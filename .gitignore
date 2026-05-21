@@ -1,2 +1,9 @@
 .DS_Store
 __pycache__/
+
+# Local-only refresh tooling (contains personal contact details for iMessage alerts)
+refresh.sh
+com.vitalcity.catalogue-refresh.plist
+refresh.log
+launchd.out.log
+launchd.err.log
