@@ -156,6 +156,18 @@
   .pill:hover { border-color: var(--vc-black); color: var(--vc-black); }
   .pill.issue { border-color: var(--vc-orange); color: var(--vc-orange); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; font-size: 10px; }
   .pill.issue:hover { background: var(--vc-orange); color: var(--vc-black); }
+  td.typecell { white-space: nowrap; }
+  .tt {
+    display: inline-block; font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 3px 7px; border: 1px solid var(--vc-cloud);
+    color: var(--vc-charcoal); background: var(--vc-white); cursor: pointer; white-space: nowrap;
+  }
+  .tt:hover { border-color: var(--vc-black); color: var(--vc-black); }
+  .tt.t-opinion { border-color: var(--vc-charcoal); color: var(--vc-charcoal); }
+  .tt.t-data { border-color: var(--vc-cerulean); color: var(--vc-cerulean); }
+  .tt.t-tool { border-color: var(--vc-orange); color: var(--vc-orange); }
+  .tt.t-qa { border-color: var(--vc-magenta); color: var(--vc-magenta); }
+  .tt.t-review { border-color: var(--vc-black); color: var(--vc-black); }
   .star { color: var(--vc-orange); }
   .loading, .empty { padding: 70px 32px; text-align: center; color: var(--vc-charcoal); }
   footer {
@@ -183,6 +195,7 @@
 
 <div class="controls">
   <input type="search" id="q" placeholder="Search titles, summaries, authors, topics…" autocomplete="off">
+  <select id="fType"><option value="">All types</option></select>
   <select id="fAuthor"><option value="">All authors</option></select>
   <select id="fTopic"><option value="">All topics</option></select>
   <select id="fIssue"><option value="">All issues</option></select>
@@ -196,13 +209,14 @@
   <table id="tbl">
     <thead><tr>
       <th data-k="published_date">Date <span class="arrow"></span></th>
+      <th data-k="type">Type <span class="arrow"></span></th>
       <th data-k="title">Title &amp; summary <span class="arrow"></span></th>
       <th data-k="primary_author">Author <span class="arrow"></span></th>
       <th data-k="topics">Topics <span class="arrow"></span></th>
       <th data-k="issues">Issue <span class="arrow"></span></th>
       <th data-k="word_count">Words <span class="arrow"></span></th>
     </tr></thead>
-    <tbody id="rows"><tr><td colspan="6" class="loading">Loading catalogue…</td></tr></tbody>
+    <tbody id="rows"><tr><td colspan="7" class="loading">Loading catalogue…</td></tr></tbody>
   </table>
 </div>
 
@@ -222,6 +236,12 @@ function fmtDate(d) {
 function issueLabel(name) {
   const it = ISSUES.find(i => i.name === name);
   return it ? it.display_name : name.replace(/-/g, " ");
+}
+function typeClass(t) {
+  return ({
+    "opinion/commentary": "t-opinion", "data analysis": "t-data", "map/tool": "t-tool",
+    "q&a": "t-qa", "book review": "t-review",
+  })[t] || "";
 }
 
 async function load() {
@@ -247,13 +267,16 @@ function buildStats() {
 }
 
 function buildFilters() {
-  const authors = {}, topics = {}, years = {};
+  const authors = {}, topics = {}, years = {}, types = {};
   DATA.forEach(r => {
     (r.authors||[]).forEach(a => authors[a] = (authors[a]||0)+1);
     (r.topics||[]).forEach(t => topics[t] = (topics[t]||0)+1);
+    if (r.type) types[r.type] = (types[r.type]||0)+1;
     if (r.published_date) years[r.published_date.slice(0,4)] = true;
   });
   const opt = (v, t) => `<option value="${v.replace(/"/g,'&quot;')}">${t}</option>`;
+  $("#fType").innerHTML += Object.keys(types).sort((a,b)=>types[b]-types[a])
+    .map(t => opt(t, `${t} (${types[t]})`)).join("");
   $("#fAuthor").innerHTML += Object.keys(authors).sort((a,b)=>authors[b]-authors[a])
     .map(a => opt(a, `${a} (${authors[a]})`)).join("");
   $("#fTopic").innerHTML += Object.keys(topics).sort((a,b)=>topics[b]-topics[a])
@@ -263,10 +286,10 @@ function buildFilters() {
 }
 
 function bind() {
-  ["#q","#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s => $(s).addEventListener("input", render));
+  ["#q","#fType","#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s => $(s).addEventListener("input", render));
   $("#fFeatured").addEventListener("change", render);
   $("#clear").addEventListener("click", () => {
-    $("#q").value=""; ["#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s=>$(s).value="");
+    $("#q").value=""; ["#fType","#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s=>$(s).value="");
     $("#fFeatured").checked=false; render();
   });
   document.querySelectorAll("thead th").forEach(th => th.addEventListener("click", () => {
@@ -276,10 +299,11 @@ function bind() {
   }));
   // delegate clicks on author / topic / issue to set the matching filter
   $("#rows").addEventListener("click", e => {
-    const el = e.target.closest("[data-author],[data-topic],[data-issue]"); if (!el) return;
+    const el = e.target.closest("[data-author],[data-topic],[data-issue],[data-type]"); if (!el) return;
     if (el.dataset.author !== undefined) $("#fAuthor").value = el.dataset.author;
     if (el.dataset.topic !== undefined) $("#fTopic").value = el.dataset.topic;
     if (el.dataset.issue !== undefined) $("#fIssue").value = el.dataset.issue;
+    if (el.dataset.type !== undefined) $("#fType").value = el.dataset.type;
     render();
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
@@ -287,16 +311,17 @@ function bind() {
 
 function filtered() {
   const q = $("#q").value.trim().toLowerCase();
-  const fa = $("#fAuthor").value, ft = $("#fTopic").value, fi = $("#fIssue").value, fy = $("#fYear").value;
+  const ftype = $("#fType").value, fa = $("#fAuthor").value, ft = $("#fTopic").value, fi = $("#fIssue").value, fy = $("#fYear").value;
   const feat = $("#fFeatured").checked;
   return DATA.filter(r => {
+    if (ftype && r.type !== ftype) return false;
     if (fa && !(r.authors||[]).includes(fa)) return false;
     if (ft && !(r.topics||[]).includes(ft)) return false;
     if (fi && !(r.issues||[]).includes(fi)) return false;
     if (fy && !(r.published_date||"").startsWith(fy)) return false;
     if (feat && !r.featured) return false;
     if (q) {
-      const hay = [r.title, r.summary, (r.authors||[]).join(" "), (r.topics||[]).join(" "),
+      const hay = [r.title, r.summary, r.type, (r.authors||[]).join(" "), (r.topics||[]).join(" "),
         (r.issues||[]).join(" ")].join(" ").toLowerCase();
       if (!hay.includes(q)) return false;
     }
@@ -323,12 +348,13 @@ function render() {
   if (th) th.textContent = sortDir === 1 ? "▲" : "▼";
 
   $("#resultbar").innerHTML = `Showing <b>${rows.length}</b> of ${DATA.length} articles`;
-  if (!rows.length) { $("#rows").innerHTML = `<tr><td colspan="6" class="empty">No articles match these filters.</td></tr>`; return; }
+  if (!rows.length) { $("#rows").innerHTML = `<tr><td colspan="7" class="empty">No articles match these filters.</td></tr>`; return; }
 
   const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   $("#rows").innerHTML = rows.map(r => `
     <tr>
       <td class="date">${fmtDate(r.published_date)}</td>
+      <td class="typecell">${r.type?`<span class="tt ${typeClass(r.type)}" data-type="${esc(r.type)}">${esc(r.type)}</span>`:''}</td>
       <td class="title">${r.featured?'<span class="star">★ </span>':''}<a class="headline" href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a>${r.summary?`<span class="summary">${esc(r.summary)}</span>`:''}</td>
       <td>${(r.authors||[]).map(a=>`<a class="author" data-author="${esc(a)}">${esc(a)}</a>`).join(", ")}</td>
       <td>${(r.topics||[]).map(t=>`<span class="pill" data-topic="${esc(t)}">${esc(t)}</span>`).join("")}</td>
@@ -347,7 +373,7 @@ new ResizeObserver(syncStickyOffset).observe(document.querySelector(".controls")
 syncStickyOffset();
 
 $("#footer").innerHTML = '<span class="wm">Vital City</span> &nbsp; Data pulled from the Vital City Ghost Content API. See methodology.md for sources, definitions and limitations. Refreshes weekly.';
-load().catch(e => { $("#rows").innerHTML = `<tr><td colspan="6" class="empty">Could not load data (${e}). Serve this folder over http — see README.</td></tr>`; });
+load().catch(e => { $("#rows").innerHTML = `<tr><td colspan="7" class="empty">Could not load data (${e}). Serve this folder over http — see README.</td></tr>`; });
 </script>
 </body>
 </html>

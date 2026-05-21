@@ -78,6 +78,39 @@ are excluded everywhere:
 - `#Import 2026-02-26 13:34` (slug prefix `hash-import-`) — a one-time content import marker
 - `#none` (slug `hash-none`) — a stray empty tag on 4 posts
 
+## Content type classification
+
+Each article is assigned exactly one **type**, plus a `type_basis` field that
+records *why* it got that type (so nothing is a black box and you can audit or
+reclassify any call). The classifier is rule-based and runs most-specific-first;
+the first rule that matches wins:
+
+| Order | Type | Matched when… | `type_basis` |
+|---|---|---|---|
+| 1 | **book review** | tagged "Book Review", or title says "a review of" / "reviewed" | `tag:book-review` / `title:review` |
+| 2 | **q&a** | tagged Podcast, interview, Conversations, or "In Conversation With…"; or the title reads like an interview ("in conversation", "a conversation with", "talks to/with", "Q&A") | `tag:<name>` / `title:conversation` |
+| 3 | **map/tool** | title contains "interactive", "explorer", "tracker", "dashboard", "calculator", "quiz", "interactive map"; **or** the article embeds one of Vital City's own hosted apps (`vitalcity-nyc.github.io` iframe); **or** the HTML loads a mapping/viz library (Leaflet, Mapbox, MapLibre, D3, Vega-Lite, deck.gl) | `title:tool-or-map` / `html:vc-app-embed` / `html:map-or-viz-library` |
+| 4 | **data analysis** | tagged "Data Stories" / in the `#data-stories` series; title like "by the numbers" / "in N charts" / "mapped"; **or** the piece embeds **3 or more** charts (Flourish / Datawrapper) | `tag:data-stories` / `html:N-chart-embeds` |
+| 5 | **something else** | framing pages — title like "About This Project", "Editor's Note", "Masthead", "A Note From…" | `title:framing-page` |
+| 6 | **opinion/commentary** | everything else (the default — Vital City is fundamentally an essays/commentary journal) | `default` |
+
+As of the latest run: opinion/commentary 693, q&a 59, data analysis 44,
+map/tool 10, book review 5, something else 1.
+
+**Deliberate design choices and their limits:**
+- "tool" and bare "map" are **not** matched in titles because they are usually
+  metaphorical ("the unlikely *tool* that could transform hiring"). Real tools
+  are caught by "interactive", an embedded Vital City app, or a JS map library.
+- Mapping/viz libraries are matched by their actual script/CDN references (e.g.
+  `leaflet.js`, `api.mapbox.com`, `/d3@`, `vega-lite`), **not** loose words, so
+  prose like "Las **Vega**s" or "road**map**" does not trigger a false positive.
+- The 3-chart threshold for "data analysis" keeps opinion essays that merely
+  include a chart or two in "opinion/commentary"; only genuinely chart-driven
+  pieces flip to "data analysis".
+- The classifier favors precision over recall on the smaller categories. A piece
+  that is mis-typed can be inspected via `type_basis` and the rules adjusted in
+  `scrape.py` (`classify_type`).
+
 ## Rollups
 
 - `data/authors.json` — one entry per contributor: post count, the article
@@ -85,6 +118,7 @@ are excluded everywhere:
 - `data/issues.json` — one entry per issue/series: post count, first/last
   publish date, top 5 co-occurring topics, issue number and display name.
 - `data/tags.json` — every public topic with its post count.
+- `data/types.json` — each content type with its post count.
 - `data/meta.json` — run timestamp and totals.
 
 ## Known limitations

@@ -133,6 +133,53 @@ def one_line_summary(p):
     return first or None
 
 
+QA_TAGS = {"podcast", "interview", "conversations", "in conversation with..."}
+QA_TITLE = re.compile(r"q&a|q & a|in conversation|a conversation with|\binterview\b|talks? (?:to|with)|speaks with|sits down with", re.I)
+REVIEW_TITLE = re.compile(r"a review of|book review|\breviewed\b", re.I)
+TOOL_TITLE = re.compile(r"interactive|explorer|\btracker\b|dashboard|calculator|simulator|mapping tool|interactive map|\bquiz\b", re.I)
+# Match actual JS library references (script src / cdn URLs), not prose words
+# like "Vegas" or "roadmap". These signal the piece is itself an interactive tool.
+MAP_LIB = re.compile(
+    r"leaflet\.(?:js|css)|unpkg\.com/leaflet|api\.mapbox\.com|mapbox-gl|maplibre-gl|"
+    r"/d3@|d3\.min\.js|d3js\.org|cdn\.jsdelivr\.net/npm/d3|vega-lite|/vega@|vega\.min|"
+    r"deck\.gl|cdn\.observableusercontent", re.I)
+DATA_TITLE = re.compile(r"by the numbers|in \d+ charts|, in charts|, charted|, mapped", re.I)
+OTHER_TITLE = re.compile(r"about this project|: about\b|editor.?s? note|\bmasthead\b|welcome to vital city|a note (?:from|on|to)", re.I)
+
+
+def classify_type(p, topics, issues):
+    """Assign one content type, returning (type, basis). Rule-based and ordered
+    most-specific-first; the basis string records why, for transparency."""
+    title = p.get("title") or ""
+    tagnames = {t["name"].lower() for t in p.get("tags", [])}
+    issue_slugs = {i.lower() for i in issues}
+    hl = (p.get("html") or "").lower()
+    chart_embeds = hl.count("flourish-embed") + hl.count("datawrapper-vis") + hl.count("flo.uri.sh/visualisation")
+    has_map_lib = bool(MAP_LIB.search(hl))
+    # Iframe to Vital City's own hosted apps = a custom interactive tool/map
+    has_vc_app = bool(re.search(r"<iframe[^>]+(?:vitalcity-nyc|vital-city-nyc)\.github\.io", hl))
+
+    if "book review" in tagnames or REVIEW_TITLE.search(title):
+        return "book review", "tag:book-review" if "book review" in tagnames else "title:review"
+    if tagnames & QA_TAGS:
+        return "q&a", "tag:" + next(iter(tagnames & QA_TAGS))
+    if QA_TITLE.search(title):
+        return "q&a", "title:conversation"
+    if TOOL_TITLE.search(title):
+        return "map/tool", "title:tool-or-map"
+    if has_vc_app:
+        return "map/tool", "html:vc-app-embed"
+    if has_map_lib:
+        return "map/tool", "html:map-or-viz-library"
+    if "data stories" in tagnames or "data-stories" in issue_slugs or DATA_TITLE.search(title):
+        return "data analysis", "tag:data-stories"
+    if chart_embeds >= 3:
+        return "data analysis", f"html:{chart_embeds}-chart-embeds"
+    if OTHER_TITLE.search(title):
+        return "something else", "title:framing-page"
+    return "opinion/commentary", "default"
+
+
 def normalize_post(p):
     topics, issues = classify_tags(p.get("tags", []))
     authors = [a.get("name") for a in p.get("authors", []) if a.get("name")]
@@ -143,11 +190,14 @@ def normalize_post(p):
     issue_names = [i["name"].lstrip("#") for i in issues]
     numbered = [issue_number(i["name"]) for i in issues]
     numbered = [n for n in numbered if n is not None]
+    ptype, type_basis = classify_type(p, [t["name"] for t in topics], issue_names)
 
     return {
         "title": p.get("title"),
         "slug": p.get("slug"),
         "url": f"{SITE}/{p.get('slug')}/",
+        "type": ptype,
+        "type_basis": type_basis,
         "published_date": pub_date,
         "published_at": pub,
         "updated_at": p.get("updated_at"),
@@ -226,7 +276,7 @@ def build_rollups(records, raw_posts):
 
 def write_csv(records, path):
     cols = [
-        "published_date", "title", "summary", "primary_author", "authors", "topics",
+        "published_date", "title", "type", "summary", "primary_author", "authors", "topics",
         "issues", "issue_numbers", "word_count", "reading_minutes",
         "featured", "visibility", "url",
     ]
@@ -235,7 +285,7 @@ def write_csv(records, path):
         w.writerow(cols)
         for r in records:
             w.writerow([
-                r["published_date"], r["title"], r["summary"] or "", r["primary_author"],
+                r["published_date"], r["title"], r["type"], r["summary"] or "", r["primary_author"],
                 "; ".join(r["authors"]), "; ".join(r["topics"]),
                 "; ".join(r["issues"]), "; ".join(str(n) for n in r["issue_numbers"]),
                 r["word_count"], r["reading_minutes"], r["featured"],
@@ -281,6 +331,12 @@ def main():
         sorted(issues.values(), key=lambda i: (i["number"] is None, -(i["number"] or 0))),
         indent=2, ensure_ascii=False))
     (DATA_DIR / "tags.json").write_text(json.dumps(topics, indent=2, ensure_ascii=False))
+
+    type_counts = {}
+    for r in records:
+        type_counts[r["type"]] = type_counts.get(r["type"], 0) + 1
+    types = [{"type": k, "post_count": v} for k, v in sorted(type_counts.items(), key=lambda x: -x[1])]
+    (DATA_DIR / "types.json").write_text(json.dumps(types, indent=2, ensure_ascii=False))
 
     meta = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
