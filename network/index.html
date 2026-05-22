@@ -38,6 +38,10 @@
   .sub{color:var(--vc-charcoal);font-size:13px}
   .confbar{background:var(--vc-black);color:#fff;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;padding:6px 30px;font-weight:700}
 
+  .askbar{display:flex;align-items:center;gap:10px;padding:12px 30px;border-bottom:1px solid var(--vc-black);background:var(--vc-chartreuse,#dde44c)}
+  .askbar .asklabel{font-weight:900;text-transform:uppercase;letter-spacing:.1em;font-size:12px}
+  .askbar input{flex:1;font:inherit;font-size:15px;padding:9px 12px;border:1px solid var(--vc-black);border-radius:0;background:#fff}
+  .askbar .askans{font-weight:700;font-size:13px;white-space:nowrap}
   .stats{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--vc-black);background:var(--vc-paper)}
   .stat{padding:14px 18px;border-right:1px solid var(--vc-cloud)}
   .stat:last-child{border-right:none}
@@ -132,6 +136,11 @@
     <div class="sub">Everyone in Vital City's orbit — newsletter subscribers, contributors, contacts and donors — searchable by type and category. Filter to any subset, then export it, copy its emails, or email the group.</div>
   </header>
   <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute<a href="#" id="forget" style="float:right;color:#fff;text-decoration:underline">Lock / forget password on this device</a></div>
+  <div class="askbar">
+    <span class="asklabel">Ask</span>
+    <input id="ask" type="search" autocomplete="off" placeholder="e.g. authors who are also donors · donors in criminal justice · how many subscribers are journalists">
+    <span class="askans" id="askAnswer"></span>
+  </div>
   <div class="stats" id="stats"></div>
   <div class="controls">
     <div class="seg" id="segMem">
@@ -203,14 +212,17 @@
 const $=s=>document.querySelector(s);
 const CATS=["VC contributor","VC advisor","journalist","academic","foundation leadership","nonprofit leadership","city gov","current nyc.gov","state gov","fed gov","judge","architect"];
 const SPECS=["criminal justice","housing","transit","budget","urban planning","education","public health","economy","technology","politics & government","race & equity","culture"];
-const SUFFIXES=new Set(["jr","jr.","sr","sr.","ii","iii","iv","v","md","phd","esq"]);
 function nameParts(n){
+  // First name = first token; everything after is the (often compound) surname,
+  // e.g. "Jennifer Jones Austin" → first "Jennifer", last "Jones Austin".
+  // Middle initials ("Aaron M. Pallas") are dropped from the displayed name.
   if(!n) return {first:"",last:""};
   const t=n.trim().split(/\s+/);
-  if(t.length===1) return {first:t[0],last:""};        // single token → first name only
-  let i=t.length-1; const sufs=[];
-  while(i>0 && (SUFFIXES.has(t[i].toLowerCase())||!/[a-z]/i.test(t[i]))){ sufs.unshift(t[i]); i--; }
-  return {first:t.slice(0,i).join(" "), last:[t[i],...sufs].join(" ")};
+  if(t.length===1) return {first:t[0],last:""};
+  const isInitial=s=>/^[A-Za-z]\.?$/.test(s);
+  let rest=t.slice(1).filter(s=>!isInitial(s));
+  if(!rest.length) rest=t.slice(1);
+  return {first:t[0], last:rest.join(" ")};
 }
 let PEOPLE=[], seg="all", sortKey="last", sortDir=1;
 let selectedCats=new Set();   // chosen type/specialty categories (OR within)
@@ -278,6 +290,8 @@ function init(){
   $("#clear").addEventListener("click",clearAll);
   $("#stats").addEventListener("click",e=>{const s=e.target.closest(".stat[data-action]");if(s)statAction(s.dataset.action);});
   $("#forget").addEventListener("click",e=>{e.preventDefault();localStorage.removeItem(PASSKEY);location.reload();});
+  $("#ask").addEventListener("keydown",e=>{if(e.key==="Enter")runAsk();});
+  $("#ask").addEventListener("search",runAsk);
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
   $("#rows").addEventListener("click",e=>{
     const ed=e.target.closest(".edit"); if(ed){e.stopPropagation();editName(ed.dataset.em);return;}
@@ -330,6 +344,47 @@ function buildMatrix(){
   }).join("");
   $("#matrix").innerHTML=rows;
   $("#matrix").addEventListener("click",e=>{const tr=e.target.closest("tr");if(!tr)return;toggleCat(tr.dataset.type,!selectedCats.has(tr.dataset.type));});
+}
+
+// ---- Natural-language query ----
+const TYPE_SYN={
+  "journalist":/journalis|reporter|\bpress\b|\bmedia\b/, "academic":/academ|professor|scholar|researcher/,
+  "judge":/\bjudge|judicial|jurist/, "architect":/architect/,
+  "foundation leadership":/foundation|funder|philanthrop|grantmak/,
+  "nonprofit leadership":/nonprofit|non-profit|\bngo\b/,
+  "city gov":/city gov|city hall|city government|municipal/,
+  "current nyc.gov":/nyc\.gov|current city|currently in city|current administration/,
+  "state gov":/state gov|state government|albany|assembly|state senate/,
+  "fed gov":/\bfed\b|federal|congress/, "VC advisor":/advisor|adviser/,
+};
+const SPEC_SYN={
+  "criminal justice":/criminal justice|\bcrime|policing|\bpolice|\bjail|incarcer|prison|gun violence/,
+  "housing":/housing|homeless|tenant|\brent\b/, "transit":/transit|transport|subway|\bmta\b/,
+  "budget":/budget|fiscal|comptroller/, "urban planning":/urban planning|city planning|\bplanning|land use|zoning/,
+  "education":/education|\bschool|students/, "public health":/public health|mental health|\bhealth\b|overdose/,
+  "economy":/\becono|inequality|\bjobs\b|\blabor/, "technology":/technolog|\btech\b/,
+  "politics & government":/politics|\belections?\b|\bmayor|\bcouncil\b/,
+  "race & equity":/\brace\b|racial|equity/, "culture":/\bculture|\bhistory|\barts\b/,
+};
+function syncUI(){
+  setSeg(seg);
+  document.querySelectorAll(".facet").forEach(l=>{const on=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on);const cb=l.querySelector("input");if(cb)cb.checked=on;});
+}
+function runAsk(){
+  const s=$("#ask").value.trim().toLowerCase();
+  if(!s){ $("#askAnswer").textContent=""; return; }
+  clearAll();
+  if(/subscrib|member|newsletter|email list/.test(s))
+    seg=/non[- ]?(member|subscrib)|not (a )?(subscrib|member)|haven'?t (subscrib|join)|aren'?t subscrib|unsubscrib/.test(s)?"non":"members";
+  if(/donor|donat|\bgave\b|giving|\bgift/.test(s))
+    $("#fDonor").value=/non[- ]?donor|not (a )?donor|haven'?t donat|never donat|aren'?t donor|didn'?t donat/.test(s)?"no":"yes";
+  if(/author|contributor|wrote|writes|\bwrit|byline/.test(s))
+    $("#fAuthor").value=/non[- ]?(author|contributor)|not (an? )?(author|contributor)|haven'?t writ|don'?t write|didn'?t writ|never writ/.test(s)?"no":"yes";
+  for(const [c,rx] of Object.entries(TYPE_SYN)) if(rx.test(s)) selectedCats.add(c);
+  for(const [c,rx] of Object.entries(SPEC_SYN)) if(rx.test(s)) selectedCats.add(c);
+  syncUI(); render();
+  const n=filtered().length;
+  $("#askAnswer").textContent=`${n.toLocaleString()} ${n===1?"person":"people"}`;
 }
 
 function filtered(){
