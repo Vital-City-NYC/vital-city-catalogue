@@ -110,7 +110,23 @@
   .matrix .bar{height:5px;background:var(--vc-cloud);margin-top:3px}
   .matrix .bar i{display:block;height:5px;background:var(--vc-cerulean)}
 
-  .resultrow{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:12px 30px 4px}
+  .resultrow{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:10px 30px;position:sticky;top:var(--ctrlH,52px);z-index:18;background:var(--vc-paper);border-bottom:1px solid var(--vc-cloud)}
+  .filtersentence{font-size:11.5px;color:var(--vc-black);margin-top:3px;font-weight:400;text-transform:none;letter-spacing:0;max-width:60ch}
+  .filtersentence b{font-weight:700}
+  .savedviews{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 30px 0}
+  .savedviews .svlabel{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin-right:2px}
+  .svchip{font-size:11.5px;font-weight:700;padding:3px 9px;border:1px solid var(--vc-black);background:var(--vc-white);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .svchip:hover{background:var(--vc-black);color:#fff}
+  .svchip .x{color:var(--vc-charcoal);font-weight:700}
+  .svchip:hover .x{color:#fff}
+  .svadd{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border:1px dashed var(--vc-charcoal);background:transparent;color:var(--vc-charcoal);cursor:pointer}
+  .svadd:hover{border-color:var(--vc-black);color:var(--vc-black)}
+  .dupgroup{border:1px solid var(--vc-cloud);padding:8px 10px;margin:8px 0}
+  .dupgroup .gh{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px}
+  .dupperson{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:3px 0;border-top:1px solid var(--vc-paper)}
+  .dupperson a{color:var(--vc-cerulean);font-weight:700;text-decoration:none;cursor:pointer}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--vc-black);color:#fff;padding:10px 18px;font-size:13px;font-weight:700;z-index:300;opacity:0;transition:opacity .2s}
+  .toast.show{opacity:1}
   .actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .resultbar{font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
   .hintlink{color:var(--vc-cerulean);font-weight:700;text-decoration:none;white-space:nowrap}
@@ -119,7 +135,8 @@
   .tablewrap{padding:6px 30px 60px}
   table.people{width:100%;border-collapse:collapse;font-size:13.5px;table-layout:fixed}
   table.people td{overflow-wrap:anywhere}
-  table.people th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;padding:9px 10px;border-bottom:1px solid var(--vc-black);position:sticky;top:60px;background:var(--vc-paper);cursor:pointer;white-space:nowrap}
+  table.people th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;padding:9px 10px;border-bottom:1px solid var(--vc-black);position:sticky;top:var(--toolbarH,112px);background:var(--vc-paper);cursor:pointer;white-space:nowrap}
+  table.people th .sa{color:var(--vc-cloud);font-weight:400}
   table.people td{padding:10px;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
   tr:hover td{background:var(--vc-white)}
   .nm{font-weight:700}
@@ -160,6 +177,7 @@
 </div>
 
 <div id="app">
+  <div class="toast" id="toast"></div>
   <header class="mast">
     <a class="howto" href="about.html" target="_blank">How it works ↗</a>
     <div class="wm">Vital City</div>
@@ -188,6 +206,7 @@
     <code>private/donors_source.csv</code> with it and republish (or hand the CSV to
     Claude Code and ask it to refresh the donor list). New gifts won't appear until then.
   </div>
+  <div class="savedviews" id="savedViews"></div>
   <div class="hint">Click <b>✎</b> on any row to change a person's details or delete the entry; <b>✓</b> confirms a <span class="g">gray</span> guessed name. <a href="#" id="exportFixes" class="hintlink">Export edits →</a></div>
   <div class="layout">
     <aside>
@@ -203,9 +222,13 @@
     </aside>
     <div>
       <div class="resultrow">
-        <div class="resultbar" id="resultbar"></div>
+        <div class="resultmeta">
+          <div class="resultbar" id="resultbar"></div>
+          <div class="filtersentence" id="filterSentence"></div>
+        </div>
         <div class="actions">
           <button class="btn" id="addPerson" title="Manually add one new person">+ Add person</button>
+          <button class="btn" id="findDupes" title="Find possible duplicate records">Find duplicates</button>
           <button class="btn primary" id="export">Export CSV</button>
           <button class="btn" id="copyEmails">Copy emails</button>
           <select id="emailField" title="Which field to drop recipients into"><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
@@ -267,6 +290,29 @@
         <button class="btn" id="edDelete" style="margin-left:auto;border-color:var(--vc-magenta);color:var(--vc-magenta)">Delete entry</button>
         <span class="lbl-note">Saved for everyone automatically — shows for you now, for everyone on the next daily refresh.</span>
       </div>
+    </div>
+  </div>
+
+  <div id="emailModal" class="modal" style="display:none">
+    <div class="modalbox">
+      <h3>Open your mail app?</h3>
+      <p id="emConfirmText" style="font-size:14px;line-height:1.5"></p>
+      <p id="emFilter" style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.5"></p>
+      <p id="emCapWarn" style="display:none;font-size:13px;color:var(--vc-magenta);font-weight:700"></p>
+      <div class="modalbtns">
+        <button class="btn primary" id="emGo">Open mail app</button>
+        <button class="btn" id="emCopyInstead">Copy emails instead</button>
+        <button class="btn" id="emCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dupModal" class="modal" style="display:none">
+    <div class="modalbox" style="width:620px">
+      <h3>Possible duplicates</h3>
+      <p id="dupSummary" style="font-size:13px;color:var(--vc-charcoal)"></p>
+      <div id="dupList" style="max-height:60vh;overflow:auto"></div>
+      <div class="modalbtns"><button class="btn" id="dupClose">Close</button></div>
     </div>
   </div>
 </div>
@@ -372,6 +418,21 @@ function init(){
   $("#stats").addEventListener("click",e=>{const s=e.target.closest(".stat[data-action]");if(s)statAction(s.dataset.action);});
   $("#forget").addEventListener("click",e=>{e.preventDefault();localStorage.removeItem(PASSKEY);location.reload();});
   $("#addPerson").addEventListener("click",openAdd);
+  $("#findDupes").addEventListener("click",showDuplicates);
+  $("#dupClose").addEventListener("click",()=>$("#dupModal").style.display="none");
+  $("#dupModal").addEventListener("click",e=>{if(e.target.id==="dupModal")$("#dupModal").style.display="none";});
+  $("#dupList").addEventListener("click",e=>{const a=e.target.closest("a[data-key]");if(!a)return;$("#dupModal").style.display="none";openEdit(a.dataset.key);});
+  $("#emGo").addEventListener("click",doEmailGroup);
+  $("#emCancel").addEventListener("click",()=>$("#emailModal").style.display="none");
+  $("#emCopyInstead").addEventListener("click",()=>{ $("#emailModal").style.display="none"; navigator.clipboard.writeText(pendingEmails.join(", ")).then(()=>toast(`Copied ${pendingEmails.length.toLocaleString()} emails to clipboard`)).catch(()=>toast("Copy failed")); });
+  $("#emailModal").addEventListener("click",e=>{if(e.target.id==="emailModal")$("#emailModal").style.display="none";});
+  renderViews();
+  $("#savedViews").addEventListener("click",e=>{
+    const del=e.target.closest(".x[data-del]"); if(del){ e.stopPropagation(); const v=loadViews(); v.splice(+del.dataset.del,1); localStorage.setItem(VKEY,JSON.stringify(v)); renderViews(); return; }
+    if(e.target.id==="svAdd"){ const name=prompt("Name this view (e.g. \"Housing reporters '24+\"):"); if(name&&name.trim()){ const v=loadViews(); v.push({name:name.trim(),state:currentState()}); localStorage.setItem(VKEY,JSON.stringify(v)); renderViews(); toast("View saved"); } return; }
+    const chip=e.target.closest(".svchip"); if(chip){ const v=loadViews()[+chip.dataset.i]; if(v) applyState(v.state); }
+  });
+  window.addEventListener("resize",measureSticky);
   $("#edDon").addEventListener("change",()=>{ $("#edDamtWrap").style.display=$("#edDon").checked?"block":"none"; });
   $("#edSave").addEventListener("click",saveEdit);
   $("#edCancel").addEventListener("click",closeEdit);
@@ -593,12 +654,103 @@ function confirmName(key){
   const ov=loadOverrides(); ov[key]=Object.assign({}, ov[key], {n:p.n});
   localStorage.setItem(OVKEY,JSON.stringify(ov)); pushOverride(key,ov[key]); p.ns="given"; render();
 }
+let toastT=null;
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2200); }
+
+function measureSticky(){
+  const c=document.querySelector(".controls"), r=document.querySelector(".resultrow");
+  if(!c||!r) return;
+  const ch=c.offsetHeight;
+  document.documentElement.style.setProperty("--ctrlH", ch+"px");
+  document.documentElement.style.setProperty("--toolbarH", (ch+r.offsetHeight)+"px");
+}
+
+// Plain-English summary of the active filters (shown under the result count).
+function describeFilters(){
+  const inc=[], exc=[]; const lab={mem:"Subscribers",don:"Donors",auth:"Authors"};
+  const parts=[];
+  if(isOther()) parts.push("<b>none of</b> subscriber, donor or author");
+  else { ["mem","don","auth"].forEach(k=>{ if(want[k]===1)inc.push(lab[k]); else if(want[k]===-1)exc.push(lab[k]); });
+    if(inc.length) parts.push(inc.join(" <b>AND</b> "));
+    if(exc.length) parts.push((inc.length?"<b>excluding</b> ":"<b>Excluding</b> ")+exc.join(", ")); }
+  if($("#fRepeatDonor").checked) parts.push("repeat donors (2+ gifts)");
+  const cats=[...selectedCats]; if(cats.length) parts.push("type/area: "+cats.join(" <b>OR</b> "));
+  const df=$("#dFrom").value, dt=$("#dTo").value; if(df||dt) parts.push("subscribed "+(df||"…")+"–"+(dt||"now"));
+  const q=$("#q").value.trim(); if(q) parts.push('matching "'+esc(q)+'"');
+  if(onlyUnsub) parts.push("unsubscribed only"); else if($("#fUnsub").checked) parts.push("incl. unsubscribed");
+  return parts.length ? parts.join(" · ") : "Showing everyone — no filters applied.";
+}
+
+// ---- Saved views (named filter combinations, this device) ----
+const VKEY="vc_views";
+function loadViews(){ try{return JSON.parse(localStorage.getItem(VKEY)||"[]");}catch(e){return [];} }
+function currentState(){ return {want:Object.assign({},want), cats:[...selectedCats], q:$("#q").value,
+  dFrom:$("#dFrom").value, dTo:$("#dTo").value, repeat:$("#fRepeatDonor").checked,
+  unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, sortKey:sortKey, sortDir:sortDir}; }
+function applyState(s){
+  want=Object.assign({mem:0,don:0,auth:0}, s.want||{});
+  selectedCats=new Set(s.cats||[]);
+  $("#q").value=s.q||""; $("#dFrom").value=s.dFrom||""; $("#dTo").value=s.dTo||"";
+  $("#fUnsub").checked=!!s.unsub; onlyUnsub=!!s.onlyUnsub;
+  if(s.sortKey){ sortKey=s.sortKey; sortDir=s.sortDir||1; }
+  syncToggles(); $("#fRepeatDonor").checked=!!s.repeat;
+  document.querySelectorAll(".facet").forEach(l=>{const on=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on);const cb=l.querySelector("input");if(cb)cb.checked=on;});
+  render();
+}
+function renderViews(){
+  const v=loadViews();
+  const chips=v.map((x,i)=>`<button class="svchip" data-i="${i}" title="Apply saved view">${esc(x.name)}<span class="x" data-del="${i}" title="Delete">✕</span></button>`).join("");
+  $("#savedViews").innerHTML=(v.length?`<span class="svlabel">Saved views</span>`:"")+chips+`<button class="svadd" id="svAdd">★ Save current view</button>`;
+}
+
+// ---- Email group with a confirmation sheet ----
+let pendingEmails=[];
 function emailGroup(){
   const emails=[...new Set(filtered().map(p=>p.e).filter(Boolean))];
-  if(!emails.length){ alert("No email addresses in this subset."); return; }
-  if(emails.length>100 && !confirm(`This will hand ${emails.length.toLocaleString()} recipients to your mail app. Many apps cap how many open at once — for big lists, "Copy emails" is more reliable. Continue?`)) return;
+  if(!emails.length){ toast("No email addresses in this subset."); return; }
+  pendingEmails=emails;
+  const field=$("#emailField").value.toUpperCase();
+  $("#emConfirmText").innerHTML=`Open your mail app with <b>${emails.length.toLocaleString()}</b> recipient${emails.length===1?"":"s"} in the <b>${field}</b> field?`;
+  $("#emFilter").innerHTML="Current filter: "+describeFilters();
+  const cap=$("#emCapWarn");
+  if(emails.length>500){ cap.style.display="block"; cap.textContent=`Heads-up: ${emails.length.toLocaleString()} recipients. Many mail apps cap a single Bcc around 500 — "Copy emails instead" is more reliable for a list this big.`; }
+  else cap.style.display="none";
+  $("#emailModal").style.display="flex";
+}
+function doEmailGroup(){
+  $("#emailModal").style.display="none";
   const field=$("#emailField").value;
-  window.location.href=`mailto:?${field}=${encodeURIComponent(emails.join(","))}`;
+  window.location.href=`mailto:?${field}=${encodeURIComponent(pendingEmails.join(","))}`;
+}
+
+// ---- Duplicate finder (shared email, or same first-initial + surname) ----
+function findDuplicates(){
+  const nameB=new Map(), emailB=new Map();
+  PEOPLE.forEach(p=>{
+    const np=nameParts(p.n), last=sortName(np.last), first=sortName(np.first);
+    if(last && last.length>=4 && first){ const k=first.charAt(0)+"|"+last; (nameB.get(k)||nameB.set(k,[]).get(k)).push(p); }
+    (p.emails||[]).forEach(e=>{ e=e.toLowerCase(); (emailB.get(e)||emailB.set(e,[]).get(e)).push(p); });
+  });
+  const groups=[];
+  emailB.forEach((g,e)=>{ const u=[...new Set(g)]; if(u.length>1) groups.push({why:"shared email · "+e, people:u}); });
+  nameB.forEach(g=>{ const u=[...new Set(g)]; if(u.length>1 && u.length<=4) groups.push({why:"similar name", people:u}); });
+  const seen=new Set(), out=[];
+  groups.forEach(gr=>{ const sig=gr.people.map(personKey).sort().join("|"); if(!seen.has(sig)){ seen.add(sig); out.push(gr); } });
+  return out;
+}
+function showDuplicates(){
+  const groups=findDuplicates();
+  $("#dupSummary").textContent = groups.length
+    ? `${groups.length.toLocaleString()} possible duplicate group${groups.length===1?"":"s"}${groups.length>80?" (showing first 80)":""}. Open ✎ to fix/merge emails or delete a record.`
+    : "No likely duplicates found.";
+  $("#dupList").innerHTML = groups.slice(0,80).map(gr=>{
+    const rows=gr.people.map(p=>{
+      const tags=[p.mem?"sub":"",p.don?"donor":"",p.auth?"author":""].filter(Boolean).join(" · ");
+      return `<div class="dupperson"><span><b>${esc(p.n||"—")}</b>${tags?' · '+tags:''} <span style="color:var(--vc-charcoal)">${esc((p.emails||[]).join(", "))||"no email"}</span></span><a data-key="${esc(personKey(p))}">✎ edit</a></div>`;
+    }).join("");
+    return `<div class="dupgroup"><div class="gh">${esc(gr.why)}</div>${rows}</div>`;
+  }).join("");
+  $("#dupModal").style.display="flex";
 }
 function exportFixes(){
   const ov=loadOverrides();
@@ -612,8 +764,9 @@ function copyEmails(){
   const btn=$("#copyEmails"), label=btn.textContent;
   navigator.clipboard.writeText(emails.join(", ")).then(()=>{
     btn.textContent=`Copied ${emails.length.toLocaleString()} ✓`;
+    toast(`Copied ${emails.length.toLocaleString()} email${emails.length===1?"":"s"} to clipboard`);
     setTimeout(()=>btn.textContent=label,1800);
-  }).catch(()=>{btn.textContent="Copy failed";setTimeout(()=>btn.textContent=label,1800);});
+  }).catch(()=>{btn.textContent="Copy failed";toast("Copy failed");setTimeout(()=>btn.textContent=label,1800);});
 }
 function csvCell(v){v=v==null?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
 function exportCSV(){
@@ -645,11 +798,16 @@ function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replac
 function render(){
   document.querySelectorAll("table.people th").forEach(th=>{
     const base=th.dataset.label||(th.dataset.label=th.textContent.replace(/[ ▲▼]+$/,""));
-    th.textContent=base+(sortKey===th.dataset.k?(sortDir>0?" ▲":" ▼"):"");
+    if(sortKey===th.dataset.k) th.innerHTML=base+(sortDir>0?" ▲":" ▼");
+    else if(th.dataset.k) th.innerHTML=base+' <span class="sa">▲</span>';
+    else th.textContent=base;
   });
   const all=sortRows(filtered());
   const shown=all.slice(0,CAP);
-  $("#resultbar").innerHTML=`Showing <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`+(all.length>CAP?` &nbsp;·&nbsp; refine filters to see all, or Export CSV for the full list`:"");
+  $("#resultbar").innerHTML=(all.length>CAP
+    ? `Showing first <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} matches &nbsp;·&nbsp; refine filters or Export CSV for the full list`
+    : `Showing <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`);
+  $("#filterSentence").innerHTML=describeFilters();
   $("#rows").innerHTML=shown.map(p=>{
     const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'');
     const key=esc(personKey(p));
@@ -673,6 +831,7 @@ function render(){
       <td class="em${p.unsub?' unsub':''}">${(p.emails&&p.emails.length?p.emails.map(esc).join("<br>"):'<span class="muted">—</span>')}</td>
     </tr>`;
   }).join("");
+  measureSticky();
 }
 </script>
 </body>
