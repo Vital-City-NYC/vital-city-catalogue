@@ -40,6 +40,20 @@ jobs:
           printf '%s' "$GHOST_ADMIN_KEY" > private/.ghost_admin_key
           python3 bundle_sources.py unpack
 
+      - name: Pull shared edits from the Google Sheet store
+        env:
+          OVERRIDES_URL: ${{ secrets.OVERRIDES_URL }}
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: |
+          if [ -n "$OVERRIDES_URL" ]; then
+            curl -fsSL --get "$OVERRIDES_URL" --data-urlencode "pass=$VC_NETWORK_PASS" \
+              -o private/people_overrides.json \
+              && echo "fetched shared edits ($(wc -c < private/people_overrides.json) bytes)" \
+              || echo "WARNING: could not fetch shared edits; continuing without"
+          else
+            echo "OVERRIDES_URL not set yet — skipping shared-edit pull"
+          fi
+
       - name: Pull current Ghost members (live)
         run: python3 ghost_members.py --apply
 
