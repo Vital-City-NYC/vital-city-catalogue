@@ -163,7 +163,7 @@ def main():
         if fl and fl in by_fl: return by_fl[fl]
         p = {"n": "", "ns": "", "e": "", "inst": "", "role": "",
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
-             "don": 0, "damt": 0.0, "dcnt": 0, "src": []}
+             "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "src": []}
         people.append(p)
         return p
 
@@ -247,6 +247,13 @@ def main():
                 p["don"] = 1
                 p["damt"] = round(p["damt"] + amt, 2)
                 p["dcnt"] += cnt
+                # most-recent gift date (M/D/YYYY ... -> YYYY-MM-DD), keep the latest
+                ld = (row.get("Last Donation at") or "").strip()
+                m = re.match(r"(\d{1,2})/(\d{1,2})/(\d{4})", ld)
+                if m:
+                    iso = f"{m.group(3)}-{int(m.group(1)):02d}-{int(m.group(2)):02d}"
+                    if iso > p["dlast"]:
+                        p["dlast"] = iso
                 if "donor" not in p["src"]:
                     p["src"].append("donor")
                 index(p)

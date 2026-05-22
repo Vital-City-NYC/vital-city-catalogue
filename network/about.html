@@ -43,17 +43,18 @@
   <p>Each person is one row, built by merging four sources (matched by email, then by name):</p>
   <table>
     <tr><th>Source</th><th>What it adds</th></tr>
-    <tr><td><b>Subscribers</b> (from Ghost)</td><td>The <span class="pill b-mem">Member</span> badge + join year. <b>"Member" here means a newsletter subscriber</b> — not the same as a donor.</td></tr>
+    <tr><td><b>Newsletter subscribers</b> (from Ghost)</td><td>The <span class="pill b-mem">Subscriber</span> badge + the year they joined. <b>"Subscriber" means the free email list</b> — not the same as a donor.</td></tr>
     <tr><td><b>Contacts</b> (the Google Sheet your team maintains)</td><td>The <span class="pill">type</span> tags: journalist, academic, funder, gov, judge, architect, nonprofit, contributor, advisor + specialties (criminal justice, housing, transit).</td></tr>
-    <tr><td><b>Donors</b> (from FCNY)</td><td>The <span class="pill b-don">$ amount</span> badge (total given).</td></tr>
+    <tr><td><b>Donors</b> (from FCNY)</td><td>The <span class="pill b-don">$ amount</span> badge (total given) and the date of their most recent gift.</td></tr>
     <tr><td><b>Authors</b> (vitalcitynyc.org)</td><td>The "N pieces" badge (articles written).</td></tr>
   </table>
-  <div class="note"><b>Subscriber ≠ donor.</b> Someone can be a donor without being a newsletter subscriber, and vice-versa. If you filter "Donors + Non-members," you're seeing donors who haven't joined the email list — good people to invite to subscribe.</div>
+  <div class="note"><b>Subscriber ≠ donor.</b> Someone can be a donor without being a newsletter subscriber, and vice-versa. If you filter "Donors + Non-subscribers," you're seeing donors who haven't joined the email list — good people to invite to subscribe.</div>
 
   <h2>Searching &amp; filtering</h2>
   <ul>
     <li><b>Type / specialty</b> (left checkboxes): tick any combination — they're OR'd together (e.g. <i>journalist</i> + <i>academic</i> shows either).</li>
-    <li><b>Members / Non-members</b>, <b>Author</b>, <b>Donor</b>: each narrows further (AND'd with everything else).</li>
+    <li><b>Subscribers / Non-subscribers</b>, <b>Author</b>, <b>Donor</b>: each narrows further (AND'd with everything else).</li>
+    <li><b>Subscribed between</b> (left): filter to people who joined the newsletter within a date range.</li>
     <li><b>Search box</b>: matches name, email or institution.</li>
     <li>Click any type tag, the type×membership bars, a name's badges, etc. to filter by it. <b>Clear</b> resets everything.</li>
   </ul>
@@ -83,7 +84,8 @@
   </ul>
 
   <h2>Confidentiality</h2>
-  <p>This contains member, donor and contact data. The page is password-protected and the underlying data is encrypted — only people with the passphrase can read it. Don't redistribute it or the passphrase.</p>
+  <p>This contains subscriber, donor and contact data. The page is password-protected and the underlying data is encrypted — only people with the passphrase can read it. Don't redistribute it or the passphrase.</p>
+  <p>After you enter the passphrase once, the device remembers it so you don't retype it each visit. On a shared or public computer, click <b>Lock / forget password on this device</b> (top bar) to clear it.</p>
 
   <a class="back" href="index.html">← Back to the search tool</a>
 </div>
