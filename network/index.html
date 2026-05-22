@@ -80,6 +80,9 @@
   table.people td{padding:10px;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
   tr:hover td{background:var(--vc-white)}
   .nm{font-weight:700}
+  .nm.guess{color:var(--vc-charcoal);font-weight:400;font-style:italic}
+  .edit{cursor:pointer;color:var(--vc-cloud);margin-left:7px;font-size:12px;text-decoration:none}
+  .edit:hover{color:var(--vc-orange)}
   .em{color:var(--vc-charcoal);font-size:12px}
   .pill{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;margin:1px 4px 1px 0;background:var(--vc-cloud);color:var(--vc-black);cursor:pointer;white-space:nowrap}
   .pill:hover{background:var(--vc-cerulean);color:#fff}
@@ -131,6 +134,7 @@
     <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off">
     <button class="btn primary" id="export">Export CSV</button>
     <button class="btn" id="copyEmails">Copy emails</button>
+    <button class="btn" id="exportFixes">Export name fixes</button>
     <button class="btn" id="clear">Clear</button>
   </div>
   <div class="layout">
@@ -188,6 +192,7 @@ async function unlock(){
   try{
     const blob=await fetch("data.enc").then(r=>r.json());
     PEOPLE=await decryptBlob(pass,blob);
+    applyLocalFixes();
     $("#gate").style.display="none";
     $("#app").style.display="block";
     init();
@@ -215,9 +220,13 @@ function init(){
   ["#fAuthor","#fDonor","#q"].forEach(s=>$(s).addEventListener("input",render));
   $("#export").addEventListener("click",exportCSV);
   $("#copyEmails").addEventListener("click",copyEmails);
+  $("#exportFixes").addEventListener("click",exportFixes);
   $("#clear").addEventListener("click",clearAll);
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
-  $("#rows").addEventListener("click",e=>{const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);});
+  $("#rows").addEventListener("click",e=>{
+    const ed=e.target.closest(".edit"); if(ed){e.stopPropagation();editName(ed.dataset.em);return;}
+    const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);
+  });
   render();
 }
 
@@ -271,6 +280,31 @@ function filtered(){
   });
 }
 
+const OVKEY="vc_name_overrides";
+function loadOverrides(){ try{return JSON.parse(localStorage.getItem(OVKEY)||"{}");}catch(e){return {};} }
+function applyLocalFixes(){
+  const ov=loadOverrides();
+  PEOPLE.forEach(p=>{ if(p.e && ov[p.e]){ p.n=ov[p.e]; p.ns="given"; } });
+}
+function editName(email){
+  const p=PEOPLE.find(x=>x.e===email); if(!p) return;
+  const v=prompt(`Correct name for ${email}:`, p.n||"");
+  if(v===null) return;
+  const nv=v.trim();
+  const ov=loadOverrides();
+  if(nv){ ov[email]=nv; p.n=nv; p.ns="given"; } else { delete ov[email]; }
+  localStorage.setItem(OVKEY,JSON.stringify(ov));
+  render();
+}
+function exportFixes(){
+  const ov=loadOverrides(), keys=Object.keys(ov);
+  if(!keys.length){ alert("No name fixes yet. Click the ✎ next to a name to fix it."); return; }
+  const lines=["email,name"];
+  keys.forEach(em=>lines.push([em,ov[em]].map(csvCell).join(",")));
+  const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="vital-city-name-fixes.csv";document.body.appendChild(a);a.click();a.remove();
+}
 function copyEmails(){
   const emails=[...new Set(filtered().map(p=>p.e).filter(Boolean))];
   const btn=$("#copyEmails"), label=btn.textContent;
@@ -310,7 +344,7 @@ function render(){
   $("#resultbar").innerHTML=`Showing <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`+(all.length>CAP?` &nbsp;·&nbsp; refine filters to see all, or Export CSV for the full list`:"");
   $("#rows").innerHTML=shown.map(p=>`
     <tr>
-      <td class="nm">${esc(p.n)||'<span class="muted">—</span>'}</td>
+      <td><span class="nm${p.ns==='guess'?' guess':''}">${esc(p.n)||'<span class="muted">—</span>'}</span>${p.e?`<a class="edit" data-em="${esc(p.e)}" title="Fix name">✎</a>`:''}</td>
       <td>${(p.types||[]).map(t=>`<span class="pill" data-type="${esc(t)}">${esc(t)}</span>`).join("")||'<span class="muted">—</span>'}</td>
       <td>${p.mem?`<span class="badge b-mem">Member${p.since?" '"+p.since.slice(2,4):""}</span>`:'<span class="muted">—</span>'}</td>
       <td>${p.auth?`<span class="badge b-auth">${p.arts} ${p.arts===1?"piece":"pieces"}</span>`:'<span class="muted">—</span>'}</td>

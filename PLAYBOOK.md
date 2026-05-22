@@ -58,6 +58,18 @@ Open the URL, enter the passphrase. Filter by any combination — type/specialty
 (left checkboxes), Members / Non-members, Authors, Donors — and **Export CSV**
 to download the exact list (e.g. "academics who are donors but not members").
 
+## Fixing names
+
+Some people show a **gray, italic** name — that's an educated guess pulled from
+their email (e.g. `aaron@naparstek.com` → *Aaron Naparstek*). Black names are
+confirmed. To fix any name:
+
+1. Click the **✎** next to the name, type the correct one. It saves in your
+   browser immediately (turns black).
+2. To make a fix permanent for everyone, click **Export name fixes** (downloads
+   `email,name` rows), save it as `private/name_overrides.csv`, and run
+   `bash publish.sh`. The build bakes those corrections in for all users.
+
 ## Rotating the passphrase
 
 ```

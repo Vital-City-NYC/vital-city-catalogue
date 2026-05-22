@@ -45,16 +45,53 @@ GENERIC = {"info","contact","hello","admin","office","press","news","mail","emai
  "support","editor","editors","subscriptions","membership","members","help","newsletter",
  "comms","media","outreach","development","dev","marketing","desk","general","inquiries"}
 
+# Webmail / ISP domains — their domain root is NOT a person's surname.
+PROVIDERS = {"gmail","googlemail","yahoo","ymail","rocketmail","hotmail","outlook","live",
+ "msn","aol","icloud","me","mac","proton","protonmail","pm","gmx","fastmail","hey","duck",
+ "comcast","verizon","att","sbcglobal","optimum","rcn","earthlink","mindspring","zoho",
+ "mail","email","ms","cloud","inbox","aim"}
+
+
 def name_from_email(e):
-    """Extrapolate a display name + name tokens from an email local-part."""
-    local = email_norm(e).split("@")[0].split("+")[0]
+    """Best-guess display name from an email address. These are educated guesses
+    (shown in gray in the UI), never treated as authoritative.
+      jane.doe@x.com   -> Jane Doe        (split local part)
+      aaron@naparstek.com -> Aaron Naparstek  (personal-domain surname)
+      jsmith@gmail.com -> Jsmith           (single token, provider domain)
+    Returns "" when nothing reasonable can be derived.
+    """
+    e = email_norm(e)
+    if "@" not in e:
+        return ""
+    local, domain = e.split("@", 1)
+    local = local.split("+")[0]
     parts = [re.sub(r"[^a-z]", "", p) for p in re.split(r"[._\-]+", local)]
     parts = [p for p in parts if p and p not in GENERIC and len(p) >= 2]
     if len(parts) >= 2:
-        return " ".join(p.capitalize() for p in parts[:2]), f"{parts[0]} {parts[-1]}"
+        return f"{parts[0].capitalize()} {parts[1].capitalize()}"
     if len(parts) == 1:
-        return parts[0].capitalize(), parts[0]
-    return "", ""
+        first = parts[0]
+        droot = domain.split(".")[0]
+        tld = domain.rsplit(".", 1)[-1]
+        # Personal/vanity domain → use the domain root as a likely surname.
+        if (3 <= len(first) <= 11 and droot not in PROVIDERS and droot != first
+                and re.fullmatch(r"[a-z]{4,12}", droot)
+                and tld in ("com", "net", "co", "io")
+                and not domain.endswith((".edu", ".gov"))):
+            return f"{first.capitalize()} {droot.capitalize()}"
+        return first.capitalize()
+    return ""
+
+
+def set_name(p, name, given):
+    """Set a person's display name, tracking whether it's authoritative ('given')
+    or an email guess ('guess'). A given name upgrades a previous guess."""
+    if not name:
+        return
+    if not p["n"]:
+        p["n"], p["ns"] = name, "given" if given else "guess"
+    elif given and p.get("ns") == "guess":
+        p["n"], p["ns"] = name, "given"
 
 
 def _set(v):
@@ -124,7 +161,7 @@ def main():
         if email and email in by_email: return by_email[email]
         if name and name in by_name: return by_name[name]
         if fl and fl in by_fl: return by_fl[fl]
-        p = {"n": "", "e": "", "inst": "", "role": "",
+        p = {"n": "", "ns": "", "e": "", "inst": "", "role": "",
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
              "don": 0, "damt": 0.0, "dcnt": 0, "src": []}
         people.append(p)
@@ -144,12 +181,12 @@ def main():
             members_total += 1
             email = email_norm(row.get("email"))
             recorded = (row.get("name") or "").strip()
-            disp, _tok = (recorded, norm(recorded)) if recorded else name_from_email(email)
-            p = get_or_make(email=email, name=norm(disp))
+            guess = name_from_email(email) if not recorded else ""
+            p = get_or_make(email=email, name=norm(recorded or guess))
             p["mem"] = 1
             p["src"].append("member")
             if email and not p["e"]: p["e"] = email
-            if disp and not p["n"]: p["n"] = disp
+            set_name(p, recorded, True) if recorded else set_name(p, guess, False)
             since = (row.get("created_at") or "")[:10]
             if since and not p["since"]: p["since"] = since
             index(p)
@@ -159,7 +196,7 @@ def main():
     crm_total = len(crm)
     for c in crm:
         p = get_or_make(email=c["email"], name=norm(c["name"]), fl=firstlast(c["name"]))
-        if not p["n"]: p["n"] = c["name"]
+        set_name(p, c["name"], True)
         if c["email"] and not p["e"]: p["e"] = c["email"]
         if c["institution"] and not p["inst"]: p["inst"] = c["institution"]
         if c["role"] and not p["role"]: p["role"] = c["role"]
@@ -176,7 +213,7 @@ def main():
         if not nn or nn in NONPERSON: continue
         authors_total += 1
         p = get_or_make(name=nn, fl=firstlast(a["name"]))
-        if not p["n"]: p["n"] = a["name"]
+        set_name(p, a["name"], True)
         p["auth"] = 1
         p["arts"] = a.get("post_count", 0)
         if "author" not in p["src"]: p["src"].append("author")
@@ -204,8 +241,7 @@ def main():
                 except ValueError:
                     cnt = 0
                 p = get_or_make(email=email, name=norm(name), fl=firstlast(name))
-                if not p["n"] and name:
-                    p["n"] = name
+                set_name(p, name, True)
                 if email and not p["e"]:
                     p["e"] = email
                 p["don"] = 1
@@ -215,8 +251,20 @@ def main():
                     p["src"].append("donor")
                 index(p)
 
-    # NB: people with no real name (email-only members whose address yields no
-    # name) keep an empty name and are identified by email in the UI.
+    # ---- 5. Manual name fixes (email -> corrected name) ----
+    # Edits made in the explorer's edit mode are exported here and become
+    # permanent for everyone on the next publish.
+    overrides_path = PRIV / "name_overrides.csv"
+    overrides_applied = 0
+    if overrides_path.exists():
+        with open(overrides_path, newline="") as f:
+            for row in csv.DictReader(f):
+                em = email_norm(row.get("email"))
+                fixed = (row.get("name") or "").strip()
+                if em and fixed and em in by_email:
+                    by_email[em]["n"] = fixed
+                    by_email[em]["ns"] = "given"
+                    overrides_applied += 1
 
     # ---- stats ----
     members = sum(1 for p in people if p["mem"])
