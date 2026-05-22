@@ -144,6 +144,18 @@ def clean_name(name):
     return name.strip()
 
 
+def set_email(p, email):
+    """Set a person's email, preferring a real address over a made-up
+    @vitalcitynyc.org one (Ghost assigns those to authors for organization)."""
+    email = email_norm(email)
+    if not email:
+        return
+    if not p["e"]:
+        p["e"] = email
+    elif p["e"].endswith("vitalcitynyc.org") and not email.endswith("vitalcitynyc.org"):
+        p["e"] = email
+
+
 def set_name(p, name, given):
     """Set a person's display name, tracking whether it's authoritative ('given')
     or an email guess ('guess'). A given name upgrades a previous guess."""
@@ -247,7 +259,7 @@ def main():
             p = get_or_make(email=email, name=norm(recorded or guess))
             p["mem"] = 1
             p["src"].append("member")
-            if email and not p["e"]: p["e"] = email
+            set_email(p, email)
             set_name(p, recorded, True) if recorded else set_name(p, guess, False)
             since = (row.get("created_at") or "")[:10]
             if since and not p["since"]: p["since"] = since
@@ -259,7 +271,7 @@ def main():
     for c in crm:
         p = get_or_make(email=c["email"], name=norm(c["name"]), fl=firstlast(c["name"]))
         set_name(p, c["name"], True)
-        if c["email"] and not p["e"]: p["e"] = c["email"]
+        set_email(p, c["email"])
         if c["institution"] and not p["inst"]: p["inst"] = c["institution"]
         if c["role"] and not p["role"]: p["role"] = c["role"]
         p["types"] = sorted(set(p["types"]) | set(c["types"]))
@@ -315,8 +327,7 @@ def main():
                     cnt = 0
                 p = get_or_make(email=email, name=norm(name), fl=firstlast(name))
                 set_name(p, name, True)
-                if email and not p["e"]:
-                    p["e"] = email
+                set_email(p, email)
                 p["don"] = 1
                 p["damt"] = round(p["damt"] + amt, 2)
                 p["dcnt"] += cnt
@@ -345,6 +356,14 @@ def main():
         if (dom == "nyc.gov" or dom.endswith(".nyc.gov")) and "current nyc.gov" not in p["types"]:
             p["types"] = sorted(set(p["types"]) | {"current nyc.gov"})
             nycgov_inferred += 1
+
+    # Drop made-up author/contributor emails: Ghost assigns each author a fake
+    # @vitalcitynyc.org address. Never list those (only authors' emails are made up).
+    scrubbed = 0
+    for p in people:
+        if p["e"].endswith("vitalcitynyc.org") and (p["auth"] or "VC contributor" in p["types"]):
+            p["e"] = ""
+            scrubbed += 1
 
     # ---- 5. Manual name fixes (email -> corrected name) ----
     # Edits made in the explorer's edit mode are exported here and become
