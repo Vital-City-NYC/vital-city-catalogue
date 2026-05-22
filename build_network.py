@@ -294,6 +294,7 @@ def merge_people(people):
             continue
         q = seen[nn]
         q["mem"], q["auth"], q["don"] = q["mem"] or p["mem"], q["auth"] or p["auth"], q["don"] or p["don"]
+        q["unsub"] = q["unsub"] or p["unsub"]
         q["arts"] = max(q["arts"], p["arts"])
         q["damt"] = round(q["damt"] + p["damt"], 2)
         q["dcnt"] += p["dcnt"]
@@ -349,7 +350,7 @@ def main():
         if fl and fl in by_fl: return by_fl[fl]
         p = {"n": "", "ns": "", "e": "", "emails": [], "inst": "", "role": "",
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
-             "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "src": []}
+             "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "src": []}
         people.append(p)
         return p
 
@@ -472,6 +473,25 @@ def main():
                     p["src"].append("donor")
                 index(p)
 
+    # ---- 4c. Unsubscribed (Mailchimp export) — former newsletter contacts ----
+    unsub_path = PRIV / "unsubscribed_source.csv"
+    if unsub_path.exists():
+        with open(unsub_path, newline="") as f:
+            for row in csv.DictReader(f):
+                email = email_norm(row.get("Email"))
+                if not email:
+                    continue
+                fn, ln = (row.get("First Name") or "").strip(), (row.get("Last Name") or "").strip()
+                name = f"{fn} {ln}".strip()
+                p = get_or_make(emails=[email], name=norm(name), fl=firstlast(name))
+                set_email(p, email)
+                if name:
+                    set_name(p, name, True)
+                p["unsub"] = 1
+                if "unsub" not in p["src"]:
+                    p["src"].append("unsub")
+                index(p)
+
     # ---- 6. Infer categories from email domain ----
     #   journalist     -> known news-outlet domains
     #   current nyc.gov -> an active NYC city email (anything ending nyc.gov)
@@ -530,6 +550,9 @@ def main():
     before = len(people)
     people = merge_people(people)
     print(f"merged {before - len(people)} duplicate-name records", file=__import__("sys").stderr)
+    for p in people:                 # unsubscribed wins: a former contact is not a current subscriber
+        if p["unsub"]:
+            p["mem"] = 0
 
     # ---- stats ----
     members = sum(1 for p in people if p["mem"])
