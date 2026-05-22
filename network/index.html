@@ -437,7 +437,7 @@ function render(){
       <td><span class="nm${g}">${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
       <td>${types}</td>
       <td>${p.mem?`<span class="badge b-mem">Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>`:'<span class="muted">—</span>'}</td>
-      <td>${p.auth?`<span class="badge b-auth">${p.arts} ${p.arts===1?"piece":"pieces"}</span>`:'<span class="muted">—</span>'}</td>
+      <td>${p.auth?`<span class="badge b-auth">${p.arts>0?p.arts+(p.arts===1?" piece":" pieces"):"author"}</span>`:'<span class="muted">—</span>'}</td>
       <td>${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
       <td>${esc(p.inst)||'<span class="muted">—</span>'}</td>
       <td class="em">${esc(p.e)||'<span class="muted">—</span>'}</td>

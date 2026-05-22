@@ -224,6 +224,61 @@ def load_crm():
     return out
 
 
+def merge_people(people):
+    """Final consolidation: merge records that share an exact normalized full
+    name (different sources/emails for the same person). Full-name match keeps
+    namesake risk low. Combines flags, sums giving, unions categories, prefers a
+    real (non-@vitalcitynyc.org) email and a confirmed name."""
+    seen, out = {}, []
+    for p in people:
+        nn = norm(p["n"])
+        if not nn or nn not in seen:
+            if nn:
+                seen[nn] = p
+            out.append(p)
+            continue
+        q = seen[nn]
+        q["mem"], q["auth"], q["don"] = q["mem"] or p["mem"], q["auth"] or p["auth"], q["don"] or p["don"]
+        q["arts"] = max(q["arts"], p["arts"])
+        q["damt"] = round(q["damt"] + p["damt"], 2)
+        q["dcnt"] += p["dcnt"]
+        q["types"] = sorted(set(q["types"]) | set(p["types"]))
+        q["topics"] = sorted(set(q["topics"]) | set(p["topics"]))
+        q["src"] = sorted(set(q["src"]) | set(p["src"]))
+        if p["e"] and (not q["e"] or (q["e"].endswith("vitalcitynyc.org") and not p["e"].endswith("vitalcitynyc.org"))):
+            q["e"] = p["e"]
+        if p["inst"] and not q["inst"]: q["inst"] = p["inst"]
+        if p["role"] and not q["role"]: q["role"] = p["role"]
+        if p["since"] and (not q["since"] or p["since"] < q["since"]): q["since"] = p["since"]
+        if p["dlast"] > q["dlast"]: q["dlast"] = p["dlast"]
+        if q["ns"] == "guess" and p["ns"] == "given": q["n"], q["ns"] = p["n"], "given"
+    return out
+
+
+def load_author_file():
+    """Authoritative contributor roster (Google Contacts export). Returns
+    [{name, email}] using the first non-@vitalcitynyc.org email as the real one."""
+    path = PRIV / "vc_authors.csv"
+    if not path.exists():
+        return []
+    out = []
+    with open(path, newline="") as f:
+        for r in csv.DictReader(f):
+            parts = [(r.get(c) or "").strip() for c in ("First Name", "Middle Name", "Last Name", "Name Suffix")]
+            name = " ".join(p for p in parts if p).strip()
+            if not name:
+                continue
+            cands = []
+            for col in ("E-mail 1 - Value", "E-mail 2 - Value", "E-mail 3 - Value"):
+                for e in re.split(r":::|,", r.get(col) or ""):
+                    e = e.strip().lower()
+                    if "@" in e:
+                        cands.append(e)
+            email = next((e for e in cands if not e.endswith("vitalcitynyc.org")), "")
+            out.append({"name": name, "email": email})
+    return out
+
+
 def main():
     # ---- index helpers ----
     people = []                 # list of person dicts
@@ -301,6 +356,21 @@ def main():
         p["auth"] = 1
         p["arts"] = a.get("post_count", 0)
         p["types"] = sorted(set(p["types"]) | {"VC contributor"})   # anyone who wrote for us is a contributor
+        p["topics"] = sorted(set(p["topics"]) | author_specs.get(nn, set()))
+        if "author" not in p["src"]: p["src"].append("author")
+        index(p)
+
+    # ---- 3b. Authoritative contributor roster (real emails) ----
+    roster = load_author_file()
+    for a in roster:
+        nn = norm(a["name"])
+        if not nn or nn in NONPERSON:
+            continue
+        p = get_or_make(email=a["email"], name=nn, fl=firstlast(a["name"]))
+        set_name(p, a["name"], True)
+        set_email(p, a["email"])
+        p["types"] = sorted(set(p["types"]) | {"VC contributor"})
+        p["auth"] = 1
         p["topics"] = sorted(set(p["topics"]) | author_specs.get(nn, set()))
         if "author" not in p["src"]: p["src"].append("author")
         index(p)
@@ -391,6 +461,11 @@ def main():
                     by_email[em]["n"] = fixed
                     by_email[em]["ns"] = "given"
                     overrides_applied += 1
+
+    # ---- consolidate exact-full-name duplicates (last) ----
+    before = len(people)
+    people = merge_people(people)
+    print(f"merged {before - len(people)} duplicate-name records", file=__import__("sys").stderr)
 
     # ---- stats ----
     members = sum(1 for p in people if p["mem"])
