@@ -71,8 +71,9 @@
   .stat .num{font-family:var(--vc-serif);font-weight:200;font-size:30px;line-height:1;font-synthesis:none}
   .stat .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);margin-top:6px;font-weight:700}
   .stat.clickable{cursor:pointer}
-  .stat.clickable:hover{background:var(--vc-white)}
-  .stat.clickable:hover .lbl{color:var(--vc-orange)}
+  .stat.clickable:not(.inc):not(.exc):not(.active):hover{background:var(--vc-white)}
+  .stat.clickable:not(.inc):not(.exc):not(.active):hover .lbl{color:var(--vc-orange)}
+  .stat.inc:hover,.stat.exc:hover,.stat.active:hover{filter:brightness(0.92)}
 
   .controls{position:sticky;top:0;z-index:20;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:12px 30px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
   .seg{display:inline-flex;border:1px solid var(--vc-black)}
