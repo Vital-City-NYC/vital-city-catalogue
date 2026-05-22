@@ -10,7 +10,7 @@ Passphrase to open the page: shared separately (stored locally in
 
 | List | Who maintains it | Where it lives |
 |---|---|---|
-| **Contacts** (names + categories: journalist, academic, funder, gov, judge, etc.) | The team, collaboratively | A shared **Google Sheet** |
+| **Contacts** (names + categories: journalist, academic, funder, gov, judge, etc.) | The team, collaboratively | **Google Sheet:** `vital-city-contacts-master` — https://docs.google.com/spreadsheets/d/1GXNFKKspPgXK_ubUB2XptrNQfXqmHeHocyN2c_6O6Q8/edit (owner jgreenman@vitalcitynyc.org) |
 | **Members / subscribers** | Comes from Ghost | Export from Ghost admin |
 | **Donors** | Comes from FCNY | Export from FCNY |
 
@@ -37,8 +37,10 @@ either works.)
 Editing the Sheet does **not** change the live page by itself — someone
 publishes when ready (a minute, start to finish):
 
-1. **Contacts:** in the Google Sheet → *File ▸ Download ▸ Comma-separated values*.
-   Save it as `private/contacts_source.csv` in this folder.
+1. **Contacts:** either ask Claude to pull the Google Sheet directly (via the
+   Drive connector → it writes `private/contacts_source.csv`), or in the Sheet
+   do *File ▸ Download ▸ Comma-separated values* and save it as
+   `private/contacts_source.csv`.
 2. **Members (if you have a fresh export):** save it as
    `private/members_source.csv`.
 3. **Donors (if you have a fresh export):** save it as
