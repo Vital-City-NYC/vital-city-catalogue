@@ -126,6 +126,37 @@ def firstlast(s):
     t = norm(s).split()
     return f"{t[0]} {t[-1]}" if len(t) >= 2 else (t[0] if t else "")
 
+# Common first-name nicknames -> formal form, so "Jeff Asher" the author matches
+# "Jeffrey Asher" the subscriber. Bidirectional via canonicalization.
+NICKNAMES = {
+    "jeff": "jeffrey", "geoff": "geoffrey", "ben": "benjamin", "benji": "benjamin",
+    "mike": "michael", "mick": "michael", "chris": "christopher", "dave": "david",
+    "dan": "daniel", "danny": "daniel", "tom": "thomas", "tommy": "thomas",
+    "rob": "robert", "bob": "robert", "bobby": "robert", "rich": "richard",
+    "rick": "richard", "dick": "richard", "jim": "james", "jimmy": "james",
+    "bill": "william", "will": "william", "billy": "william", "steve": "stephen",
+    "matt": "matthew", "nick": "nicholas", "tony": "anthony", "alex": "alexander",
+    "sam": "samuel", "greg": "gregory", "joe": "joseph", "ed": "edward",
+    "ted": "edward", "andy": "andrew", "drew": "andrew", "ken": "kenneth",
+    "ron": "ronald", "pat": "patrick", "cathy": "catherine", "kate": "katherine",
+    "katie": "katherine", "kathy": "katherine", "liz": "elizabeth", "beth": "elizabeth",
+    "betsy": "elizabeth", "sue": "susan", "jen": "jennifer", "jenny": "jennifer",
+    "becky": "rebecca", "meg": "margaret", "peggy": "margaret", "abby": "abigail",
+    "josh": "joshua", "zach": "zachary", "nate": "nathaniel", "gabe": "gabriel",
+    "fred": "frederick", "ray": "raymond", "vince": "vincent", "cy": "cyrus",
+}
+
+
+def first_compatible(a, b):
+    """Two first names plausibly the same person: equal, nickname-equivalent, or
+    one a prefix of the other (>=3 chars), e.g. jeff/jeffrey, ben/benjamin."""
+    if not a or not b:
+        return False
+    a, b = a.lower(), b.lower()
+    if a == b or NICKNAMES.get(a, a) == NICKNAMES.get(b, b):
+        return True
+    return len(a) >= 3 and len(b) >= 3 and (a.startswith(b) or b.startswith(a))
+
 def email_norm(e):
     return (e or "").strip().lower()
 
@@ -553,6 +584,45 @@ def main():
     before = len(people)
     people = merge_people(people)
     print(f"merged {before - len(people)} duplicate-name records", file=__import__("sys").stderr)
+
+    # ---- link known contributors/donors to a subscriber record filed under a
+    # name variant (e.g. "Jeff Asher" author == "Jeffrey Asher" subscriber, often
+    # a different email). Conservative: same last name + compatible first name,
+    # and only when EXACTLY ONE subscriber matches (ambiguous namesakes skipped).
+    members_by_last = {}
+    for m in people:
+        if m["mem"]:
+            parts = norm(m["n"]).split()
+            if len(parts) >= 2:
+                members_by_last.setdefault(parts[-1], []).append(m)
+    linked = 0
+    for p in people:
+        if p["mem"] or not (p["auth"] or p["don"]):
+            continue
+        parts = norm(p["n"]).split()
+        if len(parts) < 2:
+            continue
+        cands = [m for m in members_by_last.get(parts[-1], [])
+                 if m is not p and not m.get("_merged_away")
+                 and first_compatible(parts[0], norm(m["n"]).split()[0])]
+        if len(cands) != 1:
+            continue
+        m = cands[0]
+        p["mem"] = 1
+        if "member" not in p["src"]:
+            p["src"].append("member")
+        p["unsub"] = p["unsub"] or m["unsub"]
+        if m["since"] and (not p["since"] or m["since"] < p["since"]):
+            p["since"] = m["since"]
+        for e in m["emails"]:
+            if e not in p["emails"]:
+                p["emails"].append(e)
+        p["e"] = primary_email(p["emails"])
+        m["_merged_away"] = True
+        linked += 1
+    people = [p for p in people if not p.get("_merged_away")]
+    print(f"linked {linked} contributor/donor records to a name-variant subscriber", file=__import__("sys").stderr)
+
     for p in people:                 # unsubscribed wins: a former contact is not a current subscriber
         if p["unsub"]:
             p["mem"] = 0
