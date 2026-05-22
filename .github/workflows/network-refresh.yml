@@ -1,0 +1,67 @@
+name: network-refresh
+
+# Daily cloud refresh of the Contact Master Search.
+# Runs on GitHub's servers, so it works whether or not Josh's laptop is on.
+# Pulls current Ghost members + re-scrapes the article catalogue (live), rebuilds
+# the fused people dataset from the encrypted source bundle, re-encrypts, and pushes
+# (which auto-deploys GitHub Pages). Ghost only — no Mailchimp.
+
+on:
+  schedule:
+    - cron: "0 11 * * *"   # 11:00 UTC daily = 7am ET (EDT) / 6am ET (EST)
+  workflow_dispatch:        # allow manual "Run workflow" from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: network-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet cryptography openpyxl
+
+      - name: Restore secrets + decrypt source bundle
+        env:
+          GHOST_ADMIN_KEY: ${{ secrets.GHOST_ADMIN_KEY }}
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: |
+          mkdir -p private
+          printf '%s' "$GHOST_ADMIN_KEY" > private/.ghost_admin_key
+          python3 bundle_sources.py unpack
+
+      - name: Pull current Ghost members (live)
+        run: python3 ghost_members.py --apply
+
+      - name: Refresh article catalogue (live)
+        run: python3 scrape.py
+
+      - name: Rebuild fused people dataset
+        run: python3 build_network.py
+
+      - name: Encrypt for publishing
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: python3 encrypt_people.py
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name "Vital City Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data network/data.enc
+          if git diff --cached --quiet; then
+            echo "no changes to publish"
+          else
+            git commit -m "Daily Ghost refresh $(date -u '+%Y-%m-%d')"
+            git push
+          fi
