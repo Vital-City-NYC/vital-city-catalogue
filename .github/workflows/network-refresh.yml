@@ -64,6 +64,17 @@ jobs:
             echo "MAILCHIMP_KEY not set — using bundled unsubscribed_source.csv"
           fi
 
+      - name: Pull Donorbox donors (live)
+        env:
+          DONORBOX_KEY: ${{ secrets.DONORBOX_KEY }}
+          DONORBOX_EMAIL: info@vitalcitynyc.org
+        run: |
+          if [ -n "$DONORBOX_KEY" ]; then
+            python3 donorbox_donors.py || echo "WARNING: Donorbox pull failed; using bundled donors_source.csv"
+          else
+            echo "DONORBOX_KEY not set — using bundled donors_source.csv"
+          fi
+
       - name: Pull current Ghost members (live)
         run: python3 ghost_members.py --apply
 

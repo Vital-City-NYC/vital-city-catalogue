@@ -218,10 +218,8 @@
     <button class="btn primary" id="clear" title="Reset every filter and return to the full list">Reset all</button>
   </div>
   <div class="donornote" id="donorNote" style="display:none">
-    <b>Donor data is a manual snapshot from Donorbox — it is not live.</b>
-    To refresh: in Donorbox export the full donations CSV, then replace
-    <code>private/donors_source.csv</code> with it and republish (or hand the CSV to
-    Claude Code and ask it to refresh the donor list). New gifts won't appear until then.
+    <b>Donor data syncs automatically from Donorbox every day.</b>
+    New gifts, lifetime totals, gift counts and last-gift dates refresh on their own — nothing manual to do. (Today's gifts appear on tomorrow's refresh.)
   </div>
   <div class="savedviews" id="savedViews"></div>
   <div class="hint">Click <b>✎</b> on any row to change a person's details or delete the entry; <b>✓</b> confirms a <span class="g">gray</span> guessed name. Press <kbd>?</kbd> for shortcuts. <a href="#" id="exportFixes" class="hintlink">Export edits →</a></div>
