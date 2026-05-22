@@ -51,6 +51,12 @@
   .addflags{display:flex;flex-direction:column;gap:5px;margin-top:5px}
   .addflags .fl{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--vc-black);margin:0}
   .addflags .fl input{display:inline-block;width:auto;margin:0;padding:0}
+  .updnote{margin-top:16px;padding:11px 13px;border:1px solid var(--vc-cloud);background:var(--vc-paper);font-size:12.5px;line-height:1.5;font-weight:300;text-transform:none;letter-spacing:0;color:var(--vc-black)}
+  .updnote ul{margin:6px 0;padding-left:18px}
+  .updnote li{font-size:12.5px;margin:2px 0}
+  .updnote a{display:inline-block;margin-top:4px;color:var(--vc-cerulean);font-weight:700;text-decoration:none}
+  .updnote a:hover{text-decoration:underline}
+  .updcaution{margin-top:8px;color:var(--vc-charcoal)}
   .modalbtns{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
   .modalbtns .lbl-note{font-size:11px;flex:1 1 100%}
   .stat .num.unsubnum{color:#c8102e}
@@ -247,6 +253,16 @@
           <label class="fl"><input type="checkbox" id="edDon"> Donor</label>
         </div>
         <label id="edDamtWrap" style="display:none">Donation total ($)<input id="edDamt" type="number" min="0" step="1"></label>
+      </div>
+      <div id="edUpdateNote" class="updnote" style="display:none">
+        <b>How this list stays current</b>
+        <ul>
+          <li><b>Automatic, daily:</b> newsletter subscribers (from Ghost) and authors (from newly published pieces) refresh on their own.</li>
+          <li><b>Manual:</b> donors (a Donorbox export) and any whole new list — hand the CSV to Claude Code to fold in.</li>
+          <li><b>Edits &amp; manual adds here</b> save automatically to the shared store; they show for you now and for everyone on the next daily refresh.</li>
+        </ul>
+        <a id="edSheetLink" href="#" target="_blank" rel="noopener">View the shared edit store (Google Sheet) ↗</a>
+        <div class="updcaution">Make changes <b>through this tool</b> — it writes the correct format. Editing the Sheet's JSON by hand is fragile (deleting a row to undo a change is fine).</div>
       </div>
       <div class="modalbtns">
         <button class="btn primary" id="edSave">Save</button>
@@ -479,6 +495,8 @@ const OVKEY="vc_overrides";
 // pushed here (in addition to this device) so they persist for everyone via the
 // daily refresh. Empty = device-only (export-and-publish fallback still works).
 const BACKEND_URL="https://script.google.com/macros/s/AKfycbw-lsFo3rHWZX3BnL0mEOo1kgRGqcsznH8WC3e5bcEu95zuwMG7NSCYpazP2Z4z7w3hPQ/exec";
+// Edit URL of the Google Sheet that backs the shared edit store (for the "view it" link).
+const SHEET_URL="";
 function loadOverrides(){ try{return JSON.parse(localStorage.getItem(OVKEY)||"{}");}catch(e){return {};} }
 // Fire-and-forget save to the shared store. Auth = the passphrase the viewer
 // entered (held on this device after unlock), never shipped in the page source.
@@ -531,7 +549,7 @@ function openEdit(key){
   $("#edName").value=p.n||""; $("#edInst").value=p.inst||"";
   $("#edEmails").value=(p.emails||[]).join("\n");
   $("#edTypes").value=(p.types||[]).join(", "); $("#edTopics").value=(p.topics||[]).join(", ");
-  $("#edAddFlags").style.display="none"; $("#edDelete").style.display="";
+  $("#edAddFlags").style.display="none"; $("#edUpdateNote").style.display="none"; $("#edDelete").style.display="";
   $("#editModal").style.display="flex"; $("#edName").focus();
 }
 function openAdd(){
@@ -540,7 +558,8 @@ function openAdd(){
   $("#edName").value=""; $("#edInst").value=""; $("#edEmails").value=""; $("#edTypes").value=""; $("#edTopics").value="";
   $("#edMem").checked=false; $("#edAuth").checked=false; $("#edDon").checked=false; $("#edDamt").value="";
   $("#edDamtWrap").style.display="none";
-  $("#edAddFlags").style.display="block"; $("#edDelete").style.display="none";
+  if(SHEET_URL){ $("#edSheetLink").href=SHEET_URL; $("#edSheetLink").style.display=""; } else { $("#edSheetLink").style.display="none"; }
+  $("#edAddFlags").style.display="block"; $("#edUpdateNote").style.display="block"; $("#edDelete").style.display="none";
   $("#editModal").style.display="flex"; $("#edName").focus();
 }
 function readFields(){
