@@ -41,6 +41,12 @@
   .stats{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid var(--vc-black);background:var(--vc-paper)}
   .stat.active{background:var(--vc-black)}
   .stat.active .num,.stat.active .lbl{color:#fff}
+  .stat.inc{background:var(--vc-green)}
+  .stat.inc .num,.stat.inc .lbl{color:#fff}
+  .stat.exc{background:var(--vc-magenta)}
+  .stat.exc .num,.stat.exc .lbl{color:#fff}
+  .tilestate{font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-top:4px;min-height:11px;color:#fff}
+  .stat:not(.inc):not(.exc):not(.active) .tilestate{color:var(--vc-charcoal)}
   .nm.unsub,.em.unsub{color:#c8102e}
   .modal{position:fixed;inset:0;background:rgba(5,5,7,.5);display:flex;align-items:center;justify-content:center;z-index:200}
   .modalbox{background:#fff;border:1px solid var(--vc-black);padding:24px;width:440px;max-width:92vw;max-height:90vh;overflow:auto}
@@ -78,13 +84,15 @@
   .controls label.chk{font-size:12px;display:inline-flex;align-items:center;gap:6px;color:var(--vc-charcoal);cursor:pointer;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
   .toggles{display:inline-flex;flex-wrap:wrap;gap:8px}
   .tg{font:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:8px 13px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-charcoal);cursor:pointer}
-  .tg.on{color:#fff}
-  #tSub.on{background:var(--vc-green);border-color:var(--vc-green);color:#fff}
-  #tDon.on{background:var(--vc-orange);border-color:var(--vc-orange);color:var(--vc-black)}
-  #tAuth.on{background:var(--vc-magenta);border-color:var(--vc-magenta);color:#fff}
+  .tg.on{background:var(--vc-green);border-color:var(--vc-green);color:#fff}
   #tOther.on{background:var(--vc-black);border-color:var(--vc-black);color:#fff}
-  .tg.excl{background:#fdecef;border-color:var(--vc-magenta);color:var(--vc-magenta)}
+  .tg.excl{background:var(--vc-magenta);border-color:var(--vc-magenta);color:#fff}
   .toghint{font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .toglegend{font-size:11.5px;color:var(--vc-charcoal);display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .toglegend .lg{font-weight:700;padding:1px 7px;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+  .toglegend .lg-inc{background:var(--vc-green);color:#fff}
+  .toglegend .lg-exc{background:var(--vc-magenta);color:#fff}
+  .toglegend .lg-off{border:1px solid var(--vc-charcoal);color:var(--vc-charcoal)}
   .donornote{margin:0 30px 0;padding:10px 14px;border:1px solid var(--vc-orange);background:#fff7f3;font-size:12px;line-height:1.5;color:var(--vc-black)}
   .donornote b{font-weight:700}
   .infodot{display:inline-block;margin-left:6px;width:14px;height:14px;line-height:14px;text-align:center;border:1px solid var(--vc-charcoal);border-radius:50%;font-size:10px;font-weight:700;color:var(--vc-charcoal);cursor:help}
@@ -194,7 +202,7 @@
       <button class="tg" id="tAuth" title="Click once to include, again to exclude (Not authors), again for off. Vital City contributors.">Authors</button>
       <button class="tg" id="tOther" title="None of subscriber, donor or author">Other</button>
     </div>
-    <span class="toghint">click again to exclude · combine for overlaps</span>
+    <span class="toglegend">Click a category to cycle it: <span class="lg lg-inc">✓ include</span> → <span class="lg lg-exc">✕ exclude</span> → <span class="lg lg-off">off</span>. Turn on two or more to see the overlap.</span>
     <label class="chk" id="repeatDonorWrap" style="display:none"><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
     <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off">
     <label class="chk"><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
@@ -397,7 +405,7 @@ function buildStats(){
     [other.toLocaleString(),"other","other","None of subscriber, donor or author",""],
     [unsub.toLocaleString(),"unsubscribed","unsub","Former contacts who left the list"," unsubnum"],
   ];
-  $("#stats").innerHTML=S.map(([n,l,a,t,cls])=>`<div class="stat clickable" data-action="${a}" data-stat="${a}" title="${t}"><div class="num${cls}">${n}</div><div class="lbl">${l}</div></div>`).join("");
+  $("#stats").innerHTML=S.map(([n,l,a,t,cls])=>`<div class="stat clickable" data-action="${a}" data-stat="${a}" title="${t}"><div class="num${cls}">${n}</div><div class="lbl">${l}</div><div class="tilestate"></div></div>`).join("");
 }
 function init(){
   buildStats();
@@ -465,14 +473,29 @@ function toggleCat(c,on){
 }
 function syncToggles(){
   const other=isOther();
-  const LAB={tSub:["Subscribers","Not subscribers"],tDon:["Donors","Not donors"],tAuth:["Authors","Not authors"]};
+  // chip labels spell out the state: include (✓), off (plain), exclude (✕ Not …)
+  const LAB={tSub:["Subscribers","✓ Subscribers","✕ Not subscribers"],
+             tDon:["Donors","✓ Donors","✕ Not donors"],
+             tAuth:["Authors","✓ Authors","✕ Not authors"]};
   const set=(id,v)=>{const e=$(id);const on=!other&&v===1,ex=!other&&v===-1;
     e.classList.toggle("on",on);e.classList.toggle("excl",ex);
-    e.textContent=LAB[id.slice(1)][ex?1:0];};
+    e.textContent=other?LAB[id.slice(1)][0]:LAB[id.slice(1)][v===1?1:v===-1?2:0];};
   set("#tSub",want.mem); set("#tDon",want.don); set("#tAuth",want.auth);
   $("#tOther").classList.toggle("on",other);
-  const map={subs:want.mem===1,donors:want.don===1,authors:want.auth===1,other:other};
-  document.querySelectorAll(".stat[data-stat]").forEach(s=>s.classList.toggle("active",!!map[s.dataset.stat]));
+  // KPI tiles mirror the same state: green = included, magenta = excluded, with a word.
+  const st={subs:want.mem,donors:want.don,authors:want.auth};
+  document.querySelectorAll(".stat[data-stat]").forEach(s=>{
+    const k=s.dataset.stat, ts=s.querySelector(".tilestate");
+    if((k in st) && !other){
+      const v=st[k];
+      s.classList.toggle("inc",v===1); s.classList.toggle("exc",v===-1); s.classList.remove("active");
+      if(ts) ts.textContent = v===1?"✓ included" : v===-1?"✕ excluded" : "";
+    } else {
+      s.classList.remove("inc","exc");
+      s.classList.toggle("active", k==="other"?other : k==="unsub"?onlyUnsub : false);
+      if(ts) ts.textContent = (k==="other"&&other)?"✓ showing" : (k==="unsub"&&onlyUnsub)?"✓ showing" : "";
+    }
+  });
   // Repeat-donor sub-filter + Donorbox note are only meaningful while viewing donors.
   const showDon=want.don===1;
   $("#repeatDonorWrap").style.display=showDon?"inline-flex":"none";
@@ -509,12 +532,15 @@ function clearAll(){
 
 function statAction(a){
   if(a==="all"){ clearAll(); return; }
-  if(a==="unsub"){ clearAll(); onlyUnsub=true; $("#fUnsub").checked=true; sortKey="last"; sortDir=1; render(); return; }
-  if(a==="subs") toggleWant("mem");
-  else if(a==="donors") toggleWant("don");
-  else if(a==="authors") toggleWant("auth");
+  if(a==="unsub"){
+    if(onlyUnsub){ clearAll(); return; }   // click again to turn off
+    clearAll(); onlyUnsub=true; $("#fUnsub").checked=true; sortKey="last"; sortDir=1; syncToggles(); render(); return;
+  }
+  // KPI tiles cycle the same way as the chips: include → exclude → off.
+  if(a==="subs") cycleWant("mem");
+  else if(a==="donors") cycleWant("don");
+  else if(a==="authors") cycleWant("auth");
   else if(a==="other") toggleOther();
-  const c=document.querySelector(".controls"); if(c) window.scrollTo({top:0,behavior:"smooth"});
 }
 function buildMatrix(){
   const rows=CATS.map(c=>{
