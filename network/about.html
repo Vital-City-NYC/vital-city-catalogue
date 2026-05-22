@@ -80,7 +80,7 @@
   </ul>
 
   <h2>Unsubscribed (former contacts)</h2>
-  <p>People who left the newsletter are kept <b>separate</b> and <b style="color:#c8102e">shown in red</b>. They're <b>hidden by default</b> — tick <b>Include unsubscribed</b> to mix them in, or click the red <b>unsubscribed</b> banner number to see only them. The other banner counts reflect <i>current</i> contacts only.</p>
+  <p>People who left the newsletter are kept <b>separate</b> and <b style="color:#c8102e">shown in red</b>. They're <b>hidden by default</b> — tick <b>Include unsubscribed</b> to mix them in, or click the red <b>unsubscribed</b> banner number to see only them. The other banner counts reflect <i>current</i> contacts only. This list <b>syncs automatically from Mailchimp each day</b>, so when someone unsubscribes there they drop off the subscriber list on the next refresh.</p>
 
   <h2>Getting lists out</h2>
   <ul>
@@ -98,6 +98,7 @@
   <table>
     <tr><th>Data</th><th>Updates</th><th>How</th></tr>
     <tr><td><b>Newsletter subscribers</b></td><td><b>Automatic, daily</b></td><td>Pulled live from Ghost each morning. New sign-ups appear on the next day's refresh.</td></tr>
+    <tr><td><b>Unsubscribes</b></td><td><b>Automatic, daily</b></td><td>Pulled live from Mailchimp. Anyone who unsubscribes there is flagged and removed from the subscriber list automatically. (Mailchimp is used <i>only</i> for the unsubscribe signal — Ghost still owns who's subscribed.)</td></tr>
     <tr><td><b>Authors / contributors</b></td><td><b>Automatic, daily</b></td><td>The article catalogue is re-scraped; new bylines become <i>VC contributor</i> rows automatically.</td></tr>
     <tr><td><b>Inferred types &amp; specialties</b></td><td><b>Automatic</b></td><td>Recomputed every refresh (journalist from news domains, current nyc.gov from city emails, domains from what people wrote).</td></tr>
     <tr><td><b>Your edits / confirms / deletes</b></td><td><b>Automatic</b></td><td>Saved to the shared store as you make them; folded in on the next daily refresh.</td></tr>

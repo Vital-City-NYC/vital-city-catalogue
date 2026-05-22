@@ -54,6 +54,16 @@ jobs:
             echo "OVERRIDES_URL not set yet — skipping shared-edit pull"
           fi
 
+      - name: Pull Mailchimp unsubscribes (live)
+        env:
+          MAILCHIMP_KEY: ${{ secrets.MAILCHIMP_KEY }}
+        run: |
+          if [ -n "$MAILCHIMP_KEY" ]; then
+            python3 mailchimp_unsubs.py || echo "WARNING: Mailchimp pull failed; using bundled unsubscribed_source.csv"
+          else
+            echo "MAILCHIMP_KEY not set — using bundled unsubscribed_source.csv"
+          fi
+
       - name: Pull current Ghost members (live)
         run: python3 ghost_members.py --apply
 
