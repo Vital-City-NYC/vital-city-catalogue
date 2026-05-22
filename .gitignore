@@ -1,12 +1,17 @@
 .DS_Store
 __pycache__/
 
-# Local-only refresh tooling (contains personal contact details for iMessage alerts)
+# Local-only refresh tooling (superseded by the cloud GitHub Actions job).
 refresh.sh
 com.vitalcity.catalogue-refresh.plist
+ghost_refresh.sh
+com.vitalcity.network-refresh.plist
 refresh.log
+ghost_refresh.log
 launchd.out.log
 launchd.err.log
+launchd.network.out.log
+launchd.network.err.log
 
 # Private contact CRM — never publish. Local-only cross-analysis layer.
 private/
