@@ -38,11 +38,7 @@
   .sub{color:var(--vc-charcoal);font-size:13px}
   .confbar{background:var(--vc-black);color:#fff;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;padding:6px 30px;font-weight:700}
 
-  .askbar{display:flex;align-items:center;gap:10px;padding:12px 30px;border-bottom:1px solid var(--vc-black);background:var(--vc-chartreuse,#dde44c)}
-  .askbar .asklabel{font-weight:900;text-transform:uppercase;letter-spacing:.1em;font-size:12px}
-  .askbar input{flex:1;font:inherit;font-size:15px;padding:9px 12px;border:1px solid var(--vc-black);border-radius:0;background:#fff}
-  .askbar .askans{font-weight:700;font-size:13px;white-space:nowrap}
-  .stats{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--vc-black);background:var(--vc-paper)}
+  .stats{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid var(--vc-black);background:var(--vc-paper)}
   .stat.active{background:var(--vc-black)}
   .stat.active .num,.stat.active .lbl{color:#fff}
   .nm.unsub,.em.unsub{color:#c8102e}
@@ -78,7 +74,12 @@
   #tDon.on{background:var(--vc-orange);border-color:var(--vc-orange);color:var(--vc-black)}
   #tAuth.on{background:var(--vc-magenta);border-color:var(--vc-magenta);color:#fff}
   #tOther.on{background:var(--vc-black);border-color:var(--vc-black);color:#fff}
+  .tg.excl{background:#fff;border-color:var(--vc-magenta);color:var(--vc-magenta)}
+  .tg.excl::before{content:"\2260 "}  /* ≠ : excluded */
   .toghint{font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .donornote{margin:0 30px 0;padding:10px 14px;border:1px solid var(--vc-orange);background:#fff7f3;font-size:12px;line-height:1.5;color:var(--vc-black)}
+  .donornote b{font-weight:700}
+  .infodot{display:inline-block;margin-left:6px;width:14px;height:14px;line-height:14px;text-align:center;border:1px solid var(--vc-charcoal);border-radius:50%;font-size:10px;font-weight:700;color:var(--vc-charcoal);cursor:help}
   .btn{font:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:8px 13px;border:1px solid var(--vc-black);background:var(--vc-white);cursor:pointer}
   .btn:hover{background:var(--vc-black);color:#fff}
   .btn.primary{background:var(--vc-black);color:#fff}
@@ -160,32 +161,33 @@
     <div class="sub">Everyone in Vital City's orbit — newsletter subscribers, contributors, contacts and donors — searchable by type and category. Filter to any subset, then export it, copy its emails, or email the group.</div>
   </header>
   <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute<a href="#" id="forget" style="float:right;color:#fff;text-decoration:underline">Lock / forget password on this device</a></div>
-  <div class="askbar">
-    <span class="asklabel">Ask</span>
-    <input id="ask" type="search" autocomplete="off" placeholder="e.g. authors who are also donors · donors in criminal justice · how many subscribers are journalists">
-    <span class="askans" id="askAnswer"></span>
-  </div>
   <div class="stats" id="stats"></div>
   <div class="controls">
     <span class="toghint">Show:</span>
     <div class="toggles">
-      <button class="tg" id="tSub" title="Newsletter subscribers">Subscribers</button>
-      <button class="tg" id="tDon" title="People who have given">Donors</button>
-      <button class="tg" id="tAuth" title="Vital City contributors">Authors</button>
+      <button class="tg" id="tSub" title="Click: include → exclude (≠) → off. Newsletter subscribers.">Subscribers</button>
+      <button class="tg" id="tDon" title="Click: include → exclude (≠) → off. People who have given.">Donors</button>
+      <button class="tg" id="tAuth" title="Click: include → exclude (≠) → off. Vital City contributors.">Authors</button>
       <button class="tg" id="tOther" title="None of subscriber, donor or author">Other</button>
     </div>
-    <span class="toghint">turn on 2+ for the overlap</span>
+    <span class="toghint">click again to exclude (≠) · combine for overlaps</span>
     <label class="chk" id="repeatDonorWrap" style="display:none"><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
     <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off">
     <label class="chk"><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
-    <button class="btn" id="clear">Clear filters</button>
+    <button class="btn primary" id="clear" title="Reset every filter and return to the full list">Reset all</button>
   </div>
-  <div class="hint">Click <b>✎</b> on any row to edit a person's fields; <span class="g">gray italic</span> names are email guesses (<b>✓</b> confirms one). <a href="#" id="exportFixes" class="hintlink">Export edits →</a></div>
+  <div class="donornote" id="donorNote" style="display:none">
+    <b>Donor data is a manual snapshot from Donorbox — it is not live.</b>
+    To refresh: in Donorbox export the full donations CSV, then replace
+    <code>private/donors_source.csv</code> with it and republish (or hand the CSV to
+    Claude Code and ask it to refresh the donor list). New gifts won't appear until then.
+  </div>
+  <div class="hint">Click <b>✎</b> to edit, <b>✓</b> to confirm a <span class="g">gray</span> guessed name, <b>🗑</b> to delete an entry. Edits are saved <b>on this device only</b> until you <a href="#" id="exportFixes" class="hintlink">Export edits →</a> and publish them (then they stick for everyone, permanently).
   <div class="layout">
     <aside>
-      <h2>Filter by type</h2>
+      <h2>Filter by type<span class="infodot" title="Types are pieced together from our contact CRM plus automatic inference: 'VC contributor' from a published byline, 'journalist' from a news-outlet email domain, 'current nyc.gov' from an active city email, and others from the CRM. They are approximate and may be incomplete or out of date — edit any row to correct it.">i</span></h2>
       <div id="typeFacets"></div>
-      <h2 style="margin-top:18px">Area of specialty</h2>
+      <h2 style="margin-top:18px">Area of specialty<span class="infodot" title="Areas of specialty are extrapolated from the topics a person has written about for Vital City (and CRM notes where available). They are inferred, so they're approximate and won't be exhaustive — edit any row to adjust.">i</span></h2>
       <div id="specFacets"></div>
       <h2 style="margin-top:18px">Subscribed between</h2>
       <div class="daterow"><input type="date" id="dFrom" title="Subscribed on or after"><span>to</span><input type="date" id="dTo" title="Subscribed on or before"></div>
@@ -315,23 +317,20 @@ function init(){
   const other=cur.filter(p=>!p.mem&&!p.don&&!p.auth).length;   // none of the three
   const donors=cur.filter(p=>p.don).length;
   const unsub=PEOPLE.length-cur.length;
-  const raised=PEOPLE.reduce((s,p)=>s+(p.damt||0),0);
-  const raisedStr=raised>=1000?"$"+Math.round(raised/1000)+"K":"$"+Math.round(raised);
   const S=[
-    [cur.length.toLocaleString(),"people","all","Current contacts — clear all filters",""],
+    [cur.length.toLocaleString(),"people","all","Current contacts — reset all filters",""],
     [memTotal.toLocaleString(),"subscribers","subs","Newsletter subscribers — toggle the Subscribers filter",""],
     [donors.toLocaleString(),"donors","donors","Donors — toggle the Donors filter",""],
     [auth.toLocaleString(),"authors","authors","Vital City contributors — toggle the Authors filter",""],
     [other.toLocaleString(),"other","other","None of subscriber, donor or author",""],
-    [raisedStr,"raised","raised","Total raised — donors by amount",""],
     [unsub.toLocaleString(),"unsubscribed","unsub","Former contacts who left the list"," unsubnum"],
   ];
   $("#stats").innerHTML=S.map(([n,l,a,t,cls])=>`<div class="stat clickable" data-action="${a}" data-stat="${a}" title="${t}"><div class="num${cls}">${n}</div><div class="lbl">${l}</div></div>`).join("");
   buildFacets();
   buildMatrix();
-  $("#tSub").addEventListener("click",()=>toggleWant("mem"));
-  $("#tDon").addEventListener("click",()=>toggleWant("don"));
-  $("#tAuth").addEventListener("click",()=>toggleWant("auth"));
+  $("#tSub").addEventListener("click",()=>cycleWant("mem"));
+  $("#tDon").addEventListener("click",()=>cycleWant("don"));
+  $("#tAuth").addEventListener("click",()=>cycleWant("auth"));
   $("#tOther").addEventListener("click",toggleOther);
   ["#q","#dFrom","#dTo"].forEach(s=>$(s).addEventListener("input",render));
   $("#fRepeatDonor").addEventListener("change",render);
@@ -343,8 +342,6 @@ function init(){
   $("#clear").addEventListener("click",clearAll);
   $("#stats").addEventListener("click",e=>{const s=e.target.closest(".stat[data-action]");if(s)statAction(s.dataset.action);});
   $("#forget").addEventListener("click",e=>{e.preventDefault();localStorage.removeItem(PASSKEY);location.reload();});
-  $("#ask").addEventListener("keydown",e=>{if(e.key==="Enter")runAsk();});
-  $("#ask").addEventListener("search",runAsk);
   $("#edSave").addEventListener("click",saveEdit);
   $("#edCancel").addEventListener("click",closeEdit);
   $("#edDelete").addEventListener("click",()=>{ if(editKey) deleteEntry(editKey); });
@@ -376,22 +373,31 @@ function toggleCat(c,on){
   render();
 }
 function syncToggles(){
-  $("#tSub").classList.toggle("on",want.mem===1);
-  $("#tDon").classList.toggle("on",want.don===1);
-  $("#tAuth").classList.toggle("on",want.auth===1);
-  $("#tOther").classList.toggle("on",isOther());
-  const map={subs:want.mem===1,donors:want.don===1,authors:want.auth===1,other:isOther()};
+  const other=isOther();
+  const set=(id,v)=>{const e=$(id);e.classList.toggle("on",!other&&v===1);e.classList.toggle("excl",!other&&v===-1);};
+  set("#tSub",want.mem); set("#tDon",want.don); set("#tAuth",want.auth);
+  $("#tOther").classList.toggle("on",other);
+  const map={subs:want.mem===1,donors:want.don===1,authors:want.auth===1,other:other};
   document.querySelectorAll(".stat[data-stat]").forEach(s=>s.classList.toggle("active",!!map[s.dataset.stat]));
-  // Repeat-donor sub-filter is only meaningful while viewing donors.
-  const showRepeat=want.don===1;
-  $("#repeatDonorWrap").style.display=showRepeat?"inline-flex":"none";
-  if(!showRepeat) $("#fRepeatDonor").checked=false;
+  // Repeat-donor sub-filter + Donorbox note are only meaningful while viewing donors.
+  const showDon=want.don===1;
+  $("#repeatDonorWrap").style.display=showDon?"inline-flex":"none";
+  if(!showDon) $("#fRepeatDonor").checked=false;
+  const note=$("#donorNote"); if(note) note.style.display=showDon?"block":"none";
 }
+function setSort(k){ if(k==="mem"){sortKey="since";sortDir=-1;} else if(k==="don"){sortKey="damt";sortDir=-1;} else {sortKey="arts";sortDir=-1;} }
+// Chip: cycle off -> include -> exclude -> off (lets you ask e.g. donors who are NOT subscribers).
+function cycleWant(k){
+  if(isOther()) want={mem:0,don:0,auth:0};
+  want[k]= want[k]===0?1 : (want[k]===1?-1:0);
+  if(want[k]===1) setSort(k);
+  syncToggles(); render();
+}
+// Headline number: simple include on/off (keeps the click-numbers-to-combine behavior).
 function toggleWant(k){
-  if(isOther()) want={mem:0,don:0,auth:0};   // leaving "other" mode
-  const turningOn=want[k]!==1;
-  want[k]=turningOn?1:0;
-  if(turningOn){ if(k==="mem"){sortKey="since";sortDir=-1;} else if(k==="don"){sortKey="damt";sortDir=-1;} else {sortKey="arts";sortDir=-1;} }
+  if(isOther()) want={mem:0,don:0,auth:0};
+  want[k]= want[k]===1?0:1;
+  if(want[k]===1) setSort(k);
   syncToggles(); render();
 }
 function toggleOther(){
@@ -414,7 +420,6 @@ function statAction(a){
   else if(a==="donors") toggleWant("don");
   else if(a==="authors") toggleWant("auth");
   else if(a==="other") toggleOther();
-  else if(a==="raised"){ if(want.don!==1) toggleWant("don"); sortKey="damt"; sortDir=-1; syncToggles(); render(); }
   const c=document.querySelector(".controls"); if(c) window.scrollTo({top:0,behavior:"smooth"});
 }
 function buildMatrix(){
@@ -426,47 +431,6 @@ function buildMatrix(){
   }).join("");
   $("#matrix").innerHTML=rows;
   $("#matrix").addEventListener("click",e=>{const tr=e.target.closest("tr");if(!tr)return;toggleCat(tr.dataset.type,!selectedCats.has(tr.dataset.type));});
-}
-
-// ---- Natural-language query ----
-const TYPE_SYN={
-  "journalist":/journalis|reporter|\bpress\b|\bmedia\b/, "academic":/academ|professor|scholar|researcher/,
-  "judge":/\bjudge|judicial|jurist/, "architect":/architect/,
-  "foundation leadership":/foundation|funder|philanthrop|grantmak/,
-  "nonprofit leadership":/nonprofit|non-profit|\bngo\b/,
-  "city gov":/city gov|city hall|city government|municipal/,
-  "current nyc.gov":/nyc\.gov|current city|currently in city|current administration/,
-  "state gov":/state gov|state government|albany|assembly|state senate/,
-  "fed gov":/\bfed\b|federal|congress/, "VC advisor":/advisor|adviser/,
-};
-const SPEC_SYN={
-  "criminal justice":/criminal justice|\bcrime|policing|\bpolice|\bjail|incarcer|prison|gun violence/,
-  "housing":/housing|homeless|tenant|\brent\b/, "transit":/transit|transport|subway|\bmta\b/,
-  "budget":/budget|fiscal|comptroller/, "urban planning":/urban planning|city planning|\bplanning|land use|zoning/,
-  "education":/education|\bschool|students/, "public health":/public health|mental health|\bhealth\b|overdose/,
-  "economy":/\becono|inequality|\bjobs\b|\blabor/, "technology":/technolog|\btech\b/,
-  "politics & government":/politics|\belections?\b|\bmayor|\bcouncil\b/,
-  "race & equity":/\brace\b|racial|equity/, "culture":/\bculture|\bhistory|\barts\b/,
-};
-function syncUI(){
-  syncToggles();
-  document.querySelectorAll(".facet").forEach(l=>{const on=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on);const cb=l.querySelector("input");if(cb)cb.checked=on;});
-}
-function runAsk(){
-  const s=$("#ask").value.trim().toLowerCase();
-  if(!s){ $("#askAnswer").textContent=""; return; }
-  clearAll();
-  if(/subscrib|member|newsletter|email list/.test(s))
-    want.mem=/non[- ]?(member|subscrib)|not (a )?(subscrib|member)|haven'?t (subscrib|join)|aren'?t subscrib|unsubscrib/.test(s)?-1:1;
-  if(/donor|donat|\bgave\b|giving|\bgift/.test(s))
-    want.don=/non[- ]?donor|not (a )?donor|haven'?t donat|never donat|aren'?t donor|didn'?t donat/.test(s)?-1:1;
-  if(/author|contributor|wrote|writes|\bwrit|byline/.test(s))
-    want.auth=/non[- ]?(author|contributor)|not (an? )?(author|contributor)|haven'?t writ|don'?t write|didn'?t writ|never writ/.test(s)?-1:1;
-  for(const [c,rx] of Object.entries(TYPE_SYN)) if(rx.test(s)) selectedCats.add(c);
-  for(const [c,rx] of Object.entries(SPEC_SYN)) if(rx.test(s)) selectedCats.add(c);
-  syncUI(); render();
-  const n=filtered().length;
-  $("#askAnswer").textContent=`${n.toLocaleString()} ${n===1?"person":"people"}`;
 }
 
 function filtered(){
