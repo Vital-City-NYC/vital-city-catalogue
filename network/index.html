@@ -52,6 +52,15 @@
   .controls input[type=search],.controls select{font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--vc-black);background:#fff;border-radius:0}
   .controls input[type=search]{flex:1 1 220px;min-width:180px}
   .controls label.chk{font-size:12px;display:inline-flex;align-items:center;gap:6px;color:var(--vc-charcoal);cursor:pointer;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .btn{font:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:8px 13px;border:1px solid var(--vc-black);background:var(--vc-white);cursor:pointer}
+  .btn:hover{background:var(--vc-black);color:#fff}
+  .btn.primary{background:var(--vc-black);color:#fff}
+  .btn.primary:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:var(--vc-black)}
+  .facet{display:flex;align-items:center;gap:7px;font-size:12.5px;padding:3px 0;cursor:pointer}
+  .facet input{margin:0}
+  .facet .c{margin-left:auto;color:var(--vc-charcoal);font-variant-numeric:tabular-nums;font-size:11.5px}
+  .facet.on{font-weight:700}
+  .donornote{margin-top:14px;font-size:11px;color:var(--vc-charcoal);border:1px dashed var(--vc-cloud);padding:8px}
 
   .layout{display:grid;grid-template-columns:260px 1fr;gap:0}
   aside{border-right:1px solid var(--vc-cloud);padding:18px 22px 40px}
@@ -108,16 +117,25 @@
       <button data-seg="members">Members</button>
       <button data-seg="non">Non-members</button>
     </div>
-    <select id="fType"><option value="">All types</option></select>
-    <label class="chk"><input type="checkbox" id="fAuthor"> Authors only</label>
+    <select id="fAuthor">
+      <option value="any">Author: any</option>
+      <option value="yes">Authors only</option>
+      <option value="no">Non-authors</option>
+    </select>
     <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off">
+    <button class="btn primary" id="export">Export CSV</button>
+    <button class="btn" id="clear">Clear</button>
   </div>
   <div class="layout">
     <aside>
-      <h2>By type × membership</h2>
+      <h2>Filter by type</h2>
+      <div id="typeFacets"></div>
+      <h2 style="margin-top:18px">Area of specialty</h2>
+      <div id="specFacets"></div>
+      <h2 style="margin-top:18px">By type × membership</h2>
       <table class="matrix" id="matrix"></table>
-      <h2 style="margin-top:22px">Reading the bars</h2>
-      <div style="font-size:11.5px;color:var(--vc-charcoal)">Blue fill = share of that type who are members. Click a type to filter.</div>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">Blue fill = share of that type who are members.</div>
+      <div class="donornote"><b>Donor</b> filter is pending — the current data has no donor/payment info (all members are free subscribers). Share a donor list to enable it.</div>
     </aside>
     <div>
       <div class="resultbar" id="resultbar"></div>
@@ -141,7 +159,9 @@
 <script>
 const $=s=>document.querySelector(s);
 const CATS=["VC contributor","VC advisor","journalist","academic","foundation leadership","nonprofit leadership","city gov","state gov","fed gov","judge","architect"];
+const SPECS=["criminal justice","housing","transit"];
 let PEOPLE=[], seg="all", sortKey="n", sortDir=1;
+let selectedCats=new Set();   // chosen type/specialty categories (OR within)
 const CAP=600;
 
 function b64d(s){const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
@@ -179,13 +199,37 @@ function init(){
   const crm=PEOPLE.filter(p=>(p.src||[]).includes("crm")).length;
   const S=[[PEOPLE.length,"people"],[memTotal,"members"],[crm,"CRM contacts"],[typed,"typed"],[auth,"authors"],[authMem,"author-members"]];
   $("#stats").innerHTML=S.map(([n,l])=>`<div class="stat"><div class="num">${n.toLocaleString()}</div><div class="lbl">${l}</div></div>`).join("");
-  $("#fType").innerHTML+=CATS.map(c=>{const n=PEOPLE.filter(p=>(p.types||[]).includes(c)).length;return n?`<option value="${c}">${c} (${n})</option>`:"";}).join("");
+  buildFacets();
   buildMatrix();
   $("#segMem").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;seg=b.dataset.seg;[...$("#segMem").children].forEach(x=>x.classList.toggle("on",x===b));render();});
-  ["#fType","#q"].forEach(s=>$(s).addEventListener("input",render));
-  $("#fAuthor").addEventListener("change",render);
+  ["#fAuthor","#q"].forEach(s=>$(s).addEventListener("input",render));
+  $("#export").addEventListener("click",exportCSV);
+  $("#clear").addEventListener("click",clearAll);
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
-  $("#rows").addEventListener("click",e=>{const el=e.target.closest("[data-type]");if(!el)return;$("#fType").value=el.dataset.type;render();});
+  $("#rows").addEventListener("click",e=>{const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);});
+  render();
+}
+
+function catCount(c){return PEOPLE.filter(p=>(p.types||[]).includes(c)||(p.topics||[]).includes(c)).length;}
+function facetRow(c){
+  const id="f_"+c.replace(/[^a-z]/gi,"");
+  return `<label class="facet" data-cat="${c}"><input type="checkbox" id="${id}" value="${c}"><span>${c}</span><span class="c">${catCount(c).toLocaleString()}</span></label>`;
+}
+function buildFacets(){
+  $("#typeFacets").innerHTML=CATS.map(facetRow).join("");
+  $("#specFacets").innerHTML=SPECS.map(facetRow).join("");
+  document.querySelectorAll(".facet input").forEach(cb=>cb.addEventListener("change",()=>toggleCat(cb.value,cb.checked)));
+}
+function toggleCat(c,on){
+  if(on)selectedCats.add(c); else selectedCats.delete(c);
+  document.querySelectorAll(".facet").forEach(l=>{const on2=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on2);const cb=l.querySelector("input");if(cb)cb.checked=on2;});
+  render();
+}
+function clearAll(){
+  selectedCats.clear(); seg="all";
+  [...$("#segMem").children].forEach((x,i)=>x.classList.toggle("on",i===0));
+  $("#fAuthor").value="any"; $("#q").value="";
+  document.querySelectorAll(".facet").forEach(l=>{l.classList.remove("on");const cb=l.querySelector("input");if(cb)cb.checked=false;});
   render();
 }
 
@@ -197,19 +241,33 @@ function buildMatrix(){
     return `<tr data-type="${c}"><td>${c}<div class="bar"><i style="width:${pct}%"></i></div></td><td class="m">${m}/${grp.length}</td></tr>`;
   }).join("");
   $("#matrix").innerHTML=rows;
-  $("#matrix").addEventListener("click",e=>{const tr=e.target.closest("tr");if(!tr)return;$("#fType").value=tr.dataset.type;render();});
+  $("#matrix").addEventListener("click",e=>{const tr=e.target.closest("tr");if(!tr)return;toggleCat(tr.dataset.type,!selectedCats.has(tr.dataset.type));});
 }
 
 function filtered(){
-  const ft=$("#fType").value, q=$("#q").value.trim().toLowerCase(), ao=$("#fAuthor").checked;
+  const q=$("#q").value.trim().toLowerCase(), au=$("#fAuthor").value;
+  const cats=[...selectedCats];
   return PEOPLE.filter(p=>{
     if(seg==="members"&&!p.mem)return false;
     if(seg==="non"&&p.mem)return false;
-    if(ft&&!(p.types||[]).includes(ft))return false;
-    if(ao&&!p.auth)return false;
+    if(au==="yes"&&!p.auth)return false;
+    if(au==="no"&&p.auth)return false;
+    if(cats.length){const have=new Set([...(p.types||[]),...(p.topics||[])]);if(!cats.some(c=>have.has(c)))return false;}
     if(q){const hay=`${p.n} ${p.e} ${p.inst}`.toLowerCase();if(!hay.includes(q))return false;}
     return true;
   });
+}
+
+function csvCell(v){v=v==null?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function exportCSV(){
+  const rows=sortRows(filtered());
+  const cols=["name","email","institution","role","types","specialties","member","member_since","author","articles"];
+  const lines=[cols.join(",")];
+  rows.forEach(p=>lines.push([p.n,p.e,p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0].map(csvCell).join(",")));
+  const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=`vital-city-network-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);a.click();a.remove();
 }
 function sortRows(rows){
   return rows.sort((a,b)=>{
@@ -228,7 +286,7 @@ function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replac
 function render(){
   const all=sortRows(filtered());
   const shown=all.slice(0,CAP);
-  $("#resultbar").innerHTML=`Showing <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`+(all.length>CAP?` &nbsp;·&nbsp; refine search to see the rest`:"");
+  $("#resultbar").innerHTML=`Showing <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`+(all.length>CAP?` &nbsp;·&nbsp; refine filters to see all, or Export CSV for the full list`:"");
   $("#rows").innerHTML=shown.map(p=>`
     <tr>
       <td class="nm">${esc(p.n)||'<span class="muted">—</span>'}</td>
