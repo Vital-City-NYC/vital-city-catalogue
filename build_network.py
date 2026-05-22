@@ -632,10 +632,13 @@ def main():
         except Exception:
             ov = {}
         deleted_keys = 0
+        matched = set()
         for p in people:
-            o = ov.get(p["e"]) or ov.get("name:" + (p["n"] or "").lower())
-            if not o:
+            k = p["e"] if p["e"] in ov else ("name:" + (p["n"] or "").lower())
+            o = ov.get(k)
+            if not isinstance(o, dict):
                 continue
+            matched.add(k)
             if o.get("deleted"):
                 p["_deleted"] = True       # extraneous entry removed in the tool
                 deleted_keys += 1
@@ -655,11 +658,37 @@ def main():
         if deleted_keys:
             print(f"removed {deleted_keys} entries flagged deleted in people_overrides.json", file=__import__("sys").stderr)
 
+        # Manually-added people (add:true overrides that matched no existing record).
+        added = 0
+        for k, o in ov.items():
+            if k in matched or not isinstance(o, dict) or not o.get("add") or o.get("deleted"):
+                continue
+            emails = [email_norm(e) for e in (o.get("emails") or []) if email_norm(e)]
+            name = (o.get("n") or "").strip()
+            if not name and not emails:
+                continue
+            people.append({
+                "n": name, "ns": "given", "e": primary_email(emails), "emails": emails,
+                "inst": o.get("inst") or "", "role": "",
+                "types": list(o.get("types") or []), "topics": list(o.get("topics") or []),
+                "mem": 1 if o.get("mem") else 0, "since": "",
+                "auth": 1 if o.get("auth") else 0, "arts": 0,
+                "aname": name if o.get("auth") else "",
+                "don": 1 if o.get("don") else 0, "damt": float(o.get("damt") or 0),
+                "dcnt": 1 if o.get("don") else 0, "dlast": "", "unsub": 0,
+                "src": ["manual"], "added": True,
+            })
+            added += 1
+        if added:
+            print(f"added {added} manually-entered people from people_overrides.json", file=__import__("sys").stderr)
+
     # ---- drop people with no way to act on them ----
     # No email AND not a subscriber, author, donor or unsubscribed = just a name
     # in the contacts sheet (e.g. an official with no email). Not useful here.
-    dropped = [p for p in people if not (p["emails"] or p["mem"] or p["auth"] or p["don"] or p["unsub"])]
-    people = [p for p in people if p["emails"] or p["mem"] or p["auth"] or p["don"] or p["unsub"]]
+    def keep(p):
+        return bool(p["emails"] or p["mem"] or p["auth"] or p["don"] or p["unsub"] or p.get("added"))
+    dropped = [p for p in people if not keep(p)]
+    people = [p for p in people if keep(p)]
     print(f"dropped {len(dropped)} no-contact-info entries", file=__import__("sys").stderr)
 
     # ---- stats ----

@@ -108,8 +108,9 @@
   <h3>Refreshing donors (Donorbox)</h3>
   <p>Donor data is a manual snapshot, not live. To refresh it: in Donorbox, <b>export the full donations CSV</b>, then hand that file to Claude Code and ask it to refresh the donor list (it replaces <code>donors_source.csv</code> and republishes). New gifts won't show until that's done.</p>
 
-  <h3>Adding a batch of new entries (a whole CSV)</h3>
-  <p>The in-tool <b>Edit</b> is for tweaking or removing <i>existing</i> people one at a time. A <b>whole new list</b> of people is different — it's a source update, not an edit. Don't try to add them one-by-one in the tool. Instead, <b>hand the CSV to Claude Code</b> and say what it is (new contacts, a donor export, a partner list, etc.); it folds the file into the right source and the new people appear on the next refresh. So: small fix → use Edit here; a batch → bring the CSV to Claude.</p>
+  <h3>Adding people</h3>
+  <p><b>One new person</b> — a single new donor, author or contact — can be added right here: click <b>+ Add person</b> (top of the list), fill in their details, tick what they are (subscriber / author / donor, with a donation total if relevant), and Save. It persists like any other edit (shared store → next refresh), so use it sparingly for the occasional manual add.</p>
+  <p><b>A whole list</b> of new people (a CSV) is different — that's a source update, not a one-off. Don't add them one-by-one. <b>Hand the CSV to Claude Code</b> and say what it is (new contacts, a donor export, a partner list); it folds the file into the right source and they all appear on the next refresh.</p>
 
   <h3>The mirror spreadsheet</h3>
   <p>A consolidated spreadsheet that mirrors this tool — <a href="https://docs.google.com/spreadsheets/d/17v3wa1OMW5XXIcu0oN6tp4-NfOje7xPTVUv5Zb3XVVE/edit"><b>Vital City — Network (master)</b></a> — holds everyone with all fields for sorting/filtering in Sheets. (Editing that sheet doesn't feed back into the tool — use <b>Edit</b> here for that.)</p>

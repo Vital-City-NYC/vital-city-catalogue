@@ -48,6 +48,9 @@
   .modalbox label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);margin:12px 0 0}
   .modalbox input,.modalbox textarea{display:block;width:100%;font:inherit;font-size:14px;padding:8px 10px;margin-top:4px;border:1px solid var(--vc-black);border-radius:0;background:#fff;text-transform:none;letter-spacing:0;color:var(--vc-black);font-weight:300}
   .modalbox .lbl-note{font-weight:400;text-transform:none;letter-spacing:0;color:var(--vc-charcoal)}
+  .addflags{display:flex;flex-direction:column;gap:5px;margin-top:5px}
+  .addflags .fl{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--vc-black);margin:0}
+  .addflags .fl input{display:inline-block;width:auto;margin:0;padding:0}
   .modalbtns{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
   .modalbtns .lbl-note{font-size:11px;flex:1 1 100%}
   .stat .num.unsubnum{color:#c8102e}
@@ -198,6 +201,7 @@
       <div class="resultrow">
         <div class="resultbar" id="resultbar"></div>
         <div class="actions">
+          <button class="btn" id="addPerson" title="Manually add one new person">+ Add person</button>
           <button class="btn primary" id="export">Export CSV</button>
           <button class="btn" id="copyEmails">Copy emails</button>
           <select id="emailField" title="Which field to drop recipients into"><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
@@ -229,17 +233,26 @@
 
   <div id="editModal" class="modal" style="display:none">
     <div class="modalbox">
-      <h3>Edit person</h3>
+      <h3 id="edTitle">Edit person</h3>
       <label>Name<input id="edName" type="text"></label>
       <label>Institution<input id="edInst" type="text"></label>
       <label>Emails <span class="lbl-note">(one per line)</span><textarea id="edEmails" rows="3"></textarea></label>
       <label>Types <span class="lbl-note">(comma-separated)</span><input id="edTypes" type="text"></label>
       <label>Specialties <span class="lbl-note">(comma-separated)</span><input id="edTopics" type="text"></label>
+      <div id="edAddFlags" style="display:none">
+        <label>This person is <span class="lbl-note">(tick all that apply)</span></label>
+        <div class="addflags">
+          <label class="fl"><input type="checkbox" id="edMem"> Newsletter subscriber</label>
+          <label class="fl"><input type="checkbox" id="edAuth"> Author / VC contributor</label>
+          <label class="fl"><input type="checkbox" id="edDon"> Donor</label>
+        </div>
+        <label id="edDamtWrap" style="display:none">Donation total ($)<input id="edDamt" type="number" min="0" step="1"></label>
+      </div>
       <div class="modalbtns">
         <button class="btn primary" id="edSave">Save</button>
         <button class="btn" id="edCancel">Cancel</button>
         <button class="btn" id="edDelete" style="margin-left:auto;border-color:var(--vc-magenta);color:var(--vc-magenta)">Delete entry</button>
-        <span class="lbl-note">Saves on this device; use “Export edits” to make it permanent for everyone.</span>
+        <span class="lbl-note">Saved for everyone automatically — shows for you now, for everyone on the next daily refresh.</span>
       </div>
     </div>
   </div>
@@ -310,7 +323,7 @@ $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false);});
 // Auto-unlock if this device already entered the passphrase.
 (function(){ const s=localStorage.getItem(PASSKEY); if(s){ $("#pw").value=s; unlock(true); } })();
 
-function init(){
+function buildStats(){
   const cur=PEOPLE.filter(p=>!p.unsub);    // current (non-unsubscribed) universe
   const memTotal=cur.filter(p=>p.mem).length;
   const auth=cur.filter(p=>p.auth).length;
@@ -326,6 +339,9 @@ function init(){
     [unsub.toLocaleString(),"unsubscribed","unsub","Former contacts who left the list"," unsubnum"],
   ];
   $("#stats").innerHTML=S.map(([n,l,a,t,cls])=>`<div class="stat clickable" data-action="${a}" data-stat="${a}" title="${t}"><div class="num${cls}">${n}</div><div class="lbl">${l}</div></div>`).join("");
+}
+function init(){
+  buildStats();
   buildFacets();
   buildMatrix();
   $("#tSub").addEventListener("click",()=>cycleWant("mem"));
@@ -342,6 +358,8 @@ function init(){
   $("#clear").addEventListener("click",clearAll);
   $("#stats").addEventListener("click",e=>{const s=e.target.closest(".stat[data-action]");if(s)statAction(s.dataset.action);});
   $("#forget").addEventListener("click",e=>{e.preventDefault();localStorage.removeItem(PASSKEY);location.reload();});
+  $("#addPerson").addEventListener("click",openAdd);
+  $("#edDon").addEventListener("change",()=>{ $("#edDamtWrap").style.display=$("#edDon").checked?"block":"none"; });
   $("#edSave").addEventListener("click",saveEdit);
   $("#edCancel").addEventListener("click",closeEdit);
   $("#edDelete").addEventListener("click",()=>{ if(editKey) deleteEntry(editKey); });
@@ -480,10 +498,21 @@ function applyOverrideTo(p,o){
   if(o.types) p.types=o.types;
   if(o.topics) p.topics=o.topics;
 }
+// Build a full person record from a manual-add override (key not in the dataset).
+function makePerson(key,o){
+  const emails=(o.emails||[]).slice();
+  return {n:o.n||"", ns:"given", e:realPrimary(emails)||(key.indexOf("name:")===0?"":key),
+    emails:emails, inst:o.inst||"", role:"", types:(o.types||[]).slice(), topics:(o.topics||[]).slice(),
+    mem:o.mem?1:0, since:"", auth:o.auth?1:0, arts:0, aname:o.auth?(o.n||""):"",
+    don:o.don?1:0, damt:+o.damt||0, dcnt:o.don?1:0, dlast:"", unsub:0, src:["manual"], added:true};
+}
 function applyLocalFixes(){
   const ov=loadOverrides();
   PEOPLE.forEach(p=>{ const o=ov[personKey(p)]; if(o&&!o.deleted) applyOverrideTo(p,o); });
   PEOPLE=PEOPLE.filter(p=>{ const o=ov[personKey(p)]; return !(o&&o.deleted); });
+  // manually-added people aren't in the encrypted dataset until the next rebuild — recreate them here.
+  const have=new Set(PEOPLE.map(personKey));
+  Object.keys(ov).forEach(k=>{ const o=ov[k]; if(o&&o.add&&!o.deleted&&!have.has(k)) PEOPLE.push(makePerson(k,o)); });
 }
 function deleteEntry(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
@@ -494,28 +523,55 @@ function deleteEntry(key){
   PEOPLE=PEOPLE.filter(x=>x!==p);
   closeEdit(); render();
 }
-let editKey=null;
+let editKey=null, addMode=false;
 function openEdit(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
-  editKey=key;
+  editKey=key; addMode=false;
+  $("#edTitle").textContent="Edit person";
   $("#edName").value=p.n||""; $("#edInst").value=p.inst||"";
   $("#edEmails").value=(p.emails||[]).join("\n");
   $("#edTypes").value=(p.types||[]).join(", "); $("#edTopics").value=(p.topics||[]).join(", ");
+  $("#edAddFlags").style.display="none"; $("#edDelete").style.display="";
   $("#editModal").style.display="flex"; $("#edName").focus();
 }
-function saveEdit(){
-  const p=PEOPLE.find(x=>personKey(x)===editKey); if(!p){ closeEdit(); return; }
-  const o={
+function openAdd(){
+  editKey=null; addMode=true;
+  $("#edTitle").textContent="Add a person";
+  $("#edName").value=""; $("#edInst").value=""; $("#edEmails").value=""; $("#edTypes").value=""; $("#edTopics").value="";
+  $("#edMem").checked=false; $("#edAuth").checked=false; $("#edDon").checked=false; $("#edDamt").value="";
+  $("#edDamtWrap").style.display="none";
+  $("#edAddFlags").style.display="block"; $("#edDelete").style.display="none";
+  $("#editModal").style.display="flex"; $("#edName").focus();
+}
+function readFields(){
+  return {
     n:$("#edName").value.trim(), inst:$("#edInst").value.trim(),
     emails:$("#edEmails").value.split(/[\n,]/).map(s=>s.trim().toLowerCase()).filter(Boolean),
     types:$("#edTypes").value.split(",").map(s=>s.trim()).filter(Boolean),
     topics:$("#edTopics").value.split(",").map(s=>s.trim()).filter(Boolean),
   };
-  const ov=loadOverrides(); ov[editKey]=o; localStorage.setItem(OVKEY,JSON.stringify(ov));
-  pushOverride(editKey,o);
-  applyOverrideTo(p,o); closeEdit(); render();
 }
-function closeEdit(){ $("#editModal").style.display="none"; editKey=null; }
+function saveEdit(){
+  const f=readFields();
+  if(addMode){
+    if(!f.n && !f.emails.length){ alert("Add at least a name or an email."); return; }
+    const o=Object.assign({add:true}, f, {
+      mem:$("#edMem").checked?1:0, auth:$("#edAuth").checked?1:0,
+      don:$("#edDon").checked?1:0, damt:$("#edDon").checked?(+$("#edDamt").value||0):0 });
+    const key=f.emails[0]||("name:"+f.n.toLowerCase());
+    if(PEOPLE.some(x=>personKey(x)===key) && !confirm("Someone with that email/name is already in the list — add/overwrite anyway?")) return;
+    const ov=loadOverrides(); ov[key]=o; localStorage.setItem(OVKEY,JSON.stringify(ov));
+    pushOverride(key,o);
+    PEOPLE=PEOPLE.filter(x=>personKey(x)!==key); PEOPLE.push(makePerson(key,o));
+    closeEdit(); buildStats(); syncToggles(); render();
+    return;
+  }
+  const p=PEOPLE.find(x=>personKey(x)===editKey); if(!p){ closeEdit(); return; }
+  const ov=loadOverrides(); ov[editKey]=f; localStorage.setItem(OVKEY,JSON.stringify(ov));
+  pushOverride(editKey,f);
+  applyOverrideTo(p,f); closeEdit(); render();
+}
+function closeEdit(){ $("#editModal").style.display="none"; editKey=null; addMode=false; }
 function confirmName(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p||!p.n) return;
   const ov=loadOverrides(); ov[key]=Object.assign({}, ov[key], {n:p.n});
