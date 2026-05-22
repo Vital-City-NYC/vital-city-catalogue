@@ -66,6 +66,55 @@ MEDIA_DOMAINS = {
 }
 
 
+# Curated email-domain -> institution names (high confidence).
+INST_DOMAINS = {
+    "nytimes.com": "The New York Times", "wsj.com": "The Wall Street Journal",
+    "washingtonpost.com": "The Washington Post", "theatlantic.com": "The Atlantic",
+    "newyorker.com": "The New Yorker", "nymag.com": "New York Magazine",
+    "politico.com": "POLITICO", "vox.com": "Vox", "axios.com": "Axios",
+    "bloomberg.net": "Bloomberg", "bloomberg.org": "Bloomberg Philanthropies",
+    "reuters.com": "Reuters", "apnews.com": "Associated Press", "npr.org": "NPR",
+    "wnyc.org": "WNYC", "gothamist.com": "Gothamist", "thecity.nyc": "THE CITY",
+    "hellgatenyc.com": "Hell Gate", "nydailynews.com": "New York Daily News",
+    "nypost.com": "New York Post", "amny.com": "amNewYork", "cityandstateny.com": "City & State",
+    "citylimits.org": "City Limits", "documentedny.com": "Documented",
+    "themarshallproject.org": "The Marshall Project", "propublica.org": "ProPublica",
+    "chalkbeat.org": "Chalkbeat", "thenation.com": "The Nation", "crainsnewyork.com": "Crain's New York",
+    "ny1.com": "NY1", "cbsnews.com": "CBS News", "abc.com": "ABC News",
+    "allrise.org": "All Rise", "counciloncj.org": "Council on Criminal Justice",
+    "rand.org": "RAND Corporation", "manhattan-institute.org": "Manhattan Institute",
+    "vera.org": "Vera Institute of Justice", "urban.org": "Urban Institute",
+    "brookings.edu": "Brookings Institution", "cbcny.org": "Citizens Budget Commission",
+}
+WEBMAIL = {"gmail.com","googlemail.com","yahoo.com","ymail.com","hotmail.com","outlook.com",
+ "live.com","msn.com","aol.com","icloud.com","me.com","mac.com","proton.me","protonmail.com",
+ "pm.me","gmx.com","fastmail.com","comcast.net","verizon.net","att.net","sbcglobal.net",
+ "optimum.net","rcn.com","earthlink.net","mindspring.com","nyc.rr.com","mail.com","ms.com","aim.com"}
+
+
+def infer_institution(emails):
+    """Best-guess institution from an email domain. Curated map first, then
+    nyc.gov/.gov/.edu, then hyphenated org domains. Webmail → no guess."""
+    for e in emails:
+        dom = e.split("@")[-1].strip().lower()
+        if dom in INST_DOMAINS:
+            return INST_DOMAINS[dom]
+        if dom == "nyc.gov" or dom.endswith(".nyc.gov"):
+            return "New York City government"
+        if dom in WEBMAIL:
+            continue
+        if dom.endswith(".edu"):
+            root = dom[:-4].split(".")[-1]
+            return root.upper() if len(root) <= 4 else root.capitalize()
+        if dom.endswith(".gov"):
+            root = dom[:-4].split(".")[-1]
+            return root.upper() if len(root) <= 5 else root.capitalize()
+        sld = dom.split(".")[0]
+        if "-" in sld and len(sld) >= 5:                    # e.g. court-innovation -> Court Innovation
+            return " ".join(w.capitalize() for w in sld.split("-"))
+    return ""
+
+
 def norm(s):
     if not s: return ""
     s = unicodedata.normalize("NFKD", str(s)).encode("ascii", "ignore").decode().lower().strip()
@@ -144,16 +193,21 @@ def clean_name(name):
     return name.strip()
 
 
+def primary_email(emails):
+    """First real address; a made-up @vitalcitynyc.org one is last resort."""
+    reals = [e for e in emails if not e.endswith("vitalcitynyc.org")]
+    return reals[0] if reals else (emails[0] if emails else "")
+
+
 def set_email(p, email):
-    """Set a person's email, preferring a real address over a made-up
-    @vitalcitynyc.org one (Ghost assigns those to authors for organization)."""
+    """Add an email to the person's list (a person can have several) and keep
+    `e` as the primary, preferring a real address over a @vitalcitynyc.org one."""
     email = email_norm(email)
     if not email:
         return
-    if not p["e"]:
-        p["e"] = email
-    elif p["e"].endswith("vitalcitynyc.org") and not email.endswith("vitalcitynyc.org"):
-        p["e"] = email
+    if email not in p["emails"]:
+        p["emails"].append(email)
+    p["e"] = primary_email(p["emails"])
 
 
 def set_name(p, name, given):
@@ -232,8 +286,9 @@ def merge_people(people):
     seen, out = {}, []
     for p in people:
         nn = norm(p["n"])
-        if not nn or nn not in seen:
-            if nn:
+        multi = len(nn.split()) >= 2          # only merge real first+last names, never single tokens
+        if not nn or not multi or nn not in seen:
+            if nn and multi:
                 seen[nn] = p
             out.append(p)
             continue
@@ -245,8 +300,10 @@ def merge_people(people):
         q["types"] = sorted(set(q["types"]) | set(p["types"]))
         q["topics"] = sorted(set(q["topics"]) | set(p["topics"]))
         q["src"] = sorted(set(q["src"]) | set(p["src"]))
-        if p["e"] and (not q["e"] or (q["e"].endswith("vitalcitynyc.org") and not p["e"].endswith("vitalcitynyc.org"))):
-            q["e"] = p["e"]
+        for e in p["emails"]:
+            if e not in q["emails"]:
+                q["emails"].append(e)
+        q["e"] = primary_email(q["emails"])
         if p["inst"] and not q["inst"]: q["inst"] = p["inst"]
         if p["role"] and not q["role"]: q["role"] = p["role"]
         if p["since"] and (not q["since"] or p["since"] < q["since"]): q["since"] = p["since"]
@@ -268,14 +325,13 @@ def load_author_file():
             name = " ".join(p for p in parts if p).strip()
             if not name:
                 continue
-            cands = []
+            emails = []
             for col in ("E-mail 1 - Value", "E-mail 2 - Value", "E-mail 3 - Value"):
                 for e in re.split(r":::|,", r.get(col) or ""):
                     e = e.strip().lower()
-                    if "@" in e:
-                        cands.append(e)
-            email = next((e for e in cands if not e.endswith("vitalcitynyc.org")), "")
-            out.append({"name": name, "email": email})
+                    if "@" in e and not e.endswith("vitalcitynyc.org") and e not in emails:
+                        emails.append(e)
+            out.append({"name": name, "emails": emails})
     return out
 
 
@@ -286,20 +342,22 @@ def main():
     by_name = {}                # norm name -> person
     by_fl = {}                  # first+last -> person
 
-    def get_or_make(email="", name="", fl=""):
-        if email and email in by_email: return by_email[email]
+    def get_or_make(emails=None, name="", fl=""):
+        for e in (emails or []):
+            if e and e in by_email: return by_email[e]
         if name and name in by_name: return by_name[name]
         if fl and fl in by_fl: return by_fl[fl]
-        p = {"n": "", "ns": "", "e": "", "inst": "", "role": "",
+        p = {"n": "", "ns": "", "e": "", "emails": [], "inst": "", "role": "",
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
              "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "src": []}
         people.append(p)
         return p
 
     def index(p):
-        if p.get("e"): by_email.setdefault(p["e"], p)
+        for e in p["emails"]:
+            by_email.setdefault(e, p)
         nn = norm(p.get("n"))
-        if nn:
+        if nn and len(nn.split()) >= 2:        # only first+last names are merge keys; single tokens match by email only
             by_name.setdefault(nn, p)
             by_fl.setdefault(firstlast(p["n"]), p)
 
@@ -311,7 +369,7 @@ def main():
             email = email_norm(row.get("email"))
             recorded = (row.get("name") or "").strip()
             guess = name_from_email(email) if not recorded else ""
-            p = get_or_make(email=email, name=norm(recorded or guess))
+            p = get_or_make(emails=[email], name=norm(recorded or guess))
             p["mem"] = 1
             p["src"].append("member")
             set_email(p, email)
@@ -324,7 +382,7 @@ def main():
     crm = load_crm()
     crm_total = len(crm)
     for c in crm:
-        p = get_or_make(email=c["email"], name=norm(c["name"]), fl=firstlast(c["name"]))
+        p = get_or_make(emails=[c["email"]], name=norm(c["name"]), fl=firstlast(c["name"]))
         set_name(p, c["name"], True)
         set_email(p, c["email"])
         if c["institution"] and not p["inst"]: p["inst"] = c["institution"]
@@ -366,9 +424,10 @@ def main():
         nn = norm(a["name"])
         if not nn or nn in NONPERSON:
             continue
-        p = get_or_make(email=a["email"], name=nn, fl=firstlast(a["name"]))
+        p = get_or_make(emails=a["emails"], name=nn, fl=firstlast(a["name"]))
         set_name(p, a["name"], True)
-        set_email(p, a["email"])
+        for e in a["emails"]:
+            set_email(p, e)
         p["types"] = sorted(set(p["types"]) | {"VC contributor"})
         p["auth"] = 1
         p["topics"] = sorted(set(p["topics"]) | author_specs.get(nn, set()))
@@ -396,7 +455,7 @@ def main():
                     cnt = int(float(row.get("Donations Count") or 0))
                 except ValueError:
                     cnt = 0
-                p = get_or_make(email=email, name=norm(name), fl=firstlast(name))
+                p = get_or_make(emails=[email], name=norm(name), fl=firstlast(name))
                 set_name(p, name, True)
                 set_email(p, email)
                 p["don"] = 1
@@ -428,13 +487,18 @@ def main():
             p["types"] = sorted(set(p["types"]) | {"current nyc.gov"})
             nycgov_inferred += 1
 
-    # Drop made-up author/contributor emails: Ghost assigns each author a fake
-    # @vitalcitynyc.org address. Never list those (only authors' emails are made up).
-    scrubbed = 0
+    # Finalize emails + institution:
+    #  - drop made-up @vitalcitynyc.org emails from authors/contributors,
+    #  - recompute the primary email,
+    #  - infer institution from an email domain where it's blank.
     for p in people:
-        if p["e"].endswith("vitalcitynyc.org") and (p["auth"] or "VC contributor" in p["types"]):
-            p["e"] = ""
-            scrubbed += 1
+        if p["auth"] or "VC contributor" in p["types"]:
+            p["emails"] = [e for e in p["emails"] if not e.endswith("vitalcitynyc.org")]
+        p["e"] = primary_email(p["emails"])
+        if not p["inst"]:
+            inst = infer_institution(p["emails"])
+            if inst:
+                p["inst"] = inst
 
     # ---- Force VC-contributor tag for emails in extra_contributors.csv ----
     # (catches contributors whose byline name didn't match a catalogue author,

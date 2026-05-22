@@ -401,7 +401,7 @@ function exportCSV(){
   const rows=sortRows(filtered());
   const cols=["name","email","institution","role","types","specialties","subscriber","subscribed_since","author","articles","donor","donation_total","donation_count","last_donation"];
   const lines=[cols.join(",")];
-  rows.forEach(p=>lines.push([p.n,p.e,p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.don?"yes":"no",p.damt||0,p.dcnt||0,p.dlast||""].map(csvCell).join(",")));
+  rows.forEach(p=>lines.push([p.n,(p.emails||[]).join("; "),p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.don?"yes":"no",p.damt||0,p.dcnt||0,p.dlast||""].map(csvCell).join(",")));
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download=`vital-city-network-${new Date().toISOString().slice(0,10)}.csv`;
@@ -440,7 +440,7 @@ function render(){
       <td>${p.auth?`<span class="badge b-auth">${p.arts>0?p.arts+(p.arts===1?" piece":" pieces"):"author"}</span>`:'<span class="muted">—</span>'}</td>
       <td>${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
       <td>${esc(p.inst)||'<span class="muted">—</span>'}</td>
-      <td class="em">${esc(p.e)||'<span class="muted">—</span>'}</td>
+      <td class="em">${(p.emails&&p.emails.length?p.emails.map(esc).join("<br>"):'<span class="muted">—</span>')}</td>
     </tr>`;
   }).join("");
 }
