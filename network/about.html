@@ -54,7 +54,9 @@
   <p>Beyond what's in the contacts sheet, the tool fills in categories automatically:</p>
   <ul>
     <li><b>Journalists</b> are also inferred from the email someone subscribed with — if it's a known news-outlet domain (nytimes.com, wnyc.org, thecity.nyc, politico.com, etc.), they're tagged <i>journalist</i>.</li>
+    <li><b>Current nyc.gov</b> flags anyone who subscribed with an active New York City email (anything ending <code>nyc.gov</code> — agencies, city hall, DAs). It's separate from <i>city gov</i> (which is the hand-maintained list and can include former officials), so after an administration change you can find who's currently inside city government.</li>
     <li><b>Domain interests</b> are inferred from what people have <i>written</i> for Vital City — an author of pieces tagged Housing gets the <i>housing</i> domain, Budget → <i>budget</i>, and so on.</li>
+    <li><b>New authors</b> are added automatically whenever a new piece is published: on the next refresh they appear tagged <i>author</i>, with the domains they wrote about, and their email filled in if they're already in any source list.</li>
   </ul>
 
   <h2>Searching &amp; filtering</h2>

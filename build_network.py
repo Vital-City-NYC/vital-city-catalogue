@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parent
 PRIV = ROOT / "private"
 PERSON_CATS = ["VC contributor", "VC advisor", "journalist", "academic",
                "foundation leadership", "nonprofit leadership", "city gov",
-               "state gov", "fed gov", "judge", "architect"]
+               "current nyc.gov", "state gov", "fed gov", "judge", "architect"]
 # Domain-area interests (specialties).
 TOPIC_CATS = ["criminal justice", "housing", "transit", "budget", "urban planning",
               "education", "public health", "economy", "technology",
@@ -133,10 +133,21 @@ def prettify_name(name):
     return re.sub(r"[A-Za-z]+", lambda m: m.group(0)[:1].upper() + m.group(0)[1:].lower(), name)
 
 
+def clean_name(name):
+    """Strip leading/trailing junk (asterisks, stray punctuation, symbols) while
+    keeping letters, digits, periods, parens, hyphens and apostrophes."""
+    if not name:
+        return name
+    junk = r"[\s\*\|/\\_#~:;,\"'<>\[\]{}!?@^&+=]"
+    name = re.sub(r"^" + junk + r"+", "", name)
+    name = re.sub(junk + r"+$", "", name)
+    return name.strip()
+
+
 def set_name(p, name, given):
     """Set a person's display name, tracking whether it's authoritative ('given')
     or an email guess ('guess'). A given name upgrades a previous guess."""
-    name = prettify_name(name)
+    name = prettify_name(clean_name(name))
     if not name:
         return
     if not p["n"]:
@@ -320,14 +331,20 @@ def main():
                     p["src"].append("donor")
                 index(p)
 
-    # ---- 6. Infer journalists from media email domains ----
-    media_inferred = 0
+    # ---- 6. Infer categories from email domain ----
+    #   journalist     -> known news-outlet domains
+    #   current nyc.gov -> an active NYC city email (anything ending nyc.gov)
+    media_inferred = nycgov_inferred = 0
     for p in people:
-        if p["e"]:
-            dom = p["e"].split("@")[-1].strip().lower()
-            if dom in MEDIA_DOMAINS and "journalist" not in p["types"]:
-                p["types"] = sorted(set(p["types"]) | {"journalist"})
-                media_inferred += 1
+        if not p["e"]:
+            continue
+        dom = p["e"].split("@")[-1].strip().lower()
+        if dom in MEDIA_DOMAINS and "journalist" not in p["types"]:
+            p["types"] = sorted(set(p["types"]) | {"journalist"})
+            media_inferred += 1
+        if (dom == "nyc.gov" or dom.endswith(".nyc.gov")) and "current nyc.gov" not in p["types"]:
+            p["types"] = sorted(set(p["types"]) | {"current nyc.gov"})
+            nycgov_inferred += 1
 
     # ---- 5. Manual name fixes (email -> corrected name) ----
     # Edits made in the explorer's edit mode are exported here and become

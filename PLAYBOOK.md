@@ -1,5 +1,8 @@
 # Network explorer — maintenance playbook
 
+> For the full technical logic (every matching/inference rule + how to feed in
+> new data sources like a Ghost API or Mailchimp export), see **LOGIC.md**.
+
 The explorer at **https://vitalcity-nyc.github.io/vital-city-catalogue/network/**
 is generated from three lists. Here's how the team keeps it current.
 
