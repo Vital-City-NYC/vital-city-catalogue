@@ -100,6 +100,15 @@
   .btn:hover{background:var(--vc-black);color:#fff}
   .btn.primary{background:var(--vc-black);color:#fff}
   .btn.primary:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:var(--vc-black)}
+  .facetbulk{float:right;font-size:10px;font-weight:400;text-transform:none;letter-spacing:0}
+  .facetbulk a{color:var(--vc-cerulean);text-decoration:none}
+  .facetbulk a:hover{text-decoration:underline}
+  .facetSearch{width:100%;font:inherit;font-size:12px;padding:5px 8px;margin:2px 0 6px;border:1px solid var(--vc-cloud);border-radius:0;background:#fff}
+  .datepresets{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+  .datepresets button{font:inherit;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:3px 7px;border:1px solid var(--vc-cloud);background:#fff;color:var(--vc-charcoal);cursor:pointer}
+  .datepresets button:hover{border-color:var(--vc-black);color:var(--vc-black)}
+  kbd{font-family:var(--vc-sans);font-size:11px;font-weight:700;background:var(--vc-paper);border:1px solid var(--vc-cloud);border-radius:3px;padding:1px 5px}
+  #helpModal td{padding:6px 8px;border-bottom:1px solid var(--vc-cloud)}
   .facet{display:flex;align-items:center;gap:7px;font-size:12.5px;padding:3px 0;cursor:pointer}
   .facet input{margin:0}
   .facet .c{margin-left:auto;color:var(--vc-charcoal);font-variant-numeric:tabular-nums;font-size:11.5px}
@@ -204,7 +213,7 @@
     </div>
     <span class="toglegend">Click a category to cycle it: <span class="lg lg-inc">✓ include</span> → <span class="lg lg-exc">✕ exclude</span> → <span class="lg lg-off">off</span>. Turn on two or more to see the overlap.</span>
     <label class="chk" id="repeatDonorWrap" style="display:none"><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
-    <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off">
+    <input type="search" id="q" placeholder="Search name, email, institution…" autocomplete="off" aria-label="Search by name, email or institution (press / to focus)">
     <label class="chk"><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
     <button class="btn primary" id="clear" title="Reset every filter and return to the full list">Reset all</button>
   </div>
@@ -215,15 +224,18 @@
     Claude Code and ask it to refresh the donor list). New gifts won't appear until then.
   </div>
   <div class="savedviews" id="savedViews"></div>
-  <div class="hint">Click <b>✎</b> on any row to change a person's details or delete the entry; <b>✓</b> confirms a <span class="g">gray</span> guessed name. <a href="#" id="exportFixes" class="hintlink">Export edits →</a></div>
+  <div class="hint">Click <b>✎</b> on any row to change a person's details or delete the entry; <b>✓</b> confirms a <span class="g">gray</span> guessed name. Press <kbd>?</kbd> for shortcuts. <a href="#" id="exportFixes" class="hintlink">Export edits →</a></div>
   <div class="layout">
     <aside>
-      <h2>Filter by type<span class="infodot" title="Types are pieced together from our contact CRM plus automatic inference: 'VC contributor' from a published byline, 'journalist' from a news-outlet email domain, 'current nyc.gov' from an active city email, and others from the CRM. They are approximate and may be incomplete or out of date — edit any row to correct it.">i</span></h2>
+      <h2>Filter by type<span class="infodot" title="Types are pieced together from our contact CRM plus automatic inference: 'VC contributor' from a published byline, 'journalist' from a news-outlet email domain, 'current nyc.gov' from an active city email, and others from the CRM. They are approximate and may be incomplete or out of date — edit any row to correct it.">i</span><span class="facetbulk"><a href="#" data-bulk="types:all">all</a> · <a href="#" data-bulk="types:none">clear</a></span></h2>
+      <input class="facetSearch" data-for="typeFacets" placeholder="filter types…" aria-label="Filter the type list">
       <div id="typeFacets"></div>
-      <h2 style="margin-top:18px">Area of specialty<span class="infodot" title="Areas of specialty are extrapolated from the topics a person has written about for Vital City (and CRM notes where available). They are inferred, so they're approximate and won't be exhaustive — edit any row to adjust.">i</span></h2>
+      <h2 style="margin-top:18px">Area of specialty<span class="infodot" title="Areas of specialty are extrapolated from the topics a person has written about for Vital City (and CRM notes where available). They are inferred, so they're approximate and won't be exhaustive — edit any row to adjust.">i</span><span class="facetbulk"><a href="#" data-bulk="specs:all">all</a> · <a href="#" data-bulk="specs:none">clear</a></span></h2>
+      <input class="facetSearch" data-for="specFacets" placeholder="filter areas…" aria-label="Filter the specialty list">
       <div id="specFacets"></div>
       <h2 style="margin-top:18px">Subscribed between</h2>
       <div class="daterow"><input type="date" id="dFrom" title="Subscribed on or after"><span>to</span><input type="date" id="dTo" title="Subscribed on or before"></div>
+      <div class="datepresets" id="datePresets"><button data-preset="30">Last 30 days</button><button data-preset="year">This year</button><button data-preset="2024">'24 onward</button><button data-preset="all">All time</button></div>
       <h2 style="margin-top:18px">By type × subscribers</h2>
       <table class="matrix" id="matrix"></table>
       <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">Blue fill = share of that type who subscribe.</div>
@@ -323,6 +335,19 @@
       <div class="modalbtns"><button class="btn" id="dupClose">Close</button></div>
     </div>
   </div>
+
+  <div id="helpModal" class="modal" style="display:none">
+    <div class="modalbox">
+      <h3>Keyboard shortcuts</h3>
+      <table style="width:100%;font-size:13.5px;border-collapse:collapse">
+        <tr><td><kbd>/</kbd> or <kbd>⌘/Ctrl</kbd>+<kbd>K</kbd></td><td>Jump to search</td></tr>
+        <tr><td><kbd>?</kbd></td><td>Show / hide this help</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Close any open window</td></tr>
+      </table>
+      <p style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.5">Tip: click a category (chip or big number) to cycle it <b>include → exclude → off</b>. Save a filter combo as a view, or copy a shareable link to it.</p>
+      <div class="modalbtns"><button class="btn primary" id="helpClose">Got it</button></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -355,7 +380,7 @@ let selectedCats=new Set();   // chosen type/specialty categories (OR within)
 // "Other" sets all three to -1 (= none of the three).
 let want={mem:0,don:0,auth:0};
 const isOther=()=>want.mem===-1&&want.don===-1&&want.auth===-1;
-const CAP=600;
+let lastSorted=[], shownCount=0; const PAGE=300;   // infinite-scroll paging
 
 function b64d(s){const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
 async function decryptBlob(pass,blob){
@@ -438,9 +463,48 @@ function init(){
   $("#savedViews").addEventListener("click",e=>{
     const del=e.target.closest(".x[data-del]"); if(del){ e.stopPropagation(); const v=loadViews(); v.splice(+del.dataset.del,1); localStorage.setItem(VKEY,JSON.stringify(v)); renderViews(); return; }
     if(e.target.id==="svAdd"){ const name=prompt("Name this view (e.g. \"Housing reporters '24+\"):"); if(name&&name.trim()){ const v=loadViews(); v.push({name:name.trim(),state:currentState()}); localStorage.setItem(VKEY,JSON.stringify(v)); renderViews(); toast("View saved"); } return; }
+    if(e.target.id==="svLink"){ navigator.clipboard.writeText(location.href).then(()=>toast("Link to this view copied")).catch(()=>toast("Copy failed")); return; }
     const chip=e.target.closest(".svchip"); if(chip){ const v=loadViews()[+chip.dataset.i]; if(v) applyState(v.state); }
   });
   window.addEventListener("resize",measureSticky);
+  // Infinite scroll: load the next page as the bottom comes into view.
+  window.addEventListener("scroll",()=>{
+    if(shownCount>=lastSorted.length) return;
+    if(window.innerHeight+window.scrollY >= document.body.offsetHeight-700){
+      shownCount=Math.min(shownCount+PAGE,lastSorted.length); paintRows();
+    }
+  });
+  // Date presets for "Subscribed between"
+  $("#datePresets").addEventListener("click",e=>{
+    const b=e.target.closest("button[data-preset]"); if(!b) return;
+    const p=b.dataset.preset, now=new Date(), iso=d=>d.toISOString().slice(0,10);
+    if(p==="all"){ $("#dFrom").value=""; $("#dTo").value=""; }
+    else if(p==="30"){ const d=new Date(now); d.setDate(d.getDate()-30); $("#dFrom").value=iso(d); $("#dTo").value=""; }
+    else if(p==="year"){ $("#dFrom").value=now.getFullYear()+"-01-01"; $("#dTo").value=""; }
+    else if(p==="2024"){ $("#dFrom").value="2024-01-01"; $("#dTo").value=""; }
+    render();
+  });
+  // Keyboard shortcuts
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){ ["editModal","emailModal","dupModal","helpModal"].forEach(id=>{const m=$("#"+id);if(m)m.style.display="none";}); return; }
+    const inField=/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+    if((e.key==="/"||((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k")) && !inField){ e.preventDefault(); $("#q").focus(); }
+    else if(e.key==="?" && !inField){ const m=$("#helpModal"); m.style.display=m.style.display==="flex"?"none":"flex"; }
+  });
+  $("#helpClose").addEventListener("click",()=>$("#helpModal").style.display="none");
+  $("#helpModal").addEventListener("click",e=>{if(e.target.id==="helpModal")$("#helpModal").style.display="none";});
+  // Per-list facet typeahead + select all / clear
+  document.querySelectorAll(".facetSearch").forEach(inp=>inp.addEventListener("input",()=>{
+    const q=inp.value.trim().toLowerCase(), box=$("#"+inp.dataset.for);
+    box.querySelectorAll(".facet").forEach(l=>{ l.style.display=l.dataset.cat.toLowerCase().includes(q)?"":"none"; });
+  }));
+  document.querySelectorAll("[data-bulk]").forEach(b=>b.addEventListener("click",e=>{
+    e.preventDefault(); const [list,act]=b.dataset.bulk.split(":");
+    const arr=list==="types"?CATS:SPECS;
+    if(act==="all") arr.forEach(c=>selectedCats.add(c)); else arr.forEach(c=>selectedCats.delete(c));
+    document.querySelectorAll(".facet").forEach(l=>{const on=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on);const cb=l.querySelector("input");if(cb)cb.checked=on;});
+    render();
+  }));
   $("#edDon").addEventListener("change",()=>{ $("#edDamtWrap").style.display=$("#edDon").checked?"block":"none"; });
   $("#edSave").addEventListener("click",saveEdit);
   $("#edCancel").addEventListener("click",closeEdit);
@@ -453,7 +517,7 @@ function init(){
     if(e.target.closest("a.pill-link")) return;   // let the catalogue link open
     const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);
   });
-  render();
+  if(!applyHash()) render();   // a shared #link reopens its filters; else default view
 }
 
 function catCount(c){return PEOPLE.filter(p=>(p.types||[]).includes(c)||(p.topics||[]).includes(c)).length;}
@@ -619,11 +683,19 @@ function applyLocalFixes(){
 function deleteEntry(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
   if(!confirm(`Delete "${p.n||p.e||'this entry'}"? It will be removed for everyone on the next refresh.`)) return;
+  const prevOv=loadOverrides()[key];                       // for undo
   const ov=loadOverrides(); ov[key]=Object.assign({}, ov[key], {deleted:true});
   localStorage.setItem(OVKEY,JSON.stringify(ov));
   pushOverride(key,ov[key]);
   PEOPLE=PEOPLE.filter(x=>x!==p);
-  closeEdit(); render();
+  closeEdit(); buildStats(); syncToggles(); render();
+  toastAction(`Deleted ${p.n||p.e||"entry"}`, "Undo", ()=>{
+    const o=loadOverrides();
+    if(prevOv) o[key]=prevOv; else delete o[key];
+    localStorage.setItem(OVKEY,JSON.stringify(o));
+    pushOverride(key, prevOv||{deleted:false});            // un-delete in the shared store
+    PEOPLE.push(p); buildStats(); syncToggles(); render(); toast("Restored");
+  });
 }
 let editKey=null, addMode=false;
 function openEdit(key){
@@ -682,6 +754,9 @@ function confirmName(key){
 }
 let toastT=null;
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2200); }
+function toastAction(msg,label,fn){ const t=$("#toast"); t.innerHTML=esc(msg)+` <a href="#" id="toastAct" style="color:var(--vc-orange);font-weight:700;margin-left:8px">${esc(label)}</a>`;
+  $("#toastAct").onclick=e=>{e.preventDefault(); t.classList.remove("show"); fn();};
+  t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),6000); }
 
 function measureSticky(){
   const c=document.querySelector(".controls"), r=document.querySelector(".resultrow");
@@ -726,7 +801,24 @@ function applyState(s){
 function renderViews(){
   const v=loadViews();
   const chips=v.map((x,i)=>`<button class="svchip" data-i="${i}" title="Apply saved view">${esc(x.name)}<span class="x" data-del="${i}" title="Delete">✕</span></button>`).join("");
-  $("#savedViews").innerHTML=(v.length?`<span class="svlabel">Saved views</span>`:"")+chips+`<button class="svadd" id="svAdd">★ Save current view</button>`;
+  $("#savedViews").innerHTML=(v.length?`<span class="svlabel">Saved views</span>`:"")+chips+`<button class="svadd" id="svAdd">★ Save current view</button><button class="svadd" id="svLink" title="Copy a link that reopens these exact filters">🔗 Copy link to this view</button>`;
+}
+// ---- Permalink: encode the active filters in the URL hash so a view is shareable ----
+function updateHash(){
+  const s=currentState(), o={};
+  if(s.want.mem)o.m=s.want.mem; if(s.want.don)o.d=s.want.don; if(s.want.auth)o.a=s.want.auth;
+  if(s.cats.length)o.c=s.cats; if(s.q)o.q=s.q; if(s.dFrom)o.f=s.dFrom; if(s.dTo)o.t=s.dTo;
+  if(s.repeat)o.r=1; if(s.unsub)o.u=1; if(s.onlyUnsub)o.o=1;
+  if(s.sortKey!=="last"||s.sortDir!==1){o.sk=s.sortKey;o.sd=s.sortDir;}
+  const h=Object.keys(o).length?"#"+encodeURIComponent(JSON.stringify(o)):location.pathname;
+  history.replaceState(null,"",h);
+}
+function applyHash(){
+  if(!location.hash||location.hash.length<2) return false;
+  try{ const o=JSON.parse(decodeURIComponent(location.hash.slice(1)));
+    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,sortKey:o.sk||"last",sortDir:o.sd||1});
+    return true;
+  }catch(e){ return false; }
 }
 
 // ---- Email group with a confirmation sheet ----
@@ -828,16 +920,22 @@ function render(){
     else if(th.dataset.k) th.innerHTML=base+' <span class="sa">▲</span>';
     else th.textContent=base;
   });
-  const all=sortRows(filtered());
-  const shown=all.slice(0,CAP);
-  $("#resultbar").innerHTML=(all.length>CAP
-    ? `Showing first <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} matches &nbsp;·&nbsp; refine filters or Export CSV for the full list`
-    : `Showing <b>${shown.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`);
+  lastSorted=sortRows(filtered());
+  shownCount=Math.min(PAGE,lastSorted.length);
   $("#filterSentence").innerHTML=describeFilters();
+  updateHash();
+  paintRows();
+  measureSticky();
+}
+function paintRows(){
+  const all=lastSorted, shown=all.slice(0,shownCount);
+  $("#resultbar").innerHTML=(shownCount<all.length
+    ? `Showing <b>${shownCount.toLocaleString()}</b> of ${all.length.toLocaleString()} &nbsp;·&nbsp; scroll for more, or Export CSV for the full list`
+    : `Showing <b>${all.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`);
   $("#rows").innerHTML=shown.map(p=>{
     const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'');
     const key=esc(personKey(p));
-    const acts=`<a class="edit" data-key="${key}" title="Edit or delete this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}`;
+    const acts=`<a class="edit" role="button" tabindex="0" aria-label="Edit or delete ${esc(p.n||p.e||'this person')}" data-key="${key}" title="Edit or delete this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" role="button" tabindex="0" aria-label="Confirm name ${esc(p.n)} is correct" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}`;
     const types=(p.types||[]).map(t=>{
       const x=(t==='VC contributor'&&p.arts>1)?` ×${p.arts}`:'';
       if(t==='VC contributor'&&p.auth){
