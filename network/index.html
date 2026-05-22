@@ -124,11 +124,9 @@
   tr:hover td{background:var(--vc-white)}
   .nm{font-weight:700}
   .nm.guess{color:var(--vc-charcoal);font-weight:400;font-style:italic}
-  th.editcol{cursor:default}
-  td.editcell{white-space:nowrap}
-  .rowedit{font:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border:1px solid var(--vc-charcoal);background:var(--vc-white);color:var(--vc-black);cursor:pointer;border-radius:0}
-  .rowedit:hover{background:var(--vc-black);color:#fff;border-color:var(--vc-black)}
-  .confirm{cursor:pointer;color:var(--vc-green);margin-left:6px;font-size:14px;font-weight:700;text-decoration:none}
+  .edit{cursor:pointer;color:var(--vc-charcoal);margin-left:7px;font-size:12px;text-decoration:none}
+  .edit:hover{color:var(--vc-orange)}
+  .confirm{cursor:pointer;color:var(--vc-green);margin-left:5px;font-size:13px;font-weight:700;text-decoration:none}
   .confirm:hover{color:var(--vc-black)}
   .howto{position:absolute;right:30px;top:24px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-cerulean);text-decoration:none}
   .howto:hover{text-decoration:underline}
@@ -190,7 +188,7 @@
     <code>private/donors_source.csv</code> with it and republish (or hand the CSV to
     Claude Code and ask it to refresh the donor list). New gifts won't appear until then.
   </div>
-  <div class="hint">Click <b>Edit</b> on any row to change a person's details or delete the entry; <b>✓</b> confirms a <span class="g">gray</span> guessed name. <a href="#" id="exportFixes" class="hintlink">Export edits →</a></div>
+  <div class="hint">Click <b>✎</b> on any row to change a person's details or delete the entry; <b>✓</b> confirms a <span class="g">gray</span> guessed name. <a href="#" id="exportFixes" class="hintlink">Export edits →</a></div>
   <div class="layout">
     <aside>
       <h2>Filter by type<span class="infodot" title="Types are pieced together from our contact CRM plus automatic inference: 'VC contributor' from a published byline, 'journalist' from a news-outlet email domain, 'current nyc.gov' from an active city email, and others from the CRM. They are approximate and may be incomplete or out of date — edit any row to correct it.">i</span></h2>
@@ -217,12 +215,11 @@
       <div class="tablewrap">
         <table class="people">
           <colgroup>
-            <col style="width:5%"><col style="width:9%"><col style="width:10%"><col style="width:23%">
+            <col style="width:10%"><col style="width:11%"><col style="width:24%">
             <col style="width:10%"><col style="width:10%">
-            <col style="width:13%"><col style="width:20%">
+            <col style="width:14%"><col style="width:21%">
           </colgroup>
           <thead><tr>
-            <th class="editcol">Edit</th>
             <th data-k="first">First name</th>
             <th data-k="last">Last name</th>
             <th data-k="types">Type(s)</th>
@@ -382,7 +379,7 @@ function init(){
   $("#editModal").addEventListener("click",e=>{if(e.target.id==="editModal")closeEdit();});
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(!k)return;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
   $("#rows").addEventListener("click",e=>{
-    const ed=e.target.closest(".rowedit"); if(ed){e.stopPropagation();openEdit(ed.dataset.key);return;}
+    const ed=e.target.closest(".edit"); if(ed){e.stopPropagation();openEdit(ed.dataset.key);return;}
     const cf=e.target.closest(".confirm"); if(cf){e.stopPropagation();confirmName(cf.dataset.key);return;}
     if(e.target.closest("a.pill-link")) return;   // let the catalogue link open
     const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);
@@ -656,7 +653,7 @@ function render(){
   $("#rows").innerHTML=shown.map(p=>{
     const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'');
     const key=esc(personKey(p));
-    const acts=`<button class="rowedit" data-key="${key}" title="Edit or delete this person">Edit</button>${p.ns==='guess'&&p.n?`<a class="confirm" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}`;
+    const acts=`<a class="edit" data-key="${key}" title="Edit or delete this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}`;
     const types=(p.types||[]).map(t=>{
       const x=(t==='VC contributor'&&p.arts>1)?` ×${p.arts}`:'';
       if(t==='VC contributor'&&p.auth){
@@ -667,9 +664,8 @@ function render(){
     }).join("")||'<span class="muted">—</span>';
     return `
     <tr${p.unsub?' title="Unsubscribed — former contact"':''}>
-      <td class="editcell">${acts}</td>
       <td><span class="nm${g}">${esc(np.first)||'<span class="muted">—</span>'}</span></td>
-      <td><span class="nm${g}">${esc(np.last)||'<span class="muted">—</span>'}</span></td>
+      <td><span class="nm${g}">${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
       <td>${types}</td>
       <td>${p.unsub?'<span class="badge" style="background:#c8102e;color:#fff">Unsubscribed</span>':(p.mem?`<span class="badge b-mem">Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>`:'<span class="muted">—</span>')}</td>
       <td>${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
