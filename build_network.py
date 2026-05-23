@@ -113,11 +113,44 @@ INST_DOMAINS = {
     "schools.nyc.gov": "NYC Department of Education", "mtaif.org": "MTA",
     "thecity.org": "THE CITY", "gothamgazette.com": "Gotham Gazette",
     "spectrumnews.org": "Spectrum News NY1", "nybg.org": "New York Botanical Garden",
+    # --- law / PR / consulting / agencies / companies seen in the data ---
+    "paulweiss.com": "Paul, Weiss", "nyct.com": "New York City Transit (MTA)",
+    "coned.com": "Con Edison", "berlinrosen.com": "BerlinRosen", "rubenstein.com": "Rubenstein",
+    "anatgerstein.com": "Anat Gerstein", "bennettmidland.com": "Bennett Midland",
+    "wxystudio.com": "WXY Studio", "mas.org": "Municipal Art Society", "fwd.us": "FWD.us",
+    "chicagocred.com": "Chicago CRED", "slingshotstrat.com": "Slingshot Strategies",
+    "buildmsquared.com": "M Squared", "ibo.nyc.ny.us": "NYC Independent Budget Office",
+    "alleghenycounty.us": "Allegheny County", "skadden.com": "Skadden",
+    "cravath.com": "Cravath", "stblaw.com": "Simpson Thacher", "wlrk.com": "Wachtell",
+    "davispolk.com": "Davis Polk", "clearygottlieb.com": "Cleary Gottlieb",
+    "gibsondunn.com": "Gibson Dunn", "lw.com": "Latham & Watkins",
+    "kirkland.com": "Kirkland & Ellis", "sullcrom.com": "Sullivan & Cromwell",
+    "mta.info": "MTA", "panynj.gov": "Port Authority of NY & NJ", "dot.nyc.gov": "NYC DOT",
+    "hpd.nyc.gov": "NYC Housing Preservation & Development", "nycha.nyc.gov": "NYCHA",
+    "hudson.org": "Hudson Institute", "aei.org": "American Enterprise Institute",
+    "cato.org": "Cato Institute", "americanprogress.org": "Center for American Progress",
+    "tcf.org": "The Century Foundation", "demos.org": "Dēmos", "epi.org": "Economic Policy Institute",
+    "nrdc.org": "NRDC", "edf.org": "Environmental Defense Fund", "sierraclub.org": "Sierra Club",
+    "unitedway.org": "United Way", "robinhoodfoundation.org": "Robin Hood Foundation",
+    "tdf.org": "Theatre Development Fund", "trustforpublicland.org": "Trust for Public Land",
+    "enterprisecommunity.org": "Enterprise Community Partners", "lisc.org": "LISC",
+    "habitatnyc.org": "Habitat for Humanity NYC", "coalitionforthehomeless.org": "Coalition for the Homeless",
+    "win.org": "Win", "bowery.org": "Bowery Residents' Committee",
+    "robinhood.org": "Robin Hood Foundation", "tigerfoundation.org": "Tiger Foundation",
+    "aecf.org": "Annie E. Casey Foundation", "stvinc.com": "STV",
 }
 WEBMAIL = {"gmail.com","googlemail.com","yahoo.com","ymail.com","hotmail.com","outlook.com",
  "live.com","msn.com","aol.com","icloud.com","me.com","mac.com","proton.me","protonmail.com",
  "pm.me","gmx.com","fastmail.com","comcast.net","verizon.net","att.net","sbcglobal.net",
- "optimum.net","rcn.com","earthlink.net","mindspring.com","nyc.rr.com","mail.com","ms.com","aim.com"}
+ "optimum.net","rcn.com","earthlink.net","mindspring.com","nyc.rr.com","mail.com","ms.com","aim.com",
+ "yahoo.co.uk","hotmail.co.uk","yahoo.co.jp","yahoo.ca","yahoo.de","yahoo.es","yahoo.fr","yahoo.com.au",
+ "web.de","gmx.de","gmx.net","bellsouth.net","optonline.net","rocketmail.com","cox.net","shaw.ca",
+ "charter.net","docomo.ne.jp","telus.net","btinternet.com","sky.com","hey.com","duck.com","myyahoo.com",
+ "ymail.co.uk","googlemail.co.uk","outlook.co.uk","live.co.uk","icloud.co.uk","ntlworld.com","talktalk.net",
+ "frontier.com","windstream.net","roadrunner.com","ptd.net","juno.com","netzero.net"}
+
+
+DOMCOUNT = {}   # email-domain -> # of distinct people using it (filled in main; for the shared-domain fallback)
 
 
 def infer_institution(emails):
@@ -142,6 +175,10 @@ def infer_institution(emails):
             return " ".join(w.capitalize() for w in sld.split("-"))
         # A .org domain is almost always an organization → name it from the SLD.
         if dom.endswith(".org") and re.fullmatch(r"[a-z]{4,20}", sld):
+            return sld.capitalize()
+        # A domain SHARED by 2+ people is very likely an org (not a personal vanity
+        # domain) → derive an institution name from the SLD even on .com/.net/etc.
+        if DOMCOUNT.get(dom, 0) >= 2 and re.fullmatch(r"[a-z0-9]{3,20}", sld):
             return sld.capitalize()
     return ""
 
@@ -256,6 +293,7 @@ def name_from_email(e):
         if (3 <= len(first) <= 11 and droot not in PROVIDERS and droot != first
                 and re.fullmatch(r"[a-z]{4,12}", droot)
                 and tld in ("com", "net", "co", "io")
+                and domain not in INST_DOMAINS          # don't use a known org domain as a surname
                 and not domain.endswith((".edu", ".gov"))):
             return f"{first.capitalize()} {droot.capitalize()}"
         return first.capitalize()
@@ -478,7 +516,7 @@ def main():
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
              "aname": "", "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "udate": "",
              "d7": 0.0, "d7c": 0, "d30": 0.0, "d30c": 0,
-             "erate": 0, "eopen": 0, "eclick": 0, "src": []}
+             "erate": 0, "eopen": 0, "eclick": 0, "wiki": 0, "src": []}
         people.append(p)
         return p
 
@@ -670,6 +708,13 @@ def main():
             p["types"] = sorted(set(p["types"]) | {"current nyc.gov"})
             nycgov_inferred += 1
 
+    # Count how many people use each email domain (org domains are shared; personal
+    # vanity domains usually aren't) — powers the shared-domain institution fallback.
+    DOMCOUNT.clear()
+    for p in people:
+        for dom in {e.split("@")[-1].strip().lower() for e in p["emails"] if "@" in e}:
+            DOMCOUNT[dom] = DOMCOUNT.get(dom, 0) + 1
+
     # Finalize emails + institution:
     #  - drop made-up @vitalcitynyc.org emails from authors/contributors,
     #  - recompute the primary email,
@@ -794,6 +839,21 @@ def main():
     dropped = [p for p in people if not keep(p)]
     people = [p for p in people if keep(p)]
     print(f"dropped {len(dropped)} no-contact-info entries", file=__import__("sys").stderr)
+
+    # ---- influence flag (Wikipedia, from wiki_influence.py cache, keyed by name) ----
+    wiki_path = PRIV / "wiki_cache.json"
+    if wiki_path.exists():
+        try:
+            wiki = json.loads(wiki_path.read_text())
+        except Exception:
+            wiki = {}
+        wcount = 0
+        for p in people:
+            w = wiki.get((p["n"] or "").strip().lower())
+            if w and w.get("wiki"):
+                p["wiki"] = 1
+                wcount += 1
+        print(f"flagged {wcount} influential (Wikipedia) people", file=__import__("sys").stderr)
 
     # ---- stats ----
     members = sum(1 for p in people if p["mem"])

@@ -82,6 +82,11 @@ jobs:
       - name: Refresh article catalogue (live)
         run: python3 scrape.py
 
+      - name: Flag influential people (Wikipedia, incremental)
+        run: |
+          python3 build_network.py >/dev/null 2>&1 || true   # need people.json for the candidate list
+          python3 wiki_influence.py || echo "WARNING: Wikipedia influence check failed; using cached flags"
+
       - name: Rebuild fused people dataset
         run: python3 build_network.py
 

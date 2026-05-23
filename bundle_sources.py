@@ -35,6 +35,7 @@ SOURCES = [
     "extra_contributors.csv",
     "name_overrides.csv",      # optional
     "people_overrides.json",   # optional (in-tool edits)
+    "wiki_cache.json",         # optional (Wikipedia influence cache)
 ]
 
 
