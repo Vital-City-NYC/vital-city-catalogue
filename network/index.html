@@ -479,7 +479,10 @@ async function unlock(fromStore){
   if(!pass){$("#err").textContent="Enter the passphrase.";return;}
   $("#unlock").textContent="Decrypting…";
   try{
-    const blob=await fetch("data.enc").then(r=>r.json());
+    // no-cache: always revalidate with the server (cheap 304 when unchanged,
+    // full download when the daily refresh updates it) so a stale browser cache
+    // can never mask a fresh dataset — e.g. new "notable" flags not showing up.
+    const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
     PEOPLE=await decryptBlob(pass,blob);
     applyLocalFixes();
     localStorage.setItem(PASSKEY,pass);   // remember on this device
