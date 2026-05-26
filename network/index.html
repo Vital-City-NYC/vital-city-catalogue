@@ -176,6 +176,8 @@
   .nm{font-weight:700}
   .nm.guess{color:var(--vc-charcoal);font-weight:400;font-style:italic}
   .nm.wiki{text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px}
+  table.people tbody tr{cursor:pointer}                 /* whole row opens the person's details */
+  table.people tbody tr:hover .nm{color:var(--vc-cerulean)}   /* hover cue that the name is clickable */
   .edit{cursor:pointer;color:var(--vc-charcoal);margin-left:7px;font-size:12px;text-decoration:none}
   .edit:hover{color:var(--vc-orange)}
   .star{cursor:pointer;color:var(--vc-cloud);font-size:14px;text-decoration:none;margin-right:1px}
@@ -312,7 +314,7 @@
     <button class="btn primary" id="clear" title="Reset every filter and return to the full list">Reset all</button>
   </div>
   <div class="savedviews" id="savedViews"></div>
-  <div class="hint"><b>New here?</b> Hover over any button, column heading or tag for a plain-English explanation — or read the <a href="about.html" target="_blank" class="hintlink">full guide ↗</a>. Click <b>✎</b> on any row to change a person's details or delete the entry; <b>✓</b> confirms a <span class="g">gray</span> guessed name; click the <b>☆</b> to star someone. Press <kbd>?</kbd> for keyboard shortcuts. <a href="#" id="exportFixes" class="hintlink" title="Download a backup file of all the edits, confirmations and deletions made in this tool. Not normally needed — edits already save automatically.">Export edits →</a></div>
+  <div class="hint"><b>New here?</b> Hover over any button, column heading or tag for a plain-English explanation — or read the <a href="about.html" target="_blank" class="hintlink">full guide ↗</a>. Click anyone's <b>name</b> (or anywhere on their row) to view their full details — then edit or delete from there. <b>✓</b> confirms a <span class="g">gray</span> guessed name; click the <b>☆</b> to star someone. Press <kbd>?</kbd> for keyboard shortcuts. <a href="#" id="exportFixes" class="hintlink" title="Download a backup file of all the edits, confirmations and deletions made in this tool. Not normally needed — edits already save automatically.">Export edits →</a></div>
   <div class="layout">
     <aside>
       <h2>Filter by type<span class="infodot" title="Types are pieced together from our contact CRM plus automatic inference: 'VC contributor' from a published byline, 'journalist' from a news-outlet email domain, 'current nyc.gov' from an active city email, and others from the CRM. They are approximate and may be incomplete or out of date — edit any row to correct it.">i</span><span class="facetbulk"><a href="#" data-bulk="types:all" title="Tick every type at once">all</a> · <a href="#" data-bulk="types:none" title="Untick every type">clear</a></span></h2>
@@ -680,7 +682,10 @@ function init(){
     const nd=e.target.closest(".notedot"); if(nd){e.stopPropagation();openEdit(nd.dataset.key);return;}
     const cf=e.target.closest(".confirm"); if(cf){e.stopPropagation();confirmName(cf.dataset.key);return;}
     if(e.target.closest("a.pill-link")||e.target.closest("a.emlink")) return;   // let catalogue + mailto links open
-    const el=e.target.closest("[data-type]");if(!el)return;toggleCat(el.dataset.type,true);
+    const el=e.target.closest("[data-type]"); if(el){toggleCat(el.dataset.type,true);return;}   // a type tag → filter
+    // Click anywhere else on the row to view that person's details.
+    if(window.getSelection && String(window.getSelection())) return;   // don't hijack a text selection
+    const row=e.target.closest("tr[data-key]"); if(row) openEdit(row.dataset.key);
   });
   if(!applyHash()) render();   // a shared #link reopens its filters; else default view
 }
@@ -871,7 +876,7 @@ let editKey=null, addMode=false;
 function openEdit(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
   editKey=key; addMode=false;
-  $("#edTitle").textContent="Edit person";
+  $("#edTitle").textContent="Contact details";
   $("#edName").value=p.n||""; $("#edInst").value=p.inst||"";
   $("#edEmails").value=(p.emails||[]).join("\n");
   $("#edTypes").value=(p.types||[]).join(", "); $("#edTopics").value=(p.topics||[]).join(", ");
@@ -1157,9 +1162,10 @@ function render(){
 // every row already in the DOM.
 function rowHTML(p){
   const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'')+(p.wiki?' wiki':'');
-  // hover help: explain a gray (guessed) name and a notable (underlined) name
-  const nmTitle=p.wiki?' title="Notable — appears to have an English Wikipedia page (a rough signal of public profile)."'
-                :(p.ns==='guess'?' title="This name is an educated guess from the email address — click the ✓ to confirm it, or ✎ to fix it."':'');
+  // hover help: explain a gray (guessed) name and a notable (underlined) name; otherwise prompt the click-to-view
+  const nmTitle=p.wiki?' title="Notable — appears to have an English Wikipedia page (a rough signal of public profile). Click to view this person\'s details."'
+                :(p.ns==='guess'?' title="This name is an educated guess from the email address. Click to view/fix details, the ✓ to confirm it, or ✎ to edit."'
+                :' title="Click to view this person\'s full details."');
   const key=esc(personKey(p));
   const noteDot=p.note?`<a class="notedot" role="button" tabindex="0" data-key="${key}" title="${esc(p.note)}">📝</a>`:'';
   const acts=`<a class="edit" role="button" tabindex="0" aria-label="Edit or delete ${esc(p.n||p.e||'this person')}" data-key="${key}" title="Edit or delete this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" role="button" tabindex="0" aria-label="Confirm name ${esc(p.n)} is correct" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}${noteDot}`;
@@ -1178,7 +1184,7 @@ function rowHTML(p){
   // mark empty cells so the phone card view can hide them (no "DONOR —" clutter)
   const bl=c=>c?'':' blank';
   return `
-    <tr${p.unsub?' title="Unsubscribed — former contact"':''}>
+    <tr data-key="${key}"${p.unsub?' title="Unsubscribed — former contact. Click to view details."':''}>
       <td>${star} <span class="nm${g}"${nmTitle}>${esc(np.first)||'<span class="muted">—</span>'}</span></td>
       <td><span class="nm${g}"${nmTitle}>${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
       <td data-label="Type(s)" class="c-type${bl(p.types&&p.types.length)}">${types}</td>
