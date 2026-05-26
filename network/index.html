@@ -413,6 +413,7 @@
         <button class="btn" id="edCancel" title="Close without saving any changes.">Cancel</button>
         <button class="btn" id="edEmailCard" title="Open your mail app with this contact's full details in the message">✉ Email this card</button>
         <button class="btn" id="edCopyLink" title="Copy a link that opens this person's card (needs the passphrase to view)">🔗 Copy link</button>
+        <button class="btn" id="edRevertGuess" style="display:none" title="Turn this name back into a gray, unconfirmed guess (undoes a confirmation). The name text stays; it just goes back to looking like an educated guess.">↩ Revert to guess</button>
         <button class="btn" id="edDelete" style="margin-left:auto;border-color:var(--vc-magenta);color:var(--vc-magenta)" title="Remove this person from the tool for everyone. (If they still come from a live source like Ghost or Donorbox, they'll return on the next refresh.)">Delete entry</button>
         <span class="lbl-note">Saved for everyone automatically — shows for you now, for everyone on the next daily refresh.</span>
       </div>
@@ -672,6 +673,7 @@ function init(){
   $("#edDelete").addEventListener("click",()=>{ if(editKey) deleteEntry(editKey); });
   $("#edEmailCard").addEventListener("click",emailCard);
   $("#edCopyLink").addEventListener("click",copyCardLink);
+  $("#edRevertGuess").addEventListener("click",revertGuess);
   $("#editModal").addEventListener("click",e=>{if(e.target.id==="editModal")closeEdit();});
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(!k)return;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
   $("#sortMenu").addEventListener("change",e=>{const [k,d]=e.target.value.split(":");sortKey=k;sortDir=+d;render();});
@@ -882,6 +884,12 @@ function openEdit(key){
   $("#edTypes").value=(p.types||[]).join(", "); $("#edTopics").value=(p.topics||[]).join(", ");
   $("#edNote").value=p.note||"";
   $("#edAddFlags").style.display="none"; $("#edUpdateNote").style.display="none"; $("#edDelete").style.display=""; $("#edEmailCard").style.display=""; $("#edCopyLink").style.display="";
+  // Offer "Revert to guess" only when the name is confirmed but could be un-confirmed:
+  // either it's currently a stored-name override, or it's a guess we could re-gray.
+  const ovNow=loadOverrides();
+  // Show "Revert to guess" only for a confirmed name that came from an edit/confirm
+  // (not for manually-added people, whose names were never guesses).
+  $("#edRevertGuess").style.display=(p.ns!=="guess" && !p.added && ovNow[key] && ovNow[key].n && !ovNow[key].add)?"":"none";
   $("#editModal").style.display="flex"; $("#edName").focus();
 }
 function openAdd(){
@@ -891,7 +899,7 @@ function openAdd(){
   $("#edMem").checked=false; $("#edAuth").checked=false; $("#edDon").checked=false; $("#edDamt").value="";
   $("#edDamtWrap").style.display="none";
   if(SHEET_URL){ $("#edSheetLink").href=SHEET_URL; $("#edSheetLink").style.display=""; } else { $("#edSheetLink").style.display="none"; }
-  $("#edAddFlags").style.display="block"; $("#edUpdateNote").style.display="block"; $("#edDelete").style.display="none"; $("#edEmailCard").style.display="none"; $("#edCopyLink").style.display="none";
+  $("#edAddFlags").style.display="block"; $("#edUpdateNote").style.display="block"; $("#edDelete").style.display="none"; $("#edEmailCard").style.display="none"; $("#edCopyLink").style.display="none"; $("#edRevertGuess").style.display="none";
   $("#editModal").style.display="flex"; $("#edName").focus();
 }
 function readFields(){
@@ -919,12 +927,27 @@ function saveEdit(){
     return;
   }
   const p=PEOPLE.find(x=>personKey(x)===editKey); if(!p){ closeEdit(); return; }
-  const ov=loadOverrides(); ov[editKey]=Object.assign({}, ov[editKey], f);   // merge (keeps star)
+  const fSave=Object.assign({}, f);
+  // Don't silently confirm a gray (guessed) name just because the card was saved
+  // without touching the name. Only an actual name change (or the ✓ button) confirms it.
+  if(p.ns==="guess" && fSave.n===p.n) delete fSave.n;
+  const ov=loadOverrides(); ov[editKey]=Object.assign({}, ov[editKey], fSave);   // merge (keeps star)
+  if(!("n" in fSave) && ov[editKey]) delete ov[editKey].n;   // keep the stored override gray-friendly too
   localStorage.setItem(OVKEY,JSON.stringify(ov));
   pushOverride(editKey,ov[editKey]);
-  applyOverrideTo(p,f); closeEdit(); render();
+  applyOverrideTo(p,fSave); closeEdit(); render();
 }
 function closeEdit(){ $("#editModal").style.display="none"; editKey=null; addMode=false; }
+function revertGuess(){
+  if(!editKey) return;
+  const p=PEOPLE.find(x=>personKey(x)===editKey); if(!p) return;
+  const ov=loadOverrides();
+  if(ov[editKey]){ delete ov[editKey].n; if(Object.keys(ov[editKey]).length===0) delete ov[editKey]; }
+  localStorage.setItem(OVKEY,JSON.stringify(ov));
+  pushOverride(editKey, ov[editKey]||{});   // backend replaces the stored row, so the name override is cleared everywhere
+  p.ns="guess";                              // back to a gray, unconfirmed guess (the name text stays)
+  closeEdit(); render(); toast("Name set back to a gray guess");
+}
 function copyCardLink(){
   if(!editKey) return;
   const url=location.origin+location.pathname+"#"+encodeURIComponent(JSON.stringify({person:pidFor(editKey)}));
