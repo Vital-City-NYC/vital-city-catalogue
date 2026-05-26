@@ -467,6 +467,7 @@
 
 <script>
 const $=s=>document.querySelector(s);
+function debounce(fn,ms){let t;return function(...a){clearTimeout(t);t=setTimeout(()=>fn.apply(this,a),ms);};}
 const CATS=["VC contributor","VC advisor","journalist","academic","foundation leadership","nonprofit leadership","city gov","current nyc.gov","state gov","fed gov","judge"];
 const SPECS=["criminal justice","housing","transit","budget","urban planning","education","public health","economy","technology","politics & government","race & equity","culture","architecture"];
 function nameParts(n){
@@ -578,7 +579,9 @@ function init(){
   $("#tDon").addEventListener("click",()=>cycleWant("don"));
   $("#tAuth").addEventListener("click",()=>cycleWant("auth"));
   $("#tOther").addEventListener("click",toggleOther);
-  ["#q","#dFrom","#dTo"].forEach(s=>$(s).addEventListener("input",render));
+  // Debounce live-typing inputs so we don't filter+sort+repaint ~13k rows on every keystroke.
+  const renderSoon=debounce(render,180);
+  ["#q","#dFrom","#dTo"].forEach(s=>$(s).addEventListener("input",renderSoon));
   $("#fRepeatDonor").addEventListener("change",render);
   $("#fStar").addEventListener("change",render);
   $("#fWiki").addEventListener("change",render);
@@ -612,13 +615,17 @@ function init(){
     const chip=e.target.closest(".svchip"); if(chip){ const v=loadViews()[+chip.dataset.i]; if(v) applyState(v.state); }
   });
   window.addEventListener("resize",measureSticky);
-  // Infinite scroll: load the next page as the bottom comes into view.
+  // Infinite scroll: append the next page as the bottom comes into view.
+  // Passive listener + rAF guard so a burst of scroll events does one append.
+  let scrollPending=false;
   window.addEventListener("scroll",()=>{
-    if(shownCount>=lastSorted.length) return;
-    if(window.innerHeight+window.scrollY >= document.body.offsetHeight-700){
-      shownCount=Math.min(shownCount+PAGE,lastSorted.length); paintRows();
-    }
-  });
+    if(scrollPending || shownCount>=lastSorted.length) return;
+    scrollPending=true;
+    requestAnimationFrame(()=>{
+      scrollPending=false;
+      if(window.innerHeight+window.scrollY >= document.body.offsetHeight-700) appendNextPage();
+    });
+  },{passive:true});
   // Date presets for "Subscribed between"
   $("#datePresets").addEventListener("click",e=>{
     const b=e.target.closest("button[data-preset]"); if(!b) return;
@@ -1124,31 +1131,29 @@ function render(){
   paintRows();
   measureSticky();
 }
-function paintRows(){
-  const all=lastSorted, shown=all.slice(0,shownCount);
-  $("#resultbar").innerHTML=(shownCount<all.length
-    ? `Showing <b>${shownCount.toLocaleString()}</b> of ${all.length.toLocaleString()} &nbsp;·&nbsp; scroll for more, or Export CSV for the full list`
-    : `Showing <b>${all.length.toLocaleString()}</b> of ${all.length.toLocaleString()} people`);
-  $("#rows").innerHTML=shown.map(p=>{
-    const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'')+(p.wiki?' wiki':'');
-    const key=esc(personKey(p));
-    const noteDot=p.note?`<a class="notedot" role="button" tabindex="0" data-key="${key}" title="${esc(p.note)}">📝</a>`:'';
-    const acts=`<a class="edit" role="button" tabindex="0" aria-label="Edit or delete ${esc(p.n||p.e||'this person')}" data-key="${key}" title="Edit or delete this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" role="button" tabindex="0" aria-label="Confirm name ${esc(p.n)} is correct" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}${noteDot}`;
-    const star=`<a class="star${p.star?' on':''}" role="button" tabindex="0" data-key="${key}" aria-label="${p.star?'Unstar':'Star'} ${esc(p.n||p.e||'this contact')}" title="${p.star?'Starred — click to unstar':'Star this contact'}">${p.star?'★':'☆'}</a>`;
-    const types=(p.types||[]).map(t=>{
-      const x=(t==='VC contributor'&&p.arts>1)?` ×${p.arts}`:'';
-      if(t==='VC contributor'&&p.auth){
-        const an=encodeURIComponent(p.aname||p.n);
-        return `<a class="pill pill-link" href="../?author=${an}" target="_blank" rel="noopener" title="See ${esc(p.aname||p.n)}'s pieces in the catalogue ↗">${esc(t)}${x} ↗</a>`;
-      }
-      return `<span class="pill" data-type="${esc(t)}">${esc(t)}${x}</span>`;
-    }).join("")||'<span class="muted">—</span>';
-    const emailCell=(p.emails&&p.emails.length)
-      ? p.emails.map(e=>`<span class="emrow"><a class="emlink" href="mailto:${esc(e)}">${esc(e)}</a><a class="emcopy" role="button" tabindex="0" data-email="${esc(e)}" title="Copy ${esc(e)}" aria-label="Copy ${esc(e)}">⧉</a></span>`).join("")
-      : '<span class="muted">—</span>';
-    // mark empty cells so the phone card view can hide them (no "DONOR —" clutter)
-    const bl=c=>c?'':' blank';
-    return `
+// Build the HTML for a single person row. Pulled out of paintRows so the
+// infinite-scroll handler can append just the new page instead of re-serializing
+// every row already in the DOM.
+function rowHTML(p){
+  const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'')+(p.wiki?' wiki':'');
+  const key=esc(personKey(p));
+  const noteDot=p.note?`<a class="notedot" role="button" tabindex="0" data-key="${key}" title="${esc(p.note)}">📝</a>`:'';
+  const acts=`<a class="edit" role="button" tabindex="0" aria-label="Edit or delete ${esc(p.n||p.e||'this person')}" data-key="${key}" title="Edit or delete this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" role="button" tabindex="0" aria-label="Confirm name ${esc(p.n)} is correct" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}${noteDot}`;
+  const star=`<a class="star${p.star?' on':''}" role="button" tabindex="0" data-key="${key}" aria-label="${p.star?'Unstar':'Star'} ${esc(p.n||p.e||'this contact')}" title="${p.star?'Starred — click to unstar':'Star this contact'}">${p.star?'★':'☆'}</a>`;
+  const types=(p.types||[]).map(t=>{
+    const x=(t==='VC contributor'&&p.arts>1)?` ×${p.arts}`:'';
+    if(t==='VC contributor'&&p.auth){
+      const an=encodeURIComponent(p.aname||p.n);
+      return `<a class="pill pill-link" href="../?author=${an}" target="_blank" rel="noopener" title="See ${esc(p.aname||p.n)}'s pieces in the catalogue ↗">${esc(t)}${x} ↗</a>`;
+    }
+    return `<span class="pill" data-type="${esc(t)}">${esc(t)}${x}</span>`;
+  }).join("")||'<span class="muted">—</span>';
+  const emailCell=(p.emails&&p.emails.length)
+    ? p.emails.map(e=>`<span class="emrow"><a class="emlink" href="mailto:${esc(e)}">${esc(e)}</a><a class="emcopy" role="button" tabindex="0" data-email="${esc(e)}" title="Copy ${esc(e)}" aria-label="Copy ${esc(e)}">⧉</a></span>`).join("")
+    : '<span class="muted">—</span>';
+  // mark empty cells so the phone card view can hide them (no "DONOR —" clutter)
+  const bl=c=>c?'':' blank';
+  return `
     <tr${p.unsub?' title="Unsubscribed — former contact"':''}>
       <td>${star} <span class="nm${g}">${esc(np.first)||'<span class="muted">—</span>'}</span></td>
       <td><span class="nm${g}">${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
@@ -1158,7 +1163,27 @@ function paintRows(){
       <td data-label="Institution" class="c-inst${bl(p.inst)}">${esc(p.inst)||'<span class="muted">—</span>'}</td>
       <td data-label="Email" class="em${p.unsub?' unsub':''}${bl(p.emails&&p.emails.length)}">${emailCell}</td>
     </tr>`;
-  }).join("");
+}
+function resultBar(){
+  const total=lastSorted.length;
+  $("#resultbar").innerHTML=(shownCount<total
+    ? `Showing <b>${shownCount.toLocaleString()}</b> of ${total.toLocaleString()} &nbsp;·&nbsp; scroll for more, or Export CSV for the full list`
+    : `Showing <b>${total.toLocaleString()}</b> of ${total.toLocaleString()} people`);
+}
+// Full repaint — used on every filter/sort change.
+function paintRows(){
+  resultBar();
+  $("#rows").innerHTML=lastSorted.slice(0,shownCount).map(rowHTML).join("");
+  measureSticky();
+}
+// Append only the newest page — used by the infinite-scroll handler so rows
+// already in the DOM aren't rebuilt.
+function appendNextPage(){
+  if(shownCount>=lastSorted.length) return;
+  const from=shownCount, to=Math.min(shownCount+PAGE,lastSorted.length);
+  $("#rows").insertAdjacentHTML("beforeend", lastSorted.slice(from,to).map(rowHTML).join(""));
+  shownCount=to;
+  resultBar();
   measureSticky();
 }
 

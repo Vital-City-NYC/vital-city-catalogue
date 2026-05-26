@@ -90,6 +90,11 @@ jobs:
       - name: Rebuild fused people dataset
         run: python3 build_network.py
 
+      - name: Safety check — refuse to publish a gutted dataset
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: python3 sanity_check.py   # no fallback: a non-zero exit must stop the job before encrypt/commit
+
       - name: Encrypt for publishing
         env:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
@@ -97,6 +102,11 @@ jobs:
 
       - name: Commit & push if changed
         run: |
+          # Defense-in-depth: never commit a missing/tiny encrypted file (real one is ~6 MB).
+          if [ ! -s network/data.enc ] || [ "$(wc -c < network/data.enc)" -lt 100000 ]; then
+            echo "ERROR: network/data.enc missing or suspiciously small — aborting commit."
+            exit 1
+          fi
           git config user.name "Vital City Bot"
           git config user.email "actions@users.noreply.github.com"
           git add data network/data.enc
