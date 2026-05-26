@@ -160,6 +160,8 @@
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--vc-black);color:#fff;padding:10px 18px;font-size:13px;font-weight:700;z-index:300;opacity:0;transition:opacity .2s}
   .toast.show{opacity:1}
   .actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .sortctl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--vc-charcoal);display:inline-flex;align-items:center;gap:5px}
+  .sortctl select{font-size:12px;font-weight:700;text-transform:none;letter-spacing:0;padding:5px 6px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);cursor:pointer}
   .resultbar{font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
   .hintlink{color:var(--vc-cerulean);font-weight:700;text-decoration:none;white-space:nowrap}
   .hintlink:hover{text-decoration:underline}
@@ -333,6 +335,16 @@
           <div class="filtersentence" id="filterSentence"></div>
         </div>
         <div class="actions">
+          <label class="sortctl" title="Choose how to order the list">Sort:
+            <select id="sortMenu" aria-label="Sort the list by">
+              <option value="last:1">Last name (A–Z)</option>
+              <option value="first:1">First name (A–Z)</option>
+              <option value="since:-1">Recently subscribed</option>
+              <option value="since:1">Longest subscribed</option>
+              <option value="eng:-1">Most engaged</option>
+              <option value="damt:-1">Donation size</option>
+            </select>
+          </label>
           <button class="btn" id="addPerson" title="Manually add one new person">+ Add person</button>
           <button class="btn" id="needsReview" title="Records that could use a human check (incl. possible duplicates)">Needs review</button>
           <button class="btn primary" id="export">Export CSV</button>
@@ -644,6 +656,7 @@ function init(){
   $("#edEmailCard").addEventListener("click",emailCard);
   $("#editModal").addEventListener("click",e=>{if(e.target.id==="editModal")closeEdit();});
   document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(!k)return;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="arts")?-1:1;}render();}));
+  $("#sortMenu").addEventListener("change",e=>{const [k,d]=e.target.value.split(":");sortKey=k;sortDir=+d;render();});
   $("#rows").addEventListener("click",e=>{
     const st=e.target.closest(".star"); if(st){e.stopPropagation();toggleStar(st.dataset.key);return;}
     const ec=e.target.closest(".emcopy"); if(ec){e.stopPropagation();navigator.clipboard.writeText(ec.dataset.email).then(()=>toast("Copied "+ec.dataset.email)).catch(()=>toast("Copy failed"));return;}
@@ -1101,6 +1114,8 @@ function render(){
     else if(th.dataset.k) th.innerHTML=base+' <span class="sa">▲</span>';
     else th.textContent=base;
   });
+  // keep the Sort menu in sync (blank when sorting by a column not in the menu, e.g. Type/Institution/Email)
+  const sm=$("#sortMenu"); if(sm){const cur=sortKey+":"+sortDir; sm.value=[...sm.options].some(o=>o.value===cur)?cur:"";}
   lastSorted=sortRows(filtered());
   shownCount=Math.min(PAGE,lastSorted.length);
   $("#filterSentence").innerHTML=describeFilters();
