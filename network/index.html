@@ -287,44 +287,45 @@
 <div id="app">
   <div class="toast" id="toast"></div>
   <header class="mast">
-    <a class="howto" href="about.html" target="_blank">How it works ↗</a>
+    <a class="howto" href="about.html" target="_blank" title="Open the full plain-English guide to this tool in a new tab — what every feature does and how the data updates.">How it works ↗</a>
     <div class="wm">Vital City</div>
     <h1>Contact master search</h1>
     <div class="sub">Everyone in Vital City's orbit — newsletter subscribers, contributors, contacts and donors — searchable by type and category. Filter to any subset, then export it, copy its emails, or email the group.</div>
   </header>
-  <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute<a href="#" id="forget" style="float:right;color:#fff;text-decoration:underline">Lock / forget password on this device</a><a href="#" id="themeToggle" style="float:right;color:#fff;text-decoration:underline;margin-right:18px">🌙 Dark mode</a></div>
+  <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute<a href="#" id="forget" style="float:right;color:#fff;text-decoration:underline" title="Forget the saved passphrase on this device and re-lock the tool. Use this on a shared or public computer when you're done.">Lock / forget password on this device</a><a href="#" id="themeToggle" style="float:right;color:#fff;text-decoration:underline;margin-right:18px" title="Switch between light and dark color themes. Your choice is remembered on this device.">🌙 Dark mode</a></div>
   <div class="stats" id="stats"></div>
-  <div class="activitybar" id="activityBar"></div>
+  <div class="activitybar" id="activityBar" title="A quick pulse of recent movement: new newsletter sign-ups, people who unsubscribed, and money raised (with the number of gifts) over the last 7 and 30 days. Refreshes daily."></div>
   <div class="controls">
     <span class="toghint">Show:</span>
     <div class="toggles">
       <button class="tg" id="tSub" title="Click once to include, again to exclude (Not subscribers), again for off. Newsletter subscribers.">Subscribers</button>
       <button class="tg" id="tDon" title="Click once to include, again to exclude (Not donors), again for off. People who have given.">Donors</button>
       <button class="tg" id="tAuth" title="Click once to include, again to exclude (Not authors), again for off. Vital City contributors.">Authors</button>
-      <button class="tg" id="tOther" title="None of subscriber, donor or author">Other</button>
+      <button class="tg" id="tOther" title="People who are none of the three — not a subscriber, donor or author (often CRM contacts). Click once to include, again to exclude, again for off.">Other</button>
     </div>
     <span class="toglegend">Click a category to cycle it: <span class="lg lg-inc">✓ include</span> → <span class="lg lg-exc">✕ exclude</span> → <span class="lg lg-off">off</span>. Turn on two or more to see the overlap.</span>
-    <label class="chk" id="repeatDonorWrap" style="display:none"><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
-    <input type="search" id="q" placeholder="Search name, email, institution, notes…" autocomplete="off" aria-label="Search by name, email, institution or notes (press / to focus)">
-    <label class="chk"><input type="checkbox" id="fStar"> ★ Starred</label>
-    <label class="chk" title="People with an English Wikipedia page (matched conservatively using context clues)"><input type="checkbox" id="fWiki"> <span style="text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px">Notable</span></label>
-    <label class="chk"><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
+    <label class="chk" id="repeatDonorWrap" style="display:none" title="Show only donors who have given more than once (appears when the Donors filter is on)."><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
+    <input type="search" id="q" placeholder="Search name, email, institution, notes…" autocomplete="off" aria-label="Search by name, email, institution or notes (press / to focus)" title="Type to narrow the list. Matches names, email addresses, institutions and your notes — and updates as you type. Shortcut: press / to jump here.">
+    <label class="chk" title="Show only contacts you've starred. Star anyone by clicking the ☆ at the start of their row."><input type="checkbox" id="fStar"> ★ Starred</label>
+    <label class="chk" title="Show only people flagged 'notable' — they appear to have an English Wikipedia page (matched conservatively using context clues, so it's a rough signal of public profile)."><input type="checkbox" id="fWiki"> <span style="text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px">Notable</span></label>
+    <label class="chk" title="Also show people who left the newsletter. They're hidden by default and appear in red when shown."><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
     <button class="btn primary" id="clear" title="Reset every filter and return to the full list">Reset all</button>
   </div>
   <div class="savedviews" id="savedViews"></div>
-  <div class="hint">Click <b>✎</b> on any row to change a person's details or delete the entry; <b>✓</b> confirms a <span class="g">gray</span> guessed name. Press <kbd>?</kbd> for shortcuts. <a href="#" id="exportFixes" class="hintlink">Export edits →</a></div>
+  <div class="hint"><b>New here?</b> Hover over any button, column heading or tag for a plain-English explanation — or read the <a href="about.html" target="_blank" class="hintlink">full guide ↗</a>. Click <b>✎</b> on any row to change a person's details or delete the entry; <b>✓</b> confirms a <span class="g">gray</span> guessed name; click the <b>☆</b> to star someone. Press <kbd>?</kbd> for keyboard shortcuts. <a href="#" id="exportFixes" class="hintlink" title="Download a backup file of all the edits, confirmations and deletions made in this tool. Not normally needed — edits already save automatically.">Export edits →</a></div>
   <div class="layout">
     <aside>
-      <h2>Filter by type<span class="infodot" title="Types are pieced together from our contact CRM plus automatic inference: 'VC contributor' from a published byline, 'journalist' from a news-outlet email domain, 'current nyc.gov' from an active city email, and others from the CRM. They are approximate and may be incomplete or out of date — edit any row to correct it.">i</span><span class="facetbulk"><a href="#" data-bulk="types:all">all</a> · <a href="#" data-bulk="types:none">clear</a></span></h2>
-      <input class="facetSearch" data-for="typeFacets" placeholder="filter types…" aria-label="Filter the type list">
+      <h2>Filter by type<span class="infodot" title="Types are pieced together from our contact CRM plus automatic inference: 'VC contributor' from a published byline, 'journalist' from a news-outlet email domain, 'current nyc.gov' from an active city email, and others from the CRM. They are approximate and may be incomplete or out of date — edit any row to correct it.">i</span><span class="facetbulk"><a href="#" data-bulk="types:all" title="Tick every type at once">all</a> · <a href="#" data-bulk="types:none" title="Untick every type">clear</a></span></h2>
+      <input class="facetSearch" data-for="typeFacets" placeholder="filter types…" aria-label="Filter the type list" title="Long list? Type here to shrink the checkboxes below to matching types. Then tick the ones you want — ticking several shows anyone in any of them.">
+      <div class="facethint" style="font-size:11px;color:var(--vc-charcoal);margin:-2px 0 4px">Tick one or more — results show anyone matching <i>any</i> ticked box.</div>
       <div id="typeFacets"></div>
-      <h2 style="margin-top:18px">Area of specialty<span class="infodot" title="Areas of specialty are extrapolated from the topics a person has written about for Vital City (and CRM notes where available). They are inferred, so they're approximate and won't be exhaustive — edit any row to adjust.">i</span><span class="facetbulk"><a href="#" data-bulk="specs:all">all</a> · <a href="#" data-bulk="specs:none">clear</a></span></h2>
-      <input class="facetSearch" data-for="specFacets" placeholder="filter areas…" aria-label="Filter the specialty list">
+      <h2 style="margin-top:18px">Area of specialty<span class="infodot" title="Areas of specialty are extrapolated from the topics a person has written about for Vital City (and CRM notes where available). They are inferred, so they're approximate and won't be exhaustive — edit any row to adjust.">i</span><span class="facetbulk"><a href="#" data-bulk="specs:all" title="Tick every area at once">all</a> · <a href="#" data-bulk="specs:none" title="Untick every area">clear</a></span></h2>
+      <input class="facetSearch" data-for="specFacets" placeholder="filter areas…" aria-label="Filter the specialty list" title="Type here to shrink the list below to matching areas (e.g. 'housing'), then tick the ones you want.">
       <div id="specFacets"></div>
-      <h2 style="margin-top:18px">Subscribed between</h2>
-      <div class="daterow"><input type="date" id="dFrom" title="Subscribed on or after"><span>to</span><input type="date" id="dTo" title="Subscribed on or before"></div>
-      <div class="datepresets" id="datePresets"><button data-preset="30">Last 30 days</button><button data-preset="year">This year</button><button data-preset="2024">'24 onward</button><button data-preset="all">All time</button></div>
-      <h2 style="margin-top:18px">By type × subscribers</h2>
+      <h2 style="margin-top:18px" title="Narrow to people who joined the newsletter within a date window. Leave a box empty for 'any'.">Subscribed between</h2>
+      <div class="daterow"><input type="date" id="dFrom" title="Show people who subscribed on or after this date"><span>to</span><input type="date" id="dTo" title="Show people who subscribed on or before this date"></div>
+      <div class="datepresets" id="datePresets"><button data-preset="30" title="People who subscribed in the last 30 days">Last 30 days</button><button data-preset="year" title="People who subscribed since Jan 1 this year">This year</button><button data-preset="2024" title="People who subscribed from 2024 onward">'24 onward</button><button data-preset="all" title="Clear the date filter (any join date)">All time</button></div>
+      <h2 style="margin-top:18px" title="A snapshot of how many people of each type are also newsletter subscribers. The blue bar shows the share who subscribe. Click a row to filter the list to that type.">By type × subscribers</h2>
       <table class="matrix" id="matrix"></table>
       <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">Blue fill = share of that type who subscribe.</div>
     </aside>
@@ -336,7 +337,8 @@
         </div>
         <div class="actions">
           <label class="sortctl" title="Choose how to order the list">Sort:
-            <select id="sortMenu" aria-label="Sort the list by">
+            <select id="sortMenu" aria-label="Sort the list by" title="Change the order of the list: by name, by when someone subscribed, by their most recent donation, by email engagement, or by donation size.">
+
               <option value="last:1">Last name (A–Z)</option>
               <option value="first:1">First name (A–Z)</option>
               <option value="since:-1">Recently subscribed</option>
@@ -348,10 +350,10 @@
           </label>
           <button class="btn" id="addPerson" title="Manually add one new person">+ Add person</button>
           <button class="btn" id="needsReview" title="Records that could use a human check (incl. possible duplicates)">Needs review</button>
-          <button class="btn primary" id="export">Export CSV</button>
-          <button class="btn" id="copyEmails">Copy emails</button>
-          <select id="emailField" title="Which field to drop recipients into"><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
-          <button class="btn" id="emailGroup">Email group</button>
+          <button class="btn primary" id="export" title="Download everyone currently shown as a spreadsheet (.csv) — opens in Excel or Google Sheets. Respects your filters and sort.">Export CSV</button>
+          <button class="btn" id="copyEmails" title="Copy the email addresses of everyone currently shown to your clipboard, ready to paste anywhere.">Copy emails</button>
+          <select id="emailField" title="Which address field the emails go into when you click 'Email group': Bcc (recipients can't see each other — best for newsletters), To, or Cc."><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
+          <button class="btn" id="emailGroup" title="Open a new message in your email app addressed to everyone currently shown (in the Bcc/To/Cc field you picked). For big lists, 'Copy emails' is more reliable.">Email group</button>
         </div>
       </div>
       <div class="tablewrap">
@@ -362,13 +364,13 @@
             <col style="width:14%"><col style="width:21%">
           </colgroup>
           <thead><tr>
-            <th data-k="first">First name</th>
-            <th data-k="last">Last name</th>
-            <th data-k="types">Type(s)</th>
+            <th data-k="first" title="Click to sort by first name (A–Z). Click again to reverse.">First name</th>
+            <th data-k="last" title="Click to sort by last name (A–Z). Click again to reverse. Compound surnames like 'Jones Austin' are kept together.">Last name</th>
+            <th data-k="types" title="What this person is — their roles and areas (journalist, academic, city gov, VC contributor, etc.). Click a tag to filter the list to it. Click this header to sort.">Type(s)</th>
             <th data-k="eng" title="Subscriber status + email engagement from Mailchimp. The dots (●●○○○) are Mailchimp's 1–5 engagement rating; the % is the subscriber's average newsletter open rate. Click to rank most-engaged first.">Subscriber</th>
-            <th data-k="damt">Donor</th>
-            <th data-k="inst">Institution</th>
-            <th data-k="e">Email</th>
+            <th data-k="damt" title="Total this person has given (and the date of their most recent gift). Click to sort by amount, biggest first.">Donor</th>
+            <th data-k="inst" title="The person's organization or employer. Click to sort A–Z.">Institution</th>
+            <th data-k="e" title="All known email addresses for this person. Hover an address for a one-click copy button; click an address to start an email. Click this header to sort.">Email</th>
           </tr></thead>
           <tbody id="rows"></tbody>
         </table>
@@ -405,11 +407,11 @@
         <div class="updcaution">To add several people at once, use the Sheet's <b>"Add people"</b> tab (plain columns) — those rows flow in on the next refresh. Otherwise make changes <b>through this tool</b>; editing the <code>overrides</code> tab's raw JSON by hand is fragile (deleting a row to undo is fine).</div>
       </div>
       <div class="modalbtns">
-        <button class="btn primary" id="edSave">Save</button>
-        <button class="btn" id="edCancel">Cancel</button>
+        <button class="btn primary" id="edSave" title="Save your changes. They're stored for everyone automatically — you see them now, others on the next daily refresh.">Save</button>
+        <button class="btn" id="edCancel" title="Close without saving any changes.">Cancel</button>
         <button class="btn" id="edEmailCard" title="Open your mail app with this contact's full details in the message">✉ Email this card</button>
         <button class="btn" id="edCopyLink" title="Copy a link that opens this person's card (needs the passphrase to view)">🔗 Copy link</button>
-        <button class="btn" id="edDelete" style="margin-left:auto;border-color:var(--vc-magenta);color:var(--vc-magenta)">Delete entry</button>
+        <button class="btn" id="edDelete" style="margin-left:auto;border-color:var(--vc-magenta);color:var(--vc-magenta)" title="Remove this person from the tool for everyone. (If they still come from a live source like Ghost or Donorbox, they'll return on the next refresh.)">Delete entry</button>
         <span class="lbl-note">Saved for everyone automatically — shows for you now, for everyone on the next daily refresh.</span>
       </div>
     </div>
@@ -773,7 +775,7 @@ function buildMatrix(){
     const grp=PEOPLE.filter(p=>!p.unsub&&(p.types||[]).includes(c));
     const m=grp.filter(p=>p.mem).length;
     const pct=grp.length?Math.round(100*m/grp.length):0;
-    return `<tr data-type="${c}"><td>${c}<div class="bar"><i style="width:${pct}%"></i></div></td><td class="m">${m}/${grp.length}</td></tr>`;
+    return `<tr data-type="${c}" title="${m} of ${grp.length} ${c} are newsletter subscribers. Click to filter the list to ${c}."><td>${c}<div class="bar"><i style="width:${pct}%"></i></div></td><td class="m">${m}/${grp.length}</td></tr>`;
   }).join("");
   $("#matrix").innerHTML=rows;
   $("#matrix").addEventListener("click",e=>{const tr=e.target.closest("tr");if(!tr)return;toggleCat(tr.dataset.type,!selectedCats.has(tr.dataset.type));});
@@ -1155,6 +1157,9 @@ function render(){
 // every row already in the DOM.
 function rowHTML(p){
   const np=nameParts(p.n), g=(p.ns==='guess'?' guess':'')+(p.unsub?' unsub':'')+(p.wiki?' wiki':'');
+  // hover help: explain a gray (guessed) name and a notable (underlined) name
+  const nmTitle=p.wiki?' title="Notable — appears to have an English Wikipedia page (a rough signal of public profile)."'
+                :(p.ns==='guess'?' title="This name is an educated guess from the email address — click the ✓ to confirm it, or ✎ to fix it."':'');
   const key=esc(personKey(p));
   const noteDot=p.note?`<a class="notedot" role="button" tabindex="0" data-key="${key}" title="${esc(p.note)}">📝</a>`:'';
   const acts=`<a class="edit" role="button" tabindex="0" aria-label="Edit or delete ${esc(p.n||p.e||'this person')}" data-key="${key}" title="Edit or delete this person">✎</a>${p.ns==='guess'&&p.n?`<a class="confirm" role="button" tabindex="0" aria-label="Confirm name ${esc(p.n)} is correct" data-key="${key}" title="Confirm this name is correct">✓</a>`:''}${noteDot}`;
@@ -1165,17 +1170,17 @@ function rowHTML(p){
       const an=encodeURIComponent(p.aname||p.n);
       return `<a class="pill pill-link" href="../?author=${an}" target="_blank" rel="noopener" title="See ${esc(p.aname||p.n)}'s pieces in the catalogue ↗">${esc(t)}${x} ↗</a>`;
     }
-    return `<span class="pill" data-type="${esc(t)}">${esc(t)}${x}</span>`;
+    return `<span class="pill" data-type="${esc(t)}" title="Click to filter the list to everyone tagged '${esc(t)}'.">${esc(t)}${x}</span>`;
   }).join("")||'<span class="muted">—</span>';
   const emailCell=(p.emails&&p.emails.length)
-    ? p.emails.map(e=>`<span class="emrow"><a class="emlink" href="mailto:${esc(e)}">${esc(e)}</a><a class="emcopy" role="button" tabindex="0" data-email="${esc(e)}" title="Copy ${esc(e)}" aria-label="Copy ${esc(e)}">⧉</a></span>`).join("")
+    ? p.emails.map(e=>`<span class="emrow"><a class="emlink" href="mailto:${esc(e)}" title="Click to start an email to ${esc(e)} in your mail app">${esc(e)}</a><a class="emcopy" role="button" tabindex="0" data-email="${esc(e)}" title="Copy ${esc(e)} to the clipboard" aria-label="Copy ${esc(e)}">⧉</a></span>`).join("")
     : '<span class="muted">—</span>';
   // mark empty cells so the phone card view can hide them (no "DONOR —" clutter)
   const bl=c=>c?'':' blank';
   return `
     <tr${p.unsub?' title="Unsubscribed — former contact"':''}>
-      <td>${star} <span class="nm${g}">${esc(np.first)||'<span class="muted">—</span>'}</span></td>
-      <td><span class="nm${g}">${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
+      <td>${star} <span class="nm${g}"${nmTitle}>${esc(np.first)||'<span class="muted">—</span>'}</span></td>
+      <td><span class="nm${g}"${nmTitle}>${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
       <td data-label="Type(s)" class="c-type${bl(p.types&&p.types.length)}">${types}</td>
       <td data-label="Subscriber" class="c-mem${bl(p.unsub||p.mem)}">${p.unsub?'<span class="badge" style="background:#c8102e;color:#fff">Unsubscribed</span>':(p.mem?`<span class="badge b-mem">Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>${p.erate?`<span class="erate" title="Email engagement, from Mailchimp. Dots = Mailchimp's engagement rating for this subscriber (${p.erate} of 5 ● — based on how often they open & click). ${p.eopen}% = their average open rate across our newsletters; ${p.eclick}% = average click rate. Rating and open rate can differ: a 5/5 reader who only recently joined may still show a low historical open %.">${"●".repeat(p.erate)}${"○".repeat(5-p.erate)} ${p.eopen}%</span>`:''}`:'<span class="muted">—</span>')}</td>
       <td data-label="Donor" class="c-don${bl(p.don)}">${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
