@@ -509,6 +509,18 @@ function nameParts(n){
 // otherwise fall back to the heuristic split of the full name.
 function firstName(p){ return p.fn || nameParts(p.n).first; }
 function lastName(p){ return p.ln || nameParts(p.n).last; }
+// Nickname → formal name, so the duplicate finder treats Dan/Daniel, Jeff/Jeffrey, etc.
+// as the same first name — but never lumps genuinely different names (John ≠ Jason).
+const NICK={jeff:"jeffrey",geoff:"geoffrey",ben:"benjamin",benji:"benjamin",mike:"michael",mick:"michael",
+  chris:"christopher",dave:"david",dan:"daniel",danny:"daniel",tom:"thomas",tommy:"thomas",rob:"robert",
+  bob:"robert",bobby:"robert",rich:"richard",rick:"richard",dick:"richard",jim:"james",jimmy:"james",
+  bill:"william",will:"william",billy:"william",steve:"stephen",matt:"matthew",nick:"nicholas",tony:"anthony",
+  alex:"alexander",sam:"samuel",greg:"gregory",joe:"joseph",ed:"edward",ted:"edward",andy:"andrew",drew:"andrew",
+  ken:"kenneth",ron:"ronald",pat:"patrick",cathy:"catherine",kate:"katherine",katie:"katherine",kathy:"katherine",
+  liz:"elizabeth",beth:"elizabeth",betsy:"elizabeth",sue:"susan",jen:"jennifer",jenny:"jennifer",becky:"rebecca",
+  meg:"margaret",peggy:"margaret",abby:"abigail",josh:"joshua",zach:"zachary",nate:"nathaniel",gabe:"gabriel",
+  fred:"frederick",ray:"raymond",vince:"vincent",cy:"cyrus",jon:"jonathan",jonny:"jonathan"};
+function canonFirst(f){ f=sortName(f); return NICK[f]||f; }
 // Normalize a name part for sorting: lowercase, drop punctuation/accents so
 // "O'Brien", "“Gary”" etc. sort by their letters, not by leading symbols.
 function sortName(s){return (s||"").toLowerCase().normalize("NFKD").replace(/[^a-z0-9 ]+/g,"").trim();}
@@ -1168,13 +1180,15 @@ function doEmailGroup(){
 function findDuplicates(){
   const nameB=new Map(), emailB=new Map();
   PEOPLE.forEach(p=>{
-    const np=nameParts(p.n), last=sortName(np.last), first=sortName(np.first);
-    if(last && last.length>=4 && first){ const k=first.charAt(0)+"|"+last; (nameB.get(k)||nameB.set(k,[]).get(k)).push(p); }
+    const np=nameParts(p.n), last=sortName(np.last), first=canonFirst(np.first);
+    // Group by FULL first name (nickname-normalized) + last name — so Dan/Daniel Garodnick
+    // match but John Smith and Jason Smith never do. Require a real first name (3+ chars).
+    if(last && last.length>=4 && first && first.length>=3){ const k=first+"|"+last; (nameB.get(k)||nameB.set(k,[]).get(k)).push(p); }
     (p.emails||[]).forEach(e=>{ e=e.toLowerCase(); (emailB.get(e)||emailB.set(e,[]).get(e)).push(p); });
   });
   const groups=[];
   emailB.forEach((g,e)=>{ const u=[...new Set(g)]; if(u.length>1) groups.push({why:"shared email · "+e, people:u}); });
-  nameB.forEach(g=>{ const u=[...new Set(g)]; if(u.length>1 && u.length<=4) groups.push({why:"similar name", people:u}); });
+  nameB.forEach(g=>{ const u=[...new Set(g)]; if(u.length>1 && u.length<=4) groups.push({why:"same name", people:u}); });
   const seen=new Set(), out=[];
   groups.forEach(gr=>{ const sig=gr.people.map(personKey).sort().join("|"); if(!seen.has(sig)){ seen.add(sig); out.push(gr); } });
   return out;
