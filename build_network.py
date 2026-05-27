@@ -151,7 +151,9 @@ WEBMAIL = {"gmail.com","googlemail.com","yahoo.com","ymail.com","hotmail.com","o
 
 
 DOMCOUNT = {}   # email-domain -> # of distinct people using it (filled in main; for the shared-domain fallback)
-SUB_INFO = {}   # email -> {"sub": bool (active Ghost newsletter sub), "seen": last_seen ISO} (filled during member ingest)
+SUB_INFO = {}   # email -> {"ghost_active": bool (Ghost flag), "seen": last_seen ISO, "created": Ghost signup date}
+MC_SUB = set()      # emails Mailchimp lists as status=subscribed — the system of record for the newsletter
+MC_UNSUB = {}       # email -> Mailchimp unsubscribe date. Unsub wins UNLESS the Ghost signup is newer (resubscribe).
 
 
 def infer_institution(emails):
@@ -547,9 +549,10 @@ def main():
             # Record which emails are *actively* subscribed in Ghost + their last activity,
             # for the resubscribe fix and for marking the subscription email(s) in the UI.
             if email:
-                sub = str(row.get("subscribed") or "").strip().lower() in ("1", "true", "yes")
-                seen = (row.get("last_seen") or "").strip()
-                SUB_INFO[email] = {"sub": sub, "seen": seen}
+                gactive = str(row.get("subscribed") or "").strip().lower() in ("1", "true", "yes")
+                SUB_INFO[email] = {"ghost_active": gactive,
+                                   "seen": (row.get("last_seen") or "").strip(),
+                                   "created": since}   # Ghost signup date (for the resubscribe tiebreaker)
             index(p)
 
     # (Subscribers come from Ghost only — Mailchimp subscribed list intentionally
@@ -677,19 +680,34 @@ def main():
                 ud = (row.get("Unsub Date") or "").strip()[:10]
                 if ud > p["udate"]:
                     p["udate"] = ud
+                MC_UNSUB[email] = max(ud, MC_UNSUB.get(email, ""))   # Mailchimp unsubscribe date for this email
                 if "unsub" not in p["src"]:
                     p["src"].append("unsub")
                 index(p)
 
-    # ---- 4d. Engagement (Mailchimp member_rating + open/click rates), joined by email ----
+    # ---- 4d. Mailchimp SUBSCRIBED list = the newsletter system of record (+ engagement). ----
+    # Every email here is currently subscribed in Mailchimp. We also CREATE people who are
+    # subscribed in Mailchimp but missing from Ghost (legacy/direct signups), so all subscribers
+    # are captured — not just Ghost members.
     eng_path = PRIV / "engagement_source.csv"
     if eng_path.exists():
         with open(eng_path, newline="") as f:
             for row in csv.DictReader(f):
                 em = email_norm(row.get("Email"))
-                p = by_email.get(em)
-                if not p:
+                if not em:
                     continue
+                MC_SUB.add(em)
+                fn, ln = (row.get("First Name") or "").strip(), (row.get("Last Name") or "").strip()
+                name = f"{fn} {ln}".strip()
+                p = by_email.get(em)
+                if not p:                                  # Mailchimp subscriber not yet in Ghost — add them
+                    guess = name_from_email(em) if not name else ""
+                    p = get_or_make(emails=[em], name=norm(name or guess), fl=firstlast(name))
+                    set_email(p, em)
+                    set_name(p, name, True) if name else set_name(p, guess, False)
+                    if "mc-sub" not in p["src"]:
+                        p["src"].append("mc-sub")
+                    index(p)
                 try: r = int(float(row.get("Rating") or 0))
                 except ValueError: r = 0
                 try: o = int(float(row.get("Open Rate") or 0))
@@ -723,12 +741,15 @@ def main():
             DOMCOUNT[dom] = DOMCOUNT.get(dom, 0) + 1
 
     # Finalize emails + institution:
-    #  - drop made-up @vitalcitynyc.org emails from authors/contributors,
+    #  - drop made-up @vitalcitynyc.org byline emails from authors/contributors, BUT keep a
+    #    @vitalcitynyc.org address that's a real subscriber (a Ghost member or Mailchimp-subscribed
+    #    staff address, e.g. jgreenman@vitalcitynyc.org) — only the fake /users/ byline ones go,
     #  - recompute the primary email,
     #  - infer institution from an email domain where it's blank.
     for p in people:
         if p["auth"] or "VC contributor" in p["types"]:
-            p["emails"] = [e for e in p["emails"] if not e.endswith("vitalcitynyc.org")]
+            p["emails"] = [e for e in p["emails"]
+                           if not e.endswith("vitalcitynyc.org") or e in MC_SUB or e in SUB_INFO]
         p["e"] = primary_email(p["emails"])
         if not p["inst"]:
             inst = infer_institution(p["emails"])
@@ -768,24 +789,7 @@ def main():
     before = len(people)
     people = merge_people(people)
     print(f"merged {before - len(people)} duplicate-name records", file=__import__("sys").stderr)
-
-    # Current Ghost subscription wins over a stale Mailchimp unsubscribe: if someone
-    # unsubscribed and later came back (Ghost now lists an active subscription on one of
-    # their emails), clear the old unsubscribe so they show as a subscriber again.
-    revived = 0
-    for p in people:
-        sub_here = any(SUB_INFO.get(e, {}).get("sub") for e in p["emails"])
-        if p["unsub"] and sub_here:
-            p["unsub"] = 0
-            p["udate"] = ""
-            if "unsub" in p["src"]:
-                p["src"].remove("unsub")
-            p["mem"] = 1
-            revived += 1
-        elif p["unsub"]:
-            p["mem"] = 0          # genuinely unsubscribed, not currently in Ghost — a former contact
-    if revived:
-        print(f"revived {revived} resubscribed members (Ghost shows them active again)", file=__import__("sys").stderr)
+    # (Subscriber status is computed authoritatively after overrides — see below.)
 
     # ---- apply exported in-tool edits (every-field) permanently ----
     # private/people_overrides.json: {personKey: {n, inst, emails, types, topics}}
@@ -867,13 +871,47 @@ def main():
         if added:
             print(f"added {added} manually-entered people from people_overrides.json", file=__import__("sys").stderr)
 
-    # A current subscriber can't also be "unsubscribed" — reconcile after all edits/merges.
+    # ════ Subscriber status — Mailchimp is the system of record for the newsletter ════
+    # An email is a current subscription if Mailchimp lists it as subscribed, OR it's a
+    # Ghost-active member that Mailchimp hasn't unsubscribed — EXCEPT a Mailchimp unsubscribe
+    # is overridden only when the Ghost signup is NEWER than the unsubscribe (a resubscribe,
+    # whether under the same email or a new one). Mailchimp-unsubscribe otherwise wins.
+    # This bridges the lag in the manual Ghost↔Mailchimp reconciliation in both directions.
+    def email_subscribed(e):
+        if e in MC_SUB:
+            return True
+        info = SUB_INFO.get(e)
+        if not info or not info.get("ghost_active"):
+            return False
+        ud = MC_UNSUB.get(e)
+        if not ud:
+            return True                              # Ghost-active, never unsubscribed
+        return (info.get("created") or "") > ud      # resubscribed: signed up for Ghost after unsubscribing
+    revived = downgraded = 0
     for p in people:
-        if p.get("mem") and p.get("unsub"):
-            p["unsub"] = 0
-            p["udate"] = ""
+        if p.get("added"):
+            continue                                  # manual adds keep their explicit flags
+        sub_e = [e for e in p["emails"] if email_subscribed(e)]
+        if sub_e:
+            if p.get("unsub"):
+                revived += 1
+            p["mem"], p["unsub"], p["udate"] = 1, 0, ""
             if "unsub" in p.get("src", []):
                 p["src"].remove("unsub")
+            if len(p["emails"]) > 1:                   # mark the subscription email(s) for the UI
+                p["sub_emails"] = sub_e
+                best = max(((SUB_INFO.get(e, {}).get("seen") or ""), e) for e in sub_e)
+                if best[0]:
+                    p["recent_email"] = best[1]
+        elif any(e in MC_UNSUB for e in p["emails"]):
+            if p.get("mem"):
+                downgraded += 1
+            p["mem"], p["unsub"] = 0, 1
+        else:
+            p["mem"] = 0                              # a contact who isn't on the newsletter
+    print(f"subscribers: {sum(1 for p in people if p['mem'])} "
+          f"(revived {revived} resubscribes; {downgraded} downgraded to unsubscribed per Mailchimp)",
+          file=__import__("sys").stderr)
 
     # ---- drop people with no way to act on them ----
     # No email AND not a subscriber, author, donor or unsubscribed = just a name
@@ -883,22 +921,6 @@ def main():
     dropped = [p for p in people if not keep(p)]
     people = [p for p in people if keep(p)]
     print(f"dropped {len(dropped)} no-contact-info entries", file=__import__("sys").stderr)
-
-    # ---- mark the newsletter-subscription email(s) per person (only when they have several) ----
-    # The UI bolds these and underlines the most recently active one.
-    marked = 0
-    for p in people:
-        if len(p["emails"]) <= 1:
-            continue
-        sub_e = [e for e in p["emails"] if SUB_INFO.get(e, {}).get("sub")]
-        if sub_e:
-            p["sub_emails"] = sub_e
-            best = max(((SUB_INFO[e].get("seen") or ""), e) for e in sub_e)
-            if best[0]:                       # only underline a "most recent" if Ghost has activity data
-                p["recent_email"] = best[1]
-            marked += 1
-    if marked:
-        print(f"marked subscription emails on {marked} multi-email people", file=__import__("sys").stderr)
 
     # ---- influence flag (Wikipedia, from wiki_influence.py cache, keyed by name) ----
     wiki_path = PRIV / "wiki_cache.json"

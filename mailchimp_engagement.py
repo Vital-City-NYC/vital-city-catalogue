@@ -28,7 +28,7 @@ def main():
     rows, offset, count = [], 0, 1000
     while True:
         url = (f"{BASE}/lists/{LIST}/members?status=subscribed&count={count}&offset={offset}"
-               "&fields=members.email_address,members.member_rating,members.stats,total_items")
+               "&fields=members.email_address,members.member_rating,members.stats,members.merge_fields,total_items")
         d = get(url)
         members = d.get("members", [])
         for m in members:
@@ -36,16 +36,18 @@ def main():
             if not email:
                 continue
             st = m.get("stats", {}) or {}
+            mf = m.get("merge_fields", {}) or {}
             rows.append([email, m.get("member_rating") or 0,
                          round((st.get("avg_open_rate") or 0) * 100),
-                         round((st.get("avg_click_rate") or 0) * 100)])
+                         round((st.get("avg_click_rate") or 0) * 100),
+                         (mf.get("FNAME") or "").strip(), (mf.get("LNAME") or "").strip()])
         offset += len(members)
         if not members or offset >= d.get("total_items", 0):
             break
     out = PRIV / "engagement_source.csv"
     with open(out, "w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["Email", "Rating", "Open Rate", "Click Rate"])
+        w.writerow(["Email", "Rating", "Open Rate", "Click Rate", "First Name", "Last Name"])
         w.writerows(rows)
     print(f"wrote engagement for {len(rows)} members -> {out.name}", file=sys.stderr)
 
