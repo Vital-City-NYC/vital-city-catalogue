@@ -317,6 +317,7 @@
     <input type="search" id="q" placeholder="Search name, email, institution, notes…" autocomplete="off" aria-label="Search by name, email, institution or notes (press / to focus)" title="Type to narrow the list. Matches names, email addresses, institutions and your notes — and updates as you type. Shortcut: press / to jump here.">
     <label class="chk" title="Show only contacts you've starred. Star anyone by clicking the ☆ at the start of their row."><input type="checkbox" id="fStar"> ★ Starred</label>
     <label class="chk" title="Show only people flagged 'notable' — they appear to have an English Wikipedia page (matched conservatively using context clues, so it's a rough signal of public profile)."><input type="checkbox" id="fWiki"> <span style="text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px">Notable</span></label>
+    <label class="chk" title="Show only people who are subscribed to the newsletter under two or more email addresses (each tagged ✉ newsletter) — i.e. they're on the list more than once."><input type="checkbox" id="fMultiSub"> 2+ newsletter emails</label>
     <label class="chk" title="Also show people who left the newsletter. They're hidden by default and appear in red when shown."><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
     <button class="btn primary" id="clear" title="Reset every filter and return to the full list">Reset all</button>
   </div>
@@ -622,6 +623,7 @@ function init(){
   $("#fRepeatDonor").addEventListener("change",render);
   $("#fStar").addEventListener("change",render);
   $("#fWiki").addEventListener("change",render);
+  $("#fMultiSub").addEventListener("change",render);
   $("#fUnsub").addEventListener("change",()=>{onlyUnsub=false;render();});
   $("#export").addEventListener("click",exportCSV);
   $("#copyEmails").addEventListener("click",copyEmails);
@@ -798,7 +800,7 @@ function toggleOther(){
 function clearAll(){
   selectedCats.clear(); want={mem:0,don:0,auth:0}; reviewMode="";
   $("#q").value=""; $("#dFrom").value=""; $("#dTo").value="";
-  onlyUnsub=false; $("#fUnsub").checked=false; $("#fStar").checked=false; $("#fWiki").checked=false;
+  onlyUnsub=false; $("#fUnsub").checked=false; $("#fStar").checked=false; $("#fWiki").checked=false; $("#fMultiSub").checked=false;
   document.querySelectorAll(".facet").forEach(l=>{l.classList.remove("on");const cb=l.querySelector("input");if(cb)cb.checked=false;});
   syncToggles(); render();
 }
@@ -842,6 +844,7 @@ function filtered(){
     if($("#fRepeatDonor").checked && !((p.dcnt||0)>1)) return false;
     if($("#fStar").checked && !p.star) return false;
     if($("#fWiki").checked && !p.wiki) return false;
+    if($("#fMultiSub").checked && !(p.sub_emails && p.sub_emails.length>1)) return false;
     if(df||dt){ if(!p.since)return false; if(df&&p.since<df)return false; if(dt&&p.since>dt)return false; }
     if(cats.length){const have=new Set([...(p.types||[]),...(p.topics||[])]);if(!cats.some(c=>have.has(c)))return false;}
     if(reviewMode==="guessed" && !(p.ns==="guess" && (p.auth||p.don||(p.types&&p.types.length)))) return false;
@@ -1105,6 +1108,7 @@ function describeFilters(){
   if($("#fRepeatDonor").checked) parts.push("repeat donors (2+ gifts)");
   if($("#fStar").checked) parts.push("<b>★ starred</b>");
   if($("#fWiki").checked) parts.push("<b>notable</b> (Wikipedia)");
+  if($("#fMultiSub").checked) parts.push("<b>2+ newsletter emails</b>");
   const cats=[...selectedCats]; if(cats.length) parts.push("type/area: "+cats.join(" <b>OR</b> "));
   const df=$("#dFrom").value, dt=$("#dTo").value; if(df||dt) parts.push("subscribed "+(df||"…")+"–"+(dt||"now"));
   const q=$("#q").value.trim(); if(q) parts.push('matching "'+esc(q)+'"');
@@ -1117,12 +1121,12 @@ const VKEY="vc_views";
 function loadViews(){ try{return JSON.parse(localStorage.getItem(VKEY)||"[]");}catch(e){return [];} }
 function currentState(){ return {want:Object.assign({},want), cats:[...selectedCats], q:$("#q").value,
   dFrom:$("#dFrom").value, dTo:$("#dTo").value, repeat:$("#fRepeatDonor").checked, star:$("#fStar").checked,
-  wiki:$("#fWiki").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, sortKey:sortKey, sortDir:sortDir}; }
+  wiki:$("#fWiki").checked, multisub:$("#fMultiSub").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, sortKey:sortKey, sortDir:sortDir}; }
 function applyState(s){
   want=Object.assign({mem:0,don:0,auth:0}, s.want||{});
   selectedCats=new Set(s.cats||[]);
   $("#q").value=s.q||""; $("#dFrom").value=s.dFrom||""; $("#dTo").value=s.dTo||"";
-  $("#fUnsub").checked=!!s.unsub; onlyUnsub=!!s.onlyUnsub; $("#fStar").checked=!!s.star; $("#fWiki").checked=!!s.wiki;
+  $("#fUnsub").checked=!!s.unsub; onlyUnsub=!!s.onlyUnsub; $("#fStar").checked=!!s.star; $("#fWiki").checked=!!s.wiki; $("#fMultiSub").checked=!!s.multisub;
   if(s.sortKey){ sortKey=s.sortKey; sortDir=s.sortDir||1; }
   syncToggles(); $("#fRepeatDonor").checked=!!s.repeat;
   document.querySelectorAll(".facet").forEach(l=>{const on=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on);const cb=l.querySelector("input");if(cb)cb.checked=on;});
@@ -1138,7 +1142,7 @@ function updateHash(){
   const s=currentState(), o={};
   if(s.want.mem)o.m=s.want.mem; if(s.want.don)o.d=s.want.don; if(s.want.auth)o.a=s.want.auth;
   if(s.cats.length)o.c=s.cats; if(s.q)o.q=s.q; if(s.dFrom)o.f=s.dFrom; if(s.dTo)o.t=s.dTo;
-  if(s.repeat)o.r=1; if(s.unsub)o.u=1; if(s.onlyUnsub)o.o=1; if(s.star)o.st=1; if(s.wiki)o.wk=1;
+  if(s.repeat)o.r=1; if(s.unsub)o.u=1; if(s.onlyUnsub)o.o=1; if(s.star)o.st=1; if(s.wiki)o.wk=1; if(s.multisub)o.ms=1;
   if(s.sortKey!=="last"||s.sortDir!==1){o.sk=s.sortKey;o.sd=s.sortDir;}
   const h=Object.keys(o).length?"#"+encodeURIComponent(JSON.stringify(o)):location.pathname;
   history.replaceState(null,"",h);
@@ -1146,7 +1150,7 @@ function updateHash(){
 function applyHash(){
   if(!location.hash||location.hash.length<2) return false;
   try{ const o=JSON.parse(decodeURIComponent(location.hash.slice(1)));
-    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,sortKey:o.sk||"last",sortDir:o.sd||1});
+    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,multisub:!!o.ms,sortKey:o.sk||"last",sortDir:o.sd||1});
     // A per-contact link (#{"person":"<id>"}) opens that person's card.
     if(o.person){
       const p=PEOPLE.find(x=>pidFor(personKey(x))===o.person);
