@@ -509,12 +509,18 @@ def main():
     by_email = {}               # email -> person
     by_name = {}                # norm name -> person
     by_fl = {}                  # first+last -> person
+    by_tight = {}               # space/punct-insensitive full name (so "Nancy La Vigne" == "Nancy LaVigne")
+
+    def tight(s):
+        return re.sub(r"[^a-z0-9]", "", norm(s))
 
     def get_or_make(emails=None, name="", fl=""):
         for e in (emails or []):
             if e and e in by_email: return by_email[e]
         if name and name in by_name: return by_name[name]
         if fl and fl in by_fl: return by_fl[fl]
+        if name and len(norm(name).split()) >= 2 and tight(name) in by_tight:
+            return by_tight[tight(name)]   # last resort: same letters, different spacing/punctuation
         p = {"n": "", "ns": "", "e": "", "emails": [], "inst": "", "role": "",
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
              "aname": "", "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "udate": "",
@@ -530,6 +536,7 @@ def main():
         if nn and len(nn.split()) >= 2:        # only first+last names are merge keys; single tokens match by email only
             by_name.setdefault(nn, p)
             by_fl.setdefault(firstlast(p["n"]), p)
+            by_tight.setdefault(tight(p["n"]), p)
 
     # ---- 1. Members (the spine) ----
     members_total = 0
@@ -870,6 +877,24 @@ def main():
             added += 1
         if added:
             print(f"added {added} manually-entered people from people_overrides.json", file=__import__("sys").stderr)
+
+    # A "VC contributor" must have an actual published byline (arts>0). The roster and CRM can
+    # tag people who never published a piece (advisors, interview subjects, prospects) — that's
+    # misleading, so strip the contributor tag when there's no counted piece in the catalogue.
+    # (Manual adds keep their explicit author flag.)
+    decontrib = 0
+    for p in people:
+        if p.get("added"):
+            continue
+        if p.get("arts", 0) <= 0 and (p.get("auth") or "VC contributor" in p.get("types", [])):
+            p["auth"] = 0
+            p["types"] = [t for t in p["types"] if t != "VC contributor"]
+            p["aname"] = ""
+            if "author" in p.get("src", []):
+                p["src"].remove("author")
+            decontrib += 1
+    if decontrib:
+        print(f"removed VC-contributor tag from {decontrib} entries with no published piece", file=__import__("sys").stderr)
 
     # ════ Subscriber status — Mailchimp is the system of record for the newsletter ════
     # An email is a current subscription if Mailchimp lists it as subscribed, OR it's a
