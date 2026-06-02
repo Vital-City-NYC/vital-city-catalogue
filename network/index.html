@@ -84,6 +84,8 @@
   .stat.clickable:not(.inc):not(.exc):not(.active):hover{background:var(--vc-white)}
   .stat.clickable:not(.inc):not(.exc):not(.active):hover .lbl{color:var(--vc-orange)}
   .stat.inc:hover,.stat.exc:hover,.stat.active:hover{filter:brightness(0.92)}
+  .statsnote{padding:8px 30px;font-size:11.5px;color:var(--vc-charcoal);line-height:1.45;background:var(--vc-paper);border-top:1px solid var(--vc-cloud)}
+  .statsnote b{color:var(--vc-black);font-weight:700}
   .activitybar{padding:7px 30px;background:var(--vc-paper);font-size:11.5px;color:var(--vc-charcoal);font-weight:400;line-height:1.5}
   .activitybar .albl{text-transform:uppercase;letter-spacing:.09em;font-weight:700;margin-right:6px}
   .activitybar b{color:var(--vc-black);font-weight:700}
@@ -232,7 +234,7 @@
     .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
     table.people{min-width:660px}      /* scroll sideways instead of squishing on small screens */
     header.mast{padding:18px 16px 14px}
-    .confbar,.controls,.resultrow,.activitybar,.savedviews,.hint,.tablewrap{padding-left:16px;padding-right:16px}
+    .confbar,.controls,.resultrow,.activitybar,.statsnote,.savedviews,.hint,.tablewrap{padding-left:16px;padding-right:16px}
     .mastlinks{position:static;right:auto;top:auto;flex-wrap:wrap;gap:10px 14px;margin:0 0 10px}   /* flow above the wordmark instead of overlapping the title */
     .controls,.resultrow{position:static}        /* drop sticky on small screens — scroll naturally */
     table.people th{position:static}
@@ -320,6 +322,7 @@
   </header>
   <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute</div>
   <div class="stats" id="stats"></div>
+  <div class="statsnote" title="In Mailchimp every email address is its own line; here, all of a person's known addresses are merged into one record. So a subscriber on the list under 2 or 3 emails counts once here, and these totals can read slightly lower than Mailchimp's raw counts.">Counts above are <b>unique people</b> — anyone subscribed under 2 or 3 email addresses is counted once, so these totals can read a little lower than Mailchimp's raw subscriber count (which counts addresses).</div>
   <div class="activitybar" id="activityBar" title="A quick pulse of recent movement: new newsletter sign-ups, people who unsubscribed, and money raised (with the number of gifts) over the last 7 and 30 days. Refreshes daily."></div>
   <div class="controls">
     <span class="toghint">Show:</span>
@@ -605,8 +608,8 @@ function buildStats(){
   const donors=cur.filter(p=>p.don).length;
   const unsub=PEOPLE.length-cur.length;
   const S=[
-    [cur.length.toLocaleString(),"people","all","Current contacts — reset all filters",""],
-    [memTotal.toLocaleString(),"subscribers","subs","Newsletter subscribers — toggle the Subscribers filter",""],
+    [cur.length.toLocaleString(),"people","all","Unique people in the tool right now — each individual counted once even if they have multiple emails. Click to reset all filters.",""],
+    [memTotal.toLocaleString(),"subscribers","subs","Unique newsletter subscribers — each person counted once, even if they're on the Mailchimp list under 2 or 3 email addresses. So this number can read a little lower than Mailchimp's raw subscriber count (which counts addresses, not people). Click to toggle the Subscribers filter.",""],
     [donors.toLocaleString(),"donors","donors","Donors — toggle the Donors filter",""],
     [auth.toLocaleString(),"authors","authors","Vital City contributors — toggle the Authors filter",""],
     [other.toLocaleString(),"other","other","None of subscriber, donor or author",""],
