@@ -285,6 +285,7 @@
       <div class="card" id="social">
         <h2>Social — X &amp; Instagram <span class="hint">followers + recent post engagement · free unofficial endpoints (can break)</span></h2>
         <div id="socialBody"></div>
+        <div id="urlShares" style="margin-top:18px"></div>
       </div>
 
       <div class="card" id="contentCard">
@@ -495,6 +496,7 @@ function boot(data){
   renderSendChart(mc.campaigns || []);
   renderYTD(mc, mc.signup_windows || {});
   renderSocial(data.x_profile || {}, data.instagram || {});
+  renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderAcquisition(data.ghost_signup_attribution || {});
   renderGoogleTrends();
@@ -678,33 +680,29 @@ function boot(data){
     return `<div class="stub"><b>${esc(label)}</b><div style="font-size:11.5px;margin:4px 0 6px">${esc(s.reason||'')}</div>${s.setup?`<ol>${s.setup.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:''}</div>`;
   }).join("");
 
-  // ----- Media mentions (third-party press; site-restricted Google News)
+  // ----- Media mentions (third-party press only — kind='media')
   const news = data.news_mentions || [];
-  // X/Twitter results came in via the same pipeline but belong in "Social shares"
-  const isSocial = (item) => {
-    const d = (item.domain || item.source || '').toLowerCase();
-    return d.includes('x.com') || d.includes('twitter');
-  };
-  const realPress = news.filter(it => !isSocial(it));
-  const newsX     = news.filter(isSocial);
+  const realPress = news.filter(it => it.kind === 'media');
+  const socialItems = news.filter(it => it.kind === 'social');
 
   $("#newsFeed").innerHTML = realPress.length
-    ? realPress.slice(0,50).map(p=>`<li>
+    ? realPress.slice(0,80).map(p=>`<li>
         <span class="src">${esc(p.source||p.domain||'web')}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
         <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
         ${p.snippet?`<div class="snip">${esc(p.snippet)}</div>`:''}
       </li>`).join("")
-    : '<li class="empty">No third-party mentions in the current window.</li>';
+    : '<li class="empty">No third-party press mentions in the current window.</li>';
 
-  // ----- Social shares & chatter (existing Reddit press feed + X-from-news)
+  // ----- Social shares & chatter — kind='social' (X/LinkedIn/Bluesky/IG)
+  // plus the older Reddit press feed (mentions of "vital city" on r/nyc, etc.)
   const press=data.press||[];
   const combined = [
-    ...newsX.map(it => ({...it, source: 'X (search)', channel: 'x-search'})),
+    ...socialItems.map(it => ({...it, source: (it.source && it.source !== 'X' ? it.source : (it.domain==='linkedin.com'?'LinkedIn':it.domain==='bsky.app'?'Bluesky':it.domain==='instagram.com'?'Instagram':'X'))})),
     ...press,
   ].sort((a,b) => (b.published_iso||'').localeCompare(a.published_iso||''));
   $("#pressFeed").innerHTML=combined.length
-    ? combined.slice(0,30).map(p=>`<li>
-        <span class="src">${esc(p.source||p.channel||'web')}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+    ? combined.slice(0,40).map(p=>`<li>
+        <span class="src">${esc(p.source||p.channel||'web')}${p.is_url_share?' · <i title="Includes a vitalcitynyc.org link">URL share</i>':''}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
         <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
         ${p.snippet?`<div class="snip">${esc(p.snippet)}</div>`:''}
       </li>`).join("")
@@ -1290,14 +1288,45 @@ function renderAcquisition(attr){
   const landings = (attr.by_landing || []);
   const maxSrc = Math.max(1, ...sources.map(s=>s.n));
   const maxMed = Math.max(1, ...mediums.map(s=>s.n));
+  // Friendly display names for landing-page types (the raw Ghost values are
+  // post/page/url/tag/author/unknown — opaque without context)
   const labelType = (t) => ({
-    "post":   "landed on an article page",
-    "page":   "landed on a static page (About, Subscribe, etc.)",
-    "url":    "landed on the homepage / collection page",
-    "tag":    "landed on a topic tag page",
-    "author": "landed on an author page",
-    "unknown":"no landing-page recorded",
+    "post":    "Article pages",
+    "page":    "Static pages (About / Subscribe / etc.)",
+    "url":     "Homepage / root URL",
+    "tag":     "Topic tag pages",
+    "author":  "Author pages",
+    "unknown": "(no landing page recorded)",
   }[t] || t);
+  // Friendly display names for referrer sources
+  const labelSrc = (s) => {
+    if (s === "(unknown)") return "(no referrer — direct visit or browser stripped it)";
+    if (s === "Direct") return "Direct (typed URL, bookmark, SMS)";
+    if (s === "Google") return "Google search";
+    if (s === "Bing") return "Bing search";
+    if (s === "Twitter") return "X / Twitter";
+    if (s === "newsletter") return "Vital City newsletter (in-email click)";
+    if (s === "Sailthru") return "Sailthru newsletter (legacy)";
+    if (s === "Substack") return "Substack newsletter";
+    if (s === "Vital City Newsletter Contacts") return "VC contact list (manual import)";
+    if (s === "AcademicOutreach") return "Academic Outreach (UTM campaign)";
+    if (s === "ReengagementCampaign") return "Re-engagement (UTM campaign)";
+    if (s === "LizOutreach") return "Liz outreach (UTM campaign)";
+    if (s === "GopnikSampson") return "Gopnik/Sampson (UTM campaign)";
+    if (s === "Google News") return "Google News";
+    if (/^[0-9a-f]{8,}$/i.test(s)) return `Mailchimp tracker (${s.slice(0,8)})`;
+    return s;
+  };
+  const labelMed = (m) => {
+    if (m === "(none)") return "(no medium recorded — direct/bookmark)";
+    if (m === "search") return "Search engines";
+    if (m === "email") return "Email clicks";
+    if (m === "social") return "Social media";
+    if (m === "referral") return "Referrals (links from other sites)";
+    if (m === "newsletter") return "Newsletter clicks";
+    if (m === "bookmarks") return "Bookmark visits";
+    return m;
+  };
   host.innerHTML = `
     <div style="font-size:12px;color:var(--vc-charcoal);margin:0 0 14px;line-height:1.55">
       <b style="color:var(--vc-black)">What this is:</b> Ghost attaches an attribution record to every newsletter signup — the page the visitor was on and the referring source (Google, Direct, an email campaign tag, a partner site, etc.). This is the exact data the Ghost admin Analytics tab uses for "Top Sources"; we pull the raw events and roll them up here so the dashboard is always in sync.
@@ -1319,7 +1348,7 @@ function renderAcquisition(attr){
             : s.src === 'AcademicOutreach' || s.src === 'ReengagementCampaign' || s.src === 'LizOutreach' || s.src === 'GopnikSampson' ? 'A UTM-tagged campaign — referrer_source comes from the utm_source on the link the visitor clicked.'
             : `Referrer source recorded by Ghost: "${s.src}".`;
           return `<div class="dombar" title="${esc(tip)}">
-            <div style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.src)}</div>
+            <div style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(labelSrc(s.src))}</div>
             <div class="bar" style="background:var(--vc-cerulean);width:${(s.n/maxSrc*100)}%"></div>
             <div class="v">${fmtN(s.n)}</div>
           </div>`;
@@ -1327,18 +1356,68 @@ function renderAcquisition(attr){
       </div>
       <div>
         <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">By medium</div>
-        ${mediums.map(s=>`<div class="dombar" title="${esc(s.med==='(none)'?'No medium recorded (typically direct visits).':`Referrer medium recorded by Ghost: "${s.med}".`)}">
-          <div style="font-size:12px">${esc(s.med)}</div>
+        ${mediums.map(s=>`<div class="dombar" title="${esc(s.med==='(none)'?'No medium recorded — typically direct visits (typed URL or bookmark) where the browser sends no referrer.':`Referrer medium recorded by Ghost: "${s.med}".`)}">
+          <div style="font-size:12px">${esc(labelMed(s.med))}</div>
           <div class="bar" style="background:var(--vc-orange);width:${(s.n/maxMed*100)}%"></div>
           <div class="v">${fmtN(s.n)}</div>
         </div>`).join("")}
         <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin:18px 0 6px;font-weight:700">Where the signup happened</div>
-        ${landings.map(s=>`<div class="dombar" title="${esc(labelType(s.type))}">
-          <div style="font-size:12px">${esc(s.type)}</div>
+        ${landings.map(s=>`<div class="dombar" title="${esc(({
+          'post':'The visitor was on an individual article page when they signed up.',
+          'page':'The visitor was on a static page (About, Subscribe, masthead, mission, etc.) when they signed up.',
+          'url':'The visitor was on the homepage (vitalcitynyc.org/) or a section index when they signed up.',
+          'tag':'The visitor was browsing posts under a topic tag (e.g. /tag/housing/) when they signed up.',
+          'author':'The visitor was on an author bio page when they signed up.',
+          'unknown':"Ghost didn't capture which page the visitor was on. Usually means the signup happened on a custom page or before page-attribution was enabled.",
+        })[s.type] || s.type)}">
+          <div style="font-size:12px">${esc(labelType(s.type))}</div>
           <div class="bar" style="background:var(--vc-green);width:${(s.n/maxSrc*100)}%"></div>
           <div class="v">${fmtN(s.n)}</div>
         </div>`).join("")}
       </div>
+    </div>`;
+}
+
+function renderUrlShares(news){
+  const host = $("#urlShares");
+  if(!host) return;
+  // Items that include a vitalcitynyc.org link, grouped by platform.
+  const shares = (news||[]).filter(it => it.is_url_share);
+  const groups = {};
+  shares.forEach(it => {
+    const dom = (it.domain||'').toLowerCase();
+    const platform =
+      dom.includes('x.com') || dom.includes('twitter') ? 'X' :
+      dom.includes('linkedin')   ? 'LinkedIn' :
+      dom.includes('bsky')       ? 'Bluesky' :
+      dom.includes('instagram')  ? 'Instagram' : 'Other';
+    (groups[platform] = groups[platform] || []).push(it);
+  });
+  const order = ['X','LinkedIn','Bluesky','Instagram','Other'];
+  const total = shares.length;
+  if(!total){
+    host.innerHTML = `<div style="font-size:12px;color:var(--vc-charcoal);padding:8px 0">No public vitalcitynyc.org URL shares detected in the current window.</div>`;
+    return;
+  }
+  // Header + per-platform counts strip
+  const counts = order.filter(p => groups[p] && groups[p].length).map(p =>
+    `<span style="margin-right:14px"><b style="color:var(--vc-black)">${fmtN(groups[p].length)}</b> <span style="color:var(--vc-charcoal);font-size:11px;text-transform:uppercase;letter-spacing:.06em">${esc(p)}</span></span>`
+  ).join("");
+  // Top 10 most recent across platforms
+  const recent = shares.slice().sort((a,b) => (b.published_iso||'').localeCompare(a.published_iso||'')).slice(0,10);
+  host.innerHTML = `
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="Posts on social platforms that include a link to vitalcitynyc.org — caught via Google News' site-restricted search. Captures shares that don't necessarily tag the @VitalCityNYC handle.">URL shares of vitalcitynyc.org</div>
+    <div style="font-size:13px;margin-bottom:10px">${counts}<span style="color:var(--vc-charcoal);font-size:11px">total ${fmtN(total)}, last 24 months</span></div>
+    <ul class="feed" style="margin:0">${recent.map(p=>`<li>
+      <span class="src">${esc((groups[Object.keys(groups).find(k => groups[k].includes(p))]||['?'])[0]?'':'?')}${esc(
+        (p.domain||'').includes('x.com')||(p.domain||'').includes('twitter') ? 'X' :
+        (p.domain||'').includes('linkedin') ? 'LinkedIn' :
+        (p.domain||'').includes('bsky') ? 'Bluesky' :
+        (p.domain||'').includes('instagram') ? 'Instagram' : 'Web')}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+      <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
+    </li>`).join("")}</ul>
+    <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px;line-height:1.55">
+      <b>Coverage notes:</b> X &amp; LinkedIn are reasonably well-indexed by Google. Bluesky indexing is patchy (Google hasn't fully indexed bsky.app yet). Instagram URL-share detection is unreliable because Instagram's public-post text rarely contains plain-text links — most "shares" happen in story replies or DMs Google can't see.
     </div>`;
 }
 

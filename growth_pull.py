@@ -528,12 +528,16 @@ def pull_ghost():
 
 
 # ----------------------------------------------- Media mentions (third-party press)
-# A whitelist of NYC-policy + national outlets the manual citation list shows
-# actually cover Vital City. We query Google News RSS once per outlet with
-# "Vital City" site:DOMAIN — that strips out the generic-phrase noise that
-# untargeted searches catch (e.g. "schools where sports may be most VITAL,
-# new york CITY..."). After collection we dedupe, verify, and date-sort.
-MENTION_OUTLETS = [
+# Two distinct whitelists:
+#   MEDIA_OUTLETS — actual news/policy publications that cover us. For these,
+#     query "Vital City" + @ handle + URL-share. The brand-phrase search works
+#     on press sites because they use the name intentionally.
+#   SOCIAL_PLATFORMS — X, LinkedIn, Bluesky, Instagram. Here we DROP the
+#     brand-phrase shape (people use "vital city" generically — "Karachi
+#     remains Pakistan's most inclusive and economically vital city..." etc.)
+#     and only search @vitalcitynyc + vitalcitynyc.org URL shares. Those are
+#     unambiguous.
+MEDIA_OUTLETS = [
     # NYC outlets
     ("gothamist.com",          "Gothamist"),
     ("nytimes.com",            "The New York Times"),
@@ -560,30 +564,45 @@ MENTION_OUTLETS = [
     ("bloomberg.com",          "Bloomberg"),
     ("theguardian.com",        "The Guardian"),
     ("newsweek.com",           "Newsweek"),
-    # Social (search posts that mention the @ handle, full brand, or share a
-    # vitalcitynyc.org URL — the URL-share shape catches reposts and quotes
-    # that don't necessarily tag the @ handle).
-    ("x.com",                  "X (Twitter)"),
-    ("twitter.com",            "X (Twitter)"),
-    ("linkedin.com",           "LinkedIn"),
+]
+SOCIAL_PLATFORMS = [
+    ("x.com",            "X"),
+    ("twitter.com",      "X"),
+    ("linkedin.com",     "LinkedIn"),
+    ("bsky.app",         "Bluesky"),
+    ("instagram.com",    "Instagram"),
 ]
 
 
 def pull_news_mentions():
-    """Search Google News RSS for "Vital City" mentions, scoped per known
-    outlet. The site-restricted query gives us much higher precision than an
-    untargeted phrase search, which gets dominated by generic uses ("vital
-    NYC", "the city is vital", etc.) and Vital City's own articles.
+    """Search Google News RSS for Vital City references, scoped per outlet.
+
+    Two outlet groups with different query shapes:
+      - MEDIA_OUTLETS (news publications): three shapes — "Vital City",
+        @vitalcitynyc, vitalcitynyc.org — because brand-phrase matches on
+        press sites are intentional references to the publication.
+      - SOCIAL_PLATFORMS (X, LinkedIn, Bluesky, Instagram): only two shapes —
+        @vitalcitynyc, vitalcitynyc.org — DROPPING the brand-phrase search
+        because on social platforms "vital city" is used generically
+        ("Karachi remains Pakistan's most inclusive and economically vital
+        city...") and produces high-volume false positives.
+
+    Each result is tagged with `kind: 'media' | 'social'` so the dashboard
+    can route them into the right card without re-filtering by domain.
     """
     import time as _t
     out = []
     seen = set()
     UA_local = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
                 "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
-    # Two query shapes — capture both the brand name and the @ handle
-    SHAPES = ['"Vital City"', "@vitalcitynyc", "vitalcitynyc.org"]
-    for domain, label in MENTION_OUTLETS:
-        for shape in SHAPES:
+    MEDIA_SHAPES  = ['"Vital City"', "@vitalcitynyc", "vitalcitynyc.org"]
+    SOCIAL_SHAPES = ["@vitalcitynyc", "vitalcitynyc.org"]
+    targets = (
+        [(d, label, "media",  MEDIA_SHAPES)  for d, label in MEDIA_OUTLETS] +
+        [(d, label, "social", SOCIAL_SHAPES) for d, label in SOCIAL_PLATFORMS]
+    )
+    for domain, label, kind, shapes in targets:
+        for shape in shapes:
             q = f'{shape} site:{domain}'
             url = (f"https://news.google.com/rss/search?q={urllib.parse.quote(q)}"
                    f"&hl=en-US&gl=US&ceid=US:en")
@@ -608,8 +627,10 @@ def pull_news_mentions():
                 out.append({
                     "title": title, "url": link, "source": src, "published": pub,
                     "snippet": snip, "domain": domain, "match_shape": shape,
+                    "kind": kind,
+                    "is_url_share": (shape == "vitalcitynyc.org"),
                 })
-            _t.sleep(0.15)   # polite pacing across 25 outlets × 3 queries
+            _t.sleep(0.15)   # polite pacing across many outlets × shapes
 
     # Parse pub dates, drop items older than 24 months, sort newest first
     cutoff = datetime.now(timezone.utc) - timedelta(days=730)
@@ -636,16 +657,21 @@ def pull_news_mentions():
     # through (Google's phrase matching has slight leniency) but they're
     # easy to spot in a reverse-chron list.
 
-    # Dedup across outlets by title (some articles syndicate identically)
+    # Dedup PER-DOMAIN — the same article on Streetsblog vs an X share of
+    # that same article are distinct signals; keep both.
     titles_seen = set(); deduped = []
     for it in sorted(out, key=lambda x: x["_dt"], reverse=True):
-        t = it["title"].lower()[:80]
-        if t in titles_seen: continue
-        titles_seen.add(t); deduped.append(it)
+        key = (it["domain"], it["title"].lower()[:80])
+        if key in titles_seen: continue
+        titles_seen.add(key); deduped.append(it)
     for it in deduped: it.pop("_dt", None)
 
-    log(f"  news mentions: {len(deduped)} items across {len(set(i['domain'] for i in deduped))} outlets")
-    return deduped[:120]
+    # Per-kind caps so the high-volume social stream doesn't crowd press out
+    media  = [it for it in deduped if it.get("kind") == "media"][:200]
+    social = [it for it in deduped if it.get("kind") == "social"][:120]
+    out    = media + social
+    log(f"  news mentions: {len(out)} items ({len(media)} media + {len(social)} social) across {len(set(i['domain'] for i in out))} outlets")
+    return out
 
 
 # ------------------------------------------------------------- Press / Reddit (free RSS)
