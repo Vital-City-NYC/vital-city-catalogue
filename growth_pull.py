@@ -206,6 +206,9 @@ def pull_mailchimp():
             variate_subjects = []
             if c.get("type") == "variate":
                 variate_subjects = ((c.get("variate_settings") or {}).get("subject_lines") or [])
+            op = (rs.get("open_rate")  or 0) * 100
+            cl = (rs.get("click_rate") or 0) * 100
+            ctor = (cl / op * 100) if op > 0 else 0
             camp_out.append({
                 "id":       c.get("id"),
                 "subject":  (c.get("settings") or {}).get("subject_line", ""),
@@ -213,8 +216,9 @@ def pull_mailchimp():
                 "type":     c.get("type") or "regular",
                 "sent":     (c.get("send_time") or "")[:10],
                 "sent_to":  c.get("emails_sent") or 0,
-                "open_pct": round((rs.get("open_rate")  or 0) * 100, 1),
-                "click_pct":round((rs.get("click_rate") or 0) * 100, 1),
+                "open_pct": round(op, 1),
+                "click_pct":round(cl, 1),
+                "ctor_pct": round(ctor, 1),   # click-to-open ratio = honest engagement
                 "unsubs":   rs.get("unsubscribed") or rs.get("unsubscribes") or 0,
             })
         out["campaigns"] = camp_out
@@ -236,12 +240,15 @@ def pull_mailchimp():
         for m in sorted(mo):
             r = mo[m]
             recs = r["recipients"] or 1
+            op_pct = (r["wt_open"]  / recs) * 100
+            cl_pct = (r["wt_click"] / recs) * 100
             monthly.append({
                 "month": m,
                 "sends": r["sends"],
                 "recipients": r["recipients"],
-                "open_pct":  round((r["wt_open"]  / recs) * 100, 1),
-                "click_pct": round((r["wt_click"] / recs) * 100, 1),
+                "open_pct":  round(op_pct, 1),
+                "click_pct": round(cl_pct, 1),
+                "ctor_pct":  round((cl_pct / op_pct) * 100, 1) if op_pct > 0 else 0,
                 "unsubs":    r["unsubs"],
             })
         out["monthly_campaigns"] = monthly
@@ -258,11 +265,14 @@ def pull_mailchimp():
             recs = sum(i.get("emails_sent") or 0 for i in items)
             wt_open  = sum(float((i.get("report_summary") or {}).get("open_rate")  or 0) * (i.get("emails_sent") or 0) for i in items)
             wt_click = sum(float((i.get("report_summary") or {}).get("click_rate") or 0) * (i.get("emails_sent") or 0) for i in items)
+            op_pct = (wt_open  / recs) * 100 if recs else 0
+            cl_pct = (wt_click / recs) * 100 if recs else 0
             return {
                 "sends": len(items),
                 "recipients": recs,
-                "open_pct":  round((wt_open  / recs) * 100, 1) if recs else 0,
-                "click_pct": round((wt_click / recs) * 100, 1) if recs else 0,
+                "open_pct":  round(op_pct, 1),
+                "click_pct": round(cl_pct, 1),
+                "ctor_pct":  round((cl_pct / op_pct) * 100, 1) if op_pct > 0 else 0,
                 "unsubs":    sum(int((i.get("report_summary") or {}).get("unsubscribed") or 0) for i in items),
             }
 
@@ -400,6 +410,216 @@ def pull_mailchimp():
     # Stash the sets internally so build_lifecycle() can use them
     out["_mau_set"] = mau_set
     out["_aau_set"] = aau_set
+    return out
+
+
+def build_engagement_extras(mc, signup_attr, donorbox):
+    """Four newer metrics that publishers (Atlantic, Pico-using sites, Stratechery)
+    use to get past Apple Mail privacy noise:
+      - mailbox_engagement: avg open rate by email provider (gmail vs Apple vs ...)
+      - power_readers: top decile of Mailchimp rating + open rate (your reliable readers)
+      - channel_ltv: subscriber→donor conversion by acquisition source
+      - influence_weighted_reach: opens weighted by reader importance
+                                  (rating + Wikipedia "notable" + government domain)
+    All from data we already pull. Heuristic but defensible.
+    """
+    import csv
+    out = {"available": True}
+    eng_path = PRIV / "engagement_source.csv"
+    pj_path  = PRIV / "people.json"
+
+    # ---- 1. Mailbox-provider engagement -----------------------------------
+    provider_buckets = {
+        "Gmail":         ["gmail.com", "googlemail.com"],
+        "Yahoo":         ["yahoo.com", "ymail.com", "rocketmail.com"],
+        "Apple iCloud":  ["icloud.com", "me.com", "mac.com"],
+        "Microsoft":     ["hotmail.com", "outlook.com", "live.com", "msn.com"],
+        "AOL":           ["aol.com"],
+        "Comcast":       ["comcast.net"],
+        "Government":    [".gov"],    # any .gov subdomain
+        "Academic":      [".edu"],
+        "Other":         None,        # catch-all
+    }
+    def _provider(email):
+        em = (email or "").lower()
+        for label, doms in provider_buckets.items():
+            if doms is None: continue
+            for d in doms:
+                if d.startswith("."):
+                    if em.endswith(d) or f"{d}." in em: return label
+                elif em.endswith("@"+d):
+                    return label
+        return "Other"
+
+    by_prov = {label: {"label": label, "subs": 0, "wt_open_sum": 0.0} for label in provider_buckets}
+
+    # ---- 2. Power readers ------------------------------------------------
+    # Top-decile readers by composite engagement score: rating × 20 + open_rate
+    rows = []     # (email, rating, open_rate)
+    if eng_path.exists():
+        with open(eng_path) as f:
+            for r in csv.DictReader(f):
+                em = (r.get("Email") or "").lower().strip()
+                if not em: continue
+                try:
+                    rating = int(r.get("Rating") or 0)
+                    op     = int(r.get("Open Rate") or 0)
+                except: continue
+                rows.append((em, rating, op))
+                prov = _provider(em)
+                by_prov[prov]["subs"] += 1
+                by_prov[prov]["wt_open_sum"] += op   # avg of per-member rates within provider
+
+    for d in by_prov.values():
+        d["avg_open_pct"] = round(d["wt_open_sum"]/d["subs"], 1) if d["subs"] else 0
+        d.pop("wt_open_sum")
+    # Sort by sub count descending; drop empty
+    out["mailbox_engagement"] = [d for d in sorted(by_prov.values(), key=lambda x: -x["subs"]) if d["subs"] >= 5]
+
+    # Power-readers: composite score, take top 10%
+    if rows:
+        scored = sorted(rows, key=lambda r: -(r[1] * 20 + r[2]))
+        decile = max(1, len(scored) // 10)
+        power = scored[:decile]
+        # Provider breakdown of power readers
+        pp = {}
+        for em, _, _ in power:
+            p = _provider(em)
+            pp[p] = pp.get(p, 0) + 1
+        out["power_readers"] = {
+            "count": len(power),
+            "as_pct_of_list": round((len(power) / max(len(rows), 1)) * 100, 1),
+            "by_provider": [{"label": p, "n": n} for p, n in sorted(pp.items(), key=lambda kv: -kv[1])],
+            "avg_open_pct": round(sum(r[2] for r in power) / len(power), 1) if power else 0,
+            "avg_rating":   round(sum(r[1] for r in power) / len(power), 2) if power else 0,
+        }
+    else:
+        out["power_readers"] = {"count": 0, "by_provider": [], "as_pct_of_list": 0,
+                                "avg_open_pct": 0, "avg_rating": 0}
+
+    # ---- 3. Channel LTV (subscriber → donor by acquisition source) -------
+    # For each acquisition source recorded in Ghost's signup attribution,
+    # find which subscribers became donors (join via email) and sum their
+    # donation totals. Caveat: limited to subscribers whose signup events
+    # are in the Ghost feed (post April-2026 site cutover, ~800 signups
+    # captured here). Pre-cutover donors won't have a source we can attribute.
+    src_email = (signup_attr or {}).get("_by_email") or {}
+    if src_email and pj_path.exists():
+        try:
+            people_for_ltv = json.loads(pj_path.read_text())
+        except Exception: people_for_ltv = []
+        # email → person; capture donor totals
+        em_to_person = {}
+        for p in people_for_ltv:
+            for em in (p.get("emails") or []):
+                em_to_person[em.lower().strip()] = p
+        chan = {}     # source label → {signups, donors, total_amt, gifts}
+        for em, info in src_email.items():
+            src = info.get("source") or "(unknown)"
+            chan.setdefault(src, {"signups": 0, "donors": 0, "total_amt": 0.0, "gifts": 0})
+            chan[src]["signups"] += 1
+            p = em_to_person.get(em)
+            if p and p.get("don"):
+                chan[src]["donors"]    += 1
+                chan[src]["total_amt"] += float(p.get("damt") or 0)
+                chan[src]["gifts"]     += int(p.get("dcnt") or 0)
+        # Roll up tiny channels (<5 signups) into "Other" to keep the chart readable
+        chan_rows = []   # renamed from `rows` to avoid shadowing the engagement tuples list above
+        other = {"signups": 0, "donors": 0, "total_amt": 0.0, "gifts": 0}
+        for src, d in chan.items():
+            if d["signups"] < 5:
+                other["signups"] += d["signups"]
+                other["donors"]  += d["donors"]
+                other["total_amt"] += d["total_amt"]
+                other["gifts"]     += d["gifts"]
+                continue
+            chan_rows.append({
+                "source":      src,
+                "signups":     d["signups"],
+                "donors":      d["donors"],
+                "donor_rate":  round((d["donors"] / d["signups"]) * 100, 1) if d["signups"] else 0,
+                "total_raised":round(d["total_amt"], 2),
+                "ltv_per_signup": round(d["total_amt"] / d["signups"], 2) if d["signups"] else 0,
+                "ltv_per_donor":  round(d["total_amt"] / d["donors"], 2)  if d["donors"]  else 0,
+            })
+        if other["signups"] > 0:
+            chan_rows.append({
+                "source":      "Other (small channels)",
+                "signups":     other["signups"],
+                "donors":      other["donors"],
+                "donor_rate":  round((other["donors"] / other["signups"]) * 100, 1) if other["signups"] else 0,
+                "total_raised":round(other["total_amt"], 2),
+                "ltv_per_signup": round(other["total_amt"] / other["signups"], 2) if other["signups"] else 0,
+                "ltv_per_donor":  round(other["total_amt"] / other["donors"], 2)  if other["donors"]  else 0,
+            })
+        chan_rows.sort(key=lambda r: -r["signups"])
+        # Totals row for context
+        tot = {
+            "signups":     sum(r["signups"] for r in chan_rows),
+            "donors":      sum(r["donors"]  for r in chan_rows),
+            "total_raised":round(sum(r["total_raised"] for r in chan_rows), 2),
+        }
+        tot["donor_rate"] = round((tot["donors"] / tot["signups"]) * 100, 1) if tot["signups"] else 0
+        tot["ltv_per_signup"] = round(tot["total_raised"] / tot["signups"], 2) if tot["signups"] else 0
+        out["channel_ltv"] = {
+            "available": True,
+            "window_days": (signup_attr or {}).get("window_days", 180),
+            "channels": chan_rows,
+            "total": tot,
+        }
+    else:
+        out["channel_ltv"] = {"available": False,
+            "reason": "No per-email signup data available — needs Ghost member-events feed."}
+
+    # ---- 4. Influence-weighted reach -------------------------------------
+    # Score each subscriber by their likely influence in NYC policy circles:
+    #   rating-based engagement + wiki "notable" bonus + gov/edu bonus
+    # Sum across all subscribers in MAU → influence-weighted reach
+    # Convert rows (list of tuples) into email→rating dict for fast lookup
+    rating_by_email = {r[0]: r[1] for r in rows} if rows else {}
+    if pj_path.exists() and rows:
+        try:
+            people = json.loads(pj_path.read_text())
+        except Exception: people = []
+        # Map email → person (for is_notable, types, etc.)
+        em2p = {}
+        for p in people:
+            if not p.get("mem") or p.get("unsub"): continue
+            for em in (p.get("emails") or []):
+                em2p[em.lower().strip()] = p
+        # MAU emails (need set passed in — fall back to high-rating subscribers as proxy)
+        mau_set = mc.get("_mau_set") or set()
+        def _score(p, rating):
+            s = 1.0 + (rating or 0) * 0.4
+            if p.get("wiki"): s += 2.0
+            types = set(p.get("types") or [])
+            if any(t in types for t in ("current nyc.gov", "city gov", "state gov", "fed gov", "judge")):
+                s += 1.5
+            return s
+
+        weighted_total = 0.0
+        unweighted_total = 0
+        notable_in_mau = 0
+        gov_in_mau    = 0
+        for em, p in em2p.items():
+            if mau_set and em not in mau_set: continue
+            rating = rating_by_email.get(em, 0)
+            weighted_total += _score(p, rating)
+            unweighted_total += 1
+            if p.get("wiki"): notable_in_mau += 1
+            types = set(p.get("types") or [])
+            if any(t in types for t in ("current nyc.gov", "city gov", "state gov", "fed gov", "judge")):
+                gov_in_mau += 1
+        out["influence_weighted_reach"] = {
+            "score":            round(weighted_total, 1),
+            "raw_mau":          unweighted_total,
+            "notable_in_mau":   notable_in_mau,
+            "gov_in_mau":       gov_in_mau,
+            "score_per_reader": round(weighted_total / unweighted_total, 2) if unweighted_total else 0,
+        }
+    else:
+        out["influence_weighted_reach"] = {"available": False, "reason": "no people.json or engagement data"}
+
     return out
 
 
@@ -581,6 +801,7 @@ def pull_ghost_signup_attribution(days_back=180):
     by_source = {}         # referrer_source -> count (Direct, Google, newsletter, LinkedIn, etc.)
     by_medium = {}         # referrer_medium -> count (search, email, social, etc.)
     by_landing = {}        # attribution.type (post|page|url) -> count (where they signed up)
+    by_email  = {}         # email -> {source, medium, landing_url, ts} (for channel-LTV join)
     fetched = 0
     stop = False
     cursor_id = None       # last event id from previous page (cursor pagination)
@@ -626,6 +847,13 @@ def pull_ghost_signup_attribution(days_back=180):
             by_medium[med] = by_medium.get(med, 0) + 1
             ltype = (att.get("type") or "unknown")
             by_landing[ltype] = by_landing.get(ltype, 0) + 1
+            # Per-email source map (for channel-LTV join with donor data).
+            # First-touch attribution: if a user re-signs up later, keep the
+            # earliest recorded source.
+            mem = d.get("member") or {}
+            mem_em = ((mem.get("email") or "")).lower().strip()
+            if mem_em and mem_em not in by_email:
+                by_email[mem_em] = {"source": src, "medium": med, "type": ltype, "ts": ts}
             post_url = (att.get("url") or "").rstrip("/")
             if not post_url: continue
             r = by_url.setdefault(post_url, {
@@ -653,7 +881,7 @@ def pull_ghost_signup_attribution(days_back=180):
         r["first_seen"] = r["first_seen"][:10]
         r["last_seen"]  = r["last_seen"][:10]
         del r["sources"]
-    log(f"  ghost signup attribution: {fetched} signup events across {len(by_url)} URLs, {len(by_day)} days, {len(by_source)} sources")
+    log(f"  ghost signup attribution: {fetched} signup events across {len(by_url)} URLs, {len(by_day)} days, {len(by_source)} sources, {len(by_email)} per-email entries")
     return {
         "available":      True,
         "events_counted": fetched,
@@ -663,6 +891,7 @@ def pull_ghost_signup_attribution(days_back=180):
         "by_medium":      [{"med": m, "n": n} for m, n in sorted(by_medium.items(), key=lambda kv: -kv[1])],
         "by_landing":     [{"type": t, "n": n} for t, n in sorted(by_landing.items(), key=lambda kv: -kv[1])],
         "window_days":    days_back,
+        "_by_email":      by_email,   # internal — used for channel-LTV join, stripped before JSON write
     }
 
 
@@ -1508,9 +1737,10 @@ def main():
     all_titles = pull_all_ghost_titles()
     flag_own_url_shares(news_mentions, all_titles)
     lifecycle = build_lifecycle(mc)
-    # Strip the internal MAU/AAU sets from mc before serialization — they were
-    # only needed in-process for the lifecycle join.
+    engagement_extras = build_engagement_extras(mc, signup_attr, db)
+    # Strip internal-only fields from in-memory objects before JSON write
     mc.pop("_mau_set", None); mc.pop("_aau_set", None)
+    signup_attr.pop("_by_email", None)
 
     # Ghost is the source of truth for signups (the public newsletter form
     # writes to Ghost first; Mailchimp is reconciled in weekly batches). Use
@@ -1584,6 +1814,7 @@ def main():
         "press":     pull_press(),
         "news_mentions": news_mentions,
         "lifecycle":     lifecycle,
+        "engagement_extras": engagement_extras,
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
         # a "Connect this source" placeholder card with the exact setup steps.
         "ga4": {

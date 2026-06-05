@@ -298,6 +298,11 @@
         <div id="postsList"></div>
       </div>
 
+      <div class="card" id="engagementExtras">
+        <h2>Engagement &amp; influence <span class="hint">post-Apple-privacy metrics: who really reads, by mailbox provider, by influence weight</span></h2>
+        <div id="engagementExtrasBody"></div>
+      </div>
+
       <div class="card" id="quality">
         <h2>Subscriber quality <span class="hint">based on Mailchimp engagement</span></h2>
         <div id="qualityBody"></div>
@@ -504,6 +509,7 @@ function boot(data){
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderAcquisition(data.ghost_signup_attribution || {});
+  renderEngagementExtras(data.engagement_extras || {});
   renderLifecycle(data.lifecycle || {});
   renderGoogleTrends();
 
@@ -955,6 +961,10 @@ function renderPerf(mc){
     {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
       d:fmtPctDelta(dClickYtd)+" vs YTD '25", cls:deltaPctClass(dClickYtd,true),
       tip:"Year-to-date click rate, recipient-weighted. Click rate isn't inflated by Apple Mail privacy auto-opens, so changes here reflect real engagement."+interpretInsight("click_rate", dClickYtd)},
+    {lbl:"CTOR · YTD", n:(ytd.ctor_pct||0)+"%",
+      d:fmtPctDelta(pctDelta(ytd.ctor_pct, prior.ctor_pct))+" vs YTD '25",
+      cls:deltaPctClass(pctDelta(ytd.ctor_pct, prior.ctor_pct), true),
+      tip:"Click-to-Open Ratio = clicks ÷ opens. The honest quality signal in the post-Apple-Mail-privacy era: 'of the people who opened the email, what % actually engaged?' Healthy editorial newsletters typically run 8-18% CTOR. Above 18% means subjects + content are well-aligned with audience interest."},
     {lbl:"Sends · YTD", n:fmtN(ytd.sends||0),
       d:fmtPctDelta(dSendsYtd)+" vs YTD '25", cls:deltaPctClass(dSendsYtd,true),
       tip:"Total newsletter sends so far this year, vs the same period last year. Includes automations + manual sends."+interpretInsight("sends", dSendsYtd)},
@@ -1487,6 +1497,95 @@ function renderAcquisition(attr){
           <div class="v">${fmtN(s.n)}</div>
         </div>`).join("")}
       </div>
+    </div>`;
+}
+
+function renderEngagementExtras(ex){
+  const host = $("#engagementExtrasBody");
+  if(!host) return;
+  if(!ex.available){
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);padding:8px 0">Engagement extras not available yet — pipeline needs a fresh run.</div>`;
+    return;
+  }
+  const mbox  = ex.mailbox_engagement || [];
+  const power = ex.power_readers || {};
+  const ltv   = ex.channel_ltv || {available:false};
+  const iwr   = ex.influence_weighted_reach || {};
+
+  // ---- Influence-weighted reach (single KPI strip) ----
+  const iwrSection = iwr && iwr.score!=null ? `
+    <div style="margin-bottom:18px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="A composite reach metric that weights each MAU reader by their likely policy-circle influence. Each subscriber starts at 1.0; we add 0.4 per Mailchimp star (so a 5★ reader is worth 3.0), 2.0 if they're flagged as 'notable' (likely Wikipedia page), and 1.5 if their email domain marks them as government / city / state / federal / judge. The number itself is meaningful only relative to itself over time — track whether it grows as your reach into the right rooms grows.">Influence-weighted reach</div>
+      <div class="perfgrid">
+        <div class="perfcell"><div class="pl">Influence score</div><div class="pn">${fmtN(iwr.score)}</div><div class="pd flat">across ${fmtN(iwr.raw_mau||0)} MAU readers</div></div>
+        <div class="perfcell"><div class="pl">Score per reader</div><div class="pn">${iwr.score_per_reader}</div><div class="pd flat">avg weighting</div></div>
+        <div class="perfcell" title="Subscribers in MAU whose email domain ends in .gov, or who carry city/state/fed/judge type tags."><div class="pl">Gov / judge readers in MAU</div><div class="pn">${fmtN(iwr.gov_in_mau||0)}</div><div class="pd flat">policy-targeted reach</div></div>
+        <div class="perfcell" title="Subscribers in MAU flagged as 'notable' (matched to an English Wikipedia page using conservative context clues)."><div class="pl">Notable readers in MAU</div><div class="pn">${fmtN(iwr.notable_in_mau||0)}</div><div class="pd flat">public-profile readers</div></div>
+      </div>
+    </div>` : '';
+
+  // ---- Mailbox-provider engagement ----
+  const maxOpen = Math.max(1, ...mbox.map(m=>m.avg_open_pct));
+  const mboxSection = mbox.length ? `
+    <div style="margin-bottom:18px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="Avg open rate of subscribers grouped by email provider. Useful for spotting which providers are killing your deliverability (low Hotmail/Outlook rate often means your domain is in their spam scoring) and which read most actively (Apple iCloud + .gov tend to be highest). Apple Mail privacy auto-opens inflate iCloud rates somewhat.">Engagement by mailbox provider</div>
+      ${mbox.map(m=>`<div class="dombar" title="${esc(m.label==='Government'?'Subscribers with a .gov email — usually NYC city government, state, federal':m.label==='Academic'?'Subscribers at a .edu institution — NYU, Columbia, Wagner, etc.':`Subscribers using ${m.label}-hosted email`)}.">
+        <div style="font-size:12px">${esc(m.label)}</div>
+        <div class="bar" style="background:var(--vc-cerulean);width:${(m.avg_open_pct/maxOpen*100)}%"></div>
+        <div class="v">${m.avg_open_pct}%</div>
+        <div style="font-size:10.5px;color:var(--vc-charcoal);text-align:right;padding-right:4px">n=${fmtN(m.subs)}</div>
+      </div>`).join("")}
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">Govt + .edu readers usually have the highest *honest* open rates because their inbox setups don't run Apple Mail privacy proxies. They're also your most-policy-relevant readers — see "Influence-weighted reach" above.</div>
+    </div>` : '';
+
+  // ---- Power readers ----
+  const powerSection = (power.count>0) ? `
+    <div style="margin-bottom:18px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="The top 10% of subscribers ranked by composite engagement (Mailchimp star rating × 20 + open rate). These are the people who will reliably open your next email. Use this segment for: 'send-first' tests of new formats, asking for sharing, soliciting recurring donations, and recruiting authors/sources.">Power readers · top decile</div>
+      <div class="perfgrid">
+        <div class="perfcell"><div class="pl">Power-reader count</div><div class="pn">${fmtN(power.count)}</div><div class="pd flat">${power.as_pct_of_list}% of list</div></div>
+        <div class="perfcell"><div class="pl">Avg open rate</div><div class="pn">${power.avg_open_pct}%</div><div class="pd flat">across top-decile</div></div>
+        <div class="perfcell"><div class="pl">Avg Mailchimp ★</div><div class="pn">${power.avg_rating}</div><div class="pd flat">of 5.0</div></div>
+        <div class="perfcell" title="Provider mix of your top-decile readers. If a disproportionate share are on .edu or .gov, your editorial is reaching the right audience even when overall open rate is low.">
+          <div class="pl">Top providers</div>
+          <div style="font-size:11px;line-height:1.3;margin-top:4px">${(power.by_provider||[]).slice(0,4).map(p=>`${esc(p.label)}: <b>${fmtN(p.n)}</b>`).join('<br>')}</div>
+        </div>
+      </div>
+    </div>` : '';
+
+  // ---- Channel LTV ----
+  let ltvSection = '';
+  if(ltv.available && ltv.channels && ltv.channels.length){
+    const rows = ltv.channels.map(c => `<tr>
+      <td>${esc(c.source)}</td>
+      <td class="num">${fmtN(c.signups)}</td>
+      <td class="num">${fmtN(c.donors)}</td>
+      <td class="num">${c.donor_rate}%</td>
+      <td class="num">${fmtUSD(c.total_raised)}</td>
+      <td class="num">${fmtUSD(c.ltv_per_signup)}</td>
+    </tr>`).join("");
+    const t = ltv.total;
+    ltvSection = `<div style="margin-bottom:18px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="For each acquisition source recorded in Ghost's signup attribution, what % became donors and how much they've given. Caveat: this is limited to subscribers whose signup is in the Ghost member-events feed (~800 signups over the last 6 months, post-April-2026 cutover). Pre-cutover donors don't have a source we can attribute — so the absolute donor counts here are smaller than your total donor count.">Channel LTV · who actually becomes a donor</div>
+      <table class="tbl" style="width:100%">
+        <thead><tr><th>Source</th><th class="num">Signups</th><th class="num">Donors</th><th class="num">Donor rate</th><th class="num">Raised</th><th class="num">$/signup</th></tr></thead>
+        <tbody>${rows}</tbody>
+        <tfoot><tr style="font-weight:700;border-top:1px solid var(--vc-black)">
+          <td>Total tracked</td>
+          <td class="num">${fmtN(t.signups)}</td>
+          <td class="num">${fmtN(t.donors)}</td>
+          <td class="num">${t.donor_rate}%</td>
+          <td class="num">${fmtUSD(t.total_raised)}</td>
+          <td class="num">${fmtUSD(t.ltv_per_signup)}</td>
+        </tr></tfoot>
+      </table>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">Limited to subscribers in Ghost's ${ltv.window_days||180}-day signup attribution feed. Compare donor rates &mdash; a channel can produce many cheap signups (Google) or few high-value ones (Academic Outreach UTM). The Total row is the bottom of that funnel for trackable signups only.</div>
+    </div>`;
+  }
+
+  host.innerHTML = iwrSection + mboxSection + powerSection + ltvSection +
+    `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:14px;line-height:1.55;border-top:1px dashed var(--vc-cloud);padding-top:10px">
+      <b>Why this card exists:</b> Standard open rate is broken (Apple Mail privacy inflates it). These four views work around that by focusing on (a) provider-level patterns that reveal real engagement, (b) the top-decile readers you can rely on, (c) how acquisition channels actually convert to donor revenue, and (d) which of your readers carry policy-circle weight. None of these are vanity numbers — each one drives a specific decision.
     </div>`;
 }
 
