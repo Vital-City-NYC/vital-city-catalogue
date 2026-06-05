@@ -1899,33 +1899,19 @@ def main():
     # subscriber's record so the Contact tool can filter to these exact
     # subsets that the Growth dashboard surfaces.
     #
-    # SAFETY GATE: only re-encrypt people.json when we're running in a
-    # context that has just refreshed it from sources + overrides. The
-    # cloud workflow does this (build_network.py runs immediately before
-    # growth_pull.py and applies OVERRIDES_URL pulls). A local invocation
-    # WOULDN'T — it'd re-encrypt a stale local people.json without recent
-    # in-tool name confirmations, blowing away Josh's edits on the
-    # published network/data.enc. The gate: a sentinel env var that the
-    # workflow sets, and a sanity check that the on-disk people.json is
-    # fresh (mtime within the last hour).
-    import time as _t, os as _os
+    # IMPORTANT — this function NEVER encrypts anything. It only writes the
+    # flags into the plaintext private/people.json (which is gitignored and
+    # never published). Encryption of network/data.enc is the SOLE
+    # responsibility of encrypt_people.py, which the workflow runs as its
+    # own step AFTER this one — so the flags are baked into the single
+    # passphrase-correct encryption. A prior version called
+    # encrypt_people.main() inline here; in the cloud that step lacked
+    # VC_NETWORK_PASS and fell through to a freshly generated passphrase,
+    # re-encrypting the contact DB with a throwaway key and locking Josh
+    # out. That coupling is gone for good: enrich here, encrypt elsewhere.
+    import os as _os
     pj_path = PRIV / "people.json"
-    # HARD GATE: explicit opt-in only. GITHUB_ACTIONS alone is NOT enough — a
-    # prior version trusted it and the cloud step re-encrypted without
-    # VC_NETWORK_PASS in env, falling through to a freshly generated
-    # passphrase. The 12 MB enriched blob ended up encrypted with a random
-    # passphrase that died with the runner, locking Josh out of the contact
-    # tool. Required from now on: caller explicitly sets
-    # GROWTH_OK_TO_REENCRYPT=1 AND ensures VC_NETWORK_PASS is in env.
-    explicit_opt_in = bool(_os.environ.get("GROWTH_OK_TO_REENCRYPT"))
-    have_passphrase = bool(_os.environ.get("VC_NETWORK_PASS"))
-    pj_is_fresh   = pj_path.exists() and (_t.time() - pj_path.stat().st_mtime) < 3600
-    safe_to_reenc = explicit_opt_in and have_passphrase and pj_is_fresh
-    if not safe_to_reenc:
-        log("  SKIPPING people.json re-encrypt. Required: GROWTH_OK_TO_REENCRYPT=1, "
-            "VC_NETWORK_PASS in env, and a fresh people.json. "
-            "Engagement flags will land on the next refresh that meets all three.")
-    if pj_path.exists() and safe_to_reenc:
+    if pj_path.exists():
         try:
             people = json.loads(pj_path.read_text())
         except Exception as e:
@@ -1949,15 +1935,8 @@ def main():
                 if (old_mau, old_aau, old_pr, old_ar, old_sc) != (p["mau"], p["aau"], p["power_reader"], p["at_risk"], p["sunset_candidate"]):
                     updated += 1
             pj_path.write_text(json.dumps(people, indent=2))
-            log(f"  enriched people.json with engagement flags ({updated} rows changed)")
-            # Re-encrypt people.json so the Contact tool picks up the new flags.
-            # We do this directly (not via subprocess) to avoid a workflow round-trip.
-            try:
-                import encrypt_people
-                encrypt_people.main()
-                log(f"  re-encrypted network/data.enc with engagement flags")
-            except Exception as e:
-                log(f"  could not re-encrypt people.json: {e}")
+            log(f"  enriched people.json with engagement flags ({updated} rows changed). "
+                "encrypt_people.py (separate workflow step) will publish them.")
 
     # Ghost is the source of truth for signups (the public newsletter form
     # writes to Ghost first; Mailchimp is reconciled in weekly batches). Use

@@ -90,6 +90,21 @@ jobs:
       - name: Rebuild fused people dataset
         run: python3 build_network.py
 
+      # Runs BEFORE encryption so the engagement flags it writes into the
+      # plaintext people.json get baked into the single passphrase-correct
+      # encryption below. growth_pull.py NEVER encrypts — it only enriches
+      # people.json and writes private/growth.json. (Decoupling encryption
+      # from this step is what fixed the lockout where the inline re-encrypt
+      # fell through to a generated passphrase.) Non-fatal: a failure here
+      # leaves the dashboard stale but never blocks the contact-tool publish.
+      - name: Build growth-dashboard data (Mailchimp + Ghost + Donorbox + X + IG + press)
+        env:
+          MAILCHIMP_KEY: ${{ secrets.MAILCHIMP_KEY }}
+          DONORBOX_KEY:  ${{ secrets.DONORBOX_KEY }}
+          DONORBOX_EMAIL: info@vitalcitynyc.org
+        run: |
+          python3 growth_pull.py || echo "WARNING: growth_pull failed; growth dashboard will be stale"
+
       - name: Safety check — refuse to publish a gutted dataset
         env:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
@@ -99,14 +114,6 @@ jobs:
         env:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
         run: python3 encrypt_people.py
-
-      - name: Build growth-dashboard data (Mailchimp + Ghost + Donorbox + X + IG + press)
-        env:
-          MAILCHIMP_KEY: ${{ secrets.MAILCHIMP_KEY }}
-          DONORBOX_KEY:  ${{ secrets.DONORBOX_KEY }}
-          DONORBOX_EMAIL: info@vitalcitynyc.org
-        run: |
-          python3 growth_pull.py || echo "WARNING: growth_pull failed; growth dashboard will be stale"
 
       - name: Encrypt growth-dashboard data for publishing
         env:
