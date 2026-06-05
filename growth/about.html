@@ -59,6 +59,18 @@
   </ul>
   <p>Two caveats baked into the tooltips: Apple Mail's privacy auto-opens inflate this number across the industry (since the mail client opens emails on the user's behalf to fetch tracking pixels), so MAU/AAU should be read as a ceiling not a floor. And A/B-test ("variate") campaigns are excluded from the union because Mailchimp tracks openers against the child A/B sub-campaigns rather than the parent; the dashboard shows how many variate sends were skipped if that matters.</p>
 
+  <h2 id="whitelist">Editing the media-mentions whitelist</h2>
+  <p>The "Media mentions" sidebar pulls from Google News with site-restricted queries — one query per outlet for the exact phrase "Vital City", one for @vitalcitynyc, and one for any vitalcitynyc.org URL share. This means we only see mentions from outlets we've named in the whitelist; the trade-off is much higher precision (we don't get noise from random sites that use the generic phrase) for slightly narrower coverage.</p>
+  <p><b>Adding or removing an outlet</b> is a one-line edit to <code>growth_pull.py</code>, the file that runs in the daily refresh:</p>
+  <ol>
+    <li>Open <code>growth_pull.py</code> on GitHub: <a href="https://github.com/vitalcity-nyc/vital-city-catalogue/blob/main/growth_pull.py" target="_blank">vitalcity-nyc/vital-city-catalogue → growth_pull.py</a>.</li>
+    <li>Click the pencil ✏️ icon to edit in the browser, then find the <code>MENTION_OUTLETS</code> list near the top.</li>
+    <li>Each line is a tuple: <code>("domain.com", "Display Name")</code>. To add: copy a line, change the values. To remove: delete the line. To rename for display only: change the second value.</li>
+    <li>Scroll down and click <b>Commit changes</b>. The next 11 UTC refresh will pick it up. To trigger sooner, go to <a href="https://github.com/vitalcity-nyc/vital-city-catalogue/actions/workflows/network-refresh.yml" target="_blank">Actions → network-refresh → Run workflow</a>.</li>
+  </ol>
+  <p><b>What domain to use:</b> the bare hostname without <code>www.</code> works for most outlets (e.g. <code>nytimes.com</code>). For Substacks, use the publication-specific subdomain (<code>johnkroman.substack.com</code>). When in doubt, try the search yourself first at <code>news.google.com</code> with the query <code>"Vital City" site:DOMAIN</code> — if it returns relevant results, the domain works.</p>
+  <p><b>Note on WNYC:</b> WNYC's content frequently mentions Vital City on radio segments, but those audio pieces don't get indexed by Google News (only the show-page transcripts do, when they exist). Most contemporary WNYC + Vital City content surfaces under the <code>gothamist.com</code> domain instead — Gothamist and WNYC share a newsroom (both belong to New York Public Radio), and Gothamist publishes web write-ups for many WNYC stories. So the dashboard relies on the Gothamist search to catch most WNYC-adjacent mentions, and the wnyc.org search catches only the small subset of show pages that explicitly print the phrase. The 2022 launch coverage from "All of It" and "Brian Lehrer" lives there; current radio appearances may be missed.</p>
+
   <h2>Media / social mentions (the sidebar)</h2>
   <p>Two free feeds, both narrowed to NYC context so "Vital City" the brand isn't confused with the generic phrase:</p>
   <ul>

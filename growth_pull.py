@@ -75,6 +75,34 @@ def pull_mailchimp():
     except Exception as e:
         log(f"  mailchimp list summary failed: {e}")
 
+    # Growth history — monthly *cumulative* sub + unsub counts going back ~58
+    # months. From this we can derive REAL monthly new-signup counts (the
+    # /activity feed is unreliable because it only sees direct-MC-form
+    # signups, and most VC signups arrived via Ghost form even before the
+    # April 2025 cutover). Formula: new_signups[m] = (subs[m] - subs[m-1]) +
+    # (unsubs[m] - unsubs[m-1]). Captures everyone added to the list,
+    # whether through Ghost reconcile, MC form, or manual import.
+    try:
+        gh = mc_get(f"/lists/{list_id}/growth-history?count=72&sort_field=month&sort_dir=ASC",
+                    key, dc).get("history", [])
+        monthly_signups = []
+        prev_subs = prev_unsubs = None
+        for h in gh:
+            month = h.get("month") or ""
+            subs   = int(h.get("subscribed") or 0)
+            unsubs = int(h.get("unsubscribed") or 0)
+            if prev_subs is None:
+                new = subs   # first month — total subs is the count of signups so far
+            else:
+                new = (subs - prev_subs) + (unsubs - prev_unsubs)
+            monthly_signups.append({"month": month, "new_signups": max(0, new),
+                                    "cum_subs": subs, "cum_unsubs": unsubs})
+            prev_subs, prev_unsubs = subs, unsubs
+        out["monthly_signups"] = monthly_signups
+    except Exception as e:
+        log(f"  mailchimp growth-history failed: {e}")
+        out["monthly_signups"] = []
+
     # Daily activity (subs/unsubs by day) — last 180 days.
     # Subs: computed from people.json `since` dates (Mailchimp's /activity endpoint
     # only counts direct-MC-form signups and grossly understates the real number
@@ -134,13 +162,25 @@ def pull_mailchimp():
     ytd_start  = _date(y, 1, 1);   ytd_end = today
     py_start   = _date(y-1, 1, 1); py_end  = _date(y-1, today.month, today.day)
 
+    # Derive YTD signup counts from Mailchimp's growth-history (cumulative
+    # subscribers per month — the most complete record of net additions
+    # regardless of which form the signup came through). For both current
+    # and prior year, sum new_signups Jan→current_month.
+    def _ytd_signups(monthly, year, through_month):
+        return sum(int(m.get("new_signups") or 0) for m in monthly
+                   if (m.get("month") or "").startswith(f"{year}-")
+                   and (m.get("month") or "")[5:7] <= f"{through_month:02d}")
+    monthly = out.get("monthly_signups") or []
+    sig_ytd       = _ytd_signups(monthly, today.year,     today.month)
+    sig_prior_ytd = _ytd_signups(monthly, today.year - 1, today.month)
     out["signup_windows"] = {
-        "ytd":            _sum(rows, ytd_start, ytd_end, "subs"),
-        "prior_ytd":      _sum(rows, py_start,  py_end,  "subs"),
-        "prior_ytd_ok":   py_start >= GHOST_CUTOVER,
-        "ghost_cutover":  GHOST_CUTOVER.isoformat(),
-        "unsub_ytd":      _sum(rows, ytd_start, ytd_end, "unsubs"),
-        "unsub_prior_ytd":_sum(rows, py_start,  py_end,  "unsubs"),
+        "ytd":              sig_ytd,
+        "prior_ytd":        sig_prior_ytd,
+        "prior_ytd_ok":     sig_prior_ytd > 0,
+        "prior_ytd_source": "Mailchimp growth-history (monthly subscriber counts) — counts every net addition to the list, whether the signup came in via Ghost form, the MC form, or a manual import.",
+        "ghost_cutover":    GHOST_CUTOVER.isoformat(),
+        "unsub_ytd":        _sum(rows, ytd_start, ytd_end, "unsubs"),
+        "unsub_prior_ytd":  _sum(rows, py_start,  py_end,  "unsubs"),
     }
 
     # ALL sent campaigns ever — we use the full history for monthly trend lines
@@ -149,16 +189,24 @@ def pull_mailchimp():
     try:
         camp = mc_get(
             f"/campaigns?status=sent&list_id={list_id}&count=500"
-            f"&sort_field=send_time&sort_dir=DESC&fields=campaigns.id,"
+            f"&sort_field=send_time&sort_dir=DESC&fields=campaigns.id,campaigns.type,"
             f"campaigns.settings.subject_line,campaigns.send_time,campaigns.emails_sent,"
-            f"campaigns.report_summary",
+            f"campaigns.report_summary,campaigns.variate_settings.subject_lines",
             key, dc).get("campaigns", [])
         camp_out = []
         for c in camp:
             rs = c.get("report_summary") or {}
+            # Variate (A/B) campaigns leave settings.subject_line empty on the
+            # parent — the variant subjects live in variate_settings.subject_lines.
+            # Pick those up so the dashboard doesn't show "(no subject)".
+            variate_subjects = []
+            if c.get("type") == "variate":
+                variate_subjects = ((c.get("variate_settings") or {}).get("subject_lines") or [])
             camp_out.append({
                 "id":       c.get("id"),
                 "subject":  (c.get("settings") or {}).get("subject_line", ""),
+                "variate_subjects": variate_subjects,
+                "type":     c.get("type") or "regular",
                 "sent":     (c.get("send_time") or "")[:10],
                 "sent_to":  c.get("emails_sent") or 0,
                 "open_pct": round((rs.get("open_rate")  or 0) * 100, 1),
@@ -348,6 +396,7 @@ def pull_ghost_signup_attribution(days_back=180):
         return {"available": False, "reason": "no Ghost admin key"}
     since_iso = (datetime.now(timezone.utc) - timedelta(days=days_back)).isoformat()
     by_url = {}
+    by_day = {}            # day -> count of signup events (canonical signup source-of-truth)
     fetched = 0
     stop = False
     cursor_id = None       # last event id from previous page (cursor pagination)
@@ -378,6 +427,10 @@ def pull_ghost_signup_attribution(days_back=180):
             if ts and ts < since_iso:
                 stop = True
                 continue
+            # Daily total — every signup, regardless of attribution
+            if ts:
+                day = ts[:10]
+                by_day[day] = by_day.get(day, 0) + 1
             att = d.get("attribution") or {}
             post_url = (att.get("url") or "").rstrip("/")
             if not post_url: continue
@@ -406,8 +459,14 @@ def pull_ghost_signup_attribution(days_back=180):
         r["first_seen"] = r["first_seen"][:10]
         r["last_seen"]  = r["last_seen"][:10]
         del r["sources"]
-    log(f"  ghost signup attribution: {fetched} signup events across {len(by_url)} URLs")
-    return {"available": True, "events_counted": fetched, "by_url": by_url, "window_days": days_back}
+    log(f"  ghost signup attribution: {fetched} signup events across {len(by_url)} URLs, {len(by_day)} days")
+    return {
+        "available":      True,
+        "events_counted": fetched,
+        "by_url":         by_url,
+        "by_day":         [{"d": d, "subs": n} for d, n in sorted(by_day.items())],
+        "window_days":    days_back,
+    }
 
 
 def pull_ghost():
@@ -481,9 +540,12 @@ MENTION_OUTLETS = [
     ("bloomberg.com",          "Bloomberg"),
     ("theguardian.com",        "The Guardian"),
     ("newsweek.com",           "Newsweek"),
-    # Social (search posts that mention the @ handle or full brand)
+    # Social (search posts that mention the @ handle, full brand, or share a
+    # vitalcitynyc.org URL — the URL-share shape catches reposts and quotes
+    # that don't necessarily tag the @ handle).
     ("x.com",                  "X (Twitter)"),
     ("twitter.com",            "X (Twitter)"),
+    ("linkedin.com",           "LinkedIn"),
 ]
 
 
@@ -1110,6 +1172,66 @@ def main():
     db = pull_donorbox()
     attribute_signups_to_posts(mc, gh, signup_attr=signup_attr)
     attribute_donations_to_posts(db, gh)
+
+    # Ghost is the source of truth for signups (the public newsletter form
+    # writes to Ghost first; Mailchimp is reconciled in weekly batches). Use
+    # the Ghost signup_event stream to overwrite the `subs` field in the
+    # Mailchimp daily activity series — that's why the dashboard's last-2-days
+    # signup count was reading zero (people.json rebuilds daily and lags).
+    if signup_attr.get("available") and signup_attr.get("by_day"):
+        by_day_ghost = {r["d"]: r["subs"] for r in signup_attr["by_day"]}
+        # Replace the subs field with Ghost's authoritative count
+        for row in (mc.get("daily_activity") or []):
+            if row.get("d") in by_day_ghost:
+                row["subs"] = by_day_ghost[row["d"]]
+        # Add any days Ghost has that Mailchimp activity doesn't (the last
+        # day or two, typically)
+        existing_days = {row["d"] for row in (mc.get("daily_activity") or [])}
+        for d, n in by_day_ghost.items():
+            if d not in existing_days:
+                mc.setdefault("daily_activity", []).append({
+                    "d": d, "subs": n, "unsubs": 0, "opens": 0, "clicks": 0,
+                })
+        mc["daily_activity"] = sorted(mc.get("daily_activity") or [], key=lambda r: r["d"])
+        # Note this in the data so the dashboard can label it
+        mc["signup_source"] = "ghost_events"
+        # Also recompute the signup_windows ytd/prior_ytd totals based on the
+        # corrected activity series.
+        from datetime import date as _date
+        today = datetime.now(timezone.utc).date()
+        y = today.year
+        rows = mc["daily_activity"]
+        def _sum(start, end, key):
+            s, e = start.isoformat(), end.isoformat()
+            return sum(int(r.get(key) or 0) for r in rows if s <= r["d"] <= e)
+        ytd_start = _date(y, 1, 1); ytd_end = today
+        py_start  = _date(y-1, 1, 1); py_end = _date(y-1, today.month, today.day)
+        mc.setdefault("signup_windows", {})
+        # When Mailchimp's net change for a month is zero/negative (list
+        # cleanup wiped out the gross signups), patch that month's signup
+        # count from Ghost's per-event count instead — Ghost only sees real
+        # form signups so it's not affected by cleanups.
+        from collections import defaultdict as _dd2
+        ghost_month = _dd2(int)
+        for row in (mc.get("daily_activity") or []):
+            if row.get("subs", 0) > 0:
+                ghost_month[row["d"][:7]] += int(row["subs"])
+        for m in (mc.get("monthly_signups") or []):
+            mo = m.get("month") or ""
+            if m.get("new_signups", 0) == 0 and ghost_month.get(mo, 0) > 0:
+                m["new_signups"] = ghost_month[mo]
+                m["source_note"] = "Ghost events (Mailchimp net was zero/negative this month from a list cleanup)"
+        # Re-compute YTD totals after the patch
+        from datetime import date as _date2
+        _today = datetime.now(timezone.utc).date()
+        def _ytd2(year, m_through, ms):
+            return sum(int(x.get("new_signups") or 0) for x in ms
+                       if (x.get("month") or "").startswith(f"{year}-")
+                       and (x.get("month") or "")[5:7] <= f"{m_through:02d}")
+        _ms = mc.get("monthly_signups") or []
+        mc["signup_windows"]["ytd"]       = _ytd2(_today.year,     _today.month, _ms)
+        mc["signup_windows"]["prior_ytd"] = _ytd2(_today.year - 1, _today.month, _ms)
+        mc["signup_windows"]["prior_ytd_ok"] = mc["signup_windows"]["prior_ytd"] > 0
     out = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "mailchimp": mc,
