@@ -131,6 +131,18 @@
   .stub{background:var(--vc-paper);border:1px dashed var(--vc-cloud);padding:11px 13px;font-size:12px;color:var(--vc-charcoal);margin-bottom:14px}
   .stub b{color:var(--vc-black)}
   .stub ol{margin:6px 0 0 18px;padding:0;font-size:11px;line-height:1.55}
+  /* Clickable "ⓘ" info dot — for users where browser tooltips don't fire
+     reliably. Click pops up a modal with the full explanation. */
+  .infodot{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;margin-left:5px;border:1px solid var(--vc-charcoal);border-radius:50%;font-size:9.5px;font-weight:700;color:var(--vc-charcoal);background:var(--vc-white);cursor:pointer;vertical-align:1px;user-select:none;line-height:1;font-style:normal}
+  .infodot:hover{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  html.dark .infodot{background:var(--vc-paper2)}
+  #infoModal{position:fixed;inset:0;background:rgba(15,16,17,.45);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+  #infoModal.on{display:flex}
+  #infoModalBox{background:var(--vc-white);border:1px solid var(--vc-black);padding:22px 26px;max-width:580px;width:100%;max-height:80vh;overflow-y:auto;font-size:14px;line-height:1.6;color:var(--vc-black)}
+  #infoModalBox h3{margin:0 0 12px;font-family:var(--vc-sans);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);font-weight:700}
+  #infoModalBox button{margin-top:16px;font:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:8px 14px;border:1px solid var(--vc-black);background:var(--vc-black);color:#fff;cursor:pointer}
+  #infoModalBox button:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:var(--vc-black)}
+  html.dark #infoModalBox{background:var(--vc-white)}
 
   /* Gate */
   .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:99}
@@ -334,6 +346,15 @@
   </div>
 </div>
 
+<!-- Info modal — click any ⓘ to show the explanation -->
+<div id="infoModal" aria-hidden="true" role="dialog">
+  <div id="infoModalBox">
+    <h3 id="infoModalTitle">What is this?</h3>
+    <div id="infoModalText"></div>
+    <button id="infoModalClose">Got it</button>
+  </div>
+</div>
+
 <script>
 const $=s=>document.querySelector(s);
 const PASSKEY="vc_net_pass";
@@ -443,28 +464,28 @@ function boot(data){
     (function(){
       const m=mc.mau||{}, n=m.active_users;
       const pct = (n && total) ? (n/total*100).toFixed(0)+"%" : "—";
-      return {lbl:"Newsletter MAU · 30d", num: n!=null ? fmtN(n) : "—",
-              delta: n!=null ? `${pct} of list opened ≥1 email` : "data pending",
+      return {lbl:"Active subscribers · 30d", num: n!=null ? fmtN(n) : "—",
+              delta: n!=null ? `${pct} opened ≥1 email in last 30 days` : "data pending",
               cls:"flat",
-              tip:`NEWSLETTER — Unique people who opened ≥1 Vital City newsletter in the last 30 days, real union across recent sends (Mailchimp per-campaign open data, deduped). Apple Mail privacy auto-opens inflate this somewhat.`};
+              tip:`Sometimes called "MAU" (Monthly Active Users). Unique people who opened at least one Vital City newsletter in the last 30 days — a real union across every send in that window, deduped by email. Apple Mail privacy auto-opens inflate this somewhat; click rate is the cleaner cut.`};
     })(),
     (function(){
       const a=mc.aau||{}, n=a.active_users;
       const pct = (n && total) ? (n/total*100).toFixed(0)+"%" : "—";
-      return {lbl:"Newsletter AAU · 1y", num: n!=null ? fmtN(n) : "—",
-              delta: n!=null ? `${pct} of list opened ≥1 email` : "data pending",
+      return {lbl:"Active subscribers · 1y", num: n!=null ? fmtN(n) : "—",
+              delta: n!=null ? `${pct} opened ≥1 email in last year` : "data pending",
               cls:"flat",
-              tip:`NEWSLETTER — Unique people who opened ≥1 Vital City newsletter in the last 365 days. The gap from MAU is your "lapsed but reachable" audience.`};
+              tip:`Sometimes called "AAU" (Annual Active Users). Unique people who opened at least one Vital City newsletter in the last 365 days. The gap from the 30-day number is your "lapsed but reachable" audience — people who used to open but haven't lately.`};
     })(),
     // --- Website (GA4 — pending credentials) ---
-    {lbl:"Website MAU · 30d", num: ga4.mau!=null ? fmtN(ga4.mau) : "—",
+    {lbl:"Website visitors · 30d", num: ga4.mau!=null ? fmtN(ga4.mau) : "—",
      delta: ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs GA4 ↗",
      cls: ga4.mau!=null ? "flat" : "na",
-     tip:"WEBSITE — Unique anonymous visitors to vitalcitynyc.org in the last 30 days. Ghost tracks this in its admin Analytics tab but doesn't expose the aggregate page-view data to API tokens. We DO get the conversion side from Ghost (where each newsletter signup happened, see 'Where signups come from' card). For raw traffic / page views / unique visitors, GA4 is still the path. 5-min setup is on the 'How it works' page."},
-    {lbl:"Website AAU · 1y", num: ga4.aau!=null ? fmtN(ga4.aau) : "—",
+     tip:"Unique anonymous visitors to vitalcitynyc.org in the last 30 days. Ghost tracks this in its admin Analytics tab but doesn't expose the aggregate page-view data to API tokens. We DO get the conversion side from Ghost (where each newsletter signup happened — see 'Where signups come from' card below). For raw traffic / page views / unique visitor counts, GA4 (or Plausible / Cloudflare) is still the path. 5-min setup is on the 'How it works' page."},
+    {lbl:"Website visitors · 1y", num: ga4.aau!=null ? fmtN(ga4.aau) : "—",
      delta: ga4.aau!=null ? `${fmtN(ga4.sessions_365||0)} sessions` : "needs GA4 ↗",
      cls: ga4.aau!=null ? "flat" : "na",
-     tip:"WEBSITE — Unique visitors to vitalcitynyc.org in the last 365 days. Same Ghost-API gating as the MAU tile — Ghost has it, doesn't expose it. The site only moved to Ghost in April 2026, so Ghost's internal Analytics tab has at most ~2 months of traffic data anyway. GA4 / Plausible / Cloudflare Web Analytics are the realistic paths for traffic data going forward (and for any pre-April-2026 history that still lives in the prior site's analytics)."},
+     tip:"Unique anonymous visitors to vitalcitynyc.org in the last 365 days. Same Ghost-API gating as the 30-day tile — Ghost has it, doesn't expose it. The site only moved to Ghost in April 2026, so Ghost Analytics has at most ~2 months of traffic data anyway. GA4 covers both the post-cutover period and any pre-April-2026 history that still lives in the prior site's analytics."},
     // --- Fundraising ---
     {lbl:"Raised · YTD", num: db.available ? fmtUSD((dWin.ytd||{}).amount||0) : "—",
      delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts` : "Donorbox not connected",
@@ -512,6 +533,9 @@ function boot(data){
   renderEngagementExtras(data.engagement_extras || {});
   renderLifecycle(data.lifecycle || {});
   renderGoogleTrends();
+  // After every card has rendered, sprinkle clickable ⓘ icons on metric
+  // elements so users can read explanations without depending on hover.
+  installInfoDots();
 
   // ----- Campaigns table (collapsible — show 5, expand for the rest)
   const camp=mc.campaigns||[];
@@ -961,10 +985,10 @@ function renderPerf(mc){
     {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
       d:fmtPctDelta(dClickYtd)+" vs YTD '25", cls:deltaPctClass(dClickYtd,true),
       tip:"Year-to-date click rate, recipient-weighted. Click rate isn't inflated by Apple Mail privacy auto-opens, so changes here reflect real engagement."+interpretInsight("click_rate", dClickYtd)},
-    {lbl:"CTOR · YTD", n:(ytd.ctor_pct||0)+"%",
-      d:fmtPctDelta(pctDelta(ytd.ctor_pct, prior.ctor_pct))+" vs YTD '25",
+    {lbl:"Click-to-open · YTD", n:(ytd.ctor_pct||0)+"%",
+      d:`${fmtPctDelta(pctDelta(ytd.ctor_pct, prior.ctor_pct))} vs YTD '25 · of openers, % who clicked`,
       cls:deltaPctClass(pctDelta(ytd.ctor_pct, prior.ctor_pct), true),
-      tip:"Click-to-Open Ratio = clicks ÷ opens. The honest quality signal in the post-Apple-Mail-privacy era: 'of the people who opened the email, what % actually engaged?' Healthy editorial newsletters typically run 8-18% CTOR. Above 18% means subjects + content are well-aligned with audience interest."},
+      tip:"Click-to-Open Ratio (CTOR) = clicks ÷ opens. THE quality signal in the post-Apple-Mail-privacy era: 'of the people who actually opened the email, what % engaged with it enough to click something?' Healthy editorial newsletters typically run 8-18% CTOR. Above 18% means subjects + content are well-aligned with audience interest. This number doesn't get inflated by Apple's privacy auto-opens the way the raw open rate does, so it's the honest read on content quality."},
     {lbl:"Sends · YTD", n:fmtN(ytd.sends||0),
       d:fmtPctDelta(dSendsYtd)+" vs YTD '25", cls:deltaPctClass(dSendsYtd,true),
       tip:"Total newsletter sends so far this year, vs the same period last year. Includes automations + manual sends."+interpretInsight("sends", dSendsYtd)},
@@ -1179,6 +1203,86 @@ function renderSendChart(camps){
     $("#sendInsight").innerHTML = "";
   }
 }
+
+// ---- Info-dot popovers (clickable "what is this?" icons) ----
+// We don't retrofit every metric tile manually; instead, after boot()
+// finishes rendering, we walk certain selectors and attach a small ⓘ icon
+// that reads the explanation from the nearest title attribute. So every
+// existing tooltip becomes click-accessible without changing the data side.
+function installInfoDots(){
+  // Selectors of elements whose first child should get an ⓘ icon appended.
+  // We only target the "label" of each tile, so the icon sits next to the
+  // metric name (not the big number).
+  const labelSelectors = [
+    ".kpi[title] .lbl",
+    ".perfcell[title] .pl",
+    "table.ytdtbl[title] th",
+  ];
+  // Also: cards' <h2> with .hint or with title attributes
+  document.querySelectorAll("main .card > h2").forEach(h2 => {
+    // Skip if already done
+    if (h2.querySelector(".infodot")) return;
+    // Use the .hint text on this card as the explanation source if present;
+    // otherwise fall back to the card's data-info attribute (none for now).
+    const hint = h2.querySelector(".hint");
+    if (!hint || !hint.textContent.trim()) return;
+    const dot = document.createElement("span");
+    dot.className = "infodot";
+    dot.textContent = "i";
+    dot.title = "What is this?";
+    dot.setAttribute("data-info", hint.textContent.trim());
+    dot.setAttribute("data-info-title", (h2.firstChild && h2.firstChild.textContent ? h2.firstChild.textContent : h2.textContent).trim());
+    // Insert before the .hint span (so dot reads as part of the title line)
+    h2.insertBefore(dot, hint);
+  });
+  labelSelectors.forEach(sel => {
+    document.querySelectorAll(sel).forEach(el => {
+      const parent = el.closest("[title]");
+      if (!parent) return;
+      const tip = parent.getAttribute("title") || "";
+      if (!tip || tip.length < 30) return;   // skip trivial titles
+      if (el.querySelector(".infodot")) return;
+      const dot = document.createElement("span");
+      dot.className = "infodot";
+      dot.textContent = "i";
+      dot.setAttribute("data-info", tip);
+      dot.setAttribute("data-info-title", el.textContent.trim());
+      el.appendChild(dot);
+    });
+  });
+}
+
+// Delegated click — open the info modal with the dot's text
+document.addEventListener("click", e => {
+  const dot = e.target.closest && e.target.closest(".infodot");
+  if (dot && dot.dataset.info) {
+    e.preventDefault(); e.stopPropagation();
+    const titleEl = document.getElementById("infoModalTitle");
+    const textEl  = document.getElementById("infoModalText");
+    if (titleEl) titleEl.textContent = dot.dataset.infoTitle || "What is this?";
+    if (textEl)  textEl.innerHTML = dot.dataset.info.replace(/\n+/g, "<br><br>");
+    const modal = document.getElementById("infoModal");
+    if (modal) modal.classList.add("on");
+    return;
+  }
+  // Click outside the box (on the dim backdrop) closes it
+  if (e.target && e.target.id === "infoModal") {
+    document.getElementById("infoModal").classList.remove("on");
+  }
+});
+// Close button + Esc
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    const modal = document.getElementById("infoModal");
+    if (modal && modal.classList.contains("on")) modal.classList.remove("on");
+  }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const closeBtn = document.getElementById("infoModalClose");
+  if (closeBtn) closeBtn.addEventListener("click", () => {
+    document.getElementById("infoModal").classList.remove("on");
+  });
+});
 
 function timeAgo(iso){
   if(!iso) return "";
@@ -1512,30 +1616,40 @@ function renderEngagementExtras(ex){
   const ltv   = ex.channel_ltv || {available:false};
   const iwr   = ex.influence_weighted_reach || {};
 
+  // Card-level intro so the reader doesn't have to hover for context
+  const intro = `<div style="font-size:12px;color:var(--vc-charcoal);margin:0 0 18px;line-height:1.55">
+    <b style="color:var(--vc-black)">Why this card:</b> The headline "open rate" has been broken since Apple Mail's privacy update (Apple's servers auto-open emails on the user's behalf, inflating opens without engagement). These four views work around that by focusing on what's still measurable cleanly — patterns by email provider, your most reliable readers, how acquisition channels actually convert to donor revenue, and how much of your reach is in policy-relevant rooms. Each one drives a specific decision.
+  </div>`;
+
   // ---- Influence-weighted reach (single KPI strip) ----
   const iwrSection = iwr && iwr.score!=null ? `
-    <div style="margin-bottom:18px">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="A composite reach metric that weights each MAU reader by their likely policy-circle influence. Each subscriber starts at 1.0; we add 0.4 per Mailchimp star (so a 5★ reader is worth 3.0), 2.0 if they're flagged as 'notable' (likely Wikipedia page), and 1.5 if their email domain marks them as government / city / state / federal / judge. The number itself is meaningful only relative to itself over time — track whether it grows as your reach into the right rooms grows.">Influence-weighted reach</div>
+    <div style="margin-bottom:22px">
+      <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">Influence-weighted reach</div>
+      <div style="font-size:12px;color:var(--vc-charcoal);margin-bottom:8px;line-height:1.5">
+        <b style="color:var(--vc-black)">What it is:</b> A composite reach score that weights each active reader by how influential they likely are in NYC policy circles. The formula: each subscriber starts at 1.0; we add <b>+0.4 per Mailchimp star</b> (so a 5★ reader counts as 3.0), <b>+2.0 if Wikipedia-notable</b>, and <b>+1.5 if their email puts them in government, the judiciary, or a policy agency</b>. Track whether this number grows over time — it answers "are we reaching the right rooms?" better than raw subscriber count.
+      </div>
       <div class="perfgrid">
-        <div class="perfcell"><div class="pl">Influence score</div><div class="pn">${fmtN(iwr.score)}</div><div class="pd flat">across ${fmtN(iwr.raw_mau||0)} MAU readers</div></div>
-        <div class="perfcell"><div class="pl">Score per reader</div><div class="pn">${iwr.score_per_reader}</div><div class="pd flat">avg weighting</div></div>
-        <div class="perfcell" title="Subscribers in MAU whose email domain ends in .gov, or who carry city/state/fed/judge type tags."><div class="pl">Gov / judge readers in MAU</div><div class="pn">${fmtN(iwr.gov_in_mau||0)}</div><div class="pd flat">policy-targeted reach</div></div>
-        <div class="perfcell" title="Subscribers in MAU flagged as 'notable' (matched to an English Wikipedia page using conservative context clues)."><div class="pl">Notable readers in MAU</div><div class="pn">${fmtN(iwr.notable_in_mau||0)}</div><div class="pd flat">public-profile readers</div></div>
+        <div class="perfcell"><div class="pl">Influence score (total)</div><div class="pn">${fmtN(iwr.score)}</div><div class="pd flat">summed across the ${fmtN(iwr.raw_mau||0)} active readers</div></div>
+        <div class="perfcell"><div class="pl">Score per reader (avg)</div><div class="pn">${iwr.score_per_reader}</div><div class="pd flat">1.0 = baseline, 5.0 ≈ max</div></div>
+        <div class="perfcell" title="Active subscribers whose email ends in .gov, or who carry city/state/federal/judge type tags in the CRM."><div class="pl">Government / judge readers</div><div class="pn">${fmtN(iwr.gov_in_mau||0)}</div><div class="pd flat">in this month's active set</div></div>
+        <div class="perfcell" title="Active subscribers flagged as 'notable' (matched to an English Wikipedia page using conservative context clues)."><div class="pl">Wikipedia-notable readers</div><div class="pn">${fmtN(iwr.notable_in_mau||0)}</div><div class="pd flat">in this month's active set</div></div>
       </div>
     </div>` : '';
 
   // ---- Mailbox-provider engagement ----
   const maxOpen = Math.max(1, ...mbox.map(m=>m.avg_open_pct));
   const mboxSection = mbox.length ? `
-    <div style="margin-bottom:18px">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="Avg open rate of subscribers grouped by email provider. Useful for spotting which providers are killing your deliverability (low Hotmail/Outlook rate often means your domain is in their spam scoring) and which read most actively (Apple iCloud + .gov tend to be highest). Apple Mail privacy auto-opens inflate iCloud rates somewhat.">Engagement by mailbox provider</div>
+    <div style="margin-bottom:22px">
+      <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">Engagement by mailbox provider</div>
+      <div style="font-size:12px;color:var(--vc-charcoal);margin-bottom:8px;line-height:1.5">
+        <b style="color:var(--vc-black)">What it is:</b> Average open rate of subscribers, grouped by who hosts their email (Gmail, Outlook, .gov, etc.). <b>Why look:</b> a strikingly low rate for one provider (e.g. Microsoft / Outlook at 16%) is usually a <b>deliverability problem</b> — VC's mail landing in Junk for that provider's users. Worth checking Microsoft Postmaster Tools / Google Postmaster. The .gov and .edu rows tend to be the most honest engagement signal because those mail setups don't run Apple Mail privacy proxies.
+      </div>
       ${mbox.map(m=>`<div class="dombar" title="${esc(m.label==='Government'?'Subscribers with a .gov email — usually NYC city government, state, federal':m.label==='Academic'?'Subscribers at a .edu institution — NYU, Columbia, Wagner, etc.':`Subscribers using ${m.label}-hosted email`)}.">
         <div style="font-size:12px">${esc(m.label)}</div>
         <div class="bar" style="background:var(--vc-cerulean);width:${(m.avg_open_pct/maxOpen*100)}%"></div>
         <div class="v">${m.avg_open_pct}%</div>
-        <div style="font-size:10.5px;color:var(--vc-charcoal);text-align:right;padding-right:4px">n=${fmtN(m.subs)}</div>
+        <div style="font-size:10.5px;color:var(--vc-charcoal);text-align:right;padding-right:4px">${fmtN(m.subs)} subscribers</div>
       </div>`).join("")}
-      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">Govt + .edu readers usually have the highest *honest* open rates because their inbox setups don't run Apple Mail privacy proxies. They're also your most-policy-relevant readers — see "Influence-weighted reach" above.</div>
     </div>` : '';
 
   // ---- Power readers ----
