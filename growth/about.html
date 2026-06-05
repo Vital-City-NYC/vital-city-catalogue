@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Growth dashboard — how it works</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--paper:#F5F1EB;--white:#FFFFFF;--black:#0F1011;--charcoal:#5A5C61;--cloud:#D9D5CE;--cerulean:#1F6FB2;
+    --sans:"Inter Tight","Inter",system-ui,sans-serif;--serif:"GT Sectra","Source Serif Pro",Georgia,serif;}
+  body{margin:0;background:var(--paper);color:var(--black);font-family:var(--sans);font-size:14px;line-height:1.55;padding:30px;max-width:780px}
+  h1{font-family:var(--serif);font-size:26px;margin:0 0 6px}
+  h2{font-family:var(--sans);font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:var(--charcoal);margin:24px 0 8px;font-weight:700;border-top:1px solid var(--cloud);padding-top:18px}
+  .wm{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--charcoal);margin-bottom:6px}
+  table{border-collapse:collapse;width:100%;margin:6px 0;font-size:13px}
+  th,td{padding:7px 10px;border:1px solid var(--cloud);vertical-align:top;text-align:left}
+  th{background:var(--white);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+  .back{display:inline-block;margin-bottom:20px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:11px;text-decoration:none;color:var(--cerulean)}
+  ul{padding-left:22px}
+  code{font-size:12px;background:var(--white);padding:1px 4px;border:1px solid var(--cloud)}
+</style>
+</head>
+<body>
+  <a class="back" href="index.html">← Back to the dashboard</a>
+  <div class="wm">Vital City</div>
+  <h1>Growth dashboard — how it works</h1>
+  <p>This dashboard exists to answer one question first: <b>are we growing the newsletter?</b> Everything else — traffic, campaign performance, mentions — is in service of that.</p>
+
+  <h2>The headline KPIs</h2>
+  <table>
+    <tr><th>Tile</th><th>What it shows</th><th>Where it comes from</th></tr>
+    <tr><td><b>Subscribers</b></td><td>Current unique people on the Mailchimp newsletter list. Each individual counted once, even if they're on the list under 2 or 3 email addresses (so this reads slightly lower than Mailchimp's raw subscriber count).</td><td>Mailchimp list summary</td></tr>
+    <tr><td><b>New signups · 7 / 30 / 90 d</b></td><td>People who joined in each rolling window. The 7- and 30-day tiles also show the change vs the prior period of the same length.</td><td>Vital City's merged people dataset (Mailchimp + Ghost signup dates, deduped by person)</td></tr>
+    <tr><td><b>Unsubscribes · 30 d</b></td><td>People who left in the last 30 days, plus that as a percentage of the list. Healthy newsletters typically run well under 0.5% / month.</td><td>Mailchimp activity feed</td></tr>
+    <tr><td><b>Engaged subscribers</b></td><td>Share of subscribers Mailchimp rates 4–5 stars — the ones who reliably open most emails.</td><td>Mailchimp member ratings</td></tr>
+  </table>
+
+  <h2>The 90-day signup chart</h2>
+  <p>Green bars are new signups per day; the magenta line is unsubscribes per day; blue dots at the top mark days a Vital City post was published. The chart makes the relationship between content and signups visible — articles that spike the green bars tend to be the ones worth doing more of.</p>
+  <p><b>Important nuance:</b> daily signups are derived from the merged subscriber dataset. That dataset rebuilds once a day at 11:00 UTC, so the most recent 1–2 days may understate signups until the next rebuild. The Mailchimp <code>/activity</code> endpoint's own <code>subs</code> count drastically undercounts signups (it only sees direct-Mailchimp form signups, while most VC signups arrive via the Ghost form), which is why the dashboard uses the merged dataset instead.</p>
+
+  <h2>Recent newsletter sends</h2>
+  <p>The last 12 sent campaigns with subject, recipient count, open rate, click rate and unsubscribe count. Open rate cell colors: green ≥35%, blue 22–35%, orange below. (Be aware that Apple Mail's "Mail Privacy Protection" auto-opens inflate open rates across the industry; click rate is the more honest engagement number.)</p>
+
+  <h2>Content cadence</h2>
+  <p>Posts published in the last 90 days, with quick counts for the 7- and 30-day windows. Use this to see whether the publishing rhythm is steady — gaps in publishing usually show up later as flat green bars on the signup chart.</p>
+
+  <h2>Subscriber quality</h2>
+  <p>Two views of the engaged half of the list:</p>
+  <ul>
+    <li><b>Rating distribution</b> — Mailchimp's 1–5 star score, weighted by open rate and tenure. 4–5★ are people you can count on. A list mostly stuck at 2★ usually means many subscribers are new (no history yet) — which can be healthy.</li>
+    <li><b>Top email domains</b> — where subscribers' addresses live. Useful for guessing who reads on Apple Mail (auto-opens skew the rate), and for spotting institutional clusters (.edu, .gov).</li>
+  </ul>
+
+  <h2>Brand watch (the sidebar)</h2>
+  <p>Two free feeds, both narrowed to NYC context so "Vital City" the brand isn't confused with the generic phrase:</p>
+  <ul>
+    <li><b>Google News</b> — external publications quoting "Vital City". Self-references are filtered out, and items must actually contain the brand name (not just link to the site).</li>
+    <li><b>Reddit</b> — threads naming Vital City, mostly in r/nyc. These are usually shares of VC articles by users — useful signal of organic distribution.</li>
+  </ul>
+  <p>X (Twitter) and Instagram mentions are not in the sidebar yet — see "Connect more sources" below for why.</p>
+
+  <h2>Connect more sources</h2>
+  <p>Four panels are stubbed with their setup steps. Each one needs credentials you'd need to set up once:</p>
+  <table>
+    <tr><th>Source</th><th>What it adds</th><th>What's needed</th></tr>
+    <tr><td><b>Google Analytics 4</b></td><td>Sessions, users, engagement time, top pages, source/medium (organic vs social vs direct), conversions on the signup form.</td><td>GA4 service account → JSON key → add as Viewer on the GA4 property → store <code>GA4_CREDS_JSON</code> and <code>GA4_PROPERTY_ID</code> as GitHub secrets.</td></tr>
+    <tr><td><b>Google Search Console</b></td><td>Top queries, impressions, clicks, average position, rising queries (vs previous 28 days).</td><td>Add the same service-account email as a user on www.vitalcitynyc.org in Search Console; store <code>GSC_CREDS_JSON</code> and <code>GSC_SITE_URL</code>.</td></tr>
+    <tr><td><b>X / Twitter mentions</b></td><td>Recent mentions of @vitalcitynyc, replies and quote-tweets.</td><td>The free Twitter API was retired. Realistic options: pay for X Basic API (~$100/mo) and add <code>X_BEARER_TOKEN</code>; or pay for a listening service (Brand24, Mention) and feed its RSS; or monitor manually.</td></tr>
+    <tr><td><b>Instagram</b></td><td>@vitalcitynyc's own recent posts (and, with elevated review, tagged mentions).</td><td>Convert the Instagram account to a Business account linked to a Facebook Page; create a Meta app; get a long-lived Page token with <code>instagram_basic</code> scope; store <code>IG_ACCESS_TOKEN</code> and <code>IG_USER_ID</code>.</td></tr>
+  </table>
+
+  <h2>How often it refreshes</h2>
+  <p>Once a day at 11:00 UTC (≈ 7am ET in summer, 6am in winter). The same GitHub Action that updates the Contact tool also runs <code>growth_pull.py</code> → <code>encrypt_growth.py</code> and pushes the new encrypted file. The "Last refresh" timestamp at the top of the dashboard tells you exactly when this snapshot was taken.</p>
+
+  <h2>Confidentiality</h2>
+  <p>This page uses the same passphrase as the Contact tool and the same end-to-end encryption (AES-256-GCM, PBKDF2-SHA256 600k rounds). The dashboard contains aggregate metrics but no PII; it's password-protected anyway to keep our growth numbers internal.</p>
+  <a class="back" href="index.html">← Back to the dashboard</a>
+</body>
+</html>

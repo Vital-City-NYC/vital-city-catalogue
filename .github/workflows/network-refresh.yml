@@ -100,6 +100,22 @@ jobs:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
         run: python3 encrypt_people.py
 
+      - name: Build growth-dashboard data (Mailchimp signups + campaigns, Ghost cadence, press RSS)
+        env:
+          MAILCHIMP_KEY: ${{ secrets.MAILCHIMP_KEY }}
+        run: |
+          python3 growth_pull.py || echo "WARNING: growth_pull failed; growth dashboard will be stale"
+
+      - name: Encrypt growth-dashboard data for publishing
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: |
+          if [ -s private/growth.json ]; then
+            python3 encrypt_growth.py
+          else
+            echo "no private/growth.json to encrypt — skipping"
+          fi
+
       - name: Commit & push if changed
         run: |
           # Defense-in-depth: never commit a missing/tiny encrypted file (real one is ~6 MB).
@@ -109,7 +125,7 @@ jobs:
           fi
           git config user.name "Vital City Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data network/data.enc
+          git add data network/data.enc growth/data.enc 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "no changes to publish"
           else

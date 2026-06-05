@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Growth dashboard — Vital City</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0F1A2A">
+<style>
+  :root{
+    --vc-paper:#F5F1EB; --vc-white:#FFFFFF; --vc-black:#0F1011; --vc-charcoal:#5A5C61;
+    --vc-cloud:#D9D5CE; --vc-green:#57AA4A; --vc-orange:#E2772F; --vc-cerulean:#1F6FB2;
+    --vc-magenta:#C8377E; --vc-paper2:#EFE9DF;
+    --vc-sans:"Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+    --vc-serif:"GT Sectra","Source Serif Pro",Georgia,Times,serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5}
+  a{color:var(--vc-cerulean)}
+  header.mast{border-bottom:1px solid var(--vc-black);padding:22px 30px 16px;background:var(--vc-white);position:relative}
+  header.mast .wm{font-family:var(--vc-sans);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--vc-charcoal)}
+  header.mast h1{font-family:var(--vc-serif);font-weight:900;font-size:26px;margin:6px 0 2px;letter-spacing:-.01em}
+  header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:780px}
+  .mastlinks{position:absolute;right:30px;top:20px;display:flex;gap:14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .mastlinks a{color:var(--vc-cerulean);text-decoration:none;white-space:nowrap}
+  .mastlinks a:hover{text-decoration:underline}
+  .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.1em;padding:4px 30px;font-weight:700}
+
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:0;align-items:start}
+  .layout>*{min-width:0}
+  main{padding:18px 30px 60px}
+  aside.brandwatch{border-left:1px solid var(--vc-cloud);padding:18px 22px 40px;background:var(--vc-paper2);min-height:600px}
+  aside.brandwatch h2{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);font-weight:700;margin:14px 0 8px}
+  aside.brandwatch h2:first-child{margin-top:0}
+
+  /* KPI tiles */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin:0 0 22px}
+  .kpi{background:var(--vc-white);padding:14px 16px}
+  .kpi .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700}
+  .kpi .num{font-family:var(--vc-serif);font-weight:900;font-size:30px;line-height:1.1;margin-top:4px;color:var(--vc-black)}
+  .kpi .delta{font-size:11px;font-weight:700;margin-top:4px}
+  .kpi .delta.up{color:var(--vc-green)}
+  .kpi .delta.down{color:#c8102e}
+  .kpi .delta.flat{color:var(--vc-charcoal)}
+  .kpi.hero{background:var(--vc-paper2)}
+  .kpi.hero .num{font-size:36px}
+
+  /* Cards */
+  .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:16px 18px;margin:0 0 20px}
+  .card h2{font-family:var(--vc-sans);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);font-weight:700;margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .card h2 .hint{font-size:10px;color:var(--vc-charcoal);text-transform:none;letter-spacing:0;font-weight:400}
+
+  /* Chart */
+  .chartwrap{position:relative}
+  svg.chart{width:100%;height:240px;display:block}
+  .legend{font-size:11px;color:var(--vc-charcoal);display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
+  .legend .sw{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:middle}
+
+  /* Table */
+  table.tbl{width:100%;border-collapse:collapse;font-size:13px}
+  table.tbl th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--vc-black)}
+  table.tbl td{padding:9px 10px;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
+  table.tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .pillok{display:inline-block;background:var(--vc-green);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
+  .pillwarn{display:inline-block;background:var(--vc-orange);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
+  .pillinfo{display:inline-block;background:var(--vc-cerulean);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
+
+  /* Domain bars */
+  .dombar{display:grid;grid-template-columns:120px 1fr 40px;gap:8px;align-items:center;font-size:12px;margin-bottom:4px}
+  .dombar .bar{height:9px;background:var(--vc-cerulean);opacity:.7}
+  .dombar .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--vc-charcoal)}
+
+  /* Press feed */
+  .feed{margin:0;padding:0;list-style:none}
+  .feed li{padding:8px 0;border-bottom:1px solid var(--vc-cloud);font-size:12.5px}
+  .feed li:last-child{border-bottom:none}
+  .feed .src{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);margin-right:6px}
+  .feed .date{font-size:10.5px;color:var(--vc-charcoal);margin-left:6px}
+  .feed a{color:var(--vc-black);text-decoration:none;font-weight:600}
+  .feed a:hover{color:var(--vc-cerulean);text-decoration:underline}
+  .feed .snip{font-size:11.5px;color:var(--vc-charcoal);margin-top:3px;line-height:1.45}
+  .feed .empty{color:var(--vc-charcoal);font-size:12px;padding:8px 0}
+
+  .stub{background:var(--vc-paper);border:1px dashed var(--vc-cloud);padding:11px 13px;font-size:12px;color:var(--vc-charcoal);margin-bottom:14px}
+  .stub b{color:var(--vc-black)}
+  .stub ol{margin:6px 0 0 18px;padding:0;font-size:11px;line-height:1.55}
+
+  /* Gate */
+  .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:99}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px;max-width:440px;width:92%}
+  .gatebox h1{font-family:var(--vc-serif);margin:0 0 6px;font-size:24px}
+  .gatebox .wm{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--vc-charcoal);margin-bottom:6px}
+  .gatebox p{font-size:13px;color:var(--vc-charcoal);margin:6px 0 16px}
+  .gatebox input{font:inherit;font-size:15px;width:100%;padding:10px 12px;border:1px solid var(--vc-black);background:#fff;margin-bottom:14px}
+  .gatebox button{font:inherit;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:11px 18px;border:1px solid var(--vc-black);background:var(--vc-black);color:#fff;cursor:pointer;width:100%}
+  .gatebox button:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:var(--vc-black)}
+  .gateerr{color:var(--vc-magenta);font-size:12px;font-weight:700;margin-top:6px;min-height:1em}
+  .conf{margin-top:18px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);font-weight:700}
+  #app{display:none}
+  .gen{font-size:11px;color:var(--vc-charcoal);margin-top:14px}
+
+  /* Dark */
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1c1d23}
+  html.dark body{background:var(--vc-paper);color:var(--vc-black)}
+  html.dark input{background:#212329!important;color:var(--vc-black)!important;border-color:var(--vc-cloud)!important}
+  html.dark .gatebox{background:var(--vc-white)}
+  html.dark .gatebox button{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  html.dark .gatebox button:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:#161719}
+  html.dark .confbar{background:#0b0b0d;color:#cfcfcf}
+
+  /* Responsive */
+  @media(max-width:1024px){
+    .layout{grid-template-columns:1fr}
+    aside.brandwatch{border-left:none;border-top:1px solid var(--vc-cloud)}
+    .mastlinks{position:static;margin-bottom:10px}
+  }
+  @media(max-width:600px){
+    main{padding:14px 16px 40px}
+    .confbar,header.mast{padding-left:16px;padding-right:16px}
+    aside.brandwatch{padding:14px 16px 30px}
+  }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>Growth dashboard</h1>
+    <p>Internal dashboard for newsletter growth, campaign performance and brand mentions. Enter the shared passphrase to view.</p>
+    <input id="pw" type="password" placeholder="passphrase" autocomplete="current-password">
+    <button id="unlock">Unlock</button>
+    <div class="gateerr" id="err"></div>
+    <div class="conf">Confidential · internal use only</div>
+  </div>
+</div>
+
+<div id="app">
+  <header class="mast">
+    <div class="mastlinks">
+      <a href="about.html" target="_blank">How it works ↗</a>
+      <a href="../network/" title="Open the contact master search">Contacts</a>
+      <a href="#" id="themeToggle">🌙 Dark mode</a>
+      <a href="#" id="forget">Lock</a>
+    </div>
+    <div class="wm">Vital City</div>
+    <h1>Growth dashboard</h1>
+    <div class="sub" id="subline">Newsletter signups first. Campaign performance, content cadence and external brand mentions secondary.</div>
+  </header>
+  <div class="confbar">Confidential · internal growth metrics · do not redistribute</div>
+
+  <div class="layout">
+    <main>
+      <div class="kpis" id="kpis"></div>
+      <div class="card" id="trend">
+        <h2>Signups vs unsubscribes — last 90 days <span class="hint" id="trendHint"></span></h2>
+        <div class="chartwrap"><svg class="chart" id="trendChart" viewBox="0 0 800 240" preserveAspectRatio="none"></svg></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--vc-green)"></span>New signups (per day)</span>
+          <span><span class="sw" style="background:var(--vc-magenta)"></span>Unsubscribes (per day)</span>
+          <span><span class="sw" style="background:var(--vc-cerulean);border-radius:50%;width:8px;height:8px"></span>Vital City post published</span>
+        </div>
+      </div>
+
+      <div class="card" id="campaigns">
+        <h2>Recent newsletter sends <span class="hint">most recent 12 · click subject to open in Mailchimp</span></h2>
+        <div id="campTbl"></div>
+      </div>
+
+      <div class="card" id="contentCard">
+        <h2>Content cadence <span class="hint" id="postsHint"></span></h2>
+        <div id="postsList"></div>
+      </div>
+
+      <div class="card" id="quality">
+        <h2>Subscriber quality <span class="hint">based on Mailchimp engagement</span></h2>
+        <div id="qualityBody"></div>
+      </div>
+
+      <div class="card" id="stubsCard">
+        <h2>Connect more sources</h2>
+        <div id="stubsList"></div>
+      </div>
+    </main>
+
+    <aside class="brandwatch" id="brand">
+      <h2>Brand watch</h2>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px">Recent external mentions of Vital City — third-party media, Reddit and social shares. Filtered to NYC context to avoid disambiguation hits.</div>
+      <ul class="feed" id="pressFeed"></ul>
+      <h2>Newest VC posts</h2>
+      <ul class="feed" id="ghostFeed"></ul>
+    </aside>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const PASSKEY="vc_net_pass";
+
+function applyTheme(t){document.documentElement.classList.toggle("dark",t==="dark");const b=$("#themeToggle");if(b)b.textContent=t==="dark"?"☀️ Light mode":"🌙 Dark mode";}
+(function(){const t=localStorage.getItem("vc_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light");applyTheme(t);})();
+
+function b64d(s){const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+
+async function unlock(fromStore){
+  $("#err").textContent="";
+  const pass=$("#pw").value.trim();
+  if(!pass){$("#err").textContent="Enter the passphrase.";return;}
+  try{
+    const blob=await fetch("data.enc").then(r=>r.json());
+    const data=await decryptBlob(pass,blob);
+    sessionStorage.setItem(PASSKEY,pass);
+    boot(data);
+  }catch(e){
+    console.error(e);
+    $("#err").textContent="Wrong passphrase, or data unavailable.";
+    if(fromStore) sessionStorage.removeItem(PASSKEY);
+  }
+}
+$("#unlock").addEventListener("click",()=>unlock(false));
+$("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false);});
+(async function(){
+  const stored=sessionStorage.getItem(PASSKEY);
+  if(stored){$("#pw").value=stored;await unlock(true);}
+})();
+
+function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function fmtN(n){return Number(n||0).toLocaleString();}
+function fmtPct(n){return (n>=0?"":"")+Math.round(n)+"%";}
+function fmtDelta(n){if(n===0)return "no change";return (n>0?"+":"")+fmtN(n);}
+function deltaClass(n){return n>0?"up":n<0?"down":"flat";}
+
+function daysAgo(n){const d=new Date();d.setUTCDate(d.getUTCDate()-n);return d.toISOString().slice(0,10);}
+function sumRange(rows,from,to,k){return rows.filter(r=>r.d>=from&&r.d<=to).reduce((s,r)=>s+(r[k]||0),0);}
+
+function boot(data){
+  $("#gate").style.display="none";
+  $("#app").style.display="block";
+
+  // Header subline
+  const gen=new Date(data.generated_at);
+  $("#subline").innerHTML=$("#subline").innerHTML+` <span class="gen">Last refresh: ${gen.toLocaleString()}.</span>`;
+
+  // ----- KPIs (signups-first)
+  const mc=data.mailchimp||{};
+  const act=mc.daily_activity||[];
+  const today=daysAgo(0), d7=daysAgo(6), d14=daysAgo(13), d30=daysAgo(29), d60=daysAgo(59), d90=daysAgo(89);
+  const subs7=sumRange(act,d7,today,"subs"), subsPrev7=sumRange(act,d14,daysAgo(7),"subs");
+  const subs30=sumRange(act,d30,today,"subs"), subsPrev30=sumRange(act,d60,daysAgo(30),"subs");
+  const unsubs7=sumRange(act,d7,today,"unsubs"), unsubs30=sumRange(act,d30,today,"unsubs");
+  const subs90=sumRange(act,d90,today,"subs");
+
+  const total=mc.total_subscribers||0;
+  const netNew30=subs30-unsubs30;
+  const unsubRate30=total?(unsubs30/total*100):0;
+
+  const kpis=[
+    {lbl:"Subscribers",num:fmtN(total),delta:`net ${fmtDelta(netNew30)} in 30d`,cls:deltaClass(netNew30),hero:true,
+     tip:"Unique people on the Mailchimp list right now. Each individual counted once, even if they signed up under multiple emails."},
+    {lbl:"New signups · 7d",num:fmtN(subs7),delta:`${fmtDelta(subs7-subsPrev7)} vs prior 7d`,cls:deltaClass(subs7-subsPrev7),
+     tip:"New newsletter subscribers in the last 7 days, vs the 7 days before that."},
+    {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)} vs prior 30d`,cls:deltaClass(subs30-subsPrev30),
+     tip:"New newsletter subscribers in the last 30 days vs the 30 days before that."},
+    {lbl:"New signups · 90d",num:fmtN(subs90),delta:"running total",cls:"flat",
+     tip:"New newsletter subscribers in the last 90 days. Useful for trend stability."},
+    {lbl:"Unsubscribes · 30d",num:fmtN(unsubs30),delta:`${(unsubRate30).toFixed(2)}% of list/mo`,cls:unsubRate30>0.5?"down":"flat",
+     tip:"People who unsubscribed in the last 30 days. Healthy newsletters typically run well under 0.5% of list per month."},
+    {lbl:"Engaged subscribers",num:Math.round((mc.engaged_share||0)*100)+"%",delta:"open often (4-5★)",cls:"flat",
+     tip:"Share of subscribers Mailchimp rates 4 or 5 stars — they reliably open most emails."},
+  ];
+  $("#kpis").innerHTML=kpis.map(k=>
+    `<div class="kpi${k.hero?' hero':''}" title="${esc(k.tip)}">
+       <div class="lbl">${esc(k.lbl)}</div>
+       <div class="num">${k.num}</div>
+       <div class="delta ${k.cls}">${esc(k.delta)}</div>
+     </div>`).join("");
+
+  // ----- Trend chart (hand-rolled SVG)
+  renderTrendChart(act, data.ghost && data.ghost.posts || []);
+
+  // ----- Campaigns table
+  const camp=mc.campaigns||[];
+  if(camp.length){
+    const rows=camp.map(c=>{
+      const op=c.open_pct||0, cl=c.click_pct||0;
+      const opPill=op>=35?'pillok':(op>=22?'pillinfo':'pillwarn');
+      const subj=esc(c.subject||"(no subject)").trim()||"(no subject)";
+      const link=`https://us15.admin.mailchimp.com/reports/summary?id=${esc(c.id)}`;
+      return `<tr>
+        <td>${esc(c.sent)}</td>
+        <td><a href="${link}" target="_blank">${subj}</a></td>
+        <td class="num">${fmtN(c.sent_to)}</td>
+        <td class="num"><span class="${opPill}">${op}%</span></td>
+        <td class="num">${cl}%</td>
+        <td class="num">${fmtN(c.unsubs)}</td>
+      </tr>`;
+    }).join("");
+    $("#campTbl").innerHTML=
+      `<table class="tbl"><thead><tr>
+        <th>Sent</th><th>Subject</th><th class="num">Recipients</th><th class="num">Open rate</th><th class="num">Click rate</th><th class="num">Unsubs</th>
+      </tr></thead><tbody>${rows}</tbody></table>`;
+  } else {
+    $("#campTbl").innerHTML='<div style="font-size:12px;color:var(--vc-charcoal)">No campaign data available.</div>';
+  }
+
+  // ----- Content cadence
+  const gh=data.ghost||{};
+  const posts=(gh.posts||[]).slice(0,8);
+  $("#postsHint").textContent=`${gh.count_7||0} in last 7 days · ${gh.count_30||0} in last 30 · ${gh.count_90||0} in last 90`;
+  $("#postsList").innerHTML=posts.length
+    ? `<ul class="feed">${posts.map(p=>`<li>
+        <a href="${esc(p.url)}" target="_blank">${esc(p.title)}</a>
+        <span class="date">${esc(p.published)} · ${esc(p.primary_author||'')}</span>
+        <div class="snip">${esc((p.tags||[]).slice(0,4).join(' · '))}</div>
+      </li>`).join("")}</ul>`
+    : '<div style="font-size:12px;color:var(--vc-charcoal)">No posts available.</div>';
+
+  // ----- Quality breakdown
+  const dom=(mc.top_domains||[]).slice(0,10);
+  const domMax=Math.max(1,...dom.map(d=>d.n));
+  const ratingD=mc.rating_dist||{};
+  const ratingTotal=Object.values(ratingD).reduce((a,b)=>a+b,0)||1;
+  const ratingRow=[1,2,3,4,5].map(r=>{
+    const n=ratingD[r]||0, pct=(n/ratingTotal*100);
+    return `<div class="dombar">
+      <div style="font-weight:700;font-size:11px">${'★'.repeat(r)}${'☆'.repeat(5-r)}</div>
+      <div class="bar" style="width:${pct}%;background:var(--vc-${r>=4?'green':r>=3?'orange':'magenta'})"></div>
+      <div class="v">${fmtN(n)}</div>
+    </div>`;
+  }).join("");
+  $("#qualityBody").innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div>
+        <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">Rating distribution</div>
+        ${ratingRow}
+        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">★ = avg open rate, weighted by tenure. 4-5★ are highly engaged.</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">Top email domains</div>
+        ${dom.map(d=>`<div class="dombar"><div style="font-size:12px">${esc(d.d)}</div><div class="bar" style="width:${(d.n/domMax*100)}%"></div><div class="v">${fmtN(d.n)}</div></div>`).join("")}
+      </div>
+    </div>`;
+
+  // ----- Stubs
+  const stubKeys=[
+    ["ga4","Google Analytics 4 — traffic + engagement time + signup conversions","data.ga4"],
+    ["search_console","Google Search Console — queries, impressions, clicks, position","data.search_console"],
+    ["x_mentions","X (Twitter) mentions of @vitalcitynyc","data.x_mentions"],
+    ["instagram","Instagram (@vitalcitynyc) posts + tagged mentions","data.instagram"],
+  ];
+  $("#stubsList").innerHTML=stubKeys.map(([k,label])=>{
+    const s=data[k]||{};
+    if(s.available)return "";
+    return `<div class="stub"><b>${esc(label)}</b><div style="font-size:11.5px;margin:4px 0 6px">${esc(s.reason||'')}</div>${s.setup?`<ol>${s.setup.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:''}</div>`;
+  }).join("");
+
+  // ----- Brand watch (press feed)
+  const press=data.press||[];
+  $("#pressFeed").innerHTML=press.length
+    ? press.slice(0,30).map(p=>`<li>
+        <span class="src">${esc(p.source||p.channel||'web')}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+        <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
+        ${p.snippet?`<div class="snip">${esc(p.snippet)}</div>`:''}
+      </li>`).join("")
+    : '<li class="empty">No external mentions detected in the current window.</li>';
+
+  // ghost feed in sidebar
+  $("#ghostFeed").innerHTML=(gh.posts||[]).slice(0,8).map(p=>`<li>
+    <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+    <span class="date">${esc(p.published)}</span>
+  </li>`).join("") || '<li class="empty">No posts.</li>';
+}
+
+function renderTrendChart(act,posts){
+  const svg=$("#trendChart");
+  if(!act||!act.length){svg.innerHTML='<text x="400" y="120" text-anchor="middle" fill="#888">No activity data</text>';return;}
+  const last=act.slice(-90);
+  const W=800,H=240,padL=34,padR=10,padT=14,padB=22;
+  const innerW=W-padL-padR, innerH=H-padT-padB;
+  const maxSub=Math.max(1,...last.map(r=>r.subs));
+  const maxUns=Math.max(1,...last.map(r=>r.unsubs));
+  const yMax=Math.max(maxSub,maxUns);
+  const x=(i)=>padL+(i/(last.length-1||1))*innerW;
+  const y=(v)=>padT+innerH-(v/yMax)*innerH;
+  const bw=Math.max(2,innerW/last.length-1);
+
+  let html="";
+  // y-axis grid lines + labels (0, half, max)
+  const ticks=[0,Math.round(yMax/2),yMax];
+  ticks.forEach(t=>{
+    const yy=y(t);
+    html+=`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#ddd" stroke-width="1"/>`;
+    html+=`<text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${t}</text>`;
+  });
+  // x-axis date labels (4 ticks)
+  for(let i=0;i<4;i++){
+    const idx=Math.floor((last.length-1)*i/3);
+    const d=last[idx].d;
+    html+=`<text x="${x(idx)}" y="${H-6}" text-anchor="middle" font-size="10" fill="#888">${d.slice(5)}</text>`;
+  }
+  // signup bars
+  last.forEach((r,i)=>{
+    const h=Math.max(0,(r.subs/yMax)*innerH);
+    if(r.subs>0) html+=`<rect x="${x(i)-bw/2}" y="${y(r.subs)}" width="${bw}" height="${h}" fill="#57AA4A"><title>${r.d}: ${r.subs} new signups</title></rect>`;
+  });
+  // unsub line
+  const pts=last.map((r,i)=>`${x(i)},${y(r.unsubs)}`).join(" ");
+  html+=`<polyline points="${pts}" fill="none" stroke="#C8377E" stroke-width="1.6" opacity=".85"/>`;
+  // post-publish dots
+  const postDates=new Set((posts||[]).map(p=>p.published));
+  last.forEach((r,i)=>{
+    if(postDates.has(r.d)){
+      html+=`<circle cx="${x(i)}" cy="${padT+2}" r="3" fill="#1F6FB2"><title>Posts published on ${r.d}</title></circle>`;
+    }
+  });
+  svg.innerHTML=html;
+}
+
+$("#themeToggle")&&$("#themeToggle").addEventListener("click",e=>{e.preventDefault();const cur=document.documentElement.classList.contains("dark")?"light":"dark";localStorage.setItem("vc_theme",cur);applyTheme(cur);});
+$("#forget")&&$("#forget").addEventListener("click",e=>{e.preventDefault();sessionStorage.removeItem(PASSKEY);location.reload();});
+</script>
+</body>
+</html>
