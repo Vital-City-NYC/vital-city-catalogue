@@ -201,12 +201,13 @@
       <div class="kpis" id="kpis"></div>
 
       <div class="card" id="growthChart">
-        <h2>Newsletter growth &amp; reach <span class="hint">monthly, since Jan 2025 · list size and total reach per send</span></h2>
-        <div class="chartwrap"><svg class="chart" id="growthSvg" viewBox="0 0 800 240" preserveAspectRatio="none"></svg></div>
+        <h2>Newsletter growth &amp; reach <span class="hint">weekly, since Jan 2025 · list size and reach per week</span></h2>
+        <div class="chartwrap"><svg class="chart" id="growthSvg" viewBox="0 0 800 240" preserveAspectRatio="none"></svg>
+        </div>
         <div class="legend">
-          <span><span class="sw" style="background:var(--vc-green)"></span>New signups (per month)</span>
-          <span><span class="sw" style="background:var(--vc-cerulean)"></span>Subscriber list size</span>
-          <span><span class="sw" style="background:var(--vc-orange);opacity:.6"></span>Total opens per month (right axis)</span>
+          <span><span class="sw" style="background:var(--vc-green)"></span>New signups (per week)</span>
+          <span><span class="sw" style="background:var(--vc-cerulean)"></span>Subscriber list size (interpolated weekly)</span>
+          <span><span class="sw" style="background:var(--vc-orange);opacity:.6"></span>Total opens per week (right axis)</span>
         </div>
         <div id="growthInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55"></div>
       </div>
@@ -757,106 +758,180 @@ function fmtPctDelta(d){
 }
 
 function renderGrowthChart(mc){
-  // Monthly story: bars = new signups, line = cumulative subscriber list size,
-  // secondary line = avg total opens per send (a proxy for total reach that
-  // captures the "list grew so total eyeballs grew, even as open-rate fell"
-  // story). All three keep the operational chart above honest by showing the
-  // 18-month trajectory.
+  // Weekly story: bars = new signups per week, line = cumulative subscriber
+  // list size, secondary line = total opens per week (the real reach signal).
+  // Weekly is smoother than monthly and handles in-progress periods cleanly
+  // — the current incomplete week is just one small final data point, not a
+  // jagged cliff in the chart like an in-progress month produces.
   const months = (mc.monthly_signups || []).slice(-18);
-  const monthlyCamp = (mc.monthly_campaigns || []);
-  // Map month → TOTAL opens per month (the real reach signal): the sum of
-  // (open_pct × recipients) across every send that month. Captures "list
-  // grew → more delivered emails → more total opens" even when open rate
-  // fell, which is the story the daily-pulse chart can't show.
-  const opensByMonth = {};
-  monthlyCamp.forEach(m => {
-    if(m.sends > 0 && m.recipients > 0){
-      opensByMonth[m.month] = Math.round((m.open_pct/100) * m.recipients);
+  if(!months.length){ const s=$("#growthSvg"); if(s) s.innerHTML='<text x="400" y="120" text-anchor="middle" fill="#888">No history yet</text>'; return; }
+
+  // Helpers: ISO-style Monday-start week
+  const weekKey = (date) => {
+    const d = new Date(date + (date.includes('T')?'':'T00:00:00Z'));
+    const dow = d.getUTCDay();   // 0=Sun..6=Sat
+    const off = (dow === 0 ? 6 : dow - 1);
+    const wk = new Date(d.getTime() - off * 86400000);
+    return wk.toISOString().slice(0,10);
+  };
+
+  // ----- Build weekly buckets across the chart window -----
+  const startMonth = months[0].month + "-01";
+  const endDate    = new Date().toISOString().slice(0,10);
+  const weeks = [];
+  {
+    let cursor = new Date(weekKey(startMonth) + 'T00:00:00Z');
+    const stop = new Date(weekKey(endDate)    + 'T00:00:00Z');
+    while(cursor.getTime() <= stop.getTime()){
+      weeks.push({ wk: cursor.toISOString().slice(0,10), signups: 0, unsubs: 0, opens: 0 });
+      cursor = new Date(cursor.getTime() + 7*86400000);
     }
+  }
+  const wkIdx = {}; weeks.forEach((w,i) => { wkIdx[w.wk] = i; });
+
+  // Signups + unsubs per week, from daily activity (Ghost-overlaid)
+  (mc.daily_activity || []).forEach(a => {
+    if(!a.d || a.d < startMonth) return;
+    const k = weekKey(a.d);
+    if(wkIdx[k] === undefined) return;
+    weeks[wkIdx[k]].signups += +a.subs || 0;
+    weeks[wkIdx[k]].unsubs  += +a.unsubs || 0;
   });
+  // Total opens per week, from each individual campaign (open_pct × recipients
+  // per send, summed within the send's week)
+  (mc.campaigns || []).forEach(c => {
+    if(!c.sent || !(c.sent_to > 0)) return;
+    if(c.sent < startMonth) return;
+    const k = weekKey(c.sent);
+    if(wkIdx[k] === undefined) return;
+    weeks[wkIdx[k]].opens += Math.round((c.open_pct || 0)/100 * c.sent_to);
+  });
+
+  // Cumulative subscriber count per week — linear interpolation from monthly
+  // cum_subs anchors (Mailchimp growth-history). End-of-month → end-of-month.
+  const monthEnd = {};
+  months.forEach(m => { monthEnd[m.month] = m.cum_subs; });
+  const sortedMonths = months.map(m => m.month);
+  const cumAt = (dateISO) => {
+    const ym = dateISO.slice(0,7);
+    const idx = sortedMonths.indexOf(ym);
+    if(idx < 0){
+      // Before window — use first month start
+      const first = months[0]; return first.cum_subs - first.new_signups;
+    }
+    const start = idx === 0 ? (months[0].cum_subs - months[0].new_signups) : months[idx-1].cum_subs;
+    const end   = months[idx].cum_subs;
+    const d = new Date(dateISO + 'T00:00:00Z');
+    const daysInMonth = new Date(d.getUTCFullYear(), d.getUTCMonth()+1, 0).getUTCDate();
+    const dayOfMonth = d.getUTCDate();
+    return Math.round(start + (end - start) * (dayOfMonth / daysInMonth));
+  };
+  weeks.forEach(w => { w.cum_subs = cumAt(w.wk); });
+
+  // Backfill last cum_subs with current total subs (so the line ends at the
+  // real, current list size rather than the last interpolated point)
+  if(mc.total_subscribers){
+    weeks[weeks.length - 1].cum_subs = mc.total_subscribers;
+  }
   const svg = $("#growthSvg");
-  if(!months.length){svg.innerHTML='<text x="400" y="120" text-anchor="middle" fill="#888">No history yet</text>';return;}
   const W=800,H=240,padL=44,padR=56,padT=18,padB=26;
   const innerW=W-padL-padR, innerH=H-padT-padB;
-  const maxNew  = Math.max(1, ...months.map(m=>m.new_signups));
-  const maxSubs = Math.max(1, ...months.map(m=>m.cum_subs));
-  const maxOpen = Math.max(1, ...months.map(m=>opensByMonth[m.month]||0));
-  // Left y-axis serves both subs (line) and signups (bars) with two scales,
-  // but we'll normalize visually: bars use 0..maxNew up to ~45% of innerH so
-  // the cumulative line dominates as the headline visual.
-  const x = (i) => padL + (i/(months.length-1||1)) * innerW;
+  const maxNew  = Math.max(1, ...weeks.map(w=>w.signups));
+  const maxSubs = Math.max(1, ...weeks.map(w=>w.cum_subs));
+  const maxOpen = Math.max(1, ...weeks.map(w=>w.opens));
+  const x = (i) => padL + (i/(weeks.length-1||1)) * innerW;
   const ySubs = (v) => padT + innerH - (v/maxSubs) * innerH;
-  const yBar  = (v) => padT + innerH - (v/maxNew)  * (innerH * 0.45);   // bars only fill bottom 45%
+  const yBar  = (v) => padT + innerH - (v/maxNew)  * (innerH * 0.45);
   const yOpen = (v) => padT + innerH - (v/maxOpen) * innerH;
-  const bw = Math.max(8, innerW/months.length * 0.55);
+  const bw = Math.max(2, innerW/weeks.length * 0.7);
 
   let html = "";
-
-  // Light horizontal gridlines + y labels for subscriber count
+  // Gridlines + left axis labels (cum subscribers)
   [0, Math.round(maxSubs/2), maxSubs].forEach(t => {
     const yy = ySubs(t);
     html += `<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#ddd" stroke-width="1"/>`;
     html += `<text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${fmtN(t)}</text>`;
   });
-  // Right axis: opens per send
+  // Right axis: weekly total opens
   [0, Math.round(maxOpen/2), maxOpen].forEach(t => {
     const yy = yOpen(t);
     html += `<text x="${W-padR+6}" y="${yy+3}" font-size="10" fill="#888">${fmtN(t)}</text>`;
   });
-  // X labels (every 3 months + ends)
-  months.forEach((m, i) => {
-    if(i === 0 || i === months.length-1 || i % 3 === 0){
-      html += `<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="#888">${m.month}</text>`;
+  // X labels — first of each month (every ~4-5 weeks)
+  let lastMonthLabeled = "";
+  weeks.forEach((w, i) => {
+    const ym = w.wk.slice(0,7);
+    if(ym !== lastMonthLabeled && (i === 0 || w.wk.endsWith('-01') || +w.wk.slice(8,10) <= 7)){
+      // First week landing in a given month
+      if(ym !== lastMonthLabeled){
+        html += `<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="#888">${ym}</text>`;
+        lastMonthLabeled = ym;
+      }
     }
   });
-  // Bars: monthly new signups (subtle green)
-  months.forEach((m, i) => {
-    const h = Math.max(0, (m.new_signups/maxNew) * (innerH * 0.45));
-    const note = m.source_note ? `\n${m.source_note}` : '';
-    html += `<rect x="${x(i)-bw/2}" y="${yBar(m.new_signups)}" width="${bw}" height="${h}" fill="#57AA4A" opacity=".75"><title>${m.month}: +${m.new_signups} new signups${note}</title></rect>`;
+  // Bars: weekly new signups
+  weeks.forEach((w, i) => {
+    if(w.signups <= 0) return;
+    const h = Math.max(0, (w.signups/maxNew) * (innerH * 0.45));
+    html += `<rect x="${x(i)-bw/2}" y="${yBar(w.signups)}" width="${bw}" height="${h}" fill="#57AA4A" opacity=".7"><title>Week of ${w.wk}: +${w.signups} new signups · ${w.unsubs} unsubs</title></rect>`;
   });
-  // Line: cumulative subscriber count (the headline upward-sloping story)
-  const subPts = months.map((m,i) => `${x(i)},${ySubs(m.cum_subs)}`).join(" ");
+  // Cumulative subscribers line (interpolated weekly)
+  const subPts = weeks.map((w,i) => `${x(i)},${ySubs(w.cum_subs)}`).join(" ");
   html += `<polyline points="${subPts}" fill="none" stroke="#1F6FB2" stroke-width="2.5"/>`;
-  months.forEach((m,i) => {
-    html += `<circle cx="${x(i)}" cy="${ySubs(m.cum_subs)}" r="3" fill="#1F6FB2"><title>${m.month}: ${fmtN(m.cum_subs)} subscribers</title></circle>`;
+  // Dots only at month boundaries (cleaner than 78 dots)
+  weeks.forEach((w,i) => {
+    const isMonthStart = (i === 0) || (w.wk.slice(0,7) !== weeks[i-1].wk.slice(0,7));
+    if(isMonthStart || i === weeks.length-1){
+      html += `<circle cx="${x(i)}" cy="${ySubs(w.cum_subs)}" r="3" fill="#1F6FB2"><title>Week of ${w.wk}: ${fmtN(w.cum_subs)} subscribers</title></circle>`;
+    }
   });
-  // Line: avg total opens per send (right axis)
-  const openPts = months
-    .map((m,i) => opensByMonth[m.month]!=null ? `${x(i)},${yOpen(opensByMonth[m.month])}` : null)
-    .filter(Boolean).join(" ");
-  if(openPts){
-    html += `<polyline points="${openPts}" fill="none" stroke="#E2772F" stroke-width="1.6" stroke-dasharray="4 3" opacity=".75"/>`;
-    months.forEach((m,i) => {
-      const o = opensByMonth[m.month];
-      if(o == null) return;
-      html += `<circle cx="${x(i)}" cy="${yOpen(o)}" r="2" fill="#E2772F" opacity=".75"><title>${m.month}: ~${fmtN(o)} total opens across all sends</title></circle>`;
+  // Opens line — weekly total opens (right axis). Only plot weeks with sends.
+  const openWeeks = weeks.map((w,i) => w.opens > 0 ? [i, w.opens] : null).filter(Boolean);
+  if(openWeeks.length){
+    const openPts = openWeeks.map(([i,o]) => `${x(i)},${yOpen(o)}`).join(" ");
+    html += `<polyline points="${openPts}" fill="none" stroke="#E2772F" stroke-width="1.6" stroke-dasharray="4 3" opacity=".8"/>`;
+    openWeeks.forEach(([i,o]) => {
+      html += `<circle cx="${x(i)}" cy="${yOpen(o)}" r="2.5" fill="#E2772F" opacity=".85"><title>Week of ${weeks[i].wk}: ~${fmtN(o)} total opens across that week's sends</title></circle>`;
     });
+  }
+  // Annotate "in progress" for the current partial week so it's not read as a real drop
+  const lastWk = weeks[weeks.length-1];
+  if(lastWk){
+    const todayStr = new Date().toISOString().slice(0,10);
+    const wkStart = new Date(lastWk.wk + 'T00:00:00Z');
+    const daysIntoWeek = Math.min(7, Math.max(1, Math.floor((Date.parse(todayStr) - wkStart.getTime())/86400000) + 1));
+    if(daysIntoWeek < 7){
+      const xi = x(weeks.length-1);
+      html += `<text x="${xi}" y="${padT-4}" text-anchor="middle" font-size="9" fill="#888" font-style="italic">in progress (day ${daysIntoWeek}/7)</text>`;
+    }
   }
   svg.innerHTML = html;
 
-  // Insight line — surface the story
+  // Insight line — surface the long-view story. Reach comparison uses
+  // average weekly opens for the first 8 *complete* weeks vs the last 8
+  // *complete* weeks (skip the in-progress current week).
   const first = months[0], last = months[months.length-1];
   if(first && last && first.cum_subs && last.cum_subs){
-    const growthPct = ((last.cum_subs - first.cum_subs) / first.cum_subs) * 100;
     const growthMult = (last.cum_subs / first.cum_subs).toFixed(1);
     const totalNew = months.reduce((s,m) => s + (m.new_signups||0), 0);
-    // Reach comparison: average MONTHLY total opens, first 6 vs last 6 months
-    const earlyOpens = months.slice(0,6).map(m=>opensByMonth[m.month]).filter(v=>v!=null);
-    const lateOpens  = months.slice(-6).map(m=>opensByMonth[m.month]).filter(v=>v!=null);
-    const earlyAvg = earlyOpens.length ? earlyOpens.reduce((s,v)=>s+v,0)/earlyOpens.length : null;
-    const lateAvg  = lateOpens.length  ? lateOpens.reduce((s,v)=>s+v,0)/lateOpens.length  : null;
+    // Slice complete-week opens (drop the trailing in-progress week)
+    const todayMs = Date.now();
+    const completeOpens = weeks
+      .filter(w => (Date.parse(w.wk + 'T00:00:00Z') + 7*86400000) <= todayMs && w.opens > 0)
+      .map(w => w.opens);
     let openLine = '';
-    if(earlyAvg && lateAvg){
+    if(completeOpens.length >= 16){
+      const earlyAvg = completeOpens.slice(0,8).reduce((s,v)=>s+v,0)/8;
+      const lateAvg  = completeOpens.slice(-8).reduce((s,v)=>s+v,0)/8;
       const lift = ((lateAvg - earlyAvg) / earlyAvg) * 100;
       if(lift >= 0){
-        openLine = ` Avg <i>total</i> opens per month is up ${lift.toFixed(0)}% over the same window — even though per-email open rate fell with Apple Mail's privacy changes, the list grew enough that more total eyeballs reach VC content each month.`;
+        openLine = ` Avg total opens per <i>week</i> is up ${lift.toFixed(0)}% comparing the first 8 weeks of the window to the last 8 complete weeks — even though per-email open rate fell with Apple Mail's privacy changes, the list grew enough that more total eyeballs reach VC content week-to-week.`;
       } else {
-        openLine = ` Avg total opens per month is ${Math.abs(lift).toFixed(0)}% lower over the same window — the list grew but per-email engagement dropped enough that net monthly reach is down. The Newsletter performance card below has the click-rate trend, which is the honest engagement signal (clicks aren't inflated by Apple Mail auto-opens the way opens are).`;
+        openLine = ` Avg total opens per week is ${Math.abs(lift).toFixed(0)}% lower comparing the first 8 weeks to the last 8 complete weeks — list growth wasn't enough to offset the per-email engagement drop. The Newsletter performance card below has click rate, the honest engagement signal (clicks aren't inflated by Apple Mail auto-opens).`;
       }
     }
     $("#growthInsight").innerHTML =
-      `<b style="color:var(--vc-black)">The long view:</b> Subscribers went from ${fmtN(first.cum_subs)} (${esc(first.month)}) to ${fmtN(last.cum_subs)} (${esc(last.month)}) — that's ${growthMult}× the list, ${totalNew.toLocaleString()} new signups in 18 months.${openLine}`;
+      `<b style="color:var(--vc-black)">The long view:</b> Subscribers went from ${fmtN(first.cum_subs)} (${esc(first.month)}) to ${fmtN(last.cum_subs)} (today) — that's ${growthMult}× the list, ${totalNew.toLocaleString()} new signups in 18 months.${openLine}`;
   }
 }
 
