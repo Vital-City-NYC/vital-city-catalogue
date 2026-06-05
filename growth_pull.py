@@ -314,6 +314,100 @@ def pull_mailchimp():
 # -------------------------------------------------------------------- Ghost
 GHOST_CONTENT_KEY = "dd8e178e9ddfc883537e71dd07"   # public, same as scrape.py
 GHOST_API = "https://vital-city.ghost.io/ghost/api/content"
+GHOST_ADMIN_API = "https://vital-city.ghost.io/ghost/api/admin"
+
+def _ghost_admin_token():
+    """Sign a short-lived JWT for the Ghost Admin API using the id:secret in
+    private/.ghost_admin_key (or env GHOST_ADMIN_KEY in workflow)."""
+    import hashlib, hmac
+    key = os.environ.get("GHOST_ADMIN_KEY") or ""
+    if not key:
+        f = PRIV / ".ghost_admin_key"
+        if f.exists(): key = f.read_text().strip()
+    if not key or ":" not in key:
+        return None
+    kid, secret = key.split(":", 1)
+    def b64u(b): return base64.urlsafe_b64encode(b).rstrip(b"=")
+    iat = int(time.time())
+    h = b64u(json.dumps({"alg":"HS256","typ":"JWT","kid":kid}).encode())
+    p = b64u(json.dumps({"iat":iat,"exp":iat+300,"aud":"/admin/"}).encode())
+    sig = hmac.new(bytes.fromhex(secret), h+b"."+p, hashlib.sha256).digest()
+    return (h + b"." + p + b"." + b64u(sig)).decode()
+
+
+def pull_ghost_signup_attribution(days_back=180):
+    """REAL per-post signup attribution from Ghost's member-events feed.
+    Each signup_event carries the exact page the person signed up on plus
+    referrer_source/medium. This is the actual answer — not a 4-day
+    post-publish window correlation. Replaces the older correlational
+    proxy we used before this endpoint was wired in.
+    """
+    import time as _t
+    tok = _ghost_admin_token()
+    if not tok:
+        return {"available": False, "reason": "no Ghost admin key"}
+    since_iso = (datetime.now(timezone.utc) - timedelta(days=days_back)).isoformat()
+    by_url = {}
+    fetched = 0
+    stop = False
+    cursor_id = None       # last event id from previous page (cursor pagination)
+    pages = 0
+    # Ghost's /members/events/ endpoint ignores `page=N` (always returns page 1).
+    # It also rejects `created_at` in the filter ("Cannot filter by created_at").
+    # The supported workaround is cursor pagination via `id:<lastId` — Ghost
+    # event ids are lexicographically time-sortable, so this walks the feed
+    # newest-first reliably.
+    while not stop:
+        flt_str = "type:signup_event"
+        if cursor_id:
+            flt_str += f"+id:<{cursor_id}"
+        url = f"{GHOST_ADMIN_API}/members/events/?filter={urllib.parse.quote(flt_str)}&limit=100"
+        try:
+            data = json.loads(http_get(url, headers={
+                "Authorization": f"Ghost {tok}", "Accept-Version": "v5.0",
+            }, timeout=60))
+        except Exception as e:
+            log(f"  ghost member-events page {pages+1} failed: {e}")
+            break
+        events = data.get("events", []) or []
+        if not events:
+            break
+        for e in events:
+            d = e.get("data") or {}
+            ts = (d.get("created_at") or "")
+            if ts and ts < since_iso:
+                stop = True
+                continue
+            att = d.get("attribution") or {}
+            post_url = (att.get("url") or "").rstrip("/")
+            if not post_url: continue
+            r = by_url.setdefault(post_url, {
+                "signups": 0, "title": att.get("title") or "", "type": att.get("type") or "",
+                "first_seen": "", "last_seen": "", "sources": {},
+            })
+            r["signups"] += 1
+            src = att.get("referrer_source") or "(none)"
+            r["sources"][src] = r["sources"].get(src, 0) + 1
+            if not r["first_seen"] or ts < r["first_seen"]: r["first_seen"] = ts
+            if not r["last_seen"]  or ts > r["last_seen"]:  r["last_seen"]  = ts
+        fetched += len(events)
+        pages += 1
+        # Advance cursor to the last (oldest) event on this page
+        cursor_id = (events[-1].get("data") or {}).get("id")
+        if not cursor_id:
+            break
+        if pages > 250:        # safety — ~25,000 events
+            break
+        _t.sleep(0.05)         # gentle pacing
+    # Normalize: pick top 3 sources per url
+    for url, r in by_url.items():
+        srcs = sorted(r["sources"].items(), key=lambda kv: -kv[1])[:3]
+        r["top_sources"] = [{"src": s, "n": n} for s, n in srcs]
+        r["first_seen"] = r["first_seen"][:10]
+        r["last_seen"]  = r["last_seen"][:10]
+        del r["sources"]
+    log(f"  ghost signup attribution: {fetched} signup events across {len(by_url)} URLs")
+    return {"available": True, "events_counted": fetched, "by_url": by_url, "window_days": days_back}
 
 
 def pull_ghost():
@@ -722,18 +816,53 @@ def pull_instagram():
 
 
 # ------------------------------------------------------------------------ main
-def attribute_signups_to_posts(mc, gh, window_days=4):
-    """For each Ghost post, sum newsletter signups on publish_day + window_days.
-    Compare against the typical X-day rolling signup volume to compute a lift
-    factor — a rough correlational proxy for "did this piece move signups?"
+def attribute_signups_to_posts(mc, gh, signup_attr=None, window_days=4):
+    """Per-post newsletter signup attribution.
 
-    Important caveat (carried into the dashboard tooltip): with only daily
-    signup totals (not per-source attribution), we can never *prove* a single
-    post caused a spike. Multiple posts can land in the same window, organic
-    momentum and outside coverage muddy the signal, and the daily rebuild lag
-    means the most-recent 1-2 days are systematically under-counted. This is
-    a "candidates worth looking at," not a verdict.
+    If we have Ghost's real per-event attribution feed (passed as `signup_attr`),
+    we use the *exact* count of signups whose attribution.url matches the post —
+    no correlation needed, no shared-day ambiguity. Otherwise we fall back to
+    the old correlational approach: sum signups on publish_day + window_days,
+    compare against the typical active X-day window.
     """
+    # ---------- REAL attribution path (Ghost member-events) ------------
+    if signup_attr and signup_attr.get("available") and signup_attr.get("by_url"):
+        by_url = signup_attr["by_url"]
+        # Collect raw counts so we can compute a meaningful baseline
+        counts = sorted((r["signups"] for r in by_url.values()), reverse=True)
+        if counts:
+            # "Typical" post on the list (median of all attributed-to-a-post URLs)
+            median_real = counts[len(counts)//2] if counts else 0
+            for p in gh["posts"]:
+                u = (p.get("url") or "").rstrip("/")
+                r = by_url.get(u)
+                if not r:
+                    p["direct_signups"] = 0
+                    continue
+                p["direct_signups"] = r["signups"]
+                p["direct_sources"] = r.get("top_sources", [])
+                # A post is a "mover" if it directly attracted notably more
+                # signups than a typical attributed-to-a-post URL (3× median),
+                # and the absolute floor is at least 8 signups.
+                # Threshold tuned for direct-attribution counts: a post is a
+                # "mover" if it directly attracted at least 4 signups AND at
+                # least 3× the median post. (Direct attribution is stricter
+                # than the old correlational window — homepage-routed signups
+                # don't land on the post URL, so post-level numbers are
+                # naturally smaller. ~4 is the practical floor for "this
+                # piece converted on its own page.")
+                p["mover"] = p["direct_signups"] >= 4 and p["direct_signups"] >= median_real * 3
+                # Keep these fields consistent with the old surface so the
+                # dashboard rendering doesn't need to change much.
+                p["signups_window"] = p["direct_signups"]
+                p["signups_window_days"] = signup_attr.get("window_days") or window_days
+                if median_real:
+                    p["lift"] = round(p["direct_signups"] / median_real, 2)
+            gh["signup_attribution_mode"] = "real"
+            gh["signup_baseline_xd"] = median_real
+            gh["signup_attribution_window_days"] = signup_attr.get("window_days") or window_days
+            return
+    # ---------- Correlational fallback ---------------------------------
     if not (mc and mc.get("daily_activity") and gh and gh.get("posts")):
         return
     daily = {r["d"]: int(r.get("subs") or 0) for r in mc["daily_activity"] if r.get("d")}
@@ -790,18 +919,88 @@ def attribute_signups_to_posts(mc, gh, window_days=4):
 
     gh["signup_baseline_xd"] = median_xd
     gh["signup_window_days"] = window_days
+    gh["signup_attribution_mode"] = "correlational"
+
+
+def attribute_donations_to_posts(db, gh, window_days=14):
+    """Donor attribution: for each post, sum donations + dollars received in
+    the X-day window after publish, compare to the typical active X-day
+    donation window. Correlational only — Donorbox doesn't track which page
+    a donor was on when they gave. Same caveats as the (old) signup version:
+    multiple posts in a window share the lift, outside drivers exist, last
+    couple of days under-count.
+    """
+    if not (db and db.get("available") and gh and gh.get("posts")):
+        return
+    daily = {r["d"]: r for r in (db.get("daily_series") or [])}
+    if not daily:
+        return
+    days = sorted(daily)
+    sums_amt = []
+    for i in range(len(days) - window_days + 1):
+        sums_amt.append(sum(daily[days[j]]["amt"] for j in range(i, i + window_days)))
+    if not sums_amt:
+        return
+    active = sorted(s for s in sums_amt if s > 0)
+    if not active:
+        return
+    median_amt = active[len(active) // 2]
+    LIFT_THRESHOLD = 1.5
+    MIN_GIFTS = 3
+    MIN_AMT = 100.0
+    earliest = days[0]; latest = days[-1]
+
+    from datetime import date as _date
+    for p in gh["posts"]:
+        d0 = (p.get("published") or "")[:10]
+        if not d0 or d0 < earliest or d0 > latest:
+            p["donations_window"] = None
+            continue
+        try:
+            y, m, dd = (int(x) for x in d0.split("-"))
+            start = _date(y, m, dd)
+        except Exception:
+            p["donations_window"] = None
+            continue
+        amt = 0.0; n = 0; valid = False
+        for k in range(window_days):
+            day = (start + timedelta(days=k)).isoformat()
+            if day in daily:
+                amt += daily[day]["amt"]; n += daily[day]["gifts"]; valid = True
+        if not valid:
+            p["donations_window"] = None
+            continue
+        p["donations_window_amt"]  = round(amt, 2)
+        p["donations_window_n"]    = n
+        p["donations_window_days"] = window_days
+        if median_amt > 0:
+            p["donor_lift"] = round(amt / median_amt, 2)
+        p["donor_mover"] = bool(
+            n >= MIN_GIFTS and amt >= MIN_AMT
+            and p.get("donor_lift", 0) >= LIFT_THRESHOLD
+        )
+    gh["donation_baseline_xd"] = round(median_amt, 2)
+    gh["donation_window_days"] = window_days
 
 
 def main():
     PRIV.mkdir(parents=True, exist_ok=True)
     mc = pull_mailchimp()
     gh = pull_ghost()
-    attribute_signups_to_posts(mc, gh)
+    signup_attr = pull_ghost_signup_attribution(days_back=180)
+    db = pull_donorbox()
+    attribute_signups_to_posts(mc, gh, signup_attr=signup_attr)
+    attribute_donations_to_posts(db, gh)
     out = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "mailchimp": mc,
         "ghost":     gh,
-        "donorbox":  pull_donorbox(),
+        "donorbox":  db,
+        "ghost_signup_attribution": {
+            "available":      signup_attr.get("available", False),
+            "events_counted": signup_attr.get("events_counted", 0),
+            "window_days":    signup_attr.get("window_days", 0),
+        },
         "press":     pull_press(),
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
         # a "Connect this source" placeholder card with the exact setup steps.

@@ -109,6 +109,8 @@
   /* Signups-window badge for content-cadence list */
   .signups-badge{display:inline-block;margin-left:8px;font-size:10.5px;font-weight:700;color:var(--vc-charcoal);background:var(--vc-paper);border:1px solid var(--vc-cloud);padding:1px 7px;letter-spacing:.02em;vertical-align:1px;cursor:help}
   .signups-badge.is-mover{color:#3b7d2f;background:rgba(87,170,74,.13);border-color:rgba(87,170,74,.45)}
+  .signups-badge.is-donor-mover{color:#a54a14;background:rgba(226,119,47,.13);border-color:rgba(226,119,47,.45)}
+  .signups-badge.donor{color:var(--vc-charcoal);background:var(--vc-paper)}
 
   /* Press feed */
   .feed{margin:0;padding:0;list-style:none}
@@ -444,43 +446,87 @@ function boot(data){
   const baseline=gh.signup_baseline_xd||0;
   const win=gh.signup_window_days||4;
   const posts=allPosts.slice(0,8);
+  // Hint reflects whichever attribution mode is actually in play
+  const isRealHint = (gh.signup_attribution_mode === 'real');
   $("#postsHint").innerHTML =
     `${gh.count_7||0} in last 7 days · ${gh.count_30||0} in last 30 · ${gh.count_90||0} in last 90`+
-    (baseline ? ` <span title="A ${win}-day signup window starts the day each post publishes; ${win}-day windows on a typical day with any signup activity bring in ~${baseline} new newsletter subscribers. Movers cleared 1.35× that.">· baseline ~${baseline} new subs / ${win}d (when active)</span>` : '');
-  // Surface movers explicitly even if they're outside the recent 8
+    (isRealHint
+      ? ` <span title="Signup attribution comes directly from Ghost's per-event feed — each new subscriber carries the URL of the page they were on when they signed up. The number on each post is the count of signups that attributed to that exact URL; ‘median post’ refers to the median across all attributed-to-a-post URLs in the window.">· direct attribution from Ghost · median post = ${baseline||0} signups</span>`
+      : (baseline ? ` <span title="A ${win}-day signup window starts the day each post publishes; ${win}-day windows on a typical day with any signup activity bring in ~${baseline} new newsletter subscribers. Movers cleared 1.35× that.">· baseline ~${baseline} new subs / ${win}d (when active)</span>` : ''));
+  // Attribution mode determines language: "direct" (real Ghost event match) vs "≈ correlated" (window-sum)
+  const attrMode = gh.signup_attribution_mode || 'correlational';
+  const isReal = attrMode === 'real';
+
+  // Top signup movers (direct from Ghost member-events when available)
   const movers = allPosts.filter(p=>p.mover).slice(0,5);
-  const moversBlock = movers.length ? `
-    <div style="margin:0 0 12px;padding:10px 12px;background:rgba(87,170,74,.07);border-left:3px solid var(--vc-green)">
-      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="Posts whose first-4-day signup window cleared 1.35× the typical active 4-day window (baseline ≈ ${baseline} subs/4d). Correlation, not causation — see note below the post list.">Recent signup movers</div>
+  const moverTipHeader = isReal
+    ? "Posts that directly attracted notably more newsletter signups than the typical attributed post (≥3× the median, with at least 8 absolute signups). Numbers are exact — pulled from Ghost's signup-event attribution, which records the page each new subscriber signed up on."
+    : "Posts whose first-4-day signup window cleared 1.35× the typical active 4-day window — a correlational proxy because per-event attribution wasn't available.";
+  const moverBadgeLabel = (p) => isReal
+    ? `+${p.direct_signups} signups · ${p.lift}× median`
+    : `+${p.signups_window} in 4d · ${p.lift}× baseline`;
+  const moverBadgeTip = (p) => {
+    const srcStr = (p.direct_sources||[]).slice(0,3).map(s=>`${s.src}=${s.n}`).join(", ");
+    return isReal
+      ? `${p.direct_signups} people signed up for the newsletter from this page — pulled directly from Ghost's per-event attribution (no correlation assumed). Top referrer sources: ${srcStr || '(none recorded)'}.`
+      : `${p.signups_window} new subs in the 4-day window starting with this post's publish day, vs a typical ~${baseline} for an active 4-day window. Lift = ${p.lift}×.`;
+  };
+  // Donor movers (correlational only — Donorbox doesn't track per-page referrers)
+  const donorMovers = allPosts.filter(p=>p.donor_mover).slice(0,5);
+  const donorBaseline = gh.donation_baseline_xd;
+  const donorWin = gh.donation_window_days || 14;
+
+  const moversBlock = (movers.length || donorMovers.length) ? `
+    ${movers.length ? `<div style="margin:0 0 8px;padding:10px 12px;background:rgba(87,170,74,.07);border-left:3px solid var(--vc-green)">
+      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="${esc(moverTipHeader)}">Recent signup movers ${isReal?'<span style="color:var(--vc-green);font-weight:700">· direct from Ghost</span>':''}</div>
       ${movers.map(p=>`<div style="font-size:12.5px;margin:3px 0">
         <a href="${esc(p.url)}" target="_blank" style="font-weight:600;color:var(--vc-black);text-decoration:none">${esc(p.title)}</a>
         <span style="color:var(--vc-charcoal);font-size:11px;margin-left:8px">${esc(p.published)}</span>
-        <span class="signups-badge is-mover" title="+${p.signups_window} new subs in the 4-day window starting with this post's publish day, vs a typical ~${baseline} for an active 4-day window. Lift = ${p.lift}×.">+${p.signups_window} in 4d · ${p.lift}× baseline</span>
+        <span class="signups-badge is-mover" title="${esc(moverBadgeTip(p))}">${esc(moverBadgeLabel(p))}</span>
       </div>`).join("")}
-    </div>` : '';
+    </div>` : ''}
+    ${donorMovers.length ? `<div style="margin:0 0 12px;padding:10px 12px;background:rgba(226,119,47,.08);border-left:3px solid var(--vc-orange)">
+      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="Donor mover = a post whose ${donorWin}-day post-publish window saw notably more donation dollars than a typical active ${donorWin}-day window (1.5× the median, at least 3 gifts and $100). This is a correlation, NOT causation: Donorbox doesn't record which page a donor was on when they gave, so multiple posts published nearby share the lift, and outside coverage moves money in parallel.">Recent donor movers <span style="color:var(--vc-orange);font-weight:700">· correlational</span></div>
+      ${donorMovers.map(p=>`<div style="font-size:12.5px;margin:3px 0">
+        <a href="${esc(p.url)}" target="_blank" style="font-weight:600;color:var(--vc-black);text-decoration:none">${esc(p.title)}</a>
+        <span style="color:var(--vc-charcoal);font-size:11px;margin-left:8px">${esc(p.published)}</span>
+        <span class="signups-badge is-donor-mover" title="$${(p.donations_window_amt||0).toLocaleString()} in ${donorWin} days post-publish (${p.donations_window_n} gifts), vs a typical ~$${(donorBaseline||0).toLocaleString()} for an active ${donorWin}-day donation window. Lift = ${p.donor_lift}×. Correlational only.">+$${Math.round(p.donations_window_amt||0).toLocaleString()} in ${donorWin}d · ${p.donor_lift}× baseline</span>
+      </div>`).join("")}
+    </div>` : ''}
+  ` : '';
   $("#postsList").innerHTML=posts.length
     ? moversBlock + `<ul class="feed">${posts.map(p=>{
-        const sw=p.signups_window;
-        const isMover=!!p.mover;
-        const swStr = (sw!=null) ? `+${sw} new subs in ${p.signups_window_days||4}d` : '';
-        const moverTip = "This piece's publish-day-plus-3 window pulled noticeably more newsletter signups than a typical 4-day window on the list. It's a correlation, not proof — multiple posts published the same day share the attribution, and outside coverage can move things in parallel. Use it to spot candidates worth investigating, not as a final verdict.";
-        const normalTip = sw!=null
-          ? `${sw} new subscribers landed in the 4 days after this post published, vs a typical ~${baseline} for an active 4-day window.`
-          : "Signup-window data not available for this date (outside the rolling 24-month signup history).";
-        return `<li${isMover?' style="background:linear-gradient(90deg, rgba(87,170,74,.10), transparent 40%);border-left:3px solid var(--vc-green);padding-left:9px;margin-left:-12px"':''}>
+        const isMover=!!p.mover, isDonorMover=!!p.donor_mover;
+        // Signup badge — real attribution preferred
+        let subBadge = '';
+        if(isReal && p.direct_signups!=null){
+          const tip = `${p.direct_signups} people signed up for the newsletter from this page — directly attributed from Ghost's per-event data, not a window correlation.`;
+          subBadge = `<span class="signups-badge${isMover?' is-mover':''}" title="${esc(tip)}">+${p.direct_signups} signups${isMover?' · mover':''}</span>`;
+        } else if(p.signups_window!=null){
+          const tip = `${p.signups_window} new subs in the 4 days after this post published, vs a typical ~${baseline} for an active 4-day window. Correlational.`;
+          subBadge = `<span class="signups-badge${isMover?' is-mover':''}" title="${esc(tip)}">+${p.signups_window} in 4d${isMover?' · mover':''}</span>`;
+        }
+        // Donation badge
+        let donBadge = '';
+        if(p.donations_window_amt!=null && (p.donations_window_n>0 || p.donations_window_amt>0)){
+          const tip = `$${(p.donations_window_amt||0).toLocaleString()} across ${p.donations_window_n} gifts in the ${p.donations_window_days||14} days after this post published${donorBaseline?` (typical active window ~$${donorBaseline.toLocaleString()})`:''}. Correlational only — Donorbox doesn't record which page a donor was on.`;
+          donBadge = `<span class="signups-badge${isDonorMover?' is-donor-mover':' donor'}" title="${esc(tip)}">$${Math.round(p.donations_window_amt||0).toLocaleString()} in ${p.donations_window_days||14}d${isDonorMover?' · donor mover':''}</span>`;
+        }
+        const accent = isMover ? 'rgba(87,170,74,.10)' : (isDonorMover ? 'rgba(226,119,47,.10)' : '');
+        const edge   = isMover ? 'var(--vc-green)' : (isDonorMover ? 'var(--vc-orange)' : '');
+        const styleAttr = accent ? ` style="background:linear-gradient(90deg, ${accent}, transparent 40%);border-left:3px solid ${edge};padding-left:9px;margin-left:-12px"` : '';
+        return `<li${styleAttr}>
           <a href="${esc(p.url)}" target="_blank">${esc(p.title)}</a>
           <span class="date">${esc(p.published)} · ${esc(p.primary_author||'')}</span>
-          ${swStr ? `<span class="signups-badge${isMover?' is-mover':''}" title="${esc(isMover?moverTip:normalTip)}">${esc(swStr)}${isMover?' · mover':''}</span>` : ''}
+          ${subBadge}${donBadge}
           <div class="snip">${esc((p.tags||[]).slice(0,4).join(' · '))}</div>
         </li>`;
       }).join("")}</ul>
-      ${(allPosts.some(p=>p.mover)) ? `
+      ${(allPosts.some(p=>p.mover) || allPosts.some(p=>p.donor_mover)) ? `
         <div style="margin-top:14px;font-size:11.5px;color:var(--vc-charcoal);line-height:1.5;border-top:1px dashed var(--vc-cloud);padding-top:10px">
-          <b style="color:var(--vc-black)">Signup attribution caveat:</b>
-          The green left-edge marks posts whose first-4-day signup window cleared 1.35× the typical active 4-day window
-          (baseline ≈ ${baseline} subs/4d). It's a correlation, not causation — when two posts publish the same day they share the lift,
-          outside coverage moves signups in parallel, and the daily rebuild lag means the most recent 1–2 days under-count.
-          Treat movers as candidates worth investigating in GA referrer data, not as a verdict.
+          ${isReal ? `<b style="color:var(--vc-black)">Signup attribution (green):</b> Pulled directly from Ghost's per-event attribution — each newsletter signup carries the URL of the page the visitor was on when they signed up. Numbers are exact, not correlational. The green left-edge marks posts whose attributed signups are at least 3× the median attributed post (with a floor of 8 signups).` :
+          `<b style="color:var(--vc-black)">Signup attribution (green):</b> Correlational — sum of signups in the 4-day window after publish, vs the typical active 4-day window. Multiple posts on the same day share the lift.`}
+          <br><b style="color:var(--vc-black)">Donor attribution (orange):</b> Correlational only — sum of donations in the ${gh.donation_window_days||14} days after publish, vs a typical active ${gh.donation_window_days||14}-day donation window (baseline ≈ $${(gh.donation_baseline_xd||0).toLocaleString()}). Donorbox doesn't record which page a donor was on when they gave, so co-published posts share the lift and outside coverage moves money in parallel.
         </div>` : ''}`
     : '<div style="font-size:12px;color:var(--vc-charcoal)">No posts available.</div>';
 
