@@ -571,6 +571,8 @@ SOCIAL_PLATFORMS = [
     ("linkedin.com",     "LinkedIn"),
     ("bsky.app",         "Bluesky"),
     ("instagram.com",    "Instagram"),
+    ("facebook.com",     "Facebook"),
+    ("threads.net",      "Threads"),
 ]
 
 
@@ -597,15 +599,31 @@ def pull_news_mentions():
                 "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
     MEDIA_SHAPES  = ['"Vital City"', "@vitalcitynyc", "vitalcitynyc.org"]
     SOCIAL_SHAPES = ["@vitalcitynyc", "vitalcitynyc.org"]
-    targets = (
-        [(d, label, "media",  MEDIA_SHAPES)  for d, label in MEDIA_OUTLETS] +
-        [(d, label, "social", SOCIAL_SHAPES) for d, label in SOCIAL_PLATFORMS]
-    )
-    for domain, label, kind, shapes in targets:
-        for shape in shapes:
-            q = f'{shape} site:{domain}'
-            url = (f"https://news.google.com/rss/search?q={urllib.parse.quote(q)}"
-                   f"&hl=en-US&gl=US&ceid=US:en")
+    # Google News RSS hard-caps at 100 results per query. For high-volume
+    # platforms we hit that ceiling and lose older items. Mitigation: also
+    # query each social platform's vitalcitynyc.org share by year, which
+    # multiplies our depth by 3-4x without changing the shape of the data.
+    cur_year = datetime.now(timezone.utc).year
+    targets = []
+    for d, label in MEDIA_OUTLETS:
+        for s in MEDIA_SHAPES:
+            targets.append((d, label, "media", s, None))
+    for d, label in SOCIAL_PLATFORMS:
+        # Brand-tag shape (no year split)
+        targets.append((d, label, "social", "@vitalcitynyc", None))
+        # URL-share shape, split by year for depth (cur..cur-5 inclusive)
+        for yr in range(cur_year, cur_year - 6, -1):
+            targets.append((d, label, "social", "vitalcitynyc.org", yr))
+    for domain, label, kind, shape, year in targets:
+        q = f'{shape} site:{domain}'
+        if year is not None:
+            # Constrain to a single calendar year using Google's "after:" /
+            # "before:" operators — works inside news.google.com queries.
+            q += f' after:{year}-01-01 before:{year+1}-01-01'
+        url = (f"https://news.google.com/rss/search?q={urllib.parse.quote(q)}"
+               f"&hl=en-US&gl=US&ceid=US:en")
+        # Indent the rest of the loop body
+        if True:
             try:
                 xml = http_get(url, headers={"User-Agent": UA_local}, timeout=20)
             except Exception as e:
@@ -632,8 +650,11 @@ def pull_news_mentions():
                 })
             _t.sleep(0.15)   # polite pacing across many outlets × shapes
 
-    # Parse pub dates, drop items older than 24 months, sort newest first
-    cutoff = datetime.now(timezone.utc) - timedelta(days=730)
+    # Parse pub dates. For PRESS mentions we drop anything older than 24
+    # months (old press isn't actionable). For URL SHARES on social we keep
+    # everything Google indexed — those are organic distribution signals
+    # that don't go stale the same way.
+    cutoff_press = datetime.now(timezone.utc) - timedelta(days=730)
     def _parse(p):
         for fmt in ("%a, %d %b %Y %H:%M:%S %Z", "%a, %d %b %Y %H:%M:%S %z",
                     "%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%SZ"):
@@ -646,7 +667,8 @@ def pull_news_mentions():
         dt = _parse(it.get("published", ""))
         it["published_iso"] = dt.isoformat() if dt else ""
         it["_dt"] = dt
-    out = [it for it in out if it.get("_dt") and it["_dt"] >= cutoff]
+    out = [it for it in out
+           if it.get("_dt") and (it.get("kind") == "social" or it["_dt"] >= cutoff_press)]
 
     # Note on verification: Google's site-restricted exact-phrase query
     # ('"Vital City" site:DOMAIN') already requires the phrase to appear in
@@ -666,9 +688,10 @@ def pull_news_mentions():
         titles_seen.add(key); deduped.append(it)
     for it in deduped: it.pop("_dt", None)
 
-    # Per-kind caps so the high-volume social stream doesn't crowd press out
+    # Per-kind caps. Press capped tight (recent 200), social much higher
+    # since URL shares are the headline social signal and we want depth.
     media  = [it for it in deduped if it.get("kind") == "media"][:200]
-    social = [it for it in deduped if it.get("kind") == "social"][:120]
+    social = [it for it in deduped if it.get("kind") == "social"][:1500]
     out    = media + social
     log(f"  news mentions: {len(out)} items ({len(media)} media + {len(social)} social) across {len(set(i['domain'] for i in out))} outlets")
     return out
