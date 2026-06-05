@@ -1897,11 +1897,26 @@ def main():
     # ---- Enrich people.json with engagement flags --------------------
     # Add mau / aau / power_reader / at_risk / sunset booleans to each
     # subscriber's record so the Contact tool can filter to these exact
-    # subsets that the Growth dashboard surfaces. encrypt_people.py runs
-    # after this in the workflow (we update workflow ordering separately),
-    # so the next network/data.enc will carry these flags.
+    # subsets that the Growth dashboard surfaces.
+    #
+    # SAFETY GATE: only re-encrypt people.json when we're running in a
+    # context that has just refreshed it from sources + overrides. The
+    # cloud workflow does this (build_network.py runs immediately before
+    # growth_pull.py and applies OVERRIDES_URL pulls). A local invocation
+    # WOULDN'T — it'd re-encrypt a stale local people.json without recent
+    # in-tool name confirmations, blowing away Josh's edits on the
+    # published network/data.enc. The gate: a sentinel env var that the
+    # workflow sets, and a sanity check that the on-disk people.json is
+    # fresh (mtime within the last hour).
+    import time as _t, os as _os
     pj_path = PRIV / "people.json"
-    if pj_path.exists():
+    workflow_ctx  = bool(_os.environ.get("GROWTH_OK_TO_REENCRYPT") or _os.environ.get("GITHUB_ACTIONS"))
+    pj_is_fresh   = pj_path.exists() and (_t.time() - pj_path.stat().st_mtime) < 3600
+    safe_to_reenc = workflow_ctx and pj_is_fresh
+    if not safe_to_reenc:
+        log("  SKIPPING people.json re-encrypt (not in cloud workflow, or local people.json is stale). "
+            "Local runs no longer overwrite network/data.enc — engagement flags will land on the next 11 UTC refresh.")
+    if pj_path.exists() and safe_to_reenc:
         try:
             people = json.loads(pj_path.read_text())
         except Exception as e:
