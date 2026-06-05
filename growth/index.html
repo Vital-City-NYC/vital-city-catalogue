@@ -106,6 +106,10 @@
   .socposts a{color:var(--vc-black);text-decoration:none}
   .socposts a:hover{color:var(--vc-cerulean);text-decoration:underline}
 
+  /* Signups-window badge for content-cadence list */
+  .signups-badge{display:inline-block;margin-left:8px;font-size:10.5px;font-weight:700;color:var(--vc-charcoal);background:var(--vc-paper);border:1px solid var(--vc-cloud);padding:1px 7px;letter-spacing:.02em;vertical-align:1px;cursor:help}
+  .signups-badge.is-mover{color:#3b7d2f;background:rgba(87,170,74,.13);border-color:rgba(87,170,74,.45)}
+
   /* Press feed */
   .feed{margin:0;padding:0;list-style:none}
   .feed li{padding:8px 0;border-bottom:1px solid var(--vc-cloud);font-size:12.5px}
@@ -408,16 +412,51 @@ function boot(data){
     $("#campTbl").innerHTML='<div style="font-size:12px;color:var(--vc-charcoal)">No campaign data available.</div>';
   }
 
-  // ----- Content cadence
+  // ----- Content cadence (with subtle "mover" highlight on posts that
+  // correlated with above-baseline signups in their first 4 days)
   const gh=data.ghost||{};
-  const posts=(gh.posts||[]).slice(0,8);
-  $("#postsHint").textContent=`${gh.count_7||0} in last 7 days · ${gh.count_30||0} in last 30 · ${gh.count_90||0} in last 90`;
+  const allPosts=(gh.posts||[]);
+  const baseline=gh.signup_baseline_xd||0;
+  const win=gh.signup_window_days||4;
+  const posts=allPosts.slice(0,8);
+  $("#postsHint").innerHTML =
+    `${gh.count_7||0} in last 7 days · ${gh.count_30||0} in last 30 · ${gh.count_90||0} in last 90`+
+    (baseline ? ` <span title="A ${win}-day signup window starts the day each post publishes; ${win}-day windows on a typical day with any signup activity bring in ~${baseline} new newsletter subscribers. Movers cleared 1.35× that.">· baseline ~${baseline} new subs / ${win}d (when active)</span>` : '');
+  // Surface movers explicitly even if they're outside the recent 8
+  const movers = allPosts.filter(p=>p.mover).slice(0,5);
+  const moversBlock = movers.length ? `
+    <div style="margin:0 0 12px;padding:10px 12px;background:rgba(87,170,74,.07);border-left:3px solid var(--vc-green)">
+      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="Posts whose first-4-day signup window cleared 1.35× the typical active 4-day window (baseline ≈ ${baseline} subs/4d). Correlation, not causation — see note below the post list.">Recent signup movers</div>
+      ${movers.map(p=>`<div style="font-size:12.5px;margin:3px 0">
+        <a href="${esc(p.url)}" target="_blank" style="font-weight:600;color:var(--vc-black);text-decoration:none">${esc(p.title)}</a>
+        <span style="color:var(--vc-charcoal);font-size:11px;margin-left:8px">${esc(p.published)}</span>
+        <span class="signups-badge is-mover" title="+${p.signups_window} new subs in the 4-day window starting with this post's publish day, vs a typical ~${baseline} for an active 4-day window. Lift = ${p.lift}×.">+${p.signups_window} in 4d · ${p.lift}× baseline</span>
+      </div>`).join("")}
+    </div>` : '';
   $("#postsList").innerHTML=posts.length
-    ? `<ul class="feed">${posts.map(p=>`<li>
-        <a href="${esc(p.url)}" target="_blank">${esc(p.title)}</a>
-        <span class="date">${esc(p.published)} · ${esc(p.primary_author||'')}</span>
-        <div class="snip">${esc((p.tags||[]).slice(0,4).join(' · '))}</div>
-      </li>`).join("")}</ul>`
+    ? moversBlock + `<ul class="feed">${posts.map(p=>{
+        const sw=p.signups_window;
+        const isMover=!!p.mover;
+        const swStr = (sw!=null) ? `+${sw} new subs in ${p.signups_window_days||4}d` : '';
+        const moverTip = "This piece's publish-day-plus-3 window pulled noticeably more newsletter signups than a typical 4-day window on the list. It's a correlation, not proof — multiple posts published the same day share the attribution, and outside coverage can move things in parallel. Use it to spot candidates worth investigating, not as a final verdict.";
+        const normalTip = sw!=null
+          ? `${sw} new subscribers landed in the 4 days after this post published, vs a typical ~${baseline} for an active 4-day window.`
+          : "Signup-window data not available for this date (outside the rolling 24-month signup history).";
+        return `<li${isMover?' style="background:linear-gradient(90deg, rgba(87,170,74,.10), transparent 40%);border-left:3px solid var(--vc-green);padding-left:9px;margin-left:-12px"':''}>
+          <a href="${esc(p.url)}" target="_blank">${esc(p.title)}</a>
+          <span class="date">${esc(p.published)} · ${esc(p.primary_author||'')}</span>
+          ${swStr ? `<span class="signups-badge${isMover?' is-mover':''}" title="${esc(isMover?moverTip:normalTip)}">${esc(swStr)}${isMover?' · mover':''}</span>` : ''}
+          <div class="snip">${esc((p.tags||[]).slice(0,4).join(' · '))}</div>
+        </li>`;
+      }).join("")}</ul>
+      ${(allPosts.some(p=>p.mover)) ? `
+        <div style="margin-top:14px;font-size:11.5px;color:var(--vc-charcoal);line-height:1.5;border-top:1px dashed var(--vc-cloud);padding-top:10px">
+          <b style="color:var(--vc-black)">Signup attribution caveat:</b>
+          The green left-edge marks posts whose first-4-day signup window cleared 1.35× the typical active 4-day window
+          (baseline ≈ ${baseline} subs/4d). It's a correlation, not causation — when two posts publish the same day they share the lift,
+          outside coverage moves signups in parallel, and the daily rebuild lag means the most recent 1–2 days under-count.
+          Treat movers as candidates worth investigating in GA referrer data, not as a verdict.
+        </div>` : ''}`
     : '<div style="font-size:12px;color:var(--vc-charcoal)">No posts available.</div>';
 
   // ----- Quality breakdown

@@ -674,12 +674,85 @@ def pull_instagram():
 
 
 # ------------------------------------------------------------------------ main
+def attribute_signups_to_posts(mc, gh, window_days=4):
+    """For each Ghost post, sum newsletter signups on publish_day + window_days.
+    Compare against the typical X-day rolling signup volume to compute a lift
+    factor — a rough correlational proxy for "did this piece move signups?"
+
+    Important caveat (carried into the dashboard tooltip): with only daily
+    signup totals (not per-source attribution), we can never *prove* a single
+    post caused a spike. Multiple posts can land in the same window, organic
+    momentum and outside coverage muddy the signal, and the daily rebuild lag
+    means the most-recent 1-2 days are systematically under-counted. This is
+    a "candidates worth looking at," not a verdict.
+    """
+    if not (mc and mc.get("daily_activity") and gh and gh.get("posts")):
+        return
+    daily = {r["d"]: int(r.get("subs") or 0) for r in mc["daily_activity"] if r.get("d")}
+    if not daily: return
+
+    # Compute a baseline: median X-day rolling sum across the whole window.
+    days = sorted(daily)
+    sums = []
+    for i in range(len(days) - window_days + 1):
+        sums.append(sum(daily[days[j]] for j in range(i, i + window_days)))
+    if not sums: return
+    # Use the median of *active* windows (sum > 0) — the dataset is zero-rich
+    # because the daily signup data is only present where people.json has a
+    # subscriber whose Ghost `since` date hits that day, so plain median is
+    # dragged to zero and lift would explode meaninglessly.
+    active = sorted(s for s in sums if s > 0)
+    if not active: return
+    median_xd = active[len(active) // 2]
+    # A robust "spike" threshold: at least 1.5x median AND at least 12 absolute
+    # signups in the window (so small post-day signup counts don't ping).
+    LIFT_THRESHOLD = 1.35
+    MIN_ABS = 12
+
+    earliest = days[0]; latest = days[-1]
+
+    for p in gh["posts"]:
+        d0 = (p.get("published") or "")[:10]
+        if not d0 or d0 < earliest or d0 > latest:
+            p["signups_window"] = None
+            continue
+        # Sum the [d0, d0 + window_days) window — clamp to data range
+        from datetime import date as _date
+        try:
+            y, m, dd = (int(x) for x in d0.split("-"))
+            start = _date(y, m, dd)
+        except Exception:
+            p["signups_window"] = None
+            continue
+        s = 0; valid = False
+        for k in range(window_days):
+            day = (start + timedelta(days=k)).isoformat()
+            if day in daily:
+                s += daily[day]; valid = True
+        if not valid:
+            p["signups_window"] = None
+            continue
+        p["signups_window"] = s
+        p["signups_window_days"] = window_days
+        if median_xd > 0:
+            p["lift"] = round(s / median_xd, 2)
+        else:
+            p["lift"] = None
+        p["mover"] = bool(p.get("lift") and p["lift"] >= LIFT_THRESHOLD and s >= MIN_ABS)
+
+    gh["signup_baseline_xd"] = median_xd
+    gh["signup_window_days"] = window_days
+
+
 def main():
     PRIV.mkdir(parents=True, exist_ok=True)
+    mc = pull_mailchimp()
+    gh = pull_ghost()
+    attribute_signups_to_posts(mc, gh)
     out = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "mailchimp": pull_mailchimp(),
-        "ghost":     pull_ghost(),
+        "mailchimp": mc,
+        "ghost":     gh,
         "donorbox":  pull_donorbox(),
         "press":     pull_press(),
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
