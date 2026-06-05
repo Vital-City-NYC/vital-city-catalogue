@@ -200,6 +200,17 @@
     <main>
       <div class="kpis" id="kpis"></div>
 
+      <div class="card" id="growthChart">
+        <h2>Newsletter growth &amp; reach <span class="hint">monthly, since Jan 2025 · list size and total reach per send</span></h2>
+        <div class="chartwrap"><svg class="chart" id="growthSvg" viewBox="0 0 800 240" preserveAspectRatio="none"></svg></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--vc-green)"></span>New signups (per month)</span>
+          <span><span class="sw" style="background:var(--vc-cerulean)"></span>Subscriber list size</span>
+          <span><span class="sw" style="background:var(--vc-orange);opacity:.6"></span>Total opens per month (right axis)</span>
+        </div>
+        <div id="growthInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55"></div>
+      </div>
+
       <div class="card" id="perf">
         <h2>Newsletter performance <span class="hint">recipient-weighted averages · YoY = same window last year</span></h2>
         <div class="perfgrid" id="perfKpis"></div>
@@ -476,6 +487,9 @@ function boot(data){
   // ----- Trend chart (hand-rolled SVG)
   renderTrendChart(act, data.ghost && data.ghost.posts || []);
 
+  // ----- Newsletter growth & reach (the encouraging long-view chart)
+  renderGrowthChart(mc);
+
   // ----- Newsletter performance (open/click + YoY)
   renderPerf(mc);
   renderSendChart(mc.campaigns || []);
@@ -742,6 +756,110 @@ function fmtPctDelta(d){
   if(d==null||isNaN(d)) return "n/a";
   if(Math.abs(d)<0.5) return "≈ flat";
   return (d>0?"+":"")+d.toFixed(1)+"%";
+}
+
+function renderGrowthChart(mc){
+  // Monthly story: bars = new signups, line = cumulative subscriber list size,
+  // secondary line = avg total opens per send (a proxy for total reach that
+  // captures the "list grew so total eyeballs grew, even as open-rate fell"
+  // story). All three keep the operational chart above honest by showing the
+  // 18-month trajectory.
+  const months = (mc.monthly_signups || []).slice(-18);
+  const monthlyCamp = (mc.monthly_campaigns || []);
+  // Map month → TOTAL opens per month (the real reach signal): the sum of
+  // (open_pct × recipients) across every send that month. Captures "list
+  // grew → more delivered emails → more total opens" even when open rate
+  // fell, which is the story the daily-pulse chart can't show.
+  const opensByMonth = {};
+  monthlyCamp.forEach(m => {
+    if(m.sends > 0 && m.recipients > 0){
+      opensByMonth[m.month] = Math.round((m.open_pct/100) * m.recipients);
+    }
+  });
+  const svg = $("#growthSvg");
+  if(!months.length){svg.innerHTML='<text x="400" y="120" text-anchor="middle" fill="#888">No history yet</text>';return;}
+  const W=800,H=240,padL=44,padR=56,padT=18,padB=26;
+  const innerW=W-padL-padR, innerH=H-padT-padB;
+  const maxNew  = Math.max(1, ...months.map(m=>m.new_signups));
+  const maxSubs = Math.max(1, ...months.map(m=>m.cum_subs));
+  const maxOpen = Math.max(1, ...months.map(m=>opensByMonth[m.month]||0));
+  // Left y-axis serves both subs (line) and signups (bars) with two scales,
+  // but we'll normalize visually: bars use 0..maxNew up to ~45% of innerH so
+  // the cumulative line dominates as the headline visual.
+  const x = (i) => padL + (i/(months.length-1||1)) * innerW;
+  const ySubs = (v) => padT + innerH - (v/maxSubs) * innerH;
+  const yBar  = (v) => padT + innerH - (v/maxNew)  * (innerH * 0.45);   // bars only fill bottom 45%
+  const yOpen = (v) => padT + innerH - (v/maxOpen) * innerH;
+  const bw = Math.max(8, innerW/months.length * 0.55);
+
+  let html = "";
+
+  // Light horizontal gridlines + y labels for subscriber count
+  [0, Math.round(maxSubs/2), maxSubs].forEach(t => {
+    const yy = ySubs(t);
+    html += `<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#ddd" stroke-width="1"/>`;
+    html += `<text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${fmtN(t)}</text>`;
+  });
+  // Right axis: opens per send
+  [0, Math.round(maxOpen/2), maxOpen].forEach(t => {
+    const yy = yOpen(t);
+    html += `<text x="${W-padR+6}" y="${yy+3}" font-size="10" fill="#888">${fmtN(t)}</text>`;
+  });
+  // X labels (every 3 months + ends)
+  months.forEach((m, i) => {
+    if(i === 0 || i === months.length-1 || i % 3 === 0){
+      html += `<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="#888">${m.month}</text>`;
+    }
+  });
+  // Bars: monthly new signups (subtle green)
+  months.forEach((m, i) => {
+    const h = Math.max(0, (m.new_signups/maxNew) * (innerH * 0.45));
+    const note = m.source_note ? `\n${m.source_note}` : '';
+    html += `<rect x="${x(i)-bw/2}" y="${yBar(m.new_signups)}" width="${bw}" height="${h}" fill="#57AA4A" opacity=".75"><title>${m.month}: +${m.new_signups} new signups${note}</title></rect>`;
+  });
+  // Line: cumulative subscriber count (the headline upward-sloping story)
+  const subPts = months.map((m,i) => `${x(i)},${ySubs(m.cum_subs)}`).join(" ");
+  html += `<polyline points="${subPts}" fill="none" stroke="#1F6FB2" stroke-width="2.5"/>`;
+  months.forEach((m,i) => {
+    html += `<circle cx="${x(i)}" cy="${ySubs(m.cum_subs)}" r="3" fill="#1F6FB2"><title>${m.month}: ${fmtN(m.cum_subs)} subscribers</title></circle>`;
+  });
+  // Line: avg total opens per send (right axis)
+  const openPts = months
+    .map((m,i) => opensByMonth[m.month]!=null ? `${x(i)},${yOpen(opensByMonth[m.month])}` : null)
+    .filter(Boolean).join(" ");
+  if(openPts){
+    html += `<polyline points="${openPts}" fill="none" stroke="#E2772F" stroke-width="1.6" stroke-dasharray="4 3" opacity=".75"/>`;
+    months.forEach((m,i) => {
+      const o = opensByMonth[m.month];
+      if(o == null) return;
+      html += `<circle cx="${x(i)}" cy="${yOpen(o)}" r="2" fill="#E2772F" opacity=".75"><title>${m.month}: ~${fmtN(o)} total opens across all sends</title></circle>`;
+    });
+  }
+  svg.innerHTML = html;
+
+  // Insight line — surface the story
+  const first = months[0], last = months[months.length-1];
+  if(first && last && first.cum_subs && last.cum_subs){
+    const growthPct = ((last.cum_subs - first.cum_subs) / first.cum_subs) * 100;
+    const growthMult = (last.cum_subs / first.cum_subs).toFixed(1);
+    const totalNew = months.reduce((s,m) => s + (m.new_signups||0), 0);
+    // Reach comparison: average MONTHLY total opens, first 6 vs last 6 months
+    const earlyOpens = months.slice(0,6).map(m=>opensByMonth[m.month]).filter(v=>v!=null);
+    const lateOpens  = months.slice(-6).map(m=>opensByMonth[m.month]).filter(v=>v!=null);
+    const earlyAvg = earlyOpens.length ? earlyOpens.reduce((s,v)=>s+v,0)/earlyOpens.length : null;
+    const lateAvg  = lateOpens.length  ? lateOpens.reduce((s,v)=>s+v,0)/lateOpens.length  : null;
+    let openLine = '';
+    if(earlyAvg && lateAvg){
+      const lift = ((lateAvg - earlyAvg) / earlyAvg) * 100;
+      if(lift >= 0){
+        openLine = ` Avg <i>total</i> opens per month is up ${lift.toFixed(0)}% over the same window — even though per-email open rate fell with Apple Mail's privacy changes, the list grew enough that more total eyeballs reach VC content each month.`;
+      } else {
+        openLine = ` Avg total opens per month is ${Math.abs(lift).toFixed(0)}% lower over the same window — the list grew but per-email engagement dropped enough that net monthly reach is down. The Newsletter performance card below has the click-rate trend, which is the honest engagement signal (clicks aren't inflated by Apple Mail auto-opens the way opens are).`;
+      }
+    }
+    $("#growthInsight").innerHTML =
+      `<b style="color:var(--vc-black)">The long view:</b> Subscribers went from ${fmtN(first.cum_subs)} (${esc(first.month)}) to ${fmtN(last.cum_subs)} (${esc(last.month)}) — that's ${growthMult}× the list, ${totalNew.toLocaleString()} new signups in 18 months.${openLine}`;
+  }
 }
 
 function renderPerf(mc){
