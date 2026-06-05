@@ -357,11 +357,187 @@ def pull_mailchimp():
             "failed_fetches":         fail,
         }
 
-    log("  computing MAU (30d) — unioning openers across recent sends…")
-    out["mau"] = _union_openers(30)
-    log("  computing AAU (365d) — unioning openers across last year's sends…")
-    out["aau"] = _union_openers(365)
+    # The _union_openers function returns just a count; for lifecycle analysis
+    # we need the actual opener SET to cross-reference against signup dates.
+    # Re-issue the pulls but capture the sets too (re-uses Mailchimp data we
+    # already paid the API cost for; about doubles AAU pull time, but worth
+    # it since lifecycle is the single highest-leverage analysis).
+    def _union_openers_with_set(days_back):
+        since_iso = (datetime.now(timezone.utc) - timedelta(days=days_back)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+        url = (f"/campaigns?status=sent&list_id={list_id}"
+               f"&since_send_time={urllib.parse.quote(since_iso)}"
+               f"&count=500&sort_field=send_time&sort_dir=DESC"
+               f"&fields=campaigns.id,campaigns.type,campaigns.send_time")
+        try:
+            cs = mc_get(url, key, dc).get("campaigns", [])
+        except Exception as e:
+            log(f"  lifecycle openers ({days_back}d) failed: {e}"); return (set(), {})
+        regulars = [c for c in cs if c.get("type") == "regular"]
+        variate  = [c for c in cs if c.get("type") == "variate"]
+        openers = set()
+        for c in regulars:
+            cid = c["id"]; offset = 0
+            while True:
+                try:
+                    page = mc_get(
+                        f"/reports/{cid}/open-details?count=1000&offset={offset}"
+                        f"&fields=members.email_address,total_items", key, dc)
+                except Exception as e: break
+                for m in page.get("members", []):
+                    em = (m.get("email_address") or "").lower().strip()
+                    if em: openers.add(em)
+                total = int(page.get("total_items") or 0)
+                offset += 1000
+                if offset >= total: break
+        return (openers, {"regulars_counted": len(regulars), "variate_excluded": len(variate)})
+
+    log("  computing MAU (30d) openers set…")
+    mau_set, mau_meta = _union_openers_with_set(30)
+    log("  computing AAU (365d) openers set…")
+    aau_set, aau_meta = _union_openers_with_set(365)
+    out["mau"] = {"active_users": len(mau_set), **mau_meta}
+    out["aau"] = {"active_users": len(aau_set), **aau_meta}
+    # Stash the sets internally so build_lifecycle() can use them
+    out["_mau_set"] = mau_set
+    out["_aau_set"] = aau_set
     return out
+
+
+def build_lifecycle(mc):
+    """Retention curves + sunset + at-risk analysis from the MAU/AAU sets
+    + people.json signup dates + engagement-source ratings.
+
+    Outputs the four core lifecycle metrics:
+      - cohort_retention: % of each signup cohort that's in MAU today
+      - activation_rate: % of new-30-day subscribers in MAU
+      - sunset_candidates: low-engagement + tenured subscribers (count + sample)
+      - at_risk: AAU minus MAU = lapsed-but-once-engaged
+    """
+    if not mc or not mc.get("_mau_set"):
+        return {"available": False, "reason": "no MAU/AAU sets available"}
+    mau_set = mc["_mau_set"]
+    aau_set = mc["_aau_set"]
+    today = datetime.now(timezone.utc).date()
+
+    # Load people.json for subscriber list + signup dates
+    pj = PRIV / "people.json"
+    if not pj.exists():
+        return {"available": False, "reason": "no people.json yet"}
+    try:
+        people = json.loads(pj.read_text())
+    except Exception as e:
+        return {"available": False, "reason": f"people.json read failed: {e}"}
+
+    # Load Mailchimp member ratings (1-5 stars) from cached engagement CSV
+    ratings = {}   # email -> rating int
+    eng = PRIV / "engagement_source.csv"
+    if eng.exists():
+        import csv
+        with open(eng) as f:
+            for row in csv.DictReader(f):
+                em = (row.get("Email") or "").lower().strip()
+                if em:
+                    try: ratings[em] = int(row.get("Rating") or 0)
+                    except: pass
+
+    # Cohort buckets (days since signup)
+    BUCKETS = [
+        ("0-7 days",      0,   7),
+        ("8-14 days",     8,   14),
+        ("15-30 days",    15,  30),
+        ("31-60 days",    31,  60),
+        ("61-90 days",    61,  90),
+        ("91-180 days",   91,  180),
+        ("181-365 days",  181, 365),
+        ("366-730 days",  366, 730),
+        ("731+ days",     731, 99999),
+    ]
+    cohort = {lab: {"label": lab, "subs": 0, "engaged": 0, "lo": lo, "hi": hi} for lab, lo, hi in BUCKETS}
+
+    sunset = []
+    at_risk = []
+    new_30 = 0
+    new_30_engaged = 0
+    total_subs = 0
+
+    for p in people:
+        if not p.get("mem"): continue
+        if p.get("unsub"): continue
+        total_subs += 1
+        # Subscriber's earliest signup date — use `since`
+        since = (p.get("since") or "")[:10]
+        if not since: continue
+        try:
+            y, m, d = (int(x) for x in since.split("-"))
+            from datetime import date as _date
+            signup = _date(y, m, d)
+        except Exception: continue
+        days_since = (today - signup).days
+        # Which buckets does this person belong to (use the first matching)
+        for lab, lo, hi in BUCKETS:
+            if lo <= days_since <= hi:
+                cohort[lab]["subs"] += 1
+                # Is any of this person's emails in MAU?
+                em_list = [e.lower().strip() for e in (p.get("emails") or [p.get("e","")]) if e]
+                engaged = any(em in mau_set for em in em_list)
+                if engaged: cohort[lab]["engaged"] += 1
+                break
+
+        # Activation: did new-30-day subscribers open anything?
+        if days_since <= 30:
+            new_30 += 1
+            em_list = [e.lower().strip() for e in (p.get("emails") or [p.get("e","")]) if e]
+            if any(em in mau_set for em in em_list):
+                new_30_engaged += 1
+
+        # Sunset candidates: rating ≤ 2 AND tenured > 180 days AND NOT in MAU
+        em_list = [e.lower().strip() for e in (p.get("emails") or [p.get("e","")]) if e]
+        worst_rating = min((ratings.get(em, 5) for em in em_list if em in ratings), default=None)
+        in_mau = any(em in mau_set for em in em_list)
+        in_aau = any(em in aau_set for em in em_list)
+        if (worst_rating is not None and worst_rating <= 2
+            and days_since > 180 and not in_mau):
+            sunset.append({
+                "name":  p.get("n") or "(no name)",
+                "email": em_list[0] if em_list else "",
+                "rating": worst_rating,
+                "since":  since,
+                "tenure_days": days_since,
+            })
+        # At-risk: was in AAU but not in MAU (opened in last year but not last 30d)
+        if in_aau and not in_mau:
+            at_risk.append({
+                "name":  p.get("n") or "(no name)",
+                "email": em_list[0] if em_list else "",
+                "rating": worst_rating,
+                "since":  since,
+                "tenure_days": days_since,
+            })
+
+    # Compute retention rate per cohort
+    for lab, d in cohort.items():
+        d["retention_pct"] = round((d["engaged"] / d["subs"]) * 100, 1) if d["subs"] else None
+
+    activation_rate = round((new_30_engaged / new_30) * 100, 1) if new_30 else 0
+
+    return {
+        "available": True,
+        "total_subscribers_counted": total_subs,
+        "cohort_retention": [cohort[lab] for lab, lo, hi in BUCKETS],
+        "activation_30d": {
+            "cohort_size": new_30,
+            "engaged":     new_30_engaged,
+            "pct":         activation_rate,
+        },
+        "sunset_candidates": {
+            "count": len(sunset),
+            "sample": sorted(sunset, key=lambda x: -x["tenure_days"])[:20],
+        },
+        "at_risk": {
+            "count": len(at_risk),
+            "sample": sorted(at_risk, key=lambda x: -(x.get("rating") or 0))[:20],
+        },
+    }
 
 
 # -------------------------------------------------------------------- Ghost
@@ -1313,6 +1489,10 @@ def main():
     news_mentions = pull_news_mentions()
     all_titles = pull_all_ghost_titles()
     flag_own_url_shares(news_mentions, all_titles)
+    lifecycle = build_lifecycle(mc)
+    # Strip the internal MAU/AAU sets from mc before serialization — they were
+    # only needed in-process for the lifecycle join.
+    mc.pop("_mau_set", None); mc.pop("_aau_set", None)
 
     # Ghost is the source of truth for signups (the public newsletter form
     # writes to Ghost first; Mailchimp is reconciled in weekly batches). Use
@@ -1385,6 +1565,7 @@ def main():
         },
         "press":     pull_press(),
         "news_mentions": news_mentions,
+        "lifecycle":     lifecycle,
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
         # a "Connect this source" placeholder card with the exact setup steps.
         "ga4": {

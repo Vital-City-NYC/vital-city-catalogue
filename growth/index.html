@@ -252,6 +252,11 @@
         <div id="acqBody"></div>
       </div>
 
+      <div class="card" id="lifecycle">
+        <h2>Subscriber lifecycle <span class="hint">are new signups sticking? who's drifting? who's gone but salvageable?</span></h2>
+        <div id="lifecycleBody"></div>
+      </div>
+
       <div class="card" id="ytd">
         <h2>Year-to-date · 2026 vs 2025 <span class="hint">where the comparison is fair</span></h2>
         <div id="ytdBody"></div>
@@ -283,7 +288,7 @@
       </div>
 
       <div class="card" id="social">
-        <h2>Social — X &amp; Instagram <span class="hint">followers + recent post engagement · free unofficial endpoints (can break)</span></h2>
+        <h2>Social — X, Instagram, LinkedIn <span class="hint">followers + recent post engagement · free unofficial endpoints (can break)</span></h2>
         <div id="socialBody"></div>
         <div id="urlShares" style="margin-top:18px"></div>
       </div>
@@ -495,10 +500,11 @@ function boot(data){
   renderPerf(mc);
   renderSendChart(mc.campaigns || []);
   renderYTD(mc, mc.signup_windows || {});
-  renderSocial(data.x_profile || {}, data.instagram || {});
+  renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || []);
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderAcquisition(data.ghost_signup_attribution || {});
+  renderLifecycle(data.lifecycle || {});
   renderGoogleTrends();
 
   // ----- Campaigns table (collapsible — show 5, expand for the rest)
@@ -1174,7 +1180,7 @@ function timeAgo(iso){
   return Math.floor(m/(24*60))+"d";
 }
 
-function renderSocial(x, ig){
+function renderSocial(x, ig, news){
   let html='<div class="socrow">';
   function col(d, title, mkURL, postFn){
     if(!d.available){
@@ -1210,7 +1216,39 @@ function renderSocial(x, ig){
       <div class="meta"><span>${esc(timeAgo(p.iso))} ago</span><span>❤ ${fmtN(p.likes)}</span><span>💬 ${fmtN(p.comments)}</span></div>
       <a href="${esc(p.url||'#')}" target="_blank">${esc(p.caption||'(no caption)')}</a>
     </li>`).join(""));
+
   html += "</div>";
+
+  // ---- LinkedIn as a full-width row below X+IG, because we have less data
+  // here. Can't get follower count or per-post engagement from any free
+  // unofficial endpoint (LinkedIn blocks all of them aggressively); we show
+  // what we DO have: URL shares of vitalcitynyc.org split into "our company-
+  // page reposts" (detected by title match) vs apparent third-party shares.
+  const liShares = (news||[]).filter(it => it.is_url_share && (it.domain||'').toLowerCase().includes('linkedin'));
+  const liOwn   = liShares.filter(it => it.own_post);
+  const liThird = liShares.filter(it => !it.own_post);
+  const liRecent = liThird.slice().sort((a,b) => (b.published_iso||'').localeCompare(a.published_iso||'')).slice(0,8);
+  html += `<div class="soccol" style="margin-top:18px">
+    <h3>LinkedIn · <a href="https://www.linkedin.com/company/vitalcitynyc/" target="_blank" style="color:var(--vc-cerulean);font-weight:600">@vitalcitynyc</a></h3>
+    <div class="socstat" style="grid-template-columns:repeat(3,1fr)">
+      <div title="LinkedIn doesn't expose company-page follower count via any free public endpoint. To populate this we'd need to enable LinkedIn Marketing Developer Platform access (application required) or use a paid social-listening service.">
+        <div class="sv">—</div><div class="sl">Followers (API gated)</div>
+      </div>
+      <div title="Posts on LinkedIn (from any account) that include a link to vitalcitynyc.org, detected via Google News. Excludes posts whose title matches one of our article titles verbatim (those are likely our own LinkedIn company-page reposts).">
+        <div class="sv">${fmtN(liThird.length)}</div><div class="sl">Third-party URL shares</div>
+      </div>
+      <div title="LinkedIn posts whose title matches a Vital City article title verbatim — most likely the @vitalcitynyc company page reposting an article.">
+        <div class="sv">${fmtN(liOwn.length)}</div><div class="sl">Our reposts (detected)</div>
+      </div>
+    </div>
+    ${liRecent.length
+      ? `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);font-weight:700;margin:8px 0 4px">Recent third-party shares</div>
+         <ul class="socposts">${liRecent.map(p=>`<li>
+           <div class="meta"><span>${esc((p.published_iso||p.published||'').slice(0,10))}</span></div>
+           <a href="${esc(p.url)}" target="_blank">${esc(p.title.replace(/\s*-\s*LinkedIn\s*$/i,''))}</a>
+         </li>`).join("")}</ul>`
+      : '<div style="font-size:12px;color:var(--vc-charcoal);padding:6px 0">No third-party LinkedIn shares detected in the current window.</div>'}
+  </div>`;
   $("#socialBody").innerHTML = html;
 }
 
@@ -1449,6 +1487,114 @@ function renderAcquisition(attr){
           <div class="v">${fmtN(s.n)}</div>
         </div>`).join("")}
       </div>
+    </div>`;
+}
+
+function renderLifecycle(lc){
+  const host = $("#lifecycleBody");
+  if(!host) return;
+  if(!lc.available){
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);padding:8px 0">Lifecycle analysis isn't available yet. (${esc(lc.reason||'pipeline must run with MAU/AAU sets')})</div>`;
+    return;
+  }
+  const cohorts = lc.cohort_retention || [];
+  const act = lc.activation_30d || {};
+  const sunset = lc.sunset_candidates || {count:0,sample:[]};
+  const atRisk = lc.at_risk || {count:0,sample:[]};
+
+  // ---- Top KPI strip ----
+  const actCls = act.pct >= 50 ? "up" : act.pct >= 30 ? "flat" : "down";
+  const kpis = `
+    <div class="perfgrid" style="margin-bottom:18px">
+      <div class="perfcell" title="Of the ${fmtN(act.cohort_size||0)} people who joined the newsletter in the last 30 days, this is the % who have opened at least one Vital City email. Below 30% suggests a broken welcome experience or signups that weren't intentional. Above 50% means people who join are actually reading.">
+        <div class="pl">Activation · new 30d</div>
+        <div class="pn">${act.pct||0}%</div>
+        <div class="pd ${actCls}">${fmtN(act.engaged||0)} of ${fmtN(act.cohort_size||0)} opened ≥1 email</div>
+      </div>
+      <div class="perfcell" title="Subscribers who opened at least one email in the past year but nothing in the last 30 days. They've drifted but you've earned their attention before — the highest-ROI re-engagement target. A 're-engagement' send specifically to this segment usually has the best open rate of any campaign you run.">
+        <div class="pl">At-risk · lapsed but reachable</div>
+        <div class="pn">${fmtN(atRisk.count||0)}</div>
+        <div class="pd flat">opened &lt;1yr ago, nothing in 30d</div>
+      </div>
+      <div class="perfcell" title="Subscribers who Mailchimp rates 1-2 stars AND have been on the list for more than 6 months AND haven't opened in 30 days. Pruning them improves deliverability (Gmail/Outlook reduce inbox priority for senders with low engagement rates) and the open-rate denominator. Standard practice: send a 'still want to hear from us?' sunset campaign first; remove non-responders.">
+        <div class="pl">Sunset candidates</div>
+        <div class="pn">${fmtN(sunset.count||0)}</div>
+        <div class="pd ${sunset.count > 1000 ? 'down' : 'flat'}">1-2★ · 6mo+ tenure · no recent open</div>
+      </div>
+    </div>`;
+
+  // ---- Retention curve chart ----
+  const W=800, H=200, padL=46, padR=14, padT=14, padB=36;
+  const innerW=W-padL-padR, innerH=H-padT-padB;
+  const valid = cohorts.filter(c => c.subs >= 5);   // ignore tiny cohorts
+  let chart = '';
+  if(valid.length){
+    const maxX = valid.length;
+    const x = (i) => padL + (i/(maxX-1||1)) * innerW;
+    const y = (v) => padT + innerH - (v/100) * innerH;
+    let h = '';
+    // gridlines
+    [0, 25, 50, 75, 100].forEach(t => {
+      const yy = y(t);
+      h += `<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#ddd" stroke-width="1"/>`;
+      h += `<text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${t}%</text>`;
+    });
+    // x labels
+    valid.forEach((c, i) => {
+      h += `<text x="${x(i)}" y="${H-22}" text-anchor="middle" font-size="10" fill="#888">${esc(c.label.replace(' days','d'))}</text>`;
+      h += `<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="9.5" fill="#999">n=${fmtN(c.subs)}</text>`;
+    });
+    // line
+    const pts = valid.map((c, i) => `${x(i)},${y(c.retention_pct||0)}`).join(" ");
+    h += `<polyline points="${pts}" fill="none" stroke="#1F6FB2" stroke-width="2.5"/>`;
+    valid.forEach((c, i) => {
+      h += `<circle cx="${x(i)}" cy="${y(c.retention_pct||0)}" r="3.5" fill="#1F6FB2"><title>${c.label}: ${c.retention_pct}% of ${fmtN(c.subs)} subscribers still opening (n=${c.engaged} engaged)</title></circle>`;
+    });
+    chart = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="For each signup cohort (grouped by how long ago they joined), the % whose email address shows up in this month's MAU set. The curve should slope down — newer subscribers should be more engaged. A flat or rising curve at the right end of the chart means new signups are LESS engaged than older ones, which is a recruitment-quality problem.">Retention curve: still engaged 30 days later?</div>
+      <div class="chartwrap"><svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${h}</svg></div>`;
+  }
+
+  // ---- Side-by-side sunset + at-risk lists ----
+  const sampleList = (arr) => arr.length
+    ? `<ul style="list-style:none;padding:0;margin:6px 0 0;max-height:200px;overflow-y:auto">${arr.slice(0,8).map(p => `<li style="font-size:11.5px;padding:3px 0;border-bottom:1px dotted var(--vc-cloud)">
+        <b style="color:var(--vc-black)">${esc(p.name||'(no name)')}</b>
+        <span style="color:var(--vc-charcoal)">${p.rating!=null?` · ${p.rating}★`:''}</span>
+        <span style="color:var(--vc-charcoal);font-size:10.5px"> · joined ${esc(p.since)} (${fmtN(p.tenure_days)} days ago)</span>
+      </li>`).join("")}</ul>`
+    : '<div style="font-size:12px;color:var(--vc-charcoal);padding:8px 0">No candidates.</div>';
+
+  const lists = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:18px">
+    <div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">Sunset candidates · sample of ${Math.min(8, sunset.count)}</div>
+      <div style="font-size:11px;color:var(--vc-charcoal)">Suggested action: send a "still want to hear from us?" win-back with a clear unsubscribe link. Remove non-responders after 14 days.</div>
+      ${sampleList(sunset.sample||[])}
+    </div>
+    <div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">At-risk · sample of ${Math.min(8, atRisk.count)}</div>
+      <div style="font-size:11px;color:var(--vc-charcoal)">Suggested action: a re-engagement campaign featuring your best recent pieces. These people opened within the last year — they liked you once.</div>
+      ${sampleList(atRisk.sample||[])}
+    </div>
+  </div>`;
+
+  // ---- Auto-insight ----
+  const r30 = (cohorts.find(c=>c.label==='0-7 days')||{}).retention_pct ||
+              (cohorts.find(c=>c.label==='8-14 days')||{}).retention_pct;
+  const r90 = (cohorts.find(c=>c.label==='91-180 days')||{}).retention_pct;
+  const r365 = (cohorts.find(c=>c.label==='181-365 days')||{}).retention_pct;
+  let insight = '';
+  if(r30 != null && r90 != null){
+    if(r30 >= 40 && r90 >= 25){
+      insight = `Healthy curve: newer cohorts open more than older ones, and your year-old subscribers still come back at ~${Math.round(r365||0)}%. This is what list-health looks like.`;
+    } else if(r30 < 30){
+      insight = `Activation is weak — only ${r30}% of brand-new subscribers are opening anything. Suggests either a broken welcome flow or signups that weren't intentional (e.g. UTM campaigns sending unqualified traffic). Worth A/B-testing the welcome sequence.`;
+    } else {
+      insight = `Mid-funnel drop-off: ${r30}% of new cohorts are engaged but only ${r90}% of 3-month subscribers. The first 90 days are where you lose people — invest in nurture content during that window.`;
+    }
+  }
+
+  host.innerHTML = kpis + chart + (insight ? `<div style="font-size:12px;color:var(--vc-charcoal);margin-top:14px;line-height:1.55"><b style="color:var(--vc-black)">What the curve says:</b> ${insight}</div>` : '') + lists +
+    `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:14px;line-height:1.55;border-top:1px dashed var(--vc-cloud);padding-top:10px">
+      <b>Methodology:</b> Activation, retention and at-risk are computed by joining each subscriber's signup date (from the merged Ghost+Mailchimp dataset) against this month's MAU set (the union of email addresses that opened at least one regular Vital City send in the last 30 days). Sunset adds a Mailchimp 1-2★ rating + 6mo+ tenure filter. Apple Mail's privacy auto-opens slightly inflate retention numbers across the industry — click rate (in the Newsletter performance card) is the cleaner truth.
     </div>`;
 }
 
