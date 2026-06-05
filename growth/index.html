@@ -1652,8 +1652,9 @@ function renderUrlShares(news){
     </li>`).join("")}</ul>
 
     <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55">
-      <b>Honest about the split:</b> "VC's own posts" is detected by matching a share's title against the catalog of ~800 Vital City article titles — so it catches LinkedIn company-page reposts well (they typically use article titles verbatim), but it <i>undercounts</i> on X / Instagram / Facebook where the @vitalcitynyc account usually writes original commentary that doesn't repeat the article title. Some unknown portion of the "third-party" count is actually VC's own social posts we couldn't tell apart programmatically without paid social listening or browser-automation that resolves the Google News article redirects (which Google blocks).
-      <br><b>Coverage:</b> X &amp; LinkedIn well-indexed by Google; Facebook moderately indexed; Bluesky patchy; Instagram unreliable (IG posts rarely include plain-text URLs).
+      <b>How we count:</b> Google News' <code>site:</code> search for vitalcitynyc.org returns lots of false positives — especially on Facebook Pages, where any Page that has linked to a VC article <i>somewhere</i> in its history matches on every unrelated post. We filter those out by requiring the post's title or snippet to actually mention "Vital City" or contain a substring of a known VC article title (we keep an up-to-date catalog of ~800 titles).
+      <br><b>Own vs third-party:</b> a share is flagged as VC's own social post if its title matches a known article title — catches LinkedIn company-page reposts cleanly, but undercounts on X / Instagram where @vitalcitynyc writes original commentary. So some "third-party" entries may still be your own; the inverse is rarer.
+      <br><b>Coverage:</b> X &amp; LinkedIn are well-indexed by Google; Facebook moderately; Bluesky patchy (Google still rolling out bsky.app indexing); Instagram is unreliable in general because IG posts rarely include plain-text URLs.
     </div>`;
 }
 

@@ -1268,45 +1268,63 @@ def pull_all_ghost_titles():
 
 
 def flag_own_url_shares(news_mentions, all_titles):
-    """For each URL-share item, decide whether it's likely VC's own social
-    account reposting a VC article (vs a third party sharing it).
+    """For each URL-share item, classify it and decide whether to keep it.
 
-    Heuristic: strip the platform tail (' - LinkedIn', etc.) and check
-    whether the remainder either (a) matches a known VC article title
-    exactly (normalized) or (b) contains a normalized VC title as a
-    substring (catches "Article Title #vital-city" patterns).
-
-    Limitations baked into the tooltip on the dashboard: under-detects
-    Instagram and X own-posts where the caption is original copy that
-    doesn't repeat the article title.
+    Two-stage filter:
+      1. KEEP-OR-DROP: the title or snippet must actually look like a VC
+         reference. Reasoning: Google News' `"vitalcitynyc.org" site:DOMAIN`
+         query matches social Pages/profiles where vitalcitynyc.org appears
+         ANYWHERE on the page — including unrelated posts, About blurbs, or
+         even comments. The Model Cities Initiative post on Facebook (whose
+         title was about a DOJ policing program) is a classic false positive
+         — that Page had once linked to vitalcitynyc.org elsewhere. We drop
+         items unless the title or snippet contains either "vital city" /
+         "vitalcitynyc", or a substring of a known VC article title (15+
+         normalized chars).
+      2. OWN vs THIRD-PARTY: of the kept items, mark as own_post if the title
+         (after stripping " - LinkedIn"/"- X"/etc.) matches a known VC article
+         title exactly or as a long substring.
     """
-    if not (news_mentions and all_titles):
-        for it in news_mentions or []:
-            it["own_post"] = False
+    if not news_mentions:
         return
     norm = lambda s: re.sub(r"[\W_]+", "", (s or "").lower())
-    titles_n = {norm(t) for t in all_titles}
-    # For substring matching, keep longer normalized titles in a list
+    titles_n = {norm(t) for t in (all_titles or set())}
     substr_titles = [t for t in titles_n if len(t) > 20]
     PLATFORM_TAILS = re.compile(
         r"\s*[-–—]\s*(LinkedIn|Facebook|Instagram|X|Twitter|Bluesky|Threads|"
         r"x\.com|twitter\.com|bsky\.app|facebook\.com|instagram\.com)\s*$", re.I)
+    BRAND = re.compile(r"(?i)\bvital\s*city\b|vitalcitynyc")
+
+    def looks_like_vc(it):
+        # Brand phrase or domain in title or snippet → clearly about us
+        if BRAND.search(it.get("title", "")) or BRAND.search(it.get("snippet", "")):
+            return True
+        # Otherwise require a long-enough match against a known VC article title
+        t_norm = norm(PLATFORM_TAILS.sub("", it.get("title", "")).strip())
+        if len(t_norm) < 15: return False
+        for ti in substr_titles:
+            if ti in t_norm or t_norm in ti: return True
+        return False
+
+    kept = []
     for it in news_mentions:
-        if not it.get("is_url_share"):
+        if it.get("is_url_share"):
+            if not looks_like_vc(it):
+                continue  # drop the false positive
+            t = it.get("title") or ""
+            stripped = PLATFORM_TAILS.sub("", t).strip()
+            s_norm = norm(stripped)
+            if s_norm in titles_n:
+                it["own_post"] = True
+            elif any(ti in s_norm or (len(s_norm) > 20 and s_norm in ti) for ti in substr_titles):
+                it["own_post"] = True
+            else:
+                it["own_post"] = False
+        else:
             it["own_post"] = False
-            continue
-        t = it.get("title") or ""
-        stripped = PLATFORM_TAILS.sub("", t).strip()
-        s_norm = norm(stripped)
-        # Exact match
-        if s_norm in titles_n:
-            it["own_post"] = True
-            continue
-        # Substring match (in either direction) for longer titles
-        if any(ti in s_norm or (len(s_norm) > 20 and s_norm in ti) for ti in substr_titles):
-            it["own_post"] = True
-            continue
-        it["own_post"] = False
+        kept.append(it)
+    # Mutate the list in place so callers using the same reference see the result
+    news_mentions[:] = kept
 
 
 def attribute_signups_to_posts(mc, gh, signup_attr=None, window_days=4):
