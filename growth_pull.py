@@ -394,6 +394,177 @@ def pull_press():
     return dedup[:60]
 
 
+# --------------------------------------------------------------- Donorbox
+def donorbox_creds():
+    key = os.environ.get("DONORBOX_KEY") or ""
+    if not key:
+        f = PRIV / ".donorbox_key"
+        if f.exists(): key = f.read_text().strip()
+    email = os.environ.get("DONORBOX_EMAIL", "info@vitalcitynyc.org").strip()
+    return key.strip(), email
+
+
+def pull_donorbox():
+    key, email = donorbox_creds()
+    if not key:
+        return {"available": False, "reason": "DONORBOX_KEY not set"}
+    auth = base64.b64encode(f"{email}:{key}".encode()).decode()
+    headers = {
+        "Authorization": "Basic " + auth,
+        "User-Agent": "VitalCity-GrowthDashboard/1.0",
+        "Accept": "application/json",
+    }
+    donations, page = [], 1
+    while True:
+        try:
+            url = f"https://donorbox.org/api/v1/donations?page={page}&per_page=100"
+            batch = json.loads(http_get(url, headers=headers, timeout=120))
+        except Exception as e:
+            log(f"  donorbox page {page} failed: {e}")
+            break
+        if not batch: break
+        donations.extend(batch)
+        if len(batch) < 100: break
+        page += 1
+        if page > 200: break   # safety cap
+
+    paid = [d for d in donations if (d.get("status") or "").lower() == "paid"]
+    if not paid:
+        return {"available": True, "donations_paid": 0, "reason": "no paid donations in account"}
+
+    # Normalize fields we'll use
+    def _amt(d):
+        try: return float(d.get("amount") or 0)
+        except: return 0.0
+    def _net(d):
+        try: return float(d.get("net_amount") or 0)
+        except: return 0.0
+    def _day(d):  return (d.get("donation_date") or "")[:10]
+    def _mon(d):  return (d.get("donation_date") or "")[:7]
+    def _email(d): return ((d.get("donor") or {}).get("email") or "").strip().lower()
+    def _recurring(d): return bool(d.get("recurring"))
+    def _campaign(d): return ((d.get("campaign") or {}).get("name") or "(no campaign)").strip()
+
+    from datetime import date as _date
+    from collections import defaultdict as _dd, Counter as _C
+    today = datetime.now(timezone.utc).date()
+    y = today.year
+    ytd_start = _date(y, 1, 1); py_start = _date(y-1, 1, 1)
+    py_end = _date(y-1, today.month, today.day)
+    d30 = today - timedelta(days=30); d90 = today - timedelta(days=90); d7 = today - timedelta(days=7)
+    yoy30_end = _date(y-1, today.month, today.day); yoy30_start = yoy30_end - timedelta(days=30)
+
+    def _agg(items):
+        if not items: return {"count": 0, "amount": 0.0, "net": 0.0, "donors": 0,
+                              "recurring_amount": 0.0, "onetime_amount": 0.0, "avg_gift": 0.0}
+        emails = set()
+        amt = net = rec_amt = one_amt = 0.0
+        new_donors = 0
+        for d in items:
+            a = _amt(d); n = _net(d)
+            amt += a; net += n
+            if _recurring(d): rec_amt += a
+            else: one_amt += a
+            em = _email(d)
+            if em: emails.add(em)
+        return {
+            "count": len(items),
+            "amount": round(amt, 2),
+            "net": round(net, 2),
+            "donors": len(emails),
+            "recurring_amount": round(rec_amt, 2),
+            "onetime_amount":   round(one_amt, 2),
+            "avg_gift": round(amt / len(items), 2) if items else 0.0,
+        }
+
+    def _in(items, start, end):
+        s, e = start.isoformat(), end.isoformat()
+        return [d for d in items if s <= _day(d) <= e]
+
+    # Daily series (last 365 days for the trend chart)
+    daily = _dd(lambda: {"d": "", "amt": 0.0, "n": 0, "donors": set()})
+    cutoff = (today - timedelta(days=365)).isoformat()
+    for d in paid:
+        day = _day(d)
+        if day < cutoff or day > today.isoformat(): continue
+        r = daily[day]; r["d"] = day
+        r["amt"] += _amt(d); r["n"] += 1
+        em = _email(d)
+        if em: r["donors"].add(em)
+    daily_series = [{"d": r["d"], "amt": round(r["amt"], 2), "gifts": r["n"], "donors": len(r["donors"])}
+                    for r in sorted(daily.values(), key=lambda x: x["d"])]
+
+    # Monthly series (24 months for YoY trend)
+    monthly = _dd(lambda: {"m": "", "amt": 0.0, "n": 0, "donors": set(), "recurring_amt": 0.0})
+    for d in paid:
+        m = _mon(d)
+        if not m: continue
+        r = monthly[m]; r["m"] = m
+        a = _amt(d); r["amt"] += a; r["n"] += 1
+        if _recurring(d): r["recurring_amt"] += a
+        em = _email(d)
+        if em: r["donors"].add(em)
+    monthly_series = [{"m": r["m"], "amt": round(r["amt"], 2), "gifts": r["n"],
+                       "donors": len(r["donors"]), "recurring_amt": round(r["recurring_amt"], 2)}
+                      for r in sorted(monthly.values(), key=lambda x: x["m"])]
+
+    # Top campaigns YTD + all-time
+    camp_ytd = _C(); camp_all = _C()
+    for d in paid:
+        a = _amt(d); name = _campaign(d)
+        camp_all[name] += a
+        if _day(d) >= ytd_start.isoformat(): camp_ytd[name] += a
+    top_campaigns = [{"name": n, "amount": round(a, 2)} for n, a in camp_ytd.most_common(6)]
+
+    # Top recent gifts (last 30d)
+    recent = sorted(_in(paid, d30, today), key=_amt, reverse=True)[:8]
+    top_recent = [{
+        "amount": _amt(d),
+        "net": _net(d),
+        "date": _day(d),
+        "donor": ((d.get("donor") or {}).get("name") or "").strip() or "Anonymous",
+        "recurring": _recurring(d),
+        "campaign": _campaign(d),
+        "comment": (d.get("comment") or "")[:240],
+    } for d in recent]
+
+    # Active recurring donors + MRR estimate
+    rec_donors = set(); mrr = 0.0
+    last90 = _in(paid, d90, today)
+    for d in last90:
+        if _recurring(d):
+            em = _email(d)
+            if em: rec_donors.add(em)
+    # MRR: sum recurring gifts in last 30d (rough proxy)
+    for d in _in(paid, d30, today):
+        if _recurring(d): mrr += _amt(d)
+
+    # Earliest paid gift in this account — honest signal for YoY validity
+    oldest = min((_day(d) for d in paid if _day(d)), default="")
+    yoy_ok = bool(oldest and oldest < py_start.isoformat())
+
+    return {
+        "available": True,
+        "donations_paid": len(paid),
+        "history_starts": oldest,
+        "yoy_ok": yoy_ok,
+        "windows": {
+            "ytd":       _agg(_in(paid, ytd_start, today)),
+            "prior_ytd": _agg(_in(paid, py_start,  py_end)),
+            "last_30":   _agg(_in(paid, d30, today)),
+            "yoy_30":    _agg(_in(paid, yoy30_start, yoy30_end)),
+            "last_7":    _agg(_in(paid, d7, today)),
+            "all_time":  _agg(paid),
+        },
+        "daily_series":   daily_series,
+        "monthly_series": monthly_series,
+        "top_campaigns":  top_campaigns,
+        "top_recent":     top_recent,
+        "active_recurring_donors": len(rec_donors),
+        "mrr_estimate":   round(mrr, 2),
+    }
+
+
 # ----------------------------------------------------- X (Twitter) — free path
 # Uses Twitter's public syndication endpoint (the same one their embed widgets
 # hit). Returns follower/following/tweet counts + the 100 most recent tweets
@@ -509,6 +680,7 @@ def main():
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "mailchimp": pull_mailchimp(),
         "ghost":     pull_ghost(),
+        "donorbox":  pull_donorbox(),
         "press":     pull_press(),
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
         # a "Connect this source" placeholder card with the exact setup steps.

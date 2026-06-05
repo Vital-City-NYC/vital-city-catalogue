@@ -202,6 +202,28 @@
         </div>
       </div>
 
+      <div class="card" id="fundraising">
+        <h2>Fundraising · Donorbox <span class="hint" id="donorHint"></span></h2>
+        <div class="perfgrid" id="donorKpis"></div>
+        <div style="margin-top:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px">Monthly raised — last 18 months</div>
+          <div class="chartwrap"><svg class="chart" id="donorChart" viewBox="0 0 800 200" preserveAspectRatio="none"></svg></div>
+          <div class="legend">
+            <span><span class="sw" style="background:var(--vc-orange)"></span>Total raised ($)</span>
+            <span><span class="sw" style="background:var(--vc-cerulean)"></span>Unique donors</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:18px">
+          <div>
+            <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:6px">Top campaigns · YTD</div>
+            <div id="donorCampaigns"></div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:6px">Largest gifts · last 30 days</div>
+            <div id="donorRecent"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="card" id="ytd">
         <h2>Year-to-date · 2026 vs 2025 <span class="hint">where the comparison is fair</span></h2>
         <div id="ytdBody"></div>
@@ -360,6 +382,7 @@ function boot(data){
   renderSendChart(mc.campaigns || []);
   renderYTD(mc, mc.signup_windows || {});
   renderSocial(data.x_profile || {}, data.instagram || {});
+  renderDonors(data.donorbox || {});
 
   // ----- Campaigns table
   const camp=mc.campaigns||[];
@@ -735,6 +758,138 @@ function renderSocial(x, ig){
     </li>`).join(""));
   html += "</div>";
   $("#socialBody").innerHTML = html;
+}
+
+function fmtUSD(n){
+  const v = Number(n||0);
+  if(Math.abs(v) >= 100000) return "$" + Math.round(v/1000).toLocaleString() + "k";
+  return "$" + v.toLocaleString(undefined,{maximumFractionDigits:0});
+}
+
+function renderDonors(db){
+  const card=$("#fundraising");
+  if(!card) return;
+  if(!db.available){
+    card.querySelector("#donorKpis").innerHTML =
+      `<div style="grid-column:1/-1;padding:12px;font-size:12.5px;color:var(--vc-charcoal)">
+        Donorbox not connected: ${esc(db.reason||'no data')}.
+        Set the <code>DONORBOX_KEY</code> GitHub secret (account email is info@vitalcitynyc.org) to enable.
+      </div>`;
+    card.querySelector("#donorChart").innerHTML='';
+    card.querySelector("#donorCampaigns").innerHTML='';
+    card.querySelector("#donorRecent").innerHTML='';
+    $("#donorHint").textContent='';
+    return;
+  }
+  const w=(db.windows||{});
+  const ytd=w.ytd||{}, prior=w.prior_ytd||{}, l30=w.last_30||{}, yoy30=w.yoy_30||{}, allt=w.all_time||{};
+
+  // YoY only if Donorbox account history extends past last year's window
+  const yoyOk = !!db.yoy_ok;
+  function yoyDelta(now, prev, posGood){
+    if(!yoyOk || !prev) return {label:`N/A — Donorbox data starts ${esc((db.history_starts||'recently').slice(0,7))}`, cls:"na"};
+    const d=((now-prev)/prev)*100;
+    return {label: fmtPctDelta(d) + " vs YTD '25", cls: deltaPctClass(d, posGood!==false)};
+  }
+  const drYtd  = yoyDelta(ytd.amount,  prior.amount,  true);
+  const drD    = yoyDelta(ytd.donors,  prior.donors,  true);
+  const drGift = yoyDelta(ytd.avg_gift,prior.avg_gift,true);
+
+  const cells=[
+    {lbl:"Raised · YTD", n:fmtUSD(ytd.amount||0),
+      d:drYtd.label, cls:drYtd.cls,
+      tip:`Total raised through Donorbox so far this year (gross — before processor fees). Net YTD: $${fmtN(Math.round(ytd.net||0))}.`+
+          (yoyOk?interpretInsight("sends", ((ytd.amount-prior.amount)/Math.max(prior.amount,1))*100):` Donorbox history in this account starts ${esc((db.history_starts||'').slice(0,10))}, so a like-for-like YoY isn't possible yet.`)},
+    {lbl:"Unique donors · YTD", n:fmtN(ytd.donors||0),
+      d:drD.label, cls:drD.cls,
+      tip:"Number of distinct donors who gave at least once this year (deduped by email)."},
+    {lbl:"Gifts · YTD", n:fmtN(ytd.count||0),
+      d:`avg ${fmtUSD(ytd.avg_gift||0)}`, cls:"flat",
+      tip:"Total individual gifts processed this year (one donor can give multiple times)."},
+    {lbl:"Recurring · MRR", n:fmtUSD(db.mrr_estimate||0),
+      d:`${fmtN(db.active_recurring_donors||0)} active donors`, cls:"flat",
+      tip:"Estimated monthly recurring revenue, summed from recurring gifts that processed in the last 30 days. Active recurring donors = unique recurring donors who gave at least once in the last 90 days."},
+    {lbl:"Last 30 days", n:fmtUSD(l30.amount||0),
+      d:yoyOk && yoy30.amount ? fmtPctDelta(((l30.amount-yoy30.amount)/yoy30.amount)*100)+" vs same window '25" : `${fmtN(l30.count||0)} gifts`,
+      cls:yoyOk && yoy30.amount ? deltaPctClass(((l30.amount-yoy30.amount)/yoy30.amount)*100, true) : "flat",
+      tip:"Total raised in the last 30 days. Year-ago comparison appears when Donorbox history covers it."},
+    {lbl:"All time on Donorbox", n:fmtUSD(allt.amount||0),
+      d:`${fmtN(allt.donors||0)} donors / ${fmtN(allt.count||0)} gifts`, cls:"flat",
+      tip:"Every paid donation in this Donorbox account back to the earliest record. Refunds and failed charges are excluded."},
+  ];
+  $("#donorKpis").innerHTML=cells.map(c=>
+    `<div class="perfcell" title="${esc(c.tip)}">
+       <div class="pl">${esc(c.lbl)}</div>
+       <div class="pn">${c.n}</div>
+       <div class="pd ${c.cls}">${esc(c.d)}</div>
+     </div>`).join("");
+
+  // Monthly chart — dual series: $ raised (orange bars) + donor count (blue line)
+  const months=(db.monthly_series||[]).slice(-18);
+  const svg=$("#donorChart");
+  if(!months.length){svg.innerHTML='<text x="400" y="100" text-anchor="middle" fill="#888">No donor history yet</text>';}
+  else {
+    const W=800,H=200,padL=44,padR=44,padT=14,padB=24;
+    const innerW=W-padL-padR, innerH=H-padT-padB;
+    const maxAmt = Math.max(1,...months.map(m=>m.amt));
+    const maxDon = Math.max(1,...months.map(m=>m.donors));
+    const x=(i)=>padL+(i/(months.length-1||1))*innerW;
+    const yAmt=(v)=>padT+innerH-(v/maxAmt)*innerH;
+    const yDon=(v)=>padT+innerH-(v/maxDon)*innerH;
+    const bw=Math.max(8,innerW/months.length*0.6);
+    let html="";
+    // Y-axis (left = $)
+    [0, Math.round(maxAmt/2), Math.round(maxAmt)].forEach(t=>{
+      const yy=yAmt(t);
+      html+=`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#ddd" stroke-width="1"/>`;
+      html+=`<text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${fmtUSD(t)}</text>`;
+    });
+    // Y-axis (right = donors)
+    [0, Math.round(maxDon/2), Math.round(maxDon)].forEach(t=>{
+      const yy=yDon(t);
+      html+=`<text x="${W-padR+6}" y="${yy+3}" font-size="10" fill="#888">${t}</text>`;
+    });
+    // X labels (every 3 months + ends)
+    months.forEach((m,i)=>{
+      if(i===0||i===months.length-1||i%3===0){
+        html+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="10" fill="#888">${m.m}</text>`;
+      }
+    });
+    // Bars
+    months.forEach((m,i)=>{
+      const h=Math.max(0,(m.amt/maxAmt)*innerH);
+      html+=`<rect x="${x(i)-bw/2}" y="${yAmt(m.amt)}" width="${bw}" height="${h}" fill="#E2772F" opacity=".85"><title>${m.m}: ${fmtUSD(m.amt)} from ${m.donors} donors (${m.gifts} gifts)</title></rect>`;
+    });
+    // Donor line
+    const pts=months.map((m,i)=>`${x(i)},${yDon(m.donors)}`).join(" ");
+    html+=`<polyline points="${pts}" fill="none" stroke="#1F6FB2" stroke-width="2"/>`;
+    months.forEach((m,i)=>{html+=`<circle cx="${x(i)}" cy="${yDon(m.donors)}" r="3" fill="#1F6FB2"/>`;});
+    svg.innerHTML=html;
+  }
+
+  // Top campaigns YTD
+  const camps=(db.top_campaigns||[]).slice(0,6);
+  const maxCamp=Math.max(1,...camps.map(c=>c.amount));
+  $("#donorCampaigns").innerHTML = camps.length ?
+    camps.map(c=>`<div class="dombar">
+        <div style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(c.name)}">${esc(c.name)}</div>
+        <div class="bar" style="background:var(--vc-orange);width:${(c.amount/maxCamp*100)}%"></div>
+        <div class="v">${fmtUSD(c.amount)}</div>
+      </div>`).join("") : '<div style="font-size:12px;color:var(--vc-charcoal)">No campaign-attributed gifts in this window.</div>';
+
+  // Largest recent gifts
+  const recent=(db.top_recent||[]).slice(0,6);
+  $("#donorRecent").innerHTML = recent.length ?
+    `<ul class="feed" style="margin:0">${recent.map(g=>`<li>
+       <b>${fmtUSD(g.amount)}</b> · ${esc(g.donor)}${g.recurring?' <span class="pillinfo">recurring</span>':''}
+       <span class="date">${esc(g.date)}</span>
+       <div class="snip">${esc(g.campaign)}${g.comment?' — “'+esc(g.comment)+'”':''}</div>
+     </li>`).join("")}</ul>`
+    : '<div style="font-size:12px;color:var(--vc-charcoal)">No paid gifts in the last 30 days.</div>';
+
+  // Hint in the card header
+  $("#donorHint").textContent =
+    `pulled live from Donorbox · history since ${(db.history_starts||'').slice(0,10) || '—'} · ${fmtN(db.donations_paid||0)} paid gifts`;
 }
 
 function renderTrendChart(act,posts){
