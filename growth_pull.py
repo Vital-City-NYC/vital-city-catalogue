@@ -1910,12 +1910,21 @@ def main():
     # fresh (mtime within the last hour).
     import time as _t, os as _os
     pj_path = PRIV / "people.json"
-    workflow_ctx  = bool(_os.environ.get("GROWTH_OK_TO_REENCRYPT") or _os.environ.get("GITHUB_ACTIONS"))
+    # HARD GATE: explicit opt-in only. GITHUB_ACTIONS alone is NOT enough — a
+    # prior version trusted it and the cloud step re-encrypted without
+    # VC_NETWORK_PASS in env, falling through to a freshly generated
+    # passphrase. The 12 MB enriched blob ended up encrypted with a random
+    # passphrase that died with the runner, locking Josh out of the contact
+    # tool. Required from now on: caller explicitly sets
+    # GROWTH_OK_TO_REENCRYPT=1 AND ensures VC_NETWORK_PASS is in env.
+    explicit_opt_in = bool(_os.environ.get("GROWTH_OK_TO_REENCRYPT"))
+    have_passphrase = bool(_os.environ.get("VC_NETWORK_PASS"))
     pj_is_fresh   = pj_path.exists() and (_t.time() - pj_path.stat().st_mtime) < 3600
-    safe_to_reenc = workflow_ctx and pj_is_fresh
+    safe_to_reenc = explicit_opt_in and have_passphrase and pj_is_fresh
     if not safe_to_reenc:
-        log("  SKIPPING people.json re-encrypt (not in cloud workflow, or local people.json is stale). "
-            "Local runs no longer overwrite network/data.enc — engagement flags will land on the next 11 UTC refresh.")
+        log("  SKIPPING people.json re-encrypt. Required: GROWTH_OK_TO_REENCRYPT=1, "
+            "VC_NETWORK_PASS in env, and a fresh people.json. "
+            "Engagement flags will land on the next refresh that meets all three.")
     if pj_path.exists() and safe_to_reenc:
         try:
             people = json.loads(pj_path.read_text())
