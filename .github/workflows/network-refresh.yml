@@ -100,9 +100,11 @@ jobs:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
         run: python3 encrypt_people.py
 
-      - name: Build growth-dashboard data (Mailchimp signups + campaigns, Ghost cadence, press RSS)
+      - name: Build growth-dashboard data (Mailchimp + Ghost + Donorbox + X + IG + press)
         env:
           MAILCHIMP_KEY: ${{ secrets.MAILCHIMP_KEY }}
+          DONORBOX_KEY:  ${{ secrets.DONORBOX_KEY }}
+          DONORBOX_EMAIL: info@vitalcitynyc.org
         run: |
           python3 growth_pull.py || echo "WARNING: growth_pull failed; growth dashboard will be stale"
 

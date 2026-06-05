@@ -51,13 +51,22 @@
     <li><b>Top email domains</b> — where subscribers' addresses live. Useful for guessing who reads on Apple Mail (auto-opens skew the rate), and for spotting institutional clusters (.edu, .gov).</li>
   </ul>
 
-  <h2>Brand watch (the sidebar)</h2>
+  <h2>Active subscribers (MAU and AAU)</h2>
+  <p>The headline KPI row includes two "active subscribers" tiles:</p>
+  <ul>
+    <li><b>Active subscribers · 30d (MAU)</b> — the count of unique people who opened at least one Vital City newsletter in the last 30 days. Not a proxy or a rating estimate: it's the actual union of email addresses from Mailchimp's per-campaign open data across every regular send in the window, deduped. The percentage next to the count is MAU as a share of the current list.</li>
+    <li><b>Active subscribers · 1y (AAU)</b> — the same calculation across the last 365 days. The gap between MAU and AAU is your "lapsed but reachable" audience — people who used to engage but haven't recently. Re-engagement campaigns target exactly that gap.</li>
+  </ul>
+  <p>Two caveats baked into the tooltips: Apple Mail's privacy auto-opens inflate this number across the industry (since the mail client opens emails on the user's behalf to fetch tracking pixels), so MAU/AAU should be read as a ceiling not a floor. And A/B-test ("variate") campaigns are excluded from the union because Mailchimp tracks openers against the child A/B sub-campaigns rather than the parent; the dashboard shows how many variate sends were skipped if that matters.</p>
+
+  <h2>Media / social mentions (the sidebar)</h2>
   <p>Two free feeds, both narrowed to NYC context so "Vital City" the brand isn't confused with the generic phrase:</p>
   <ul>
     <li><b>Google News</b> — external publications quoting "Vital City". Self-references are filtered out, and items must actually contain the brand name (not just link to the site).</li>
     <li><b>Reddit</b> — threads naming Vital City, mostly in r/nyc. These are usually shares of VC articles by users — useful signal of organic distribution.</li>
+    <li><b>Google Trends</b> — an embedded interactive widget showing search interest for "Vital City" + NYC disambiguators over the last 12 months. Search interest is relative (0–100 = peak in the window), so use it for shape not absolute volume. Spikes typically trail by 2–7 days after a piece breaks through, so it's useful as a "did people go looking for us?" signal after coverage or a viral post.</li>
   </ul>
-  <p>X (Twitter) and Instagram mentions are not in the sidebar yet — see "Connect more sources" below for why.</p>
+  <p>X (Twitter) and Instagram numbers now live in their own card in the main column — see the "Social" section.</p>
 
   <h2>Connect more sources</h2>
   <p>Four panels are stubbed with their setup steps. Each one needs credentials you'd need to set up once:</p>

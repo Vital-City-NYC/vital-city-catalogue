@@ -281,9 +281,15 @@
     </main>
 
     <aside class="brandwatch" id="brand">
-      <h2>Brand watch</h2>
+      <h2>Media / social mentions</h2>
       <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px">Recent external mentions of Vital City — third-party media, Reddit and social shares. Filtered to NYC context to avoid disambiguation hits.</div>
       <ul class="feed" id="pressFeed"></ul>
+
+      <h2>Google Trends · "Vital City" + NYC</h2>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:8px">Live search-interest signal, last 12 months, US-only — narrowed with NYC disambiguators so we measure interest in us, not the generic phrase. Loads from Google in your browser.</div>
+      <div id="trendsEmbed" style="background:var(--vc-white);border:1px solid var(--vc-cloud);padding:6px;min-height:340px"></div>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px;line-height:1.45">Search interest is relative (0–100 = peak in window), not absolute volume. Spikes usually trail by 2–7 days after a story breaks. <a href="https://trends.google.com/trends/explore?date=today%2012-m&geo=US&q=%22vital%20city%22%20nyc,%22vital%20city%22%20mamdani,vitalcitynyc" target="_blank">Open on Google Trends ↗</a></div>
+
       <h2>Newest VC posts</h2>
       <ul class="feed" id="ghostFeed"></ul>
     </aside>
@@ -370,6 +376,24 @@ function boot(data){
      tip:"People who unsubscribed in the last 30 days. Source of truth: Mailchimp (people click the footer unsubscribe link there) — then the weekly reconcile removes them from Ghost too. Healthy newsletters typically run well under 0.5% of list per month."},
     {lbl:"Engaged subscribers",num:Math.round((mc.engaged_share||0)*100)+"%",delta:"open often (4-5★)",cls:"flat",
      tip:"Share of subscribers Mailchimp rates 4 or 5 stars — they reliably open most emails. Apple Mail's auto-open behavior depresses this rating across the industry; click rate is the more honest engagement signal."},
+    (function(){
+      const m=mc.mau||{}, n=m.active_users;
+      const total=mc.total_subscribers||0;
+      const pct = (n && total) ? (n/total*100).toFixed(0)+"%" : "—";
+      return {lbl:"Active subscribers · 30d (MAU)", num: n!=null ? fmtN(n) : "—",
+              delta: n!=null ? `${pct} of list opened ≥1 email` : "data pending",
+              cls:"flat",
+              tip:`Unique people who opened at least one Vital City newsletter in the last 30 days — a real union across the ${m.regulars_counted||0} regular sends in that window (Mailchimp's per-campaign open data, deduped by email). Apple Mail's privacy auto-opens will inflate this somewhat. ${m.variate_excluded?`Variate/A-B test sends excluded (${m.variate_excluded} in window) because openers are tracked against the child campaigns rather than the parent.`:''}`};
+    })(),
+    (function(){
+      const a=mc.aau||{}, n=a.active_users;
+      const total=mc.total_subscribers||0;
+      const pct = (n && total) ? (n/total*100).toFixed(0)+"%" : "—";
+      return {lbl:"Active subscribers · 1y (AAU)", num: n!=null ? fmtN(n) : "—",
+              delta: n!=null ? `${pct} of list opened ≥1 email` : "data pending",
+              cls:"flat",
+              tip:`Unique people who opened at least one Vital City newsletter in the last 365 days — a real union across the ${a.regulars_counted||0} regular sends in the window (Mailchimp's per-campaign open data, deduped by email). The gap between MAU and AAU is your "lapsed but reachable" audience — people who used to open but haven't recently.`};
+    })(),
   ];
   $("#kpis").innerHTML=kpis.map(k=>
     `<div class="kpi${k.hero?' hero':''}" title="${esc(k.tip)}">
@@ -387,6 +411,7 @@ function boot(data){
   renderYTD(mc, mc.signup_windows || {});
   renderSocial(data.x_profile || {}, data.instagram || {});
   renderDonors(data.donorbox || {});
+  renderGoogleTrends();
 
   // ----- Campaigns table
   const camp=mc.campaigns||[];
@@ -511,6 +536,30 @@ function boot(data){
     <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
     <span class="date">${esc(p.published)}</span>
   </li>`).join("") || '<li class="empty">No posts.</li>';
+}
+
+// Google Trends embed — direct iframe (NOT Google's embed_loader.js, which
+// calls document.write after page load and wipes the dashboard).
+// Disambiguators ("nyc", "mamdani", vitalcitynyc) narrow to references to
+// Vital City the publication rather than the generic phrase. Lives in the
+// user's browser, so it's always current.
+function renderGoogleTrends(){
+  const host = document.getElementById("trendsEmbed");
+  if(!host) return;
+  const req = {
+    comparisonItem:[
+      {keyword:'"vital city" nyc',     geo:"US", time:"today 12-m"},
+      {keyword:'"vital city" mamdani', geo:"US", time:"today 12-m"},
+      {keyword:'vitalcitynyc',         geo:"US", time:"today 12-m"},
+    ],
+    category:0, property:""
+  };
+  const src =
+    "https://trends.google.com/trends/embed/explore/TIMESERIES?req=" +
+    encodeURIComponent(JSON.stringify(req)) +
+    "&tz=240";
+  host.innerHTML =
+    `<iframe src="${src}" style="width:100%;min-height:380px;border:0;background:#fff" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Trends — Vital City"></iframe>`;
 }
 
 function pctDelta(now,prev){

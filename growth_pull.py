@@ -260,6 +260,54 @@ def pull_mailchimp():
     out["open_buckets"] = {k: open_buckets[k] for k in ["0%", "1-25%", "26-50%", "51-75%", "76-100%"]}
     out["top_domains"]  = [{"d": d, "n": n} for d, n in domains.most_common(12)]
     out["engaged_share"] = round(((rating.get(4, 0) + rating.get(5, 0)) / max(sum(rating.values()), 1)), 3)
+
+    # ---- Monthly + annual active users ---------------------------------
+    # Real number, not a proxy: the UNION of unique email addresses that
+    # opened at least one regular (non-A/B) send in the window.
+    # Cost: one extra API call per campaign + ~1 per 1000 openers (pagination).
+    # ~30-90 calls for the year — under a minute.
+    def _union_openers(days_back):
+        since_iso = (datetime.now(timezone.utc) - timedelta(days=days_back)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+        url = (f"/campaigns?status=sent&list_id={list_id}"
+               f"&since_send_time={urllib.parse.quote(since_iso)}"
+               f"&count=500&sort_field=send_time&sort_dir=DESC"
+               f"&fields=campaigns.id,campaigns.type,campaigns.send_time")
+        try:
+            cs = mc_get(url, key, dc).get("campaigns", [])
+        except Exception as e:
+            log(f"  active-users campaign list failed ({days_back}d): {e}"); return None
+        regulars = [c for c in cs if c.get("type") == "regular"]
+        variate  = [c for c in cs if c.get("type") == "variate"]
+        openers = set()
+        fail = 0
+        for c in regulars:
+            cid = c["id"]; offset = 0
+            while True:
+                try:
+                    page = mc_get(
+                        f"/reports/{cid}/open-details?count=1000&offset={offset}"
+                        f"&fields=members.email_address,total_items",
+                        key, dc)
+                except Exception as e:
+                    fail += 1; log(f"  open-details fail {cid}@{offset}: {e}"); break
+                for m in page.get("members", []):
+                    em = (m.get("email_address") or "").lower().strip()
+                    if em: openers.add(em)
+                total = int(page.get("total_items") or 0)
+                offset += 1000
+                if offset >= total: break
+        return {
+            "active_users":           len(openers),
+            "regulars_counted":       len(regulars),
+            "variate_excluded":       len(variate),
+            "campaigns_in_window":    len(cs),
+            "failed_fetches":         fail,
+        }
+
+    log("  computing MAU (30d) — unioning openers across recent sends…")
+    out["mau"] = _union_openers(30)
+    log("  computing AAU (365d) — unioning openers across last year's sends…")
+    out["aau"] = _union_openers(365)
     return out
 
 
