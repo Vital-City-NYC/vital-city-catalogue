@@ -1,34 +1,22 @@
 {
-  "generated_at": "2026-06-04T12:05:48.716257+00:00",
+  "generated_at": "2026-06-05T12:07:35.334171+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 818,
-  "total_authors": 448,
+  "total_posts": 819,
+  "total_authors": 449,
   "total_issues": 28,
   "total_topics": 200,
   "date_range": [
     "2021-09-15",
-    "2026-06-03"
+    "2026-06-04"
   ],
   "first_run": false,
-  "new_article_count": 3,
+  "new_article_count": 1,
   "new_articles": [
     {
-      "title": "What Rikers’ Receiver Should Do Now",
-      "url": "https://www.vitalcitynyc.org/rikers-receiver-jails-reform-lessons/",
-      "published_date": "2026-06-03",
-      "primary_author": "Lauren-Brooke Eisen"
-    },
-    {
-      "title": "Speeding Up the Bus: Reality Behind the Rhetoric",
-      "url": "https://www.vitalcitynyc.org/bus-speed-traffic-management-nyc/",
-      "published_date": "2026-06-03",
-      "primary_author": "Eric Goldwyn"
-    },
-    {
-      "title": "Charter Revision Politics: A Primer",
-      "url": "https://www.vitalcitynyc.org/charter-revision-politics-nyc-primer/",
-      "published_date": "2026-06-03",
-      "primary_author": "Richard Briffault"
+      "title": "For Cities, Aggressive Partisan Gerrymandering Has a Silver Lining",
+      "url": "https://www.vitalcitynyc.org/partisan-gerrymandering-cities-unexpected-benefit/",
+      "published_date": "2026-06-04",
+      "primary_author": "Marc A. Levin"
     }
   ]
 }

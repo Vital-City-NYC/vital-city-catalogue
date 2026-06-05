@@ -1,5 +1,33 @@
 [
   {
+    "title": "For Cities, Aggressive Partisan Gerrymandering Has a Silver Lining",
+    "slug": "partisan-gerrymandering-cities-unexpected-benefit",
+    "url": "https://www.vitalcitynyc.org/partisan-gerrymandering-cities-unexpected-benefit/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-04",
+    "published_at": "2026-06-04T15:03:25.000+00:00",
+    "updated_at": "2026-06-04T15:03:25.000+00:00",
+    "primary_author": "Marc A. Levin",
+    "authors": [
+      "Marc A. Levin",
+      "Khalil Cumberbatch"
+    ],
+    "topics": [
+      "Elections"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "It’s a corrosive phenomenon with one side benefit.",
+    "excerpt": "It’s a corrosive phenomenon with one side benefit.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-04T093514.343.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1910,
+    "reading_minutes": 8,
+    "id": "6a1d9e64d224c200019e9208"
+  },
+  {
     "title": "What Rikers’ Receiver Should Do Now",
     "slug": "rikers-receiver-jails-reform-lessons",
     "url": "https://www.vitalcitynyc.org/rikers-receiver-jails-reform-lessons/",
@@ -35,7 +63,7 @@
     "type_basis": "default",
     "published_date": "2026-06-03",
     "published_at": "2026-06-03T17:26:50.000+00:00",
-    "updated_at": "2026-06-03T17:26:50.000+00:00",
+    "updated_at": "2026-06-04T15:54:54.000+00:00",
     "primary_author": "Eric Goldwyn",
     "authors": [
       "Eric Goldwyn",
@@ -52,7 +80,7 @@
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-03T131026.981.png",
     "featured": false,
     "visibility": "public",
-    "word_count": 885,
+    "word_count": 886,
     "reading_minutes": 4,
     "id": "6a17148c37478a0001c37dcb"
   },
@@ -8886,37 +8914,6 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
-    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
-    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Meryl Chertoff",
-    "authors": [
-      "Meryl Chertoff"
-    ],
-    "topics": [
-      "Government Operations",
-      "Repercussions",
-      "City Planning"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "The Sharpie and the damage done",
-    "excerpt": "The Sharpie and the damage done",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1313,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a404c"
-  },
-  {
     "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
     "slug": "trumps-bizarro-new-deal",
     "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
@@ -8946,6 +8943,37 @@
     "word_count": 1619,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a41d5"
+  },
+  {
+    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
+    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
+    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Meryl Chertoff",
+    "authors": [
+      "Meryl Chertoff"
+    ],
+    "topics": [
+      "Government Operations",
+      "Repercussions",
+      "City Planning"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "The Sharpie and the damage done",
+    "excerpt": "The Sharpie and the damage done",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1313,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a404c"
   },
   {
     "title": "Donald Trump vs. the Rule of Law, and New York City",
@@ -8979,37 +9007,6 @@
     "id": "69a04c0ad4006a00010a404b"
   },
   {
-    "title": "Is It Time for Cities to Go It Alone?",
-    "slug": "is-it-time-for-cities-to-go-it-alone",
-    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "Richard Schragger",
-    "authors": [
-      "Richard Schragger"
-    ],
-    "topics": [
-      "Where Do We Go From Here?",
-      "City Government",
-      "Politics"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1697,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4049"
-  },
-  {
     "title": "What You Can Do About Trump",
     "slug": "what-you-can-do-about-trump",
     "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
@@ -9040,6 +9037,37 @@
     "word_count": 4185,
     "reading_minutes": 18,
     "id": "69a04c0ad4006a00010a404a"
+  },
+  {
+    "title": "Is It Time for Cities to Go It Alone?",
+    "slug": "is-it-time-for-cities-to-go-it-alone",
+    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:02.000+00:00",
+    "primary_author": "Richard Schragger",
+    "authors": [
+      "Richard Schragger"
+    ],
+    "topics": [
+      "Where Do We Go From Here?",
+      "City Government",
+      "Politics"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1697,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4049"
   },
   {
     "title": "A Real New York Mayoral Election",
@@ -11498,37 +11526,6 @@
     "id": "69a04c0ad4006a00010a41dd"
   },
   {
-    "title": "The Stubbornness of Sticky Fingers",
-    "slug": "what-can-we-do-about-shoplifting-a-new-urban-plague",
-    "url": "https://www.vitalcitynyc.org/what-can-we-do-about-shoplifting-a-new-urban-plague/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-01-22",
-    "published_at": "2025-01-22T21:05:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:14.000+00:00",
-    "primary_author": "Megan McArdle",
-    "authors": [
-      "Megan McArdle"
-    ],
-    "topics": [
-      "Where We Go From Here",
-      "Crime",
-      "Technology"
-    ],
-    "issues": [
-      "crime-looking-back-at-2024-and-ahead-to-2025"
-    ],
-    "issue_numbers": [],
-    "summary": "What can we do about shoplifting, a new urban plague?",
-    "excerpt": "What can we do about shoplifting, a new urban plague?",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5ez95bqstj99v7l_2gyypny_cropped-auto-format-compress-1776259723037.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1574,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a426d"
-  },
-  {
     "title": "Broken Windows Politics",
     "slug": "broken-windows-politics-disorder-still-matters",
     "url": "https://www.vitalcitynyc.org/broken-windows-politics-disorder-still-matters/",
@@ -11590,6 +11587,37 @@
     "word_count": 2480,
     "reading_minutes": 11,
     "id": "69a04c0ad4006a00010a4078"
+  },
+  {
+    "title": "The Stubbornness of Sticky Fingers",
+    "slug": "what-can-we-do-about-shoplifting-a-new-urban-plague",
+    "url": "https://www.vitalcitynyc.org/what-can-we-do-about-shoplifting-a-new-urban-plague/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-01-22",
+    "published_at": "2025-01-22T21:05:00.000+00:00",
+    "updated_at": "2026-04-15T13:37:14.000+00:00",
+    "primary_author": "Megan McArdle",
+    "authors": [
+      "Megan McArdle"
+    ],
+    "topics": [
+      "Where We Go From Here",
+      "Crime",
+      "Technology"
+    ],
+    "issues": [
+      "crime-looking-back-at-2024-and-ahead-to-2025"
+    ],
+    "issue_numbers": [],
+    "summary": "What can we do about shoplifting, a new urban plague?",
+    "excerpt": "What can we do about shoplifting, a new urban plague?",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5ez95bqstj99v7l_2gyypny_cropped-auto-format-compress-1776259723037.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1574,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a426d"
   },
   {
     "title": "The Recovery From COVID-19 Pandemic Gun Violence",
