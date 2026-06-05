@@ -43,6 +43,11 @@
   .kpi .delta.flat{color:var(--vc-charcoal)}
   .kpi.hero{background:var(--vc-paper2)}
   .kpi.hero .num{font-size:36px}
+  /* Stub tile: GA4/etc. tiles that need credentials. Click → setup docs. */
+  .kpi.stub{background:repeating-linear-gradient(45deg, var(--vc-white), var(--vc-white) 8px, var(--vc-paper2) 8px, var(--vc-paper2) 16px);cursor:help}
+  .kpi.stub:hover{background:var(--vc-paper2)}
+  .kpi.stub .num{color:var(--vc-charcoal)}
+  .kpi.stub .delta{color:var(--vc-cerulean);text-decoration:underline}
 
   /* Cards */
   .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:16px 18px;margin:0 0 20px}
@@ -369,44 +374,75 @@ function boot(data){
   const netNew30=subs30-unsubs30;
   const unsubRate30=total?(unsubs30/total*100):0;
 
+  // Cross-category banner — newsletter, website, fundraising and social.
+  // The detail tiles (7d/90d signups, engaged-4-5★) live in the Newsletter
+  // performance card below, not here. Banner is for the headline number in
+  // each category. Website tiles are GA4 stubs until that credential lands.
+  const db = data.donorbox || {};
+  const dWin = (db.windows||{});
+  const xp = data.x_profile || {};
+  const ig = data.instagram || {};
+  const ga4 = data.ga4 || {};
   const kpis=[
+    // --- Newsletter ---
     {lbl:"Subscribers",num:fmtN(total),delta:`net ${fmtDelta(netNew30)} in 30d`,cls:deltaClass(netNew30),hero:true,
-     tip:"Unique people on the Mailchimp list right now (each individual counted once, even if signed up under multiple emails). Source of truth: Mailchimp for unsubscribes; Ghost for signups, manually reconciled to Mailchimp weekly."},
-    {lbl:"New signups · 7d",num:fmtN(subs7),delta:`${fmtDelta(subs7-subsPrev7)} vs prior 7d`,cls:deltaClass(subs7-subsPrev7),
-     tip:"New newsletter subscribers in the last 7 days vs the 7 days before. Signups happen in Ghost (the website form) and are transferred to Mailchimp on the weekly reconcile — so this number is computed from the merged Ghost+Mailchimp dataset rather than the lagging Mailchimp side alone. The last 1–2 days may understate signups until the daily rebuild lands."},
+     tip:"NEWSLETTER — Unique people on the Mailchimp list right now (each individual counted once, even if signed up under multiple emails). Source of truth: Mailchimp for unsubscribes; Ghost for signups, manually reconciled to Mailchimp weekly."},
     {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)} vs prior 30d`,cls:deltaClass(subs30-subsPrev30),
-     tip:"New newsletter subscribers in the last 30 days vs the 30 days before that. Same Ghost-leading source-of-truth caveat as the 7-day tile."},
-    {lbl:"New signups · 90d",num:fmtN(subs90),delta:"running total",cls:"flat",
-     tip:"New newsletter subscribers in the last 90 days. Useful for trend stability."},
-    {lbl:"Unsubscribes · 30d",num:fmtN(unsubs30),delta:`${(unsubRate30).toFixed(2)}% of list/mo`,cls:unsubRate30>0.5?"down":"flat",
-     tip:"People who unsubscribed in the last 30 days. Source of truth: Mailchimp (people click the footer unsubscribe link there) — then the weekly reconcile removes them from Ghost too. Healthy newsletters typically run well under 0.5% of list per month."},
-    {lbl:"Engaged subscribers",num:Math.round((mc.engaged_share||0)*100)+"%",delta:"open often (4-5★)",cls:"flat",
-     tip:"Share of subscribers Mailchimp rates 4 or 5 stars — they reliably open most emails. Apple Mail's auto-open behavior depresses this rating across the industry; click rate is the more honest engagement signal."},
+     tip:"NEWSLETTER — New subscribers in the last 30 days vs the 30 days before. Computed from the merged Ghost+Mailchimp dataset (signups happen in Ghost first, transferred to Mailchimp on weekly reconcile)."},
     (function(){
       const m=mc.mau||{}, n=m.active_users;
-      const total=mc.total_subscribers||0;
       const pct = (n && total) ? (n/total*100).toFixed(0)+"%" : "—";
-      return {lbl:"Active subscribers · 30d (MAU)", num: n!=null ? fmtN(n) : "—",
+      return {lbl:"Newsletter MAU · 30d", num: n!=null ? fmtN(n) : "—",
               delta: n!=null ? `${pct} of list opened ≥1 email` : "data pending",
               cls:"flat",
-              tip:`Unique people who opened at least one Vital City newsletter in the last 30 days — a real union across the ${m.regulars_counted||0} regular sends in that window (Mailchimp's per-campaign open data, deduped by email). Apple Mail's privacy auto-opens will inflate this somewhat. ${m.variate_excluded?`Variate/A-B test sends excluded (${m.variate_excluded} in window) because openers are tracked against the child campaigns rather than the parent.`:''}`};
+              tip:`NEWSLETTER — Unique people who opened ≥1 Vital City newsletter in the last 30 days, real union across recent sends (Mailchimp per-campaign open data, deduped). Apple Mail privacy auto-opens inflate this somewhat.`};
     })(),
     (function(){
       const a=mc.aau||{}, n=a.active_users;
-      const total=mc.total_subscribers||0;
       const pct = (n && total) ? (n/total*100).toFixed(0)+"%" : "—";
-      return {lbl:"Active subscribers · 1y (AAU)", num: n!=null ? fmtN(n) : "—",
+      return {lbl:"Newsletter AAU · 1y", num: n!=null ? fmtN(n) : "—",
               delta: n!=null ? `${pct} of list opened ≥1 email` : "data pending",
               cls:"flat",
-              tip:`Unique people who opened at least one Vital City newsletter in the last 365 days — a real union across the ${a.regulars_counted||0} regular sends in the window (Mailchimp's per-campaign open data, deduped by email). The gap between MAU and AAU is your "lapsed but reachable" audience — people who used to open but haven't recently.`};
+              tip:`NEWSLETTER — Unique people who opened ≥1 Vital City newsletter in the last 365 days. The gap from MAU is your "lapsed but reachable" audience.`};
+    })(),
+    // --- Website (GA4 — pending credentials) ---
+    {lbl:"Website MAU · 30d", num: ga4.mau!=null ? fmtN(ga4.mau) : "—",
+     delta: ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs GA4 ↗",
+     cls: ga4.mau!=null ? "flat" : "na",
+     tip:"WEBSITE — Unique visitors to vitalcitynyc.org in the last 30 days. Pending: set up the GA4 service-account credential. Open the 'How it works' page → 'Connect more sources' for the 5-minute setup. Same Google service account also unlocks Search Console."},
+    {lbl:"Website AAU · 1y", num: ga4.aau!=null ? fmtN(ga4.aau) : "—",
+     delta: ga4.aau!=null ? `${fmtN(ga4.sessions_365||0)} sessions` : "needs GA4 ↗",
+     cls: ga4.aau!=null ? "flat" : "na",
+     tip:"WEBSITE — Unique visitors to vitalcitynyc.org in the last 365 days. Will activate when GA4 credentials are configured. The pre-Ghost-cutover historical traffic (Jan 2025 ↔ April 2025 transition) only lives in GA4."},
+    // --- Fundraising ---
+    {lbl:"Raised · YTD", num: db.available ? fmtUSD((dWin.ytd||{}).amount||0) : "—",
+     delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts` : "Donorbox not connected",
+     cls:"flat",
+     tip:"FUNDRAISING — Total raised on Donorbox so far this year (gross, before processor fees). Donor count is unique people; gift count counts every transaction (one donor can give multiple times). See the Fundraising card below for monthly trend + top campaigns."},
+    // --- Social ---
+    (function(){
+      const xn = xp.available ? xp.followers : null;
+      const inum = ig.available ? ig.followers : null;
+      const total = (xn||0) + (inum||0);
+      return {lbl:"Social followers", num: (xn!=null || inum!=null) ? fmtN(total) : "—",
+              delta: `${fmtN(xn||0)} on X · ${fmtN(inum||0)} on IG`,
+              cls:"flat",
+              tip:"SOCIAL — Combined X (@VitalCityNYC) + Instagram (@vitalcitynyc) followers. Pulled from unofficial public endpoints; can break if the platforms tighten them. See the Social card below for recent post engagement."};
     })(),
   ];
-  $("#kpis").innerHTML=kpis.map(k=>
-    `<div class="kpi${k.hero?' hero':''}" title="${esc(k.tip)}">
+  $("#kpis").innerHTML=kpis.map(k=>{
+    // GA4 stub tiles get a click-through to the setup docs in about.html
+    const isStub = (k.cls==="na");
+    const wrap = isStub
+      ? `<a class="kpi stub" title="${esc(k.tip)}" href="about.html#connect-more-sources" target="_blank" style="text-decoration:none;color:inherit">`
+      : `<div class="kpi${k.hero?' hero':''}" title="${esc(k.tip)}">`;
+    const close = isStub ? '</a>' : '</div>';
+    return `${wrap}
        <div class="lbl">${esc(k.lbl)}</div>
        <div class="num">${k.num}</div>
        <div class="delta ${k.cls}">${esc(k.delta)}</div>
-     </div>`).join("");
+     ${close}`;
+  }).join("");
 
   // ----- Trend chart (hand-rolled SVG)
   renderTrendChart(act, data.ghost && data.ghost.posts || []);

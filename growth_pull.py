@@ -526,7 +526,6 @@ MENTION_OUTLETS = [
     ("nymag.com",              "New York Magazine"),
     ("city-journal.org",       "City Journal"),
     ("cityandstateny.com",     "City & State NY"),
-    ("w42st.com",              "W42ST"),
     ("therealdeal.com",        "The Real Deal"),
     # Substacks frequently cited in the manual list
     ("johnkroman.substack.com",      "John Kroman (Substack)"),
