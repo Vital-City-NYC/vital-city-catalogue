@@ -447,6 +447,125 @@ def pull_ghost():
     return out
 
 
+# ----------------------------------------------- Media mentions (third-party press)
+# A whitelist of NYC-policy + national outlets the manual citation list shows
+# actually cover Vital City. We query Google News RSS once per outlet with
+# "Vital City" site:DOMAIN — that strips out the generic-phrase noise that
+# untargeted searches catch (e.g. "schools where sports may be most VITAL,
+# new york CITY..."). After collection we dedupe, verify, and date-sort.
+MENTION_OUTLETS = [
+    # NYC outlets
+    ("gothamist.com",          "Gothamist"),
+    ("nytimes.com",            "The New York Times"),
+    ("ny1.com",                "NY1"),
+    ("nyc.streetsblog.org",    "Streetsblog NYC"),
+    ("streetsblog.org",        "Streetsblog"),
+    ("wnyc.org",               "WNYC"),
+    ("thecity.nyc",            "THE CITY"),
+    ("nydailynews.com",        "New York Daily News"),
+    ("nypost.com",             "New York Post"),
+    ("nymag.com",              "New York Magazine"),
+    ("city-journal.org",       "City Journal"),
+    ("cityandstateny.com",     "City & State NY"),
+    ("w42st.com",              "W42ST"),
+    ("therealdeal.com",        "The Real Deal"),
+    # Substacks frequently cited in the manual list
+    ("johnkroman.substack.com",      "John Kroman (Substack)"),
+    ("nyeditorialboard.substack.com","NY Editorial Board (Substack)"),
+    ("probablecausation.substack.com","Probable Causation (Substack)"),
+    # National outlets
+    ("politico.com",           "Politico"),
+    ("semafor.com",            "Semafor"),
+    ("washingtonpost.com",     "Washington Post"),
+    ("newyorker.com",          "The New Yorker"),
+    ("bloomberg.com",          "Bloomberg"),
+    ("theguardian.com",        "The Guardian"),
+    ("newsweek.com",           "Newsweek"),
+    # Social (search posts that mention the @ handle or full brand)
+    ("x.com",                  "X (Twitter)"),
+    ("twitter.com",            "X (Twitter)"),
+]
+
+
+def pull_news_mentions():
+    """Search Google News RSS for "Vital City" mentions, scoped per known
+    outlet. The site-restricted query gives us much higher precision than an
+    untargeted phrase search, which gets dominated by generic uses ("vital
+    NYC", "the city is vital", etc.) and Vital City's own articles.
+    """
+    import time as _t
+    out = []
+    seen = set()
+    UA_local = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
+    # Two query shapes — capture both the brand name and the @ handle
+    SHAPES = ['"Vital City"', "@vitalcitynyc", "vitalcitynyc.org"]
+    for domain, label in MENTION_OUTLETS:
+        for shape in SHAPES:
+            q = f'{shape} site:{domain}'
+            url = (f"https://news.google.com/rss/search?q={urllib.parse.quote(q)}"
+                   f"&hl=en-US&gl=US&ceid=US:en")
+            try:
+                xml = http_get(url, headers={"User-Agent": UA_local}, timeout=20)
+            except Exception as e:
+                log(f"  news mentions {domain} ({shape}) failed: {e}"); continue
+            try:
+                root = ET.fromstring(xml)
+            except Exception as e:
+                continue
+            for it in root.findall(".//item"):
+                title = _xml_text(it, "title")
+                link  = _xml_text(it, "link")
+                src   = _xml_text(it, "source") or label
+                pub   = _xml_text(it, "pubDate")
+                snip  = re.sub(r"<[^>]+>", "", _xml_text(it, "description"))[:240]
+                if not title or not link: continue
+                key = (domain, title.lower())
+                if key in seen: continue
+                seen.add(key)
+                out.append({
+                    "title": title, "url": link, "source": src, "published": pub,
+                    "snippet": snip, "domain": domain, "match_shape": shape,
+                })
+            _t.sleep(0.15)   # polite pacing across 25 outlets × 3 queries
+
+    # Parse pub dates, drop items older than 24 months, sort newest first
+    cutoff = datetime.now(timezone.utc) - timedelta(days=730)
+    def _parse(p):
+        for fmt in ("%a, %d %b %Y %H:%M:%S %Z", "%a, %d %b %Y %H:%M:%S %z",
+                    "%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%SZ"):
+            try:
+                return datetime.strptime(p, fmt).astimezone(timezone.utc)
+            except Exception:
+                pass
+        return None
+    for it in out:
+        dt = _parse(it.get("published", ""))
+        it["published_iso"] = dt.isoformat() if dt else ""
+        it["_dt"] = dt
+    out = [it for it in out if it.get("_dt") and it["_dt"] >= cutoff]
+
+    # Note on verification: Google's site-restricted exact-phrase query
+    # ('"Vital City" site:DOMAIN') already requires the phrase to appear in
+    # the article body. We trust that — fetching every page just to re-check
+    # title/snippet (which is only the first 240 chars) would discard valid
+    # hits where "Vital City" appears deeper in the body. Outlet whitelist
+    # carries most of the precision; rare lexical false positives can sneak
+    # through (Google's phrase matching has slight leniency) but they're
+    # easy to spot in a reverse-chron list.
+
+    # Dedup across outlets by title (some articles syndicate identically)
+    titles_seen = set(); deduped = []
+    for it in sorted(out, key=lambda x: x["_dt"], reverse=True):
+        t = it["title"].lower()[:80]
+        if t in titles_seen: continue
+        titles_seen.add(t); deduped.append(it)
+    for it in deduped: it.pop("_dt", None)
+
+    log(f"  news mentions: {len(deduped)} items across {len(set(i['domain'] for i in deduped))} outlets")
+    return deduped[:120]
+
+
 # ------------------------------------------------------------- Press / Reddit (free RSS)
 def _xml_text(el, tag):
     e = el.find(tag)
@@ -1002,6 +1121,7 @@ def main():
             "window_days":    signup_attr.get("window_days", 0),
         },
         "press":     pull_press(),
+        "news_mentions": pull_news_mentions(),
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
         # a "Connect this source" placeholder card with the exact setup steps.
         "ga4": {

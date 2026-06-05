@@ -283,8 +283,12 @@
     </main>
 
     <aside class="brandwatch" id="brand">
-      <h2>Media / social mentions</h2>
-      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px">Recent external mentions of Vital City — third-party media, Reddit and social shares. Filtered to NYC context to avoid disambiguation hits.</div>
+      <h2>Media mentions</h2>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px">Third-party publications citing Vital City. Searches Google News for the exact phrase "Vital City" inside a whitelist of NYC-policy and national outlets the manual citation list shows actually cover us. Reverse-chron; may miss some (especially paywalled or audio-only).</div>
+      <ul class="feed" id="newsFeed"></ul>
+
+      <h2 style="margin-top:18px">Social shares &amp; chatter</h2>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px">X mentions of @VitalCityNYC + Reddit threads sharing VC articles.</div>
       <ul class="feed" id="pressFeed"></ul>
 
       <h2>Google Trends · "Vital City" + NYC</h2>
@@ -567,15 +571,37 @@ function boot(data){
     return `<div class="stub"><b>${esc(label)}</b><div style="font-size:11.5px;margin:4px 0 6px">${esc(s.reason||'')}</div>${s.setup?`<ol>${s.setup.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:''}</div>`;
   }).join("");
 
-  // ----- Brand watch (press feed)
+  // ----- Media mentions (third-party press; site-restricted Google News)
+  const news = data.news_mentions || [];
+  // X/Twitter results came in via the same pipeline but belong in "Social shares"
+  const isSocial = (item) => {
+    const d = (item.domain || item.source || '').toLowerCase();
+    return d.includes('x.com') || d.includes('twitter');
+  };
+  const realPress = news.filter(it => !isSocial(it));
+  const newsX     = news.filter(isSocial);
+
+  $("#newsFeed").innerHTML = realPress.length
+    ? realPress.slice(0,50).map(p=>`<li>
+        <span class="src">${esc(p.source||p.domain||'web')}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+        <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
+        ${p.snippet?`<div class="snip">${esc(p.snippet)}</div>`:''}
+      </li>`).join("")
+    : '<li class="empty">No third-party mentions in the current window.</li>';
+
+  // ----- Social shares & chatter (existing Reddit press feed + X-from-news)
   const press=data.press||[];
-  $("#pressFeed").innerHTML=press.length
-    ? press.slice(0,30).map(p=>`<li>
+  const combined = [
+    ...newsX.map(it => ({...it, source: 'X (search)', channel: 'x-search'})),
+    ...press,
+  ].sort((a,b) => (b.published_iso||'').localeCompare(a.published_iso||''));
+  $("#pressFeed").innerHTML=combined.length
+    ? combined.slice(0,30).map(p=>`<li>
         <span class="src">${esc(p.source||p.channel||'web')}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
         <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
         ${p.snippet?`<div class="snip">${esc(p.snippet)}</div>`:''}
       </li>`).join("")
-    : '<li class="empty">No external mentions detected in the current window.</li>';
+    : '<li class="empty">No social chatter in the current window.</li>';
 
   // ghost feed in sidebar
   $("#ghostFeed").innerHTML=(gh.posts||[]).slice(0,8).map(p=>`<li>
