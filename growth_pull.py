@@ -1066,6 +1066,73 @@ def pull_instagram():
 
 
 # ------------------------------------------------------------------------ main
+def pull_all_ghost_titles():
+    """All-time Ghost article titles via the Content API. Used for own-post
+    detection — matching a share's title against the full title catalog
+    catches LinkedIn/Facebook/Instagram VC-account reposts that use the
+    article title verbatim. Fast — only titles, ~10 KB total."""
+    titles = set()
+    page = 1
+    while True:
+        try:
+            url = (f"{GHOST_API}/posts/?key={GHOST_CONTENT_KEY}"
+                   f"&limit=100&page={page}&fields=title")
+            data = json.loads(http_get(url, timeout=30))
+        except Exception as e:
+            log(f"  ghost title catalog page {page} failed: {e}"); break
+        for p in data.get("posts", []):
+            t = (p.get("title") or "").strip()
+            if t and len(t) > 8: titles.add(t)
+        meta = (data.get("meta") or {}).get("pagination") or {}
+        if not meta.get("next"): break
+        page = meta["next"]
+        if page > 30: break   # safety
+    log(f"  ghost title catalog: {len(titles)} titles")
+    return titles
+
+
+def flag_own_url_shares(news_mentions, all_titles):
+    """For each URL-share item, decide whether it's likely VC's own social
+    account reposting a VC article (vs a third party sharing it).
+
+    Heuristic: strip the platform tail (' - LinkedIn', etc.) and check
+    whether the remainder either (a) matches a known VC article title
+    exactly (normalized) or (b) contains a normalized VC title as a
+    substring (catches "Article Title #vital-city" patterns).
+
+    Limitations baked into the tooltip on the dashboard: under-detects
+    Instagram and X own-posts where the caption is original copy that
+    doesn't repeat the article title.
+    """
+    if not (news_mentions and all_titles):
+        for it in news_mentions or []:
+            it["own_post"] = False
+        return
+    norm = lambda s: re.sub(r"[\W_]+", "", (s or "").lower())
+    titles_n = {norm(t) for t in all_titles}
+    # For substring matching, keep longer normalized titles in a list
+    substr_titles = [t for t in titles_n if len(t) > 20]
+    PLATFORM_TAILS = re.compile(
+        r"\s*[-–—]\s*(LinkedIn|Facebook|Instagram|X|Twitter|Bluesky|Threads|"
+        r"x\.com|twitter\.com|bsky\.app|facebook\.com|instagram\.com)\s*$", re.I)
+    for it in news_mentions:
+        if not it.get("is_url_share"):
+            it["own_post"] = False
+            continue
+        t = it.get("title") or ""
+        stripped = PLATFORM_TAILS.sub("", t).strip()
+        s_norm = norm(stripped)
+        # Exact match
+        if s_norm in titles_n:
+            it["own_post"] = True
+            continue
+        # Substring match (in either direction) for longer titles
+        if any(ti in s_norm or (len(s_norm) > 20 and s_norm in ti) for ti in substr_titles):
+            it["own_post"] = True
+            continue
+        it["own_post"] = False
+
+
 def attribute_signups_to_posts(mc, gh, signup_attr=None, window_days=4):
     """Per-post newsletter signup attribution.
 
@@ -1241,6 +1308,11 @@ def main():
     db = pull_donorbox()
     attribute_signups_to_posts(mc, gh, signup_attr=signup_attr)
     attribute_donations_to_posts(db, gh)
+    # News mentions need to be pulled here (was at the bottom of out) so we
+    # can post-process URL-share items for own-post flagging.
+    news_mentions = pull_news_mentions()
+    all_titles = pull_all_ghost_titles()
+    flag_own_url_shares(news_mentions, all_titles)
 
     # Ghost is the source of truth for signups (the public newsletter form
     # writes to Ghost first; Mailchimp is reconciled in weekly batches). Use
@@ -1312,7 +1384,7 @@ def main():
             "window_days":    signup_attr.get("window_days", 0),
         },
         "press":     pull_press(),
-        "news_mentions": pull_news_mentions(),
+        "news_mentions": news_mentions,
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
         # a "Connect this source" placeholder card with the exact setup steps.
         "ga4": {
