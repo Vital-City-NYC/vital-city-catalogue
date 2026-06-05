@@ -394,6 +394,114 @@ def pull_press():
     return dedup[:60]
 
 
+# ----------------------------------------------------- X (Twitter) — free path
+# Uses Twitter's public syndication endpoint (the same one their embed widgets
+# hit). Returns follower/following/tweet counts + the 100 most recent tweets
+# with per-tweet likes/retweets/replies. NO auth required. Caveats: it's
+# unofficial, so it can break at any time; we treat it as best-effort.
+def pull_x():
+    import re as _re
+    url = "https://syndication.twitter.com/srv/timeline-profile/screen-name/vitalcitynyc"
+    ua  = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+           "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
+    try:
+        html = http_get(url, headers={"User-Agent": ua}, timeout=20).decode("utf-8", "ignore")
+        m = _re.search(r'<script id="__NEXT_DATA__"[^>]*>(.+?)</script>', html, _re.S)
+        if not m: raise RuntimeError("no embedded JSON")
+        d = json.loads(m.group(1))
+        entries = d["props"]["pageProps"]["timeline"]["entries"]
+        tweets = []
+        user = None
+        for e in entries:
+            if e.get("type") != "tweet": continue
+            t = e.get("content", {}).get("tweet", {})
+            if not t: continue
+            if user is None: user = t.get("user", {}) or {}
+            tweets.append({
+                "id":         t.get("id_str") or str(t.get("id") or ""),
+                "created_at": t.get("created_at"),
+                "text":       (t.get("text") or t.get("full_text") or "")[:280],
+                "likes":      int(t.get("favorite_count") or 0),
+                "retweets":   int(t.get("retweet_count")  or 0),
+                "replies":    int(t.get("reply_count")    or 0) if t.get("reply_count") is not None else None,
+            })
+        if user is None:
+            return {"available": False, "reason": "syndication endpoint returned no tweets"}
+        # ISO-normalize tweet timestamps for sort + UI
+        def _iso(p):
+            try:
+                from email.utils import parsedate_to_datetime
+                return parsedate_to_datetime(p).astimezone(timezone.utc).isoformat()
+            except Exception: return ""
+        for t in tweets: t["created_iso"] = _iso(t.get("created_at") or "")
+        tweets.sort(key=lambda t: t["created_iso"] or "", reverse=True)
+        avg_likes = round(sum(t["likes"] for t in tweets[:20]) / max(len(tweets[:20]), 1), 1)
+        return {
+            "available": True,
+            "source": "syndication.twitter.com (unofficial, no API key)",
+            "handle": user.get("screen_name"),
+            "name":   user.get("name"),
+            "followers": int(user.get("followers_count") or 0),
+            "following": int(user.get("friends_count")   or 0),
+            "tweets_total": int(user.get("statuses_count") or 0),
+            "avg_likes_recent_20": avg_likes,
+            "recent_tweets": tweets[:20],
+        }
+    except Exception as e:
+        return {"available": False, "reason": f"X scrape failed: {e}"}
+
+
+# ------------------------------------------------------- Instagram — free path
+# Uses the same web_profile_info endpoint Instagram's own web app calls.
+# Needs the X-IG-App-ID header (a public constant) and a browser User-Agent.
+# Same best-effort framing as X.
+def pull_instagram():
+    url = "https://www.instagram.com/api/v1/users/web_profile_info/?username=vitalcitynyc"
+    headers = {
+        "User-Agent": ("Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) "
+                       "AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1 "
+                       "Instagram 285.0.0.16.119"),
+        "X-IG-App-ID": "936619743392459",
+        "Accept": "application/json",
+    }
+    try:
+        d = json.loads(http_get(url, headers=headers, timeout=20))
+        u = (d.get("data") or {}).get("user") or {}
+        if not u: return {"available": False, "reason": "empty user data"}
+        posts_out = []
+        for edge in (u.get("edge_owner_to_timeline_media") or {}).get("edges", [])[:12]:
+            n = edge.get("node") or {}
+            cap_edges = (n.get("edge_media_to_caption") or {}).get("edges") or []
+            cap = (cap_edges[0].get("node", {}).get("text", "") if cap_edges else "")[:240]
+            posts_out.append({
+                "id":        n.get("id"),
+                "shortcode": n.get("shortcode"),
+                "url":       f"https://www.instagram.com/p/{n.get('shortcode')}/" if n.get("shortcode") else None,
+                "timestamp": n.get("taken_at_timestamp"),
+                "iso":       (datetime.fromtimestamp(int(n["taken_at_timestamp"]), tz=timezone.utc).isoformat()
+                              if n.get("taken_at_timestamp") else ""),
+                "likes":     int((n.get("edge_liked_by") or {}).get("count") or 0),
+                "comments":  int((n.get("edge_media_to_comment") or {}).get("count") or 0),
+                "caption":   cap,
+                "type":      n.get("__typename") or n.get("product_type") or "",
+            })
+        avg_likes = round(sum(p["likes"] for p in posts_out[:10]) / max(len(posts_out[:10]), 1), 1) if posts_out else 0
+        return {
+            "available": True,
+            "source": "instagram.com web_profile_info (unofficial, no API key)",
+            "handle": u.get("username"),
+            "name":   u.get("full_name"),
+            "bio":    (u.get("biography") or "")[:240],
+            "followers": int((u.get("edge_followed_by") or {}).get("count") or 0),
+            "following": int((u.get("edge_follow")      or {}).get("count") or 0),
+            "posts_total": int((u.get("edge_owner_to_timeline_media") or {}).get("count") or 0),
+            "avg_likes_recent_10": avg_likes,
+            "recent_posts": posts_out,
+        }
+    except Exception as e:
+        return {"available": False, "reason": f"Instagram scrape failed: {e}"}
+
+
 # ------------------------------------------------------------------------ main
 def main():
     PRIV.mkdir(parents=True, exist_ok=True)
@@ -424,24 +532,8 @@ def main():
                 "3) Add GSC_CREDS_JSON and GSC_SITE_URL (e.g. sc-domain:vitalcitynyc.org) as GitHub secrets.",
             ],
         },
-        "x_mentions": {
-            "available": False,
-            "reason": "X API requires a paid plan (~$100/mo); no reliable free option",
-            "setup": [
-                "Options: (a) pay for X Basic API and add X_BEARER_TOKEN; ",
-                "(b) use a paid social-listening service (Brand24, Mention, Notify) and feed via RSS; ",
-                "(c) skip and monitor manually.",
-            ],
-        },
-        "instagram": {
-            "available": False,
-            "reason": "Instagram Graph API token not configured",
-            "setup": [
-                "1) Convert @vitalcitynyc to an Instagram Business account linked to a Facebook Page.",
-                "2) In Meta for Developers, create an app, get a long-lived Page access token with instagram_basic.",
-                "3) Add IG_ACCESS_TOKEN and IG_USER_ID as GitHub secrets.",
-            ],
-        },
+        "x_profile":  pull_x(),
+        "instagram":  pull_instagram(),
     }
     OUT.write_text(json.dumps(out, indent=2))
     size_kb = OUT.stat().st_size // 1024

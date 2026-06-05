@@ -91,6 +91,21 @@
   .dombar .bar{height:9px;background:var(--vc-cerulean);opacity:.7}
   .dombar .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--vc-charcoal)}
 
+  /* Social card */
+  .socrow{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:780px){ .socrow{grid-template-columns:1fr} }
+  .soccol{background:var(--vc-paper2);border:1px solid var(--vc-cloud);padding:14px}
+  .soccol h3{margin:0 0 8px;font-size:13px;font-family:var(--vc-sans);font-weight:700}
+  .socstat{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+  .socstat .sv{font-family:var(--vc-serif);font-weight:900;font-size:20px;line-height:1.1}
+  .socstat .sl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);font-weight:700;margin-top:2px}
+  .socposts{list-style:none;padding:0;margin:0;max-height:280px;overflow-y:auto}
+  .socposts li{padding:7px 0;border-bottom:1px solid var(--vc-cloud);font-size:12px;line-height:1.4}
+  .socposts li:last-child{border-bottom:none}
+  .socposts .meta{font-size:10.5px;color:var(--vc-charcoal);margin-bottom:2px;display:flex;gap:10px}
+  .socposts a{color:var(--vc-black);text-decoration:none}
+  .socposts a:hover{color:var(--vc-cerulean);text-decoration:underline}
+
   /* Press feed */
   .feed{margin:0;padding:0;list-style:none}
   .feed li{padding:8px 0;border-bottom:1px solid var(--vc-cloud);font-size:12.5px}
@@ -202,9 +217,25 @@
         </div>
       </div>
 
+      <div class="card" id="campaignsTrend">
+        <h2>Send-by-send open &amp; click rate <span class="hint">last 20 newsletter sends, oldest → newest</span></h2>
+        <div class="chartwrap"><svg class="chart" id="sendChart" viewBox="0 0 800 200" preserveAspectRatio="none"></svg></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--vc-cerulean)"></span>Open rate</span>
+          <span><span class="sw" style="background:var(--vc-orange)"></span>Click rate</span>
+          <span><span class="sw" style="background:var(--vc-charcoal);opacity:.5"></span>20-send rolling average</span>
+        </div>
+        <div id="sendInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
+      </div>
+
       <div class="card" id="campaigns">
         <h2>Recent newsletter sends <span class="hint">most recent 12 · click subject to open in Mailchimp</span></h2>
         <div id="campTbl"></div>
+      </div>
+
+      <div class="card" id="social">
+        <h2>Social — X &amp; Instagram <span class="hint">followers + recent post engagement · free unofficial endpoints (can break)</span></h2>
+        <div id="socialBody"></div>
       </div>
 
       <div class="card" id="contentCard">
@@ -326,7 +357,9 @@ function boot(data){
 
   // ----- Newsletter performance (open/click + YoY)
   renderPerf(mc);
+  renderSendChart(mc.campaigns || []);
   renderYTD(mc, mc.signup_windows || {});
+  renderSocial(data.x_profile || {}, data.instagram || {});
 
   // ----- Campaigns table
   const camp=mc.campaigns||[];
@@ -394,8 +427,6 @@ function boot(data){
   const stubKeys=[
     ["ga4","Google Analytics 4 — traffic + engagement time + signup conversions","data.ga4"],
     ["search_console","Google Search Console — queries, impressions, clicks, position","data.search_console"],
-    ["x_mentions","X (Twitter) mentions of @vitalcitynyc","data.x_mentions"],
-    ["instagram","Instagram (@vitalcitynyc) posts + tagged mentions","data.instagram"],
   ];
   $("#stubsList").innerHTML=stubKeys.map(([k,label])=>{
     const s=data[k]||{};
@@ -440,27 +471,29 @@ function fmtPctDelta(d){
 function renderPerf(mc){
   const w=(mc.windows)||{};
   const ytd=w.ytd||{}, prior=w.prior_ytd||{}, l30=w.last_30||{}, yoy30=w.yoy_30||{};
+  const dOpenYtd  = pctDelta(ytd.open_pct,  prior.open_pct);
+  const dClickYtd = pctDelta(ytd.click_pct, prior.click_pct);
+  const dSendsYtd = pctDelta(ytd.sends,     prior.sends);
+  const dOpen30   = yoy30.sends ? pctDelta(l30.open_pct,  yoy30.open_pct)  : null;
+  const dClick30  = yoy30.sends ? pctDelta(l30.click_pct, yoy30.click_pct) : null;
   const cells=[
     {lbl:"Open rate · YTD", n:(ytd.open_pct||0)+"%",
-      d:fmtPctDelta(pctDelta(ytd.open_pct,prior.open_pct))+" vs YTD '25",
-      cls:deltaPctClass(pctDelta(ytd.open_pct,prior.open_pct),true),
-      tip:"Year-to-date open rate, recipient-weighted across every send. The big YoY drop reflects Apple Mail privacy + list growth from July 2025 onward — both depress measured open rates without necessarily meaning less engagement."},
+      d:fmtPctDelta(dOpenYtd)+" vs YTD '25", cls:deltaPctClass(dOpenYtd,true),
+      tip:"Year-to-date open rate, recipient-weighted across every send."+interpretInsight("open_rate", dOpenYtd)},
     {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
-      d:fmtPctDelta(pctDelta(ytd.click_pct,prior.click_pct))+" vs YTD '25",
-      cls:deltaPctClass(pctDelta(ytd.click_pct,prior.click_pct),true),
-      tip:"Year-to-date click rate, recipient-weighted. Click rate is the honest engagement signal — Apple Mail's privacy auto-opens do NOT trigger clicks, so a YoY drop here is real."},
+      d:fmtPctDelta(dClickYtd)+" vs YTD '25", cls:deltaPctClass(dClickYtd,true),
+      tip:"Year-to-date click rate, recipient-weighted. Click rate isn't inflated by Apple Mail privacy auto-opens, so changes here reflect real engagement."+interpretInsight("click_rate", dClickYtd)},
     {lbl:"Sends · YTD", n:fmtN(ytd.sends||0),
-      d:fmtPctDelta(pctDelta(ytd.sends,prior.sends))+" vs YTD '25",
-      cls:deltaPctClass(pctDelta(ytd.sends,prior.sends),true),
-      tip:"Total newsletter sends so far this year, vs the same period last year. Includes automations + manual sends."},
+      d:fmtPctDelta(dSendsYtd)+" vs YTD '25", cls:deltaPctClass(dSendsYtd,true),
+      tip:"Total newsletter sends so far this year, vs the same period last year. Includes automations + manual sends."+interpretInsight("sends", dSendsYtd)},
     {lbl:"Open rate · last 30d", n:(l30.open_pct||0)+"%",
-      d:yoy30.sends? fmtPctDelta(pctDelta(l30.open_pct,yoy30.open_pct))+" vs same window '25" : "no YoY data",
-      cls:yoy30.sends? deltaPctClass(pctDelta(l30.open_pct,yoy30.open_pct),true):"na",
-      tip:"Recipient-weighted open rate, last 30 days, vs the same 30-day window one year ago."},
+      d:yoy30.sends? fmtPctDelta(dOpen30)+" vs same window '25" : "no YoY data",
+      cls:yoy30.sends? deltaPctClass(dOpen30,true):"na",
+      tip:"Recipient-weighted open rate, last 30 days, vs the same 30-day window one year ago."+(dOpen30!=null?interpretInsight("open_rate", dOpen30):"")},
     {lbl:"Click rate · last 30d", n:(l30.click_pct||0)+"%",
-      d:yoy30.sends? fmtPctDelta(pctDelta(l30.click_pct,yoy30.click_pct))+" vs same window '25" : "no YoY data",
-      cls:yoy30.sends? deltaPctClass(pctDelta(l30.click_pct,yoy30.click_pct),true):"na",
-      tip:"Recipient-weighted click rate, last 30 days, vs the same 30-day window one year ago."},
+      d:yoy30.sends? fmtPctDelta(dClick30)+" vs same window '25" : "no YoY data",
+      cls:yoy30.sends? deltaPctClass(dClick30,true):"na",
+      tip:"Recipient-weighted click rate, last 30 days, vs the same 30-day window one year ago."+(dClick30!=null?interpretInsight("click_rate", dClick30):"")},
     {lbl:"Recipients · last 30d", n:fmtN(l30.recipients||0),
       d:`${fmtN(l30.sends||0)} sends`,cls:"flat",
       tip:"Total emails sent in the last 30 days (recipients summed across all sends, so the same person can be counted on multiple campaigns)."},
@@ -561,6 +594,147 @@ function renderYTD(mc, signups){
       Newsletter performance numbers are recipient-weighted from Mailchimp campaign reports.
       Signup YoY is N/A for any period that crosses the Ghost cutover on ${esc(signups.ghost_cutover||"April 2025")}; from that date forward, YoY becomes valid.
     </div>`;
+}
+
+// Small narrative library — when a delta is large enough to matter,
+// append our best-guess interpretation so the dashboard "thinks for itself"
+// instead of just showing a red number. Tooltips, not modal popups.
+function interpretInsight(metric, deltaPct, ctx){
+  if(deltaPct==null||isNaN(deltaPct)) return "";
+  const ad = Math.abs(deltaPct);
+  if(ad < 15) return "";   // ignore noise
+  const sign = deltaPct>=0 ? "+" : "";
+  if(metric==="open_rate" && deltaPct<-20){
+    return ` Likely driver: Apple Mail's privacy-protection feature inflates older open rates and depresses newer ones, plus list growth dilutes the engaged-core share. Click rate is the more honest signal — check whether it dropped a similar amount.`;
+  }
+  if(metric==="open_rate" && deltaPct>20){
+    return ` Likely driver: list cleanup (removing unengaged subscribers) or a stretch of unusually compelling subject lines. Cross-check with subscribers count — if it went down at the same time, you trimmed disengaged readers.`;
+  }
+  if(metric==="click_rate" && deltaPct<-20){
+    return ` Click rate isn't inflated by Apple Mail privacy, so this drop is real engagement loss. Worth investigating: are recent sends mostly promotional/transactional vs. editorial? Are CTAs clear and prominent?`;
+  }
+  if(metric==="click_rate" && deltaPct>20){
+    return ` Real engagement gain. Look at which campaigns over-indexed and double down on that subject/format.`;
+  }
+  if(metric==="unsubs" && deltaPct>50){
+    return ` Big rise in absolute unsubs — but a larger list naturally produces more. Check the rate (% of list) to know whether this is a content problem or a math one. Sending more campaigns per week also increases unsubs.`;
+  }
+  if(metric==="sends" && deltaPct>40){
+    return ` More sends YoY — more reach, but also more chances to fatigue subscribers. Watch the unsubscribe rate as you scale.`;
+  }
+  if(metric==="signups_7d" && deltaPct<-30){
+    return ` Sharp 7-day signup drop — possible culprits: signup form was broken, a referral source dried up, or a publishing gap (no new article = nothing to sign up off). Check the trend chart's blue dots above the bars.`;
+  }
+  if(metric==="signups_7d" && deltaPct>30){
+    return ` Spike in 7-day signups — usually traceable to a single piece that traveled. Check the post-publish dots on the trend chart for the trigger.`;
+  }
+  if(metric==="total_opens" && deltaPct>30 && ctx && ctx.open_rate_yoy && ctx.open_rate_yoy < -20){
+    return ` Total opens up YoY even with a lower per-email open rate = list grew + you sent more. More eyeballs reached on net, which is what matters editorially.`;
+  }
+  return "";
+}
+
+function renderSendChart(camps){
+  const svg=$("#sendChart");
+  if(!camps || !camps.length){svg.innerHTML='<text x="400" y="100" text-anchor="middle" fill="#888">No campaign data</text>';return;}
+  // newest-first → oldest→newest for the chart
+  const last = camps.slice(0, 20).slice().reverse();
+  const W=800,H=200,padL=36,padR=14,padT=14,padB=30;
+  const innerW=W-padL-padR, innerH=H-padT-padB;
+  const yMax = Math.max(60, ...last.map(c=>c.open_pct||0));
+  const x=(i)=>padL+(i/(last.length-1||1))*innerW;
+  const y=(v)=>padT+innerH-(v/yMax)*innerH;
+  let html="";
+  // Grid
+  [0,25,50, Math.round(yMax/25)*25].filter((v,i,a)=>a.indexOf(v)===i&&v<=yMax).forEach(t=>{
+    const yy=y(t);
+    html+=`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#ddd" stroke-width="1"/>`;
+    html+=`<text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${t}%</text>`;
+  });
+  // X-axis: send-number ticks + dates every few sends
+  last.forEach((c,i)=>{
+    if(i===0||i===last.length-1||i%4===0){
+      html+=`<text x="${x(i)}" y="${H-14}" text-anchor="middle" font-size="9" fill="#888">${(c.sent||'').slice(5)}</text>`;
+    }
+  });
+  // Open-rate bars (light) underneath
+  const bw=Math.max(8, innerW/last.length*0.55);
+  last.forEach((c,i)=>{
+    const h=Math.max(0,(c.open_pct/yMax)*innerH);
+    const subj=(c.subject||'(no subject)').slice(0,80);
+    html+=`<rect x="${x(i)-bw/2}" y="${y(c.open_pct)}" width="${bw}" height="${h}" fill="#1F6FB2" opacity=".18"><title>${esc(c.sent)} — ${esc(subj)}\nopen ${c.open_pct}% · click ${c.click_pct}% · ${fmtN(c.sent_to)} recipients</title></rect>`;
+  });
+  // Open-rate line
+  const opPts=last.map((c,i)=>`${x(i)},${y(c.open_pct||0)}`).join(" ");
+  html+=`<polyline points="${opPts}" fill="none" stroke="#1F6FB2" stroke-width="2"/>`;
+  last.forEach((c,i)=>{html+=`<circle cx="${x(i)}" cy="${y(c.open_pct||0)}" r="3" fill="#1F6FB2"/>`;});
+  // Click-rate line
+  const clPts=last.map((c,i)=>`${x(i)},${y(c.click_pct||0)}`).join(" ");
+  html+=`<polyline points="${clPts}" fill="none" stroke="#E2772F" stroke-width="1.5"/>`;
+  last.forEach((c,i)=>{html+=`<circle cx="${x(i)}" cy="${y(c.click_pct||0)}" r="2" fill="#E2772F"/>`;});
+  // Rolling avg of open rate (window of 5)
+  const avg=[]; last.forEach((c,i)=>{
+    const s=Math.max(0,i-2), e=Math.min(last.length-1,i+2);
+    let sum=0,n=0; for(let j=s;j<=e;j++){sum+=last[j].open_pct||0;n++;}
+    avg.push(sum/n);
+  });
+  const avgPts=avg.map((v,i)=>`${x(i)},${y(v)}`).join(" ");
+  html+=`<polyline points="${avgPts}" fill="none" stroke="#5A5C61" stroke-width="1" stroke-dasharray="3 3" opacity=".6"/>`;
+  svg.innerHTML=html;
+
+  // Insight line: compare last 5 vs prior 5
+  if(last.length>=10){
+    const recent5=last.slice(-5), prior5=last.slice(-10,-5);
+    const recAvg=recent5.reduce((s,c)=>s+(c.open_pct||0),0)/5;
+    const prioAvg=prior5.reduce((s,c)=>s+(c.open_pct||0),0)/5;
+    const d=prioAvg ? ((recAvg-prioAvg)/prioAvg)*100 : 0;
+    const tip = interpretInsight("open_rate", d);
+    const dir = d>0 ? "up" : (d<0 ? "down" : "flat");
+    $("#sendInsight").innerHTML =
+      `<b>Last 5 sends</b> average ${recAvg.toFixed(1)}% open, ${dir==='flat'?'≈ ':''}${d>0?'+':''}${d.toFixed(1)}% vs the prior 5 (${prioAvg.toFixed(1)}%).${esc(tip)}`;
+  } else {
+    $("#sendInsight").innerHTML = "";
+  }
+}
+
+function timeAgo(iso){
+  if(!iso) return "";
+  const t = Date.parse(iso); if(isNaN(t)) return "";
+  const m = Math.floor((Date.now()-t)/60000);
+  if(m<60) return m+"m";
+  if(m<24*60) return Math.floor(m/60)+"h";
+  if(m<14*24*60) return Math.floor(m/(24*60))+"d";
+  return Math.floor(m/(24*60))+"d";
+}
+
+function renderSocial(x, ig){
+  let html='<div class="socrow">';
+  function col(d, title, mkURL, postFn){
+    if(!d.available){
+      return `<div class="soccol"><h3>${esc(title)}</h3><div style="font-size:12px;color:var(--vc-charcoal)">Not available right now: ${esc(d.reason||'unknown error')}.<br>This panel uses unofficial public endpoints and can break when the platforms change them.</div></div>`;
+    }
+    return `<div class="soccol">
+      <h3>${esc(title)} · <a href="${mkURL(d.handle)}" target="_blank" style="color:var(--vc-cerulean);font-weight:600">@${esc(d.handle)}</a></h3>
+      <div class="socstat">
+        <div><div class="sv">${fmtN(d.followers||0)}</div><div class="sl">Followers</div></div>
+        <div><div class="sv">${fmtN(d.posts_total || d.tweets_total || 0)}</div><div class="sl">${title==='X (Twitter)'?'Tweets total':'Posts total'}</div></div>
+        <div><div class="sv">${fmtN(d.avg_likes_recent_10 || d.avg_likes_recent_20 || 0)}</div><div class="sl">Avg likes (recent)</div></div>
+      </div>
+      <ul class="socposts">${postFn(d)}</ul>
+    </div>`;
+  }
+  html += col(x, "X (Twitter)", h=>`https://x.com/${h}`, d=>(d.recent_tweets||[]).slice(0,10).map(t=>`
+    <li>
+      <div class="meta"><span>${esc(timeAgo(t.created_iso))} ago</span><span>❤ ${fmtN(t.likes)}</span>${t.retweets?`<span>🔁 ${fmtN(t.retweets)}</span>`:''}${t.replies!=null?`<span>💬 ${fmtN(t.replies)}</span>`:''}</div>
+      <a href="https://x.com/${esc(d.handle)}/status/${esc(t.id)}" target="_blank">${esc(t.text)}</a>
+    </li>`).join(""));
+  html += col(ig, "Instagram", h=>`https://www.instagram.com/${h}/`, d=>(d.recent_posts||[]).slice(0,10).map(p=>`
+    <li>
+      <div class="meta"><span>${esc(timeAgo(p.iso))} ago</span><span>❤ ${fmtN(p.likes)}</span><span>💬 ${fmtN(p.comments)}</span></div>
+      <a href="${esc(p.url||'#')}" target="_blank">${esc(p.caption||'(no caption)')}</a>
+    </li>`).join(""));
+  html += "</div>";
+  $("#socialBody").innerHTML = html;
 }
 
 function renderTrendChart(act,posts){
