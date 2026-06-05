@@ -397,6 +397,9 @@ def pull_ghost_signup_attribution(days_back=180):
     since_iso = (datetime.now(timezone.utc) - timedelta(days=days_back)).isoformat()
     by_url = {}
     by_day = {}            # day -> count of signup events (canonical signup source-of-truth)
+    by_source = {}         # referrer_source -> count (Direct, Google, newsletter, LinkedIn, etc.)
+    by_medium = {}         # referrer_medium -> count (search, email, social, etc.)
+    by_landing = {}        # attribution.type (post|page|url) -> count (where they signed up)
     fetched = 0
     stop = False
     cursor_id = None       # last event id from previous page (cursor pagination)
@@ -432,6 +435,16 @@ def pull_ghost_signup_attribution(days_back=180):
                 day = ts[:10]
                 by_day[day] = by_day.get(day, 0) + 1
             att = d.get("attribution") or {}
+            # Flat aggregates — capture every signup's source, not just the
+            # ones that attributed to a specific post. Homepage signups are
+            # the bulk of volume; they'd be invisible if we only looked at
+            # per-URL counts.
+            src = (att.get("referrer_source") or "(unknown)").strip() or "(unknown)"
+            by_source[src] = by_source.get(src, 0) + 1
+            med = (att.get("referrer_medium") or "(none)").strip() or "(none)"
+            by_medium[med] = by_medium.get(med, 0) + 1
+            ltype = (att.get("type") or "unknown")
+            by_landing[ltype] = by_landing.get(ltype, 0) + 1
             post_url = (att.get("url") or "").rstrip("/")
             if not post_url: continue
             r = by_url.setdefault(post_url, {
@@ -459,12 +472,15 @@ def pull_ghost_signup_attribution(days_back=180):
         r["first_seen"] = r["first_seen"][:10]
         r["last_seen"]  = r["last_seen"][:10]
         del r["sources"]
-    log(f"  ghost signup attribution: {fetched} signup events across {len(by_url)} URLs, {len(by_day)} days")
+    log(f"  ghost signup attribution: {fetched} signup events across {len(by_url)} URLs, {len(by_day)} days, {len(by_source)} sources")
     return {
         "available":      True,
         "events_counted": fetched,
         "by_url":         by_url,
         "by_day":         [{"d": d, "subs": n} for d, n in sorted(by_day.items())],
+        "by_source":      [{"src": s, "n": n} for s, n in sorted(by_source.items(), key=lambda kv: -kv[1])],
+        "by_medium":      [{"med": m, "n": n} for m, n in sorted(by_medium.items(), key=lambda kv: -kv[1])],
+        "by_landing":     [{"type": t, "n": n} for t, n in sorted(by_landing.items(), key=lambda kv: -kv[1])],
         "window_days":    days_back,
     }
 

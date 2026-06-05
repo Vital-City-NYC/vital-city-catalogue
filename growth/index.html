@@ -235,6 +235,11 @@
         </div>
       </div>
 
+      <div class="card" id="acquisition">
+        <h2>Where newsletter signups come from <span class="hint" id="acqHint"></span></h2>
+        <div id="acqBody"></div>
+      </div>
+
       <div class="card" id="ytd">
         <h2>Year-to-date · 2026 vs 2025 <span class="hint">where the comparison is fair</span></h2>
         <div id="ytdBody"></div>
@@ -409,11 +414,11 @@ function boot(data){
     {lbl:"Website MAU · 30d", num: ga4.mau!=null ? fmtN(ga4.mau) : "—",
      delta: ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs GA4 ↗",
      cls: ga4.mau!=null ? "flat" : "na",
-     tip:"WEBSITE — Unique visitors to vitalcitynyc.org in the last 30 days. Pending: set up the GA4 service-account credential. Open the 'How it works' page → 'Connect more sources' for the 5-minute setup. Same Google service account also unlocks Search Console."},
+     tip:"WEBSITE — Unique anonymous visitors to vitalcitynyc.org in the last 30 days. Ghost tracks this in its admin Analytics tab but doesn't expose the aggregate page-view data to API tokens. We DO get the conversion side from Ghost (where each newsletter signup happened, see 'Where signups come from' card). For raw traffic / page views / unique visitors, GA4 is still the path. 5-min setup is on the 'How it works' page."},
     {lbl:"Website AAU · 1y", num: ga4.aau!=null ? fmtN(ga4.aau) : "—",
      delta: ga4.aau!=null ? `${fmtN(ga4.sessions_365||0)} sessions` : "needs GA4 ↗",
      cls: ga4.aau!=null ? "flat" : "na",
-     tip:"WEBSITE — Unique visitors to vitalcitynyc.org in the last 365 days. Will activate when GA4 credentials are configured. The pre-Ghost-cutover historical traffic (Jan 2025 ↔ April 2025 transition) only lives in GA4."},
+     tip:"WEBSITE — Unique visitors to vitalcitynyc.org in the last 365 days. Same Ghost-API-gating as the MAU tile — Ghost has it, doesn't expose it. GA4 is the cleanest path, and it also covers the pre-Ghost-cutover traffic (Jan-April 2025) that wouldn't exist in Ghost Analytics anyway."},
     // --- Fundraising ---
     {lbl:"Raised · YTD", num: db.available ? fmtUSD((dWin.ytd||{}).amount||0) : "—",
      delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts` : "Donorbox not connected",
@@ -453,6 +458,7 @@ function boot(data){
   renderYTD(mc, mc.signup_windows || {});
   renderSocial(data.x_profile || {}, data.instagram || {});
   renderDonors(data.donorbox || {});
+  renderAcquisition(data.ghost_signup_attribution || {});
   renderGoogleTrends();
 
   // ----- Campaigns table (collapsible — show 5, expand for the rest)
@@ -1124,6 +1130,74 @@ function renderDonors(db){
   // Hint in the card header
   $("#donorHint").textContent =
     `pulled live from Donorbox · history since ${(db.history_starts||'').slice(0,10) || '—'} · ${fmtN(db.donations_paid||0)} paid gifts`;
+}
+
+function renderAcquisition(attr){
+  const host = $("#acqBody");
+  const hint = $("#acqHint");
+  if(!host) return;
+  if(!attr.available){
+    host.innerHTML = '<div style="font-size:12.5px;color:var(--vc-charcoal);padding:8px 0">Ghost signup attribution not available right now.</div>';
+    if(hint) hint.textContent = '';
+    return;
+  }
+  const total = attr.events_counted || 0;
+  if(hint) hint.textContent = `pulled from Ghost's per-signup attribution · ${fmtN(total)} signup events over the last ${attr.window_days||180} days`;
+  const sources  = (attr.by_source  || []).slice(0,12);
+  const mediums  = (attr.by_medium  || []);
+  const landings = (attr.by_landing || []);
+  const maxSrc = Math.max(1, ...sources.map(s=>s.n));
+  const maxMed = Math.max(1, ...mediums.map(s=>s.n));
+  const labelType = (t) => ({
+    "post":   "landed on an article page",
+    "page":   "landed on a static page (About, Subscribe, etc.)",
+    "url":    "landed on the homepage / collection page",
+    "tag":    "landed on a topic tag page",
+    "author": "landed on an author page",
+    "unknown":"no landing-page recorded",
+  }[t] || t);
+  host.innerHTML = `
+    <div style="font-size:12px;color:var(--vc-charcoal);margin:0 0 14px;line-height:1.55">
+      <b style="color:var(--vc-black)">What this is:</b> Ghost attaches an attribution record to every newsletter signup — the page the visitor was on and the referring source (Google, Direct, an email campaign tag, a partner site, etc.). This is the exact data the Ghost admin Analytics tab uses for "Top Sources"; we pull the raw events and roll them up here so the dashboard is always in sync.
+      <br><b>What it doesn't show:</b> total page views or unique visitors to vitalcitynyc.org — that's anonymous-traffic data Ghost doesn't expose to the API. For that we still need GA4 (the "needs GA4 ↗" tiles in the top banner).
+    </div>
+    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:24px">
+      <div>
+        <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">Top referrer sources <span style="font-weight:400;color:var(--vc-charcoal)">(${fmtN(total)} signups, last ${attr.window_days||180}d)</span></div>
+        ${sources.map(s=>{
+          const tip = s.src === '(unknown)'
+            ? 'Ghost didn\'t capture a referrer — typically direct-visit users without a referring URL, or browsers stripping the Referer header.'
+            : s.src === 'Direct' ? 'Visitor typed the URL or arrived from a bookmark/SMS.'
+            : s.src === 'Google' ? 'Came from a Google search results page.'
+            : s.src === 'Bing' ? 'Came from a Bing search results page.'
+            : s.src === 'LinkedIn' ? 'Came from a LinkedIn post link.'
+            : s.src === 'Facebook' ? 'Came from a Facebook post link.'
+            : s.src === 'Substack' ? 'Came from a Substack newsletter or post.'
+            : s.src === 'newsletter' ? 'Came from a click in a Vital City newsletter email.'
+            : s.src === 'AcademicOutreach' || s.src === 'ReengagementCampaign' || s.src === 'LizOutreach' || s.src === 'GopnikSampson' ? 'A UTM-tagged campaign — referrer_source comes from the utm_source on the link the visitor clicked.'
+            : `Referrer source recorded by Ghost: "${s.src}".`;
+          return `<div class="dombar" title="${esc(tip)}">
+            <div style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.src)}</div>
+            <div class="bar" style="background:var(--vc-cerulean);width:${(s.n/maxSrc*100)}%"></div>
+            <div class="v">${fmtN(s.n)}</div>
+          </div>`;
+        }).join("")}
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">By medium</div>
+        ${mediums.map(s=>`<div class="dombar" title="${esc(s.med==='(none)'?'No medium recorded (typically direct visits).':`Referrer medium recorded by Ghost: "${s.med}".`)}">
+          <div style="font-size:12px">${esc(s.med)}</div>
+          <div class="bar" style="background:var(--vc-orange);width:${(s.n/maxMed*100)}%"></div>
+          <div class="v">${fmtN(s.n)}</div>
+        </div>`).join("")}
+        <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin:18px 0 6px;font-weight:700">Where the signup happened</div>
+        ${landings.map(s=>`<div class="dombar" title="${esc(labelType(s.type))}">
+          <div style="font-size:12px">${esc(s.type)}</div>
+          <div class="bar" style="background:var(--vc-green);width:${(s.n/maxSrc*100)}%"></div>
+          <div class="v">${fmtN(s.n)}</div>
+        </div>`).join("")}
+      </div>
+    </div>`;
 }
 
 function renderTrendChart(act,posts){
