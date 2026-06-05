@@ -64,6 +64,28 @@
   .pillwarn{display:inline-block;background:var(--vc-orange);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
   .pillinfo{display:inline-block;background:var(--vc-cerulean);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
 
+  /* Perf grid (Newsletter performance card) */
+  .perfgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud)}
+  .perfcell{background:var(--vc-white);padding:11px 13px}
+  .perfcell .pl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700}
+  .perfcell .pn{font-family:var(--vc-serif);font-weight:900;font-size:22px;line-height:1.1;margin-top:3px}
+  .perfcell .pd{font-size:11px;font-weight:700;margin-top:3px}
+  .perfcell .pd.up{color:var(--vc-green)}
+  .perfcell .pd.down{color:#c8102e}
+  .perfcell .pd.flat{color:var(--vc-charcoal)}
+  .perfcell .pd.na{color:var(--vc-charcoal);font-weight:400;font-style:italic}
+
+  /* YTD comparison table */
+  .ytdtbl{width:100%;border-collapse:collapse;font-size:13px}
+  .ytdtbl th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--vc-black)}
+  .ytdtbl td{padding:9px 10px;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
+  .ytdtbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .ytdtbl td.delta{text-align:right;font-weight:700}
+  .ytdtbl td.delta.up{color:var(--vc-green)}
+  .ytdtbl td.delta.down{color:#c8102e}
+  .ytdtbl td.delta.flat{color:var(--vc-charcoal)}
+  .ytdtbl td.delta.na{color:var(--vc-charcoal);font-weight:400;font-style:italic}
+
   /* Domain bars */
   .dombar{display:grid;grid-template-columns:120px 1fr 40px;gap:8px;align-items:center;font-size:12px;margin-bottom:4px}
   .dombar .bar{height:9px;background:var(--vc-cerulean);opacity:.7}
@@ -151,6 +173,25 @@
   <div class="layout">
     <main>
       <div class="kpis" id="kpis"></div>
+
+      <div class="card" id="perf">
+        <h2>Newsletter performance <span class="hint">recipient-weighted averages · YoY = same window last year</span></h2>
+        <div class="perfgrid" id="perfKpis"></div>
+        <div style="margin-top:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px">Monthly trend — last 24 months</div>
+          <div class="chartwrap"><svg class="chart" id="perfChart" viewBox="0 0 800 220" preserveAspectRatio="none"></svg></div>
+          <div class="legend">
+            <span><span class="sw" style="background:var(--vc-cerulean)"></span>Open rate</span>
+            <span><span class="sw" style="background:var(--vc-orange)"></span>Click rate</span>
+            <span><span class="sw" style="background:var(--vc-charcoal);opacity:.4;width:14px;height:1px;margin-top:4px"></span>Trend break (Apple Mail privacy / list growth around Jul 2025)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="ytd">
+        <h2>Year-to-date · 2026 vs 2025 <span class="hint">where the comparison is fair</span></h2>
+        <div id="ytdBody"></div>
+      </div>
+
       <div class="card" id="trend">
         <h2>Signups vs unsubscribes — last 90 days <span class="hint" id="trendHint"></span></h2>
         <div class="chartwrap"><svg class="chart" id="trendChart" viewBox="0 0 800 240" preserveAspectRatio="none"></svg></div>
@@ -261,17 +302,17 @@ function boot(data){
 
   const kpis=[
     {lbl:"Subscribers",num:fmtN(total),delta:`net ${fmtDelta(netNew30)} in 30d`,cls:deltaClass(netNew30),hero:true,
-     tip:"Unique people on the Mailchimp list right now. Each individual counted once, even if they signed up under multiple emails."},
+     tip:"Unique people on the Mailchimp list right now (each individual counted once, even if signed up under multiple emails). Source of truth: Mailchimp for unsubscribes; Ghost for signups, manually reconciled to Mailchimp weekly."},
     {lbl:"New signups · 7d",num:fmtN(subs7),delta:`${fmtDelta(subs7-subsPrev7)} vs prior 7d`,cls:deltaClass(subs7-subsPrev7),
-     tip:"New newsletter subscribers in the last 7 days, vs the 7 days before that."},
+     tip:"New newsletter subscribers in the last 7 days vs the 7 days before. Signups happen in Ghost (the website form) and are transferred to Mailchimp on the weekly reconcile — so this number is computed from the merged Ghost+Mailchimp dataset rather than the lagging Mailchimp side alone. The last 1–2 days may understate signups until the daily rebuild lands."},
     {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)} vs prior 30d`,cls:deltaClass(subs30-subsPrev30),
-     tip:"New newsletter subscribers in the last 30 days vs the 30 days before that."},
+     tip:"New newsletter subscribers in the last 30 days vs the 30 days before that. Same Ghost-leading source-of-truth caveat as the 7-day tile."},
     {lbl:"New signups · 90d",num:fmtN(subs90),delta:"running total",cls:"flat",
      tip:"New newsletter subscribers in the last 90 days. Useful for trend stability."},
     {lbl:"Unsubscribes · 30d",num:fmtN(unsubs30),delta:`${(unsubRate30).toFixed(2)}% of list/mo`,cls:unsubRate30>0.5?"down":"flat",
-     tip:"People who unsubscribed in the last 30 days. Healthy newsletters typically run well under 0.5% of list per month."},
+     tip:"People who unsubscribed in the last 30 days. Source of truth: Mailchimp (people click the footer unsubscribe link there) — then the weekly reconcile removes them from Ghost too. Healthy newsletters typically run well under 0.5% of list per month."},
     {lbl:"Engaged subscribers",num:Math.round((mc.engaged_share||0)*100)+"%",delta:"open often (4-5★)",cls:"flat",
-     tip:"Share of subscribers Mailchimp rates 4 or 5 stars — they reliably open most emails."},
+     tip:"Share of subscribers Mailchimp rates 4 or 5 stars — they reliably open most emails. Apple Mail's auto-open behavior depresses this rating across the industry; click rate is the more honest engagement signal."},
   ];
   $("#kpis").innerHTML=kpis.map(k=>
     `<div class="kpi${k.hero?' hero':''}" title="${esc(k.tip)}">
@@ -282,6 +323,10 @@ function boot(data){
 
   // ----- Trend chart (hand-rolled SVG)
   renderTrendChart(act, data.ghost && data.ghost.posts || []);
+
+  // ----- Newsletter performance (open/click + YoY)
+  renderPerf(mc);
+  renderYTD(mc, mc.signup_windows || {});
 
   // ----- Campaigns table
   const camp=mc.campaigns||[];
@@ -297,12 +342,11 @@ function boot(data){
         <td class="num">${fmtN(c.sent_to)}</td>
         <td class="num"><span class="${opPill}">${op}%</span></td>
         <td class="num">${cl}%</td>
-        <td class="num">${fmtN(c.unsubs)}</td>
       </tr>`;
     }).join("");
     $("#campTbl").innerHTML=
       `<table class="tbl"><thead><tr>
-        <th>Sent</th><th>Subject</th><th class="num">Recipients</th><th class="num">Open rate</th><th class="num">Click rate</th><th class="num">Unsubs</th>
+        <th>Sent</th><th>Subject</th><th class="num">Recipients</th><th class="num">Open rate</th><th class="num">Click rate</th>
       </tr></thead><tbody>${rows}</tbody></table>`;
   } else {
     $("#campTbl").innerHTML='<div style="font-size:12px;color:var(--vc-charcoal)">No campaign data available.</div>';
@@ -374,6 +418,149 @@ function boot(data){
     <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
     <span class="date">${esc(p.published)}</span>
   </li>`).join("") || '<li class="empty">No posts.</li>';
+}
+
+function pctDelta(now,prev){
+  if(prev==null||now==null) return null;
+  if(prev===0) return now===0 ? 0 : null;
+  return ((now-prev)/prev)*100;
+}
+function deltaPctClass(d,positiveIsGood){
+  if(d==null||isNaN(d)) return "na";
+  if(Math.abs(d)<1) return "flat";
+  const good = positiveIsGood ? d>0 : d<0;
+  return good ? "up" : "down";
+}
+function fmtPctDelta(d){
+  if(d==null||isNaN(d)) return "n/a";
+  if(Math.abs(d)<0.5) return "≈ flat";
+  return (d>0?"+":"")+d.toFixed(1)+"%";
+}
+
+function renderPerf(mc){
+  const w=(mc.windows)||{};
+  const ytd=w.ytd||{}, prior=w.prior_ytd||{}, l30=w.last_30||{}, yoy30=w.yoy_30||{};
+  const cells=[
+    {lbl:"Open rate · YTD", n:(ytd.open_pct||0)+"%",
+      d:fmtPctDelta(pctDelta(ytd.open_pct,prior.open_pct))+" vs YTD '25",
+      cls:deltaPctClass(pctDelta(ytd.open_pct,prior.open_pct),true),
+      tip:"Year-to-date open rate, recipient-weighted across every send. The big YoY drop reflects Apple Mail privacy + list growth from July 2025 onward — both depress measured open rates without necessarily meaning less engagement."},
+    {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
+      d:fmtPctDelta(pctDelta(ytd.click_pct,prior.click_pct))+" vs YTD '25",
+      cls:deltaPctClass(pctDelta(ytd.click_pct,prior.click_pct),true),
+      tip:"Year-to-date click rate, recipient-weighted. Click rate is the honest engagement signal — Apple Mail's privacy auto-opens do NOT trigger clicks, so a YoY drop here is real."},
+    {lbl:"Sends · YTD", n:fmtN(ytd.sends||0),
+      d:fmtPctDelta(pctDelta(ytd.sends,prior.sends))+" vs YTD '25",
+      cls:deltaPctClass(pctDelta(ytd.sends,prior.sends),true),
+      tip:"Total newsletter sends so far this year, vs the same period last year. Includes automations + manual sends."},
+    {lbl:"Open rate · last 30d", n:(l30.open_pct||0)+"%",
+      d:yoy30.sends? fmtPctDelta(pctDelta(l30.open_pct,yoy30.open_pct))+" vs same window '25" : "no YoY data",
+      cls:yoy30.sends? deltaPctClass(pctDelta(l30.open_pct,yoy30.open_pct),true):"na",
+      tip:"Recipient-weighted open rate, last 30 days, vs the same 30-day window one year ago."},
+    {lbl:"Click rate · last 30d", n:(l30.click_pct||0)+"%",
+      d:yoy30.sends? fmtPctDelta(pctDelta(l30.click_pct,yoy30.click_pct))+" vs same window '25" : "no YoY data",
+      cls:yoy30.sends? deltaPctClass(pctDelta(l30.click_pct,yoy30.click_pct),true):"na",
+      tip:"Recipient-weighted click rate, last 30 days, vs the same 30-day window one year ago."},
+    {lbl:"Recipients · last 30d", n:fmtN(l30.recipients||0),
+      d:`${fmtN(l30.sends||0)} sends`,cls:"flat",
+      tip:"Total emails sent in the last 30 days (recipients summed across all sends, so the same person can be counted on multiple campaigns)."},
+  ];
+  $("#perfKpis").innerHTML=cells.map(c=>
+    `<div class="perfcell" title="${esc(c.tip)}">
+       <div class="pl">${esc(c.lbl)}</div>
+       <div class="pn">${c.n}</div>
+       <div class="pd ${c.cls}">${esc(c.d)}</div>
+     </div>`).join("");
+  renderPerfChart(mc.monthly_campaigns||[]);
+}
+
+function renderPerfChart(monthly){
+  const svg=$("#perfChart");
+  if(!monthly.length){svg.innerHTML='<text x="400" y="110" text-anchor="middle" fill="#888">No campaign history</text>';return;}
+  const last=monthly.slice(-24);
+  const W=800,H=220,padL=34,padR=14,padT=14,padB=24;
+  const innerW=W-padL-padR, innerH=H-padT-padB;
+  const yMax=Math.max(70,...last.map(r=>r.open_pct));   // top of scale, %
+  const x=(i)=>padL+(i/(last.length-1||1))*innerW;
+  const y=(v)=>padT+innerH-(v/yMax)*innerH;
+  let html="";
+  // Grid + y labels (0, 25, 50, 75 if it fits)
+  [0,25,50,Math.round(yMax/25)*25].filter((v,i,a)=>a.indexOf(v)===i&&v<=yMax).forEach(t=>{
+    const yy=y(t);
+    html+=`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#ddd" stroke-width="1"/>`;
+    html+=`<text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${t}%</text>`;
+  });
+  // x labels (every 4 months)
+  for(let i=0;i<last.length;i++){
+    if(i%4===0 || i===last.length-1){
+      html+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="10" fill="#888">${last[i].month}</text>`;
+    }
+  }
+  // Open rate line + dots
+  const op=last.map((r,i)=>`${x(i)},${y(r.open_pct)}`).join(" ");
+  html+=`<polyline points="${op}" fill="none" stroke="#1F6FB2" stroke-width="2"/>`;
+  last.forEach((r,i)=>{html+=`<circle cx="${x(i)}" cy="${y(r.open_pct)}" r="2.5" fill="#1F6FB2"><title>${r.month}: open ${r.open_pct}% · click ${r.click_pct}% · ${r.sends} sends</title></circle>`;});
+  // Click rate (smaller line, secondary)
+  const cl=last.map((r,i)=>`${x(i)},${y(r.click_pct)}`).join(" ");
+  html+=`<polyline points="${cl}" fill="none" stroke="#E2772F" stroke-width="1.4" opacity=".9"/>`;
+  last.forEach((r,i)=>{html+=`<circle cx="${x(i)}" cy="${y(r.click_pct)}" r="2" fill="#E2772F"/>`;});
+  // Mark Apple Mail privacy "break" if Jul 2025 falls in the window
+  const brkIdx=last.findIndex(r=>r.month==="2025-07");
+  if(brkIdx>=0){
+    const bx=x(brkIdx);
+    html+=`<line x1="${bx}" x2="${bx}" y1="${padT}" y2="${padT+innerH}" stroke="#5A5C61" stroke-dasharray="3 3" opacity=".4"/>`;
+    html+=`<text x="${bx+4}" y="${padT+11}" font-size="9" fill="#5A5C61">Jul '25 break</text>`;
+  }
+  svg.innerHTML=html;
+}
+
+function renderYTD(mc, signups){
+  const w=(mc.windows)||{};
+  const ytd=w.ytd||{}, prior=w.prior_ytd||{};
+  const rows=[
+    {label:"New signups", now:signups.ytd, prev:signups.prior_ytd, ok:signups.prior_ytd_ok, positiveGood:true,
+     na:`No comparison: Vital City moved to Ghost on ${signups.ghost_cutover||"April 2025"}, so signups before that date aren't tracked in this system. Year-over-year for signups becomes possible starting in ${signups.ghost_cutover||"April 2025"}.`},
+    {label:"Unsubscribes", now:signups.unsub_ytd, prev:signups.unsub_prior_ytd, ok:true, positiveGood:false,
+     na:""},
+    {label:"Newsletter sends", now:ytd.sends, prev:prior.sends, ok:true, positiveGood:true,
+     na:""},
+    {label:"Total opens (per-send)", now:Math.round((ytd.open_pct||0)*(ytd.recipients||0)/100), prev:Math.round((prior.open_pct||0)*(prior.recipients||0)/100), ok:true, positiveGood:true,
+     na:""},
+    {label:"Avg open rate", now:(ytd.open_pct||0), prev:(prior.open_pct||0), ok:true, positiveGood:true, suffix:"%",
+     na:""},
+    {label:"Avg click rate", now:(ytd.click_pct||0), prev:(prior.click_pct||0), ok:true, positiveGood:true, suffix:"%",
+     na:""},
+  ];
+  const body=rows.map(r=>{
+    const nowStr  = r.suffix==="%" ? (r.now||0).toFixed(1)+"%" : fmtN(r.now||0);
+    let deltaCell, dCls;
+    if(!r.ok){ deltaCell="N/A — Ghost cutover"; dCls="na"; }
+    else if(r.prev==null||(r.prev===0&&r.now===0)){ deltaCell="—"; dCls="flat"; }
+    else if(r.prev===0){ deltaCell="new in '26"; dCls="up"; }
+    else {
+      const d=((r.now-r.prev)/r.prev)*100;
+      deltaCell=fmtPctDelta(d);
+      dCls=deltaPctClass(d,r.positiveGood);
+    }
+    const prevStr = (!r.ok ? "—" :
+      (r.suffix==="%" ? (r.prev||0).toFixed(1)+"%" : fmtN(r.prev||0)));
+    return `<tr title="${esc(r.na||'')}">
+      <td>${esc(r.label)}</td>
+      <td class="num">${nowStr}</td>
+      <td class="num">${prevStr}</td>
+      <td class="delta ${dCls}">${esc(deltaCell)}</td>
+    </tr>`;
+  }).join("");
+  $("#ytdBody").innerHTML=
+    `<table class="ytdtbl"><thead><tr>
+      <th>Metric</th><th class="num">YTD 2026</th><th class="num">YTD 2025 (same period)</th><th class="num">YoY</th>
+    </tr></thead><tbody>${body}</tbody></table>
+    <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">
+      <b>Source of truth:</b> signups → Ghost (the website signup form; transferred to Mailchimp on the weekly reconcile).
+      Unsubscribes → Mailchimp (people click the footer link there; transferred out of Ghost on the same reconcile).
+      Newsletter performance numbers are recipient-weighted from Mailchimp campaign reports.
+      Signup YoY is N/A for any period that crosses the Ghost cutover on ${esc(signups.ghost_cutover||"April 2025")}; from that date forward, YoY becomes valid.
+    </div>`;
 }
 
 function renderTrendChart(act,posts){

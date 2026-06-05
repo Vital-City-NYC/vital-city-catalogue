@@ -82,7 +82,9 @@ def pull_mailchimp():
     # are taken from Mailchimp /activity which is accurate for those.
     rows_by_day = {}
     try:
-        act = mc_get(f"/lists/{list_id}/activity?count=180", key, dc).get("activity", [])
+        # 730 days = 2 years, enough for year-over-year comparisons on
+        # unsubscribes / opens / clicks (these signals are reliable in Mailchimp).
+        act = mc_get(f"/lists/{list_id}/activity?count=730", key, dc).get("activity", [])
         for a in act:
             d = a.get("day")
             if not d: continue
@@ -115,10 +117,38 @@ def pull_mailchimp():
 
     out["daily_activity"] = sorted(rows_by_day.values(), key=lambda r: r["d"])
 
-    # Recent campaigns (last 12 sends) with per-send stats
+    # Signup + unsubscribe windows (YTD and YoY where the data supports it).
+    # Ghost cutover was April 2025, so signups YoY for any window touching
+    # Jan-Mar 2025 is N/A (pre-Ghost data isn't there). Unsubs YoY is fine
+    # because Mailchimp has been the source of unsubs throughout.
+    from datetime import date as _date
+    today = datetime.now(timezone.utc).date()
+    y = today.year
+    GHOST_CUTOVER = _date(2025, 4, 1)  # documented in HANDOFF — Ghost rollout
+
+    def _sum(rows, start, end, key):
+        s, e = start.isoformat(), end.isoformat()
+        return sum(int(r.get(key) or 0) for r in rows if s <= r["d"] <= e)
+
+    rows = out["daily_activity"]
+    ytd_start  = _date(y, 1, 1);   ytd_end = today
+    py_start   = _date(y-1, 1, 1); py_end  = _date(y-1, today.month, today.day)
+
+    out["signup_windows"] = {
+        "ytd":            _sum(rows, ytd_start, ytd_end, "subs"),
+        "prior_ytd":      _sum(rows, py_start,  py_end,  "subs"),
+        "prior_ytd_ok":   py_start >= GHOST_CUTOVER,
+        "ghost_cutover":  GHOST_CUTOVER.isoformat(),
+        "unsub_ytd":      _sum(rows, ytd_start, ytd_end, "unsubs"),
+        "unsub_prior_ytd":_sum(rows, py_start,  py_end,  "unsubs"),
+    }
+
+    # ALL sent campaigns ever — we use the full history for monthly trend lines
+    # (Mailchimp goes back to ~March 2022) and for YoY comparisons. The recent‑12
+    # table on the dashboard just slices the newest ones.
     try:
         camp = mc_get(
-            f"/campaigns?status=sent&list_id={list_id}&count=12"
+            f"/campaigns?status=sent&list_id={list_id}&count=500"
             f"&sort_field=send_time&sort_dir=DESC&fields=campaigns.id,"
             f"campaigns.settings.subject_line,campaigns.send_time,campaigns.emails_sent,"
             f"campaigns.report_summary",
@@ -136,9 +166,74 @@ def pull_mailchimp():
                 "unsubs":   rs.get("unsubscribed") or rs.get("unsubscribes") or 0,
             })
         out["campaigns"] = camp_out
+
+        # Monthly aggregates (recipient‑weighted rates) for the trend chart
+        from collections import defaultdict as _dd
+        mo = _dd(lambda: {"sends": 0, "recipients": 0, "wt_open": 0.0, "wt_click": 0.0, "unsubs": 0})
+        for c in camp:
+            sent = c.get("emails_sent") or 0
+            rs = c.get("report_summary") or {}
+            m = (c.get("send_time") or "")[:7]
+            if not m: continue
+            mo[m]["sends"] += 1
+            mo[m]["recipients"] += sent
+            mo[m]["wt_open"]  += float(rs.get("open_rate")  or 0) * sent
+            mo[m]["wt_click"] += float(rs.get("click_rate") or 0) * sent
+            mo[m]["unsubs"]   += int(rs.get("unsubscribed") or rs.get("unsubscribes") or 0)
+        monthly = []
+        for m in sorted(mo):
+            r = mo[m]
+            recs = r["recipients"] or 1
+            monthly.append({
+                "month": m,
+                "sends": r["sends"],
+                "recipients": r["recipients"],
+                "open_pct":  round((r["wt_open"]  / recs) * 100, 1),
+                "click_pct": round((r["wt_click"] / recs) * 100, 1),
+                "unsubs":    r["unsubs"],
+            })
+        out["monthly_campaigns"] = monthly
+
+        # Period buckets: window stats and YoY comparisons (Mailchimp send data
+        # goes back to ~2022, so this is reliable for newsletter performance).
+        # Signup YoY is documented as N/A pre-April 2025 (Ghost cutover).
+        from datetime import date as _date
+        today = datetime.now(timezone.utc).date()
+        y, _ = today.year, today.month
+
+        def _agg(items):
+            recs = sum(i.get("emails_sent") or 0 for i in items)
+            wt_open  = sum(float((i.get("report_summary") or {}).get("open_rate")  or 0) * (i.get("emails_sent") or 0) for i in items)
+            wt_click = sum(float((i.get("report_summary") or {}).get("click_rate") or 0) * (i.get("emails_sent") or 0) for i in items)
+            return {
+                "sends": len(items),
+                "recipients": recs,
+                "open_pct":  round((wt_open  / recs) * 100, 1) if recs else 0,
+                "click_pct": round((wt_click / recs) * 100, 1) if recs else 0,
+                "unsubs":    sum(int((i.get("report_summary") or {}).get("unsubscribed") or 0) for i in items),
+            }
+
+        def _in(items, start, end):
+            return [c for c in items if start.isoformat() <= (c.get("send_time") or "")[:10] <= end.isoformat()]
+
+        ytd_start  = _date(y, 1, 1); ytd_end = today
+        py_start   = _date(y-1, 1, 1); py_end = _date(y-1, today.month, today.day)
+        last30_end = today; last30_start = today - timedelta(days=30)
+        prev30_end = last30_start - timedelta(days=1); prev30_start = prev30_end - timedelta(days=30)
+        yoy30_end  = _date(y-1, today.month, today.day); yoy30_start = yoy30_end - timedelta(days=30)
+
+        out["windows"] = {
+            "ytd":         _agg(_in(camp, ytd_start,  ytd_end)),
+            "prior_ytd":   _agg(_in(camp, py_start,   py_end)),
+            "last_30":     _agg(_in(camp, last30_start, last30_end)),
+            "prev_30":     _agg(_in(camp, prev30_start, prev30_end)),
+            "yoy_30":      _agg(_in(camp, yoy30_start,  yoy30_end)),
+        }
     except Exception as e:
         log(f"  mailchimp campaigns failed: {e}")
         out["campaigns"] = []
+        out["monthly_campaigns"] = []
+        out["windows"] = {}
 
     # Rating distribution + top email domains — read from cached engagement CSV
     eng = PRIV / "engagement_source.csv"
