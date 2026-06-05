@@ -188,7 +188,7 @@
       <a href="about.html" target="_blank">How it works ↗</a>
       <a href="../network/" title="Open the contact master search">Contacts</a>
       <a href="#" id="themeToggle">🌙 Dark mode</a>
-      <a href="#" id="forget">Lock</a>
+      <a href="#" id="forget" title="Forget the saved passphrase on this device and re-lock the tool. Otherwise the passphrase is remembered for 30 days on this browser. Use Lock on a shared or public computer when you're done.">Lock</a>
     </div>
     <div class="wm">Vital City</div>
     <h1>Growth dashboard</h1>
@@ -315,6 +315,30 @@
 <script>
 const $=s=>document.querySelector(s);
 const PASSKEY="vc_net_pass";
+const PASS_TTL_DAYS = 30;   // remember the passphrase on this device for ~30 days
+
+// Persisted-passphrase helpers. Stored as {pass, expires_at} in localStorage
+// so it survives closing the browser tab (sessionStorage was a bug — that
+// only persists for the current tab). Lock button still clears it manually.
+function savePass(pass){
+  const exp = Date.now() + PASS_TTL_DAYS * 24 * 3600 * 1000;
+  try { localStorage.setItem(PASSKEY, JSON.stringify({pass, exp})); } catch {}
+}
+function loadPass(){
+  try {
+    const raw = localStorage.getItem(PASSKEY);
+    if(!raw) return null;
+    // Backward-compat: older sessionStorage builds stored a plain string
+    if(raw[0] !== "{") return raw;
+    const o = JSON.parse(raw);
+    if(o && o.pass && o.exp && o.exp > Date.now()) return o.pass;
+    localStorage.removeItem(PASSKEY);   // expired
+    return null;
+  } catch { return null; }
+}
+function clearPass(){
+  try { localStorage.removeItem(PASSKEY); sessionStorage.removeItem(PASSKEY); } catch {}
+}
 
 function applyTheme(t){document.documentElement.classList.toggle("dark",t==="dark");const b=$("#themeToggle");if(b)b.textContent=t==="dark"?"☀️ Light mode":"🌙 Dark mode";}
 (function(){const t=localStorage.getItem("vc_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light");applyTheme(t);})();
@@ -334,19 +358,19 @@ async function unlock(fromStore){
   try{
     const blob=await fetch("data.enc").then(r=>r.json());
     const data=await decryptBlob(pass,blob);
-    sessionStorage.setItem(PASSKEY,pass);
+    savePass(pass);
     boot(data);
   }catch(e){
     console.error(e);
     $("#err").textContent="Wrong passphrase, or data unavailable.";
-    if(fromStore) sessionStorage.removeItem(PASSKEY);
+    if(fromStore) clearPass();   // stale (e.g. passphrase was rotated)
   }
 }
 $("#unlock").addEventListener("click",()=>unlock(false));
 $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false);});
 (async function(){
-  const stored=sessionStorage.getItem(PASSKEY);
-  if(stored){$("#pw").value=stored;await unlock(true);}
+  const stored = loadPass();
+  if(stored){ $("#pw").value = stored; await unlock(true); }
 })();
 
 function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -1246,7 +1270,7 @@ function renderTrendChart(act,posts){
 }
 
 $("#themeToggle")&&$("#themeToggle").addEventListener("click",e=>{e.preventDefault();const cur=document.documentElement.classList.contains("dark")?"light":"dark";localStorage.setItem("vc_theme",cur);applyTheme(cur);});
-$("#forget")&&$("#forget").addEventListener("click",e=>{e.preventDefault();sessionStorage.removeItem(PASSKEY);location.reload();});
+$("#forget")&&$("#forget").addEventListener("click",e=>{e.preventDefault();clearPass();location.reload();});
 </script>
 </body>
 </html>
