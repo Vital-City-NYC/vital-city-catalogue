@@ -263,7 +263,6 @@
         <div class="legend">
           <span><span class="sw" style="background:var(--vc-green)"></span>New signups (per day)</span>
           <span><span class="sw" style="background:var(--vc-magenta)"></span>Unsubscribes (per day)</span>
-          <span><span class="sw" style="background:var(--vc-cerulean);border-radius:50%;width:8px;height:8px"></span>Vital City post published</span>
         </div>
       </div>
 
@@ -1094,7 +1093,7 @@ function interpretInsight(metric, deltaPct, ctx){
     return ` Sharp 7-day signup drop — possible culprits: signup form was broken, a referral source dried up, or a publishing gap (no new article = nothing to sign up off). Check the trend chart's blue dots above the bars.`;
   }
   if(metric==="signups_7d" && deltaPct>30){
-    return ` Spike in 7-day signups — usually traceable to a single piece that traveled. Check the post-publish dots on the trend chart for the trigger.`;
+    return ` Spike in 7-day signups — usually traceable to a single piece that traveled. Check the "Recent signup movers" callout in the Content cadence card for the trigger.`;
   }
   if(metric==="total_opens" && deltaPct>30 && ctx && ctx.open_rate_yoy && ctx.open_rate_yoy < -20){
     return ` Total opens up YoY even with a lower per-email open rate = list grew + you sent more. More eyeballs reached on net, which is what matters editorially.`;
@@ -1531,13 +1530,10 @@ function renderTrendChart(act,posts){
   // unsub line
   const pts=last.map((r,i)=>`${x(i)},${y(r.unsubs)}`).join(" ");
   html+=`<polyline points="${pts}" fill="none" stroke="#C8377E" stroke-width="1.6" opacity=".85"/>`;
-  // post-publish dots
-  const postDates=new Set((posts||[]).map(p=>p.published));
-  last.forEach((r,i)=>{
-    if(postDates.has(r.d)){
-      html+=`<circle cx="${x(i)}" cy="${padT+2}" r="3" fill="#1F6FB2"><title>Posts published on ${r.d}</title></circle>`;
-    }
-  });
+  // (Post-publish dots removed — Vital City publishes multiple times a week,
+  // so a per-day binary "did anything publish today" marker is too noisy to
+  // be useful. The "Recent signup movers" callout in the Content cadence card
+  // is a better signal for which specific pieces drew traffic.)
   svg.innerHTML=html;
 }
 
