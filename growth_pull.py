@@ -599,26 +599,63 @@ def build_engagement_extras(mc, signup_attr, donorbox):
 
         weighted_total = 0.0
         unweighted_total = 0
-        notable_in_mau = 0
-        gov_in_mau    = 0
+        notable_list = []
+        gov_list     = []
+        GOV_TYPES = {"current nyc.gov", "city gov", "state gov", "fed gov", "judge"}
         for em, p in em2p.items():
             if mau_set and em not in mau_set: continue
             rating = rating_by_email.get(em, 0)
             weighted_total += _score(p, rating)
             unweighted_total += 1
-            if p.get("wiki"): notable_in_mau += 1
             types = set(p.get("types") or [])
-            if any(t in types for t in ("current nyc.gov", "city gov", "state gov", "fed gov", "judge")):
-                gov_in_mau += 1
+            row = {
+                "name":  p.get("n") or "(no name)",
+                "email": em,
+                "inst":  p.get("inst") or "",
+                "types": list(types)[:6],
+                "rating": rating,
+            }
+            if p.get("wiki"): notable_list.append({**row, "wiki": True})
+            if any(t in types for t in GOV_TYPES): gov_list.append(row)
+        # Sort each subset by Mailchimp rating then name so highest-engagement
+        # readers appear first in the modal
+        notable_list.sort(key=lambda r: (-(r.get("rating") or 0), r["name"]))
+        gov_list.sort(    key=lambda r: (-(r.get("rating") or 0), r["name"]))
         out["influence_weighted_reach"] = {
             "score":            round(weighted_total, 1),
             "raw_mau":          unweighted_total,
-            "notable_in_mau":   notable_in_mau,
-            "gov_in_mau":       gov_in_mau,
+            "notable_in_mau":   len(notable_list),
+            "gov_in_mau":       len(gov_list),
             "score_per_reader": round(weighted_total / unweighted_total, 2) if unweighted_total else 0,
+            "notable_list":     notable_list,
+            "gov_list":         gov_list,
         }
     else:
         out["influence_weighted_reach"] = {"available": False, "reason": "no people.json or engagement data"}
+
+    # Also include a power-readers list (top 200 by composite engagement score)
+    # so the count there is clickable too. Stored separately to keep the
+    # power_readers summary block backward-compatible.
+    if rows:
+        scored2 = sorted(rows, key=lambda r: -(r[1] * 20 + r[2]))
+        top = scored2[: min(200, max(1, len(scored2) // 10))]   # top 10% capped at 200
+        # Lookup person info for each
+        pj_path2 = PRIV / "people.json"
+        em2p2 = {}
+        if pj_path2.exists():
+            try:
+                _people = json.loads(pj_path2.read_text())
+                for p in _people:
+                    for em in (p.get("emails") or []):
+                        em2p2[em.lower().strip()] = p
+            except Exception: pass
+        out["power_readers_list"] = [{
+            "name":   (em2p2.get(em, {}).get("n") or "(no name)"),
+            "email":  em,
+            "inst":   em2p2.get(em, {}).get("inst") or "",
+            "rating": rating,
+            "open_pct": op,
+        } for em, rating, op in top]
 
     return out
 
@@ -752,10 +789,14 @@ def build_lifecycle(mc):
         "sunset_candidates": {
             "count": len(sunset),
             "sample": sorted(sunset, key=lambda x: -x["tenure_days"])[:20],
+            # full list (capped at 500 to keep encrypted blob reasonable) for the
+            # clickable modal — sorted same way (longest-tenured first)
+            "list":   sorted(sunset, key=lambda x: -x["tenure_days"])[:500],
         },
         "at_risk": {
             "count": len(at_risk),
             "sample": sorted(at_risk, key=lambda x: -(x.get("rating") or 0))[:20],
+            "list":   sorted(at_risk, key=lambda x: -(x.get("rating") or 0))[:500],
         },
     }
 

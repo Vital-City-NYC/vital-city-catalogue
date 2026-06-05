@@ -143,6 +143,23 @@
   #infoModalBox button{margin-top:16px;font:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:8px 14px;border:1px solid var(--vc-black);background:var(--vc-black);color:#fff;cursor:pointer}
   #infoModalBox button:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:var(--vc-black)}
   html.dark #infoModalBox{background:var(--vc-white)}
+  /* People-list modal — same look as info modal, wider for tabular data */
+  #peopleModal{position:fixed;inset:0;background:rgba(15,16,17,.45);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+  #peopleModal.on{display:flex}
+  #peopleModalBox{background:var(--vc-white);border:1px solid var(--vc-black);padding:22px 26px;max-width:760px;width:100%;max-height:84vh;overflow-y:auto;font-size:14px;line-height:1.5;color:var(--vc-black)}
+  #peopleModalBox h3{margin:0 0 4px;font-family:var(--vc-serif);font-size:22px;color:var(--vc-black);font-weight:900}
+  #peopleModalBox table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  #peopleModalBox th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--vc-black)}
+  #peopleModalBox td{padding:7px 8px;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
+  #peopleModalBox td.r{text-align:right;font-variant-numeric:tabular-nums}
+  #peopleModalBox a.pl{color:var(--vc-cerulean);text-decoration:none;font-weight:600}
+  #peopleModalBox a.pl:hover{text-decoration:underline}
+  #peopleModalBox button{margin-top:16px;font:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:8px 14px;border:1px solid var(--vc-black);background:var(--vc-black);color:#fff;cursor:pointer}
+  #peopleModalBox button:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:var(--vc-black)}
+  html.dark #peopleModalBox{background:var(--vc-white)}
+  /* The clickable-number style: numbers in tiles that open the people modal */
+  .clickable-num{cursor:pointer;border-bottom:1px dashed var(--vc-cerulean)}
+  .clickable-num:hover{color:var(--vc-cerulean)}
 
   /* Gate */
   .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:99}
@@ -352,6 +369,16 @@
     <h3 id="infoModalTitle">What is this?</h3>
     <div id="infoModalText"></div>
     <button id="infoModalClose">Got it</button>
+  </div>
+</div>
+
+<!-- People-list modal — click any subset number to see the actual people -->
+<div id="peopleModal" aria-hidden="true" role="dialog">
+  <div id="peopleModalBox">
+    <h3 id="peopleModalTitle">Subset</h3>
+    <div id="peopleModalNote" style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:12px"></div>
+    <div id="peopleModalBody"></div>
+    <button id="peopleModalClose">Close</button>
   </div>
 </div>
 
@@ -1204,6 +1231,60 @@ function renderSendChart(camps){
   }
 }
 
+// ---- People-list modal — open a subset of subscribers as a clickable list ----
+// Each row links to the Contact tool with the email pre-searched, so Josh can
+// jump straight to the full record (with notes, edit, type tags, etc.).
+window._peopleSubsets = {};   // populated by renderers; keyed by short id
+function showPeople(key, title, note){
+  const subset = window._peopleSubsets[key];
+  if(!subset){ console.warn("no subset for", key); return; }
+  document.getElementById("peopleModalTitle").textContent = title || "Subscribers";
+  document.getElementById("peopleModalNote").innerHTML  = note || "";
+  const body = document.getElementById("peopleModalBody");
+  const rows = subset.list || [];
+  const fmtTypes = (t) => Array.isArray(t) ? t.join(" · ") : "";
+  body.innerHTML = rows.length ? `
+    <table>
+      <thead><tr>
+        <th>Name</th><th>Email</th><th>Institution</th>
+        ${rows[0].rating!=null ? '<th class="r">★</th>' : ''}
+        ${rows[0].open_pct!=null ? '<th class="r">Open%</th>' : ''}
+        ${rows[0].tenure_days!=null ? '<th class="r">Tenure</th>' : ''}
+        ${rows[0].since ? '<th>Joined</th>' : ''}
+        <th>Open in contacts</th>
+      </tr></thead>
+      <tbody>${rows.map(r => `<tr>
+        <td><b>${esc(r.name||'(no name)')}</b>${r.wiki?' <span title="Wikipedia-notable" style="color:var(--vc-cerulean);font-size:11px">★notable</span>':''}${(r.types && r.types.length)?`<div style="font-size:10.5px;color:var(--vc-charcoal);margin-top:2px">${esc(fmtTypes(r.types))}</div>`:''}</td>
+        <td style="font-size:12px"><a href="mailto:${esc(r.email)}" style="color:var(--vc-black);text-decoration:none">${esc(r.email)}</a></td>
+        <td style="font-size:12px">${esc(r.inst||'')}</td>
+        ${r.rating!=null ? `<td class="r">${r.rating||0}</td>` : ''}
+        ${r.open_pct!=null ? `<td class="r">${r.open_pct||0}%</td>` : ''}
+        ${r.tenure_days!=null ? `<td class="r">${fmtN(r.tenure_days)}d</td>` : ''}
+        ${r.since ? `<td>${esc(r.since)}</td>` : ''}
+        <td><a class="pl" target="_blank" href="../network/index.html#${encodeURIComponent(JSON.stringify({q:r.email}))}">View ↗</a></td>
+      </tr>`).join("")}</tbody>
+    </table>
+    ${(subset.total||rows.length) > rows.length ? `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px">Showing top ${rows.length} of ${fmtN(subset.total)}. To see all, open the Contact tool and filter accordingly.</div>` : ''}
+  ` : '<div style="color:var(--vc-charcoal);padding:8px 0">No matching subscribers in this subset.</div>';
+  document.getElementById("peopleModal").classList.add("on");
+}
+// Close on backdrop, Esc, button
+document.addEventListener("click", e => {
+  if(e.target && e.target.id === "peopleModal"){
+    document.getElementById("peopleModal").classList.remove("on");
+  }
+});
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape"){
+    const m = document.getElementById("peopleModal");
+    if(m && m.classList.contains("on")) m.classList.remove("on");
+  }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("peopleModalClose");
+  if(btn) btn.addEventListener("click", () => document.getElementById("peopleModal").classList.remove("on"));
+});
+
 // ---- Info-dot popovers (clickable "what is this?" icons) ----
 // We don't retrofit every metric tile manually; instead, after boot()
 // finishes rendering, we walk certain selectors and attach a small ⓘ icon
@@ -1615,6 +1696,10 @@ function renderEngagementExtras(ex){
   const power = ex.power_readers || {};
   const ltv   = ex.channel_ltv || {available:false};
   const iwr   = ex.influence_weighted_reach || {};
+  // Stash the actual subsets so the click-through opens a person list
+  window._peopleSubsets["notable_in_mau"] = {list: iwr.notable_list || [], total: iwr.notable_in_mau||0};
+  window._peopleSubsets["gov_in_mau"]     = {list: iwr.gov_list     || [], total: iwr.gov_in_mau||0};
+  window._peopleSubsets["power_readers"]  = {list: ex.power_readers_list || [], total: (power.count||0)};
 
   // Card-level intro so the reader doesn't have to hover for context
   const intro = `<div style="font-size:12px;color:var(--vc-charcoal);margin:0 0 18px;line-height:1.55">
@@ -1631,8 +1716,16 @@ function renderEngagementExtras(ex){
       <div class="perfgrid">
         <div class="perfcell"><div class="pl">Influence score (total)</div><div class="pn">${fmtN(iwr.score)}</div><div class="pd flat">summed across the ${fmtN(iwr.raw_mau||0)} active readers</div></div>
         <div class="perfcell"><div class="pl">Score per reader (avg)</div><div class="pn">${iwr.score_per_reader}</div><div class="pd flat">1.0 = baseline, 5.0 ≈ max</div></div>
-        <div class="perfcell" title="Active subscribers whose email ends in .gov, or who carry city/state/federal/judge type tags in the CRM."><div class="pl">Government / judge readers</div><div class="pn">${fmtN(iwr.gov_in_mau||0)}</div><div class="pd flat">in this month's active set</div></div>
-        <div class="perfcell" title="Active subscribers flagged as 'notable' (matched to an English Wikipedia page using conservative context clues)."><div class="pl">Wikipedia-notable readers</div><div class="pn">${fmtN(iwr.notable_in_mau||0)}</div><div class="pd flat">in this month's active set</div></div>
+        <div class="perfcell" title="Active subscribers whose email ends in .gov, or who carry city/state/federal/judge type tags in the CRM. Click the number to see them.">
+          <div class="pl">Government / judge readers</div>
+          <div class="pn"><span class="clickable-num" onclick="showPeople('gov_in_mau','Government/judge readers in this month\\'s active set','These are subscribers whose email is on a government domain (.gov) or who carry city/state/federal/judge type tags in the Contact tool, AND who opened at least one Vital City newsletter in the last 30 days. The most policy-relevant audience for Vital City\\'s editorial.')">${fmtN(iwr.gov_in_mau||0)}</span></div>
+          <div class="pd flat">in this month's active set <span style="color:var(--vc-cerulean)">· click to view</span></div>
+        </div>
+        <div class="perfcell" title="Active subscribers flagged as 'notable' (matched to an English Wikipedia page using conservative context clues). Click the number to see them.">
+          <div class="pl">Wikipedia-notable readers</div>
+          <div class="pn"><span class="clickable-num" onclick="showPeople('notable_in_mau','Wikipedia-notable readers in this month\\'s active set','Subscribers flagged as appearing on the English Wikipedia (matched conservatively from CRM context). These are the public-profile readers — academics, journalists, public officials, prominent practitioners. Rough signal of public-profile audience reach.')">${fmtN(iwr.notable_in_mau||0)}</span></div>
+          <div class="pd flat">in this month's active set <span style="color:var(--vc-cerulean)">· click to view</span></div>
+        </div>
       </div>
     </div>` : '';
 
@@ -1657,7 +1750,11 @@ function renderEngagementExtras(ex){
     <div style="margin-bottom:18px">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="The top 10% of subscribers ranked by composite engagement (Mailchimp star rating × 20 + open rate). These are the people who will reliably open your next email. Use this segment for: 'send-first' tests of new formats, asking for sharing, soliciting recurring donations, and recruiting authors/sources.">Power readers · top decile</div>
       <div class="perfgrid">
-        <div class="perfcell"><div class="pl">Power-reader count</div><div class="pn">${fmtN(power.count)}</div><div class="pd flat">${power.as_pct_of_list}% of list</div></div>
+        <div class="perfcell" title="The top 10% of subscribers by composite engagement (rating × 20 + open rate). Click the number to see the top 200 of them.">
+          <div class="pl">Power-reader count</div>
+          <div class="pn"><span class="clickable-num" onclick="showPeople('power_readers','Power readers — top decile of engaged subscribers','The 200 most-engaged subscribers from this list (composite score = Mailchimp star rating × 20 + Mailchimp average open rate). These are the people who reliably open every Vital City newsletter — useful for send-first tests, recurring-donation asks, source recruitment.')">${fmtN(power.count)}</span></div>
+          <div class="pd flat">${power.as_pct_of_list}% of list <span style="color:var(--vc-cerulean)">· click to view top 200</span></div>
+        </div>
         <div class="perfcell"><div class="pl">Avg open rate</div><div class="pn">${power.avg_open_pct}%</div><div class="pd flat">across top-decile</div></div>
         <div class="perfcell"><div class="pl">Avg Mailchimp ★</div><div class="pn">${power.avg_rating}</div><div class="pd flat">of 5.0</div></div>
         <div class="perfcell" title="Provider mix of your top-decile readers. If a disproportionate share are on .edu or .gov, your editorial is reaching the right audience even when overall open rate is low.">
@@ -1724,17 +1821,20 @@ function renderLifecycle(lc){
         <div class="pn">${act.pct||0}%</div>
         <div class="pd ${actCls}">${fmtN(act.engaged||0)} of ${fmtN(act.cohort_size||0)} opened ≥1 email</div>
       </div>
-      <div class="perfcell" title="Subscribers who opened at least one email in the past year but nothing in the last 30 days. They've drifted but you've earned their attention before — the highest-ROI re-engagement target. A 're-engagement' send specifically to this segment usually has the best open rate of any campaign you run.">
+      <div class="perfcell" title="Subscribers who opened at least one email in the past year but nothing in the last 30 days. They've drifted but you've earned their attention before — the highest-ROI re-engagement target. Click the number to see who they are.">
         <div class="pl">At-risk · lapsed but reachable</div>
-        <div class="pn">${fmtN(atRisk.count||0)}</div>
-        <div class="pd flat">opened &lt;1yr ago, nothing in 30d</div>
+        <div class="pn"><span class="clickable-num" onclick="showPeople('at_risk','At-risk subscribers (lapsed but reachable)','Subscribers who opened at least one Vital City email in the past year but nothing in the last 30 days. They\\'ve drifted but you\\'ve earned their attention before — the highest-ROI re-engagement target. A re-engagement send specifically to this segment usually has the best open rate of any campaign you run. Top 500 shown here, sorted by Mailchimp star rating descending (highest-value first).')">${fmtN(atRisk.count||0)}</span></div>
+        <div class="pd flat">opened &lt;1yr ago, nothing in 30d <span style="color:var(--vc-cerulean)">· click to view</span></div>
       </div>
-      <div class="perfcell" title="Subscribers who Mailchimp rates 1-2 stars AND have been on the list for more than 6 months AND haven't opened in 30 days. Pruning them improves deliverability (Gmail/Outlook reduce inbox priority for senders with low engagement rates) and the open-rate denominator. Standard practice: send a 'still want to hear from us?' sunset campaign first; remove non-responders.">
+      <div class="perfcell" title="Subscribers who Mailchimp rates 1-2 stars AND have been on the list for more than 6 months AND haven't opened in 30 days. Pruning them improves deliverability. Click the number to see who they are.">
         <div class="pl">Sunset candidates</div>
-        <div class="pn">${fmtN(sunset.count||0)}</div>
-        <div class="pd ${sunset.count > 1000 ? 'down' : 'flat'}">1-2★ · 6mo+ tenure · no recent open</div>
+        <div class="pn"><span class="clickable-num" onclick="showPeople('sunset_candidates','Sunset candidates (low-engagement, long-tenured, no recent opens)','Subscribers who Mailchimp rates 1-2 stars AND have been on the list 6+ months AND haven\\'t opened in 30 days. Pruning them improves deliverability (Gmail/Outlook reduce inbox priority for senders with low engagement rates) and the open-rate denominator. Standard practice: send a single 'still want to hear from us?' campaign to this segment; remove non-responders after 14 days. Top 500 shown here, sorted by longest-tenure first.')">${fmtN(sunset.count||0)}</span></div>
+        <div class="pd ${sunset.count > 1000 ? 'down' : 'flat'}">1-2★ · 6mo+ tenure · no recent open <span style="color:var(--vc-cerulean)">· click to view</span></div>
       </div>
     </div>`;
+  // Stash the lifecycle subsets so the clickable numbers above work
+  window._peopleSubsets["at_risk"]           = {list: atRisk.list || atRisk.sample || [], total: atRisk.count||0};
+  window._peopleSubsets["sunset_candidates"] = {list: sunset.list || sunset.sample || [], total: sunset.count||0};
 
   // ---- Retention curve chart ----
   const W=800, H=200, padL=46, padR=14, padT=14, padB=36;
