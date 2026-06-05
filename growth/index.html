@@ -418,7 +418,7 @@ function boot(data){
     {lbl:"Website AAU · 1y", num: ga4.aau!=null ? fmtN(ga4.aau) : "—",
      delta: ga4.aau!=null ? `${fmtN(ga4.sessions_365||0)} sessions` : "needs GA4 ↗",
      cls: ga4.aau!=null ? "flat" : "na",
-     tip:"WEBSITE — Unique visitors to vitalcitynyc.org in the last 365 days. Same Ghost-API-gating as the MAU tile — Ghost has it, doesn't expose it. GA4 is the cleanest path, and it also covers the pre-Ghost-cutover traffic (Jan-April 2025) that wouldn't exist in Ghost Analytics anyway."},
+     tip:"WEBSITE — Unique visitors to vitalcitynyc.org in the last 365 days. Same Ghost-API gating as the MAU tile — Ghost has it, doesn't expose it. The site only moved to Ghost in April 2026, so Ghost's internal Analytics tab has at most ~2 months of traffic data anyway. GA4 / Plausible / Cloudflare Web Analytics are the realistic paths for traffic data going forward (and for any pre-April-2026 history that still lives in the prior site's analytics)."},
     // --- Fundraising ---
     {lbl:"Raised · YTD", num: db.available ? fmtUSD((dWin.ytd||{}).amount||0) : "—",
      delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts` : "Donorbox not connected",
@@ -805,7 +805,7 @@ function renderYTD(mc, signups){
   const rows=[
     {label:"New signups", now:signups.ytd, prev:signups.prior_ytd, ok:signups.prior_ytd_ok, positiveGood:true,
      na:signups.prior_ytd_source ||
-        `Comparing current Ghost signup counts against Mailchimp's daily activity feed for the same period last year. Mailchimp was the canonical signup source pre-Ghost-cutover (Apr 2025), so Jan-Mar 2025 is accurate. From April 2025 forward the Ghost form took over and Mailchimp undercounts until the weekly reconcile catches up, so the prior-year figure for that stretch is a floor — true 2025 was probably higher.`},
+        `2026 YTD signups are pulled from Ghost (the site moved to Ghost in April 2026 and signups now come through there). 2025 YTD signups are pulled from Mailchimp's growth-history — that's the canonical record of every net addition to the list regardless of which form fed it (Prismic-hosted form, MC form, or manual import). The comparison is methodology-fair; the absolute 2025 numbers reflect whatever ingestion was happening then including any list imports.`},
     {label:"Unsubscribes", now:signups.unsub_ytd, prev:signups.unsub_prior_ytd, ok:true, positiveGood:false,
      na:""},
     {label:"Newsletter sends", now:ytd.sends, prev:prior.sends, ok:true, positiveGood:true,
@@ -842,10 +842,10 @@ function renderYTD(mc, signups){
       <th>Metric</th><th class="num">YTD 2026</th><th class="num">YTD 2025 (same period)</th><th class="num">YoY</th>
     </tr></thead><tbody>${body}</tbody></table>
     <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">
-      <b>Source of truth:</b> signups → Ghost (the website signup form is the canonical intake since the ${esc((signups.ghost_cutover||'April 2025').slice(0,7))} cutover; transferred to Mailchimp on the weekly reconcile).
+      <b>Source of truth:</b> signups → Ghost (the website signup form is the canonical intake since vitalcitynyc.org moved to Ghost in <b>April 2026</b>; transferred to Mailchimp on the weekly reconcile).
       Unsubscribes → Mailchimp (people click the footer link there; transferred out of Ghost on the same reconcile).
       Newsletter performance numbers are recipient-weighted from Mailchimp campaign reports.
-      <br><b>Signup YoY caveat:</b> Vital City's 2026 YTD signups are pulled from Ghost. The 2025 figure comes from Mailchimp's daily-activity feed for the same period — accurate for Jan–Mar 2025 (pre-Ghost) and a floor for Apr–Jun 2025 (Ghost form took over and Mailchimp catches up via the weekly batch). The comparison is directionally fair; the prior-year number is more likely understated than overstated.
+      <br><b>Signup YoY method:</b> 2026 YTD comes from Ghost. 2025 YTD comes from Mailchimp's growth-history (cumulative net subscriber count per month) — the same record regardless of whether a signup arrived through the prior Prismic-hosted form, the Mailchimp form, or a list import. The methodology is the same for both years. If 2025's headline number jumps (the May-Jun 2025 months spike sharply in the chart), that's likely a one-time list integration — Josh would know which.
     </div>`;
 }
 

@@ -78,8 +78,9 @@ def pull_mailchimp():
     # Growth history — monthly *cumulative* sub + unsub counts going back ~58
     # months. From this we can derive REAL monthly new-signup counts (the
     # /activity feed is unreliable because it only sees direct-MC-form
-    # signups, and most VC signups arrived via Ghost form even before the
-    # April 2025 cutover). Formula: new_signups[m] = (subs[m] - subs[m-1]) +
+    # signups, and the actual site cutover to Ghost was April 2026 — most
+    # 2025 signups went through the prior Prismic-hosted form into Mailchimp
+    # directly). Formula: new_signups[m] = (subs[m] - subs[m-1]) +
     # (unsubs[m] - unsubs[m-1]). Captures everyone added to the list,
     # whether through Ghost reconcile, MC form, or manual import.
     try:
@@ -145,14 +146,17 @@ def pull_mailchimp():
 
     out["daily_activity"] = sorted(rows_by_day.values(), key=lambda r: r["d"])
 
-    # Signup + unsubscribe windows (YTD and YoY where the data supports it).
-    # Ghost cutover was April 2025, so signups YoY for any window touching
-    # Jan-Mar 2025 is N/A (pre-Ghost data isn't there). Unsubs YoY is fine
-    # because Mailchimp has been the source of unsubs throughout.
+    # Signup + unsubscribe windows (YTD and YoY).
+    # The Ghost subscription started Jan 2025 but the actual SITE cutover
+    # (vitalcitynyc.org moving from Prismic to Ghost) was April 2026. So:
+    #  - 2025 signups were captured via the prior site/Mailchimp form
+    #  - 2026 signups (April onward) come via Ghost's form
+    # Mailchimp's growth-history reflects all subscriber adds regardless of
+    # which form they came through, so it's the YoY-fair source.
     from datetime import date as _date
     today = datetime.now(timezone.utc).date()
     y = today.year
-    GHOST_CUTOVER = _date(2025, 4, 1)  # documented in HANDOFF — Ghost rollout
+    GHOST_CUTOVER = _date(2026, 4, 1)  # vitalcitynyc.org site moved to Ghost
 
     def _sum(rows, start, end, key):
         s, e = start.isoformat(), end.isoformat()
@@ -244,7 +248,8 @@ def pull_mailchimp():
 
         # Period buckets: window stats and YoY comparisons (Mailchimp send data
         # goes back to ~2022, so this is reliable for newsletter performance).
-        # Signup YoY is documented as N/A pre-April 2025 (Ghost cutover).
+        # Signup YoY uses Mailchimp growth-history (canonical regardless of
+        # which front-end form fed the list — Prismic pre-cutover, Ghost after).
         from datetime import date as _date
         today = datetime.now(timezone.utc).date()
         y, _ = today.year, today.month
