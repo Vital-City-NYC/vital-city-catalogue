@@ -352,6 +352,16 @@
         <option value="needs_work">Needs work (guessed or missing)</option>
       </select>
     </label>
+    <label class="sortctl" title="Filter to engagement subsets the Growth dashboard surfaces. Active = opened a Vital City newsletter in the last 30 days (MAU) or year (AAU). Power readers = top decile by composite engagement. At-risk = opened in last year but not last 30 days — re-engagement target. Sunset candidates = 1-2★ + 6mo+ tenure + no recent open, pruning candidates. Refreshes daily.">Engagement:
+      <select id="fEngagement" aria-label="Filter by newsletter engagement">
+        <option value="any">(any)</option>
+        <option value="mau">Active · last 30 days (MAU)</option>
+        <option value="aau">Active · last year (AAU)</option>
+        <option value="power">Power readers (top decile)</option>
+        <option value="at_risk">At-risk (lapsed but reachable)</option>
+        <option value="sunset">Sunset candidates (prune list)</option>
+      </select>
+    </label>
     <button class="btn ghost" id="clear" title="Reset every filter and return to the full list">Reset all</button>
   </div>
   <div class="savedviews" id="savedViews"></div>
@@ -668,6 +678,7 @@ function init(){
   $("#fWiki").addEventListener("change",render);
   $("#fMultiSub").addEventListener("change",render);
   $("#fName").addEventListener("change",render);
+  $("#fEngagement").addEventListener("change",render);
   $("#fUnsub").addEventListener("change",()=>{onlyUnsub=false;render();});
   $("#export").addEventListener("click",exportCSV);
   $("#copyEmails").addEventListener("click",copyEmails);
@@ -844,7 +855,7 @@ function toggleOther(){
 function clearAll(){
   selectedCats.clear(); want={mem:0,don:0,auth:0}; reviewMode="";
   $("#q").value=""; $("#dFrom").value=""; $("#dTo").value="";
-  onlyUnsub=false; $("#fUnsub").checked=false; $("#fStar").checked=false; $("#fWiki").checked=false; $("#fMultiSub").checked=false; $("#fName").value="any";
+  onlyUnsub=false; $("#fUnsub").checked=false; $("#fStar").checked=false; $("#fWiki").checked=false; $("#fMultiSub").checked=false; $("#fName").value="any"; $("#fEngagement").value="any";
   document.querySelectorAll(".facet").forEach(l=>{l.classList.remove("on");const cb=l.querySelector("input");if(cb)cb.checked=false;});
   syncToggles(); render();
 }
@@ -889,6 +900,16 @@ function filtered(){
     if($("#fStar").checked && !p.star) return false;
     if($("#fWiki").checked && !p.wiki) return false;
     if($("#fMultiSub").checked && !(p.sub_emails && p.sub_emails.length>1)) return false;
+    {
+      const ef=$("#fEngagement").value;
+      if(ef && ef!=="any"){
+        if(ef==="mau" && !p.mau) return false;
+        else if(ef==="aau" && !p.aau) return false;
+        else if(ef==="power" && !p.power_reader) return false;
+        else if(ef==="at_risk" && !p.at_risk) return false;
+        else if(ef==="sunset" && !p.sunset_candidate) return false;
+      }
+    }
     {
       const nf=$("#fName").value;
       if(nf && nf!=="any"){
@@ -1176,6 +1197,16 @@ function describeFilters(){
     };
     if(nf && nfLabels[nf]) parts.push(nfLabels[nf]);
   }
+  {
+    const ef=$("#fEngagement").value, efLabels={
+      "mau":"<b>active 30d</b>",
+      "aau":"<b>active 1y</b>",
+      "power":"<b>power readers</b>",
+      "at_risk":"<b>at-risk</b>",
+      "sunset":"<b>sunset candidates</b>",
+    };
+    if(ef && efLabels[ef]) parts.push(efLabels[ef]);
+  }
   const cats=[...selectedCats]; if(cats.length) parts.push("type/area: "+cats.join(" <b>OR</b> "));
   const df=$("#dFrom").value, dt=$("#dTo").value; if(df||dt) parts.push("subscribed "+(df||"…")+"–"+(dt||"now"));
   const q=$("#q").value.trim(); if(q) parts.push('matching "'+esc(q)+'"');
@@ -1188,12 +1219,12 @@ const VKEY="vc_views";
 function loadViews(){ try{return JSON.parse(localStorage.getItem(VKEY)||"[]");}catch(e){return [];} }
 function currentState(){ return {want:Object.assign({},want), cats:[...selectedCats], q:$("#q").value,
   dFrom:$("#dFrom").value, dTo:$("#dTo").value, repeat:$("#fRepeatDonor").checked, star:$("#fStar").checked,
-  wiki:$("#fWiki").checked, multisub:$("#fMultiSub").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, name:$("#fName").value, sortKey:sortKey, sortDir:sortDir}; }
+  wiki:$("#fWiki").checked, multisub:$("#fMultiSub").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, name:$("#fName").value, engagement:$("#fEngagement").value, sortKey:sortKey, sortDir:sortDir}; }
 function applyState(s){
   want=Object.assign({mem:0,don:0,auth:0}, s.want||{});
   selectedCats=new Set(s.cats||[]);
   $("#q").value=s.q||""; $("#dFrom").value=s.dFrom||""; $("#dTo").value=s.dTo||"";
-  $("#fUnsub").checked=!!s.unsub; onlyUnsub=!!s.onlyUnsub; $("#fStar").checked=!!s.star; $("#fWiki").checked=!!s.wiki; $("#fMultiSub").checked=!!s.multisub; $("#fName").value=s.name||"any";
+  $("#fUnsub").checked=!!s.unsub; onlyUnsub=!!s.onlyUnsub; $("#fStar").checked=!!s.star; $("#fWiki").checked=!!s.wiki; $("#fMultiSub").checked=!!s.multisub; $("#fName").value=s.name||"any"; $("#fEngagement").value=s.engagement||"any";
   if(s.sortKey){ sortKey=s.sortKey; sortDir=s.sortDir||1; }
   syncToggles(); $("#fRepeatDonor").checked=!!s.repeat;
   document.querySelectorAll(".facet").forEach(l=>{const on=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on);const cb=l.querySelector("input");if(cb)cb.checked=on;});
@@ -1211,6 +1242,7 @@ function updateHash(){
   if(s.cats.length)o.c=s.cats; if(s.q)o.q=s.q; if(s.dFrom)o.f=s.dFrom; if(s.dTo)o.t=s.dTo;
   if(s.repeat)o.r=1; if(s.unsub)o.u=1; if(s.onlyUnsub)o.o=1; if(s.star)o.st=1; if(s.wiki)o.wk=1; if(s.multisub)o.ms=1;
   if(s.name && s.name!=="any") o.nm=s.name;
+  if(s.engagement && s.engagement!=="any") o.eg=s.engagement;
   if(s.sortKey!=="last"||s.sortDir!==1){o.sk=s.sortKey;o.sd=s.sortDir;}
   const h=Object.keys(o).length?"#"+encodeURIComponent(JSON.stringify(o)):location.pathname;
   history.replaceState(null,"",h);
@@ -1218,7 +1250,7 @@ function updateHash(){
 function applyHash(){
   if(!location.hash||location.hash.length<2) return false;
   try{ const o=JSON.parse(decodeURIComponent(location.hash.slice(1)));
-    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,multisub:!!o.ms,name:o.nm||"any",sortKey:o.sk||"last",sortDir:o.sd||1});
+    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,multisub:!!o.ms,name:o.nm||"any",engagement:o.eg||"any",sortKey:o.sk||"last",sortDir:o.sd||1});
     // A per-contact link (#{"person":"<id>"}) opens that person's card.
     if(o.person){
       const p=PEOPLE.find(x=>pidFor(personKey(x))===o.person);

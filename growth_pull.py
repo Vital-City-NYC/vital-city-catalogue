@@ -413,6 +413,19 @@ def pull_mailchimp():
     return out
 
 
+def _last_name_key(row):
+    """Sort key for subset lists in the dashboard: alphabetical by last name,
+    then first. Mirrors how the Contact tool sorts by last name — split on
+    whitespace, the last token is the last name. Single-word names sort by
+    the whole thing. Empty names sort last."""
+    n = (row.get("name") or "").strip()
+    if not n: return ("zzz", "")
+    parts = n.split()
+    if len(parts) == 1:
+        return (parts[0].lower(), "")
+    return (parts[-1].lower(), " ".join(parts[:-1]).lower())
+
+
 def build_engagement_extras(mc, signup_attr, donorbox):
     """Four newer metrics that publishers (Atlantic, Pico-using sites, Stratechery)
     use to get past Apple Mail privacy noise:
@@ -617,10 +630,10 @@ def build_engagement_extras(mc, signup_attr, donorbox):
             }
             if p.get("wiki"): notable_list.append({**row, "wiki": True})
             if any(t in types for t in GOV_TYPES): gov_list.append(row)
-        # Sort each subset by Mailchimp rating then name so highest-engagement
-        # readers appear first in the modal
-        notable_list.sort(key=lambda r: (-(r.get("rating") or 0), r["name"]))
-        gov_list.sort(    key=lambda r: (-(r.get("rating") or 0), r["name"]))
+        # Alphabetical by last name — matches how the Contact tool sorts and
+        # makes it easy to scan / find specific people.
+        notable_list.sort(key=_last_name_key)
+        gov_list.sort(    key=_last_name_key)
         out["influence_weighted_reach"] = {
             "score":            round(weighted_total, 1),
             "raw_mau":          unweighted_total,
@@ -649,13 +662,15 @@ def build_engagement_extras(mc, signup_attr, donorbox):
                     for em in (p.get("emails") or []):
                         em2p2[em.lower().strip()] = p
             except Exception: pass
-        out["power_readers_list"] = [{
+        prl = [{
             "name":   (em2p2.get(em, {}).get("n") or "(no name)"),
             "email":  em,
             "inst":   em2p2.get(em, {}).get("inst") or "",
             "rating": rating,
             "open_pct": op,
         } for em, rating, op in top]
+        prl.sort(key=_last_name_key)
+        out["power_readers_list"] = prl
 
     return out
 
@@ -788,15 +803,19 @@ def build_lifecycle(mc):
         },
         "sunset_candidates": {
             "count": len(sunset),
+            # Sample sticks with longest-tenure-first (the inline preview in
+            # the lifecycle card surfaces the longest-lapsed first as a
+            # nudge), but the modal list is alphabetical by last name.
             "sample": sorted(sunset, key=lambda x: -x["tenure_days"])[:20],
-            # full list (capped at 500 to keep encrypted blob reasonable) for the
-            # clickable modal — sorted same way (longest-tenured first)
-            "list":   sorted(sunset, key=lambda x: -x["tenure_days"])[:500],
+            "list":   sorted(sunset, key=_last_name_key)[:500],
         },
         "at_risk": {
             "count": len(at_risk),
+            # Sample stays sorted by star rating (highest-engagement first) so
+            # the inline preview leads with your highest-value reachable
+            # subscribers. The modal list is alphabetical by last name.
             "sample": sorted(at_risk, key=lambda x: -(x.get("rating") or 0))[:20],
-            "list":   sorted(at_risk, key=lambda x: -(x.get("rating") or 0))[:500],
+            "list":   sorted(at_risk, key=_last_name_key)[:500],
         },
     }
 
@@ -1454,7 +1473,10 @@ def pull_x():
             "following": int(user.get("friends_count")   or 0),
             "tweets_total": int(user.get("statuses_count") or 0),
             "avg_likes_recent_20": avg_likes,
-            "recent_tweets": tweets[:20],
+            # Keep all syndication tweets (up to 100) so flag_own_url_shares
+            # has a deeper matching set. The dashboard's social card still
+            # slices to the most recent ~10 for display.
+            "recent_tweets": tweets[:100],
         }
     except Exception as e:
         return {"available": False, "reason": f"X scrape failed: {e}"}
@@ -1537,29 +1559,90 @@ def pull_all_ghost_titles():
     return titles
 
 
-def flag_own_url_shares(news_mentions, all_titles):
+def pull_own_social_posts():
+    """Query Google News restricted to VC's own social-account paths
+    (x.com/VitalCityNYC, linkedin.com/company/vitalcitynyc). Returns
+    per-domain sets of post titles that are KNOWN to be VC's own — used
+    as a stronger own-vs-third-party signal than article-title matching,
+    which only catches LinkedIn company-page reposts.
+    """
+    UA_local = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
+    # Site paths that Google News will accept. We search each path with three
+    # query shapes to gather as many VC-own titles as possible (the brand
+    # phrase, the URL, and a wildcard).
+    sources = [
+        ("x.com",        ["site:x.com/VitalCityNYC",
+                          "site:twitter.com/VitalCityNYC",
+                          'site:x.com/VitalCityNYC "vitalcitynyc.org"']),
+        ("linkedin.com", ["site:linkedin.com/company/vitalcitynyc",
+                          'site:linkedin.com/company/vitalcitynyc "vitalcitynyc"']),
+    ]
+    out = {}
+    for dom, qs in sources:
+        titles = []
+        for q in qs:
+            try:
+                url = f"https://news.google.com/rss/search?q={urllib.parse.quote(q)}&hl=en-US&gl=US&ceid=US:en"
+                xml = http_get(url, headers={"User-Agent": UA_local}, timeout=20)
+                root = ET.fromstring(xml)
+                for it in root.findall(".//item"):
+                    t = _xml_text(it, "title").strip()
+                    if t and len(t) > 8: titles.append(t)
+            except Exception as e:
+                log(f"  own-social ({dom}/{q[:40]}) failed: {e}")
+        out[dom] = list(set(titles))   # dedup within domain
+    log(f"  VC own social posts: {sum(len(v) for v in out.values())} titles ({', '.join(f'{k}={len(v)}' for k,v in out.items())})")
+    return out
+
+
+def flag_own_url_shares(news_mentions, all_titles, vc_tweets=None, own_social=None):
     """For each URL-share item, classify it and decide whether to keep it.
 
     Two-stage filter:
       1. KEEP-OR-DROP: the title or snippet must actually look like a VC
-         reference. Reasoning: Google News' `"vitalcitynyc.org" site:DOMAIN`
-         query matches social Pages/profiles where vitalcitynyc.org appears
-         ANYWHERE on the page — including unrelated posts, About blurbs, or
-         even comments. The Model Cities Initiative post on Facebook (whose
-         title was about a DOJ policing program) is a classic false positive
-         — that Page had once linked to vitalcitynyc.org elsewhere. We drop
-         items unless the title or snippet contains either "vital city" /
-         "vitalcitynyc", or a substring of a known VC article title (15+
-         normalized chars).
-      2. OWN vs THIRD-PARTY: of the kept items, mark as own_post if the title
-         (after stripping " - LinkedIn"/"- X"/etc.) matches a known VC article
-         title exactly or as a long substring.
+         reference (brand phrase or known article title substring). Filters
+         out Facebook Page false positives like "Model Cities Initiative".
+      2. OWN vs THIRD-PARTY: a share is flagged as VC's own social post if
+         (a) its title matches a known VC article title verbatim or substring
+         (catches LinkedIn company-page reposts), OR
+         (b) its title matches text from a recent @VitalCityNYC tweet pulled
+         via the syndication feed (catches X tweets where VC's promotional
+         copy is original and doesn't repeat the article title — "Amid the
+         seemingly endless news...", "Left: Vital City in January..." etc.).
     """
     if not news_mentions:
         return
     norm = lambda s: re.sub(r"[\W_]+", "", (s or "").lower())
     titles_n = {norm(t) for t in (all_titles or set())}
     substr_titles = [t for t in titles_n if len(t) > 20]
+    # Normalize VC's own recent tweets for matching X shares. We strip URLs
+    # and handles before normalizing because Google News titles often drop
+    # the trailing t.co links that VC tweets include.
+    vc_tweets_n = set()
+    if vc_tweets:
+        for t in vc_tweets:
+            cleaned = re.sub(r"https?://\S+", "", t or "")
+            cleaned = re.sub(r"@\w+", "", cleaned)
+            n = norm(cleaned)
+            if len(n) > 25:    # ignore very short tweets to avoid bad matches
+                vc_tweets_n.add(n)
+    # Per-domain own-social-post titles (from pull_own_social_posts —
+    # Google News restricted to x.com/VitalCityNYC and
+    # linkedin.com/company/vitalcitynyc). Stronger signal than vc_tweets
+    # because it doesn't depend on the syndication feed's quirks.
+    own_titles_by_dom = {}
+    if own_social:
+        for dom, titles in own_social.items():
+            normd = set()
+            PLATFORM_TAILS_pre = re.compile(r"\s*[-–—]\s*[\w\.]+\s*$")
+            for t in titles:
+                t2 = PLATFORM_TAILS_pre.sub("", t).strip()
+                t2 = re.sub(r"https?://\S+", "", t2)
+                t2 = re.sub(r"@\w+", "", t2)
+                n = norm(t2)
+                if len(n) > 20: normd.add(n)
+            own_titles_by_dom[dom] = normd
     PLATFORM_TAILS = re.compile(
         r"\s*[-–—]\s*(LinkedIn|Facebook|Instagram|X|Twitter|Bluesky|Threads|"
         r"x\.com|twitter\.com|bsky\.app|facebook\.com|instagram\.com)\s*$", re.I)
@@ -1584,12 +1667,31 @@ def flag_own_url_shares(news_mentions, all_titles):
             t = it.get("title") or ""
             stripped = PLATFORM_TAILS.sub("", t).strip()
             s_norm = norm(stripped)
+            # Strip URLs/handles from the title before matching against VC's
+            # own X tweets — Google often drops the t.co link from the end
+            # while VC's tweet text includes one.
+            s_norm_x = norm(re.sub(r"@\w+", "", re.sub(r"https?://\S+", "", stripped)))
+            domain_lc = (it.get("domain") or "").lower()
+            is_x = ("x.com" in domain_lc or "twitter" in domain_lc)
             if s_norm in titles_n:
                 it["own_post"] = True
             elif any(ti in s_norm or (len(s_norm) > 20 and s_norm in ti) for ti in substr_titles):
                 it["own_post"] = True
+            elif is_x and vc_tweets_n and len(s_norm_x) > 25 and any(
+                tw in s_norm_x or s_norm_x in tw for tw in vc_tweets_n
+            ):
+                # Title matches one of @VitalCityNYC's recent tweets — own post
+                it["own_post"] = True
             else:
-                it["own_post"] = False
+                # Check against per-domain own-social-post titles from Google
+                # News (site:x.com/VitalCityNYC etc.) — the strongest signal
+                # for X & LinkedIn own posts that aren't article-title reposts.
+                own = False
+                for dom, normd in own_titles_by_dom.items():
+                    if dom not in domain_lc: continue
+                    if len(s_norm_x) > 20 and any(t in s_norm_x or s_norm_x in t for t in normd):
+                        own = True; break
+                it["own_post"] = own
         else:
             it["own_post"] = False
         kept.append(it)
@@ -1776,12 +1878,62 @@ def main():
     # can post-process URL-share items for own-post flagging.
     news_mentions = pull_news_mentions()
     all_titles = pull_all_ghost_titles()
-    flag_own_url_shares(news_mentions, all_titles)
+    # Pull VC's own X tweets to recognize URL shares that are reposts from
+    # @VitalCityNYC's own account (where VC's tweet copy doesn't match an
+    # article title verbatim — promotional text, contextual one-liners, etc.).
+    xprof = pull_x()
+    vc_tweets = [t.get("text","") for t in (xprof.get("recent_tweets") or [])] if xprof.get("available") else []
+    own_social = pull_own_social_posts()
+    flag_own_url_shares(news_mentions, all_titles, vc_tweets=vc_tweets, own_social=own_social)
+    # Capture MAU/AAU sets BEFORE they're popped, for the people.json enrich pass
+    mau_set_for_enrich = mc.get("_mau_set") or set()
+    aau_set_for_enrich = mc.get("_aau_set") or set()
     lifecycle = build_lifecycle(mc)
     engagement_extras = build_engagement_extras(mc, signup_attr, db)
     # Strip internal-only fields from in-memory objects before JSON write
     mc.pop("_mau_set", None); mc.pop("_aau_set", None)
     signup_attr.pop("_by_email", None)
+
+    # ---- Enrich people.json with engagement flags --------------------
+    # Add mau / aau / power_reader / at_risk / sunset booleans to each
+    # subscriber's record so the Contact tool can filter to these exact
+    # subsets that the Growth dashboard surfaces. encrypt_people.py runs
+    # after this in the workflow (we update workflow ordering separately),
+    # so the next network/data.enc will carry these flags.
+    pj_path = PRIV / "people.json"
+    if pj_path.exists():
+        try:
+            people = json.loads(pj_path.read_text())
+        except Exception as e:
+            log(f"  enrich people.json: read failed: {e}")
+            people = None
+        if people is not None:
+            # Pull the engagement subsets we computed
+            power_emails = {r["email"] for r in (engagement_extras.get("power_readers_list") or [])}
+            at_risk_emails = {r["email"] for r in (lifecycle.get("at_risk", {}).get("list") or []) if r.get("email")}
+            sunset_emails  = {r["email"] for r in (lifecycle.get("sunset_candidates", {}).get("list") or []) if r.get("email")}
+            updated = 0
+            for p in people:
+                em_list = [e.lower().strip() for e in (p.get("emails") or [p.get("e","")]) if e]
+                old_mau = p.get("mau"); old_aau = p.get("aau")
+                old_pr = p.get("power_reader"); old_ar = p.get("at_risk"); old_sc = p.get("sunset_candidate")
+                p["mau"] = bool(any(em in mau_set_for_enrich for em in em_list))
+                p["aau"] = bool(any(em in aau_set_for_enrich for em in em_list))
+                p["power_reader"]     = bool(any(em in power_emails   for em in em_list))
+                p["at_risk"]          = bool(any(em in at_risk_emails for em in em_list))
+                p["sunset_candidate"] = bool(any(em in sunset_emails  for em in em_list))
+                if (old_mau, old_aau, old_pr, old_ar, old_sc) != (p["mau"], p["aau"], p["power_reader"], p["at_risk"], p["sunset_candidate"]):
+                    updated += 1
+            pj_path.write_text(json.dumps(people, indent=2))
+            log(f"  enriched people.json with engagement flags ({updated} rows changed)")
+            # Re-encrypt people.json so the Contact tool picks up the new flags.
+            # We do this directly (not via subprocess) to avoid a workflow round-trip.
+            try:
+                import encrypt_people
+                encrypt_people.main()
+                log(f"  re-encrypted network/data.enc with engagement flags")
+            except Exception as e:
+                log(f"  could not re-encrypt people.json: {e}")
 
     # Ghost is the source of truth for signups (the public newsletter form
     # writes to Ghost first; Mailchimp is reconciled in weekly batches). Use
@@ -1878,7 +2030,7 @@ def main():
                 "3) Add GSC_CREDS_JSON and GSC_SITE_URL (e.g. sc-domain:vitalcitynyc.org) as GitHub secrets.",
             ],
         },
-        "x_profile":  pull_x(),
+        "x_profile":  xprof,
         "instagram":  pull_instagram(),
     }
     OUT.write_text(json.dumps(out, indent=2))
