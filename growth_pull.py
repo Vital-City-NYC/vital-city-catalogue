@@ -809,9 +809,17 @@ def build_lifecycle(mc):
                 "tenure_days": days_since,
             })
 
-    # Compute retention rate per cohort
+    # Compute retention rate per cohort. Cohorts under 20 people report None
+    # rather than a percentage — 0-of-7 is noise, not signal. The newest
+    # cohorts also structurally undercount: new signups live in Ghost until
+    # the weekly Mailchimp reconcile, so their opens aren't measurable yet,
+    # and they may not have received a send at all. A tiny young cohort once
+    # produced "0% activation — broken welcome flow?" on the dashboard when
+    # nothing was wrong.
+    MIN_COHORT = 20
     for lab, d in cohort.items():
-        d["retention_pct"] = round((d["engaged"] / d["subs"]) * 100, 1) if d["subs"] else None
+        d["retention_pct"] = round((d["engaged"] / d["subs"]) * 100, 1) if d["subs"] >= MIN_COHORT else None
+        d["small_sample"]  = bool(d["subs"] < MIN_COHORT)
 
     activation_rate = round((new_30_engaged / new_30) * 100, 1) if new_30 else 0
 

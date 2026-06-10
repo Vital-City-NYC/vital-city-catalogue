@@ -63,6 +63,13 @@
   .sechead-title{font-size:13px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--vc-black);
                  border-bottom:2px solid var(--vc-black);padding-bottom:5px}
   .sechead-sub{font-size:11.5px;color:var(--vc-charcoal);margin-top:5px;line-height:1.5}
+  /* Time-window toggle row (Signups vs unsubscribes chart) */
+  .winrow{display:flex;gap:6px;margin:0 0 10px}
+  .winbtn{font:inherit;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+          padding:4px 10px;border:1px solid var(--vc-cloud);background:var(--vc-white);
+          color:var(--vc-charcoal);cursor:pointer;border-radius:999px}
+  .winbtn:hover{border-color:var(--vc-charcoal)}
+  .winbtn.on{background:var(--vc-black);border-color:var(--vc-black);color:var(--vc-paper)}
   .card h2{font-family:var(--vc-sans);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);font-weight:700;margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
   .card h2 .hint{font-size:10px;color:var(--vc-charcoal);text-transform:none;letter-spacing:0;font-weight:400}
 
@@ -273,12 +280,10 @@
       </div>
 
       <div class="card" id="trend">
-        <h2>Signups vs unsubscribes — last 90 days <span class="hint" id="trendHint"></span></h2>
-        <div class="chartwrap"><svg class="chart" id="trendChart" viewBox="0 0 800 240" preserveAspectRatio="none"></svg></div>
-        <div class="legend">
-          <span><span class="sw" style="background:var(--vc-green)"></span>New signups (per day)</span>
-          <span><span class="sw" style="background:var(--vc-magenta)"></span>Unsubscribes (per day)</span>
-        </div>
+        <h2>Signups vs unsubscribes <span class="hint" id="trendHint"></span></h2>
+        <div class="winrow" id="trendWin"></div>
+        <div class="chartwrap"><svg class="chart" id="trendChart" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid meet"></svg></div>
+        <div class="legend" id="trendLegend"></div>
       </div>
 
       <div class="card" id="ytd">
@@ -1958,7 +1963,7 @@ function renderEngagementExtras(ex){
     </tr>`).join("");
     const t = ltv.total;
     ltvSection = `<div style="margin-bottom:18px">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="For each acquisition source recorded in Ghost's signup attribution, what % became donors and how much they've given. Caveat: this is limited to subscribers whose signup is in the Ghost member-events feed (~800 signups over the last 6 months, post-April-2026 cutover). Pre-cutover donors don't have a source we can attribute — so the absolute donor counts here are smaller than your total donor count.">Channel LTV · who actually becomes a donor</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="Lifetime value (LTV) = the total donation revenue a subscriber has generated since signing up. This table groups subscribers by where their signup came from (Ghost records the referrer for each one — Google, a partner site, an email campaign tag, etc.) and shows, per channel: how many signed up, how many later became donors, and how much they gave. The '$/signup' column is the channel's lifetime value per signup — total raised divided by all signups from that channel, donors or not. It tells you which channels bring in people who eventually give, not just people who subscribe. Caveat: limited to subscribers whose signup is in the Ghost member-events feed (~800 signups over the last 6 months, post-April-2026 cutover). Pre-cutover donors don't have a source we can attribute — so the absolute donor counts here are smaller than your total donor count.">Donor lifetime value by signup channel · which sources produce donors, not just subscribers</div>
       <table class="tbl" style="width:100%">
         <thead><tr><th>Source</th><th class="num">Signups</th><th class="num">Donors</th><th class="num">Donor rate</th><th class="num">Raised</th><th class="num">$/signup</th></tr></thead>
         <tbody>${rows}</tbody>
@@ -1971,7 +1976,7 @@ function renderEngagementExtras(ex){
           <td class="num">${fmtUSD(t.ltv_per_signup)}</td>
         </tr></tfoot>
       </table>
-      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">Limited to subscribers in Ghost's ${ltv.window_days||180}-day signup attribution feed. Compare donor rates &mdash; a channel can produce many cheap signups (Google) or few high-value ones (Academic Outreach UTM). The Total row is the bottom of that funnel for trackable signups only.</div>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">"$/signup" = lifetime value per signup: everything a channel's subscribers have donated, divided by all of that channel's signups. Limited to subscribers in Ghost's ${ltv.window_days||180}-day signup attribution feed. Compare donor rates &mdash; a channel can produce many cheap signups (Google) or few high-value ones (Academic Outreach UTM). The Total row is the bottom of that funnel for trackable signups only.</div>
     </div>`;
   }
 
@@ -2071,18 +2076,28 @@ function renderLifecycle(lc){
   </div>`;
 
   // ---- Auto-insight ----
-  const r30 = (cohorts.find(c=>c.label==='0-7 days')||{}).retention_pct ||
-              (cohorts.find(c=>c.label==='8-14 days')||{}).retention_pct;
+  // Use the YOUNGEST cohort that's actually measurable: at least 20 people
+  // (the pipeline nulls retention_pct below that) — a 0-of-7 cohort is
+  // noise. The newest cohorts also undercount structurally: signups live
+  // in Ghost until the weekly Mailchimp reconcile, so their opens can't be
+  // measured yet, and they may not have received a send at all.
+  const youngOrder = ['0-7 days','8-14 days','15-30 days'];
+  const youngest = youngOrder.map(l=>cohorts.find(c=>c.label===l)).find(c=>c && c.retention_pct!=null);
+  const r30 = youngest ? youngest.retention_pct : null;
   const r90 = (cohorts.find(c=>c.label==='91-180 days')||{}).retention_pct;
   const r365 = (cohorts.find(c=>c.label==='181-365 days')||{}).retention_pct;
+  const youngLabel = youngest ? youngest.label : null;
   let insight = '';
-  if(r30 != null && r90 != null){
+  if(r30 == null){
+    insight = `Not enough recent signups to measure activation yet (each new-subscriber cohort needs at least 20 people, and brand-new signups can't show opens until they reach Mailchimp on the weekly reconcile and receive their first send). Check back after the next few sends.`;
+  } else if(r90 != null){
+    const qual = `(measured on the ${youngLabel} cohort, n=${fmtN(youngest.subs)})`;
     if(r30 >= 40 && r90 >= 25){
-      insight = `Healthy curve: newer cohorts open more than older ones, and your year-old subscribers still come back at ~${Math.round(r365||0)}%. This is what list-health looks like.`;
+      insight = `Healthy curve: newer cohorts open more than older ones ${qual}, and your year-old subscribers still come back at ~${Math.round(r365||0)}%. This is what list-health looks like.`;
     } else if(r30 < 30){
-      insight = `Activation is weak — only ${r30}% of brand-new subscribers are opening anything. Suggests either a broken welcome flow or signups that weren't intentional (e.g. UTM campaigns sending unqualified traffic). Worth A/B-testing the welcome sequence.`;
+      insight = `Activation looks weak — ${r30}% of the ${youngLabel} cohort ${qual} has opened anything. Before acting on this, note the caveat: very recent signups undercount until they reach Mailchimp and receive a send. If the number stays low after a few sends, look at the welcome flow and at whether recent signups were qualified traffic.`;
     } else {
-      insight = `Mid-funnel drop-off: ${r30}% of new cohorts are engaged but only ${r90}% of 3-month subscribers. The first 90 days are where you lose people — invest in nurture content during that window.`;
+      insight = `Mid-funnel drop-off: ${r30}% of the ${youngLabel} cohort ${qual} is engaged but only ${r90}% of 3-month subscribers. The first 90 days are where you lose people — invest in nurture content during that window.`;
     }
   }
 
@@ -2152,40 +2167,93 @@ function renderUrlShares(news){
     </div>`;
 }
 
-function renderTrendChart(act,posts){
+function renderTrendChart(act,posts,windowDays){
   const svg=$("#trendChart");
   if(!act||!act.length){svg.innerHTML='<text x="400" y="120" text-anchor="middle" fill="#888">No activity data</text>';return;}
-  const last=act.slice(-90);
-  const W=800,H=240,padL=34,padR=10,padT=14,padB=22;
+  // Window toggle: 90/180 days shown daily; longer windows aggregate to
+  // weekly totals so the bars stay readable. Mailchimp's daily activity
+  // feed reaches back ~2 years (zero-filled before real data starts).
+  windowDays = windowDays || renderTrendChart._win || 90;
+  renderTrendChart._win = windowDays;
+  const WINDOWS=[["90d",90],["180d",180],["1y",365],["All",9999]];
+  const winEl=$("#trendWin");
+  if(winEl){
+    winEl.innerHTML=WINDOWS.map(([lab,d])=>
+      `<button class="winbtn${d===windowDays?' on':''}" data-d="${d}">${lab}</button>`).join("");
+    winEl.querySelectorAll(".winbtn").forEach(b=>
+      b.addEventListener("click",()=>renderTrendChart(act,posts,+b.dataset.d)));
+  }
+  let rows=act.slice(-windowDays);
+  // Trim leading zero-filled days (the feed pads back before real history)
+  const firstNz=rows.findIndex(r=>(+r.subs||0)||(+r.unsubs||0)||(+r.opens||0));
+  if(firstNz>0) rows=rows.slice(firstNz);
+  const weekly=rows.length>200;
+  if(weekly){
+    const wk={};
+    rows.forEach(r=>{
+      const d=new Date(r.d+'T00:00:00Z');
+      const off=(d.getUTCDay()===0?6:d.getUTCDay()-1);
+      const k=new Date(d.getTime()-off*86400000).toISOString().slice(0,10);
+      wk[k]=wk[k]||{d:k,subs:0,unsubs:0};
+      wk[k].subs+=+r.subs||0; wk[k].unsubs+=+r.unsubs||0;
+    });
+    rows=Object.values(wk).sort((a,b)=>a.d.localeCompare(b.d));
+  }
+  const unit=weekly?"per week":"per day";
+  const hint=$("#trendHint");
+  if(hint) hint.textContent=`${weekly?'weekly totals':'daily'} · ${rows.length} ${weekly?'weeks':'days'} shown · data back to ${rows[0].d}`;
+  const legend=$("#trendLegend");
+  if(legend) legend.innerHTML=
+    `<span><span class="sw" style="background:var(--vc-green)"></span>New signups (${unit})</span>`+
+    `<span><span class="sw" style="background:var(--vc-magenta)"></span>Unsubscribes (${unit})</span>`;
+
+  const H=240,padL=38,padR=10,padT=14,padB=22;
+  // True pixel width — same anti-distortion treatment as the growth chart
+  const W=Math.max(360,Math.round(svg.clientWidth||(svg.parentElement&&svg.parentElement.clientWidth)||800));
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
   const innerW=W-padL-padR, innerH=H-padT-padB;
-  const maxSub=Math.max(1,...last.map(r=>r.subs));
-  const maxUns=Math.max(1,...last.map(r=>r.unsubs));
-  const yMax=Math.max(maxSub,maxUns);
-  const x=(i)=>padL+(i/(last.length-1||1))*innerW;
-  const y=(v)=>padT+innerH-(v/yMax)*innerH;
-  const bw=Math.max(2,innerW/last.length-1);
+  const dataMax=Math.max(1,...rows.map(r=>Math.max(+r.subs||0,+r.unsubs||0)));
+  // Round ticks (same nice-step scale as the growth chart)
+  const niceStep=(m,n)=>{const raw=m/n,pow=Math.pow(10,Math.floor(Math.log10(raw)));
+    for(const f of [1,2,2.5,5,10]) if(f*pow>=raw) return f*pow;};
+  const step=niceStep(dataMax,4), yTop=Math.ceil(dataMax/step)*step;
+  const x=(i)=>padL+(i/(rows.length-1||1))*innerW;
+  const y=(v)=>padT+innerH-(v/yTop)*innerH;
+  const bw=Math.max(2,innerW/rows.length-1);
 
   let html="";
-  // y-axis grid lines + labels (0, half, max)
-  const ticks=[0,Math.round(yMax/2),yMax];
-  ticks.forEach(t=>{
+  for(let t=0;t<=yTop;t+=step){
     const yy=y(t);
-    html+=`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#ddd" stroke-width="1"/>`;
-    html+=`<text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${t}</text>`;
+    html+=`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#e6e6e3" stroke-width="1"/>`;
+    html+=`<text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${fmtN(t)}</text>`;
+  }
+  // x labels — month starts, thinned by pixel distance (never collide)
+  const minPx=52; let lastX=-1e9;
+  rows.forEach((r,i)=>{
+    const isMonthStart=(i===0)||(r.d.slice(0,7)!==rows[i-1].d.slice(0,7));
+    if(!isMonthStart||x(i)-lastX<minPx) return;
+    html+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="10" fill="#888">${windowDays>200?r.d.slice(0,7):r.d.slice(5,10)}</text>`;
+    lastX=x(i);
   });
-  // x-axis date labels (4 ticks)
-  for(let i=0;i<4;i++){
-    const idx=Math.floor((last.length-1)*i/3);
-    const d=last[idx].d;
-    html+=`<text x="${x(idx)}" y="${H-6}" text-anchor="middle" font-size="10" fill="#888">${d.slice(5)}</text>`;
+  // Signup-data boundary: per-day signup counts only exist from the Ghost
+  // events feed (Dec 2025) while unsubscribes reach back to mid-2024. On
+  // long windows, mark the boundary so missing bars don't read as zero
+  // signups. (Same treatment as the growth & reach chart.)
+  const firstSub=rows.findIndex(r=>(+r.subs||0)>0);
+  if(firstSub>2){
+    const mx=x(firstSub)-bw/2-2;
+    html+=`<line x1="${mx}" x2="${mx}" y1="${padT}" y2="${padT+innerH}" stroke="#bbb" stroke-width="1" stroke-dasharray="2 3"><title>Per-day signup detail starts here (${rows[firstSub].d}) — earlier signups happened but aren't broken out daily. The unsubscribe line is complete for the whole window.</title></line>`;
+  }
+  if(legend && firstSub>2){
+    legend.innerHTML+=`<span title="Per-day signup counts come from Ghost's member-events feed, which begins December 2025. Earlier signups happened — they're just not broken out by day. The unsubscribe line (from Mailchimp) is complete for the whole window."><span class="sw" style="background:repeating-linear-gradient(180deg,#bbb 0 2px,transparent 2px 5px)"></span>Dashed line: signup detail starts ${esc(rows[firstSub].d.slice(0,7))}</span>`;
   }
   // signup bars
-  last.forEach((r,i)=>{
-    const h=Math.max(0,(r.subs/yMax)*innerH);
-    if(r.subs>0) html+=`<rect x="${x(i)-bw/2}" y="${y(r.subs)}" width="${bw}" height="${h}" fill="#57AA4A"><title>${r.d}: ${r.subs} new signups</title></rect>`;
+  rows.forEach((r,i)=>{
+    const h=Math.max(0,((+r.subs||0)/yTop)*innerH);
+    if(r.subs>0) html+=`<rect x="${x(i)-bw/2}" y="${y(r.subs)}" width="${bw}" height="${h}" fill="#57AA4A"><title>${weekly?'Week of ':''}${r.d}: ${r.subs} new signups · ${r.unsubs} unsubs</title></rect>`;
   });
   // unsub line
-  const pts=last.map((r,i)=>`${x(i)},${y(r.unsubs)}`).join(" ");
+  const pts=rows.map((r,i)=>`${x(i)},${y(+r.unsubs||0)}`).join(" ");
   html+=`<polyline points="${pts}" fill="none" stroke="#C8377E" stroke-width="1.6" opacity=".85"/>`;
   // (Post-publish dots removed — Vital City publishes multiple times a week,
   // so a per-day binary "did anything publish today" marker is too noisy to
