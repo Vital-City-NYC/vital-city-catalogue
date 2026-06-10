@@ -231,7 +231,7 @@
 
       <div class="card" id="growthChart">
         <h2>Newsletter growth &amp; reach <span class="hint">weekly, since Jan 2025 · list size and reach per week</span></h2>
-        <div class="chartwrap"><svg class="chart" id="growthSvg" viewBox="0 0 800 240" preserveAspectRatio="none"></svg>
+        <div class="chartwrap"><svg class="chart" id="growthSvg" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
         <div class="legend">
           <span><span class="sw" style="background:var(--vc-green)"></span>New signups (per week)</span>
@@ -900,7 +900,13 @@ function renderGrowthChart(mc){
     weeks[weeks.length - 1].cum_subs = mc.total_subscribers;
   }
   const svg = $("#growthSvg");
-  const W=800,H=240,padL=44,padR=56,padT=18,padB=26;
+  const H=240,padL=44,padR=56,padT=18,padB=26;
+  // Draw at the SVG's true pixel width so nothing gets horizontally stretched.
+  // (A fixed 800-wide viewBox with preserveAspectRatio="none" was distorting
+  // the text, dots and strokes — and smearing the month labels together —
+  // whenever the container was wider than 800px.)
+  const W = Math.max(360, Math.round(svg.clientWidth || (svg.parentElement && svg.parentElement.clientWidth) || 800));
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   const innerW=W-padL-padR, innerH=H-padT-padB;
   const maxNew  = Math.max(1, ...weeks.map(w=>w.signups));
   const maxSubs = Math.max(1, ...weeks.map(w=>w.cum_subs));
@@ -923,18 +929,30 @@ function renderGrowthChart(mc){
     const yy = yOpen(t);
     html += `<text x="${W-padR+6}" y="${yy+3}" font-size="10" fill="#888">${fmtN(t)}</text>`;
   });
-  // X labels — first of each month (every ~4-5 weeks)
-  let lastMonthLabeled = "";
+  // X labels — month starts, thinned by pixel distance so they never collide
+  // at any width. Greedy: only label a month if it's at least minPxPerLabel
+  // away from the last one we drew.
+  const monthStarts = [];
   weeks.forEach((w, i) => {
-    const ym = w.wk.slice(0,7);
-    if(ym !== lastMonthLabeled && (i === 0 || w.wk.endsWith('-01') || +w.wk.slice(8,10) <= 7)){
-      // First week landing in a given month
-      if(ym !== lastMonthLabeled){
-        html += `<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="#888">${ym}</text>`;
-        lastMonthLabeled = ym;
-      }
-    }
+    if(i === 0 || w.wk.slice(0,7) !== weeks[i-1].wk.slice(0,7)) monthStarts.push(i);
   });
+  const minPxPerLabel = 56;               // room for a "2025-01" label at font 10
+  let lastLabelX = -1e9;
+  monthStarts.forEach(idx => {
+    if(x(idx) - lastLabelX < minPxPerLabel) return;
+    html += `<text x="${x(idx)}" y="${H-8}" text-anchor="middle" font-size="10" fill="#888">${weeks[idx].wk.slice(0,7)}</text>`;
+    lastLabelX = x(idx);
+  });
+  // Mark where weekly signup tracking begins. Earlier weeks have no green
+  // bars because per-day signup events (Ghost) only start partway into the
+  // window — not because zero people joined. Without this, the empty left
+  // half reads as a data gap or a flatline.
+  const firstSignupWk = weeks.findIndex(w => w.signups > 0);
+  if(firstSignupWk > 1){
+    const mx = x(firstSignupWk) - bw/2 - 2;
+    html += `<line x1="${mx}" x2="${mx}" y1="${padT}" y2="${padT+innerH}" stroke="#bbb" stroke-width="1" stroke-dasharray="2 3"/>`;
+    html += `<text x="${mx+4}" y="${padT+10}" font-size="9" fill="#999">weekly signups tracked from here →</text>`;
+  }
   // Bars: weekly new signups
   weeks.forEach((w, i) => {
     if(w.signups <= 0) return;
@@ -972,6 +990,17 @@ function renderGrowthChart(mc){
     }
   }
   svg.innerHTML = html;
+
+  // Redraw at the new pixel width on resize so the chart stays crisp (and the
+  // label thinning re-runs) when the window or embed is widened/narrowed.
+  if(!renderGrowthChart._bound){
+    renderGrowthChart._bound = true;
+    let rt;
+    window.addEventListener("resize", () => {
+      clearTimeout(rt);
+      rt = setTimeout(() => renderGrowthChart(mc), 150);
+    });
+  }
 
   // Insight line — surface the long-view story. Reach comparison uses
   // average weekly opens for the first 8 *complete* weeks vs the last 8
