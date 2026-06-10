@@ -21,7 +21,7 @@ Stubbed for next iteration (need creds):
 Output: private/growth.json (consumed by encrypt_growth.py).
 """
 from __future__ import annotations
-import base64, hashlib, hmac, json, os, re, sys, time, urllib.parse, urllib.request
+import base64, hashlib, hmac, html as html_mod, json, os, re, sys, time, urllib.parse, urllib.request
 from collections import Counter, defaultdict
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -195,7 +195,9 @@ def pull_mailchimp():
             f"/campaigns?status=sent&list_id={list_id}&count=500"
             f"&sort_field=send_time&sort_dir=DESC&fields=campaigns.id,campaigns.type,"
             f"campaigns.settings.subject_line,campaigns.send_time,campaigns.emails_sent,"
-            f"campaigns.report_summary,campaigns.variate_settings.subject_lines",
+            f"campaigns.report_summary,campaigns.variate_settings.subject_lines,"
+            f"campaigns.variate_settings.winning_combination_id,"
+            f"campaigns.variate_settings.combinations,campaigns.variate_settings.test_size",
             key, dc).get("campaigns", [])
         camp_out = []
         for c in camp:
@@ -203,19 +205,40 @@ def pull_mailchimp():
             # Variate (A/B) campaigns leave settings.subject_line empty on the
             # parent — the variant subjects live in variate_settings.subject_lines.
             # Pick those up so the dashboard doesn't show "(no subject)".
-            variate_subjects = []
+            # IMPORTANT on A/B numbers: emails_sent and report_summary on the
+            # parent already aggregate ALL waves — both test groups AND the
+            # winner rollout (which Mailchimp sends as a hidden child campaign
+            # that never appears in this list). Verified against campaign
+            # 41736c4a01 (2026-06-04): parent 8,333 sends = 2×2,083 test +
+            # 4,167 winner; parent opens 3,345 = 1,660 test + 1,685 winner.
+            # So one row per A/B is complete — we just surface the winner.
+            variate_subjects, winner_subject, test_n = [], "", 0
             if c.get("type") == "variate":
-                variate_subjects = ((c.get("variate_settings") or {}).get("subject_lines") or [])
+                vs = c.get("variate_settings") or {}
+                variate_subjects = vs.get("subject_lines") or []
+                combos = vs.get("combinations") or []
+                test_n = sum(int(cb.get("recipients") or 0) for cb in combos)
+                win_id = vs.get("winning_combination_id")
+                for cb in combos:
+                    if cb.get("id") == win_id:
+                        si = cb.get("subject_line")
+                        if isinstance(si, int) and 0 <= si < len(variate_subjects):
+                            winner_subject = variate_subjects[si]
+                        break
             op = (rs.get("open_rate")  or 0) * 100
             cl = (rs.get("click_rate") or 0) * 100
             ctor = (cl / op * 100) if op > 0 else 0
+            sent_to = c.get("emails_sent") or 0
             camp_out.append({
                 "id":       c.get("id"),
                 "subject":  (c.get("settings") or {}).get("subject_line", ""),
                 "variate_subjects": variate_subjects,
+                "winner_subject": winner_subject,
+                "test_n":   test_n,
+                "winner_n": max(0, sent_to - test_n) if test_n else 0,
                 "type":     c.get("type") or "regular",
                 "sent":     (c.get("send_time") or "")[:10],
-                "sent_to":  c.get("emails_sent") or 0,
+                "sent_to":  sent_to,
                 "open_pct": round(op, 1),
                 "click_pct":round(cl, 1),
                 "ctor_pct": round(ctor, 1),   # click-to-open ratio = honest engagement
@@ -1039,6 +1062,96 @@ SOCIAL_PLATFORMS = [
     ("facebook.com",     "Facebook"),
     ("threads.net",      "Threads"),
 ]
+# Junk-title patterns for MEDIA mentions (case-insensitive regex, editable).
+# These match ephemeral aggregate pages — TV schedules, live blogs, homepage
+# rotations — that Google indexes with a momentary "Vital City" promo that's
+# gone by the time anyone clicks through (e.g. NY1's "NEWS ALL DAY" schedule
+# page). A matching title drops the item from the media list.
+JUNK_TITLE_PATTERNS = [
+    r"^news all day\b",          # NY1 rolling schedule page
+    r"^watch live\b",
+    r"^live blog\b",
+    r"^today'?s (top )?headlines?$",   # bare headline-roundup pages (no specifics)
+]
+
+
+VC_BLUESKY_HANDLE = "vitalcitynyc.bsky.social"
+
+def pull_bluesky_mentions():
+    """Bluesky's public search API — the one social platform with a real,
+    free, official search endpoint (open AT Protocol; no key, no auth).
+    Unlike the Google News site: queries, this is the platform's own index:
+    complete, current and with engagement counts. NOTE: use api.bsky.app —
+    public.api.bsky.app 403s from some networks."""
+    items = []
+    seen_uris = set()
+    for q, is_share in (("vitalcitynyc.org", True), ("vitalcitynyc", False)):
+        url = ("https://api.bsky.app/xrpc/app.bsky.feed.searchPosts"
+               f"?q={urllib.parse.quote(q)}&limit=100&sort=latest")
+        try:
+            data = json.loads(http_get(url, timeout=20))
+        except Exception as e:
+            log(f"  bluesky search ({q}) failed: {e}"); continue
+        for p in data.get("posts", []):
+            uri = p.get("uri") or ""
+            if not uri or uri in seen_uris: continue
+            seen_uris.add(uri)
+            handle = ((p.get("author") or {}).get("handle") or "").strip()
+            rkey   = uri.rsplit("/", 1)[-1]
+            text   = ((p.get("record") or {}).get("text") or "").strip()
+            created = ((p.get("record") or {}).get("createdAt") or p.get("indexedAt") or "")
+            created = re.sub(r"\.\d+", "", created)   # trim fractional seconds for strptime
+            likes, reposts = p.get("likeCount") or 0, p.get("repostCount") or 0
+            eng = f" · {likes} likes, {reposts} reposts" if (likes or reposts) else ""
+            items.append({
+                "title": re.sub(r"\s+", " ", text)[:140] or "(no text)",
+                "url": f"https://bsky.app/profile/{handle}/post/{rkey}",
+                "source": "@" + handle, "published": created,
+                "snippet": (text[:200] + eng).strip(),
+                "domain": "bsky.app", "match_shape": q, "kind": "social",
+                "is_url_share": is_share,
+                "likes": likes, "reposts": reposts,
+                # Authorship is definitive here (it's the platform API, not a
+                # Google index guess) — lets flag_own_url_shares skip matching.
+                "own_account": handle.lower() == VC_BLUESKY_HANDLE,
+                "native_search": True,
+            })
+    log(f"  bluesky mentions: {len(items)}")
+    return items
+
+
+def pull_reddit_mentions():
+    """Reddit search via the RSS endpoint — every submission linking to
+    vitalcitynyc.org. (The .json endpoint 403s for non-browser clients;
+    search.rss serves the same results as Atom and stays open.)"""
+    items = []
+    seen = set()
+    ns = "{http://www.w3.org/2005/Atom}"
+    for q, is_share in (("site:vitalcitynyc.org", True), ('"vitalcitynyc.org"', False)):
+        url = f"https://www.reddit.com/search.rss?q={urllib.parse.quote(q)}&sort=new&limit=100&t=all"
+        try:
+            xml = http_get(url, headers={"User-Agent": UA}, timeout=20)
+            root = ET.fromstring(xml)
+        except Exception as e:
+            log(f"  reddit search ({q}) failed: {e}"); continue
+        for it in root.findall(f".//{ns}entry"):
+            link_el = it.find(f"{ns}link")
+            link = link_el.get("href") if link_el is not None else ""
+            if not link or link in seen: continue
+            seen.add(link)
+            cat = it.find(f"{ns}category")
+            sub = (cat.get("label") if cat is not None else "") or "Reddit"
+            pub = _xml_text(it, f"{ns}published") or _xml_text(it, f"{ns}updated")
+            pub = re.sub(r"\.\d+", "", pub)
+            items.append({
+                "title": html_mod.unescape(_xml_text(it, f"{ns}title"))[:140],
+                "url": link, "source": sub, "published": pub,
+                "snippet": "", "domain": "reddit.com", "match_shape": q,
+                "kind": "social", "is_url_share": is_share,
+                "native_search": True,
+            })
+    log(f"  reddit mentions: {len(items)}")
+    return items
 
 
 def pull_news_mentions():
@@ -1098,12 +1211,24 @@ def pull_news_mentions():
             except Exception as e:
                 continue
             for it in root.findall(".//item"):
-                title = _xml_text(it, "title")
+                # Google News RSS double-escapes HTML entities (&amp;nbsp;),
+                # so XML parsing leaves literal "&nbsp;" / "&#39;" text in
+                # titles and snippets — unescape to real characters.
+                title = html_mod.unescape(_xml_text(it, "title"))
                 link  = _xml_text(it, "link")
-                src   = _xml_text(it, "source") or label
+                src   = html_mod.unescape(_xml_text(it, "source") or label)
                 pub   = _xml_text(it, "pubDate")
-                snip  = re.sub(r"<[^>]+>", "", _xml_text(it, "description"))[:240]
+                snip  = html_mod.unescape(re.sub(r"<[^>]+>", "", _xml_text(it, "description")))[:240]
+                # Google News appends " - Source Name" to every title; the
+                # source is shown separately on the dashboard, so strip it.
+                if src and title.endswith(" - " + src):
+                    title = title[: -len(" - " + src)].rstrip()
+                title = re.sub(r"\s+", " ", title).strip()
                 if not title or not link: continue
+                # Drop known ephemeral aggregate pages (TV schedules, live
+                # blogs) — see JUNK_TITLE_PATTERNS above.
+                if kind == "media" and any(re.search(p, title, re.I) for p in JUNK_TITLE_PATTERNS):
+                    continue
                 key = (domain, title.lower())
                 if key in seen: continue
                 seen.add(key)
@@ -1114,6 +1239,12 @@ def pull_news_mentions():
                     "is_url_share": (shape == "vitalcitynyc.org"),
                 })
             _t.sleep(0.15)   # polite pacing across many outlets × shapes
+
+    # Platform-native sources — far better than Google News for the
+    # platforms that offer a real free search API. These flow through the
+    # same date-parse / dedup / sort / cap stages below.
+    out.extend(pull_bluesky_mentions())
+    out.extend(pull_reddit_mentions())
 
     # Parse pub dates. For PRESS mentions we drop anything older than 24
     # months (old press isn't actionable). For URL SHARES on social we keep
@@ -1144,11 +1275,15 @@ def pull_news_mentions():
     # through (Google's phrase matching has slight leniency) but they're
     # easy to spot in a reverse-chron list.
 
-    # Dedup PER-DOMAIN — the same article on Streetsblog vs an X share of
-    # that same article are distinct signals; keep both.
+    # Dedup. Social stays PER-DOMAIN — the same article on Streetsblog vs an
+    # X share of that same article are distinct signals; keep both. MEDIA
+    # dedups on title alone across domains, because overlapping site: scopes
+    # (streetsblog.org also matches nyc.streetsblog.org) return the same
+    # article twice under two whitelist entries.
     titles_seen = set(); deduped = []
     for it in sorted(out, key=lambda x: x["_dt"], reverse=True):
-        key = (it["domain"], it["title"].lower()[:80])
+        key = (it["title"].lower()[:80],) if it.get("kind") == "media" \
+              else (it["domain"], it["title"].lower()[:80])
         if key in titles_seen: continue
         titles_seen.add(key); deduped.append(it)
     for it in deduped: it.pop("_dt", None)
@@ -1184,11 +1319,11 @@ def pull_press():
             root = ET.fromstring(xml)
             for it in root.findall(".//item"):
                 items.append({
-                    "title":   _xml_text(it, "title"),
+                    "title":   html_mod.unescape(_xml_text(it, "title")),
                     "url":     _xml_text(it, "link"),
-                    "source":  _xml_text(it, "source") or "Google News",
+                    "source":  html_mod.unescape(_xml_text(it, "source") or "Google News"),
                     "published": _xml_text(it, "pubDate"),
-                    "snippet": re.sub(r"<[^>]+>", "", _xml_text(it, "description"))[:240],
+                    "snippet": html_mod.unescape(re.sub(r"<[^>]+>", "", _xml_text(it, "description")))[:240],
                     "channel": src,
                 })
         except Exception as e:
@@ -1373,17 +1508,23 @@ def pull_donorbox():
         if _day(d) >= ytd_start.isoformat(): camp_ytd[name] += a
     top_campaigns = [{"name": n, "amount": round(a, 2)} for n, a in camp_ytd.most_common(6)]
 
-    # Top recent gifts (last 30d)
-    recent = sorted(_in(paid, d30, today), key=_amt, reverse=True)[:8]
-    top_recent = [{
-        "amount": _amt(d),
-        "net": _net(d),
-        "date": _day(d),
-        "donor": ((d.get("donor") or {}).get("name") or "").strip() or "Anonymous",
-        "recurring": _recurring(d),
-        "campaign": _campaign(d),
-        "comment": (d.get("comment") or "")[:240],
-    } for d in recent]
+    # Two gift lists for the dashboard: largest in the last 90 days, and the
+    # most recent regardless of size.
+    def _gift_row(d):
+        return {
+            "amount": _amt(d),
+            "net": _net(d),
+            "date": _day(d),
+            "donor": ((d.get("donor") or {}).get("name") or "").strip() or "Anonymous",
+            "recurring": _recurring(d),
+            "campaign": _campaign(d),
+            "comment": (d.get("comment") or "")[:240],
+        }
+    d90_start = d90
+    largest = sorted(_in(paid, d90_start, today), key=_amt, reverse=True)[:8]
+    top_recent  = [_gift_row(d) for d in largest]   # key name kept for dashboard compat; now last 90d
+    latest = sorted(paid, key=_day, reverse=True)[:8]
+    latest_gifts = [_gift_row(d) for d in latest]
 
     # Active recurring donors + MRR estimate
     rec_donors = set(); mrr = 0.0
@@ -1416,7 +1557,8 @@ def pull_donorbox():
         "daily_series":   daily_series,
         "monthly_series": monthly_series,
         "top_campaigns":  top_campaigns,
-        "top_recent":     top_recent,
+        "top_recent":     top_recent,      # largest gifts, last 90 days
+        "latest_gifts":   latest_gifts,    # most recent gifts, any size
         "active_recurring_donors": len(rec_donors),
         "mrr_estimate":   round(mrr, 2),
     }
@@ -1661,6 +1803,16 @@ def flag_own_url_shares(news_mentions, all_titles, vc_tweets=None, own_social=No
 
     kept = []
     for it in news_mentions:
+        # Platform-native results (Bluesky API, Reddit search) carry definitive
+        # metadata: own_account means the platform says VC authored it, and
+        # native_search means the platform's own index matched the query — no
+        # Google-leniency false-positive risk, so skip the heuristics.
+        if it.get("own_account"):
+            it["own_post"] = True
+            kept.append(it); continue
+        if it.get("native_search"):
+            it["own_post"] = False
+            kept.append(it); continue
         if it.get("is_url_share"):
             if not looks_like_vc(it):
                 continue  # drop the false positive

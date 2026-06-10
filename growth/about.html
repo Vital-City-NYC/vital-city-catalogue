@@ -72,13 +72,16 @@
   <p><b>Note on WNYC:</b> WNYC's content frequently mentions Vital City on radio segments, but those audio pieces don't get indexed by Google News (only the show-page transcripts do, when they exist). Most contemporary WNYC + Vital City content surfaces under the <code>gothamist.com</code> domain instead — Gothamist and WNYC share a newsroom (both belong to New York Public Radio), and Gothamist publishes web write-ups for many WNYC stories. So the dashboard relies on the Gothamist search to catch most WNYC-adjacent mentions, and the wnyc.org search catches only the small subset of show pages that explicitly print the phrase. The 2022 launch coverage from "All of It" and "Brian Lehrer" lives there; current radio appearances may be missed.</p>
 
   <h2>Media / social mentions (the sidebar)</h2>
-  <p>Two free feeds, both narrowed to NYC context so "Vital City" the brand isn't confused with the generic phrase:</p>
+  <p>Free feeds, narrowed to NYC context so "Vital City" the brand isn't confused with the generic phrase. Coverage quality differs sharply by source — the honest hierarchy:</p>
   <ul>
-    <li><b>Google News</b> — external publications quoting "Vital City". Self-references are filtered out, and items must actually contain the brand name (not just link to the site).</li>
-    <li><b>Reddit</b> — threads naming Vital City, mostly in r/nyc. These are usually shares of VC articles by users — useful signal of organic distribution.</li>
+    <li><b>Bluesky (complete)</b> — Bluesky's own search API is open and free (it's an open protocol), so every public post containing "vitalcitynyc" or a vitalcitynyc.org link is captured, with like and repost counts. Posts from @vitalcitynyc.bsky.social are tagged as VC's own; everything else is third-party chatter.</li>
+    <li><b>Reddit (complete for link posts)</b> — Reddit's free search feed, queried for every submission linking to vitalcitynyc.org plus any post naming the domain. These are usually shares of VC articles by users — useful signal of organic distribution.</li>
+    <li><b>X, LinkedIn, Instagram, Facebook, Threads (partial)</b> — these platforms sell their search APIs (X Basic alone is ~$100/month), so the dashboard surfaces only what Google's index happens to catch via site-restricted queries. Real but incomplete: assume there is more chatter on these platforms than shown. The "Coverage" note at the bottom of the social list says exactly this.</li>
+    <li><b>Google News</b> — external publications quoting "Vital City". Self-references are filtered out, items must actually contain the brand name (not just link to the site), and known ephemeral page types (TV schedules like NY1's "News All Day", live blogs) are excluded via an editable junk-title list at the top of <code>growth_pull.py</code>.</li>
     <li><b>Google Trends</b> — an embedded interactive widget showing search interest for "Vital City" + NYC disambiguators over the last 12 months. Search interest is relative (0–100 = peak in the window), so use it for shape not absolute volume. Spikes typically trail by 2–7 days after a piece breaks through, so it's useful as a "did people go looking for us?" signal after coverage or a viral post.</li>
   </ul>
   <p>X (Twitter) and Instagram numbers now live in their own card in the main column — see the "Social" section.</p>
+  <p><b>Two free upgrades worth considering later:</b> (1) Google Programmable Search offers 100 free queries per day against Google's full web index — better X/LinkedIn coverage than the Google News feed, still partial; needs a free API key and search-engine ID. (2) Once Google Analytics 4 is connected, referral traffic by source becomes the most honest social signal of all — it measures readers who actually arrived, with no scraping involved.</p>
 
   <h2 id="connect-more-sources">Connect more sources</h2>
   <p>Four panels are stubbed with their setup steps. Each one needs credentials you'd need to set up once:</p>

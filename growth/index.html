@@ -51,6 +51,18 @@
 
   /* Cards */
   .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:16px 18px;margin:0 0 20px}
+  /* Sticky jump-nav + section headers (page ordered by org priority:
+     grow the list → donors & influence → content engine → list health → reach) */
+  .secnav{position:sticky;top:0;z-index:30;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);
+          margin:0 0 18px;padding:8px 2px;display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}
+  .secnav-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--vc-charcoal)}
+  .secnav a{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;
+            color:var(--vc-cerulean);text-decoration:none;white-space:nowrap}
+  .secnav a:hover{text-decoration:underline}
+  .sechead{margin:30px 0 14px;scroll-margin-top:46px}
+  .sechead-title{font-size:13px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--vc-black);
+                 border-bottom:2px solid var(--vc-black);padding-bottom:5px}
+  .sechead-sub{font-size:11.5px;color:var(--vc-charcoal);margin-top:5px;line-height:1.5}
   .card h2{font-family:var(--vc-sans);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);font-weight:700;margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
   .card h2 .hint{font-size:10px;color:var(--vc-charcoal);text-transform:none;letter-spacing:0;font-weight:400}
 
@@ -221,13 +233,27 @@
     </div>
     <div class="wm">Vital City</div>
     <h1>Growth dashboard</h1>
-    <div class="sub" id="subline">Newsletter signups first. Campaign performance, content cadence and external brand mentions secondary.</div>
+    <div class="sub" id="subline">Ordered by priority: growing the list first, then donors and influence, then the content engine that drives both. List health and raw traffic signals at the bottom.</div>
   </header>
   <div class="confbar">Confidential · internal growth metrics · do not redistribute</div>
 
   <div class="layout">
     <main>
       <div class="kpis" id="kpis"></div>
+
+      <nav class="secnav" aria-label="Dashboard sections">
+        <span class="secnav-lbl">Jump to:</span>
+        <a href="#sec-growth">Growing the list</a>
+        <a href="#sec-donors">Donors &amp; influence</a>
+        <a href="#sec-content">The content engine</a>
+        <a href="#sec-health">List health</a>
+        <a href="#sec-reach">Reach &amp; traffic</a>
+      </nav>
+
+      <div class="sechead" id="sec-growth">
+        <div class="sechead-title">Growing the list</div>
+        <div class="sechead-sub">The number one question: is the newsletter growing, and where is that growth coming from?</div>
+      </div>
 
       <div class="card" id="growthChart">
         <h2>Newsletter growth &amp; reach <span class="hint">weekly, since Jan 2025 · list size and reach per week</span></h2>
@@ -241,17 +267,28 @@
         <div id="growthInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55"></div>
       </div>
 
-      <div class="card" id="perf">
-        <h2>Newsletter performance <span class="hint">recipient-weighted averages · YoY = same window last year</span></h2>
-        <div class="perfgrid" id="perfKpis"></div>
-        <div style="margin-top:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px">Monthly trend — last 24 months</div>
-          <div class="chartwrap"><svg class="chart" id="perfChart" viewBox="0 0 800 220" preserveAspectRatio="none"></svg></div>
-          <div class="legend">
-            <span><span class="sw" style="background:var(--vc-cerulean)"></span>Open rate</span>
-            <span><span class="sw" style="background:var(--vc-orange)"></span>Click rate</span>
-            <span><span class="sw" style="background:var(--vc-charcoal);opacity:.4;width:14px;height:1px;margin-top:4px"></span>Trend break (Apple Mail privacy / list growth around Jul 2025)</span>
-          </div>
+      <div class="card" id="acquisition">
+        <h2>Where newsletter signups come from <span class="hint" id="acqHint"></span></h2>
+        <div id="acqBody"></div>
+      </div>
+
+      <div class="card" id="trend">
+        <h2>Signups vs unsubscribes — last 90 days <span class="hint" id="trendHint"></span></h2>
+        <div class="chartwrap"><svg class="chart" id="trendChart" viewBox="0 0 800 240" preserveAspectRatio="none"></svg></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--vc-green)"></span>New signups (per day)</span>
+          <span><span class="sw" style="background:var(--vc-magenta)"></span>Unsubscribes (per day)</span>
         </div>
+      </div>
+
+      <div class="card" id="ytd">
+        <h2>Year-to-date · 2026 vs 2025 <span class="hint">where the comparison is fair</span></h2>
+        <div id="ytdBody"></div>
+      </div>
+
+      <div class="sechead" id="sec-donors">
+        <div class="sechead-title">Donors &amp; influence</div>
+        <div class="sechead-sub">Cultivation: who gives, who matters and whether the people who shape New York City are reading.</div>
       </div>
 
       <div class="card" id="fundraising">
@@ -264,39 +301,42 @@
             <span><span class="sw" style="background:var(--vc-cerulean)"></span>Unique donors</span>
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:18px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:18px">
           <div>
             <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:6px">Top campaigns · YTD</div>
             <div id="donorCampaigns"></div>
           </div>
           <div>
-            <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:6px">Largest gifts · last 30 days</div>
+            <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:6px">Largest gifts · last 90 days</div>
             <div id="donorRecent"></div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:6px">Most recent gifts</div>
+            <div id="donorLatest"></div>
           </div>
         </div>
       </div>
 
-      <div class="card" id="acquisition">
-        <h2>Where newsletter signups come from <span class="hint" id="acqHint"></span></h2>
-        <div id="acqBody"></div>
+      <div class="card" id="engagementExtras">
+        <h2>Engagement &amp; influence <span class="hint">post-Apple-privacy metrics: who really reads, by mailbox provider, by influence weight</span></h2>
+        <div id="engagementExtrasBody"></div>
       </div>
 
-      <div class="card" id="lifecycle">
-        <h2>Subscriber lifecycle <span class="hint">are new signups sticking? who's drifting? who's gone but salvageable?</span></h2>
-        <div id="lifecycleBody"></div>
+      <div class="sechead" id="sec-content">
+        <div class="sechead-title">The content engine</div>
+        <div class="sechead-sub">What we publish and send, and how each piece performs — the machine that drives the two sections above.</div>
       </div>
 
-      <div class="card" id="ytd">
-        <h2>Year-to-date · 2026 vs 2025 <span class="hint">where the comparison is fair</span></h2>
-        <div id="ytdBody"></div>
-      </div>
-
-      <div class="card" id="trend">
-        <h2>Signups vs unsubscribes — last 90 days <span class="hint" id="trendHint"></span></h2>
-        <div class="chartwrap"><svg class="chart" id="trendChart" viewBox="0 0 800 240" preserveAspectRatio="none"></svg></div>
-        <div class="legend">
-          <span><span class="sw" style="background:var(--vc-green)"></span>New signups (per day)</span>
-          <span><span class="sw" style="background:var(--vc-magenta)"></span>Unsubscribes (per day)</span>
+      <div class="card" id="perf">
+        <h2>Newsletter performance <span class="hint">recipient-weighted averages · YoY = same window last year</span></h2>
+        <div class="perfgrid" id="perfKpis"></div>
+        <div style="margin-top:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px">Monthly trend — last 24 months</div>
+          <div class="chartwrap"><svg class="chart" id="perfChart" viewBox="0 0 800 220" preserveAspectRatio="none"></svg></div>
+          <div class="legend">
+            <span><span class="sw" style="background:var(--vc-cerulean)"></span>Open rate</span>
+            <span><span class="sw" style="background:var(--vc-orange)"></span>Click rate</span>
+            <span><span class="sw" style="background:var(--vc-charcoal);opacity:.4;width:14px;height:1px;margin-top:4px"></span>Trend break (Apple Mail privacy / list growth around Jul 2025)</span>
+          </div>
         </div>
       </div>
 
@@ -316,20 +356,14 @@
         <div id="campTbl"></div>
       </div>
 
-      <div class="card" id="social">
-        <h2>Social — X, Instagram, LinkedIn <span class="hint">followers + recent post engagement · free unofficial endpoints (can break)</span></h2>
-        <div id="socialBody"></div>
-        <div id="urlShares" style="margin-top:18px"></div>
-      </div>
-
       <div class="card" id="contentCard">
         <h2>Content cadence <span class="hint" id="postsHint"></span></h2>
         <div id="postsList"></div>
       </div>
 
-      <div class="card" id="engagementExtras">
-        <h2>Engagement &amp; influence <span class="hint">post-Apple-privacy metrics: who really reads, by mailbox provider, by influence weight</span></h2>
-        <div id="engagementExtrasBody"></div>
+      <div class="sechead" id="sec-health">
+        <div class="sechead-title">List health</div>
+        <div class="sechead-sub">Maintenance metrics: engagement quality and lifecycle. Worth a periodic look, not a daily one.</div>
       </div>
 
       <div class="card" id="quality">
@@ -337,10 +371,27 @@
         <div id="qualityBody"></div>
       </div>
 
+      <div class="card" id="lifecycle">
+        <h2>Subscriber lifecycle <span class="hint">are new signups sticking? who's drifting? who's gone but salvageable?</span></h2>
+        <div id="lifecycleBody"></div>
+      </div>
+
+      <div class="sechead" id="sec-reach">
+        <div class="sechead-title">Reach &amp; traffic</div>
+        <div class="sechead-sub">Distribution signals — directional only. Followers and visits matter when they convert into subscribers and donors above.</div>
+      </div>
+
+      <div class="card" id="social">
+        <h2>Social — X, Instagram, LinkedIn <span class="hint">followers + recent post engagement · free unofficial endpoints (can break)</span></h2>
+        <div id="socialBody"></div>
+        <div id="urlShares" style="margin-top:18px"></div>
+      </div>
+
       <div class="card" id="stubsCard">
         <h2>Connect more sources</h2>
         <div id="stubsList"></div>
       </div>
+
     </main>
 
     <aside class="brandwatch" id="brand">
@@ -508,21 +559,12 @@ function boot(data){
               cls:"flat",
               tip:`Sometimes called "AAU" (Annual Active Users). Unique people who opened at least one Vital City newsletter in the last 365 days. The gap from the 30-day number is your "lapsed but reachable" audience — people who used to open but haven't lately.`};
     })(),
-    // --- Website (GA4 — pending credentials) ---
-    {lbl:"Website visitors · 30d", num: ga4.mau!=null ? fmtN(ga4.mau) : "—",
-     delta: ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs GA4 ↗",
-     cls: ga4.mau!=null ? "flat" : "na",
-     tip:"Unique anonymous visitors to vitalcitynyc.org in the last 30 days. Ghost tracks this in its admin Analytics tab but doesn't expose the aggregate page-view data to API tokens. We DO get the conversion side from Ghost (where each newsletter signup happened — see 'Where signups come from' card below). For raw traffic / page views / unique visitor counts, GA4 (or Plausible / Cloudflare) is still the path. 5-min setup is on the 'How it works' page."},
-    {lbl:"Website visitors · 1y", num: ga4.aau!=null ? fmtN(ga4.aau) : "—",
-     delta: ga4.aau!=null ? `${fmtN(ga4.sessions_365||0)} sessions` : "needs GA4 ↗",
-     cls: ga4.aau!=null ? "flat" : "na",
-     tip:"Unique anonymous visitors to vitalcitynyc.org in the last 365 days. Same Ghost-API gating as the 30-day tile — Ghost has it, doesn't expose it. The site only moved to Ghost in April 2026, so Ghost Analytics has at most ~2 months of traffic data anyway. GA4 covers both the post-cutover period and any pre-April-2026 history that still lives in the prior site's analytics."},
-    // --- Fundraising ---
+    // --- Fundraising (priority 2: donors) ---
     {lbl:"Raised · YTD", num: db.available ? fmtUSD((dWin.ytd||{}).amount||0) : "—",
      delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts` : "Donorbox not connected",
      cls:"flat",
      tip:"FUNDRAISING — Total raised on Donorbox so far this year (gross, before processor fees). Donor count is unique people; gift count counts every transaction (one donor can give multiple times). See the Fundraising card below for monthly trend + top campaigns."},
-    // --- Social ---
+    // --- Reach & traffic (directional; tiles ordered last to match the page) ---
     (function(){
       const xn = xp.available ? xp.followers : null;
       const inum = ig.available ? ig.followers : null;
@@ -532,6 +574,14 @@ function boot(data){
               cls:"flat",
               tip:"SOCIAL — Combined X (@VitalCityNYC) + Instagram (@vitalcitynyc) followers. Pulled from unofficial public endpoints; can break if the platforms tighten them. See the Social card below for recent post engagement."};
     })(),
+    {lbl:"Website visitors · 30d", num: ga4.mau!=null ? fmtN(ga4.mau) : "—",
+     delta: ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs GA4 ↗",
+     cls: ga4.mau!=null ? "flat" : "na",
+     tip:"Unique anonymous visitors to vitalcitynyc.org in the last 30 days. Ghost tracks this in its admin Analytics tab but doesn't expose the aggregate page-view data to API tokens. We DO get the conversion side from Ghost (where each newsletter signup happened — see 'Where signups come from' card below). For raw traffic / page views / unique visitor counts, GA4 (or Plausible / Cloudflare) is still the path. 5-min setup is on the 'How it works' page."},
+    {lbl:"Website visitors · 1y", num: ga4.aau!=null ? fmtN(ga4.aau) : "—",
+     delta: ga4.aau!=null ? `${fmtN(ga4.sessions_365||0)} sessions` : "needs GA4 ↗",
+     cls: ga4.aau!=null ? "flat" : "na",
+     tip:"Unique anonymous visitors to vitalcitynyc.org in the last 365 days. Same Ghost-API gating as the 30-day tile — Ghost has it, doesn't expose it. The site only moved to Ghost in April 2026, so Ghost Analytics has at most ~2 months of traffic data anyway. GA4 covers both the post-cutover period and any pre-April-2026 history that still lives in the prior site's analytics."},
   ];
   $("#kpis").innerHTML=kpis.map(k=>{
     // GA4 stub tiles get a click-through to the setup docs in about.html
@@ -576,17 +626,27 @@ function boot(data){
       const op=c.open_pct||0, cl=c.click_pct||0;
       const opPill=op>=35?'pillok':(op>=22?'pillinfo':'pillwarn');
       // Variate (A/B-test) campaigns have no subject_line on the parent —
-      // the children carry the variants. Fall back to the variate subject list.
-      let subj = (c.subject||"").trim();
+      // the children carry the variants. Fall back to the variate subject
+      // list, with a ✓ on the winner. Recipients/open/click on the row
+      // already cover ALL waves: both test groups plus the winner rollout
+      // (Mailchimp folds the hidden winner-send into the parent's report).
+      let subj = (c.subject||"").trim(), abNote = "";
       if(!subj && c.variate_subjects && c.variate_subjects.length){
-        subj = "A/B: " + c.variate_subjects.slice(0,2).join(" / ");
+        const win = (c.winner_subject||"").trim();
+        subj = "A/B: " + c.variate_subjects.slice(0,2)
+          .map(s => s.trim() === win ? s.trim() + " ✓" : s.trim()).join(" / ");
         if(c.variate_subjects.length>2) subj += ` (+${c.variate_subjects.length-2})`;
+        if(c.test_n && c.winner_n){
+          abNote = `A/B test: each subject went to half of a ${fmtN(c.test_n)}-person test wave; ` +
+                   `the winner (✓) then went to the remaining ${fmtN(c.winner_n)}. ` +
+                   `This row's recipients and rates cover all waves combined.`;
+        }
       }
       if(!subj) subj = "(no subject recorded)";
       const link=`https://us15.admin.mailchimp.com/reports/summary?id=${esc(c.id)}`;
       return `<tr>
         <td>${esc(c.sent)}</td>
-        <td><a href="${link}" target="_blank">${esc(subj)}</a></td>
+        <td${abNote?` title="${esc(abNote)}"`:""}><a href="${link}" target="_blank">${esc(subj)}</a></td>
         <td class="num">${fmtN(c.sent_to)}</td>
         <td class="num"><span class="${opPill}">${op}%</span></td>
         <td class="num">${cl}%</td>
@@ -760,20 +820,25 @@ function boot(data){
       </li>`).join("")
     : '<li class="empty">No third-party press mentions in the current window.</li>';
 
-  // ----- Social shares & chatter — kind='social' (X/LinkedIn/Bluesky/IG)
-  // plus the older Reddit press feed (mentions of "vital city" on r/nyc, etc.)
+  // ----- Social shares & chatter — kind='social' (X/LinkedIn/Bluesky/IG/
+  // Reddit) plus the older Reddit press feed (mentions of "vital city" on
+  // r/nyc, etc.). Coverage varies by how each platform was searched:
+  // Bluesky and Reddit come from the platforms' own free search (complete);
+  // X, LinkedIn, Instagram and Facebook come from what Google happens to
+  // index (partial — those platforms sell their search APIs).
   const press=data.press||[];
   const combined = [
     ...socialItems.map(it => ({...it, source: (it.source && it.source !== 'X' ? it.source : (it.domain==='linkedin.com'?'LinkedIn':it.domain==='bsky.app'?'Bluesky':it.domain==='instagram.com'?'Instagram':'X'))})),
     ...press,
   ].sort((a,b) => (b.published_iso||'').localeCompare(a.published_iso||''));
-  $("#pressFeed").innerHTML=combined.length
+  $("#pressFeed").innerHTML=(combined.length
     ? combined.slice(0,40).map(p=>`<li>
-        <span class="src">${esc(p.source||p.channel||'web')}${p.is_url_share?' · <i title="Includes a vitalcitynyc.org link">URL share</i>':''}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+        <span class="src">${esc(p.source||p.channel||'web')}${p.own_post?' · <i title="Posted by a Vital City account">VC post</i>':p.is_url_share?' · <i title="Includes a vitalcitynyc.org link">URL share</i>':''}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
         <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
         ${p.snippet?`<div class="snip">${esc(p.snippet)}</div>`:''}
       </li>`).join("")
-    : '<li class="empty">No social chatter in the current window.</li>';
+    : '<li class="empty">No social chatter in the current window.</li>')
+    + `<li class="empty" style="border-top:1px solid var(--vc-cloud);padding-top:8px;margin-top:6px" title="Bluesky and Reddit offer free official search APIs, so those mentions are complete. X, LinkedIn, Instagram and Facebook sell API access (hundreds of dollars per month), so for them we surface only what Google's index happens to catch — real but partial.">Coverage: Bluesky + Reddit complete (official APIs) · X / LinkedIn / Instagram partial (no free search exists)</li>`;
 
   // ghost feed in sidebar
   $("#ghostFeed").innerHTML=(gh.posts||[]).slice(0,8).map(p=>`<li>
@@ -1554,6 +1619,7 @@ function renderDonors(db){
     card.querySelector("#donorChart").innerHTML='';
     card.querySelector("#donorCampaigns").innerHTML='';
     card.querySelector("#donorRecent").innerHTML='';
+    const dl=card.querySelector("#donorLatest"); if(dl) dl.innerHTML='';
     $("#donorHint").textContent='';
     return;
   }
@@ -1653,15 +1719,17 @@ function renderDonors(db){
         <div class="v">${fmtUSD(c.amount)}</div>
       </div>`).join("") : '<div style="font-size:12px;color:var(--vc-charcoal)">No campaign-attributed gifts in this window.</div>';
 
-  // Largest recent gifts
-  const recent=(db.top_recent||[]).slice(0,6);
-  $("#donorRecent").innerHTML = recent.length ?
-    `<ul class="feed" style="margin:0">${recent.map(g=>`<li>
+  // Gift lists: largest (last 90 days) + most recent (any size)
+  const giftList = (gifts, emptyMsg) => gifts.length ?
+    `<ul class="feed" style="margin:0">${gifts.map(g=>`<li>
        <b>${fmtUSD(g.amount)}</b> · ${esc(g.donor)}${g.recurring?' <span class="pillinfo">recurring</span>':''}
        <span class="date">${esc(g.date)}</span>
        <div class="snip">${esc(g.campaign)}${g.comment?' — “'+esc(g.comment)+'”':''}</div>
      </li>`).join("")}</ul>`
-    : '<div style="font-size:12px;color:var(--vc-charcoal)">No paid gifts in the last 30 days.</div>';
+    : `<div style="font-size:12px;color:var(--vc-charcoal)">${emptyMsg}</div>`;
+  $("#donorRecent").innerHTML = giftList((db.top_recent||[]).slice(0,6), 'No paid gifts in the last 90 days.');
+  const latestEl = $("#donorLatest");
+  if(latestEl) latestEl.innerHTML = giftList((db.latest_gifts||[]).slice(0,6), 'Awaiting next data refresh.');
 
   // Hint in the card header
   $("#donorHint").textContent =
