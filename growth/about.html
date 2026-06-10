@@ -83,11 +83,21 @@
   <p>X (Twitter) and Instagram numbers now live in their own card in the main column — see the "Social" section.</p>
   <p><b>Two free upgrades worth considering later:</b> (1) Google Programmable Search offers 100 free queries per day against Google's full web index — better X/LinkedIn coverage than the Google News feed, still partial; needs a free API key and search-engine ID. (2) Once Google Analytics 4 is connected, referral traffic by source becomes the most honest social signal of all — it measures readers who actually arrived, with no scraping involved.</p>
 
+  <h2 id="ghost-analytics">Website visitors — the free 5-minute fix (Ghost staff token)</h2>
+  <p>Ghost already tracks site traffic — unique visitors, page views, sources, top pages — in its built-in Analytics tab (powered by Tinybird). The catch, verified directly against the live site: Ghost only shares those numbers with <b>staff</b> credentials. The integration key this dashboard normally uses gets "no permission" on every stats endpoint. The fix is free:</p>
+  <ol>
+    <li>Open <b>Ghost Admin → Settings → Staff</b> and click your own profile.</li>
+    <li>Scroll to <b>"Staff access token"</b> and copy it (it looks like <code>id:secret</code>).</li>
+    <li>Add it as a GitHub secret named <code>GHOST_STAFF_KEY</code> on the repo (Settings → Secrets → Actions) — or hand it to Claude to set up.</li>
+  </ol>
+  <p>On the next daily refresh the two "Website visitors" tiles fill in from Ghost's own analytics. Two caveats: the token carries your staff permissions, so treat it like a password (a secret, never in the repo); and Ghost's traffic history only starts at the April 2026 site cutover, so the 1-year tile accumulates over time.</p>
+
   <h2 id="connect-more-sources">Connect more sources</h2>
-  <p>Four panels are stubbed with their setup steps. Each one needs credentials you'd need to set up once:</p>
+  <p>These panels are stubbed with their setup steps. Each one needs credentials you'd need to set up once:</p>
   <table>
     <tr><th>Source</th><th>What it adds</th><th>What's needed</th></tr>
-    <tr><td><b>Google Analytics 4</b></td><td>Sessions, users, engagement time, top pages, source/medium (organic vs social vs direct), conversions on the signup form.</td><td>GA4 service account → JSON key → add as Viewer on the GA4 property → store <code>GA4_CREDS_JSON</code> and <code>GA4_PROPERTY_ID</code> as GitHub secrets.</td></tr>
+    <tr><td><b>Ghost Analytics (built-in)</b></td><td>Unique visitors and page views for vitalcitynyc.org — the same numbers as Ghost Admin's Analytics tab.</td><td>A staff access token — see <a href="#ghost-analytics">the free 5-minute fix</a> above.</td></tr>
+    <tr><td><b>Google Analytics 4</b></td><td>An alternative/supplement to Ghost Analytics: sessions, engagement time, source/medium splits, plus any pre-April-2026 history from the old site if the property covered it.</td><td>GA4 service account → JSON key → add as Viewer on the GA4 property → store <code>GA4_CREDS_JSON</code> and <code>GA4_PROPERTY_ID</code> as GitHub secrets.</td></tr>
     <tr><td><b>Google Search Console</b></td><td>Top queries, impressions, clicks, average position, rising queries (vs previous 28 days).</td><td>Add the same service-account email as a user on www.vitalcitynyc.org in Search Console; store <code>GSC_CREDS_JSON</code> and <code>GSC_SITE_URL</code>.</td></tr>
     <tr><td><b>X / Twitter mentions</b></td><td>Recent mentions of @vitalcitynyc, replies and quote-tweets.</td><td>The free Twitter API was retired. Realistic options: pay for X Basic API (~$100/mo) and add <code>X_BEARER_TOKEN</code>; or pay for a listening service (Brand24, Mention) and feed its RSS; or monitor manually.</td></tr>
     <tr><td><b>Instagram</b></td><td>@vitalcitynyc's own recent posts (and, with elevated review, tagged mentions).</td><td>Convert the Instagram account to a Business account linked to a Facebook Page; create a Meta app; get a long-lived Page token with <code>instagram_basic</code> scope; store <code>IG_ACCESS_TOKEN</code> and <code>IG_USER_ID</code>.</td></tr>

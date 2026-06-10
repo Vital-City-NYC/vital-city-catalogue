@@ -579,14 +579,24 @@ function boot(data){
               cls:"flat",
               tip:"SOCIAL — Combined X (@VitalCityNYC) + Instagram (@vitalcitynyc) followers. Pulled from unofficial public endpoints; can break if the platforms tighten them. See the Social card below for recent post engagement."};
     })(),
-    {lbl:"Website visitors · 30d", num: ga4.mau!=null ? fmtN(ga4.mau) : "—",
-     delta: ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs GA4 ↗",
-     cls: ga4.mau!=null ? "flat" : "na",
-     tip:"Unique anonymous visitors to vitalcitynyc.org in the last 30 days. Ghost tracks this in its admin Analytics tab but doesn't expose the aggregate page-view data to API tokens. We DO get the conversion side from Ghost (where each newsletter signup happened — see 'Where signups come from' card below). For raw traffic / page views / unique visitor counts, GA4 (or Plausible / Cloudflare) is still the path. 5-min setup is on the 'How it works' page."},
-    {lbl:"Website visitors · 1y", num: ga4.aau!=null ? fmtN(ga4.aau) : "—",
-     delta: ga4.aau!=null ? `${fmtN(ga4.sessions_365||0)} sessions` : "needs GA4 ↗",
-     cls: ga4.aau!=null ? "flat" : "na",
-     tip:"Unique anonymous visitors to vitalcitynyc.org in the last 365 days. Same Ghost-API gating as the 30-day tile — Ghost has it, doesn't expose it. The site only moved to Ghost in April 2026, so Ghost Analytics has at most ~2 months of traffic data anyway. GA4 covers both the post-cutover period and any pre-April-2026 history that still lives in the prior site's analytics."},
+    (function(){
+      const gt = data.ghost_traffic || {};
+      const n = gt.available ? gt.visitors_30d : (ga4.mau!=null ? ga4.mau : null);
+      const sub = gt.available ? `${fmtN(gt.pageviews_30d||0)} page views` :
+                  (ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs Ghost staff token ↗ · free");
+      return {lbl:"Website visitors · 30d", num: n!=null ? fmtN(n) : "—", delta: sub,
+              cls: n!=null ? "flat" : "na",
+              tip:"Unique visitors to vitalcitynyc.org in the last 30 days, from Ghost's own built-in analytics (the same numbers as the admin Analytics tab). Ghost only shares these with STAFF credentials — the integration key the dashboard normally uses gets 'no permission' on every stats endpoint (verified directly against the live site). The fix is free and takes 5 minutes: copy the staff access token from Ghost Admin → Settings → Staff → your profile, and add it as the GHOST_STAFF_KEY secret. Full steps on the How it works page. GA4 remains an optional alternative (it would also cover pre-April-2026 history from the old site)."};
+    })(),
+    (function(){
+      const gt = data.ghost_traffic || {};
+      const n = gt.available ? gt.visitors_365d : (ga4.aau!=null ? ga4.aau : null);
+      const sub = gt.available ? `${fmtN(gt.pageviews_365d||0)} page views` :
+                  (ga4.aau!=null ? `${fmtN(ga4.sessions_365||0)} sessions` : "needs Ghost staff token ↗ · free");
+      return {lbl:"Website visitors · 1y", num: n!=null ? fmtN(n) : "—", delta: sub,
+              cls: n!=null ? "flat" : "na",
+              tip:"Unique visitors over the last 365 days from Ghost's built-in analytics — same staff-token gating as the 30-day tile. Note the site only moved to Ghost in April 2026, so Ghost's traffic history starts there; a full year of data accumulates over time. GA4 could backfill the pre-cutover period if its property covered the old site."};
+    })(),
   ];
   $("#kpis").innerHTML=kpis.map(k=>{
     // GA4 stub tiles get a click-through to the setup docs in about.html
@@ -1569,25 +1579,63 @@ function renderSocial(x, ig, news){
       <div class="socstat">
         <div><div class="sv">${fmtN(d.followers||0)}</div><div class="sl">Followers</div></div>
         <div><div class="sv">${fmtN(d.posts_total || d.tweets_total || 0)}</div><div class="sl">${title==='X (Twitter)'?'Tweets total':'Posts total'}</div></div>
-        <div><div class="sv">${fmtN(d.avg_likes_recent_10 || d.avg_likes_recent_20 || 0)}</div><div class="sl">Avg likes (recent)</div></div>
+        <div${d._avgTip?` title="${esc(d._avgTip)}"`:''}><div class="sv">${d._avgDisplay!==undefined?d._avgDisplay:fmtN(d.avg_likes_recent_10 || d.avg_likes_recent_20 || 0)}</div><div class="sl">Avg likes (recent)</div></div>
       </div>
       <ul class="socposts">${postFn(d)}</ul>
     </div>`;
   }
-  html += col(x, "X (Twitter)", h=>`https://x.com/${h}`, d=>{
-    // Recent-only filter — the syndication feed includes pinned/quoted tweets
-    // that can be months/years old; cap to last 90 days for the dashboard.
+  // X's free embed feed has degraded into a stale cache — it returns ~100
+  // tweets but often only one or two from the last 90 days, with unreliable
+  // engagement counts, even though the account posts steadily (our Google-
+  // index detection finds dozens of recent @VitalCityNYC posts). So: merge
+  // the two sources, label which is which, and only show an avg-likes stat
+  // when there are enough fresh feed items to make it meaningful.
+  {
     const cutoff = Date.now() - 90*24*3600*1000;
-    const recent = (d.recent_tweets||[]).filter(t => {
+    const synd = (x.recent_tweets||[]).filter(t => {
       const ts = t.created_iso ? Date.parse(t.created_iso) : NaN;
       return !isNaN(ts) && ts >= cutoff;
-    }).slice(0,10);
-    if(!recent.length) return '<li class="empty">No tweets in the last 90 days from this account.</li>';
-    return recent.map(t=>`
-      <li>
+    });
+    if(synd.length >= 3){
+      const avg = Math.round(synd.reduce((s,t)=>s+(+t.likes||0),0)/synd.length);
+      x._avgDisplay = fmtN(avg);
+      x._avgTip = `Average likes across the ${synd.length} feed tweets from the last 90 days.`;
+    } else {
+      x._avgDisplay = "—";
+      x._avgTip = "Not enough fresh data to average: X's free embed feed only returned " + synd.length +
+        " tweet(s) from the last 90 days (it updates slowly and unreliably since X retired free API access).";
+    }
+  }
+  html += col(x, "X (Twitter)", h=>`https://x.com/${h}`, d=>{
+    const cutoff = Date.now() - 90*24*3600*1000;
+    const seen = new Set();
+    const norm = s => (s||'').toLowerCase().replace(/https?:\/\/\S+/g,'').replace(/[\W_]+/g,'').slice(0,40);
+    const items = [];
+    // 1. Embed-feed tweets from the last 90 days (have engagement counts)
+    (d.recent_tweets||[]).forEach(t => {
+      const ts = t.created_iso ? Date.parse(t.created_iso) : NaN;
+      if(isNaN(ts) || ts < cutoff) return;
+      seen.add(norm(t.text));
+      items.push({iso:t.created_iso, html:`
         <div class="meta"><span>${esc(timeAgo(t.created_iso))} ago</span><span>❤ ${fmtN(t.likes)}</span>${t.retweets?`<span>🔁 ${fmtN(t.retweets)}</span>`:''}${t.replies!=null?`<span>💬 ${fmtN(t.replies)}</span>`:''}</div>
-        <a href="https://x.com/${esc(d.handle)}/status/${esc(t.id)}" target="_blank">${esc(t.text)}</a>
-      </li>`).join("");
+        <a href="https://x.com/${esc(d.handle)}/status/${esc(t.id)}" target="_blank">${esc(t.text)}</a>`});
+    });
+    // 2. @VitalCityNYC posts Google indexed (current, but no engagement data)
+    (news||[]).filter(it => it.own_post && /x\.com|twitter\.com/.test((it.domain||'').toLowerCase()))
+      .forEach(it => {
+        const ts = it.published_iso ? Date.parse(it.published_iso) : NaN;
+        if(isNaN(ts) || ts < cutoff) return;
+        const k = norm(it.title);
+        if(seen.has(k)) return;
+        seen.add(k);
+        items.push({iso:it.published_iso, html:`
+          <div class="meta"><span>${esc(timeAgo(it.published_iso))} ago</span><span title="Found via Google's index of x.com — like/repost counts aren't available this way.">via Google index</span></div>
+          <a href="${esc(it.url)}" target="_blank">${esc(it.title)}</a>`});
+      });
+    items.sort((a,b)=>(b.iso||'').localeCompare(a.iso||''));
+    const note = `<li class="empty" style="border-top:1px solid var(--vc-cloud);padding-top:8px;margin-top:6px" title="X retired free API access in 2023; the embed feed it still serves updates slowly and unreliably. Posts found via Google's index fill the gap but carry no engagement counts. For real X analytics the options are paid (X API Basic ~$100/month) or manual (analytics.x.com in the browser).">Feed coverage is partial: X no longer offers free data access. ❤-counted items come from X's slow embed feed; "via Google index" items are newer but uncounted.</li>`;
+    if(!items.length) return '<li class="empty">Nothing from the last 90 days in either source (X embed feed or Google index).</li>' + note;
+    return items.slice(0,8).map(i=>`<li>${i.html}</li>`).join("") + note;
   });
   html += col(ig, "Instagram", h=>`https://www.instagram.com/${h}/`, d=>(d.recent_posts||[]).slice(0,10).map(p=>`
     <li>

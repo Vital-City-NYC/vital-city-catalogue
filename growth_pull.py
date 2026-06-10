@@ -856,14 +856,11 @@ GHOST_CONTENT_KEY = "dd8e178e9ddfc883537e71dd07"   # public, same as scrape.py
 GHOST_API = "https://vital-city.ghost.io/ghost/api/content"
 GHOST_ADMIN_API = "https://vital-city.ghost.io/ghost/api/admin"
 
-def _ghost_admin_token():
-    """Sign a short-lived JWT for the Ghost Admin API using the id:secret in
-    private/.ghost_admin_key (or env GHOST_ADMIN_KEY in workflow)."""
+def _ghost_jwt_from(key):
+    """Sign a short-lived JWT for the Ghost Admin API from an id:secret pair.
+    Works for both integration admin keys and staff access tokens (same
+    format; different permission levels)."""
     import hashlib, hmac
-    key = os.environ.get("GHOST_ADMIN_KEY") or ""
-    if not key:
-        f = PRIV / ".ghost_admin_key"
-        if f.exists(): key = f.read_text().strip()
     if not key or ":" not in key:
         return None
     kid, secret = key.split(":", 1)
@@ -873,6 +870,80 @@ def _ghost_admin_token():
     p = b64u(json.dumps({"iat":iat,"exp":iat+300,"aud":"/admin/"}).encode())
     sig = hmac.new(bytes.fromhex(secret), h+b"."+p, hashlib.sha256).digest()
     return (h + b"." + p + b"." + b64u(sig)).decode()
+
+
+def _ghost_admin_token():
+    """Integration admin key from private/.ghost_admin_key or env GHOST_ADMIN_KEY."""
+    key = os.environ.get("GHOST_ADMIN_KEY") or ""
+    if not key:
+        f = PRIV / ".ghost_admin_key"
+        if f.exists(): key = f.read_text().strip()
+    return _ghost_jwt_from(key)
+
+
+def _ghost_staff_token():
+    """STAFF access token (user-level permissions) from private/.ghost_staff_key
+    or env GHOST_STAFF_KEY. Ghost's /stats/* analytics endpoints — visitor
+    counts, top content, sources; the Tinybird-backed data behind the admin
+    Analytics tab — return 403 for integration keys (verified live on Ghost
+    6.45) but are allowed for staff credentials. Find yours in Ghost Admin →
+    Settings → Staff → your profile → "Staff access token"."""
+    key = os.environ.get("GHOST_STAFF_KEY") or ""
+    if not key:
+        f = PRIV / ".ghost_staff_key"
+        if f.exists(): key = f.read_text().strip()
+    return _ghost_jwt_from(key)
+
+
+def pull_ghost_traffic():
+    """Site traffic (unique visitors, page views) from Ghost's own analytics.
+
+    Path: staff JWT → /tinybird/token/ (the same token the admin UI uses) →
+    query the Tinybird api_kpis pipe for daily visits/pageviews. Requires a
+    staff access token; integration keys are forbidden from every stats
+    endpoint. Returns {"available": False, reason} until that's configured.
+    Field names from Tinybird are version-dependent, so raw rows are stored
+    alongside the computed numbers for debuggability."""
+    tok = _ghost_staff_token()
+    if not tok:
+        return {"available": False,
+                "reason": "no Ghost staff token — free 5-minute setup, see the How it works page"}
+    hdr = {"Authorization": "Ghost " + tok, "Accept-Version": "v5.0", "User-Agent": UA}
+    def gj(path):
+        return json.loads(http_get(GHOST_ADMIN_API + path, headers=hdr, timeout=30))
+    out = {"available": False, "source": "ghost-analytics (Tinybird)"}
+    try:
+        cfg = (gj("/config/").get("config") or {})
+        stats_cfg = cfg.get("stats") or {}
+        endpoint, site = stats_cfg.get("endpoint") or "https://api.tinybird.co", stats_cfg.get("id")
+        tb = gj("/tinybird/token/")
+        token = (tb.get("tinybird") or {}).get("token") or tb.get("token")
+        if not (token and site):
+            out["reason"] = "staff token works but no Tinybird token/site id in config"
+            return out
+        today = datetime.now(timezone.utc).date()
+        def tbq(date_from):
+            q = urllib.parse.urlencode({"site_uuid": site, "date_from": str(date_from), "date_to": str(today)})
+            return json.loads(http_get(f"{endpoint}/v0/pipes/api_kpis.json?{q}",
+                headers={"Authorization": "Bearer " + token}, timeout=30)).get("data") or []
+        def agg(rows):
+            # Tolerate field-name drift across Ghost/Tinybird versions
+            v = sum((r.get("visits") or r.get("visitors") or 0) for r in rows)
+            pv = sum((r.get("pageviews") or r.get("page_views") or 0) for r in rows)
+            return int(v), int(pv)
+        rows30  = tbq(today - timedelta(days=30))
+        rows365 = tbq(today - timedelta(days=365))
+        out["visitors_30d"],  out["pageviews_30d"]  = agg(rows30)
+        out["visitors_365d"], out["pageviews_365d"] = agg(rows365)
+        out["kpi_rows_30d"] = rows30[:40]   # raw sample for field-name debugging
+        out["available"] = bool(rows30 or rows365)
+        if not out["available"]:
+            out["reason"] = "Tinybird responded but returned no rows"
+        return out
+    except Exception as e:
+        out["reason"] = f"stats path failed: {e}"
+        log(f"  ghost traffic: {out['reason']}")
+        return out
 
 
 def pull_ghost_signup_attribution(days_back=180):
@@ -2171,6 +2242,10 @@ def main():
         "news_mentions": news_mentions,
         "lifecycle":     lifecycle,
         "engagement_extras": engagement_extras,
+        # Ghost's own Tinybird-backed site analytics (visitors, page views).
+        # Needs a STAFF access token; the integration key gets 403 on every
+        # /stats/* endpoint (verified live). Free once the token is added.
+        "ghost_traffic": pull_ghost_traffic(),
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
         # a "Connect this source" placeholder card with the exact setup steps.
         "ga4": {

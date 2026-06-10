@@ -102,6 +102,10 @@ jobs:
           MAILCHIMP_KEY: ${{ secrets.MAILCHIMP_KEY }}
           DONORBOX_KEY:  ${{ secrets.DONORBOX_KEY }}
           DONORBOX_EMAIL: info@vitalcitynyc.org
+          # Optional: unlocks Ghost's built-in site analytics (visitors/page
+          # views) — integration keys are forbidden from /stats/*, staff
+          # tokens are allowed. Absent → the website tiles stay stubbed.
+          GHOST_STAFF_KEY: ${{ secrets.GHOST_STAFF_KEY }}
         run: |
           python3 growth_pull.py || echo "WARNING: growth_pull failed; growth dashboard will be stale"
 
