@@ -935,6 +935,27 @@ def pull_ghost_traffic():
         rows365 = tbq(today - timedelta(days=365))
         out["visitors_30d"],  out["pageviews_30d"]  = agg(rows30)
         out["visitors_365d"], out["pageviews_365d"] = agg(rows365)
+        # First month with REAL traffic. Tinybird has a trickle back to
+        # 2025-08 (6-36 visits/month — staging/preview hits during the Ghost
+        # build-out) and then jumps to ~37K/month in 2026-03 when the site
+        # actually went live. "First nonzero day" would mislabel the window
+        # by seven months, so: first month with at least 1,000 visits, then
+        # that month's first day with traffic. The dashboard labels the tile
+        # "since YYYY-MM" with this so a partial history is never passed off
+        # as a full year.
+        monthly = {}
+        for r in rows365:
+            d = r.get("date") or ""
+            if d: monthly[d[:7]] = monthly.get(d[:7], 0) + (r.get("visits") or r.get("visitors") or 0)
+        real_months = sorted(m for m, v in monthly.items() if v >= 1000)
+        if real_months:
+            m0 = real_months[0]
+            days = sorted(r.get("date") for r in rows365
+                          if (r.get("date") or "").startswith(m0)
+                          and (r.get("visits") or r.get("visitors") or 0) > 0)
+            out["history_start"] = days[0] if days else m0 + "-01"
+        else:
+            out["history_start"] = None
         out["kpi_rows_30d"] = rows30[:40]   # raw sample for field-name debugging
         out["available"] = bool(rows30 or rows365)
         if not out["available"]:

@@ -591,11 +591,19 @@ function boot(data){
     (function(){
       const gt = data.ghost_traffic || {};
       const n = gt.available ? gt.visitors_365d : (ga4.aau!=null ? ga4.aau : null);
+      // Ghost analytics only began recording at the April 2026 site cutover,
+      // so a "1y" label would understate real traffic badly (GA4, which
+      // tracked the previous site too, shows ~500K active users for a full
+      // trailing year). Label the window by its true start month instead.
+      const start = gt.history_start || "";          // YYYY-MM-DD of first recorded traffic
+      const startLbl = start ? new Date(start+'T00:00:00Z')
+        .toLocaleDateString('en-US',{month:'short',year:'numeric',timeZone:'UTC'}) : null;
       const sub = gt.available ? `${fmtN(gt.pageviews_365d||0)} page views` :
                   (ga4.aau!=null ? `${fmtN(ga4.sessions_365||0)} sessions` : "needs Ghost staff token ↗ · free");
-      return {lbl:"Website visitors · 1y", num: n!=null ? fmtN(n) : "—", delta: sub,
+      return {lbl: gt.available && startLbl ? `Website visitors · since ${startLbl}` : "Website visitors · 1y",
+              num: n!=null ? fmtN(n) : "—", delta: sub,
               cls: n!=null ? "flat" : "na",
-              tip:"Unique visitors over the last 365 days from Ghost's built-in analytics — same staff-token gating as the 30-day tile. Note the site only moved to Ghost in April 2026, so Ghost's traffic history starts there; a full year of data accumulates over time. GA4 could backfill the pre-cutover period if its property covered the old site."};
+              tip:`Unique visitors from Ghost's built-in analytics, which only started recording when the site moved to Ghost${startLbl ? ` (first recorded traffic: ${esc(start)})` : " in April 2026"}. This is NOT a full year — it understates the trailing-12-month audience. For the full-year picture use GA4, which tracked the previous site too (it shows roughly 500K active users for the year through June 2026). The number here will grow into a true 1-year window as Ghost history accumulates.`};
     })(),
   ];
   $("#kpis").innerHTML=kpis.map(k=>{
