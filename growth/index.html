@@ -96,9 +96,13 @@
   .pillwarn{display:inline-block;background:var(--vc-orange);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
   .pillinfo{display:inline-block;background:var(--vc-cerulean);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
 
-  /* Perf grid (Newsletter performance card) */
-  .perfgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud)}
-  .perfcell{background:var(--vc-white);padding:11px 13px}
+  /* Perf grid (Newsletter performance card + fundraising / engagement /
+     lifecycle KPI strips). Dividers are drawn by the CELLS (right + bottom
+     hairlines) rather than by a cloud background bleeding through gaps —
+     so when the last row is partial (e.g. 7 cells in a 5-wide grid), the
+     empty tracks stay card-colored instead of showing as a gray void. */
+  .perfgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;background:var(--vc-white);border-top:1px solid var(--vc-cloud);border-left:1px solid var(--vc-cloud)}
+  .perfcell{background:var(--vc-white);padding:11px 14px;border-right:1px solid var(--vc-cloud);border-bottom:1px solid var(--vc-cloud)}
   .perfcell .pl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700}
   .perfcell .pn{font-family:var(--vc-serif);font-weight:900;font-size:22px;line-height:1.1;margin-top:3px}
   .perfcell .pd{font-size:11px;font-weight:700;margin-top:3px}
@@ -108,11 +112,18 @@
   .perfcell .pd.na{color:var(--vc-charcoal);font-weight:400;font-style:italic}
 
   /* YTD comparison table */
-  .ytdtbl{width:100%;border-collapse:collapse;font-size:13px}
+  .ytdtbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+  /* Metric column takes the slack; the three value columns are equal so the
+     numbers line up in even, predictable columns. */
+  .ytdtbl col.metric{width:auto}
+  .ytdtbl col.val{width:21%}
   .ytdtbl th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--vc-black)}
+  /* Right-align numeric HEADERS too — a left header over right-aligned
+     numbers is exactly the misalignment that read as broken. */
+  .ytdtbl th.num{text-align:right}
   .ytdtbl td{padding:9px 10px;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
   .ytdtbl td.num{text-align:right;font-variant-numeric:tabular-nums}
-  .ytdtbl td.delta{text-align:right;font-weight:700}
+  .ytdtbl td.delta{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
   .ytdtbl td.delta.up{color:var(--vc-green)}
   .ytdtbl td.delta.down{color:#c8102e}
   .ytdtbl td.delta.flat{color:var(--vc-charcoal)}
@@ -1319,8 +1330,8 @@ function renderYTD(mc, signups){
     </tr>`;
   }).join("");
   $("#ytdBody").innerHTML=
-    `<table class="ytdtbl"><thead><tr>
-      <th>Metric</th><th class="num">YTD 2026</th><th class="num">YTD 2025 (same period)</th><th class="num">YoY</th>
+    `<table class="ytdtbl"><colgroup><col class="metric"><col class="val"><col class="val"><col class="val"></colgroup><thead><tr>
+      <th>Metric</th><th class="num">YTD 2026</th><th class="num">YTD 2025<br><span style="font-weight:400;text-transform:none;letter-spacing:0">same period</span></th><th class="num">YoY</th>
     </tr></thead><tbody>${body}</tbody></table>
     <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">
       <b>Source of truth:</b> signups → Ghost (the website signup form is the canonical intake since vitalcitynyc.org moved to Ghost in <b>April 2026</b>; transferred to Mailchimp on the weekly reconcile).
