@@ -80,7 +80,6 @@
       "vital-city-issues-call-for-submissions",
       "vital-signs-crime-and-justice-in-new-york-city",
       "vital-signs-march-2023",
-      "vital-signs-state-of-the-city-on-crime-2024",
       "what-brought-new-york-city-back-from-the-brink",
       "what-does-it-take-to-govern-the-jails",
       "what-hangs-in-the-balance-sheets",
@@ -203,9 +202,10 @@
   },
   {
     "name": "Jamie Rubin",
-    "post_count": 30,
+    "post_count": 31,
     "slugs": [
       "a-housing-agenda-for-the-next-mayor",
+      "adam-lubinsky-interview",
       "after-hours-with-jamie-rubin-and-majora-carter",
       "after-hours-with-jamie-rubin-reflections-on-disaster-relief",
       "after-hours-with-jamie-rubin-what-do-we-owe-nonprofits-anyway",
@@ -499,24 +499,6 @@
     "website": null
   },
   {
-    "name": "Paul Reeping",
-    "post_count": 7,
-    "slugs": [
-      "just-the-facts-on-new-york-city-subway-crime",
-      "navigating-apartment-hunting-rising-rent-in-nyc",
-      "safer-cities-in-context",
-      "the-state-of-crime-in-new-york-city-at-midyear-2024",
-      "vital-signs-state-of-the-city-on-crime-2024",
-      "what-the-data-show-about-subway-safety",
-      "what-we-know-and-dont-know-about-guns"
-    ],
-    "slug": "reeping-paul",
-    "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
-    "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "John K. Roman",
     "post_count": 7,
     "slugs": [
@@ -553,6 +535,23 @@
     "website": null
   },
   {
+    "name": "Paul Reeping",
+    "post_count": 6,
+    "slugs": [
+      "just-the-facts-on-new-york-city-subway-crime",
+      "navigating-apartment-hunting-rising-rent-in-nyc",
+      "safer-cities-in-context",
+      "the-state-of-crime-in-new-york-city-at-midyear-2024",
+      "what-the-data-show-about-subway-safety",
+      "what-we-know-and-dont-know-about-guns"
+    ],
+    "slug": "reeping-paul",
+    "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
+    "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Vincent Schiraldi",
     "post_count": 6,
     "slugs": [
@@ -583,6 +582,22 @@
     "slug": "ludwig-jens",
     "bio": "is the Edwin A. and Betty L. Bergman Distinguished Service Professor at the University of Chicago and Pritzker Director of the Crime Lab. He co-directs the Education Lab and NBER’s working group on economics of crime.",
     "url": "https://www.vitalcitynyc.org/author/ludwig-jens/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Cara Eckholm",
+    "post_count": 5,
+    "slugs": [
+      "an-antidote-to-doge-strengthening-urban-policy-entrepreneurs",
+      "building-better-piece-by-piece",
+      "guadalajara-visor-urbano-permitting",
+      "london-low-traffic-neighborhoods-safety-urban-planning",
+      "nantes-tourism-culture-sophie-levy-interview"
+    ],
+    "slug": "eckholm-cara",
+    "bio": "is the host of Borrow & Steal, a new interview series from Vital City. She is a fellow at Renaissance Philanthropy and runs AKA Urban, a planning firm. ",
+    "url": "https://www.vitalcitynyc.org/author/eckholm-cara/",
     "twitter": null,
     "website": null
   },
@@ -723,21 +738,6 @@
     "slug": "levin-marc-a",
     "bio": "is chief policy counsel for the Council on Criminal Justice.",
     "url": "https://www.vitalcitynyc.org/author/levin-marc-a/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Cara Eckholm",
-    "post_count": 4,
-    "slugs": [
-      "an-antidote-to-doge-strengthening-urban-policy-entrepreneurs",
-      "building-better-piece-by-piece",
-      "guadalajara-visor-urbano-permitting",
-      "london-low-traffic-neighborhoods-safety-urban-planning"
-    ],
-    "slug": "eckholm-cara",
-    "bio": "is the host of Borrow & Steal, a new interview series from Vital City. She is a fellow at Renaissance Philanthropy and runs AKA Urban, a planning firm. ",
-    "url": "https://www.vitalcitynyc.org/author/eckholm-cara/",
     "twitter": null,
     "website": null
   },
@@ -1007,20 +1007,6 @@
     "website": null
   },
   {
-    "name": "Marcos F. Soler",
-    "post_count": 3,
-    "slugs": [
-      "crime-on-the-ground-and-how-its-experienced",
-      "new-york-city-gun-violence-down-major-crime-high",
-      "the-truth-about-shootings-in-new-york-city"
-    ],
-    "slug": "soler-marcos-f",
-    "bio": "is the executive director of the Center for Ethics and the Rule of Law at the University of Pennsylvania, and he previously served as deputy secretary for public safety for the New York governor.",
-    "url": "https://www.vitalcitynyc.org/author/soler-marcos-f/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Alex Chohlas-Wood",
     "post_count": 3,
     "slugs": [
@@ -1161,15 +1147,15 @@
     "website": null
   },
   {
-    "name": "Gerard Torrats-Espinosa",
+    "name": "Jeff Asher",
     "post_count": 3,
     "slugs": [
-      "clustering-of-gun-violence-the-problem-that-wont-go-away",
-      "more-non-profits-fewer-crimes"
+      "crime-data-is-better-will-americans-pay-attention",
+      "what-the-numbers-miss-about-gun-crimes"
     ],
-    "slug": "torrats-espinosa-gerard",
-    "bio": "is an assistant professor of sociology and a member of the Data Science Institute at Columbia University.",
-    "url": "https://www.vitalcitynyc.org/author/torrats-espinosa-gerard/",
+    "slug": "asher-jeff",
+    "bio": "is a crime analyst based in New Orleans and co-founder of AH Datalytics. He is the author of a Substack newsletter covering crime data and analysis.",
+    "url": "https://www.vitalcitynyc.org/author/asher-jeff/",
     "twitter": null,
     "website": null
   },
@@ -1304,7 +1290,7 @@
       "mamdani-nyc-unions-efficiency-reform"
     ],
     "slug": "disalvo-daniel",
-    "bio": "is a professor of political science at the City College of New York-CUNY and a senior fellow at the Manhattan Institute.",
+    "bio": "is professor and associate dean of the School of Civic Life and leadership at the University of North Carolina at Chapel Hill and a senior fellow at the Manhattan Institute.",
     "url": "https://www.vitalcitynyc.org/author/disalvo-daniel/",
     "twitter": null,
     "website": null
@@ -1423,6 +1409,19 @@
     "slug": "campion-sean",
     "bio": "is director of housing and economic development studies at the Citizens Budget Commission, which focuses on constructive change in New York City and New York State government finances and services.",
     "url": "https://www.vitalcitynyc.org/author/campion-sean/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Caterina Roman",
+    "post_count": 2,
+    "slugs": [
+      "erin-dalton-data-driven-social-services-nyc",
+      "on-fear-itself-worry-about-crime-has-taken-on-a-life-of-its-own"
+    ],
+    "slug": "roman-caterina",
+    "bio": "is a professor in the Department of Criminal Justice at Temple University.",
+    "url": "https://www.vitalcitynyc.org/author/roman-caterina/",
     "twitter": null,
     "website": null
   },
@@ -1791,6 +1790,19 @@
     "website": null
   },
   {
+    "name": "Marcos F. Soler",
+    "post_count": 2,
+    "slugs": [
+      "crime-on-the-ground-and-how-its-experienced",
+      "the-truth-about-shootings-in-new-york-city"
+    ],
+    "slug": "soler-marcos-f",
+    "bio": "is the executive director of the Center for Ethics and the Rule of Law at the University of Pennsylvania, and he previously served as deputy secretary for public safety for the New York governor.",
+    "url": "https://www.vitalcitynyc.org/author/soler-marcos-f/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Reuven Blau",
     "post_count": 2,
     "slugs": [
@@ -1869,15 +1881,15 @@
     "website": null
   },
   {
-    "name": "Jeff Asher",
+    "name": "Gerard Torrats-Espinosa",
     "post_count": 2,
     "slugs": [
-      "crime-data-is-better-will-americans-pay-attention",
-      "what-the-numbers-miss-about-gun-crimes"
+      "clustering-of-gun-violence-the-problem-that-wont-go-away",
+      "more-non-profits-fewer-crimes"
     ],
-    "slug": "asher-jeff",
-    "bio": "is a crime analyst based in New Orleans and co-founder of AH Datalytics. He is the author of a Substack newsletter covering crime data and analysis.",
-    "url": "https://www.vitalcitynyc.org/author/asher-jeff/",
+    "slug": "torrats-espinosa-gerard",
+    "bio": "is an assistant professor of sociology and a member of the Data Science Institute at Columbia University.",
+    "url": "https://www.vitalcitynyc.org/author/torrats-espinosa-gerard/",
     "twitter": null,
     "website": null
   },
@@ -2625,18 +2637,6 @@
     "slug": "reiss-david",
     "bio": "is a clinical professor of law at Cornell Law School and Cornell Tech and was chair of the Rent Guidelines Board from 2019 to 2023.",
     "url": "https://www.vitalcitynyc.org/author/reiss-david/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Caterina Roman",
-    "post_count": 1,
-    "slugs": [
-      "erin-dalton-data-driven-social-services-nyc"
-    ],
-    "slug": "roman-caterina",
-    "bio": "is a professor in the Department of Criminal Justice at Temple University.",
-    "url": "https://www.vitalcitynyc.org/author/roman-caterina/",
     "twitter": null,
     "website": null
   },
@@ -5941,6 +5941,18 @@
     "website": null
   },
   {
+    "name": "Marc Perel",
+    "post_count": 1,
+    "slugs": [
+      "lorem-ipsum"
+    ],
+    "slug": "marc",
+    "bio": null,
+    "url": "https://www.vitalcitynyc.org/author/marc/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Tamara Greenfield",
     "post_count": 1,
     "slugs": [
@@ -5961,18 +5973,6 @@
     "slug": "lee-layman",
     "bio": "is the project director of Neighborhood Safety Initiative (NSI) at the Center for Court Innovation, a lead implementation partner in the Mayor’s Action Plan for Neighborhood Safety (MAP).",
     "url": "https://www.vitalcitynyc.org/author/lee-layman/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Marc Perel",
-    "post_count": 1,
-    "slugs": [
-      "lorem-ipsum"
-    ],
-    "slug": "marc",
-    "bio": null,
-    "url": "https://www.vitalcitynyc.org/author/marc/",
     "twitter": null,
     "website": null
   },

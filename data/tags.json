@@ -1,7 +1,7 @@
 [
   {
     "name": "Crime",
-    "post_count": 141
+    "post_count": 142
   },
   {
     "name": "History",
@@ -17,11 +17,11 @@
   },
   {
     "name": "City Planning",
-    "post_count": 105
+    "post_count": 107
   },
   {
     "name": "Justice",
-    "post_count": 78
+    "post_count": 79
   },
   {
     "name": "Housing",
@@ -29,11 +29,11 @@
   },
   {
     "name": "culture",
-    "post_count": 69
+    "post_count": 70
   },
   {
     "name": "Gun Violence",
-    "post_count": 67
+    "post_count": 65
   },
   {
     "name": "Police Reform",
@@ -41,7 +41,7 @@
   },
   {
     "name": "Politics",
-    "post_count": 50
+    "post_count": 51
   },
   {
     "name": "Economics",
@@ -53,7 +53,7 @@
   },
   {
     "name": "Social Science",
-    "post_count": 41
+    "post_count": 42
   },
   {
     "name": "Public Health",
@@ -64,16 +64,20 @@
     "post_count": 30
   },
   {
-    "name": "Education",
-    "post_count": 29
+    "name": "data",
+    "post_count": 30
   },
   {
-    "name": "data",
+    "name": "Education",
     "post_count": 29
   },
   {
     "name": "Technology",
     "post_count": 28
+  },
+  {
+    "name": "Podcast",
+    "post_count": 26
   },
   {
     "name": "Setting the Stage",
@@ -88,16 +92,12 @@
     "post_count": 25
   },
   {
-    "name": "Podcast",
-    "post_count": 25
-  },
-  {
     "name": "interview",
     "post_count": 24
   },
   {
     "name": "Incarceration",
-    "post_count": 22
+    "post_count": 23
   },
   {
     "name": "Infrastructure",
@@ -112,11 +112,11 @@
     "post_count": 21
   },
   {
-    "name": "Subway Crime",
-    "post_count": 19
+    "name": "Data Stories",
+    "post_count": 18
   },
   {
-    "name": "Data Stories",
+    "name": "Subway Crime",
     "post_count": 18
   },
   {
@@ -284,6 +284,10 @@
     "post_count": 7
   },
   {
+    "name": "Environment",
+    "post_count": 6
+  },
+  {
     "name": "The Shape of the Economic Engine",
     "post_count": 6
   },
@@ -316,7 +320,7 @@
     "post_count": 6
   },
   {
-    "name": "What Do We Know?",
+    "name": "Disorder",
     "post_count": 6
   },
   {
@@ -345,10 +349,6 @@
   },
   {
     "name": "Wrenches in the Gears",
-    "post_count": 5
-  },
-  {
-    "name": "Environment",
     "post_count": 5
   },
   {
@@ -436,7 +436,7 @@
     "post_count": 4
   },
   {
-    "name": "Disorder",
+    "name": "What Do We Know?",
     "post_count": 4
   },
   {
@@ -462,6 +462,10 @@
   {
     "name": "New Solutions",
     "post_count": 4
+  },
+  {
+    "name": "Borrow and Steal",
+    "post_count": 3
   },
   {
     "name": "About This Project",
@@ -508,6 +512,10 @@
     "post_count": 3
   },
   {
+    "name": "Statistics",
+    "post_count": 3
+  },
+  {
     "name": "How Did It Get This Bad?",
     "post_count": 3
   },
@@ -538,10 +546,6 @@
   {
     "name": "Conversations",
     "post_count": 3
-  },
-  {
-    "name": "Borrow and Steal",
-    "post_count": 2
   },
   {
     "name": "Comings and Goings",
@@ -581,10 +585,6 @@
   },
   {
     "name": "Cleanup on Aisle 10",
-    "post_count": 2
-  },
-  {
-    "name": "Statistics",
     "post_count": 2
   },
   {
