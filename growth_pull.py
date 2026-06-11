@@ -1177,6 +1177,22 @@ JUNK_TITLE_PATTERNS = [
 
 VC_BLUESKY_HANDLE = "vitalcitynyc.bsky.social"
 
+def pull_bluesky_profile():
+    """Account-level Bluesky stats — followers, posts. Open official API,
+    no auth (same as the mention search)."""
+    try:
+        d = json.loads(http_get(
+            f"https://api.bsky.app/xrpc/app.bsky.actor.getProfile?actor={VC_BLUESKY_HANDLE}",
+            timeout=15))
+        out = {"available": True, "handle": VC_BLUESKY_HANDLE,
+               "followers": d.get("followersCount") or 0,
+               "posts_total": d.get("postsCount") or 0}
+        log(f"  bluesky profile: {out['followers']} followers, {out['posts_total']} posts")
+        return out
+    except Exception as e:
+        log(f"  bluesky profile failed: {e}")
+        return {"available": False, "reason": str(e)[:120]}
+
 def pull_bluesky_mentions():
     """Bluesky's public search API — the one social platform with a real,
     free, official search endpoint (open AT Protocol; no key, no auth).
@@ -2312,6 +2328,8 @@ def main():
         # LinkedIn company-page follower count (public-page meta scrape with
         # repo-cached fallback for when LinkedIn authwalls the runner).
         "linkedin": pull_linkedin_followers(),
+        # Bluesky account stats (open official API).
+        "bluesky": pull_bluesky_profile(),
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
         # a "Connect this source" placeholder card with the exact setup steps.
         "ga4": {

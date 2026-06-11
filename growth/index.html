@@ -116,14 +116,49 @@
   .dombar .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--vc-charcoal)}
 
   /* Social card */
-  .socrow{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media(max-width:780px){ .socrow{grid-template-columns:1fr} }
-  .soccol{background:var(--vc-paper2);border:1px solid var(--vc-cloud);padding:14px}
-  .soccol h3{margin:0 0 8px;font-size:13px;font-family:var(--vc-sans);font-weight:700}
-  .socstat{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
-  .socstat .sv{font-family:var(--vc-serif);font-weight:900;font-size:20px;line-height:1.1}
-  .socstat .sl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);font-weight:700;margin-top:2px}
-  .socposts{list-style:none;padding:0;margin:0;max-height:280px;overflow-y:auto}
+  /* ---- Social ledger ---- */
+  /* One headline number, a proportional platform bar that doubles as the
+     legend, then four identical platform panels (accent-coded top rules,
+     same stat strip, same list anatomy, same provenance chips). */
+  .sochero{display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap;margin:4px 0 18px}
+  .sochero .tlabel{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin-bottom:5px}
+  .sochero .total{font-family:var(--vc-serif);font-weight:900;font-size:42px;line-height:.95;letter-spacing:-.01em}
+  .socbar{flex:1 1 320px;min-width:250px;padding-bottom:3px}
+  .socbar .bar{display:flex;height:13px;border:1px solid var(--vc-black);background:var(--vc-white)}
+  .socbar .seg{height:100%;transition:width .7s cubic-bezier(.2,.7,.3,1)}
+  .socbar .seg+.seg{border-left:1px solid var(--vc-white)}
+  .socchips{display:flex;gap:5px 16px;flex-wrap:wrap;margin-top:8px}
+  .socchips .chip{font-size:11px;color:var(--vc-charcoal);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .socchips .dot{width:8px;height:8px;display:inline-block;flex:none}
+  .socchips b{color:var(--vc-black);font-weight:700}
+  .socgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:780px){ .socgrid{grid-template-columns:1fr} }
+  .socpanel{background:var(--vc-white);border:1px solid var(--vc-cloud);border-top-width:3px;padding:13px 15px 12px;display:flex;flex-direction:column;min-width:0}
+  .socpanel .phead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
+  .socpanel .pname{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-black)}
+  .socpanel .phandle{font-size:11px;color:var(--vc-cerulean);text-decoration:none;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .socpanel .phandle:hover{text-decoration:underline}
+  .socstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px}
+  .socstats .sv{font-family:var(--vc-serif);font-weight:900;font-size:19px;line-height:1.1}
+  .socstats .sl{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--vc-charcoal);font-weight:700;margin-top:2px;line-height:1.35}
+  .latestlbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;border-top:1px solid var(--vc-cloud);padding-top:9px;margin-bottom:4px}
+  .soclist{list-style:none;padding:0;margin:0;max-height:288px;overflow-y:auto;flex:1}
+  .soclist li{padding:7px 0;border-bottom:1px solid var(--vc-paper2)}
+  .soclist li:last-child{border-bottom:none}
+  .soclist .meta{display:flex;gap:9px;font-size:10.5px;color:var(--vc-charcoal);margin-bottom:2px;align-items:center;flex-wrap:wrap}
+  .soclist .meta .when{font-variant-numeric:tabular-nums}
+  .soclist .srcchip{font-size:8.5px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;border:1px solid var(--vc-cloud);padding:0 6px;border-radius:999px;line-height:1.6}
+  .soclist a{color:var(--vc-black);text-decoration:none;font-size:12.5px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .soclist a:hover{text-decoration:underline;text-decoration-color:var(--vc-orange);text-decoration-thickness:2px;text-underline-offset:2px}
+  .soclist .lempty{font-size:12px;color:var(--vc-charcoal);padding:6px 0}
+  .pcover{margin-top:10px;font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;align-self:flex-start;padding:2px 8px;border:1px solid;cursor:help}
+  .pcover.full{color:#3E7E36;border-color:#57AA4A}
+  .pcover.part{color:#A4540F;border-color:#E2772F}
+  .pcover.mid{color:var(--vc-charcoal);border-color:var(--vc-charcoal)}
+  html.dark .socpanel{background:var(--vc-white)}
+  html.dark .socbar .bar{background:var(--vc-paper2)}
+  html.dark .pcover.full{color:#7CC974;border-color:#57AA4A}
+  html.dark .pcover.part{color:#F0A06A;border-color:#E2772F}
   .socposts li{padding:7px 0;border-bottom:1px solid var(--vc-cloud);font-size:12px;line-height:1.4}
   .socposts li:last-child{border-bottom:none}
   .socposts .meta{font-size:10.5px;color:var(--vc-charcoal);margin-bottom:2px;display:flex;gap:10px}
@@ -387,7 +422,7 @@
       </div>
 
       <div class="card" id="social">
-        <h2>Social — X, Instagram, LinkedIn <span class="hint">followers + recent post engagement · free unofficial endpoints (can break)</span></h2>
+        <h2>Social reach — X, LinkedIn, Bluesky, Instagram <span class="hint">followers + latest posts per platform · all free sources · coverage labeled per panel</span></h2>
         <div id="socialBody"></div>
         <div id="urlShares" style="margin-top:18px"></div>
       </div>
@@ -470,7 +505,11 @@ function clearPass(){
   try { localStorage.removeItem(PASSKEY); sessionStorage.removeItem(PASSKEY); } catch {}
 }
 
-function applyTheme(t){document.documentElement.classList.toggle("dark",t==="dark");const b=$("#themeToggle");if(b)b.textContent=t==="dark"?"☀️ Light mode":"🌙 Dark mode";}
+function applyTheme(t){document.documentElement.classList.toggle("dark",t==="dark");const b=$("#themeToggle");if(b)b.textContent=t==="dark"?"☀️ Light mode":"🌙 Dark mode";
+  // Re-render the social ledger so the platform bar swaps the X segment
+  // between black (light mode) and off-white (dark mode) — it's the one
+  // platform color that must flip with the theme.
+  if(renderSocial._args) renderSocial(...renderSocial._args);}
 (function(){const t=localStorage.getItem("vc_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light");applyTheme(t);})();
 
 function b64d(s){const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
@@ -571,17 +610,18 @@ function boot(data){
      tip:"FUNDRAISING — Total raised on Donorbox so far this year (gross, before processor fees). Donor count is unique people; gift count counts every transaction (one donor can give multiple times). See the Fundraising card below for monthly trend + top campaigns."},
     // --- Reach & traffic (directional; tiles ordered last to match the page) ---
     (function(){
-      const xn = xp.available ? xp.followers : null;
-      const inum = ig.available ? ig.followers : null;
-      const li = data.linkedin || {};
-      const ln = li.available ? li.followers : null;
-      const total = (xn||0) + (inum||0) + (ln||0);
-      const parts = [`${fmtN(xn||0)} on X`, `${fmtN(inum||0)} on IG`];
-      if(ln!=null) parts.push(`${fmtN(ln)} on LI`);
-      return {lbl:"Social followers", num: (xn!=null || inum!=null || ln!=null) ? fmtN(total) : "—",
-              delta: parts.join(" · "),
+      const li = data.linkedin || {}, bs = data.bluesky || {};
+      const counts = [
+        ["X",   xp.available ? xp.followers : null],
+        ["LI",  li.available ? li.followers : null],
+        ["Bsky",bs.available ? bs.followers : null],
+        ["IG",  ig.available ? ig.followers : null],
+      ].filter(([,n]) => n != null).sort((a,b)=>b[1]-a[1]);
+      const total = counts.reduce((s,[,n])=>s+n,0);
+      return {lbl:"Social followers", num: counts.length ? fmtN(total) : "—",
+              delta: counts.map(([k,n])=>`${fmtN(n)} ${k}`).join(" · "),
               cls:"flat",
-              tip:"SOCIAL — Combined X (@VitalCityNYC) + Instagram (@vitalcitynyc) + LinkedIn (company page) followers. X and Instagram come from unofficial public endpoints; LinkedIn comes from the public company page (its meta text states the follower count)"+(ln!=null&&li.as_of?`, last read ${esc(li.as_of)}`:"")+". All can break if the platforms tighten access. See the Social card below for recent post engagement."};
+              tip:"SOCIAL — Combined followers: X (@VitalCityNYC) + LinkedIn company page + Bluesky (@vitalcitynyc.bsky.social) + Instagram (@vitalcitynyc). Sources: X and Instagram via unofficial public endpoints, LinkedIn via its public page"+(li.as_of?` (as of ${esc(li.as_of)})`:"")+", Bluesky via its open official API. See the Social reach card below for per-platform detail and coverage notes."};
     })(),
     (function(){
       const gt = data.ghost_traffic || {};
@@ -634,7 +674,7 @@ function boot(data){
   renderPerf(mc);
   renderSendChart(mc.campaigns || []);
   renderYTD(mc, mc.signup_windows || {});
-  renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || [], data.linkedin || {});
+  renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || [], data.linkedin || {}, data.bluesky || {});
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderAcquisition(data.ghost_signup_attribution || {});
@@ -1580,115 +1620,139 @@ function timeAgo(iso){
   return Math.floor(m/(24*60))+"d";
 }
 
-function renderSocial(x, ig, news, li){
-  li = li || {};
-  let html='<div class="socrow">';
-  function col(d, title, mkURL, postFn){
-    if(!d.available){
-      return `<div class="soccol"><h3>${esc(title)}</h3><div style="font-size:12px;color:var(--vc-charcoal)">Not available right now: ${esc(d.reason||'unknown error')}.<br>This panel uses unofficial public endpoints and can break when the platforms change them.</div></div>`;
-    }
-    return `<div class="soccol">
-      <h3>${esc(title)} · <a href="${mkURL(d.handle)}" target="_blank" style="color:var(--vc-cerulean);font-weight:600">@${esc(d.handle)}</a></h3>
-      <div class="socstat">
-        <div><div class="sv">${fmtN(d.followers||0)}</div><div class="sl">Followers</div></div>
-        <div><div class="sv">${fmtN(d.posts_total || d.tweets_total || 0)}</div><div class="sl">${title==='X (Twitter)'?'Tweets total':'Posts total'}</div></div>
-        <div${d._avgTip?` title="${esc(d._avgTip)}"`:''}><div class="sv">${d._avgDisplay!==undefined?d._avgDisplay:fmtN(d.avg_likes_recent_10 || d.avg_likes_recent_20 || 0)}</div><div class="sl">Avg likes (recent)</div></div>
-      </div>
-      <ul class="socposts">${postFn(d)}</ul>
-    </div>`;
-  }
-  // X's free embed feed has degraded into a stale cache — it returns ~100
-  // tweets but often only one or two from the last 90 days, with unreliable
-  // engagement counts, even though the account posts steadily (our Google-
-  // index detection finds dozens of recent @VitalCityNYC posts). So: merge
-  // the two sources, label which is which, and only show an avg-likes stat
-  // when there are enough fresh feed items to make it meaningful.
-  {
-    const cutoff = Date.now() - 90*24*3600*1000;
-    const synd = (x.recent_tweets||[]).filter(t => {
-      const ts = t.created_iso ? Date.parse(t.created_iso) : NaN;
-      return !isNaN(ts) && ts >= cutoff;
-    });
-    if(synd.length >= 3){
-      const avg = Math.round(synd.reduce((s,t)=>s+(+t.likes||0),0)/synd.length);
-      x._avgDisplay = fmtN(avg);
-      x._avgTip = `Average likes across the ${synd.length} feed tweets from the last 90 days.`;
-    } else {
-      x._avgDisplay = "—";
-      x._avgTip = "Not enough fresh data to average: X's free embed feed only returned " + synd.length +
-        " tweet(s) from the last 90 days (it updates slowly and unreliably since X retired free API access).";
-    }
-  }
-  html += col(x, "X (Twitter)", h=>`https://x.com/${h}`, d=>{
-    const cutoff = Date.now() - 90*24*3600*1000;
-    const seen = new Set();
-    const norm = s => (s||'').toLowerCase().replace(/https?:\/\/\S+/g,'').replace(/[\W_]+/g,'').slice(0,40);
-    const items = [];
-    // 1. Embed-feed tweets from the last 90 days (have engagement counts)
-    (d.recent_tweets||[]).forEach(t => {
-      const ts = t.created_iso ? Date.parse(t.created_iso) : NaN;
-      if(isNaN(ts) || ts < cutoff) return;
-      seen.add(norm(t.text));
-      items.push({iso:t.created_iso, html:`
-        <div class="meta"><span>${esc(timeAgo(t.created_iso))} ago</span><span>❤ ${fmtN(t.likes)}</span>${t.retweets?`<span>🔁 ${fmtN(t.retweets)}</span>`:''}${t.replies!=null?`<span>💬 ${fmtN(t.replies)}</span>`:''}</div>
-        <a href="https://x.com/${esc(d.handle)}/status/${esc(t.id)}" target="_blank">${esc(t.text)}</a>`});
-    });
-    // 2. @VitalCityNYC posts Google indexed (current, but no engagement data)
-    (news||[]).filter(it => it.own_post && /x\.com|twitter\.com/.test((it.domain||'').toLowerCase()))
-      .forEach(it => {
-        const ts = it.published_iso ? Date.parse(it.published_iso) : NaN;
-        if(isNaN(ts) || ts < cutoff) return;
-        const k = norm(it.title);
-        if(seen.has(k)) return;
-        seen.add(k);
-        items.push({iso:it.published_iso, html:`
-          <div class="meta"><span>${esc(timeAgo(it.published_iso))} ago</span><span title="Found via Google's index of x.com — like/repost counts aren't available this way.">via Google index</span></div>
-          <a href="${esc(it.url)}" target="_blank">${esc(it.title)}</a>`});
-      });
-    items.sort((a,b)=>(b.iso||'').localeCompare(a.iso||''));
-    const note = `<li class="empty" style="border-top:1px solid var(--vc-cloud);padding-top:8px;margin-top:6px" title="X retired free API access in 2023; the embed feed it still serves updates slowly and unreliably. Posts found via Google's index fill the gap but carry no engagement counts. For real X analytics the options are paid (X API Basic ~$100/month) or manual (analytics.x.com in the browser).">Feed coverage is partial: X no longer offers free data access. ❤-counted items come from X's slow embed feed; "via Google index" items are newer but uncounted.</li>`;
-    if(!items.length) return '<li class="empty">Nothing from the last 90 days in either source (X embed feed or Google index).</li>' + note;
-    return items.slice(0,8).map(i=>`<li>${i.html}</li>`).join("") + note;
+function renderSocial(x, ig, news, li, bs){
+  li = li || {}; bs = bs || {};
+  renderSocial._args = [x, ig, news, li, bs];   // for theme-toggle re-render
+  const cutoff = Date.now() - 90*24*3600*1000;
+  const norm = s => (s||'').toLowerCase().replace(/https?:\/\/\S+/g,'').replace(/[\W_]+/g,'').slice(0,40);
+
+  // ---- Build each platform's "Latest" items in ONE shared vocabulary:
+  // {iso, when, badges[], text, url}. Badges are either engagement counts
+  // or a small source chip — never both styles mixed on one line.
+  const liItem = (when, badges, text, url) => `<li>
+    <div class="meta"><span class="when">${esc(when)}</span>${badges.join("")}</div>
+    <a href="${esc(url)}" target="_blank">${esc(text)}</a></li>`;
+  const chip = (label, tip) => `<span class="srcchip"${tip?` title="${esc(tip)}"`:''}>${esc(label)}</span>`;
+  const eng = (h, r, c) => {
+    let s = `<span>❤ ${fmtN(h||0)}</span>`;
+    if(r) s += `<span>🔁 ${fmtN(r)}</span>`;
+    if(c!=null && c!=='') s += `<span>💬 ${fmtN(c)}</span>`;
+    return s;
+  };
+
+  // X: merge the embed feed (engagement counts, but stale — often only 1-2
+  // fresh tweets) with @VitalCityNYC posts Google indexed (current, no counts).
+  const xItems = [];
+  const xSeen = new Set();
+  const xSynd = (x.recent_tweets||[]).filter(t => {
+    const ts = t.created_iso ? Date.parse(t.created_iso) : NaN;
+    return !isNaN(ts) && ts >= cutoff;
   });
-  html += col(ig, "Instagram", h=>`https://www.instagram.com/${h}/`, d=>(d.recent_posts||[]).slice(0,10).map(p=>`
-    <li>
-      <div class="meta"><span>${esc(timeAgo(p.iso))} ago</span><span>❤ ${fmtN(p.likes)}</span><span>💬 ${fmtN(p.comments)}</span></div>
-      <a href="${esc(p.url||'#')}" target="_blank">${esc(p.caption||'(no caption)')}</a>
-    </li>`).join(""));
+  xSynd.forEach(t => {
+    xSeen.add(norm(t.text));
+    xItems.push({iso:t.created_iso||'', html:liItem(timeAgo(t.created_iso)+" ago",
+      [eng(t.likes, t.retweets, t.replies)], t.text,
+      `https://x.com/${x.handle||'VitalCityNYC'}/status/${t.id}`)});
+  });
+  (news||[]).filter(it => it.own_post && /x\.com|twitter\.com/.test((it.domain||'').toLowerCase()))
+    .forEach(it => {
+      const ts = it.published_iso ? Date.parse(it.published_iso) : NaN;
+      if(isNaN(ts) || ts < cutoff || xSeen.has(norm(it.title))) return;
+      xSeen.add(norm(it.title));
+      xItems.push({iso:it.published_iso, html:liItem(timeAgo(it.published_iso)+" ago",
+        [chip("via Google", "Found via Google's index of x.com — like/repost counts aren't available this way.")],
+        it.title, it.url)});
+    });
+  xItems.sort((a,b)=>(b.iso||'').localeCompare(a.iso||''));
+  const xAvg = (() => {
+    if(xSynd.length >= 3){
+      const avg = Math.round(xSynd.reduce((s,t)=>s+(+t.likes||0),0)/xSynd.length);
+      return {v:fmtN(avg), tip:`Average likes across the ${xSynd.length} feed tweets from the last 90 days.`};
+    }
+    return {v:"—", tip:`Not enough fresh data to average: X's embed feed returned only ${xSynd.length} tweet(s) from the last 90 days (it updates slowly since X retired free API access).`};
+  })();
 
-  html += "</div>";
+  // Bluesky: platform-native search results already in news_mentions.
+  const bsItems = (news||[]).filter(it => (it.domain||'') === 'bsky.app')
+    .filter(it => { const ts = it.published_iso?Date.parse(it.published_iso):NaN; return !isNaN(ts) && ts >= cutoff; })
+    .sort((a,b)=>(b.published_iso||'').localeCompare(a.published_iso||''))
+    .map(it => ({iso:it.published_iso, html:liItem(timeAgo(it.published_iso)+" ago",
+      [(it.likes||it.reposts) ? eng(it.likes, it.reposts, null) : "",
+       it.own_post ? chip("VC post","Posted by @vitalcitynyc.bsky.social") : chip("mention","A third-party post that mentions Vital City or shares a vitalcitynyc.org link.")].filter(Boolean),
+      it.title, it.url)}));
 
-  // ---- LinkedIn as a full-width row below X+IG, because we have less data
-  // here. Can't get follower count or per-post engagement from any free
-  // unofficial endpoint (LinkedIn blocks all of them aggressively); we show
-  // what we DO have: URL shares of vitalcitynyc.org split into "our company-
-  // page reposts" (detected by title match) vs apparent third-party shares.
+  // LinkedIn: third-party shares of vitalcitynyc.org found via Google.
   const liShares = (news||[]).filter(it => it.is_url_share && (it.domain||'').toLowerCase().includes('linkedin'));
   const liOwn   = liShares.filter(it => it.own_post);
   const liThird = liShares.filter(it => !it.own_post);
-  const liRecent = liThird.slice().sort((a,b) => (b.published_iso||'').localeCompare(a.published_iso||'')).slice(0,8);
-  html += `<div class="soccol" style="margin-top:18px">
-    <h3>LinkedIn · <a href="https://www.linkedin.com/company/vitalcitynyc/" target="_blank" style="color:var(--vc-cerulean);font-weight:600">@vitalcitynyc</a></h3>
-    <div class="socstat" style="grid-template-columns:repeat(3,1fr)">
-      <div title="${li.available ? esc(`Read from the public company page's meta text (LinkedIn states the follower count there) — no API needed. Source: ${li.source||'public page'}, as of ${li.as_of||'today'}. If LinkedIn blocks the daily fetch, the last good reading is served with its original date.`) : 'LinkedIn blocked the public-page read and no cached value exists yet. The follower count is on the public company page; the pipeline retries daily.'}">
-        <div class="sv">${li.available ? fmtN(li.followers) : "—"}</div><div class="sl">Followers${li.available ? '' : ' (fetch blocked)'}</div>
-      </div>
-      <div title="Posts on LinkedIn (from any account) that include a link to vitalcitynyc.org, detected via Google News. Excludes posts whose title matches one of our article titles verbatim (those are likely our own LinkedIn company-page reposts).">
-        <div class="sv">${fmtN(liThird.length)}</div><div class="sl">Third-party URL shares</div>
-      </div>
-      <div title="LinkedIn posts whose title matches a Vital City article title verbatim — most likely the @vitalcitynyc company page reposting an article.">
-        <div class="sv">${fmtN(liOwn.length)}</div><div class="sl">Our reposts (detected)</div>
-      </div>
+  const liItems = liThird.slice()
+    .sort((a,b)=>(b.published_iso||'').localeCompare(a.published_iso||''))
+    .map(p => ({iso:p.published_iso, html:liItem((p.published_iso||p.published||'').slice(0,10),
+      [chip("3rd-party share","A LinkedIn post from outside Vital City sharing a vitalcitynyc.org link — found via Google's index.")],
+      p.title.replace(/\s*-\s*LinkedIn\s*$/i,''), p.url)}));
+
+  // Instagram: own recent posts from the unofficial endpoint.
+  const igItems = (ig.recent_posts||[]).map(p => ({iso:p.iso||'', html:liItem(timeAgo(p.iso)+" ago",
+    [eng(p.likes, 0, p.comments)], p.caption||'(no caption)', p.url||'#')}));
+
+  // ---- Platform registry: everything the hero bar + panels need.
+  const PLATS = [
+    {key:"x",  name:"X (Twitter)", accent:"var(--vc-black)", color:"#050507", colorDark:"#e8e8e5",
+     handle:"@"+(x.handle||"VitalCityNYC"), url:`https://x.com/${x.handle||"VitalCityNYC"}`,
+     followers: x.available ? x.followers : null,
+     stats:[{v:fmtN(x.followers||0), l:"Followers"}, {v:fmtN(x.tweets_total||0), l:"Tweets total"}, {v:xAvg.v, l:"Avg likes (recent)", tip:xAvg.tip}],
+     items:xItems,
+     cover:{cls:"part", label:"Partial coverage", tip:"X retired free API access in 2023. ❤-counted items come from X's slow embed feed; 'via Google' items are newer but uncounted. Full X analytics are paid (~$100/month) or manual (analytics.x.com)."}},
+    {key:"li", name:"LinkedIn", accent:"var(--vc-cerulean)", color:"#217ebe", colorDark:"#217ebe",
+     handle:"@vitalcitynyc", url:"https://www.linkedin.com/company/vitalcitynyc/",
+     followers: li.available ? li.followers : null,
+     stats:[{v:li.available?fmtN(li.followers):"—", l:"Followers", tip: li.available?`Read from the public company page (as of ${li.as_of||'today'}). If LinkedIn blocks the daily fetch, the last good reading is served with its date.`:"LinkedIn blocked the public-page read and no cached value exists yet; the pipeline retries daily."},
+            {v:fmtN(liOwn.length), l:"Our reposts (detected)", tip:"LinkedIn posts whose title matches a Vital City article title — most likely the company page reposting an article."},
+            {v:fmtN(liThird.length), l:"3rd-party shares", tip:"LinkedIn posts from outside Vital City that share a vitalcitynyc.org link, found via Google's index."}],
+     items:liItems,
+     cover:{cls:"mid", label:"Followers live · posts via Google", tip:"The follower count is read from LinkedIn's public page. Post coverage relies on Google's index of linkedin.com — real but partial; LinkedIn sells full API access."}},
+    {key:"bs", name:"Bluesky", accent:"#4E98CB", color:"#4E98CB", colorDark:"#4E98CB",
+     handle:"@vitalcitynyc.bsky.social", url:"https://bsky.app/profile/vitalcitynyc.bsky.social",
+     followers: bs.available ? bs.followers : null,
+     stats:[{v:bs.available?fmtN(bs.followers):"—", l:"Followers"}, {v:bs.available?fmtN(bs.posts_total):"—", l:"Posts total"}, {v:fmtN(bsItems.length), l:"Posts + mentions · 90d"}],
+     items:bsItems,
+     cover:{cls:"full", label:"Complete · official API", tip:"Bluesky's API is open and free (AT Protocol), so follower counts, posts and mentions here are complete and current — the one platform with full visibility."}},
+    {key:"ig", name:"Instagram", accent:"var(--vc-magenta)", color:"#e7466d", colorDark:"#e7466d",
+     handle:"@"+(ig.handle||"vitalcitynyc"), url:`https://www.instagram.com/${ig.handle||"vitalcitynyc"}/`,
+     followers: ig.available ? ig.followers : null,
+     stats:[{v:fmtN(ig.followers||0), l:"Followers"}, {v:fmtN(ig.posts_total||0), l:"Posts total"}, {v:fmtN(ig.avg_likes_recent_10||ig.avg_likes_recent_20||0), l:"Avg likes (recent)"}],
+     items:igItems,
+     cover:{cls:"mid", label:"Unofficial endpoint", tip:"Pulled from Instagram's public web endpoint — reliable today, but Meta can tighten it at any time. Mentions/tags of @vitalcitynyc by others aren't visible without Meta's reviewed API access."}},
+  ];
+
+  // ---- Hero: total + proportional bar (the bar IS the legend) ----
+  const counted = PLATS.filter(p => p.followers != null);
+  const total = counted.reduce((s,p)=>s+(p.followers||0),0);
+  const isDark = document.documentElement.classList.contains('dark');
+  const bySize = counted.slice().sort((a,b)=>b.followers-a.followers);
+  const hero = `<div class="sochero">
+    <div><div class="tlabel">Followers across platforms</div><div class="total">${fmtN(total)}</div></div>
+    <div class="socbar">
+      <div class="bar">${bySize.map(p=>`<div class="seg" style="width:${(p.followers/total*100).toFixed(2)}%;background:${isDark?p.colorDark:p.color}" title="${esc(p.name.replace(' (Twitter)',''))}: ${fmtN(p.followers)} followers (${(p.followers/total*100).toFixed(0)}% of the cross-platform total)"></div>`).join("")}</div>
+      <div class="socchips">${bySize.map(p=>`<span class="chip" title="${esc(p.cover.tip)}"><span class="dot" style="background:${isDark?p.colorDark:p.color}"></span>${esc(p.name.replace(' (Twitter)',''))} <b>${fmtN(p.followers)}</b> · ${(p.followers/total*100).toFixed(0)}%</span>`).join("")}</div>
     </div>
-    ${liRecent.length
-      ? `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);font-weight:700;margin:8px 0 4px">Recent third-party shares</div>
-         <ul class="socposts">${liRecent.map(p=>`<li>
-           <div class="meta"><span>${esc((p.published_iso||p.published||'').slice(0,10))}</span></div>
-           <a href="${esc(p.url)}" target="_blank">${esc(p.title.replace(/\s*-\s*LinkedIn\s*$/i,''))}</a>
-         </li>`).join("")}</ul>`
-      : '<div style="font-size:12px;color:var(--vc-charcoal);padding:6px 0">No third-party LinkedIn shares detected in the current window.</div>'}
   </div>`;
-  $("#socialBody").innerHTML = html;
+
+  // ---- Panels ----
+  const panel = (p) => {
+    const body = p.followers == null && !p.items.length
+      ? `<div class="lempty">Not available right now${p.key==='li'?'':' — this panel uses public endpoints and can break when platforms change them'}.</div>`
+      : `<div class="socstats">${p.stats.map(s=>`<div${s.tip?` title="${esc(s.tip)}"`:''}><div class="sv">${s.v}</div><div class="sl">${esc(s.l)}</div></div>`).join("")}</div>
+         <div class="latestlbl">Latest · 90 days</div>
+         <ul class="soclist">${p.items.length ? p.items.slice(0,8).map(i=>i.html).join("") : '<li class="lempty">Nothing in the last 90 days.</li>'}</ul>`;
+    return `<div class="socpanel" style="border-top-color:${p.accent}">
+      <div class="phead"><span class="pname">${esc(p.name)}</span><a class="phandle" href="${esc(p.url)}" target="_blank">${esc(p.handle)} ↗</a></div>
+      ${body}
+      <span class="pcover ${p.cover.cls}" title="${esc(p.cover.tip)}">${esc(p.cover.label)}</span>
+    </div>`;
+  };
+
+  $("#socialBody").innerHTML = hero + `<div class="socgrid">${PLATS.map(panel).join("")}</div>`;
 }
 
 function fmtUSD(n){
