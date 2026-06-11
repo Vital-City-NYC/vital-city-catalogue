@@ -33,7 +33,11 @@
   aside.brandwatch h2:first-child{margin-top:0}
 
   /* KPI tiles */
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin:0 0 22px}
+  /* 8 tiles in rows that always divide evenly (4/2/1 columns) — auto-fit
+     left a partial second row with a bare gray slab where tiles ran out. */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin:0 0 22px}
+  @media(max-width:980px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:480px){ .kpis{grid-template-columns:1fr} }
   .kpi{background:var(--vc-white);padding:14px 16px}
   .kpi .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700}
   .kpi .num{font-family:var(--vc-serif);font-weight:900;font-size:30px;line-height:1.1;margin-top:4px;color:var(--vc-black)}
@@ -83,7 +87,11 @@
   table.tbl{width:100%;border-collapse:collapse;font-size:13px}
   table.tbl th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--vc-black)}
   table.tbl td{padding:9px 10px;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
+  /* Numeric columns: header and cells share the same right edge — a header
+     left-aligned over right-aligned numbers reads as misalignment. */
+  table.tbl th.num{text-align:right}
   table.tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+  table.tbl tbody tr:hover td{background:var(--vc-paper2)}
   .pillok{display:inline-block;background:var(--vc-green);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
   .pillwarn{display:inline-block;background:var(--vc-orange);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
   .pillinfo{display:inline-block;background:var(--vc-cerulean);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
