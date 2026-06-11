@@ -314,7 +314,7 @@
     <div class="mastlinks">
       <a href="about.html" target="_blank" title="Open the full plain-English guide to this tool in a new tab — what every feature does and how the data updates.">How it works ↗</a>
       <a href="#" id="themeToggle" title="Switch between light and dark color themes. Your choice is remembered on this device.">🌙 Dark mode</a>
-      <a href="#" id="forget" title="Forget the saved passphrase on this device and re-lock the tool. Use this on a shared or public computer when you're done.">Lock</a>
+      <a href="#" id="forget" title="You stay logged in automatically on this device for 90 days (refreshed each visit) — and the same login covers the Growth dashboard too, so you shouldn't need to re-enter the passphrase. 'Lock' is the opposite: tap it to forget the saved passphrase and re-lock now, e.g. on a shared or public computer.">Lock</a>
     </div>
     <div class="wm">Vital City</div>
     <h1>Contact master search</h1>
@@ -339,6 +339,7 @@
       <label class="chk" title="Show only contacts you've starred. Star anyone by clicking the ☆ at the start of their row."><input type="checkbox" id="fStar"> ★ Starred</label>
       <label class="chk" title="Show only people flagged 'notable' — they appear to have an English Wikipedia page (matched conservatively using context clues, so it's a rough signal of public profile)."><input type="checkbox" id="fWiki"> <span style="text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px">Notable</span></label>
       <label class="chk" title="Show only people who are subscribed to the newsletter under two or more email addresses (each tagged ✉ newsletter) — i.e. they're on the list more than once."><input type="checkbox" id="fMultiSub"> 2+ newsletter emails</label>
+      <label class="chk" title="Show only people we have NO email address for — usually authors or contacts added by name without a known address. Useful for filling in missing contact info."><input type="checkbox" id="fNoEmail"> No email</label>
       <label class="chk" title="Also show people who left the newsletter. They're hidden by default and appear in red when shown."><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
     </span>
     <label class="sortctl" title="Filter by how complete a contact's name is — useful for prioritizing name-confirmation work. Guessed names appear in gray in the list and have a ✓ button to confirm. Combine with the Donors or Subscribers filter to find your highest-value contacts that still need a real name.">Name:
@@ -604,32 +605,63 @@ async function decryptBlob(pass,blob){
 }
 
 const PASSKEY="vc_net_pass";
+const PASS_TTL_DAYS=90;   // stay logged in on this device for ~90 days (sliding)
+// Persisted-passphrase helpers — IDENTICAL format to the Growth dashboard so
+// the two tools (same origin, same passphrase) share one login: sign in to
+// either and both stay unlocked. Stored as {pass, exp} JSON; a bare legacy
+// string is still read for backward-compat.
+function savePass(pass){
+  try{ localStorage.setItem(PASSKEY, JSON.stringify({pass, exp: Date.now()+PASS_TTL_DAYS*864e5})); }catch{}
+}
+function loadPass(){
+  try{
+    const raw=localStorage.getItem(PASSKEY);
+    if(!raw) return null;
+    if(raw[0]!=="{") return raw;              // legacy plain-string format
+    const o=JSON.parse(raw);
+    if(o && o.pass && o.exp && o.exp>Date.now()) return o.pass;
+    localStorage.removeItem(PASSKEY);         // expired
+    return null;
+  }catch{ return null; }
+}
+function clearPass(){ try{ localStorage.removeItem(PASSKEY); sessionStorage.removeItem(PASSKEY); }catch{} }
+
 async function unlock(fromStore){
   $("#err").textContent="";
   const pass=$("#pw").value.trim();
   if(!pass){$("#err").textContent="Enter the passphrase.";return;}
   $("#unlock").textContent="Decrypting…";
+  let blob;
   try{
     // no-cache: always revalidate with the server (cheap 304 when unchanged,
     // full download when the daily refresh updates it) so a stale browser cache
     // can never mask a fresh dataset — e.g. new "notable" flags not showing up.
-    const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
-    PEOPLE=await decryptBlob(pass,blob);
-    applyLocalFixes();
-    localStorage.setItem(PASSKEY,pass);   // remember on this device
-    $("#gate").style.display="none";
-    $("#app").style.display="block";
-    init();
+    blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
   }catch(e){
-    if(fromStore) localStorage.removeItem(PASSKEY);   // stale saved pass (e.g. rotated)
+    // Fetch/network problem — DON'T wipe a saved passphrase over a transient
+    // hiccup, or the user is needlessly logged out.
+    $("#err").textContent="Couldn't load the data file — check your connection and try again.";
+    $("#unlock").textContent="Unlock";
+    return;
+  }
+  try{
+    PEOPLE=await decryptBlob(pass,blob);
+  }catch(e){
+    if(fromStore) clearPass();   // genuinely wrong/rotated passphrase — clear it
     $("#err").textContent="Wrong passphrase, or data unavailable.";
     $("#unlock").textContent="Unlock";
+    return;
   }
+  applyLocalFixes();
+  savePass(pass);   // remember + refresh the 90-day window on every unlock
+  $("#gate").style.display="none";
+  $("#app").style.display="block";
+  init();
 }
 $("#unlock").addEventListener("click",()=>unlock(false));
 $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false);});
-// Auto-unlock if this device already entered the passphrase.
-(function(){ const s=localStorage.getItem(PASSKEY); if(s){ $("#pw").value=s; unlock(true); } })();
+// Auto-unlock if this device entered the passphrase within the last 90 days.
+(function(){ const s=loadPass(); if(s){ $("#pw").value=s; unlock(true); } })();
 
 function buildStats(){
   const cur=PEOPLE.filter(p=>!p.unsub);    // current (non-unsubscribed) universe
@@ -677,6 +709,7 @@ function init(){
   $("#fStar").addEventListener("change",render);
   $("#fWiki").addEventListener("change",render);
   $("#fMultiSub").addEventListener("change",render);
+  $("#fNoEmail").addEventListener("change",render);
   $("#fName").addEventListener("change",render);
   $("#fEngagement").addEventListener("change",render);
   $("#fUnsub").addEventListener("change",()=>{onlyUnsub=false;render();});
@@ -686,7 +719,7 @@ function init(){
   $("#exportFixes").addEventListener("click",e=>{e.preventDefault();exportFixes();});
   $("#clear").addEventListener("click",clearAll);
   $("#stats").addEventListener("click",e=>{const s=e.target.closest(".stat[data-action]");if(s)statAction(s.dataset.action);});
-  $("#forget").addEventListener("click",e=>{e.preventDefault();localStorage.removeItem(PASSKEY);location.reload();});
+  $("#forget").addEventListener("click",e=>{e.preventDefault();clearPass();location.reload();});
   $("#themeToggle").addEventListener("click",e=>{e.preventDefault(); const t=document.documentElement.classList.contains("dark")?"light":"dark"; localStorage.setItem("vc_theme",t); applyTheme(t);});
   $("#addPerson").addEventListener("click",openAdd);
   $("#needsReview").addEventListener("click",showReview);
@@ -855,7 +888,7 @@ function toggleOther(){
 function clearAll(){
   selectedCats.clear(); want={mem:0,don:0,auth:0}; reviewMode="";
   $("#q").value=""; $("#dFrom").value=""; $("#dTo").value="";
-  onlyUnsub=false; $("#fUnsub").checked=false; $("#fStar").checked=false; $("#fWiki").checked=false; $("#fMultiSub").checked=false; $("#fName").value="any"; $("#fEngagement").value="any";
+  onlyUnsub=false; $("#fUnsub").checked=false; $("#fStar").checked=false; $("#fWiki").checked=false; $("#fMultiSub").checked=false; $("#fNoEmail").checked=false; $("#fName").value="any"; $("#fEngagement").value="any";
   document.querySelectorAll(".facet").forEach(l=>{l.classList.remove("on");const cb=l.querySelector("input");if(cb)cb.checked=false;});
   syncToggles(); render();
 }
@@ -900,6 +933,7 @@ function filtered(){
     if($("#fStar").checked && !p.star) return false;
     if($("#fWiki").checked && !p.wiki) return false;
     if($("#fMultiSub").checked && !(p.sub_emails && p.sub_emails.length>1)) return false;
+    if($("#fNoEmail").checked && ((p.e||"").trim() || (p.emails||[]).some(e=>(e||"").trim()))) return false;
     {
       const ef=$("#fEngagement").value;
       if(ef && ef!=="any"){
@@ -945,7 +979,7 @@ function pushOverride(key,override){
   if(!BACKEND_URL) return;
   try{
     fetch(BACKEND_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify({pass:localStorage.getItem(PASSKEY)||"",key:key,override:override})}).catch(()=>{});
+      body:JSON.stringify({pass:loadPass()||"",key:key,override:override})}).catch(()=>{});
   }catch(e){}
 }
 function personKey(p){ return p.e || ("name:"+(p.n||"").toLowerCase()); }
@@ -1186,6 +1220,7 @@ function describeFilters(){
   if($("#fStar").checked) parts.push("<b>★ starred</b>");
   if($("#fWiki").checked) parts.push("<b>notable</b> (Wikipedia)");
   if($("#fMultiSub").checked) parts.push("<b>2+ newsletter emails</b>");
+  if($("#fNoEmail").checked) parts.push("<b>no email on file</b>");
   {
     const nf=$("#fName").value, nfLabels={
       "confirmed_full":"<b>name</b>: confirmed full",
@@ -1219,12 +1254,12 @@ const VKEY="vc_views";
 function loadViews(){ try{return JSON.parse(localStorage.getItem(VKEY)||"[]");}catch(e){return [];} }
 function currentState(){ return {want:Object.assign({},want), cats:[...selectedCats], q:$("#q").value,
   dFrom:$("#dFrom").value, dTo:$("#dTo").value, repeat:$("#fRepeatDonor").checked, star:$("#fStar").checked,
-  wiki:$("#fWiki").checked, multisub:$("#fMultiSub").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, name:$("#fName").value, engagement:$("#fEngagement").value, sortKey:sortKey, sortDir:sortDir}; }
+  wiki:$("#fWiki").checked, multisub:$("#fMultiSub").checked, noEmail:$("#fNoEmail").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, name:$("#fName").value, engagement:$("#fEngagement").value, sortKey:sortKey, sortDir:sortDir}; }
 function applyState(s){
   want=Object.assign({mem:0,don:0,auth:0}, s.want||{});
   selectedCats=new Set(s.cats||[]);
   $("#q").value=s.q||""; $("#dFrom").value=s.dFrom||""; $("#dTo").value=s.dTo||"";
-  $("#fUnsub").checked=!!s.unsub; onlyUnsub=!!s.onlyUnsub; $("#fStar").checked=!!s.star; $("#fWiki").checked=!!s.wiki; $("#fMultiSub").checked=!!s.multisub; $("#fName").value=s.name||"any"; $("#fEngagement").value=s.engagement||"any";
+  $("#fUnsub").checked=!!s.unsub; onlyUnsub=!!s.onlyUnsub; $("#fStar").checked=!!s.star; $("#fWiki").checked=!!s.wiki; $("#fMultiSub").checked=!!s.multisub; $("#fNoEmail").checked=!!s.noEmail; $("#fName").value=s.name||"any"; $("#fEngagement").value=s.engagement||"any";
   if(s.sortKey){ sortKey=s.sortKey; sortDir=s.sortDir||1; }
   syncToggles(); $("#fRepeatDonor").checked=!!s.repeat;
   document.querySelectorAll(".facet").forEach(l=>{const on=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on);const cb=l.querySelector("input");if(cb)cb.checked=on;});
