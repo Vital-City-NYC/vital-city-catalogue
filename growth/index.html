@@ -1908,7 +1908,10 @@ function renderAcquisition(attr){
     return;
   }
   const total = attr.events_counted || 0;
-  if(hint) hint.textContent = `pulled from Ghost's per-signup attribution · ${fmtN(total)} signup events over the last ${attr.window_days||180} days`;
+  // Honest window: if the events feed ended early, coverage is shorter than
+  // the requested window — say what we actually have, not what we asked for.
+  if(hint) hint.textContent = `pulled from Ghost's per-signup attribution · ${fmtN(total)} signup events` +
+    (attr.coverage_start ? ` since ${attr.coverage_start}` : ` over the last ${attr.window_days||180} days`);
   const sources  = (attr.by_source  || []).slice(0,12);
   const mediums  = (attr.by_medium  || []);
   const landings = (attr.by_landing || []);
@@ -1956,11 +1959,11 @@ function renderAcquisition(attr){
   host.innerHTML = `
     <div style="font-size:12px;color:var(--vc-charcoal);margin:0 0 14px;line-height:1.55">
       <b style="color:var(--vc-black)">What this is:</b> Ghost attaches an attribution record to every newsletter signup — the page the visitor was on and the referring source (Google, Direct, an email campaign tag, a partner site, etc.). This is the exact data the Ghost admin Analytics tab uses for "Top Sources"; we pull the raw events and roll them up here so the dashboard is always in sync.
-      <br><b>What it doesn't show:</b> total page views or unique visitors to vitalcitynyc.org — that's anonymous-traffic data Ghost doesn't expose to the API. For that we still need GA4 (the "needs GA4 ↗" tiles in the top banner).
+      <br><b>What it doesn't show:</b> total page views or unique visitors — that's the anonymous-traffic side, which now lives in the "Website visitors" tiles in the top banner (Ghost's own analytics, unlocked via the staff token). This card is the conversion side: of the people who signed up, where did they come from?
     </div>
     <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:24px">
       <div>
-        <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">Top referrer sources <span style="font-weight:400;color:var(--vc-charcoal)">(${fmtN(total)} signups, last ${attr.window_days||180}d)</span></div>
+        <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">Top referrer sources <span style="font-weight:400;color:var(--vc-charcoal)">(${fmtN(total)} signups${attr.coverage_start?` since ${esc(attr.coverage_start)}`:`, last ${attr.window_days||180}d`})</span></div>
         ${sources.map(s=>{
           const tip = s.src === '(unknown)'
             ? 'Ghost didn\'t capture a referrer — typically direct-visit users without a referring URL, or browsers stripping the Referer header.'

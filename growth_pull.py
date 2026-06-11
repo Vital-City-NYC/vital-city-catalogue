@@ -1065,6 +1065,15 @@ def pull_ghost_signup_attribution(days_back=180):
         r["last_seen"]  = r["last_seen"][:10]
         del r["sources"]
     log(f"  ghost signup attribution: {fetched} signup events across {len(by_url)} URLs, {len(by_day)} days, {len(by_source)} sources, {len(by_email)} per-email entries")
+    # The cursor walk should end by crossing since_iso. If it ended any other
+    # way (empty page, missing id), coverage is silently shorter than the
+    # requested window — say so loudly instead of letting the card imply
+    # full-window data.
+    if not stop and fetched:
+        oldest = min(by_day) if by_day else "?"
+        log(f"  WARNING: events feed ended early — coverage starts {oldest}, "
+            f"short of the requested {days_back}-day window (feed returned an "
+            f"empty page or an event without an id).")
     return {
         "available":      True,
         "events_counted": fetched,
@@ -2312,10 +2321,17 @@ def main():
         "mailchimp": mc,
         "ghost":     gh,
         "donorbox":  db,
+        # The acquisition card renders these breakdowns — they're aggregates
+        # (no emails; _by_email is popped above). A past slimming pass cut
+        # the payload to bare metadata and silently blanked the card.
         "ghost_signup_attribution": {
             "available":      signup_attr.get("available", False),
             "events_counted": signup_attr.get("events_counted", 0),
             "window_days":    signup_attr.get("window_days", 0),
+            "coverage_start": (signup_attr.get("by_day") or [{}])[0].get("d", ""),
+            "by_source":      signup_attr.get("by_source") or [],
+            "by_medium":      signup_attr.get("by_medium") or [],
+            "by_landing":     signup_attr.get("by_landing") or [],
         },
         "press":     pull_press(),
         "news_mentions": news_mentions,
