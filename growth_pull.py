@@ -1254,6 +1254,48 @@ def pull_reddit_mentions():
     return items
 
 
+LI_CACHE = ROOT / "data" / "li_followers.json"
+
+def pull_linkedin_followers():
+    """LinkedIn company-page follower count, scraped from the PUBLIC page's
+    meta description ("Vital City | 3,046 followers on LinkedIn. ..."). No
+    auth needed with a browser User-Agent — verified live. LinkedIn often
+    authwalls datacenter IPs though, so the GitHub Actions runner may get
+    blocked: on success we write data/li_followers.json (committed by the
+    workflow — the count is public information); on failure we serve that
+    cached value with its original as-of date."""
+    UA_browser = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
+    try:
+        page = http_get("https://www.linkedin.com/company/vitalcitynyc",
+                        headers={"User-Agent": UA_browser}, timeout=20).decode("utf-8", "replace")
+        m = re.search(r'content="[^"]*?\|\s*([\d,]+)\s+followers on LinkedIn', page)
+        if m:
+            n = int(m.group(1).replace(",", ""))
+            today = datetime.now(timezone.utc).date().isoformat()
+            out = {"available": True, "followers": n, "as_of": today,
+                   "source": "public company-page meta (live)"}
+            try:
+                LI_CACHE.parent.mkdir(parents=True, exist_ok=True)
+                LI_CACHE.write_text(json.dumps({"followers": n, "as_of": today}))
+            except Exception:
+                pass
+            log(f"  linkedin followers: {n} (live)")
+            return out
+        raise ValueError("follower pattern not found in page (authwall?)")
+    except Exception as e:
+        if LI_CACHE.exists():
+            try:
+                c = json.loads(LI_CACHE.read_text())
+                log(f"  linkedin followers: live fetch failed ({e}); using cached {c.get('followers')} from {c.get('as_of')}")
+                return {"available": True, "followers": c.get("followers"),
+                        "as_of": c.get("as_of"), "source": "cached (live fetch blocked)"}
+            except Exception:
+                pass
+        log(f"  linkedin followers failed: {e}")
+        return {"available": False, "reason": str(e)[:120]}
+
+
 def pull_news_mentions():
     """Search Google News RSS for Vital City references, scoped per outlet.
 
@@ -2267,6 +2309,9 @@ def main():
         # Needs a STAFF access token; the integration key gets 403 on every
         # /stats/* endpoint (verified live). Free once the token is added.
         "ghost_traffic": pull_ghost_traffic(),
+        # LinkedIn company-page follower count (public-page meta scrape with
+        # repo-cached fallback for when LinkedIn authwalls the runner).
+        "linkedin": pull_linkedin_followers(),
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
         # a "Connect this source" placeholder card with the exact setup steps.
         "ga4": {

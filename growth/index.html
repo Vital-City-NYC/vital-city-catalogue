@@ -573,11 +573,15 @@ function boot(data){
     (function(){
       const xn = xp.available ? xp.followers : null;
       const inum = ig.available ? ig.followers : null;
-      const total = (xn||0) + (inum||0);
-      return {lbl:"Social followers", num: (xn!=null || inum!=null) ? fmtN(total) : "—",
-              delta: `${fmtN(xn||0)} on X · ${fmtN(inum||0)} on IG`,
+      const li = data.linkedin || {};
+      const ln = li.available ? li.followers : null;
+      const total = (xn||0) + (inum||0) + (ln||0);
+      const parts = [`${fmtN(xn||0)} on X`, `${fmtN(inum||0)} on IG`];
+      if(ln!=null) parts.push(`${fmtN(ln)} on LI`);
+      return {lbl:"Social followers", num: (xn!=null || inum!=null || ln!=null) ? fmtN(total) : "—",
+              delta: parts.join(" · "),
               cls:"flat",
-              tip:"SOCIAL — Combined X (@VitalCityNYC) + Instagram (@vitalcitynyc) followers. Pulled from unofficial public endpoints; can break if the platforms tighten them. See the Social card below for recent post engagement."};
+              tip:"SOCIAL — Combined X (@VitalCityNYC) + Instagram (@vitalcitynyc) + LinkedIn (company page) followers. X and Instagram come from unofficial public endpoints; LinkedIn comes from the public company page (its meta text states the follower count)"+(ln!=null&&li.as_of?`, last read ${esc(li.as_of)}`:"")+". All can break if the platforms tighten access. See the Social card below for recent post engagement."};
     })(),
     (function(){
       const gt = data.ghost_traffic || {};
@@ -630,7 +634,7 @@ function boot(data){
   renderPerf(mc);
   renderSendChart(mc.campaigns || []);
   renderYTD(mc, mc.signup_windows || {});
-  renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || []);
+  renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || [], data.linkedin || {});
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderAcquisition(data.ghost_signup_attribution || {});
@@ -1576,7 +1580,8 @@ function timeAgo(iso){
   return Math.floor(m/(24*60))+"d";
 }
 
-function renderSocial(x, ig, news){
+function renderSocial(x, ig, news, li){
+  li = li || {};
   let html='<div class="socrow">';
   function col(d, title, mkURL, postFn){
     if(!d.available){
@@ -1665,8 +1670,8 @@ function renderSocial(x, ig, news){
   html += `<div class="soccol" style="margin-top:18px">
     <h3>LinkedIn · <a href="https://www.linkedin.com/company/vitalcitynyc/" target="_blank" style="color:var(--vc-cerulean);font-weight:600">@vitalcitynyc</a></h3>
     <div class="socstat" style="grid-template-columns:repeat(3,1fr)">
-      <div title="LinkedIn doesn't expose company-page follower count via any free public endpoint. To populate this we'd need to enable LinkedIn Marketing Developer Platform access (application required) or use a paid social-listening service.">
-        <div class="sv">—</div><div class="sl">Followers (API gated)</div>
+      <div title="${li.available ? esc(`Read from the public company page's meta text (LinkedIn states the follower count there) — no API needed. Source: ${li.source||'public page'}, as of ${li.as_of||'today'}. If LinkedIn blocks the daily fetch, the last good reading is served with its original date.`) : 'LinkedIn blocked the public-page read and no cached value exists yet. The follower count is on the public company page; the pipeline retries daily.'}">
+        <div class="sv">${li.available ? fmtN(li.followers) : "—"}</div><div class="sl">Followers${li.available ? '' : ' (fetch blocked)'}</div>
       </div>
       <div title="Posts on LinkedIn (from any account) that include a link to vitalcitynyc.org, detected via Google News. Excludes posts whose title matches one of our article titles verbatim (those are likely our own LinkedIn company-page reposts).">
         <div class="sv">${fmtN(liThird.length)}</div><div class="sl">Third-party URL shares</div>
