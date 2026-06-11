@@ -1,5 +1,771 @@
 [
   {
+    "title": "Economic Growth vs. Economic Justice: A False Choice",
+    "slug": "nyc-economic-development-mamdani-administration",
+    "url": "https://www.vitalcitynyc.org/nyc-economic-development-mamdani-administration/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:30:00.000+00:00",
+    "updated_at": "2026-06-10T16:34:32.000+00:00",
+    "primary_author": "Alicia Glen",
+    "authors": [
+      "Alicia Glen",
+      "James Patchett"
+    ],
+    "topics": [
+      "Economics",
+      "More Money in More Pockets",
+      "City Government"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "Recommendations for the Mamdani administration from former top city economic development officials",
+    "excerpt": "Recommendations for the Mamdani administration from former top city economic development officials",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T151307.675.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2389,
+    "reading_minutes": 10,
+    "id": "6a2865d8db63ad0001922484"
+  },
+  {
+    "title": "Before You Surcharge the Penthouse, Fix the Foundation",
+    "slug": "nyc-pied-a-terre-surchage-property-tax",
+    "url": "https://www.vitalcitynyc.org/nyc-pied-a-terre-surchage-property-tax/",
+    "type": "map/tool",
+    "type_basis": "html:vc-app-embed",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:25:00.000+00:00",
+    "updated_at": "2026-06-10T16:34:59.000+00:00",
+    "primary_author": "Martha Stark",
+    "authors": [
+      "Martha Stark"
+    ],
+    "topics": [
+      "Economics",
+      "Housing",
+      "Budget",
+      "More Money in More Pockets"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "The pied-à-terre surcharge is coming. It is being built on a property tax system we have known for decades is broken — and that will shape where it actually lands.",
+    "excerpt": "The pied-à-terre surcharge is coming. It is being built on a property tax system we have known for decades is broken — and that will shape where it actually lands.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T154708.395.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2629,
+    "reading_minutes": 11,
+    "id": "6a286d91db63ad000192258c"
+  },
+  {
+    "title": "How New York City Can Come Out a Winner in the AI Age",
+    "slug": "ai-economic-opportunities-nyc",
+    "url": "https://www.vitalcitynyc.org/ai-economic-opportunities-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:20:00.000+00:00",
+    "updated_at": "2026-06-10T16:35:24.000+00:00",
+    "primary_author": "Arpit Gupta",
+    "authors": [
+      "Arpit Gupta"
+    ],
+    "topics": [
+      "Technology",
+      "More Money in More Pockets",
+      "Artifical Intelligence",
+      "Economics"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "Bet on the last mile of new technologies.",
+    "excerpt": "Bet on the last mile of new technologies.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T111036.895.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2513,
+    "reading_minutes": 11,
+    "id": "6a282d9fdb63ad00019220f2"
+  },
+  {
+    "title": "The Prosperity Equation",
+    "slug": "nyc-housing-affordability-economic-mobility",
+    "url": "https://www.vitalcitynyc.org/nyc-housing-affordability-economic-mobility/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:15:00.000+00:00",
+    "updated_at": "2026-06-10T16:35:46.000+00:00",
+    "primary_author": "Abby Jo Sigal",
+    "authors": [
+      "Abby Jo Sigal",
+      "Molly Wasow Park"
+    ],
+    "topics": [
+      "Economics",
+      "More Money in More Pockets",
+      "Housing",
+      "Labor"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "Producing housing is only half the challenge. Government must help people climb the economic ladder.",
+    "excerpt": "Producing housing is only half the challenge. Government must help people climb the economic ladder.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T152429.240.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2875,
+    "reading_minutes": 12,
+    "id": "6a28684bdb63ad00019224e6"
+  },
+  {
+    "title": "Economic Justice Starts With Young People",
+    "slug": "economic-justice-youth-workforce-development-nyc",
+    "url": "https://www.vitalcitynyc.org/economic-justice-youth-workforce-development-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:10:00.000+00:00",
+    "updated_at": "2026-06-10T16:36:06.000+00:00",
+    "primary_author": "Jared Giles",
+    "authors": [
+      "Jared Giles"
+    ],
+    "topics": [
+      "Economics",
+      "More Money in More Pockets",
+      "Youth",
+      "Education"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "To make the city affordable, New York must align its education, workforce and economic development strategies.",
+    "excerpt": "To make the city affordable, New York must align its education, workforce and economic development strategies.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T121300.310.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1292,
+    "reading_minutes": 6,
+    "id": "6a283b76db63ad0001922157"
+  },
+  {
+    "title": "Build Wealth, Not Just Wages",
+    "slug": "nyc-workforce-development-wealth-gap",
+    "url": "https://www.vitalcitynyc.org/nyc-workforce-development-wealth-gap/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:09:00.000+00:00",
+    "updated_at": "2026-06-10T16:36:35.000+00:00",
+    "primary_author": "Pascale Mevs Fitzgerald",
+    "authors": [
+      "Pascale Mevs Fitzgerald"
+    ],
+    "topics": [
+      "Economics",
+      "More Money in More Pockets",
+      "Labor"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "The City needs to focus on building its own ownership society, not just boosting incomes.",
+    "excerpt": "The City needs to focus on building its own ownership society, not just boosting incomes.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T130747.561.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1278,
+    "reading_minutes": 6,
+    "id": "6a28470adb63ad00019221a8"
+  },
+  {
+    "title": "The Job That's Taking Over New York City",
+    "slug": "home-care-job-growth-problems-nyc",
+    "url": "https://www.vitalcitynyc.org/home-care-job-growth-problems-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:09:00.000+00:00",
+    "updated_at": "2026-06-10T16:32:04.000+00:00",
+    "primary_author": "Bill Hammond",
+    "authors": [
+      "Bill Hammond"
+    ],
+    "topics": [
+      "Labor",
+      "Wrenches in the Gears",
+      "Economics"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "The ranks of home health care workers are exploding, and that’s a problem.",
+    "excerpt": "The ranks of home health care workers are exploding, and that’s a problem.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T104126.075.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1404,
+    "reading_minutes": 6,
+    "id": "6a2825f0db63ad00019220d7"
+  },
+  {
+    "title": "The Affordability Conundrum",
+    "slug": "mamdani-affordability-conundrum-nyc",
+    "url": "https://www.vitalcitynyc.org/mamdani-affordability-conundrum-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:09:00.000+00:00",
+    "updated_at": "2026-06-10T16:26:17.000+00:00",
+    "primary_author": "Sherry Glied",
+    "authors": [
+      "Sherry Glied"
+    ],
+    "topics": [
+      "City Government",
+      "The Shape of the Economic Engine",
+      "Economics"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "Mamdani wants a growing, more livable city — but that goal is in tension with his core affordability promise.",
+    "excerpt": "Mamdani wants a growing, more livable city — but that goal is in tension with his core affordability promise.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T095909.930.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1397,
+    "reading_minutes": 6,
+    "id": "6a1d9ec1d224c200019e921c"
+  },
+  {
+    "title": "New York City’s Job Growth Has a Quality Problem",
+    "slug": "nyc-job-quality-problem",
+    "url": "https://www.vitalcitynyc.org/nyc-job-quality-problem/",
+    "type": "data analysis",
+    "type_basis": "html:4-chart-embeds",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:07:00.000+00:00",
+    "updated_at": "2026-06-10T16:32:29.000+00:00",
+    "primary_author": "Tal Roded",
+    "authors": [
+      "Tal Roded"
+    ],
+    "topics": [
+      "Labor",
+      "Wrenches in the Gears",
+      "Economics"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "Only one-third of residents work in what the City’s Office of the Comptroller has called a “good job.” Here’s why that matters.",
+    "excerpt": "Only one-third of residents work in what the City’s Office of the Comptroller has called a “good job.” Here’s why that matters.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T134632.589.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2002,
+    "reading_minutes": 9,
+    "id": "6a28518cdb63ad00019222b5"
+  },
+  {
+    "title": "Whither Wall Street?",
+    "slug": "wall-street-future-nyc",
+    "url": "https://www.vitalcitynyc.org/wall-street-future-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:07:00.000+00:00",
+    "updated_at": "2026-06-10T16:30:10.000+00:00",
+    "primary_author": "Nicole Gelinas",
+    "authors": [
+      "Nicole Gelinas"
+    ],
+    "topics": [
+      "Economics",
+      "The Shape of the Economic Engine"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "New York can’t predict the future of its most lucrative industry, but it should pay more attention to the past.",
+    "excerpt": "New York can’t predict the future of its most lucrative industry, but it should pay more attention to the past.  ",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T133308.751.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2380,
+    "reading_minutes": 10,
+    "id": "6a284e73db63ad0001922260"
+  },
+  {
+    "title": "New York Families Are Doing Better Than You’ve Heard",
+    "slug": "nyc-families-positive-income-trends",
+    "url": "https://www.vitalcitynyc.org/nyc-families-positive-income-trends/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:05:00.000+00:00",
+    "updated_at": "2026-06-10T16:30:49.000+00:00",
+    "primary_author": "Scott Winship",
+    "authors": [
+      "Scott Winship"
+    ],
+    "topics": [
+      "Economics",
+      "The Shape of the Economic Engine",
+      "Quality of Life"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "A deeper look at income trends reveals some positive findings.",
+    "excerpt": "A deeper look at income trends reveals some positive findings.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T154245.099.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2376,
+    "reading_minutes": 10,
+    "id": "6a286ccbdb63ad000192257a"
+  },
+  {
+    "title": "Public Sector Unions vs. Mamdani’s Ambitions",
+    "slug": "mamdani-nyc-unions-efficiency-reform",
+    "url": "https://www.vitalcitynyc.org/mamdani-nyc-unions-efficiency-reform/",
+    "type": "map/tool",
+    "type_basis": "html:vc-app-embed",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:05:00.000+00:00",
+    "updated_at": "2026-06-10T16:32:59.000+00:00",
+    "primary_author": "Daniel DiSalvo",
+    "authors": [
+      "Daniel DiSalvo"
+    ],
+    "topics": [
+      "Labor",
+      "Wrenches in the Gears",
+      "City Government"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "He won with labor support, but something’s going to have to give.",
+    "excerpt": "He won with labor support, but something’s going to have to give.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T143151.671.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1591,
+    "reading_minutes": 7,
+    "id": "6a285c22db63ad000192237f"
+  },
+  {
+    "title": "A Bolder Development Strategy for a Crowded New York",
+    "slug": "nyc-joint-developments-public-land-housing",
+    "url": "https://www.vitalcitynyc.org/nyc-joint-developments-public-land-housing/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:05:00.000+00:00",
+    "updated_at": "2026-06-10T16:36:53.000+00:00",
+    "primary_author": "Yonah Freemark",
+    "authors": [
+      "Yonah Freemark"
+    ],
+    "topics": [
+      "Housing",
+      "More Money in More Pockets",
+      "Economics",
+      "City Planning"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "Build on, and build up, public facilities.",
+    "excerpt": "Build on, and build up, public facilities.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T131240.673.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1503,
+    "reading_minutes": 7,
+    "id": "6a28496ddb63ad00019221c3"
+  },
+  {
+    "title": "The Millionaire Exodus That Never Came",
+    "slug": "mamdani-tax-increase-millionaire-exodus-fears",
+    "url": "https://www.vitalcitynyc.org/mamdani-tax-increase-millionaire-exodus-fears/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:03:00.000+00:00",
+    "updated_at": "2026-06-10T16:33:22.000+00:00",
+    "primary_author": "Cristobal Young",
+    "authors": [
+      "Cristobal Young"
+    ],
+    "topics": [
+      "Economics",
+      "Wrenches in the Gears",
+      "City Government",
+      "Budget"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "What really happens to the ultra-rich when states and localities increase taxes?",
+    "excerpt": "What really happens to the ultra-rich when states and localities increase taxes?",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T145139.124.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2327,
+    "reading_minutes": 10,
+    "id": "6a2860d0db63ad00019223df"
+  },
+  {
+    "title": "Anchors of Opportunity?",
+    "slug": "nyc-public-housing-economics",
+    "url": "https://www.vitalcitynyc.org/nyc-public-housing-economics/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:03:00.000+00:00",
+    "updated_at": "2026-06-10T16:31:30.000+00:00",
+    "primary_author": "Ingrid Gould Ellen",
+    "authors": [
+      "Ingrid Gould Ellen"
+    ],
+    "topics": [
+      "Housing",
+      "The Shape of the Economic Engine",
+      "Economics"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "The economics of public housing",
+    "excerpt": "The economics of public housing ",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T100553.816.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1912,
+    "reading_minutes": 8,
+    "id": "6a0e0a28a0bfc9000149cfe7"
+  },
+  {
+    "title": "Time to Build Big Again",
+    "slug": "nyc-large-scale-housing-development",
+    "url": "https://www.vitalcitynyc.org/nyc-large-scale-housing-development/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:02:27.000+00:00",
+    "updated_at": "2026-06-10T16:02:27.000+00:00",
+    "primary_author": "Lynne Sagalyn",
+    "authors": [
+      "Lynne Sagalyn"
+    ],
+    "topics": [
+      "Housing",
+      "More Money in More Pockets",
+      "City Planning",
+      "History"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "Major development projects can employ and house people at scale.",
+    "excerpt": "Major development projects can employ and house people at scale.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T132649.360.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2287,
+    "reading_minutes": 10,
+    "id": "6a284cbcdb63ad0001922211"
+  },
+  {
+    "title": "The Real Cost of a $30 Wage: The View From the Restaurant Industry",
+    "slug": "nyc-minimum-wage-increase-restaurant-industry",
+    "url": "https://www.vitalcitynyc.org/nyc-minimum-wage-increase-restaurant-industry/",
+    "type": "map/tool",
+    "type_basis": "html:vc-app-embed",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:01:27.000+00:00",
+    "updated_at": "2026-06-10T16:01:27.000+00:00",
+    "primary_author": "Andrew Rigie",
+    "authors": [
+      "Andrew Rigie"
+    ],
+    "topics": [
+      "Economics",
+      "Wrenches in the Gears",
+      "Labor"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "How rising labor costs would affect businesses with prosciutto-thin margins",
+    "excerpt": "How rising labor costs would affect businesses with prosciutto-thin margins",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T145842.053.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 757,
+    "reading_minutes": 3,
+    "id": "6a28622ddb63ad0001922445"
+  },
+  {
+    "title": "How Immigrants Make New York City Go",
+    "slug": "nyc-immigrants-economic-vitality",
+    "url": "https://www.vitalcitynyc.org/nyc-immigrants-economic-vitality/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:00:02.000+00:00",
+    "updated_at": "2026-06-10T16:00:02.000+00:00",
+    "primary_author": "Nancy Foner",
+    "authors": [
+      "Nancy Foner"
+    ],
+    "topics": [
+      "Immigration",
+      "The Shape of the Economic Engine",
+      "Economics"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "To understand the threat of current enforcement efforts, appreciate what newcomers, documented and undocumented, contribute to the city.",
+    "excerpt": "To understand the threat of current enforcement efforts, appreciate what newcomers, documented and undocumented, contribute to the city.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T102522.155.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1540,
+    "reading_minutes": 7,
+    "id": "6a282260db63ad0001921ffe"
+  },
+  {
+    "title": "Editor's Note",
+    "slug": "editors-note-issue-16",
+    "url": "https://www.vitalcitynyc.org/editors-note-issue-16/",
+    "type": "something else",
+    "type_basis": "title:framing-page",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T15:58:41.000+00:00",
+    "updated_at": "2026-06-10T15:58:41.000+00:00",
+    "primary_author": "Josh Greenman",
+    "authors": [
+      "Josh Greenman"
+    ],
+    "topics": [
+      "Economics",
+      "The $2 Trillion Question",
+      "City Government"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "How will Zohran Mamdani’s agenda interact with New York’s economy?",
+    "excerpt": "How will Zohran Mamdani’s agenda interact with New York’s economy?",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T153831.321.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 777,
+    "reading_minutes": 3,
+    "id": "6a286bbcdb63ad0001922551"
+  },
+  {
+    "title": "The New York City Economy: A Data Story",
+    "slug": "nyc-economy-data-story",
+    "url": "https://www.vitalcitynyc.org/nyc-economy-data-story/",
+    "type": "map/tool",
+    "type_basis": "html:vc-app-embed",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T15:18:00.000+00:00",
+    "updated_at": "2026-06-10T16:07:28.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Economics",
+      "The $2 Trillion Question",
+      "Data Stories"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "A data story",
+    "excerpt": "A data story",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T140544.572.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 0,
+    "reading_minutes": 1,
+    "id": "6a28560adb63ad0001922335"
+  },
+  {
+    "title": "New York Under Mamdani: At the Crossroads, Again",
+    "slug": "nyc-economy-zohran-mamdani-efficiency",
+    "url": "https://www.vitalcitynyc.org/nyc-economy-zohran-mamdani-efficiency/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T15:09:00.000+00:00",
+    "updated_at": "2026-06-10T16:07:11.000+00:00",
+    "primary_author": "Edward Glaeser",
+    "authors": [
+      "Edward Glaeser"
+    ],
+    "topics": [
+      "Economics",
+      "The $2 Trillion Question",
+      "City Government"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "Rather than a tax and spending binge, how about a campaign for competence?",
+    "excerpt": "Rather than a tax and spending binge, how about a campaign for competence?",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T095200.930.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2904,
+    "reading_minutes": 13,
+    "id": "6a1d9e99d224c200019e9213"
+  },
+  {
+    "title": "Twilight of the Union City?",
+    "slug": "nyc-labor-unions-history-future",
+    "url": "https://www.vitalcitynyc.org/nyc-labor-unions-history-future/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T15:00:00.000+00:00",
+    "updated_at": "2026-06-10T16:26:11.000+00:00",
+    "primary_author": "Joshua B. Freeman",
+    "authors": [
+      "Joshua B. Freeman"
+    ],
+    "topics": [
+      "Labor",
+      "The Shape of the Economic Engine",
+      "Economics"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "Organized labor, though far less powerful than it used to be, still helps thousands of New Yorkers.",
+    "excerpt": "Organized labor, though far less powerful than it used to be, still helps thousands of New Yorkers.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T103232.584.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2335,
+    "reading_minutes": 10,
+    "id": "6a282412db63ad000192206d"
+  },
+  {
+    "title": "Voices of the City: The Economy",
+    "slug": "economy-opinion-survey-nyc",
+    "url": "https://www.vitalcitynyc.org/economy-opinion-survey-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T12:59:00.000+00:00",
+    "updated_at": "2026-06-10T16:06:47.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Economics",
+      "The $2 Trillion Question"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "What are New Yorkers saying about the condition of the economy?",
+    "excerpt": "What are New Yorkers saying about the condition of the economy?",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T154052.385.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1509,
+    "reading_minutes": 7,
+    "id": "6a286c49db63ad0001922567"
+  },
+  {
     "title": "For Cities, Aggressive Partisan Gerrymandering Has a Silver Lining",
     "slug": "partisan-gerrymandering-cities-unexpected-benefit",
     "url": "https://www.vitalcitynyc.org/partisan-gerrymandering-cities-unexpected-benefit/",
@@ -2033,37 +2799,6 @@
     "id": "69a04c0ad4006a00010a42e3"
   },
   {
-    "title": "The NYPD’s Crime-Reduction Strategy: Chief of Department Michael LiPetri in Conversation",
-    "slug": "nypd-crime-strategy-questions-michael-lipetri",
-    "url": "https://www.vitalcitynyc.org/nypd-crime-strategy-questions-michael-lipetri/",
-    "type": "q&a",
-    "type_basis": "title:conversation",
-    "published_date": "2026-02-19",
-    "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-04-15T13:36:25.000+00:00",
-    "primary_author": "Vital City",
-    "authors": [
-      "Vital City"
-    ],
-    "topics": [
-      "Crime",
-      "Where We’re Headed",
-      "Police Reform"
-    ],
-    "issues": [
-      "crime-looking-back-at-2025-and-ahead-to-2026"
-    ],
-    "issue_numbers": [],
-    "summary": "Gun violence is way down; assaults and other forms of violence are not. What’s next?",
-    "excerpt": "Gun violence is way down; assaults and other forms of violence are not. What’s next?",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aypv_d0yxlcxvohp_mathias-wasik-nyc-004-auto-format-compress-1776259650474.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1451,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a42e8"
-  },
-  {
     "title": "Historic Declines, Contested Borders",
     "slug": "crime-reduction-trends-immigration-enforcement",
     "url": "https://www.vitalcitynyc.org/crime-reduction-trends-immigration-enforcement/",
@@ -2219,6 +2954,37 @@
     "id": "69a04c0ad4006a00010a42e6"
   },
   {
+    "title": "Does Mayor Mamdani Have a Public Safety Strategy?",
+    "slug": "mamdani-public-safety-strategy-nyc",
+    "url": "https://www.vitalcitynyc.org/mamdani-public-safety-strategy-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-02-19",
+    "published_at": "2026-02-19T17:00:54.000+00:00",
+    "updated_at": "2026-05-21T20:11:28.000+00:00",
+    "primary_author": "Elizabeth Glazer",
+    "authors": [
+      "Elizabeth Glazer"
+    ],
+    "topics": [
+      "Police Reform",
+      "Where We’re Headed",
+      "Crime"
+    ],
+    "issues": [
+      "crime-looking-back-at-2025-and-ahead-to-2026"
+    ],
+    "issue_numbers": [],
+    "summary": "It’s not an easy question to answer.",
+    "excerpt": "It’s not an easy question to answer.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/azsgrlwlo0xkemd0_par414809-auto-format-compress-1776259650841.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2251,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a42e1"
+  },
+  {
     "title": "The Top Five Crime and Justice Stories of 2025",
     "slug": "biggest-crime-justice-stories-america-2025",
     "url": "https://www.vitalcitynyc.org/biggest-crime-justice-stories-america-2025/",
@@ -2282,37 +3048,6 @@
     "id": "69a04c0ad4006a00010a42e9"
   },
   {
-    "title": "Does Mayor Mamdani Have a Public Safety Strategy?",
-    "slug": "mamdani-public-safety-strategy-nyc",
-    "url": "https://www.vitalcitynyc.org/mamdani-public-safety-strategy-nyc/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-02-19",
-    "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-05-21T20:11:28.000+00:00",
-    "primary_author": "Elizabeth Glazer",
-    "authors": [
-      "Elizabeth Glazer"
-    ],
-    "topics": [
-      "Police Reform",
-      "Where We’re Headed",
-      "Crime"
-    ],
-    "issues": [
-      "crime-looking-back-at-2025-and-ahead-to-2026"
-    ],
-    "issue_numbers": [],
-    "summary": "It’s not an easy question to answer.",
-    "excerpt": "It’s not an easy question to answer.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/azsgrlwlo0xkemd0_par414809-auto-format-compress-1776259650841.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2251,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a42e1"
-  },
-  {
     "title": "The State of Crime in New York City: 2025 and Beyond",
     "slug": "crime-in-new-york-city-trends-statistics",
     "url": "https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/",
@@ -2347,11 +3082,42 @@
     "id": "69a04c0ad4006a00010a42df"
   },
   {
+    "title": "Does Mayor Mamdani Have a Public Safety Strategy?",
+    "slug": "mamdani-public-safety-strategy-nyc",
+    "url": "https://www.vitalcitynyc.org/mamdani-public-safety-strategy-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-02-19",
+    "published_at": "2026-02-19T17:00:54.000+00:00",
+    "updated_at": "2026-05-21T20:11:28.000+00:00",
+    "primary_author": "Elizabeth Glazer",
+    "authors": [
+      "Elizabeth Glazer"
+    ],
+    "topics": [
+      "Police Reform",
+      "Where We’re Headed",
+      "Crime"
+    ],
+    "issues": [
+      "crime-looking-back-at-2025-and-ahead-to-2026"
+    ],
+    "issue_numbers": [],
+    "summary": "It’s not an easy question to answer.",
+    "excerpt": "It’s not an easy question to answer.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/azsgrlwlo0xkemd0_par414809-auto-format-compress-1776259650841.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2251,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a42e1"
+  },
+  {
     "title": "Governments That Get Results",
     "slug": "gloria-gong-interview",
     "url": "https://www.vitalcitynyc.org/gloria-gong-interview/",
     "type": "q&a",
-    "type_basis": "tag:interview",
+    "type_basis": "tag:podcast",
     "published_date": "2026-02-12",
     "published_at": "2026-02-12T14:36:01.000+00:00",
     "updated_at": "2026-04-15T13:36:27.000+00:00",
@@ -5339,6 +6105,39 @@
     "id": "69a04c0ad4006a00010a42a4"
   },
   {
+    "title": "What Hangs in the Balance Sheets",
+    "slug": "what-hangs-in-the-balance-sheets",
+    "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-16T19:02:02.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "What We Can and Can't Afford",
+      "Economics",
+      "Government Operations"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Two New York City apartment buildings’ costs and revenue",
+    "excerpt": "Two New York City apartment buildings’ costs and revenue",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhfp2gnhvftpqhy_h_16282379-auto-format-compress-1776259678798.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 3276,
+    "reading_minutes": 14,
+    "id": "69a04c0ad4006a00010a401a"
+  },
+  {
     "title": "Learning from Jersey City",
     "slug": "learning-from-jersey-city",
     "url": "https://www.vitalcitynyc.org/learning-from-jersey-city/",
@@ -5635,39 +6434,6 @@
     "word_count": 4707,
     "reading_minutes": 20,
     "id": "69a04c0ad4006a00010a4280"
-  },
-  {
-    "title": "What Hangs in the Balance Sheets",
-    "slug": "what-hangs-in-the-balance-sheets",
-    "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-16T19:02:02.000+00:00",
-    "primary_author": "Vital City",
-    "authors": [
-      "Vital City"
-    ],
-    "topics": [
-      "What We Can and Can't Afford",
-      "Economics",
-      "Government Operations"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Two New York City apartment buildings’ costs and revenue",
-    "excerpt": "Two New York City apartment buildings’ costs and revenue",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhfp2gnhvftpqhy_h_16282379-auto-format-compress-1776259678798.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 3276,
-    "reading_minutes": 14,
-    "id": "69a04c0ad4006a00010a401a"
   },
   {
     "title": "Local Democracy is Land-Use Policy",
@@ -8914,97 +9680,35 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
-    "slug": "trumps-bizarro-new-deal",
-    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Adam Cohen",
-    "authors": [
-      "Adam Cohen"
-    ],
-    "topics": [
-      "History",
-      "Repercussions",
-      "Government Operations"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1619,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a41d5"
-  },
-  {
-    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
-    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
-    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Meryl Chertoff",
-    "authors": [
-      "Meryl Chertoff"
-    ],
-    "topics": [
-      "Government Operations",
-      "Repercussions",
-      "City Planning"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "The Sharpie and the damage done",
-    "excerpt": "The Sharpie and the damage done",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1313,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a404c"
-  },
-  {
-    "title": "Donald Trump vs. the Rule of Law, and New York City",
-    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
-    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
+    "title": "Is It Time for Cities to Go It Alone?",
+    "slug": "is-it-time-for-cities-to-go-it-alone",
+    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
     "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "Harry Siegel",
+    "primary_author": "Richard Schragger",
     "authors": [
-      "Harry Siegel"
+      "Richard Schragger"
     ],
     "topics": [
-      "Politics",
-      "Repercussions",
-      "Corruption"
+      "Where Do We Go From Here?",
+      "City Government",
+      "Politics"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
+    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1560,
+    "word_count": 1697,
     "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a404b"
+    "id": "69a04c0ad4006a00010a4049"
   },
   {
     "title": "What You Can Do About Trump",
@@ -9039,35 +9743,97 @@
     "id": "69a04c0ad4006a00010a404a"
   },
   {
-    "title": "Is It Time for Cities to Go It Alone?",
-    "slug": "is-it-time-for-cities-to-go-it-alone",
-    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
+    "title": "Donald Trump vs. the Rule of Law, and New York City",
+    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
+    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
     "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "Richard Schragger",
+    "primary_author": "Harry Siegel",
     "authors": [
-      "Richard Schragger"
+      "Harry Siegel"
     ],
     "topics": [
-      "Where Do We Go From Here?",
-      "City Government",
-      "Politics"
+      "Politics",
+      "Repercussions",
+      "Corruption"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
+    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1697,
+    "word_count": 1560,
     "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4049"
+    "id": "69a04c0ad4006a00010a404b"
+  },
+  {
+    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
+    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
+    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Meryl Chertoff",
+    "authors": [
+      "Meryl Chertoff"
+    ],
+    "topics": [
+      "Government Operations",
+      "Repercussions",
+      "City Planning"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "The Sharpie and the damage done",
+    "excerpt": "The Sharpie and the damage done",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1313,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a404c"
+  },
+  {
+    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
+    "slug": "trumps-bizarro-new-deal",
+    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Adam Cohen",
+    "authors": [
+      "Adam Cohen"
+    ],
+    "topics": [
+      "History",
+      "Repercussions",
+      "Government Operations"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1619,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a41d5"
   },
   {
     "title": "A Real New York Mayoral Election",
@@ -11335,37 +12101,6 @@
     "id": "69a04c0ad4006a00010a407a"
   },
   {
-    "title": "Community Violence Intervention at a Crossroads",
-    "slug": "community-violence-intervention-at-a-crossroads",
-    "url": "https://www.vitalcitynyc.org/community-violence-intervention-at-a-crossroads/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-01-22",
-    "published_at": "2025-01-22T21:15:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:13.000+00:00",
-    "primary_author": "Andrew V. Papachristos",
-    "authors": [
-      "Andrew V. Papachristos"
-    ],
-    "topics": [
-      "Where We Go From Here",
-      "Gun Violence",
-      "Justice"
-    ],
-    "issues": [
-      "crime-looking-back-at-2024-and-ahead-to-2025"
-    ],
-    "issue_numbers": [],
-    "summary": "The promising field may not get the precious time it needs to mature.",
-    "excerpt": "The promising field may not get the precious time it needs to mature.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5e-zpbqstj99waz_b55wa5_cropped-auto-format-compress-1776259721664.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1495,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a4073"
-  },
-  {
     "title": "The State of the City on Crime 2024",
     "slug": "vital-signs-state-of-the-city-on-crime-2024",
     "url": "https://www.vitalcitynyc.org/vital-signs-state-of-the-city-on-crime-2024/",
@@ -11400,6 +12135,37 @@
     "id": "69a04c0ad4006a00010a4079"
   },
   {
+    "title": "Community Violence Intervention at a Crossroads",
+    "slug": "community-violence-intervention-at-a-crossroads",
+    "url": "https://www.vitalcitynyc.org/community-violence-intervention-at-a-crossroads/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-01-22",
+    "published_at": "2025-01-22T21:15:00.000+00:00",
+    "updated_at": "2026-04-15T13:37:13.000+00:00",
+    "primary_author": "Andrew V. Papachristos",
+    "authors": [
+      "Andrew V. Papachristos"
+    ],
+    "topics": [
+      "Where We Go From Here",
+      "Gun Violence",
+      "Justice"
+    ],
+    "issues": [
+      "crime-looking-back-at-2024-and-ahead-to-2025"
+    ],
+    "issue_numbers": [],
+    "summary": "The promising field may not get the precious time it needs to mature.",
+    "excerpt": "The promising field may not get the precious time it needs to mature.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5e-zpbqstj99waz_b55wa5_cropped-auto-format-compress-1776259721664.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1495,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a4073"
+  },
+  {
     "title": "Crime Data Is Better. Will Americans Pay Attention?",
     "slug": "crime-data-is-better-will-americans-pay-attention",
     "url": "https://www.vitalcitynyc.org/crime-data-is-better-will-americans-pay-attention/",
@@ -11432,36 +12198,35 @@
     "id": "69a04c0ad4006a00010a41dc"
   },
   {
-    "title": "On Fear Itself",
-    "slug": "on-fear-itself-worry-about-crime-has-taken-on-a-life-of-its-own",
-    "url": "https://www.vitalcitynyc.org/on-fear-itself-worry-about-crime-has-taken-on-a-life-of-its-own/",
+    "title": "Clustering of Gun Violence: The Problem That Won’t Go Away",
+    "slug": "clustering-of-gun-violence-the-problem-that-wont-go-away",
+    "url": "https://www.vitalcitynyc.org/clustering-of-gun-violence-the-problem-that-wont-go-away/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-01-22",
     "published_at": "2025-01-22T21:10:00.000+00:00",
     "updated_at": "2026-04-15T13:37:13.000+00:00",
-    "primary_author": "Caterina Roman",
+    "primary_author": "Gerard Torrats-Espinosa",
     "authors": [
-      "Caterina Roman"
+      "Gerard Torrats-Espinosa"
     ],
     "topics": [
-      "Crime",
-      "Politics",
-      "Social Science",
-      "Disorder"
+      "What Do We Know?",
+      "Gun Violence",
+      "Crime"
     ],
     "issues": [
       "crime-looking-back-at-2024-and-ahead-to-2025"
     ],
     "issue_numbers": [],
-    "summary": "Worry about crime has taken on a life of its own — and has pernicious consequences.",
-    "excerpt": "Worry about crime has taken on a life of its own — and has pernicious consequences.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5fd7jbqstj99wcm_gettyimages-2191231696_cropped-auto-format-compress-1776259722491.jpg",
+    "summary": "2025 will likely continue one of the most stubborn patterns in crime.",
+    "excerpt": "2025 will likely continue one of the most stubborn patterns in crime.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5fpkjbqstj99wgr_t74098_cropped-auto-format-compress-1776259721779.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1107,
-    "reading_minutes": 5,
-    "id": "69a04c0ad4006a00010a4076"
+    "word_count": 955,
+    "reading_minutes": 4,
+    "id": "69a04c0ad4006a00010a4285"
   },
   {
     "title": "Clustering of Gun Violence: The Problem That Won’t Go Away",

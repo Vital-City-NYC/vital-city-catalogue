@@ -5,7 +5,7 @@
   },
   {
     "name": "History",
-    "post_count": 136
+    "post_count": 137
   },
   {
     "name": "Government Operations",
@@ -13,27 +13,27 @@
   },
   {
     "name": "City Government",
-    "post_count": 111
+    "post_count": 117
   },
   {
     "name": "City Planning",
-    "post_count": 103
+    "post_count": 105
   },
   {
     "name": "Justice",
     "post_count": 78
   },
   {
+    "name": "Housing",
+    "post_count": 72
+  },
+  {
     "name": "culture",
     "post_count": 69
   },
   {
-    "name": "Housing",
-    "post_count": 67
-  },
-  {
     "name": "Gun Violence",
-    "post_count": 66
+    "post_count": 67
   },
   {
     "name": "Police Reform",
@@ -41,7 +41,11 @@
   },
   {
     "name": "Politics",
-    "post_count": 51
+    "post_count": 50
+  },
+  {
+    "name": "Economics",
+    "post_count": 48
   },
   {
     "name": "Jails",
@@ -49,7 +53,7 @@
   },
   {
     "name": "Social Science",
-    "post_count": 42
+    "post_count": 41
   },
   {
     "name": "Public Health",
@@ -60,40 +64,36 @@
     "post_count": 30
   },
   {
+    "name": "Education",
+    "post_count": 29
+  },
+  {
     "name": "data",
     "post_count": 29
   },
   {
-    "name": "Education",
-    "post_count": 28
-  },
-  {
     "name": "Technology",
-    "post_count": 27
-  },
-  {
-    "name": "Economics",
-    "post_count": 27
+    "post_count": 28
   },
   {
     "name": "Setting the Stage",
     "post_count": 26
   },
   {
-    "name": "Podcast",
+    "name": "Budget",
     "post_count": 25
   },
   {
     "name": "Quality of Life",
-    "post_count": 24
+    "post_count": 25
+  },
+  {
+    "name": "Podcast",
+    "post_count": 25
   },
   {
     "name": "interview",
     "post_count": 24
-  },
-  {
-    "name": "Budget",
-    "post_count": 23
   },
   {
     "name": "Incarceration",
@@ -116,11 +116,11 @@
     "post_count": 19
   },
   {
-    "name": "Neighborhood Life",
-    "post_count": 17
+    "name": "Data Stories",
+    "post_count": 18
   },
   {
-    "name": "Data Stories",
+    "name": "Neighborhood Life",
     "post_count": 17
   },
   {
@@ -188,6 +188,18 @@
     "post_count": 10
   },
   {
+    "name": "Labor",
+    "post_count": 9
+  },
+  {
+    "name": "Youth",
+    "post_count": 9
+  },
+  {
+    "name": "Immigration",
+    "post_count": 9
+  },
+  {
     "name": "Federal Government",
     "post_count": 9
   },
@@ -216,11 +228,7 @@
     "post_count": 9
   },
   {
-    "name": "Youth",
-    "post_count": 8
-  },
-  {
-    "name": "Immigration",
+    "name": "More Money in More Pockets",
     "post_count": 8
   },
   {
@@ -276,6 +284,10 @@
     "post_count": 7
   },
   {
+    "name": "The Shape of the Economic Engine",
+    "post_count": 6
+  },
+  {
     "name": "Corrections",
     "post_count": 6
   },
@@ -304,6 +316,10 @@
     "post_count": 6
   },
   {
+    "name": "What Do We Know?",
+    "post_count": 6
+  },
+  {
     "name": "What Doesn’t Work",
     "post_count": 6
   },
@@ -324,6 +340,14 @@
     "post_count": 6
   },
   {
+    "name": "Artifical Intelligence",
+    "post_count": 5
+  },
+  {
+    "name": "Wrenches in the Gears",
+    "post_count": 5
+  },
+  {
     "name": "Environment",
     "post_count": 5
   },
@@ -337,14 +361,6 @@
   },
   {
     "name": "Historical Lessons",
-    "post_count": 5
-  },
-  {
-    "name": "Disorder",
-    "post_count": 5
-  },
-  {
-    "name": "What Do We Know?",
     "post_count": 5
   },
   {
@@ -368,15 +384,15 @@
     "post_count": 5
   },
   {
+    "name": "The $2 Trillion Question",
+    "post_count": 4
+  },
+  {
     "name": "Elections",
     "post_count": 4
   },
   {
     "name": "Law",
-    "post_count": 4
-  },
-  {
-    "name": "Artifical Intelligence",
     "post_count": 4
   },
   {
@@ -417,6 +433,10 @@
   },
   {
     "name": "Place",
+    "post_count": 4
+  },
+  {
+    "name": "Disorder",
     "post_count": 4
   },
   {
@@ -518,10 +538,6 @@
   {
     "name": "Conversations",
     "post_count": 3
-  },
-  {
-    "name": "Labor",
-    "post_count": 2
   },
   {
     "name": "Borrow and Steal",

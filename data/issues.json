@@ -1,5 +1,35 @@
 [
   {
+    "name": "issue-16",
+    "post_count": 23,
+    "first_published": "2026-06-10",
+    "last_published": "2026-06-10",
+    "number": 16,
+    "display_name": "Issue 16",
+    "top_topics": [
+      [
+        "Economics",
+        21
+      ],
+      [
+        "More Money in More Pockets",
+        8
+      ],
+      [
+        "Labor",
+        7
+      ],
+      [
+        "City Government",
+        6
+      ],
+      [
+        "The Shape of the Economic Engine",
+        6
+      ]
+    ]
+  },
+  {
     "name": "issue-15",
     "post_count": 25,
     "first_published": "2025-06-16",
@@ -604,11 +634,11 @@
     "display_name": "Trump 100 Days And Beyond",
     "top_topics": [
       [
-        "Repercussions",
+        "Government Operations",
         4
       ],
       [
-        "Government Operations",
+        "Repercussions",
         4
       ],
       [
@@ -620,7 +650,7 @@
         2
       ],
       [
-        "History",
+        "City Government",
         1
       ]
     ]
@@ -673,15 +703,15 @@
       ],
       [
         "What Do We Know?",
-        5
+        6
       ],
       [
         "Gun Violence",
-        5
+        6
       ],
       [
         "Disorder",
-        4
+        3
       ]
     ]
   },

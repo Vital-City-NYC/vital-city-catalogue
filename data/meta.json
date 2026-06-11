@@ -1,15 +1,154 @@
 {
-  "generated_at": "2026-06-10T12:10:32.754213+00:00",
+  "generated_at": "2026-06-11T12:26:38.707819+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 819,
-  "total_authors": 449,
-  "total_issues": 28,
-  "total_topics": 200,
+  "total_posts": 842,
+  "total_authors": 461,
+  "total_issues": 29,
+  "total_topics": 204,
   "date_range": [
     "2021-09-15",
-    "2026-06-04"
+    "2026-06-10"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 23,
+  "new_articles": [
+    {
+      "title": "Economic Growth vs. Economic Justice: A False Choice",
+      "url": "https://www.vitalcitynyc.org/nyc-economic-development-mamdani-administration/",
+      "published_date": "2026-06-10",
+      "primary_author": "Alicia Glen"
+    },
+    {
+      "title": "Before You Surcharge the Penthouse, Fix the Foundation",
+      "url": "https://www.vitalcitynyc.org/nyc-pied-a-terre-surchage-property-tax/",
+      "published_date": "2026-06-10",
+      "primary_author": "Martha Stark"
+    },
+    {
+      "title": "How New York City Can Come Out a Winner in the AI Age",
+      "url": "https://www.vitalcitynyc.org/ai-economic-opportunities-nyc/",
+      "published_date": "2026-06-10",
+      "primary_author": "Arpit Gupta"
+    },
+    {
+      "title": "The Prosperity Equation",
+      "url": "https://www.vitalcitynyc.org/nyc-housing-affordability-economic-mobility/",
+      "published_date": "2026-06-10",
+      "primary_author": "Abby Jo Sigal"
+    },
+    {
+      "title": "Economic Justice Starts With Young People",
+      "url": "https://www.vitalcitynyc.org/economic-justice-youth-workforce-development-nyc/",
+      "published_date": "2026-06-10",
+      "primary_author": "Jared Giles"
+    },
+    {
+      "title": "Build Wealth, Not Just Wages",
+      "url": "https://www.vitalcitynyc.org/nyc-workforce-development-wealth-gap/",
+      "published_date": "2026-06-10",
+      "primary_author": "Pascale Mevs Fitzgerald"
+    },
+    {
+      "title": "The Job That's Taking Over New York City",
+      "url": "https://www.vitalcitynyc.org/home-care-job-growth-problems-nyc/",
+      "published_date": "2026-06-10",
+      "primary_author": "Bill Hammond"
+    },
+    {
+      "title": "The Affordability Conundrum",
+      "url": "https://www.vitalcitynyc.org/mamdani-affordability-conundrum-nyc/",
+      "published_date": "2026-06-10",
+      "primary_author": "Sherry Glied"
+    },
+    {
+      "title": "New York City’s Job Growth Has a Quality Problem",
+      "url": "https://www.vitalcitynyc.org/nyc-job-quality-problem/",
+      "published_date": "2026-06-10",
+      "primary_author": "Tal Roded"
+    },
+    {
+      "title": "Whither Wall Street?",
+      "url": "https://www.vitalcitynyc.org/wall-street-future-nyc/",
+      "published_date": "2026-06-10",
+      "primary_author": "Nicole Gelinas"
+    },
+    {
+      "title": "New York Families Are Doing Better Than You’ve Heard",
+      "url": "https://www.vitalcitynyc.org/nyc-families-positive-income-trends/",
+      "published_date": "2026-06-10",
+      "primary_author": "Scott Winship"
+    },
+    {
+      "title": "Public Sector Unions vs. Mamdani’s Ambitions",
+      "url": "https://www.vitalcitynyc.org/mamdani-nyc-unions-efficiency-reform/",
+      "published_date": "2026-06-10",
+      "primary_author": "Daniel DiSalvo"
+    },
+    {
+      "title": "A Bolder Development Strategy for a Crowded New York",
+      "url": "https://www.vitalcitynyc.org/nyc-joint-developments-public-land-housing/",
+      "published_date": "2026-06-10",
+      "primary_author": "Yonah Freemark"
+    },
+    {
+      "title": "The Millionaire Exodus That Never Came",
+      "url": "https://www.vitalcitynyc.org/mamdani-tax-increase-millionaire-exodus-fears/",
+      "published_date": "2026-06-10",
+      "primary_author": "Cristobal Young"
+    },
+    {
+      "title": "Anchors of Opportunity?",
+      "url": "https://www.vitalcitynyc.org/nyc-public-housing-economics/",
+      "published_date": "2026-06-10",
+      "primary_author": "Ingrid Gould Ellen"
+    },
+    {
+      "title": "Time to Build Big Again",
+      "url": "https://www.vitalcitynyc.org/nyc-large-scale-housing-development/",
+      "published_date": "2026-06-10",
+      "primary_author": "Lynne Sagalyn"
+    },
+    {
+      "title": "The Real Cost of a $30 Wage: The View From the Restaurant Industry",
+      "url": "https://www.vitalcitynyc.org/nyc-minimum-wage-increase-restaurant-industry/",
+      "published_date": "2026-06-10",
+      "primary_author": "Andrew Rigie"
+    },
+    {
+      "title": "How Immigrants Make New York City Go",
+      "url": "https://www.vitalcitynyc.org/nyc-immigrants-economic-vitality/",
+      "published_date": "2026-06-10",
+      "primary_author": "Nancy Foner"
+    },
+    {
+      "title": "Editor's Note",
+      "url": "https://www.vitalcitynyc.org/editors-note-issue-16/",
+      "published_date": "2026-06-10",
+      "primary_author": "Josh Greenman"
+    },
+    {
+      "title": "The New York City Economy: A Data Story",
+      "url": "https://www.vitalcitynyc.org/nyc-economy-data-story/",
+      "published_date": "2026-06-10",
+      "primary_author": "Vital City"
+    },
+    {
+      "title": "New York Under Mamdani: At the Crossroads, Again",
+      "url": "https://www.vitalcitynyc.org/nyc-economy-zohran-mamdani-efficiency/",
+      "published_date": "2026-06-10",
+      "primary_author": "Edward Glaeser"
+    },
+    {
+      "title": "Twilight of the Union City?",
+      "url": "https://www.vitalcitynyc.org/nyc-labor-unions-history-future/",
+      "published_date": "2026-06-10",
+      "primary_author": "Joshua B. Freeman"
+    },
+    {
+      "title": "Voices of the City: The Economy",
+      "url": "https://www.vitalcitynyc.org/economy-opinion-survey-nyc/",
+      "published_date": "2026-06-10",
+      "primary_author": "Vital City"
+    }
+  ]
 }

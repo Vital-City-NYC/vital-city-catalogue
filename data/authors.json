@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 88,
+    "post_count": 89,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -17,6 +17,7 @@
       "dan-garodnick-housing-zoning-city-of-yes-interview",
       "daniel-okrent-interview",
       "drugs-in-new-york-city-by-the-numbers",
+      "economy-opinion-survey-nyc",
       "eric-adams-interview",
       "errol-louis-harry-siegel-and-vishaan-chakrabarti-join-vital-city-as-contributing-writers",
       "explained-what-is-involuntary-removal-outdoor-deaths-nyc",
@@ -43,8 +44,8 @@
       "michael-lipetri-interview",
       "new-york-city-deputy-mayors-on-how-things-really-get-done",
       "new-york-citys-subways-moving-millions",
+      "nyc-economy-data-story",
       "nyc-housing-permits-fast-track-construction-mamdani",
-      "nypd-crime-strategy-questions-michael-lipetri",
       "our-advice-to-the-new-york-times-about-a-vexing-editorial-decision",
       "predictability-begets-productivity",
       "questions-answers-trump-noem-dhs-ice",
@@ -100,7 +101,7 @@
   },
   {
     "name": "Elizabeth Glazer",
-    "post_count": 46,
+    "post_count": 47,
     "slugs": [
       "a-brief-history-of-the-3300-target",
       "a-rare-remedy-to-the-persistent-brutality-of-rikers",
@@ -243,12 +244,13 @@
   },
   {
     "name": "Josh Greenman",
-    "post_count": 17,
+    "post_count": 18,
     "slugs": [
       "age-diversity-in-cities-and-neighborhoods",
       "black-market-brooklyn",
       "brick-by-brick-rule-by-rule",
       "congestion-pricing-an-explainer",
+      "editors-note-issue-16",
       "imagine-a-real-new-york-mayoral-election",
       "michael-oppenheimer-mark-chambers-interview",
       "new-york-city-crime-beyond-the-numbers",
@@ -416,6 +418,27 @@
     "website": null
   },
   {
+    "name": "Nicole Gelinas",
+    "post_count": 10,
+    "slugs": [
+      "movement-new-yorks-long-war-to-take-back-its-streets-from-the-car-excerpt",
+      "mta-new-app-subway-omny",
+      "new-york-stilled-life-feral-city-review",
+      "our-transit-tomorrow",
+      "saved-by-the-camera",
+      "serve-the-walkers",
+      "tables-and-chairs",
+      "the-four-forces-that-have-shaped-the-subway-system",
+      "times-square-good-times-square-bad",
+      "wall-street-future-nyc"
+    ],
+    "slug": "gelinas-nicole",
+    "bio": "is a Manhattan Institute senior fellow and author of the book \"Movement: New York’s Long War to Take Back Its Streets From the Car.\"",
+    "url": "https://www.vitalcitynyc.org/author/gelinas-nicole/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Brandon del Pozo",
     "post_count": 10,
     "slugs": [
@@ -453,26 +476,6 @@
     "slug": "hall-john",
     "bio": "is a retired police professional and a National Institute of Justice Law Enforcement Advancing Data and Science (LEADS) Scholar.",
     "url": "https://www.vitalcitynyc.org/author/hall-john/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Nicole Gelinas",
-    "post_count": 9,
-    "slugs": [
-      "movement-new-yorks-long-war-to-take-back-its-streets-from-the-car-excerpt",
-      "mta-new-app-subway-omny",
-      "new-york-stilled-life-feral-city-review",
-      "our-transit-tomorrow",
-      "saved-by-the-camera",
-      "serve-the-walkers",
-      "tables-and-chairs",
-      "the-four-forces-that-have-shaped-the-subway-system",
-      "times-square-good-times-square-bad"
-    ],
-    "slug": "gelinas-nicole",
-    "bio": "is a Manhattan Institute senior fellow and author of the book \"Movement: New York’s Long War to Take Back Its Streets From the Car.\"",
-    "url": "https://www.vitalcitynyc.org/author/gelinas-nicole/",
     "twitter": null,
     "website": null
   },
@@ -660,6 +663,51 @@
     "slug": "jacobson-michael",
     "bio": "is the director of the CUNY Institute for State and Local Governance and a professor of sociology at the Graduate Center of the City University of New York.",
     "url": "https://www.vitalcitynyc.org/author/jacobson-michael/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Arpit Gupta",
+    "post_count": 4,
+    "slugs": [
+      "ai-economic-opportunities-nyc",
+      "cause-to-worry-reason-to-act",
+      "congestion-pricing-across-america",
+      "office-conversions-easier-said-than-done"
+    ],
+    "slug": "gupta-arpit",
+    "bio": "is an associate professor of finance at NYU Stern School of Business.",
+    "url": "https://www.vitalcitynyc.org/author/gupta-arpit/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Ingrid Gould Ellen",
+    "post_count": 4,
+    "slugs": [
+      "gently-increasing-new-york-housing-density",
+      "mamdani-housing-affordability-new-york",
+      "nyc-public-housing-economics",
+      "six-ideas-for-improving-affordability-in-new-york"
+    ],
+    "slug": "ellen-ingrid-gould",
+    "bio": "is the Paulette Goddard Professor of Urban Policy and Planning at NYU Wagner Graduate School of Public Service and faculty director at the NYU Furman Center. She specializes in housing policy and residential segregation.",
+    "url": "https://www.vitalcitynyc.org/author/ellen-ingrid-gould/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Edward Glaeser",
+    "post_count": 4,
+    "slugs": [
+      "gothams-boundless-ingenuity",
+      "nyc-economy-zohran-mamdani-efficiency",
+      "training-ai-to-make-cities-more-humane",
+      "when-the-cure-for-corruption-is-worse-than-the-disease"
+    ],
+    "slug": "glaeser-edward",
+    "bio": "is the Fred and Eleanor Glimp Professor of Economics at Harvard University. He is the author of \"Triumph of the City.\"",
+    "url": "https://www.vitalcitynyc.org/author/glaeser-edward/",
     "twitter": null,
     "website": null
   },
@@ -889,6 +937,34 @@
     "website": null
   },
   {
+    "name": "Sherry Glied",
+    "post_count": 3,
+    "slugs": [
+      "mamdani-affordability-conundrum-nyc",
+      "the-hubris-of-social-scientists",
+      "why-it-takes-four-new-housing-units-to-get-one-person-off-the-street"
+    ],
+    "slug": "glied-sherry",
+    "bio": "is a professor at Robert F. Wagner Graduate School of Public Service, and was dean of the school from 2013 to 2025.",
+    "url": "https://www.vitalcitynyc.org/author/glied-sherry/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Yonah Freemark",
+    "post_count": 3,
+    "slugs": [
+      "new-york-city-needs-a-two-track-mind",
+      "nyc-joint-developments-public-land-housing",
+      "what-new-yorks-subway-system-can-learn-from-cities-around-the-world"
+    ],
+    "slug": "freemark-yonah",
+    "bio": "is the lead of the Urban Institute’s Practice Area on Fair Housing, Land Use and Transportation. He has been conducting research on transportation planning for 15 years.",
+    "url": "https://www.vitalcitynyc.org/author/freemark-yonah/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Eric Goldwyn",
     "post_count": 3,
     "slugs": [
@@ -969,20 +1045,6 @@
     "slug": "been-vicki",
     "bio": "is the Weinfeld Professor of Law at NYU School of Law and faculty director of NYU’s Furman Center. She served as NYC’s deputy mayor of housing and economic development from 2019 to 2021.",
     "url": "https://www.vitalcitynyc.org/author/been-vicki/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Ingrid Gould Ellen",
-    "post_count": 3,
-    "slugs": [
-      "gently-increasing-new-york-housing-density",
-      "mamdani-housing-affordability-new-york",
-      "six-ideas-for-improving-affordability-in-new-york"
-    ],
-    "slug": "ellen-ingrid-gould",
-    "bio": "is the Paulette Goddard Professor of Urban Policy and Planning at NYU Wagner Graduate School of Public Service and faculty director at the NYU Furman Center. She specializes in housing policy and residential segregation.",
-    "url": "https://www.vitalcitynyc.org/author/ellen-ingrid-gould/",
     "twitter": null,
     "website": null
   },
@@ -1071,20 +1133,6 @@
     "website": null
   },
   {
-    "name": "Arpit Gupta",
-    "post_count": 3,
-    "slugs": [
-      "cause-to-worry-reason-to-act",
-      "congestion-pricing-across-america",
-      "office-conversions-easier-said-than-done"
-    ],
-    "slug": "gupta-arpit",
-    "bio": "is an associate professor of finance at NYU Stern School of Business.",
-    "url": "https://www.vitalcitynyc.org/author/gupta-arpit/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Austin Celestin",
     "post_count": 3,
     "slugs": [
@@ -1099,20 +1147,6 @@
     "website": null
   },
   {
-    "name": "Edward Glaeser",
-    "post_count": 3,
-    "slugs": [
-      "gothams-boundless-ingenuity",
-      "training-ai-to-make-cities-more-humane",
-      "when-the-cure-for-corruption-is-worse-than-the-disease"
-    ],
-    "slug": "glaeser-edward",
-    "bio": "is the Fred and Eleanor Glimp Professor of Economics at Harvard University. He is the author of \"Triumph of the City.\"",
-    "url": "https://www.vitalcitynyc.org/author/glaeser-edward/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Jeffrey A. Butts",
     "post_count": 3,
     "slugs": [
@@ -1123,6 +1157,19 @@
     "slug": "butts-jeffrey-a",
     "bio": "is the director of the Research and Evaluation Center at John Jay College of Criminal Justice.",
     "url": "https://www.vitalcitynyc.org/author/butts-jeffrey-a/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Gerard Torrats-Espinosa",
+    "post_count": 3,
+    "slugs": [
+      "clustering-of-gun-violence-the-problem-that-wont-go-away",
+      "more-non-profits-fewer-crimes"
+    ],
+    "slug": "torrats-espinosa-gerard",
+    "bio": "is an assistant professor of sociology and a member of the Data Science Institute at Columbia University.",
+    "url": "https://www.vitalcitynyc.org/author/torrats-espinosa-gerard/",
     "twitter": null,
     "website": null
   },
@@ -1207,6 +1254,58 @@
     "slug": "vergara-camilo-jose",
     "bio": "is a photographer who has spent more than 50 years documenting poor communities in New York City. He has more than 16,000 images in the Library of Congress.",
     "url": "https://www.vitalcitynyc.org/author/vergara-camilo-jose/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Alicia Glen",
+    "post_count": 2,
+    "slugs": [
+      "build-more-homes-for-families",
+      "nyc-economic-development-mamdani-administration"
+    ],
+    "slug": "glen-alicia",
+    "bio": "is the founder and managing principal at MSquared, an investment and development firm. She served as deputy mayor for housing and economic development under Mayor Bill de Blasio.",
+    "url": "https://www.vitalcitynyc.org/author/glen-alicia/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Martha Stark",
+    "post_count": 2,
+    "slugs": [
+      "nyc-pied-a-terre-surchage-property-tax",
+      "the-property-tax-cannot-stand"
+    ],
+    "slug": "stark-martha",
+    "bio": "is a clinical professor at NYU's Robert F. Wagner Graduate School of Public Service.",
+    "url": "https://www.vitalcitynyc.org/author/stark-martha/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Molly Wasow Park",
+    "post_count": 2,
+    "slugs": [
+      "nyc-housing-affordability-economic-mobility",
+      "system-coordination-in-crisis-response-to-high-acuity-homelessness"
+    ],
+    "slug": "wasow-park-molly",
+    "bio": "is commissioner of the New York City Department of Social Services and a member of the Collaborative on Housing for Health.",
+    "url": "https://www.vitalcitynyc.org/author/wasow-park-molly/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Daniel DiSalvo",
+    "post_count": 2,
+    "slugs": [
+      "have-public-sector-unions-taken-the-place-of-tammany-hall",
+      "mamdani-nyc-unions-efficiency-reform"
+    ],
+    "slug": "disalvo-daniel",
+    "bio": "is a professor of political science at the City College of New York-CUNY and a senior fellow at the Manhattan Institute.",
+    "url": "https://www.vitalcitynyc.org/author/disalvo-daniel/",
     "twitter": null,
     "website": null
   },
@@ -1302,19 +1401,6 @@
     "website": null
   },
   {
-    "name": "Sherry Glied",
-    "post_count": 2,
-    "slugs": [
-      "the-hubris-of-social-scientists",
-      "why-it-takes-four-new-housing-units-to-get-one-person-off-the-street"
-    ],
-    "slug": "glied-sherry",
-    "bio": "is a professor at Robert F. Wagner Graduate School of Public Service, and was dean of the school from 2013 to 2025.",
-    "url": "https://www.vitalcitynyc.org/author/glied-sherry/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Robert Gordon",
     "post_count": 2,
     "slugs": [
@@ -1337,19 +1423,6 @@
     "slug": "campion-sean",
     "bio": "is director of housing and economic development studies at the Citizens Budget Commission, which focuses on constructive change in New York City and New York State government finances and services.",
     "url": "https://www.vitalcitynyc.org/author/campion-sean/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Caterina Roman",
-    "post_count": 2,
-    "slugs": [
-      "erin-dalton-data-driven-social-services-nyc",
-      "on-fear-itself-worry-about-crime-has-taken-on-a-life-of-its-own"
-    ],
-    "slug": "roman-caterina",
-    "bio": "is a professor in the Department of Criminal Justice at Temple University.",
-    "url": "https://www.vitalcitynyc.org/author/roman-caterina/",
     "twitter": null,
     "website": null
   },
@@ -1558,19 +1631,6 @@
     "slug": "bates-josiah",
     "bio": "is the Great Lakes reporter for The Trace and the author of \"In These Streets: Reporting from the Front Lines of Inner-City Gun Violence.\"",
     "url": "https://www.vitalcitynyc.org/author/bates-josiah/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Yonah Freemark",
-    "post_count": 2,
-    "slugs": [
-      "new-york-city-needs-a-two-track-mind",
-      "what-new-yorks-subway-system-can-learn-from-cities-around-the-world"
-    ],
-    "slug": "freemark-yonah",
-    "bio": "is the lead of the Urban Institute’s Practice Area on Fair Housing, Land Use and Transportation. He has been conducting research on transportation planning for 15 years.",
-    "url": "https://www.vitalcitynyc.org/author/freemark-yonah/",
     "twitter": null,
     "website": null
   },
@@ -1818,19 +1878,6 @@
     "slug": "asher-jeff",
     "bio": "is a crime analyst based in New Orleans and co-founder of AH Datalytics. He is the author of a Substack newsletter covering crime data and analysis.",
     "url": "https://www.vitalcitynyc.org/author/asher-jeff/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Gerard Torrats-Espinosa",
-    "post_count": 2,
-    "slugs": [
-      "clustering-of-gun-violence-the-problem-that-wont-go-away",
-      "more-non-profits-fewer-crimes"
-    ],
-    "slug": "torrats-espinosa-gerard",
-    "bio": "is an assistant professor of sociology and a member of the Data Science Institute at Columbia University.",
-    "url": "https://www.vitalcitynyc.org/author/torrats-espinosa-gerard/",
     "twitter": null,
     "website": null
   },
@@ -2186,6 +2233,150 @@
     "website": null
   },
   {
+    "name": "James Patchett",
+    "post_count": 1,
+    "slugs": [
+      "nyc-economic-development-mamdani-administration"
+    ],
+    "slug": "james",
+    "bio": "is chief executive of Gilbane Development and served as president and CEO of the New York City Economic Development Corporation from 2017-21.",
+    "url": "https://www.vitalcitynyc.org/author/james/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Abby Jo Sigal",
+    "post_count": 1,
+    "slugs": [
+      "nyc-housing-affordability-economic-mobility"
+    ],
+    "slug": "sigal-abby-jo",
+    "bio": ", a strategic advisor at the New York Hall of Science and executive-in-residence at the NYU School of Professional Studies, formerly led the New York City Office of Talent and Workforce Development and Enterprise Community Partners’ New York office.",
+    "url": "https://www.vitalcitynyc.org/author/sigal-abby-jo/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Jared Giles",
+    "post_count": 1,
+    "slugs": [
+      "economic-justice-youth-workforce-development-nyc"
+    ],
+    "slug": "giles-jared",
+    "bio": "is the vice president of STEAM Engine and founder of SquareOne, a consulting firm focused on education, workforce and economic development.",
+    "url": "https://www.vitalcitynyc.org/author/giles-jared/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Pascale Mevs Fitzgerald",
+    "post_count": 1,
+    "slugs": [
+      "nyc-workforce-development-wealth-gap"
+    ],
+    "slug": "fitzgerald-pascale-mevs",
+    "bio": "is an education and workforce professional in pursuit of her Ph.D. at Columbia Teachers College.",
+    "url": "https://www.vitalcitynyc.org/author/fitzgerald-pascale-mevs/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Bill Hammond",
+    "post_count": 1,
+    "slugs": [
+      "home-care-job-growth-problems-nyc"
+    ],
+    "slug": "hammond-bill",
+    "bio": "is a senior fellow with the Empire Center for Public Policy.",
+    "url": "https://www.vitalcitynyc.org/author/hammond-bill/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Tal Roded",
+    "post_count": 1,
+    "slugs": [
+      "nyc-job-quality-problem"
+    ],
+    "slug": "roded-tal",
+    "bio": "is a data scientist and author of the public policy-focused substack NYCuriosity. He currently serves on Manhattan Community Board 3.",
+    "url": "https://www.vitalcitynyc.org/author/roded-tal/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Scott Winship",
+    "post_count": 1,
+    "slugs": [
+      "nyc-families-positive-income-trends"
+    ],
+    "slug": "winship-scott",
+    "bio": "is a senior fellow and the director of the Center on Opportunity and Social Mobility at the American Enterprise Institute, where he researches social mobility and the causes and effects of poverty.",
+    "url": "https://www.vitalcitynyc.org/author/winship-scott/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Cristobal Young",
+    "post_count": 1,
+    "slugs": [
+      "mamdani-tax-increase-millionaire-exodus-fears"
+    ],
+    "slug": "young-cristobal",
+    "bio": "is an associate professor of sociology at Cornell University.",
+    "url": "https://www.vitalcitynyc.org/author/young-cristobal/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Lynne Sagalyn",
+    "post_count": 1,
+    "slugs": [
+      "nyc-large-scale-housing-development"
+    ],
+    "slug": "sagalyn-lynne",
+    "bio": "is professor emerita at Columbia Business School.",
+    "url": "https://www.vitalcitynyc.org/author/sagalyn-lynne/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Andrew Rigie",
+    "post_count": 1,
+    "slugs": [
+      "nyc-minimum-wage-increase-restaurant-industry"
+    ],
+    "slug": "rigie-andrew",
+    "bio": "is the executive director of the New York Hospitality Alliance.",
+    "url": "https://www.vitalcitynyc.org/author/rigie-andrew/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Nancy Foner",
+    "post_count": 1,
+    "slugs": [
+      "nyc-immigrants-economic-vitality"
+    ],
+    "slug": "foner-nancy",
+    "bio": "is distinguished professor emerita of sociology at Hunter College and the Graduate Center, City University of New York. Her most recent book is “Immigration: How the Past Shapes the Present.”\n",
+    "url": "https://www.vitalcitynyc.org/author/foner-nancy/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Joshua B. Freeman",
+    "post_count": 1,
+    "slugs": [
+      "nyc-labor-unions-history-future"
+    ],
+    "slug": "freeman-joshua-b",
+    "bio": "is Emeritus Professor of History at Queens College, and has written extensively about labor and New York City.  His most recent book is “Garden Apartments: The History of a Low-Rent Utopia.”",
+    "url": "https://www.vitalcitynyc.org/author/freeman-joshua-b/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Khalil Cumberbatch",
     "post_count": 1,
     "slugs": [
@@ -2438,6 +2629,18 @@
     "website": null
   },
   {
+    "name": "Caterina Roman",
+    "post_count": 1,
+    "slugs": [
+      "erin-dalton-data-driven-social-services-nyc"
+    ],
+    "slug": "roman-caterina",
+    "bio": "is a professor in the Department of Criminal Justice at Temple University.",
+    "url": "https://www.vitalcitynyc.org/author/roman-caterina/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Sachi Takahashi-Rial",
     "post_count": 1,
     "slugs": [
@@ -2590,18 +2793,6 @@
     "slug": "sikora-pete",
     "bio": "is the climate and inequality campaigns director for New York Communities for Change.",
     "url": "https://www.vitalcitynyc.org/author/sikora-pete/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Molly Wasow Park",
-    "post_count": 1,
-    "slugs": [
-      "system-coordination-in-crisis-response-to-high-acuity-homelessness"
-    ],
-    "slug": "wasow-park-molly",
-    "bio": "is commissioner of the New York City Department of Social Services and a member of the Collaborative on Housing for Health.",
-    "url": "https://www.vitalcitynyc.org/author/wasow-park-molly/",
     "twitter": null,
     "website": null
   },
@@ -2998,18 +3189,6 @@
     "slug": "flint-anthony",
     "bio": "is a senior fellow at the Lincoln Institute of Land Policy in Cambridge, Massachusetts.",
     "url": "https://www.vitalcitynyc.org/author/flint-anthony/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Martha Stark",
-    "post_count": 1,
-    "slugs": [
-      "the-property-tax-cannot-stand"
-    ],
-    "slug": "stark-martha",
-    "bio": "is a clinical professor at NYU's Robert F. Wagner Graduate School of Public Service.",
-    "url": "https://www.vitalcitynyc.org/author/stark-martha/",
     "twitter": null,
     "website": null
   },
@@ -3626,14 +3805,14 @@
     "website": null
   },
   {
-    "name": "Adam Cohen",
+    "name": "Richard Schragger",
     "post_count": 1,
     "slugs": [
-      "trumps-bizarro-new-deal"
+      "is-it-time-for-cities-to-go-it-alone"
     ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
+    "slug": "schragger-richard",
+    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
+    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
     "twitter": null,
     "website": null
   },
@@ -3650,14 +3829,14 @@
     "website": null
   },
   {
-    "name": "Richard Schragger",
+    "name": "Adam Cohen",
     "post_count": 1,
     "slugs": [
-      "is-it-time-for-cities-to-go-it-alone"
+      "trumps-bizarro-new-deal"
     ],
-    "slug": "schragger-richard",
-    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
-    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },
@@ -3958,18 +4137,6 @@
     "slug": "dunkelman-marc",
     "bio": "is a visiting fellow in international and public affairs at Brown University’s Taubman Center for Public Policy and American Institutions. He is the author of \"Why Nothing Works: Who Killed Progress — And How to Bring It Back.\"",
     "url": "https://www.vitalcitynyc.org/author/dunkelman-marc/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Daniel DiSalvo",
-    "post_count": 1,
-    "slugs": [
-      "have-public-sector-unions-taken-the-place-of-tammany-hall"
-    ],
-    "slug": "disalvo-daniel",
-    "bio": "is a professor of political science at the City College of New York-CUNY and a senior fellow at the Manhattan Institute.",
-    "url": "https://www.vitalcitynyc.org/author/disalvo-daniel/",
     "twitter": null,
     "website": null
   },
@@ -4654,18 +4821,6 @@
     "slug": "burr-kirsten",
     "bio": "is a PhD student at Columbia Business School in the finance division with a research focus on household finance, asset pricing, and public policy.",
     "url": "https://www.vitalcitynyc.org/author/burr-kirsten/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Alicia Glen",
-    "post_count": 1,
-    "slugs": [
-      "build-more-homes-for-families"
-    ],
-    "slug": "glen-alicia",
-    "bio": "is the founder and managing principal at MSquared, an investment and development firm. She served as deputy mayor for housing and economic development under Mayor Bill de Blasio.",
-    "url": "https://www.vitalcitynyc.org/author/glen-alicia/",
     "twitter": null,
     "website": null
   },

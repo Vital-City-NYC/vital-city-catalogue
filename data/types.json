@@ -1,19 +1,19 @@
 [
   {
     "type": "opinion/commentary",
-    "post_count": 697
+    "post_count": 715
   },
   {
     "type": "q&a",
-    "post_count": 60
+    "post_count": 59
   },
   {
     "type": "data analysis",
-    "post_count": 45
+    "post_count": 46
   },
   {
     "type": "map/tool",
-    "post_count": 11
+    "post_count": 15
   },
   {
     "type": "book review",
@@ -21,6 +21,6 @@
   },
   {
     "type": "something else",
-    "post_count": 1
+    "post_count": 2
   }
 ]
