@@ -563,9 +563,12 @@ function boot(data){
   $("#gate").style.display="none";
   $("#app").style.display="block";
 
-  // Header subline
+  // Header subline. Idempotent: strip any prior refresh stamp before adding,
+  // so a re-render (e.g. theme toggle re-running boot) can't duplicate it.
   const gen=new Date(data.generated_at);
-  $("#subline").innerHTML=$("#subline").innerHTML+` <span class="gen">Last refresh: ${gen.toLocaleString()}.</span>`;
+  const sub=$("#subline");
+  const oldGen=sub.querySelector(".gen"); if(oldGen) oldGen.remove();
+  sub.insertAdjacentHTML("beforeend", ` <span class="gen">Last refresh: ${gen.toLocaleString()}.</span>`);
 
   // ----- KPIs (signups-first)
   const mc=data.mailchimp||{};
@@ -592,16 +595,16 @@ function boot(data){
   const kpis=[
     // --- Newsletter ---
     {lbl:"Subscribers",num:fmtN(total),delta:`net ${fmtDelta(netNew30)} in 30d`,cls:deltaClass(netNew30),hero:true,
-     tip:"NEWSLETTER — Unique people on the Mailchimp list right now (each individual counted once, even if signed up under multiple emails). Source of truth: Mailchimp for unsubscribes; Ghost for signups, manually reconciled to Mailchimp weekly."},
+     tip:"Unique people on the Mailchimp list right now — each individual counted once, even if signed up under multiple emails.\n\nWhy it matters: The newsletter list is Vital City's core owned audience and the organization's number-one growth goal. Every other metric on this page ultimately serves growing and engaging it.\n\nSource: Mailchimp for unsubscribes, Ghost for signups, reconciled weekly."},
     {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)} vs prior 30d`,cls:deltaClass(subs30-subsPrev30),
-     tip:"NEWSLETTER — New subscribers in the last 30 days vs the 30 days before. Computed from the merged Ghost+Mailchimp dataset (signups happen in Ghost first, transferred to Mailchimp on weekly reconcile)."},
+     tip:"New subscribers in the last 30 days vs the 30 days before.\n\nWhy it matters: This is the live pulse of list growth. Sustained month-over-month gains are the clearest sign the top of the funnel is working; a sustained decline is the earliest warning that acquisition needs attention.\n\nSource: merged Ghost+Mailchimp dataset (signups land in Ghost first, reconciled to Mailchimp weekly)."},
     (function(){
       const m=mc.mau||{}, n=m.active_users;
       const pct = (n && total) ? (n/total*100).toFixed(0)+"%" : "—";
       return {lbl:"Active subscribers · 30d", num: n!=null ? fmtN(n) : "—",
               delta: n!=null ? `${pct} opened ≥1 email in last 30 days` : "data pending",
               cls:"flat",
-              tip:`Sometimes called "MAU" (Monthly Active Users). Unique people who opened at least one Vital City newsletter in the last 30 days — a real union across every send in that window, deduped by email. Apple Mail privacy auto-opens inflate this somewhat; click rate is the cleaner cut.`};
+              tip:`Unique people who opened at least one Vital City newsletter in the last 30 days — a real union across every send in the window, deduped by email. Sometimes called MAU (monthly active users).\n\nWhy it matters: This is your genuinely reachable audience — the people actually reading, not just subscribed. List size flatters; this is the number that predicts how many will see your next send.\n\nNote: Apple Mail privacy auto-opens inflate this somewhat — click rate is the cleaner cut.`};
     })(),
     (function(){
       const a=mc.aau||{}, n=a.active_users;
@@ -609,13 +612,13 @@ function boot(data){
       return {lbl:"Active subscribers · 1y", num: n!=null ? fmtN(n) : "—",
               delta: n!=null ? `${pct} opened ≥1 email in last year` : "data pending",
               cls:"flat",
-              tip:`Sometimes called "AAU" (Annual Active Users). Unique people who opened at least one Vital City newsletter in the last 365 days. The gap from the 30-day number is your "lapsed but reachable" audience — people who used to open but haven't lately.`};
+              tip:`Unique people who opened at least one Vital City newsletter in the last 365 days. Sometimes called AAU (annual active users).\n\nWhy it matters: The gap between this and the 30-day number is your re-engagement opportunity — people who already chose Vital City once and are far cheaper to win back than to acquire fresh. The Subscriber lifecycle card turns that gap into a named, exportable list.`};
     })(),
     // --- Fundraising (priority 2: donors) ---
     {lbl:"Raised · YTD", num: db.available ? fmtUSD((dWin.ytd||{}).amount||0) : "—",
      delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts` : "Donorbox not connected",
      cls:"flat",
-     tip:"FUNDRAISING — Total raised on Donorbox so far this year (gross, before processor fees). Donor count is unique people; gift count counts every transaction (one donor can give multiple times). See the Fundraising card below for monthly trend + top campaigns."},
+     tip:"Total raised on Donorbox so far this year (gross, before processor fees). Donor count is unique people; gift count counts every transaction.\n\nWhy it matters: Fundraising is Vital City's second priority after list growth, and this is the headline number for the year. The Donors & influence section below breaks it down by channel, campaign and recurring base — and shows which signup sources actually produce donors."},
     // --- Reach & traffic (directional; tiles ordered last to match the page) ---
     (function(){
       const li = data.linkedin || {}, bs = data.bluesky || {};
@@ -629,7 +632,7 @@ function boot(data){
       return {lbl:"Social followers", num: counts.length ? fmtN(total) : "—",
               delta: counts.map(([k,n])=>`${fmtN(n)} ${k}`).join(" · "),
               cls:"flat",
-              tip:"SOCIAL — Combined followers: X (@VitalCityNYC) + LinkedIn company page + Bluesky (@vitalcitynyc.bsky.social) + Instagram (@vitalcitynyc). Sources: X and Instagram via unofficial public endpoints, LinkedIn via its public page"+(li.as_of?` (as of ${esc(li.as_of)})`:"")+", Bluesky via its open official API. See the Social reach card below for per-platform detail and coverage notes."};
+              tip:"Combined followers across X (@VitalCityNYC), the LinkedIn company page, Bluesky (@vitalcitynyc.bsky.social) and Instagram (@vitalcitynyc).\n\nWhy it matters: Followers are owned amplification reach beyond the inbox — the audience that can share Vital City's work into networks email never touches. A fast-growing platform (Bluesky here) signals where new readers are arriving and where to invest posting effort.\n\nSource: X and Instagram via public endpoints, LinkedIn via its public page"+(li.as_of?` (as of ${esc(li.as_of)})`:"")+", Bluesky via its open official API. Per-platform detail and coverage notes are in the Social reach card below."};
     })(),
     (function(){
       const gt = data.ghost_traffic || {};
@@ -638,7 +641,7 @@ function boot(data){
                   (ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs Ghost staff token ↗ · free");
       return {lbl:"Website visitors · 30d", num: n!=null ? fmtN(n) : "—", delta: sub,
               cls: n!=null ? "flat" : "na",
-              tip:"Unique visitors to vitalcitynyc.org in the last 30 days, from Ghost's own built-in analytics (the same numbers as the admin Analytics tab). Ghost only shares these with STAFF credentials — the integration key the dashboard normally uses gets 'no permission' on every stats endpoint (verified directly against the live site). The fix is free and takes 5 minutes: copy the staff access token from Ghost Admin → Settings → Staff → your profile, and add it as the GHOST_STAFF_KEY secret. Full steps on the How it works page. GA4 remains an optional alternative (it would also cover pre-April-2026 history from the old site)."};
+              tip:"Unique visitors to vitalcitynyc.org in the last 30 days, from Ghost's own analytics (same numbers as the admin Analytics tab).\n\nWhy it matters: This is the top of the funnel — the pool of people who could become subscribers and donors. Read it against New signups to see how well the site converts attention into list growth; a big gap is a conversion opportunity.\n\nSetup note: Ghost shares traffic only with a staff token (GHOST_STAFF_KEY) — the free 5-minute fix is on the How it works page. GA4 is an optional alternative that would also cover pre-April-2026 history."};
     })(),
     (function(){
       const gt = data.ghost_traffic || {};
@@ -655,7 +658,7 @@ function boot(data){
       return {lbl: gt.available && startLbl ? `Website visitors · since ${startLbl}` : "Website visitors · 1y",
               num: n!=null ? fmtN(n) : "—", delta: sub,
               cls: n!=null ? "flat" : "na",
-              tip:`Unique visitors from Ghost's built-in analytics, which only started recording when the site moved to Ghost${startLbl ? ` (first recorded traffic: ${esc(start)})` : " in April 2026"}. This is NOT a full year — it understates the trailing-12-month audience. For the full-year picture use GA4, which tracked the previous site too (it shows roughly 500K active users for the year through June 2026). The number here will grow into a true 1-year window as Ghost history accumulates.`};
+              tip:`Cumulative unique visitors since Ghost analytics began recording${startLbl ? ` (first traffic: ${esc(start)})` : " at the April 2026 cutover"}.\n\nWhy it matters: The site's total reach over its Ghost lifetime — useful context for grant reporting and long-run trend.\n\nNote: this is NOT a trailing year; it understates the true 12-month audience. GA4 tracked the old site too and shows roughly 500K active users for the year through June 2026. This window grows toward a real year as Ghost history accumulates.`};
     })(),
   ];
   $("#kpis").innerHTML=kpis.map(k=>{
@@ -1205,28 +1208,28 @@ function renderPerf(mc){
   const cells=[
     {lbl:"Open rate · YTD", n:(ytd.open_pct||0)+"%",
       d:fmtPctDelta(dOpenYtd)+" vs YTD '25", cls:deltaPctClass(dOpenYtd,true),
-      tip:"Year-to-date open rate, recipient-weighted across every send."+interpretInsight("open_rate", dOpenYtd)},
+      tip:"Year-to-date open rate, recipient-weighted across every send.\n\nWhy it matters: The first gate of engagement — did the subject line earn the open? Watch the trend rather than the level: Apple Mail's privacy auto-opens have inflated everyone's open rate since 2021, so it reads softer than it looks (click-to-open is the honest cut)."+interpretInsight("open_rate", dOpenYtd)},
     {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
       d:fmtPctDelta(dClickYtd)+" vs YTD '25", cls:deltaPctClass(dClickYtd,true),
-      tip:"Year-to-date click rate, recipient-weighted. Click rate isn't inflated by Apple Mail privacy auto-opens, so changes here reflect real engagement."+interpretInsight("click_rate", dClickYtd)},
+      tip:"Year-to-date click rate, recipient-weighted across every send.\n\nWhy it matters: The honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens, so this is the truest read on whether content is landing. If one performance number deserves your attention, it's this one."+interpretInsight("click_rate", dClickYtd)},
     {lbl:"Click-to-open · YTD", n:(ytd.ctor_pct||0)+"%",
       d:`${fmtPctDelta(pctDelta(ytd.ctor_pct, prior.ctor_pct))} vs YTD '25 · of openers, % who clicked`,
       cls:deltaPctClass(pctDelta(ytd.ctor_pct, prior.ctor_pct), true),
       tip:"Click-to-Open Ratio (CTOR) = clicks ÷ opens. THE quality signal in the post-Apple-Mail-privacy era: 'of the people who actually opened the email, what % engaged with it enough to click something?' Healthy editorial newsletters typically run 8-18% CTOR. Above 18% means subjects + content are well-aligned with audience interest. This number doesn't get inflated by Apple's privacy auto-opens the way the raw open rate does, so it's the honest read on content quality."},
     {lbl:"Sends · YTD", n:fmtN(ytd.sends||0),
       d:fmtPctDelta(dSendsYtd)+" vs YTD '25", cls:deltaPctClass(dSendsYtd,true),
-      tip:"Total newsletter sends so far this year, vs the same period last year. Includes automations + manual sends."+interpretInsight("sends", dSendsYtd)},
+      tip:"Total newsletter sends so far this year vs the same period last year. Includes automations and manual sends.\n\nWhy it matters: Publishing cadence. More sends mean more reach and more signup touchpoints — but read it alongside unsubscribes and click rate to be sure volume isn't fatiguing the list rather than serving it."+interpretInsight("sends", dSendsYtd)},
     {lbl:"Open rate · last 30d", n:(l30.open_pct||0)+"%",
       d:yoy30.sends? fmtPctDelta(dOpen30)+" vs same window '25" : "no YoY data",
       cls:yoy30.sends? deltaPctClass(dOpen30,true):"na",
-      tip:"Recipient-weighted open rate, last 30 days, vs the same 30-day window one year ago."+(dOpen30!=null?interpretInsight("open_rate", dOpen30):"")},
+      tip:"Recipient-weighted open rate over the last 30 days, vs the same 30-day window one year ago.\n\nWhy it matters: The recent read on subject-line pull, compared year-over-year so seasonal swings don't mislead. The YoY framing is what makes a single month's number meaningful."+(dOpen30!=null?interpretInsight("open_rate", dOpen30):"")},
     {lbl:"Click rate · last 30d", n:(l30.click_pct||0)+"%",
       d:yoy30.sends? fmtPctDelta(dClick30)+" vs same window '25" : "no YoY data",
       cls:yoy30.sends? deltaPctClass(dClick30,true):"na",
-      tip:"Recipient-weighted click rate, last 30 days, vs the same 30-day window one year ago."+(dClick30!=null?interpretInsight("click_rate", dClick30):"")},
+      tip:"Recipient-weighted click rate over the last 30 days, vs the same 30-day window one year ago.\n\nWhy it matters: The recent, un-inflated measure of whether content is resonating right now. A drop here is a real signal — unlike open rate, it can't be papered over by Apple's auto-opens."+(dClick30!=null?interpretInsight("click_rate", dClick30):"")},
     {lbl:"Recipients · last 30d", n:fmtN(l30.recipients||0),
       d:`${fmtN(l30.sends||0)} sends`,cls:"flat",
-      tip:"Total emails sent in the last 30 days (recipients summed across all sends, so the same person can be counted on multiple campaigns)."},
+      tip:"Total emails sent in the last 30 days — recipients summed across all sends, so the same person counts once per campaign they received.\n\nWhy it matters: Raw reach generated by the newsletter, and the denominator behind every rate above. Rising recipients with steady rates means the list is growing without diluting engagement."},
   ];
   $("#perfKpis").innerHTML=cells.map(c=>
     `<div class="perfcell" title="${esc(c.tip)}">
@@ -1594,7 +1597,18 @@ document.addEventListener("click", e => {
     const titleEl = document.getElementById("infoModalTitle");
     const textEl  = document.getElementById("infoModalText");
     if (titleEl) titleEl.textContent = dot.dataset.infoTitle || "What is this?";
-    if (textEl)  textEl.innerHTML = dot.dataset.info.replace(/\n+/g, "<br><br>");
+    if (textEl){
+      // Source strings are PLAIN TEXT (they double as native hover tooltips,
+      // where HTML tags would show literally). Here in the click-modal we can
+      // afford richer formatting, so escape, paragraph-break on blank lines,
+      // and bold the standard labels — without polluting the hover version.
+      let t = dot.dataset.info
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+        .replace(/\n+/g, "<br><br>")
+        .replace(/(Why it matters:|Setup note:|Source:|Note:|Caveat:|What it doesn't show:)/g,
+                 '<b style="color:var(--vc-black)">$1</b>');
+      textEl.innerHTML = t;
+    }
     const modal = document.getElementById("infoModal");
     if (modal) modal.classList.add("on");
     return;
@@ -1806,20 +1820,20 @@ function renderDonors(db){
           (yoyOk?interpretInsight("sends", ((ytd.amount-prior.amount)/Math.max(prior.amount,1))*100):` Donorbox history in this account starts ${esc((db.history_starts||'').slice(0,10))}, so a like-for-like YoY isn't possible yet.`)},
     {lbl:"Unique donors · YTD", n:fmtN(ytd.donors||0),
       d:drD.label, cls:drD.cls,
-      tip:"Number of distinct donors who gave at least once this year (deduped by email)."},
+      tip:"Distinct donors who gave at least once this year, deduped by email.\n\nWhy it matters: Breadth of support, not just dollars. A rising donor count means the base is widening — which boards and funders read as institutional health and lower dependence on any single large gift."},
     {lbl:"Gifts · YTD", n:fmtN(ytd.count||0),
       d:`avg ${fmtUSD(ytd.avg_gift||0)}`, cls:"flat",
-      tip:"Total individual gifts processed this year (one donor can give multiple times)."},
+      tip:"Total individual gifts processed this year; one donor can give multiple times.\n\nWhy it matters: Gift frequency. When gifts run well ahead of donors, people are giving repeatedly — a signal of loyalty and a cue that recurring asks would land."},
     {lbl:"Recurring · MRR", n:fmtUSD(db.mrr_estimate||0),
       d:`${fmtN(db.active_recurring_donors||0)} active donors`, cls:"flat",
-      tip:"Estimated monthly recurring revenue, summed from recurring gifts that processed in the last 30 days. Active recurring donors = unique recurring donors who gave at least once in the last 90 days."},
+      tip:"Estimated monthly recurring revenue, summed from recurring gifts processed in the last 30 days. Active recurring donors = unique recurring donors who gave at least once in the last 90 days.\n\nWhy it matters: Recurring revenue is the predictable base you can budget against — worth far more per dollar than one-time gifts because it renews without re-asking. Growing the MRR base is the single most leveraged fundraising move."},
     {lbl:"Last 30 days", n:fmtUSD(l30.amount||0),
       d:yoyOk && yoy30.amount ? fmtPctDelta(((l30.amount-yoy30.amount)/yoy30.amount)*100)+" vs same window '25" : `${fmtN(l30.count||0)} gifts`,
       cls:yoyOk && yoy30.amount ? deltaPctClass(((l30.amount-yoy30.amount)/yoy30.amount)*100, true) : "flat",
-      tip:"Total raised in the last 30 days. Year-ago comparison appears when Donorbox history covers it."},
+      tip:"Total raised in the last 30 days. A year-ago comparison appears once Donorbox history covers it.\n\nWhy it matters: The current fundraising pulse — the fastest read on whether a recent campaign or appeal is landing, before it shows up in the YTD total."},
     {lbl:"All time on Donorbox", n:fmtUSD(allt.amount||0),
       d:`${fmtN(allt.donors||0)} donors / ${fmtN(allt.count||0)} gifts`, cls:"flat",
-      tip:"Every paid donation in this Donorbox account back to the earliest record. Refunds and failed charges are excluded."},
+      tip:"Every paid donation in this Donorbox account back to the earliest record; refunds and failed charges excluded.\n\nWhy it matters: The long-run scale of individual giving through Donorbox — context for how this year compares to the lifetime total, and a number funders often ask for."},
   ];
   $("#donorKpis").innerHTML=cells.map(c=>
     `<div class="perfcell" title="${esc(c.tip)}">
