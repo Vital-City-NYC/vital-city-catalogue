@@ -300,7 +300,10 @@ WEBMAIL = {"gmail.com","googlemail.com","yahoo.com","ymail.com","hotmail.com","o
  "mt-system.ru","naver.com","net-lix.de","obox.co.za","pacbell.net","passinbox.com","pipeline.com",
  "pobox.com","rogers.com","simplelogin.com","t-online.de","tin.it","yahoo.com.hk","yandex.ru",
  "zoominternet.net","testform.xyz","ino.to","feed.readwise.io","feedb.in","feedly.email",
- "kill-the-newsletter.com","knology.net"}
+ "kill-the-newsletter.com","knology.net",
+ "hotmail.de","hotmail.es","hotmail.it","hotmail.com.mx","hotmail.com.br","live.de","live.it",
+ "live.es","outlook.de","outlook.es","outlook.fr","outlook.it","yahoo.de","yahoo.es","yahoo.it",
+ "yahoo.com.br","yahoo.com.mx","yahoo.co.in","yahoo.com.ar"}
 
 
 DOMCOUNT = {}   # email-domain -> # of distinct people using it (filled in main; for the shared-domain fallback)
@@ -322,6 +325,68 @@ def _curated_inst(dom):
             cand = ".".join(parts[-n:])
             if cand in INST_DOMAINS:
                 return INST_DOMAINS[cand]
+    return None
+
+
+def _naive_inst(dom):
+    """What the pre-curation fallback would have produced for this domain (.edu/
+    .gov root, hyphen-split, .org SLD, shared-domain SLD). Used to recognize a
+    stored institution as a stale MACHINE value (e.g. 'Uchicago', 'Nycourts',
+    'Vitalcitynyc') that is safe to refresh to the curated spelling — without
+    touching human-curated values like 'Columbia Law School' or 'NYU Wagner',
+    which never equal this naive form."""
+    if dom in WEBMAIL:
+        return None
+    if dom.endswith(".edu"):
+        root = dom[:-4].split(".")[-1]
+        return root.upper() if len(root) <= 4 else root.capitalize()
+    if dom.endswith(".gov") and not (dom == "nyc.gov" or dom.endswith(".nyc.gov")):
+        root = dom[:-4].split(".")[-1]
+        return root.upper() if len(root) <= 5 else root.capitalize()
+    sld = dom.split(".")[0]
+    if "-" in sld and len(sld) >= 5:
+        return " ".join(w.capitalize() for w in sld.split("-"))
+    if dom.endswith(".org") and re.fullmatch(r"[a-z]{4,20}", sld):
+        return sld.capitalize()
+    if DOMCOUNT.get(dom, 0) >= 2 and re.fullmatch(r"[a-z0-9]{3,20}", sld):
+        return sld.capitalize()
+    return None
+
+
+def refresh_stale_inst(people):
+    """Replace a stored institution with the curated spelling ONLY when it
+    exactly equals the old machine-derived garble for one of the person's email
+    domains (or the domain is now treated as webmail, in which case clear it).
+    Human/CRM values never match the naive form, so they're left untouched. This
+    heals override-carried garbles that bypass the blank-only inference path."""
+    fixed = 0
+    for p in people:
+        cur = (p.get("inst") or "").strip()
+        if not cur:
+            continue
+        for e in (p.get("emails") or []):
+            if "@" not in e:
+                continue
+            dom = e.split("@")[-1].strip().lower()
+            if dom in WEBMAIL and _naive_garble(dom) == cur:
+                p["inst"] = ""; fixed += 1; break
+            if _naive_inst(dom) == cur:
+                c = _curated_inst(dom)
+                if c and c != cur:
+                    p["inst"] = c; fixed += 1
+                break
+    return fixed
+
+
+def _naive_garble(dom):
+    """Like _naive_inst but ignores the webmail guard — so a stored value such as
+    'Hotmail' (from a webmail variant the shared-domain fallback once mislabeled)
+    can be recognized and cleared."""
+    sld = dom.split(".")[0]
+    if "-" in sld and len(sld) >= 5:
+        return " ".join(w.capitalize() for w in sld.split("-"))
+    if re.fullmatch(r"[a-z0-9]{3,20}", sld):
+        return sld.capitalize()
     return None
 
 
@@ -1047,6 +1112,13 @@ def main():
             added += 1
         if added:
             print(f"added {added} manually-entered people from people_overrides.json", file=__import__("sys").stderr)
+
+    # Heal stale machine-garble institutions carried by overrides/adds (which
+    # bypass the blank-only inference path) — only where the stored value is the
+    # exact old auto-derived form, never a human-curated one.
+    refreshed = refresh_stale_inst(people)
+    if refreshed:
+        print(f"refreshed {refreshed} stale machine-derived institutions", file=__import__("sys").stderr)
 
     # A "VC contributor" must have an actual published byline (arts>0). The roster and CRM can
     # tag people who never published a piece (advisors, interview subjects, prospects) — that's
