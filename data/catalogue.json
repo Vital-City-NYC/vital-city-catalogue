@@ -601,7 +601,7 @@
     "type_basis": "html:vc-app-embed",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T16:01:27.000+00:00",
-    "updated_at": "2026-06-10T16:01:27.000+00:00",
+    "updated_at": "2026-06-11T19:17:09.000+00:00",
     "primary_author": "Andrew Rigie",
     "authors": [
       "Andrew Rigie"
@@ -617,8 +617,8 @@
     "issue_numbers": [
       16
     ],
-    "summary": "How rising labor costs would affect businesses with prosciutto-thin margins",
-    "excerpt": "How rising labor costs would affect businesses with prosciutto-thin margins",
+    "summary": "How rising labor costs would affect businesses",
+    "excerpt": "How rising labor costs would affect businesses",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T145842.053.png",
     "featured": false,
     "visibility": "public",
@@ -3178,7 +3178,7 @@
     "slug": "gloria-gong-interview",
     "url": "https://www.vitalcitynyc.org/gloria-gong-interview/",
     "type": "q&a",
-    "type_basis": "tag:interview",
+    "type_basis": "tag:podcast",
     "published_date": "2026-02-12",
     "published_at": "2026-02-12T14:36:01.000+00:00",
     "updated_at": "2026-04-15T13:36:27.000+00:00",
@@ -9741,35 +9741,97 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "Is It Time for Cities to Go It Alone?",
-    "slug": "is-it-time-for-cities-to-go-it-alone",
-    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
+    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
+    "slug": "trumps-bizarro-new-deal",
+    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "Richard Schragger",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Adam Cohen",
     "authors": [
-      "Richard Schragger"
+      "Adam Cohen"
     ],
     "topics": [
-      "Where Do We Go From Here?",
-      "City Government",
-      "Politics"
+      "History",
+      "Repercussions",
+      "Government Operations"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
+    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1697,
+    "word_count": 1619,
     "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4049"
+    "id": "69a04c0ad4006a00010a41d5"
+  },
+  {
+    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
+    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
+    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Meryl Chertoff",
+    "authors": [
+      "Meryl Chertoff"
+    ],
+    "topics": [
+      "Government Operations",
+      "Repercussions",
+      "City Planning"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "The Sharpie and the damage done",
+    "excerpt": "The Sharpie and the damage done",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1313,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a404c"
+  },
+  {
+    "title": "Donald Trump vs. the Rule of Law, and New York City",
+    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
+    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:02.000+00:00",
+    "primary_author": "Harry Siegel",
+    "authors": [
+      "Harry Siegel"
+    ],
+    "topics": [
+      "Politics",
+      "Repercussions",
+      "Corruption"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1560,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a404b"
   },
   {
     "title": "What You Can Do About Trump",
@@ -9804,97 +9866,35 @@
     "id": "69a04c0ad4006a00010a404a"
   },
   {
-    "title": "Donald Trump vs. the Rule of Law, and New York City",
-    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
-    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
+    "title": "Is It Time for Cities to Go It Alone?",
+    "slug": "is-it-time-for-cities-to-go-it-alone",
+    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
     "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "Harry Siegel",
+    "primary_author": "Richard Schragger",
     "authors": [
-      "Harry Siegel"
+      "Richard Schragger"
     ],
     "topics": [
-      "Politics",
-      "Repercussions",
-      "Corruption"
+      "Where Do We Go From Here?",
+      "City Government",
+      "Politics"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
+    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1560,
+    "word_count": 1697,
     "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a404b"
-  },
-  {
-    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
-    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
-    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Meryl Chertoff",
-    "authors": [
-      "Meryl Chertoff"
-    ],
-    "topics": [
-      "Government Operations",
-      "Repercussions",
-      "City Planning"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "The Sharpie and the damage done",
-    "excerpt": "The Sharpie and the damage done",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1313,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a404c"
-  },
-  {
-    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
-    "slug": "trumps-bizarro-new-deal",
-    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Adam Cohen",
-    "authors": [
-      "Adam Cohen"
-    ],
-    "topics": [
-      "History",
-      "Repercussions",
-      "Government Operations"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1619,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a41d5"
+    "id": "69a04c0ad4006a00010a4049"
   },
   {
     "title": "A Real New York Mayoral Election",
@@ -12162,37 +12162,6 @@
     "id": "69a04c0ad4006a00010a407a"
   },
   {
-    "title": "Community Violence Intervention at a Crossroads",
-    "slug": "community-violence-intervention-at-a-crossroads",
-    "url": "https://www.vitalcitynyc.org/community-violence-intervention-at-a-crossroads/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-01-22",
-    "published_at": "2025-01-22T21:15:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:13.000+00:00",
-    "primary_author": "Andrew V. Papachristos",
-    "authors": [
-      "Andrew V. Papachristos"
-    ],
-    "topics": [
-      "Where We Go From Here",
-      "Gun Violence",
-      "Justice"
-    ],
-    "issues": [
-      "crime-looking-back-at-2024-and-ahead-to-2025"
-    ],
-    "issue_numbers": [],
-    "summary": "The promising field may not get the precious time it needs to mature.",
-    "excerpt": "The promising field may not get the precious time it needs to mature.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5e-zpbqstj99waz_b55wa5_cropped-auto-format-compress-1776259721664.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1495,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a4073"
-  },
-  {
     "title": "Crime Data Is Better. Will Americans Pay Attention?",
     "slug": "crime-data-is-better-will-americans-pay-attention",
     "url": "https://www.vitalcitynyc.org/crime-data-is-better-will-americans-pay-attention/",
@@ -12223,6 +12192,37 @@
     "word_count": 1254,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a41dc"
+  },
+  {
+    "title": "Community Violence Intervention at a Crossroads",
+    "slug": "community-violence-intervention-at-a-crossroads",
+    "url": "https://www.vitalcitynyc.org/community-violence-intervention-at-a-crossroads/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-01-22",
+    "published_at": "2025-01-22T21:15:00.000+00:00",
+    "updated_at": "2026-04-15T13:37:13.000+00:00",
+    "primary_author": "Andrew V. Papachristos",
+    "authors": [
+      "Andrew V. Papachristos"
+    ],
+    "topics": [
+      "Where We Go From Here",
+      "Gun Violence",
+      "Justice"
+    ],
+    "issues": [
+      "crime-looking-back-at-2024-and-ahead-to-2025"
+    ],
+    "issue_numbers": [],
+    "summary": "The promising field may not get the precious time it needs to mature.",
+    "excerpt": "The promising field may not get the precious time it needs to mature.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5e-zpbqstj99waz_b55wa5_cropped-auto-format-compress-1776259721664.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1495,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a4073"
   },
   {
     "title": "Crime Data Is Better. Will Americans Pay Attention?",
@@ -15064,7 +15064,7 @@
     "type_basis": "default",
     "published_date": "2024-10-02",
     "published_at": "2024-10-02T15:25:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:27.000+00:00",
+    "updated_at": "2026-06-12T11:01:44.000+00:00",
     "primary_author": "Josh Greenman",
     "authors": [
       "Josh Greenman"
@@ -15086,7 +15086,7 @@
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/zvscxrvsgryswk8t_rtsl6vj7_cropped-jpg-auto-format-compress-1776259742780.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1086,
+    "word_count": 1041,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a40a6"
   },
