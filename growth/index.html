@@ -290,7 +290,7 @@
       <a href="about.html" target="_blank">How it works ↗</a>
       <a href="../network/" title="Open the contact master search">Contacts</a>
       <a href="#" id="themeToggle">🌙 Dark mode</a>
-      <a href="#" id="forget" title="Forget the saved passphrase on this device and re-lock the tool. Otherwise the passphrase is remembered for 30 days on this browser. Use Lock on a shared or public computer when you're done.">Lock</a>
+      <a href="#" id="forget" title="You stay logged in automatically on this device for 90 days (refreshed each visit) — and the same login covers the Contact tool too, so you shouldn't need to re-enter the passphrase. 'Lock' is the opposite: tap it to forget the saved passphrase and re-lock now, e.g. on a shared or public computer.">Lock</a>
     </div>
     <div class="wm">Vital City</div>
     <h1>Growth dashboard</h1>
@@ -301,6 +301,12 @@
   <div class="layout">
     <main>
       <div class="kpis" id="kpis"></div>
+
+      <div class="card" id="weekPulse" style="display:none">
+        <h2>Last 7 days <span class="hint" id="weekPulseHint"></span></h2>
+        <div class="perfgrid" id="weekPulseGrid"></div>
+        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px;line-height:1.5">Each tile shows the rolling last 7 days with the change vs the 7 days before it. For unsubscribes, down is good (shown green). Social-follower change isn't included — we don't capture daily follower counts, so a 7-day delta there would be guesswork.</div>
+      </div>
 
       <nav class="secnav" aria-label="Dashboard sections">
         <span class="secnav-lbl">Jump to:</span>
@@ -499,7 +505,7 @@
 <script>
 const $=s=>document.querySelector(s);
 const PASSKEY="vc_net_pass";
-const PASS_TTL_DAYS = 30;   // remember the passphrase on this device for ~30 days
+const PASS_TTL_DAYS = 90;   // remember the passphrase on this device for ~90 days (sliding; shared with the Contact tool)
 
 // Persisted-passphrase helpers. Stored as {pass, expires_at} in localStorage
 // so it survives closing the browser tab (sessionStorage was a bug — that
@@ -685,6 +691,9 @@ function boot(data){
        <div class="delta ${k.cls}">${esc(k.delta)}</div>
      ${close}`;
   }).join("");
+
+  // ----- Last 7 days rolling scorecard (weekly pulse, all categories)
+  renderWeekPulse(data);
 
   // ----- Trend chart (hand-rolled SVG)
   renderTrendChart(act, data.ghost && data.ghost.posts || []);
@@ -2326,6 +2335,65 @@ function renderUrlShares(news){
       <br><b>Own vs third-party:</b> a share is flagged as VC's own social post if its title matches a known article title — catches LinkedIn company-page reposts cleanly, but undercounts on X / Instagram where @vitalcitynyc writes original commentary. So some "third-party" entries may still be your own; the inverse is rarer.
       <br><b>Coverage:</b> X &amp; LinkedIn are well-indexed by Google; Facebook moderately; Bluesky patchy (Google still rolling out bsky.app indexing); Instagram is unreliable in general because IG posts rarely include plain-text URLs.
     </div>`;
+}
+
+function renderWeekPulse(data){
+  const card=$("#weekPulse"); if(!card) return;
+  const mc=data.mailchimp||{}, db=data.donorbox||{}, gh=data.ghost||{}, gt=data.ghost_traffic||{};
+  const act=mc.daily_activity||[];
+  if(!act.length){ card.style.display="none"; return; }
+  // Anchor the rolling window to the latest day we actually have activity for,
+  // so a not-yet-populated "today" can't understate the week.
+  const maxDate=act.map(r=>r.d).filter(Boolean).sort().pop();
+  const shift=(iso,days)=>{ const d=new Date(iso+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()+days); return d.toISOString().slice(0,10); };
+  const curStart=shift(maxDate,-6), curEnd=maxDate;
+  const prevStart=shift(maxDate,-13), prevEnd=shift(maxDate,-7);
+  const inRange=(iso,a,b)=> iso && iso.slice(0,10)>=a && iso.slice(0,10)<=b;
+  // sum a numeric field over a date-keyed series within [a,b]
+  const sumField=(rows,dateKey,valKey,a,b)=> (rows||[]).reduce((s,r)=> inRange(r[dateKey],a,b)? s+(+r[valKey]||0):s, 0);
+  const countWhere=(rows,dateKey,a,b,pred)=> (rows||[]).reduce((s,r)=> (inRange((pred?pred(r):r[dateKey]),a,b)? s+1:s), 0);
+
+  const win=(a,b)=>({
+    signups:  sumField(act,"d","subs",a,b),
+    unsubs:   sumField(act,"d","unsubs",a,b),
+    opens:    sumField(act,"d","opens",a,b),
+    sends:    countWhere(mc.campaigns,"sent",a,b,c=>c.sent),
+    raised:   sumField(db.daily_series,"d","amt",a,b),
+    gifts:    sumField(db.daily_series,"d","gifts",a,b),
+    articles: countWhere(gh.posts,"published",a,b,p=>p.published),
+    visitors: sumField(gt.kpi_rows_30d,"date","visits",a,b),
+  });
+  const cur=win(curStart,curEnd), prev=win(prevStart,prevEnd);
+  cur.net=cur.signups-cur.unsubs; prev.net=prev.signups-prev.unsubs;
+
+  // Build tiles. goodDown=true means a DECREASE is the good outcome (unsubs).
+  const fmtMoney=v=>"$"+fmtN(Math.round(v));
+  const TILES=[
+    {k:"signups", lbl:"New signups", fmt:fmtN},
+    {k:"unsubs",  lbl:"Unsubscribes", fmt:fmtN, goodDown:true},
+    {k:"net",     lbl:"Net list change", fmt:v=>(v>0?"+":"")+fmtN(v)},
+    {k:"sends",   lbl:"Newsletter sends", fmt:fmtN, neutral:true},
+    {k:"raised",  lbl:"Raised", fmt:fmtMoney},
+    {k:"gifts",   lbl:"Gifts", fmt:fmtN},
+    {k:"articles",lbl:"New articles", fmt:fmtN},
+  ];
+  if(gt.available) TILES.push({k:"visitors", lbl:"Website visitors", fmt:fmtN});
+
+  const cells=TILES.map(t=>{
+    const now=cur[t.k]||0, was=prev[t.k]||0, d=now-was;
+    let cls="flat", dtxt;
+    if(d===0){ dtxt="no change vs prior 7d"; }
+    else {
+      const up=d>0, good = t.neutral ? null : (t.goodDown ? !up : up);
+      cls = good===null ? "flat" : (good ? "up" : "down");
+      const dv = t.fmt===fmtMoney ? fmtMoney(Math.abs(d)) : fmtN(Math.abs(d));
+      dtxt=`${up?"▲":"▼"} ${dv} vs prior 7d`;
+    }
+    return `<div class="perfcell"><div class="pl">${esc(t.lbl)}</div><div class="pn">${t.fmt(now)}</div><div class="pd ${cls}">${esc(dtxt)}</div></div>`;
+  }).join("");
+  $("#weekPulseGrid").innerHTML=cells;
+  const h=$("#weekPulseHint"); if(h) h.textContent=`rolling · ${curStart} → ${curEnd}, vs the 7 days before`;
+  card.style.display="";
 }
 
 function renderTrendChart(act,posts,windowDays){
