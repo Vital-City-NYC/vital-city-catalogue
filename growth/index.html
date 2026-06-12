@@ -25,7 +25,7 @@
   .mastlinks a:hover{text-decoration:underline}
   .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.1em;padding:4px 30px;font-weight:700}
 
-  .layout{display:grid;grid-template-columns:1fr 320px;gap:0;align-items:start}
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:0;align-items:start;max-width:1480px;margin:0 auto}
   .layout>*{min-width:0}
   main{padding:18px 30px 60px}
   aside.brandwatch{border-left:1px solid var(--vc-cloud);padding:18px 22px 40px;background:var(--vc-paper2);min-height:600px}
@@ -2292,13 +2292,13 @@ function renderLifecycle(lc){
       h += `<circle cx="${x(i)}" cy="${y(c.retention_pct||0)}" r="3.5" fill="#1F6FB2"><title>${c.label}: ${c.retention_pct}% of ${fmtN(c.subs)} subscribers still opening (n=${c.engaged} engaged)</title></circle>`;
     });
     chart = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="For each signup cohort (grouped by how long ago they joined), the % whose email address shows up in this month's MAU set. The curve should slope down — newer subscribers should be more engaged. A flat or rising curve at the right end of the chart means new signups are LESS engaged than older ones, which is a recruitment-quality problem.">Retention curve: still engaged 30 days later?</div>
-      <div class="chartwrap"><svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${h}</svg></div>`;
+      <div class="chartwrap" style="max-width:${W}px"><svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="height:auto;aspect-ratio:${W}/${H}">${h}</svg></div>`;
   }
 
   // ---- Side-by-side sunset + at-risk lists ----
   const sampleList = (arr) => arr.length
     ? `<ul style="list-style:none;padding:0;margin:6px 0 0;max-height:200px;overflow-y:auto">${arr.slice(0,8).map(p => `<li style="font-size:11.5px;padding:3px 0;border-bottom:1px dotted var(--vc-cloud)">
-        <b style="color:var(--vc-black)">${esc(p.name||'(no name)')}</b>
+        <a class="pl" target="_blank" href="${cdbHref(p)}" title="Open in the contact database" style="font-weight:700">${esc(p.name||'(no name)')} ↗</a>
         <span style="color:var(--vc-charcoal)">${p.rating!=null?` · ${p.rating}★`:''}</span>
         <span style="color:var(--vc-charcoal);font-size:10.5px"> · joined ${esc(p.since)} (${fmtN(p.tenure_days)} days ago)</span>
       </li>`).join("")}</ul>`
@@ -2517,6 +2517,13 @@ function renderWeekPulse(data){
   card.style.display="";
 }
 
+// Deep-link to the Contact tool, opened/searched to one person (by email, or
+// name when there's no email). Mirrors the link the per-subset modals use.
+function cdbHref(r){
+  const q=(r && (r.email || r.name)) || "";
+  return "../network/index.html#"+encodeURIComponent(JSON.stringify({q}));
+}
+
 // Modal: who is behind a 7d-box people-attached number.
 function showWeekNames(key){
   const spec=(window._weekNames||{})[key]; if(!spec) return;
@@ -2528,11 +2535,14 @@ function showWeekNames(key){
   const note=document.getElementById("peopleModalNote"); if(note) note.innerHTML="";
   const hd={date:"Date",name:"Name",email:"Email",source:"Source",donor:"Donor",amount:"Amount"};
   const cell=(r,c)=> c==="amount" ? `$${fmtN(Math.round(r.amount||0))}${r.recurring?' <span class="pillinfo">rec</span>':''}`
+                   : (c==="name"||c==="donor") ? ((r[c]||"").trim()
+                       ? `<a class="pl" target="_blank" href="${cdbHref(r)}" title="Open in the contact database">${esc(r[c])} ↗</a>`
+                       : `<a class="pl" target="_blank" href="${cdbHref(r)}" title="Open in the contact database">(no name) ↗</a>`)
                    : c==="email" ? `<a href="mailto:${esc(r.email||'')}" style="color:var(--vc-black);text-decoration:none">${esc(r.email||'—')}</a>`
                    : esc((r[c]!=null?String(r[c]):"")||"—");
   document.getElementById("peopleModalBody").innerHTML = rows.length
-    ? `<table><thead><tr>${spec.cols.map(c=>`<th${(c==='amount')?' class="r"':''}>${hd[c]}</th>`).join("")}</tr></thead>
-       <tbody>${rows.map(r=>`<tr>${spec.cols.map(c=>`<td${(c==='amount')?' class="r"':''} style="font-size:12.5px">${cell(r,c)}</td>`).join("")}</tr>`).join("")}</tbody></table>
+    ? `<table style="width:auto;max-width:100%"><thead><tr>${spec.cols.map(c=>`<th${(c==='amount')?' class="r"':''}>${hd[c]}</th>`).join("")}</tr></thead>
+       <tbody>${rows.map(r=>`<tr>${spec.cols.map(c=>`<td${(c==='amount')?' class="r"':''} style="font-size:12.5px;white-space:nowrap">${cell(r,c)}</td>`).join("")}</tr>`).join("")}</tbody></table>
        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px">${rows.length} in the last 7 days. ${key==='unsubs'?'Names come from Mailchimp and are often blank — email is the reliable identifier.':''}</div>`
     : '<div style="color:var(--vc-charcoal);padding:8px 0">Nobody in this window.</div>';
   document.getElementById("peopleModal").classList.add("on");
