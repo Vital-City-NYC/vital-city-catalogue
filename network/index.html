@@ -467,7 +467,7 @@
         <div class="updcaution">To add several people at once, use the Sheet's <b>"Add people"</b> tab (plain columns) — those rows flow in on the next refresh. Otherwise make changes <b>through this tool</b>; editing the <code>overrides</code> tab's raw JSON by hand is fragile (deleting a row to undo is fine).</div>
       </div>
       <div class="modalbtns">
-        <button class="btn primary" id="edSave" title="Save your changes. They're stored for everyone automatically — you see them now, others on the next daily refresh.">Save</button>
+        <button class="btn primary" id="edSave" title="Save your changes (shortcut: ⌘-Enter / Ctrl-Enter). They're stored for everyone automatically — you see them now, others on the next daily refresh.">Save <span style="font-weight:400;opacity:.7;font-size:11px">⌘↵</span></button>
         <button class="btn" id="edCancel" title="Close without saving any changes.">Cancel</button>
         <button class="btn" id="edEmailCard" title="Copy this contact's full details to the clipboard (and open a mail draft if you have a desktop mail app) so you can email it to someone.">✉ Email this card</button>
         <button class="btn" id="edCopyLink" title="Copy a link that opens this person's card (needs the passphrase to view)">🔗 Copy link</button>
@@ -779,6 +779,8 @@ function init(){
   });
   // Keyboard shortcuts
   document.addEventListener("keydown",e=>{
+    // Cmd/Ctrl-Enter saves the open edit card (works from any field in it).
+    if((e.metaKey||e.ctrlKey)&&e.key==="Enter"&&$("#editModal").style.display!=="none"){ e.preventDefault(); saveEdit(); return; }
     if(e.key==="Escape"){ ["editModal","emailModal","dupModal","helpModal","reviewModal"].forEach(id=>{const m=$("#"+id);if(m)m.style.display="none";}); return; }
     const inField=/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
     if((e.key==="/"||((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k")) && !inField){ e.preventDefault(); $("#q").focus(); }
