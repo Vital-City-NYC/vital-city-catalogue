@@ -161,6 +161,8 @@
   .savedviews .svlabel{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin-right:2px}
   .svchip{font-size:11.5px;font-weight:700;padding:3px 9px;border:1px solid var(--vc-black);background:var(--vc-white);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
   .svchip:hover{background:var(--vc-black);color:#fff}
+  .svchip-built{border-color:var(--vc-green);color:var(--vc-green)}
+  .svchip-built:hover{background:var(--vc-green);color:#fff}
   .svchip .x{color:var(--vc-charcoal);font-weight:700}
   .svchip:hover .x{color:#fff}
   .svadd{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border:1px dashed var(--vc-charcoal);background:transparent;color:var(--vc-charcoal);cursor:pointer}
@@ -750,6 +752,7 @@ function init(){
     const del=e.target.closest(".x[data-del]"); if(del){ e.stopPropagation(); const v=loadViews(); v.splice(+del.dataset.del,1); localStorage.setItem(VKEY,JSON.stringify(v)); renderViews(); return; }
     if(e.target.id==="svAdd"){ const name=prompt("Name this view (e.g. \"Housing reporters '24+\"):"); if(name&&name.trim()){ const v=loadViews(); v.push({name:name.trim(),state:currentState()}); localStorage.setItem(VKEY,JSON.stringify(v)); renderViews(); toast("View saved"); } return; }
     if(e.target.id==="svLink"){ navigator.clipboard.writeText(location.href).then(()=>toast("Link to this view copied")).catch(()=>toast("Copy failed")); return; }
+    const bchip=e.target.closest(".svchip-built"); if(bchip){ const b=BUILTIN_VIEWS[+bchip.dataset.builtin]; if(b) applyState(b.state); return; }
     const chip=e.target.closest(".svchip"); if(chip){ const v=loadViews()[+chip.dataset.i]; if(v) applyState(v.state); }
   });
   window.addEventListener("resize",measureSticky);
@@ -1265,10 +1268,18 @@ function applyState(s){
   document.querySelectorAll(".facet").forEach(l=>{const on=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on);const cb=l.querySelector("input");if(cb)cb.checked=on;});
   render();
 }
+// Built-in views — always present, recompute live each refresh (they ride the
+// daily-updated power_reader / donor flags). NOT deletable, not localStorage.
+const BUILTIN_VIEWS=[
+  {name:"⭐ Fundraising prospects", builtin:"prospects",
+   title:"Engaged newsletter subscribers who haven't given online — power readers, donors excluded. NOTE: 'donor' = a Donorbox online gift only; people who gave by check / wire / FCNY / at events still appear here, so cross-check against offline major-gift records before an ask.",
+   state:{want:{mem:1,don:-1,auth:0}, cats:[], engagement:"power"}},
+];
 function renderViews(){
   const v=loadViews();
+  const builtins=BUILTIN_VIEWS.map((b,i)=>`<button class="svchip svchip-built" data-builtin="${i}" title="${esc(b.title)}">${esc(b.name)}</button>`).join("");
   const chips=v.map((x,i)=>`<button class="svchip" data-i="${i}" title="Apply saved view">${esc(x.name)}<span class="x" data-del="${i}" title="Delete">✕</span></button>`).join("");
-  $("#savedViews").innerHTML=(v.length?`<span class="svlabel">Saved views</span>`:"")+chips+`<button class="svadd" id="svAdd">★ Save current view</button><button class="svadd" id="svLink" title="Copy a link that reopens these exact filters">🔗 Copy link to this view</button>`;
+  $("#savedViews").innerHTML=`<span class="svlabel">Views</span>`+builtins+chips+`<button class="svadd" id="svAdd">★ Save current view</button><button class="svadd" id="svLink" title="Copy a link that reopens these exact filters">🔗 Copy link to this view</button>`;
 }
 // ---- Permalink: encode the active filters in the URL hash so a view is shareable ----
 function updateHash(){
