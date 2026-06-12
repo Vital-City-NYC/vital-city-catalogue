@@ -957,6 +957,34 @@ def pull_ghost_traffic():
         else:
             out["history_start"] = None
         out["kpi_rows_30d"] = rows30[:40]   # raw sample for field-name debugging
+        # Top pieces of the last 7 days by visits (the spreadsheet's "top
+        # performers" category). Exclude the homepage and the jobs board;
+        # map each pathname to its article title from the catalogue.
+        try:
+            q7 = urllib.parse.urlencode({"site_uuid": site, "date_from": str(today - timedelta(days=7)),
+                                         "date_to": str(today), "limit": 30})
+            tp = json.loads(http_get(f"{endpoint}/v0/pipes/api_top_pages.json?{q7}",
+                headers={"Authorization": "Bearer " + token}, timeout=30)).get("data") or []
+            cat = {}
+            try:
+                for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
+                    u = (c.get("url") or "").rstrip("/")
+                    if u: cat["/" + u.split("/")[-1] + "/"] = c.get("title")
+            except Exception:
+                pass
+            top = []
+            for r in tp:
+                path = (r.get("pathname") or "").strip()
+                if path in ("/", "") or "/job" in path or path.startswith("/tag/") or path.startswith("/author/"):
+                    continue
+                title = cat.get(path) or path.strip("/").replace("-", " ").title()
+                top.append({"title": title, "path": path,
+                            "visits": int(r.get("visits") or r.get("hits") or 0)})
+                if len(top) >= 8: break
+            out["top_pages_7d"] = top
+        except Exception as e:
+            log(f"  ghost top pages failed: {e}")
+            out["top_pages_7d"] = []
         out["available"] = bool(rows30 or rows365)
         if not out["available"]:
             out["reason"] = "Tinybird responded but returned no rows"
@@ -985,6 +1013,8 @@ def pull_ghost_signup_attribution(days_back=180):
     by_medium = {}         # referrer_medium -> count (search, email, social, etc.)
     by_landing = {}        # attribution.type (post|page|url) -> count (where they signed up)
     by_email  = {}         # email -> {source, medium, landing_url, ts} (for channel-LTV join)
+    recent = []            # last-21d signups w/ name+email+date for the click-through list
+    recent_cut = (datetime.now(timezone.utc) - timedelta(days=21)).isoformat()
     fetched = 0
     stop = False
     cursor_id = None       # last event id from previous page (cursor pagination)
@@ -1019,6 +1049,14 @@ def pull_ghost_signup_attribution(days_back=180):
             if ts:
                 day = ts[:10]
                 by_day[day] = by_day.get(day, 0) + 1
+            # Recent-signups list (names behind the 7d-box "New signups" tile)
+            if ts and ts >= recent_cut:
+                m = d.get("member") or {}
+                em = (m.get("email") or "").strip()
+                if em:
+                    recent.append({"email": em, "name": (m.get("name") or "").strip(),
+                                   "date": ts[:10],
+                                   "source": (d.get("attribution") or {}).get("referrer_source") or ""})
             att = d.get("attribution") or {}
             # Flat aggregates — capture every signup's source, not just the
             # ones that attributed to a specific post. Homepage signups are
@@ -1083,8 +1121,47 @@ def pull_ghost_signup_attribution(days_back=180):
         "by_medium":      [{"med": m, "n": n} for m, n in sorted(by_medium.items(), key=lambda kv: -kv[1])],
         "by_landing":     [{"type": t, "n": n} for t, n in sorted(by_landing.items(), key=lambda kv: -kv[1])],
         "window_days":    days_back,
+        "recent_signups": sorted(recent, key=lambda r: r["date"], reverse=True),
         "_by_email":      by_email,   # internal — used for channel-LTV join, stripped before JSON write
     }
+
+
+def pull_recent_unsubs(days=21):
+    """Recent unsubscribers with email + date, for the 7d-box click-through.
+    Source: Mailchimp per-campaign unsubscribe detail (/reports/{id}/unsubscribed)
+    — the same place the team's manual unsubscribe log comes from. Names are
+    often blank (Mailchimp rarely captures them); email + date always present."""
+    key = mailchimp_key()
+    if not key: return []
+    dc = key.split("-")[-1]
+    def mc(path):
+        auth = base64.b64encode(f"anystring:{key}".encode()).decode()
+        return json.loads(http_get(f"https://{dc}.api.mailchimp.com/3.0{path}",
+            headers={"Authorization": "Basic " + auth}, timeout=60))
+    cut = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    out, seen = [], set()
+    try:
+        camps = mc(f"/campaigns?status=sent&count=20&sort_field=send_time&sort_dir=DESC"
+                   f"&since_send_time={urllib.parse.quote(cut)}&fields=campaigns.id").get("campaigns", [])
+        for c in camps:
+            try:
+                det = mc(f"/reports/{c['id']}/unsubscribed?count=200&fields="
+                         "unsubscribes.email_address,unsubscribes.timestamp,"
+                         "unsubscribes.merge_fields.FNAME,unsubscribes.merge_fields.LNAME").get("unsubscribes", [])
+            except Exception:
+                continue
+            for u in det:
+                ts = (u.get("timestamp") or "")
+                em = (u.get("email_address") or "").lower().strip()
+                if not em or em in seen or ts < cut: continue
+                seen.add(em)
+                mf = u.get("merge_fields") or {}
+                nm = f"{mf.get('FNAME','')} {mf.get('LNAME','')}".strip()
+                out.append({"email": em, "name": nm, "date": ts[:10]})
+    except Exception as e:
+        log(f"  recent unsubs failed: {e}")
+    log(f"  recent unsubs (last {days}d): {len(out)}")
+    return sorted(out, key=lambda r: r["date"], reverse=True)
 
 
 def pull_ghost():
@@ -1692,6 +1769,11 @@ def pull_donorbox():
     top_recent  = [_gift_row(d) for d in largest]   # key name kept for dashboard compat; now last 90d
     latest = sorted(paid, key=_day, reverse=True)[:8]
     latest_gifts = [_gift_row(d) for d in latest]
+    # Every gift in the last 21 days w/ donor + email + date, for the 7d-box
+    # "Gifts" click-through (small counts, so a full list is fine).
+    d21 = today - timedelta(days=21)
+    recent_gifts = [{**_gift_row(d), "email": _email(d)}
+                    for d in sorted(_in(paid, d21, today), key=_day, reverse=True)]
 
     # Active recurring donors + MRR estimate
     rec_donors = set(); mrr = 0.0
@@ -1726,6 +1808,7 @@ def pull_donorbox():
         "top_campaigns":  top_campaigns,
         "top_recent":     top_recent,      # largest gifts, last 90 days
         "latest_gifts":   latest_gifts,    # most recent gifts, any size
+        "recent_gifts":   recent_gifts,    # all gifts last 21d (for 7d-box click-through)
         "active_recurring_donors": len(rec_donors),
         "mrr_estimate":   round(mrr, 2),
     }
@@ -2332,7 +2415,11 @@ def main():
             "by_source":      signup_attr.get("by_source") or [],
             "by_medium":      signup_attr.get("by_medium") or [],
             "by_landing":     signup_attr.get("by_landing") or [],
+            "recent_signups": signup_attr.get("recent_signups") or [],
         },
+        # Recent unsubscribers (email + date, names where Mailchimp has them)
+        # for the 7d-box "Unsubscribes" click-through.
+        "recent_unsubs": pull_recent_unsubs(21),
         "press":     pull_press(),
         "news_mentions": news_mentions,
         "lifecycle":     lifecycle,

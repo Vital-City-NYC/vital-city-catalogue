@@ -110,6 +110,16 @@
   .perfcell .pd.down{color:#c8102e}
   .perfcell .pd.flat{color:var(--vc-charcoal)}
   .perfcell .pd.na{color:var(--vc-charcoal);font-weight:400;font-style:italic}
+  /* Clickable 7d-box number (reveals the names behind it) */
+  .wpclick{cursor:pointer;text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px}
+  .wpclick:hover{text-decoration-color:var(--vc-orange)}
+  /* Top pieces this week — ranked list */
+  ol.wptop{list-style:none;counter-reset:wp;margin:0;padding:0}
+  ol.wptop li{counter-increment:wp;display:flex;align-items:baseline;gap:8px;padding:4px 0;border-bottom:1px solid var(--vc-paper2);font-size:13px}
+  ol.wptop li:last-child{border-bottom:none}
+  ol.wptop li::before{content:counter(wp);font-family:var(--vc-serif);font-weight:900;font-size:14px;color:var(--vc-cerulean);min-width:16px}
+  ol.wptop .wptop-t{flex:1;line-height:1.35;min-width:0}
+  ol.wptop .wptop-v{font-variant-numeric:tabular-nums;font-weight:700;color:var(--vc-charcoal);font-size:12px;white-space:nowrap}
 
   /* YTD comparison table */
   .ytdtbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
@@ -305,7 +315,8 @@
       <div class="card" id="weekPulse" style="display:none">
         <h2>Last 7 days <span class="hint" id="weekPulseHint"></span></h2>
         <div class="perfgrid" id="weekPulseGrid"></div>
-        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px;line-height:1.5">Each tile shows the rolling last 7 days with the change vs the 7 days before it. For unsubscribes, down is good (shown green). Social-follower change isn't included — we don't capture daily follower counts, so a 7-day delta there would be guesswork.</div>
+        <div id="weekPulseTop" style="margin-top:14px"></div>
+        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">Each tile shows the rolling last 7 days with the change vs the 7 days before it. For unsubscribes, down is good (shown green). Underlined numbers (signups, unsubscribes, gifts) are clickable — see exactly who. Social-follower change isn't included — we don't capture daily follower counts, so a 7-day delta there would be guesswork.</div>
       </div>
 
       <nav class="secnav" aria-label="Dashboard sections">
@@ -550,7 +561,7 @@ async function unlock(fromStore){
   const pass=$("#pw").value.trim();
   if(!pass){$("#err").textContent="Enter the passphrase.";return;}
   try{
-    const blob=await fetch("data.enc").then(r=>r.json());
+    const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
     const data=await decryptBlob(pass,blob);
     savePass(pass);
     boot(data);
@@ -2379,6 +2390,24 @@ function renderWeekPulse(data){
   ];
   if(gt.available) TILES.push({k:"visitors", lbl:"Website visitors", fmt:fmtN});
 
+  // Name lists behind the people-attached tiles, filtered to the 7d window.
+  // Click a small count to see exactly who. (Thousands → no list; but these
+  // weekly counts are tiny, so any non-empty list is clickable.)
+  const inWin=(iso)=>inRange(iso,curStart,curEnd);
+  const sg=(data.ghost_signup_attribution||{}).recent_signups||[];
+  const un=data.recent_unsubs||[];
+  const gf=(db.recent_gifts||[]);
+  window._weekNames={
+    signups:{title:"New signups · last 7 days", cols:["date","name","email","source"],
+             list: sg.filter(r=>inWin(r.date))},
+    unsubs:{title:"Unsubscribes · last 7 days", cols:["date","name","email"],
+            list: un.filter(r=>inWin(r.date))},
+    gifts:{title:"Gifts · last 7 days", cols:["date","donor","amount","email"],
+           list: gf.filter(r=>inWin(r.date))},
+  };
+  const CLICK_MAX=200;   // safety; weekly counts are far below this
+  const clickable={signups:1,unsubs:1,gifts:1};
+
   const cells=TILES.map(t=>{
     const now=cur[t.k]||0, was=prev[t.k]||0, d=now-was;
     let cls="flat", dtxt;
@@ -2389,11 +2418,48 @@ function renderWeekPulse(data){
       const dv = t.fmt===fmtMoney ? fmtMoney(Math.abs(d)) : fmtN(Math.abs(d));
       dtxt=`${up?"▲":"▼"} ${dv} vs prior 7d`;
     }
-    return `<div class="perfcell"><div class="pl">${esc(t.lbl)}</div><div class="pn">${t.fmt(now)}</div><div class="pd ${cls}">${esc(dtxt)}</div></div>`;
+    const nm=clickable[t.k] && window._weekNames[t.k];
+    const canClick = nm && nm.list.length>0 && nm.list.length<=CLICK_MAX;
+    const numHtml = canClick
+      ? `<span class="wpclick" onclick="showWeekNames('${t.k}')" title="Click to see the ${nm.list.length} ${esc(t.lbl.toLowerCase())} behind this number">${t.fmt(now)}</span>`
+      : t.fmt(now);
+    return `<div class="perfcell"><div class="pl">${esc(t.lbl)}</div><div class="pn">${numHtml}</div><div class="pd ${cls}">${esc(dtxt)}</div></div>`;
   }).join("");
   $("#weekPulseGrid").innerHTML=cells;
+
+  // Top pieces of the week (borrowed from the internal weekly chart's
+  // "top performers" column) — ranked by Ghost-analytics visits.
+  const tp=(gt.top_pages_7d||[]);
+  const tpEl=$("#weekPulseTop");
+  if(tpEl){
+    tpEl.innerHTML = tp.length
+      ? `<div style="font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 6px">Top pieces this week <span style="font-weight:400;text-transform:none;letter-spacing:0">· by site visits, excluding the homepage</span></div>`
+        + `<ol class="wptop">${tp.slice(0,5).map(p=>`<li><span class="wptop-t">${esc(p.title)}</span><span class="wptop-v">${fmtN(p.visits)}</span></li>`).join("")}</ol>`
+      : "";
+  }
   const h=$("#weekPulseHint"); if(h) h.textContent=`rolling · ${curStart} → ${curEnd}, vs the 7 days before`;
   card.style.display="";
+}
+
+// Modal: who is behind a 7d-box people-attached number.
+function showWeekNames(key){
+  const spec=(window._weekNames||{})[key]; if(!spec) return;
+  const rows=spec.list||[];
+  window._activeSubsetKey="week_"+key;
+  window._peopleSubsets=window._peopleSubsets||{};
+  window._peopleSubsets["week_"+key]={list:rows.map(r=>({...r, email:r.email||""})), total:rows.length};
+  document.getElementById("peopleModalTitle").textContent=spec.title;
+  const note=document.getElementById("peopleModalNote"); if(note) note.innerHTML="";
+  const hd={date:"Date",name:"Name",email:"Email",source:"Source",donor:"Donor",amount:"Amount"};
+  const cell=(r,c)=> c==="amount" ? `$${fmtN(Math.round(r.amount||0))}${r.recurring?' <span class="pillinfo">rec</span>':''}`
+                   : c==="email" ? `<a href="mailto:${esc(r.email||'')}" style="color:var(--vc-black);text-decoration:none">${esc(r.email||'—')}</a>`
+                   : esc((r[c]!=null?String(r[c]):"")||"—");
+  document.getElementById("peopleModalBody").innerHTML = rows.length
+    ? `<table><thead><tr>${spec.cols.map(c=>`<th${(c==='amount')?' class="r"':''}>${hd[c]}</th>`).join("")}</tr></thead>
+       <tbody>${rows.map(r=>`<tr>${spec.cols.map(c=>`<td${(c==='amount')?' class="r"':''} style="font-size:12.5px">${cell(r,c)}</td>`).join("")}</tr>`).join("")}</tbody></table>
+       <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px">${rows.length} in the last 7 days. ${key==='unsubs'?'Names come from Mailchimp and are often blank — email is the reliable identifier.':''}</div>`
+    : '<div style="color:var(--vc-charcoal);padding:8px 0">Nobody in this window.</div>';
+  document.getElementById("peopleModal").classList.add("on");
 }
 
 function renderTrendChart(act,posts,windowDays){
