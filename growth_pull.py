@@ -1054,9 +1054,13 @@ def pull_ghost_signup_attribution(days_back=180):
                 m = d.get("member") or {}
                 em = (m.get("email") or "").strip()
                 if em:
+                    _att = d.get("attribution") or {}
                     recent.append({"email": em, "name": (m.get("name") or "").strip(),
                                    "date": ts[:10],
-                                   "source": (d.get("attribution") or {}).get("referrer_source") or ""})
+                                   "source": _att.get("referrer_source") or "",
+                                   "landing_url": (_att.get("url") or "").rstrip("/"),
+                                   "landing_title": _att.get("title") or "",
+                                   "landing_type": _att.get("type") or ""})
             att = d.get("attribution") or {}
             # Flat aggregates — capture every signup's source, not just the
             # ones that attributed to a specific post. Homepage signups are

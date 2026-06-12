@@ -2427,15 +2427,30 @@ function renderWeekPulse(data){
   }).join("");
   $("#weekPulseGrid").innerHTML=cells;
 
-  // Top pieces of the week (borrowed from the internal weekly chart's
-  // "top performers" column) — ranked by Ghost-analytics visits.
-  const tp=(gt.top_pages_7d||[]);
+  // Top pieces of the week, two ways:
+  //  (a) by site visits — what got read (Ghost analytics).
+  //  (b) by newsletter signups it drove — what actually converted readers
+  //      into subscribers (a deeper-engagement signal than raw traffic).
   const tpEl=$("#weekPulseTop");
+  const lbl=(txt,sub)=>`<div style="font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 6px">${txt} <span style="font-weight:400;text-transform:none;letter-spacing:0">· ${sub}</span></div>`;
+  const olist=(rows)=>`<ol class="wptop">${rows.map(p=>`<li><span class="wptop-t">${esc(p.t)}</span><span class="wptop-v">${esc(p.v)}</span></li>`).join("")}</ol>`;
+  // (a) views
+  const tp=(gt.top_pages_7d||[]).slice(0,5).map(p=>({t:p.title, v:fmtN(p.visits)+" views"}));
+  // (b) signups driven, grouped from this week's recent_signups by landing piece
+  const conv={};
+  (sg||[]).filter(r=>inWin(r.date)).forEach(r=>{
+    if(r.landing_type!=="post" || !r.landing_url) return;   // only article landings
+    const k=r.landing_url, t=r.landing_title || k.split("/").filter(Boolean).pop().replace(/-/g," ");
+    (conv[k]=conv[k]||{t, n:0}).n++;
+  });
+  const convTop=Object.values(conv).sort((a,b)=>b.n-a.n).slice(0,5)
+    .map(p=>({t:p.t, v:p.n+" signup"+(p.n===1?"":"s")}));
   if(tpEl){
-    tpEl.innerHTML = tp.length
-      ? `<div style="font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 6px">Top pieces this week <span style="font-weight:400;text-transform:none;letter-spacing:0">· by site visits, excluding the homepage</span></div>`
-        + `<ol class="wptop">${tp.slice(0,5).map(p=>`<li><span class="wptop-t">${esc(p.title)}</span><span class="wptop-v">${fmtN(p.visits)}</span></li>`).join("")}</ol>`
-      : "";
+    let html="";
+    if(tp.length) html += lbl("Top pieces this week","by site visits, excluding the homepage") + olist(tp);
+    if(convTop.length) html += `<div style="margin-top:14px"></div>` +
+      lbl("Most subscriber-converting pieces","by newsletter signups they drove this week") + olist(convTop);
+    tpEl.innerHTML = html;
   }
   const h=$("#weekPulseHint"); if(h) h.textContent=`rolling · ${curStart} → ${curEnd}, vs the 7 days before`;
   card.style.display="";
