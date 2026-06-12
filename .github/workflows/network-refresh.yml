@@ -106,6 +106,10 @@ jobs:
           # views) — integration keys are forbidden from /stats/*, staff
           # tokens are allowed. Absent → the website tiles stay stubbed.
           GHOST_STAFF_KEY: ${{ secrets.GHOST_STAFF_KEY }}
+          # Optional: Google Analytics 4 website traffic (covers pre-April-2026
+          # history). Both must be set for the visitor tiles to populate from GA4.
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_CREDS_JSON:  ${{ secrets.GA4_CREDS_JSON }}
         run: |
           python3 growth_pull.py || echo "WARNING: growth_pull failed; growth dashboard will be stale"
 

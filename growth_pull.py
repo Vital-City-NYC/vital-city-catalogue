@@ -895,6 +895,98 @@ def _ghost_staff_token():
     return _ghost_jwt_from(key)
 
 
+# ---------------------------------------------------------------- GA4
+GA4_SETUP = [
+    "1) In Google Cloud (console.cloud.google.com), pick/create a project and enable the 'Google Analytics Data API'.",
+    "2) Create a service account in that project; under its Keys tab, add a JSON key and download it.",
+    "3) In GA4 -> Admin -> Property access management, add the service-account email with the Viewer role. IMPORTANT: UNCHECK 'Notify new users by email' (a service account has no inbox, and leaving it checked throws 'This email doesn't match a Google Account').",
+    "4) Copy the GA4 property's numeric ID (Admin -> Property settings, e.g. 123456789).",
+    "5) Set GitHub secrets GA4_PROPERTY_ID (the number) and GA4_CREDS_JSON (the whole JSON key, raw or base64).",
+]
+
+
+def _b64url(b):
+    return base64.urlsafe_b64encode(b).rstrip(b"=")
+
+
+def _ga4_access_token(creds):
+    """Mint a short-lived OAuth token from a service-account key by signing a
+    JWT (RS256) with the cryptography lib — no google-auth dependency needed."""
+    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives.asymmetric import padding
+    now = int(time.time())
+    header = {"alg": "RS256", "typ": "JWT"}
+    claim = {
+        "iss": creds["client_email"],
+        "scope": "https://www.googleapis.com/auth/analytics.readonly",
+        "aud": "https://oauth2.googleapis.com/token",
+        "iat": now, "exp": now + 3600,
+    }
+    seg = _b64url(json.dumps(header).encode()) + b"." + _b64url(json.dumps(claim).encode())
+    key = serialization.load_pem_private_key(creds["private_key"].encode(), password=None)
+    sig = key.sign(seg, padding.PKCS1v15(), hashes.SHA256())
+    assertion = (seg + b"." + _b64url(sig)).decode()
+    data = urllib.parse.urlencode({
+        "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        "assertion": assertion,
+    }).encode()
+    req = urllib.request.Request("https://oauth2.googleapis.com/token", data=data,
+                                 headers={"Content-Type": "application/x-www-form-urlencoded"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.loads(r.read())["access_token"]
+
+
+def _ga4_totals(prop, token, days):
+    """totalUsers / sessions / page views over the last `days` days."""
+    body = {
+        "dateRanges": [{"startDate": f"{days}daysAgo", "endDate": "today"}],
+        "metrics": [{"name": "totalUsers"}, {"name": "sessions"}, {"name": "screenPageViews"}],
+    }
+    req = urllib.request.Request(
+        f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+        data=json.dumps(body).encode(),
+        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        rep = json.loads(r.read())
+    rows = rep.get("rows") or []
+    if not rows:
+        return (0, 0, 0)
+    v = rows[0]["metricValues"]
+    return (int(v[0]["value"]), int(v[1]["value"]), int(v[2]["value"]))
+
+
+def pull_ga4():
+    """Website traffic from Google Analytics 4 (covers the pre-April-2026 site
+    history Ghost's own analytics can't). Needs GA4_PROPERTY_ID + a
+    service-account key in GA4_CREDS_JSON. Returns a stub with setup steps until
+    both are present. Shape matches what the dashboard visitor tiles read
+    (mau / sessions_30 / aau / sessions_365)."""
+    prop = os.environ.get("GA4_PROPERTY_ID", "").strip()
+    raw = os.environ.get("GA4_CREDS_JSON", "").strip()
+    if not prop or not raw:
+        return {"available": False, "reason": "GA4 service-account JSON + property ID not configured",
+                "setup": GA4_SETUP}
+    try:
+        try:
+            creds = json.loads(base64.b64decode(raw))
+        except Exception:
+            creds = json.loads(raw)
+        token = _ga4_access_token(creds)
+        u30, s30, p30 = _ga4_totals(prop, token, 30)
+        u365, s365, p365 = _ga4_totals(prop, token, 365)
+        log(f"  ga4: {u30:,} users / {s30:,} sessions (30d); {u365:,} users (1y)")
+        return {
+            "available": True, "property_id": prop,
+            "mau": u30, "sessions_30": s30, "pageviews_30": p30,
+            "aau": u365, "sessions_365": s365, "pageviews_365": p365,
+            "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        }
+    except Exception as e:
+        log(f"  ga4: pull failed ({e})")
+        return {"available": False, "reason": f"GA4 configured but the pull failed: {e}",
+                "setup": GA4_SETUP}
+
+
 def pull_ghost_traffic():
     """Site traffic (unique visitors, page views) from Ghost's own analytics.
 
@@ -2439,17 +2531,9 @@ def main():
         "bluesky": pull_bluesky_profile(),
         # Sources blocked on credentials Josh hasn't set up yet — dashboard renders
         # a "Connect this source" placeholder card with the exact setup steps.
-        "ga4": {
-            "available": False,
-            "reason": "GA4 service-account JSON + property ID not configured",
-            "setup": [
-                "1) In Google Cloud, enable the Google Analytics Data API.",
-                "2) Create a service account; download the JSON key.",
-                "3) Add the service account email (xx@yy.iam.gserviceaccount.com) to GA4 with Viewer role.",
-                "4) Copy the GA4 property numeric ID (Admin -> Property Settings).",
-                "5) Add GA4_CREDS_JSON (base64-encoded JSON) and GA4_PROPERTY_ID as GitHub secrets.",
-            ],
-        },
+        # Google Analytics 4 — website traffic (covers pre-April-2026 history).
+        # Real pull when GA4_PROPERTY_ID + GA4_CREDS_JSON are set; stub w/ steps otherwise.
+        "ga4": pull_ga4(),
         "search_console": {
             "available": False,
             "reason": "Search Console service-account not configured",
