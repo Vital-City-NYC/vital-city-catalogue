@@ -138,6 +138,149 @@ INST_DOMAINS = {
     "win.org": "Win", "bowery.org": "Bowery Residents' Committee",
     "robinhood.org": "Robin Hood Foundation", "tigerfoundation.org": "Tiger Foundation",
     "aecf.org": "Annie E. Casey Foundation", "stvinc.com": "STV",
+    # --- 2026-06 cleanup: spell out affiliations that the SLD/.edu/.gov fallbacks
+    # were rendering as ugly run-together single words (e.g. "Uchicago",
+    # "Nycourts", "Cmw Newyork", "Csg"). Domain-keyed so there are no
+    # output-string collisions; subdomains resolve via registrable-suffix match.
+    # Universities & colleges
+    "uchicago.edu": "University of Chicago", "utexas.edu": "University of Texas at Austin",
+    "upenn.edu": "University of Pennsylvania", "stonybrook.edu": "Stony Brook University",
+    "bankstreet.edu": "Bank Street College of Education", "brown.edu": "Brown University",
+    "cornell.edu": "Cornell University", "barnard.edu": "Barnard College", "bard.edu": "Bard College",
+    "northeastern.edu": "Northeastern University", "northwestern.edu": "Northwestern University",
+    "rutgers.edu": "Rutgers University", "temple.edu": "Temple University",
+    "pratt.edu": "Pratt Institute", "georgetown.edu": "Georgetown University",
+    "emory.edu": "Emory University", "drexel.edu": "Drexel University", "duke.edu": "Duke University",
+    "tufts.edu": "Tufts University", "tulane.edu": "Tulane University",
+    "vanderbilt.edu": "Vanderbilt University", "wesleyan.edu": "Wesleyan University",
+    "williams.edu": "Williams College", "smith.edu": "Smith College", "colby.edu": "Colby College",
+    "oberlin.edu": "Oberlin College", "middlebury.edu": "Middlebury College",
+    "denison.edu": "Denison University", "siena.edu": "Siena College",
+    "hofstra.edu": "Hofstra University", "fordham.edu": "Fordham University",
+    "buffalo.edu": "University at Buffalo", "binghamton.edu": "Binghamton University",
+    "albany.edu": "University at Albany", "albanylaw.edu": "Albany Law School",
+    "cortland.edu": "SUNY Cortland", "suny.edu": "State University of New York",
+    "arizona.edu": "University of Arizona", "auburn.edu": "Auburn University",
+    "colorado.edu": "University of Colorado Boulder", "depaul.edu": "DePaul University",
+    "elmhurst.edu": "Elmhurst University", "miami.edu": "University of Miami",
+    "richmond.edu": "University of Richmond", "rowan.edu": "Rowan University",
+    "maine.edu": "University of Maine", "nebraska.edu": "University of Nebraska",
+    "hampshire.edu": "Hampshire College", "berklee.edu": "Berklee College of Music",
+    "wayne.edu": "Wayne State University", "iastate.edu": "Iowa State University",
+    "latech.edu": "Louisiana Tech University", "loyno.edu": "Loyola University New Orleans",
+    "conncoll.edu": "Connecticut College", "mercy.edu": "Mercy University",
+    "oakland.edu": "Oakland University", "suffolk.edu": "Suffolk University",
+    "stjohns.edu": "St. John's University", "wagner.edu": "Wagner College",
+    "american.edu": "American University", "stanford.edu": "Stanford University",
+    "berkeley.edu": "UC Berkeley", "ucdavis.edu": "UC Davis", "uci.edu": "UC Irvine",
+    "ucsf.edu": "UC San Francisco", "ucla.edu": "UCLA",
+    "usc.edu": "University of Southern California", "uconn.edu": "University of Connecticut",
+    "umass.edu": "University of Massachusetts", "umd.edu": "University of Maryland",
+    "umn.edu": "University of Minnesota", "nyls.edu": "New York Law School",
+    "nyit.edu": "New York Institute of Technology", "pace.edu": "Pace University",
+    "liu.edu": "Long Island University", "sva.edu": "School of Visual Arts",
+    # Media
+    "aarp.org": "AARP", "audacy.com": "Audacy", "forbes.com": "Forbes",
+    "economist.com": "The Economist", "nationalreview.com": "National Review",
+    "theguardian.com": "The Guardian", "peoplemag.com": "People",
+    "nysun.com": "The New York Sun", "amsterdamnews.com": "New York Amsterdam News",
+    "siadvance.com": "Staten Island Advance", "newsday.com": "Newsday",
+    "politicsny.com": "PoliticsNY", "therealdeal.com": "The Real Deal",
+    "thetrace.org": "The Trace", "nextcity.org": "Next City", "nysfocus.com": "New York Focus",
+    "imprintnews.org": "The Imprint", "placesjournal.org": "Places Journal",
+    "boltsmag.org": "Bolts", "commonwealthbeacon.org": "CommonWealth Beacon",
+    "thelensnola.org": "The Lens", "texastribune.org": "The Texas Tribune",
+    "stlpublicradio.org": "St. Louis Public Radio", "wypr.org": "WYPR",
+    "publicnewsservice.org": "Public News Service", "solitarywatch.org": "Solitary Watch",
+    "thenewhumanitarian.org": "The New Humanitarian", "schnepsmedia.com": "Schneps Media",
+    "nbcuni.com": "NBCUniversal", "voxmedia.com": "Vox Media", "alm.com": "ALM",
+    # Law firms
+    "pbwt.com": "Patterson Belknap Webb & Tyler", "cgsh.com": "Cleary Gottlieb",
+    "ropesgray.com": "Ropes & Gray", "nixonpeabody.com": "Nixon Peabody",
+    "debevoise.com": "Debevoise & Plimpton", "cozen.com": "Cozen O'Connor",
+    "bclplaw.com": "Bryan Cave Leighton Paisner", "fenwick.com": "Fenwick & West",
+    "mclaughlinstern.com": "McLaughlin & Stern", "faegredrinker.com": "Faegre Drinker",
+    "bakermckenzie.com": "Baker McKenzie", "geragos.com": "Geragos & Geragos",
+    "hraadvisors.com": "HR&A Advisors",
+    # Finance / companies
+    "morganstanley.com": "Morgan Stanley", "barclays.com": "Barclays", "cbre.com": "CBRE",
+    "compass.com": "Compass", "ngkf.com": "Newmark", "guidehouse.com": "Guidehouse",
+    # Foundations
+    "joycefdn.org": "The Joyce Foundation", "helmsleytrust.org": "Helmsley Charitable Trust",
+    "revsonfoundation.org": "Charles H. Revson Foundation",
+    "schusterman.org": "Schusterman Family Philanthropies", "towfoundation.org": "The Tow Foundation",
+    "pinkertonfdn.org": "The Pinkerton Foundation", "wtgrantfdn.org": "William T. Grant Foundation",
+    "unboundphilanthropy.org": "Unbound Philanthropy", "thejusttrust.org": "The Just Trust",
+    "nyhealthfoundation.org": "New York Health Foundation",
+    "thenytrust.org": "The New York Community Trust", "hollyhockfoundation.org": "Hollyhock Foundation",
+    "philanthropynewyork.org": "Philanthropy New York", "pegsfoundation.org": "Peg's Foundation",
+    "langeloth.org": "The Langeloth Foundation", "greenlightfund.org": "GreenLight Fund",
+    "hfg.org": "Harry Frank Guggenheim Foundation", "rwjf.org": "Robert Wood Johnson Foundation",
+    "csgv.org": "Coalition to Stop Gun Violence", "clarkest.com": "Clark Foundation",
+    # Government (courts, city/county, federal)
+    "nycourts.gov": "New York State Courts", "courts.state.ny.us": "New York State Courts",
+    "nysenate.gov": "New York State Senate", "exec.ny.gov": "New York State Executive Chamber",
+    "comptroller.nyc.gov": "NYC Comptroller's Office", "advocate.nyc.gov": "NYC Public Advocate's Office",
+    "boston.gov": "City of Boston", "nashville.gov": "Metro Nashville", "phoenix.gov": "City of Phoenix",
+    "austintexas.gov": "City of Austin", "baltimorecity.gov": "City of Baltimore",
+    "cityofchicago.org": "City of Chicago", "cityofboise.org": "City of Boise",
+    "detroitmi.gov": "City of Detroit", "durhamnc.gov": "City of Durham",
+    "lacity.org": "City of Los Angeles", "sarasotafl.gov": "City of Sarasota",
+    "tucsonaz.gov": "City of Tucson", "lowellma.gov": "City of Lowell",
+    "newrochelleny.gov": "City of New Rochelle", "kingcounty.gov": "King County",
+    "cookcountyil.gov": "Cook County", "dallascounty.org": "Dallas County",
+    "harriscountytx.gov": "Harris County", "westchestercountyny.gov": "Westchester County",
+    "usdoj.gov": "US Department of Justice", "usaid.gov": "US Agency for International Development",
+    # NYC nonprofits, defenders, libraries, parks, culture
+    "nychhc.org": "NYC Health + Hospitals", "nycja.org": "NYC Criminal Justice Agency",
+    "osborneny.org": "Osborne Association", "pfnyc.org": "Partnership for New York City",
+    "abny.org": "Association for a Better New York", "vitalcitynyc.org": "Vital City",
+    "nycbar.org": "New York City Bar Association", "nycds.org": "New York County Defender Services",
+    "nylpi.org": "New York Lawyers for the Public Interest", "lsnyc.org": "Legal Services NYC",
+    "brooklynda.org": "Brooklyn District Attorney's Office", "queensda.org": "Queens District Attorney's Office",
+    "nypti.org": "New York Prosecutors Training Institute", "nypl.org": "New York Public Library",
+    "bklynlibrary.org": "Brooklyn Public Library", "nypublicradio.org": "New York Public Radio",
+    "foodbanknyc.org": "Food Bank For New York City", "fortunesociety.org": "The Fortune Society",
+    "childrensaidnyc.org": "Children's Aid", "cccnewyork.org": "Citizens' Committee for Children of New York",
+    "cnycn.org": "Center for NYC Neighborhoods", "citizensnyc.org": "Citizens Committee for New York City",
+    "nyfoundling.org": "The New York Foundling", "safehorizon.org": "Safe Horizon",
+    "sffny.org": "Sanctuary for Families", "cucs.org": "Center for Urban Community Services",
+    "riseboro.org": "RiseBoro Community Partnership", "bronxworks.org": "BronxWorks",
+    "urbanupbound.org": "Urban Upbound", "greenwichhouse.org": "Greenwich House",
+    "hudsonguild.org": "Hudson Guild", "gnyha.org": "Greater New York Hospital Association",
+    "hanyc.org": "Hotel Association of New York City", "hanys.org": "Healthcare Association of New York State",
+    "nyaprs.org": "New York Association of Psychiatric Rehabilitation Services",
+    "cssny.org": "Community Service Society", "transalt.org": "Transportation Alternatives",
+    "streetsblog.org": "Streetsblog", "ridersalliance.org": "Riders Alliance",
+    "ny4p.org": "New Yorkers for Parks", "weact.org": "WE ACT for Environmental Justice",
+    "prospectpark.org": "Prospect Park Alliance", "centralparknyc.org": "Central Park Conservancy",
+    "washingtonsqpark.org": "Washington Square Park Conservancy", "thehighline.org": "The High Line",
+    "timessquarenyc.org": "Times Square Alliance", "downtownny.com": "Downtown Alliance",
+    "trinitywallstreet.org": "Trinity Church Wall Street", "lincolncenter.org": "Lincoln Center",
+    "publictheater.org": "The Public Theater", "brooklynmuseum.org": "Brooklyn Museum",
+    "fountainhouse.org": "Fountain House", "legal-aid.org": "The Legal Aid Society",
+    "bds.org": "Brooklyn Defender Services", "bronxdefenders.org": "The Bronx Defenders",
+    "neighborhooddefender.org": "Neighborhood Defender Service of Harlem",
+    # National research / advocacy orgs
+    "ncja.org": "National Criminal Justice Association",
+    "ncjfcj.org": "National Council of Juvenile and Family Court Judges",
+    "theiacp.org": "International Association of Chiefs of Police", "naadac.org": "NAADAC",
+    "rti.org": "RTI International", "norc.org": "NORC at the University of Chicago",
+    "mdrc.org": "MDRC", "cna.org": "CNA", "lac.org": "Legal Action Center",
+    "doe.org": "The Doe Fund", "edc.nyc": "NYC Economic Development Corporation",
+    "tpl.org": "Trust for Public Land", "cssp.org": "Center for the Study of Social Policy",
+    "prrac.org": "PRRAC", "nmic.org": "Northern Manhattan Improvement Corporation",
+    "iadb.org": "Inter-American Development Bank", "seiu.org": "SEIU", "fpwa.org": "FPWA",
+    "csg.org": "The Council of State Governments", "cfrny.org": "Center for Family Representation",
+    "brac.org": "BRAC", "ideas42.org": "ideas42", "recidiviz.org": "Recidiviz",
+    "measuresforjustice.org": "Measures for Justice", "socialfinance.org": "Social Finance",
+    "policingequity.org": "Center for Policing Equity", "sentencingproject.org": "The Sentencing Project",
+    "innocenceproject.org": "Innocence Project", "prisonpolicy.org": "Prison Policy Initiative",
+    "drugpolicy.org": "Drug Policy Alliance", "earthjustice.org": "Earthjustice",
+    "giffords.org": "Giffords", "everytown.org": "Everytown for Gun Safety",
+    "povertyactionlab.org": "J-PAL", "codeforamerica.org": "Code for America", "nacto.org": "NACTO",
+    # Grammatical-only fix (no expansion asserted — just casing/spacing):
+    "cmw-newyork.com": "CMW New York",
 }
 WEBMAIL = {"gmail.com","googlemail.com","yahoo.com","ymail.com","hotmail.com","outlook.com",
  "live.com","msn.com","aol.com","icloud.com","me.com","mac.com","proton.me","protonmail.com",
@@ -147,7 +290,17 @@ WEBMAIL = {"gmail.com","googlemail.com","yahoo.com","ymail.com","hotmail.com","o
  "web.de","gmx.de","gmx.net","bellsouth.net","optonline.net","rocketmail.com","cox.net","shaw.ca",
  "charter.net","docomo.ne.jp","telus.net","btinternet.com","sky.com","hey.com","duck.com","myyahoo.com",
  "ymail.co.uk","googlemail.co.uk","outlook.co.uk","live.co.uk","icloud.co.uk","ntlworld.com","talktalk.net",
- "frontier.com","windstream.net","roadrunner.com","ptd.net","juno.com","netzero.net"}
+ "frontier.com","windstream.net","roadrunner.com","ptd.net","juno.com","netzero.net",
+ # 2026-06 cleanup: more webmail/ISP variants + forwarders/feed-readers/test
+ # domains the shared-domain fallback was mislabeling as institutions
+ # ("Hotmail", "Bigpond", "Testform", etc.). These should yield NO affiliation.
+ "126.com","bigpond.com","bigpond.net.au","bell.net","buckeye-express.com","compuserve.com",
+ "ezweb.ne.jp","freenet.de","gmsil.com","gmx.ch","gmx.net","hotmail.co.jp","hotmail.fr",
+ "hotmail.ca","iinet.net.au","libero.it","live.fr","mailbox.org","mecoinbox.com","mozmail.com",
+ "mt-system.ru","naver.com","net-lix.de","obox.co.za","pacbell.net","passinbox.com","pipeline.com",
+ "pobox.com","rogers.com","simplelogin.com","t-online.de","tin.it","yahoo.com.hk","yandex.ru",
+ "zoominternet.net","testform.xyz","ino.to","feed.readwise.io","feedb.in","feedly.email",
+ "kill-the-newsletter.com","knology.net"}
 
 
 DOMCOUNT = {}   # email-domain -> # of distinct people using it (filled in main; for the shared-domain fallback)
@@ -156,13 +309,30 @@ MC_SUB = set()      # emails Mailchimp lists as status=subscribed — the system
 MC_UNSUB = {}       # email -> Mailchimp unsubscribe date. Unsub wins UNLESS the Ghost signup is newer (resubscribe).
 
 
+def _curated_inst(dom):
+    """Look up a domain in the curated map, trying the exact domain first and
+    then its registrable form, so subdomains resolve (sas.upenn.edu ->
+    upenn.edu, austin.utexas.edu -> utexas.edu, law.northwestern.edu ->
+    northwestern.edu). Exact entries (e.g. law.columbia.edu) still win."""
+    if dom in INST_DOMAINS:
+        return INST_DOMAINS[dom]
+    parts = dom.split(".")
+    for n in (2, 3):
+        if len(parts) > n:
+            cand = ".".join(parts[-n:])
+            if cand in INST_DOMAINS:
+                return INST_DOMAINS[cand]
+    return None
+
+
 def infer_institution(emails):
     """Best-guess institution from an email domain. Curated map first, then
     nyc.gov/.gov/.edu, then hyphenated org domains. Webmail → no guess."""
     for e in emails:
         dom = e.split("@")[-1].strip().lower()
-        if dom in INST_DOMAINS:
-            return INST_DOMAINS[dom]
+        hit = _curated_inst(dom)
+        if hit:
+            return hit
         if dom == "nyc.gov" or dom.endswith(".nyc.gov"):
             return "New York City government"
         if dom in WEBMAIL:
