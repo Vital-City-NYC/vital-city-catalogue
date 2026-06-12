@@ -80,6 +80,15 @@
   /* Chart */
   .chartwrap{position:relative}
   svg.chart{width:100%;height:240px;display:block}
+  /* Interactive hover for the growth & reach chart */
+  .chart-guide{position:absolute;top:0;width:1px;background:var(--vc-charcoal);opacity:.35;pointer-events:none;display:none}
+  .chart-dot{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--vc-cerulean);border:2px solid var(--vc-white);transform:translate(-50%,-50%);pointer-events:none;display:none;box-shadow:0 0 0 1px var(--vc-cerulean)}
+  .chart-tip{position:absolute;pointer-events:none;display:none;z-index:5;background:var(--vc-black);color:var(--vc-paper);font-size:11.5px;line-height:1.45;padding:7px 10px;border-radius:3px;white-space:nowrap;transform:translate(-50%,-100%);box-shadow:0 2px 10px rgba(0,0,0,.25)}
+  .chart-tip b{color:#fff;font-weight:700}
+  .chart-tip .tipwk{font-size:10px;text-transform:uppercase;letter-spacing:.06em;opacity:.7;margin-bottom:3px}
+  .chart-tip .tipsub{color:#9fd0ef}
+  .chart-tip .tipgrn{color:#9fe0a0}
+  .chart-tip .tipopn{color:#f3b48c}
   .legend{font-size:11px;color:var(--vc-charcoal);display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
   .legend .sw{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:middle}
 
@@ -1188,6 +1197,58 @@ function renderGrowthChart(mc){
     }
   }
   svg.innerHTML = html;
+
+  // ---- Interactive hover: guide line + marker + tooltip showing the real
+  // numbers for the nearest week. SVG units == CSS px here (viewBox width =
+  // measured pixel width, aspect-matched), so mouse offsetX maps 1:1 to x().
+  const wrap = svg.parentElement;
+  let guide = wrap.querySelector(".chart-guide"),
+      dot   = wrap.querySelector(".chart-dot"),
+      tip   = wrap.querySelector(".chart-tip");
+  if(!guide){ guide=document.createElement("div"); guide.className="chart-guide"; wrap.appendChild(guide); }
+  if(!dot){   dot=document.createElement("div");   dot.className="chart-dot";     wrap.appendChild(dot); }
+  if(!tip){   tip=document.createElement("div");   tip.className="chart-tip";     wrap.appendChild(tip); }
+  guide.style.height = innerH + "px";   // span the plot area (top padT..bottom)
+  guide.style.top = padT + "px";
+  // Per-week hover points (x in px, plus the values to show)
+  svg._hoverPts = weeks.map((w,i)=>({
+    x: x(i), subsY: ySubs(w.cum_subs), wk: w.wk,
+    cum: w.cum_subs, signups: w.signups, unsubs: w.unsubs, opens: w.opens,
+  }));
+  svg._hoverGeo = {left: padL, right: W-padR};
+  if(!svg._hoverBound){
+    svg._hoverBound = true;
+    const move = (ev) => {
+      const pts = svg._hoverPts; if(!pts || !pts.length) return;
+      const rect = svg.getBoundingClientRect();
+      // viewBox width can differ from CSS width on odd zooms; scale offsetX.
+      const scale = (svg.viewBox.baseVal.width || rect.width) / rect.width;
+      const mx = (ev.clientX - rect.left) * scale;
+      let best=pts[0], bd=Infinity;
+      for(const p of pts){ const d=Math.abs(p.x-mx); if(d<bd){bd=d;best=p;} }
+      const pxScale = rect.width / (svg.viewBox.baseVal.width || rect.width);
+      const left = best.x * pxScale, topDot = best.subsY * pxScale;
+      guide.style.display="block"; guide.style.left=left+"px";
+      dot.style.display="block"; dot.style.left=left+"px"; dot.style.top=topDot+"px";
+      tip.style.display="block";
+      tip.innerHTML =
+        `<div class="tipwk">Week of ${esc(best.wk)}</div>`+
+        `<div><span class="tipsub">■</span> <b>${fmtN(best.cum)}</b> subscribers</div>`+
+        `<div><span class="tipgrn">■</span> ${fmtN(best.signups)} new signup${best.signups===1?"":"s"}`+
+          (best.unsubs?` · ${fmtN(best.unsubs)} unsub${best.unsubs===1?"":"s"}`:"")+`</div>`+
+        (best.opens?`<div><span class="tipopn">■</span> ~${fmtN(best.opens)} opens that week</div>`:"");
+      // place above the dot; flip horizontally near edges
+      let tl=left, tb=Math.max(topDot-12, 4);
+      tip.style.left=tl+"px"; tip.style.top=tb+"px";
+      const tr=tip.getBoundingClientRect();
+      if(tr.left < rect.left+4) tip.style.left=(left + (rect.left+4 - tr.left))+"px";
+      else if(tr.right > rect.right-4) tip.style.left=(left - (tr.right - (rect.right-4)))+"px";
+    };
+    svg.addEventListener("mousemove", move);
+    svg.addEventListener("mouseleave", () => {
+      guide.style.display="none"; dot.style.display="none"; tip.style.display="none";
+    });
+  }
 
   // Redraw at the new pixel width on resize so the chart stays crisp (and the
   // label thinning re-runs) when the window or embed is widened/narrowed.
