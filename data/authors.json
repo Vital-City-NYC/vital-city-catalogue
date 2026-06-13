@@ -80,6 +80,7 @@
       "vital-city-issues-call-for-submissions",
       "vital-signs-crime-and-justice-in-new-york-city",
       "vital-signs-march-2023",
+      "vital-signs-state-of-the-city-on-crime-2024",
       "what-brought-new-york-city-back-from-the-brink",
       "what-does-it-take-to-govern-the-jails",
       "what-hangs-in-the-balance-sheets",
@@ -418,6 +419,28 @@
     "website": null
   },
   {
+    "name": "Brandon del Pozo",
+    "post_count": 11,
+    "slugs": [
+      "a-cop-civilian-confrontation-the-police-perspective",
+      "a-tale-of-two-new-yorkers-didarul-islam-and-zohran-mamdani",
+      "daniel-penny-jordan-neely-and-all-of-us-in-between",
+      "knicks-hooligans-nypd",
+      "mamdani-nypd-snowball-fight-police-arrest",
+      "minnesota-ice-alex-pretti-policing",
+      "public-safety-and-mental-health",
+      "subway-disorder",
+      "surging-the-guard-wont-safeguard-the-subways",
+      "the-right-role-for-police-in-the-opioid-crisis",
+      "when-city-streets-really-are-war-zones"
+    ],
+    "slug": "del-pozo-brandon",
+    "bio": "is an assistant professor of medicine at Brown University’s Warren Alpert Medical School and research scientist at Brown University Health. He was chief of police of Burlington, Vermont, and served with the NYPD from 1997 to 2015.",
+    "url": "https://www.vitalcitynyc.org/author/del-pozo-brandon/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Nicole Gelinas",
     "post_count": 10,
     "slugs": [
@@ -435,27 +458,6 @@
     "slug": "gelinas-nicole",
     "bio": "is a Manhattan Institute senior fellow and author of the book \"Movement: New York’s Long War to Take Back Its Streets From the Car.\"",
     "url": "https://www.vitalcitynyc.org/author/gelinas-nicole/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Brandon del Pozo",
-    "post_count": 10,
-    "slugs": [
-      "a-cop-civilian-confrontation-the-police-perspective",
-      "a-tale-of-two-new-yorkers-didarul-islam-and-zohran-mamdani",
-      "daniel-penny-jordan-neely-and-all-of-us-in-between",
-      "mamdani-nypd-snowball-fight-police-arrest",
-      "minnesota-ice-alex-pretti-policing",
-      "public-safety-and-mental-health",
-      "subway-disorder",
-      "surging-the-guard-wont-safeguard-the-subways",
-      "the-right-role-for-police-in-the-opioid-crisis",
-      "when-city-streets-really-are-war-zones"
-    ],
-    "slug": "del-pozo-brandon",
-    "bio": "is an assistant professor of medicine at Brown University’s Warren Alpert Medical School and research scientist at Brown University Health. He was chief of police of Burlington, Vermont, and served with the NYPD from 1997 to 2015.",
-    "url": "https://www.vitalcitynyc.org/author/del-pozo-brandon/",
     "twitter": null,
     "website": null
   },
@@ -499,6 +501,24 @@
     "website": null
   },
   {
+    "name": "Paul Reeping",
+    "post_count": 7,
+    "slugs": [
+      "just-the-facts-on-new-york-city-subway-crime",
+      "navigating-apartment-hunting-rising-rent-in-nyc",
+      "safer-cities-in-context",
+      "the-state-of-crime-in-new-york-city-at-midyear-2024",
+      "vital-signs-state-of-the-city-on-crime-2024",
+      "what-the-data-show-about-subway-safety",
+      "what-we-know-and-dont-know-about-guns"
+    ],
+    "slug": "reeping-paul",
+    "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
+    "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "John K. Roman",
     "post_count": 7,
     "slugs": [
@@ -531,23 +551,6 @@
     "slug": "tusk-bradley",
     "bio": "is a venture capitalist, political strategist, philanthropist and writer. His new book, \"Vote With Your Phone: Why Mobile Voting Is Our Final Shot at Saving Democracy,\" was published on September 17. ",
     "url": "https://www.vitalcitynyc.org/author/tusk-bradley/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Paul Reeping",
-    "post_count": 6,
-    "slugs": [
-      "just-the-facts-on-new-york-city-subway-crime",
-      "navigating-apartment-hunting-rising-rent-in-nyc",
-      "safer-cities-in-context",
-      "the-state-of-crime-in-new-york-city-at-midyear-2024",
-      "what-the-data-show-about-subway-safety",
-      "what-we-know-and-dont-know-about-guns"
-    ],
-    "slug": "reeping-paul",
-    "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
-    "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
     "twitter": null,
     "website": null
   },
@@ -1007,6 +1010,20 @@
     "website": null
   },
   {
+    "name": "Marcos F. Soler",
+    "post_count": 3,
+    "slugs": [
+      "crime-on-the-ground-and-how-its-experienced",
+      "new-york-city-gun-violence-down-major-crime-high",
+      "the-truth-about-shootings-in-new-york-city"
+    ],
+    "slug": "soler-marcos-f",
+    "bio": "is the executive director of the Center for Ethics and the Rule of Law at the University of Pennsylvania, and he previously served as deputy secretary for public safety for the New York governor.",
+    "url": "https://www.vitalcitynyc.org/author/soler-marcos-f/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Alex Chohlas-Wood",
     "post_count": 3,
     "slugs": [
@@ -1143,19 +1160,6 @@
     "slug": "butts-jeffrey-a",
     "bio": "is the director of the Research and Evaluation Center at John Jay College of Criminal Justice.",
     "url": "https://www.vitalcitynyc.org/author/butts-jeffrey-a/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Jeff Asher",
-    "post_count": 3,
-    "slugs": [
-      "crime-data-is-better-will-americans-pay-attention",
-      "what-the-numbers-miss-about-gun-crimes"
-    ],
-    "slug": "asher-jeff",
-    "bio": "is a crime analyst based in New Orleans and co-founder of AH Datalytics. He is the author of a Substack newsletter covering crime data and analysis.",
-    "url": "https://www.vitalcitynyc.org/author/asher-jeff/",
     "twitter": null,
     "website": null
   },
@@ -1790,19 +1794,6 @@
     "website": null
   },
   {
-    "name": "Marcos F. Soler",
-    "post_count": 2,
-    "slugs": [
-      "crime-on-the-ground-and-how-its-experienced",
-      "the-truth-about-shootings-in-new-york-city"
-    ],
-    "slug": "soler-marcos-f",
-    "bio": "is the executive director of the Center for Ethics and the Rule of Law at the University of Pennsylvania, and he previously served as deputy secretary for public safety for the New York governor.",
-    "url": "https://www.vitalcitynyc.org/author/soler-marcos-f/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Reuven Blau",
     "post_count": 2,
     "slugs": [
@@ -1877,6 +1868,19 @@
     "slug": "gill-rose",
     "bio": "is principal of the municipal integrity team at Bloomberg Associates. She is former NYC Department of Investigation commissioner and founder of the Center for the Advancement of Public Integrity at Columbia Law School.",
     "url": "https://www.vitalcitynyc.org/author/gill-rose/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Jeff Asher",
+    "post_count": 2,
+    "slugs": [
+      "crime-data-is-better-will-americans-pay-attention",
+      "what-the-numbers-miss-about-gun-crimes"
+    ],
+    "slug": "asher-jeff",
+    "bio": "is a crime analyst based in New Orleans and co-founder of AH Datalytics. He is the author of a Substack newsletter covering crime data and analysis.",
+    "url": "https://www.vitalcitynyc.org/author/asher-jeff/",
     "twitter": null,
     "website": null
   },

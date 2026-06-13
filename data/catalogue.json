@@ -1,5 +1,34 @@
 [
   {
+    "title": "The Knicks, the Hooligans and the Cops",
+    "slug": "knicks-hooligans-nypd",
+    "url": "https://www.vitalcitynyc.org/knicks-hooligans-nypd/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-12",
+    "published_at": "2026-06-12T23:25:41.000+00:00",
+    "updated_at": "2026-06-13T00:44:19.000+00:00",
+    "primary_author": "Brandon del Pozo",
+    "authors": [
+      "Brandon del Pozo"
+    ],
+    "topics": [
+      "Police-Community Relations",
+      "Sports",
+      "The Spirit of the City"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "How should the NYPD handle celebrations turning into chaos?",
+    "excerpt": "How should the NYPD handle celebrations turning into chaos?",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/GettyImages-2280353129-1.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1077,
+    "reading_minutes": 5,
+    "id": "6a2c94219b0a5300014d8879"
+  },
+  {
     "title": "Borrow and Steal: The Art of Reinvention in Nantes",
     "slug": "nantes-tourism-culture-sophie-levy-interview",
     "url": "https://www.vitalcitynyc.org/nantes-tourism-culture-sophie-levy-interview/",
@@ -36,7 +65,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2026-06-11",
     "published_at": "2026-06-11T14:29:51.000+00:00",
-    "updated_at": "2026-06-11T14:29:51.000+00:00",
+    "updated_at": "2026-06-12T22:52:11.000+00:00",
     "primary_author": "Jamie Rubin",
     "authors": [
       "Jamie Rubin"
@@ -53,7 +82,7 @@
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-11T094413.804.png",
     "featured": false,
     "visibility": "public",
-    "word_count": 2595,
+    "word_count": 2615,
     "reading_minutes": 11,
     "id": "6a29c6f20810f30001a2f13e"
   },
@@ -2950,38 +2979,35 @@
     "id": "69a04c0ad4006a00010a42e1"
   },
   {
-    "title": "The State of Crime in New York City: 2025 and Beyond",
-    "slug": "crime-in-new-york-city-trends-statistics",
-    "url": "https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/",
+    "title": "New York City’s Crime Puzzle",
+    "slug": "new-york-city-gun-violence-down-major-crime-high",
+    "url": "https://www.vitalcitynyc.org/new-york-city-gun-violence-down-major-crime-high/",
     "type": "data analysis",
-    "type_basis": "tag:data-stories",
+    "type_basis": "html:5-chart-embeds",
     "published_date": "2026-02-19",
     "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-05-21T20:11:51.000+00:00",
-    "primary_author": "Vital City",
+    "updated_at": "2026-04-15T13:36:26.000+00:00",
+    "primary_author": "Marcos F. Soler",
     "authors": [
-      "Vital City"
+      "Marcos F. Soler"
     ],
     "topics": [
       "Crime",
-      "Incarceration",
-      "Justice",
-      "Where We Are",
-      "Crime Stories",
-      "Data Stories"
+      "Gun Violence",
+      "Where We Are"
     ],
     "issues": [
       "crime-looking-back-at-2025-and-ahead-to-2026"
     ],
     "issue_numbers": [],
-    "summary": "What happened in 2025 and what it bodes for 2026",
-    "excerpt": "What happened in 2025 and what it bodes for 2026",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/azyuesfobigegixz_copyofcroppingtool-png-auto-format-compress-1776259649997.jpg",
+    "summary": "Gun violence and homicides are way, way down. Overall major crime remains high. Why?",
+    "excerpt": "Gun violence and homicides are way, way down. Overall major crime remains high. Why?",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay8-o1wlo0xkef9f_mg134036-auto-format-compress-1776259653298.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 2897,
-    "reading_minutes": 13,
-    "id": "69a04c0ad4006a00010a42df"
+    "word_count": 2838,
+    "reading_minutes": 12,
+    "id": "69a04c0ad4006a00010a42e4"
   },
   {
     "title": "How To Deploy AI To Improve Policing in New York",
@@ -3178,7 +3204,7 @@
     "slug": "gloria-gong-interview",
     "url": "https://www.vitalcitynyc.org/gloria-gong-interview/",
     "type": "q&a",
-    "type_basis": "tag:podcast",
+    "type_basis": "tag:interview",
     "published_date": "2026-02-12",
     "published_at": "2026-02-12T14:36:01.000+00:00",
     "updated_at": "2026-04-15T13:36:27.000+00:00",
@@ -12162,38 +12188,6 @@
     "id": "69a04c0ad4006a00010a407a"
   },
   {
-    "title": "Crime Data Is Better. Will Americans Pay Attention?",
-    "slug": "crime-data-is-better-will-americans-pay-attention",
-    "url": "https://www.vitalcitynyc.org/crime-data-is-better-will-americans-pay-attention/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-01-22",
-    "published_at": "2025-01-22T21:15:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:13.000+00:00",
-    "primary_author": "Jeff Asher",
-    "authors": [
-      "Jeff Asher"
-    ],
-    "topics": [
-      "data",
-      "Crime",
-      "Disorder",
-      "Statistics"
-    ],
-    "issues": [
-      "crime-looking-back-at-2024-and-ahead-to-2025"
-    ],
-    "issue_numbers": [],
-    "summary": "While efforts to collect and analyze trends have made big strides, the public trusts vibes. What is to be done?",
-    "excerpt": "While efforts to collect and analyze trends have made big strides, the public trusts vibes. What is to be done?",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5ffepbqstj99wcl_gettyimages-2192161874_cropped-auto-format-compress-1776259721203.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1254,
-    "reading_minutes": 5,
-    "id": "69a04c0ad4006a00010a41dc"
-  },
-  {
     "title": "Community Violence Intervention at a Crossroads",
     "slug": "community-violence-intervention-at-a-crossroads",
     "url": "https://www.vitalcitynyc.org/community-violence-intervention-at-a-crossroads/",
@@ -12223,6 +12217,40 @@
     "word_count": 1495,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a4073"
+  },
+  {
+    "title": "The State of the City on Crime 2024",
+    "slug": "vital-signs-state-of-the-city-on-crime-2024",
+    "url": "https://www.vitalcitynyc.org/vital-signs-state-of-the-city-on-crime-2024/",
+    "type": "data analysis",
+    "type_basis": "tag:data-stories",
+    "published_date": "2025-01-22",
+    "published_at": "2025-01-22T21:15:00.000+00:00",
+    "updated_at": "2026-04-15T13:37:13.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City",
+      "Paul Reeping"
+    ],
+    "topics": [
+      "What Do We Know?",
+      "Subway Crime",
+      "Data Stories",
+      "Crime Stories"
+    ],
+    "issues": [
+      "crime-looking-back-at-2024-and-ahead-to-2025",
+      "data-stories"
+    ],
+    "issue_numbers": [],
+    "summary": "What the data show",
+    "excerpt": "What the data show",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/z5fx3pbqstj99wje_istock-1465323988_cropped-auto-format-compress-1776259721163.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2780,
+    "reading_minutes": 12,
+    "id": "69a04c0ad4006a00010a4079"
   },
   {
     "title": "Crime Data Is Better. Will Americans Pay Attention?",

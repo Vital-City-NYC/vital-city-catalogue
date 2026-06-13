@@ -1,15 +1,34 @@
 {
-  "generated_at": "2026-06-12T19:41:52.294825+00:00",
+  "generated_at": "2026-06-13T11:42:50.028440+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 844,
+  "total_posts": 845,
   "total_authors": 461,
   "total_issues": 29,
   "total_topics": 204,
   "date_range": [
     "2021-09-15",
-    "2026-06-11"
+    "2026-06-12"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 3,
+  "new_articles": [
+    {
+      "title": "The Knicks, the Hooligans and the Cops",
+      "url": "https://www.vitalcitynyc.org/knicks-hooligans-nypd/",
+      "published_date": "2026-06-12",
+      "primary_author": "Brandon del Pozo"
+    },
+    {
+      "title": "New York City’s Crime Puzzle",
+      "url": "https://www.vitalcitynyc.org/new-york-city-gun-violence-down-major-crime-high/",
+      "published_date": "2026-02-19",
+      "primary_author": "Marcos F. Soler"
+    },
+    {
+      "title": "The State of the City on Crime 2024",
+      "url": "https://www.vitalcitynyc.org/vital-signs-state-of-the-city-on-crime-2024/",
+      "published_date": "2025-01-22",
+      "primary_author": "Vital City"
+    }
+  ]
 }

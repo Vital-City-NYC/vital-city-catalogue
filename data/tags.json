@@ -1,7 +1,7 @@
 [
   {
     "name": "Crime",
-    "post_count": 142
+    "post_count": 141
   },
   {
     "name": "History",
@@ -21,7 +21,7 @@
   },
   {
     "name": "Justice",
-    "post_count": 79
+    "post_count": 78
   },
   {
     "name": "Housing",
@@ -33,7 +33,7 @@
   },
   {
     "name": "Gun Violence",
-    "post_count": 65
+    "post_count": 66
   },
   {
     "name": "Police Reform",
@@ -64,11 +64,11 @@
     "post_count": 30
   },
   {
-    "name": "data",
-    "post_count": 30
+    "name": "Education",
+    "post_count": 29
   },
   {
-    "name": "Education",
+    "name": "data",
     "post_count": 29
   },
   {
@@ -97,7 +97,7 @@
   },
   {
     "name": "Incarceration",
-    "post_count": 23
+    "post_count": 22
   },
   {
     "name": "Infrastructure",
@@ -112,11 +112,11 @@
     "post_count": 21
   },
   {
-    "name": "Data Stories",
-    "post_count": 18
+    "name": "Subway Crime",
+    "post_count": 19
   },
   {
-    "name": "Subway Crime",
+    "name": "Data Stories",
     "post_count": 18
   },
   {
@@ -180,6 +180,10 @@
     "post_count": 11
   },
   {
+    "name": "Police-Community Relations",
+    "post_count": 10
+  },
+  {
     "name": "Climate Change",
     "post_count": 10
   },
@@ -201,10 +205,6 @@
   },
   {
     "name": "Federal Government",
-    "post_count": 9
-  },
-  {
-    "name": "Police-Community Relations",
     "post_count": 9
   },
   {
@@ -320,10 +320,6 @@
     "post_count": 6
   },
   {
-    "name": "Disorder",
-    "post_count": 6
-  },
-  {
     "name": "What Doesn’t Work",
     "post_count": 6
   },
@@ -361,6 +357,14 @@
   },
   {
     "name": "Historical Lessons",
+    "post_count": 5
+  },
+  {
+    "name": "Disorder",
+    "post_count": 5
+  },
+  {
+    "name": "What Do We Know?",
     "post_count": 5
   },
   {
@@ -436,10 +440,6 @@
     "post_count": 4
   },
   {
-    "name": "What Do We Know?",
-    "post_count": 4
-  },
-  {
     "name": "The Joy of Incrementalism",
     "post_count": 4
   },
@@ -462,6 +462,10 @@
   {
     "name": "New Solutions",
     "post_count": 4
+  },
+  {
+    "name": "Sports",
+    "post_count": 3
   },
   {
     "name": "Borrow and Steal",
@@ -512,10 +516,6 @@
     "post_count": 3
   },
   {
-    "name": "Statistics",
-    "post_count": 3
-  },
-  {
     "name": "How Did It Get This Bad?",
     "post_count": 3
   },
@@ -548,6 +548,10 @@
     "post_count": 3
   },
   {
+    "name": "The Spirit of the City",
+    "post_count": 2
+  },
+  {
     "name": "Comings and Goings",
     "post_count": 2
   },
@@ -557,10 +561,6 @@
   },
   {
     "name": "Child Welfare",
-    "post_count": 2
-  },
-  {
-    "name": "Sports",
     "post_count": 2
   },
   {
@@ -585,6 +585,10 @@
   },
   {
     "name": "Cleanup on Aisle 10",
+    "post_count": 2
+  },
+  {
+    "name": "Statistics",
     "post_count": 2
   },
   {
@@ -630,10 +634,6 @@
   {
     "name": "Gun Violence.",
     "post_count": 2
-  },
-  {
-    "name": "The Spirit of the City",
-    "post_count": 1
   },
   {
     "name": "Jobs",
