@@ -457,7 +457,7 @@
       </div>
 
       <div class="card" id="contentCard">
-        <h2>Content cadence <span class="hint" id="postsHint"></span></h2>
+        <h2>Which pieces drove signups <span class="hint" id="postsHint"></span></h2>
         <div id="postsList"></div>
       </div>
 
@@ -696,14 +696,16 @@ function boot(data){
       const total = counts.reduce((s,[,n])=>s+n,0);
       const NAMES={X:"X",LI:"LinkedIn",Bsky:"Bluesky",IG:"Instagram"};
       const included = counts.map(([k])=>NAMES[k]||k);
-      const missing = [["X",xp.available],["IG",ig.available]].filter(([,a])=>!a).map(([k])=>NAMES[k]);
-      const missTxt = missing.length
-        ? ` ${missing.join(" and ")} ${missing.length>1?"aren't":"isn't"} counted: X's API is paid and Instagram's public follower count isn't reliably readable, so including ${missing.length>1?"them":"it"} would be guesswork.`
+      // X and Instagram come in hand-entered (paid/blocked live counts); flag that.
+      const manual = [["X",xp],["LI",li],["Bsky",bs],["IG",ig]]
+        .filter(([,o])=> o && o.available && o.manual).map(([k,o])=>({n:NAMES[k], as_of:o.as_of}));
+      const manualTxt = manual.length
+        ? ` ${manual.map(m=>m.n).join(" and ")} ${manual.length>1?"are":"is"} hand-entered (as of ${manual[0].as_of||"a recent date"}) — their live counts aren't free to read (X's API is paid, Instagram's public count isn't reliably scrapeable); LinkedIn and Bluesky are pulled live.`
         : "";
       return {lbl:"Social followers", num: counts.length ? fmtN(total) : "—",
               delta: counts.map(([k,n])=>`${fmtN(n)} ${k}`).join(" · "),
               cls:"flat",
-              tip:`Combined followers across the platforms we can read for free — currently ${included.join(" + ")}.${missTxt}\n\nWhy it matters: Followers are owned amplification reach beyond the inbox — the audience that can share Vital City's work into networks email never touches.\n\nSource: LinkedIn via its public page${li.as_of?` (as of ${esc(li.as_of)})`:""}, Bluesky via its open official API. Per-platform detail and coverage notes are in the Social reach card below.`};
+              tip:`Combined followers across ${included.join(" + ")}.${manualTxt}\n\nWhy it matters: Followers are owned amplification reach beyond the inbox — the audience that can share Vital City's work into networks email never touches.\n\nPer-platform detail and coverage notes are in the Social reach card below.`};
     })(),
     (function(){
       const gt = data.ghost_traffic || {};

@@ -2156,6 +2156,24 @@ def pull_donorbox():
 # hit). Returns follower/following/tweet counts + the 100 most recent tweets
 # with per-tweet likes/retweets/replies. NO auth required. Caveats: it's
 # unofficial, so it can break at any time; we treat it as best-effort.
+# Hand-maintained follower counts for platforms we can't read for free — X's
+# API is paid and Instagram's public count isn't reliably scrapeable. Update
+# these by hand (and bump as_of). Used only when the live fetch can't get a
+# count, so the Social-followers total can still include all four platforms.
+MANUAL_FOLLOWERS = {
+    "x":         {"followers": 4305, "as_of": "2026-06-15"},
+    "instagram": {"followers": 663,  "as_of": "2026-06-15"},
+}
+
+
+def _manual_follower_stub(platform, handle, reason):
+    mf = MANUAL_FOLLOWERS.get(platform) or {}
+    if mf.get("followers"):
+        return {"available": True, "manual": True, "followers": mf["followers"],
+                "as_of": mf.get("as_of"), "handle": handle, "reason": reason}
+    return {"available": False, "reason": reason}
+
+
 def pull_x():
     import re as _re
     url = "https://syndication.twitter.com/srv/timeline-profile/screen-name/vitalcitynyc"
@@ -2183,7 +2201,7 @@ def pull_x():
                 "replies":    int(t.get("reply_count")    or 0) if t.get("reply_count") is not None else None,
             })
         if user is None:
-            return {"available": False, "reason": "syndication endpoint returned no tweets"}
+            return _manual_follower_stub("x", "@VitalCityNYC", "syndication endpoint returned no tweets")
         # ISO-normalize tweet timestamps for sort + UI
         def _iso(p):
             try:
@@ -2208,7 +2226,7 @@ def pull_x():
             "recent_tweets": tweets[:100],
         }
     except Exception as e:
-        return {"available": False, "reason": f"X scrape failed: {e}"}
+        return _manual_follower_stub("x", "@VitalCityNYC", f"X scrape failed: {e}")
 
 
 # ------------------------------------------------------- Instagram — free path
@@ -2227,7 +2245,7 @@ def pull_instagram():
     try:
         d = json.loads(http_get(url, headers=headers, timeout=20))
         u = (d.get("data") or {}).get("user") or {}
-        if not u: return {"available": False, "reason": "empty user data"}
+        if not u: return _manual_follower_stub("instagram", "@vitalcitynyc", "empty user data")
         posts_out = []
         for edge in (u.get("edge_owner_to_timeline_media") or {}).get("edges", [])[:12]:
             n = edge.get("node") or {}
@@ -2259,7 +2277,7 @@ def pull_instagram():
             "recent_posts": posts_out,
         }
     except Exception as e:
-        return {"available": False, "reason": f"Instagram scrape failed: {e}"}
+        return _manual_follower_stub("instagram", "@vitalcitynyc", f"Instagram scrape failed: {e}")
 
 
 # ------------------------------------------------------------------------ main
