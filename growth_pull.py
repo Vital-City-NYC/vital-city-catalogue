@@ -1014,8 +1014,9 @@ def pull_ghost_traffic():
             out["reason"] = "staff token works but no Tinybird token/site id in config"
             return out
         today = datetime.now(timezone.utc).date()
-        def tbq(date_from):
-            q = urllib.parse.urlencode({"site_uuid": site, "date_from": str(date_from), "date_to": str(today)})
+        def tbq(date_from, date_to=None):
+            q = urllib.parse.urlencode({"site_uuid": site, "date_from": str(date_from),
+                                        "date_to": str(date_to or today)})
             return json.loads(http_get(f"{endpoint}/v0/pipes/api_kpis.json?{q}",
                 headers={"Authorization": "Bearer " + token}, timeout=30)).get("data") or []
         def agg(rows):
@@ -1027,6 +1028,9 @@ def pull_ghost_traffic():
         rows365 = tbq(today - timedelta(days=365))
         out["visitors_30d"],  out["pageviews_30d"]  = agg(rows30)
         out["visitors_365d"], out["pageviews_365d"] = agg(rows365)
+        # Prior 30 days (days 30-60 ago) so the dashboard can show % change.
+        prev30 = tbq(today - timedelta(days=60), today - timedelta(days=30))
+        out["visitors_prev_30d"], out["pageviews_prev_30d"] = agg(prev30)
         # First month with REAL traffic. Tinybird has a trickle back to
         # 2025-08 (6-36 visits/month — staging/preview hits during the Ghost
         # build-out) and then jumps to ~37K/month in 2026-03 when the site
@@ -1059,37 +1063,56 @@ def pull_ghost_traffic():
                 if u: cat["/" + u.split("/")[-1] + "/"] = c.get("title")
         except Exception:
             pass
-        def top_pages(days, limit):
+        # path -> visits over an explicit [from, to] window (whole list, for deltas)
+        def pages_map(d_from, d_to):
             try:
-                q = urllib.parse.urlencode({"site_uuid": site, "date_from": str(today - timedelta(days=days)),
-                                            "date_to": str(today), "limit": 60})
+                q = urllib.parse.urlencode({"site_uuid": site, "date_from": str(d_from),
+                                            "date_to": str(d_to), "limit": 300})
                 tp = json.loads(http_get(f"{endpoint}/v0/pipes/api_top_pages.json?{q}",
                     headers={"Authorization": "Bearer " + token}, timeout=30)).get("data") or []
             except Exception as e:
-                log(f"  ghost top pages ({days}d) failed: {e}"); return []
-            pages = []
+                log(f"  ghost top pages ({d_from}..{d_to}) failed: {e}"); return {}
+            m = {}
             for r in tp:
                 path = (r.get("pathname") or "").strip()
-                if path in ("/", "") or "/job" in path or path.startswith("/tag/") or path.startswith("/author/"):
-                    continue
+                if path: m[path] = m.get(path, 0) + int(r.get("visits") or r.get("hits") or 0)
+            return m
+        def is_article(path):
+            return not (path in ("/", "") or "/job" in path or path in ("/about/", "/about")
+                        or path.startswith("/tag/") or path.startswith("/author/"))
+        def build_pages(cur, prev, limit):
+            pages = []
+            for path, v in sorted(cur.items(), key=lambda kv: -kv[1]):
+                if not is_article(path): continue
                 title = cat.get(path) or path.strip("/").replace("-", " ").title()
-                pages.append({"title": title, "path": path,
-                              "visits": int(r.get("visits") or r.get("hits") or 0)})
+                pages.append({"title": title, "path": path, "visits": v, "prev": prev.get(path, 0)})
                 if len(pages) >= limit: break
             return pages
-        out["top_pages_7d"]  = top_pages(7, 8)
-        out["top_pages_30d"] = top_pages(30, 12)
-        # Where the site's traffic comes from (referrer sources), last 30 days.
-        try:
-            qs = urllib.parse.urlencode({"site_uuid": site, "date_from": str(today - timedelta(days=30)),
-                                         "date_to": str(today), "limit": 12})
-            sd = json.loads(http_get(f"{endpoint}/v0/pipes/api_top_sources.json?{qs}",
-                headers={"Authorization": "Bearer " + token}, timeout=30)).get("data") or []
-            srcs = []
+        cur30  = pages_map(today - timedelta(days=30), today)
+        prev30p = pages_map(today - timedelta(days=60), today - timedelta(days=30))
+        cur7   = pages_map(today - timedelta(days=7), today)
+        out["top_pages_30d"] = build_pages(cur30, prev30p, 12)
+        out["top_pages_7d"]  = build_pages(cur7, {}, 8)   # 7d list (week pulse) — no delta
+        # Where the site's traffic comes from (referrer sources): this 30d vs prior 30d.
+        def sources_map(d_from, d_to):
+            try:
+                q = urllib.parse.urlencode({"site_uuid": site, "date_from": str(d_from),
+                                            "date_to": str(d_to), "limit": 40})
+                sd = json.loads(http_get(f"{endpoint}/v0/pipes/api_top_sources.json?{q}",
+                    headers={"Authorization": "Bearer " + token}, timeout=30)).get("data") or []
+            except Exception as e:
+                log(f"  ghost top sources ({d_from}..{d_to}) failed: {e}"); return {}
+            m = {}
             for r in sd:
                 name = (r.get("source") or r.get("referrer") or r.get("referrer_source") or "").strip() or "Direct / none"
-                srcs.append({"source": name, "visits": int(r.get("visits") or r.get("hits") or 0)})
-            out["top_sources_30d"] = [s for s in srcs if s["visits"] > 0][:10]
+                m[name] = m.get(name, 0) + int(r.get("visits") or r.get("hits") or 0)
+            return m
+        try:
+            cur_src  = sources_map(today - timedelta(days=30), today)
+            prev_src = sources_map(today - timedelta(days=60), today - timedelta(days=30))
+            srcs = [{"source": n, "visits": v, "prev": prev_src.get(n, 0)}
+                    for n, v in sorted(cur_src.items(), key=lambda kv: -kv[1]) if v > 0]
+            out["top_sources_30d"] = srcs[:10]
         except Exception as e:
             log(f"  ghost top sources failed: {e}")
             out["top_sources_30d"] = []
