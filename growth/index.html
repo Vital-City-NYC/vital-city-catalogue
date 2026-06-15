@@ -2305,7 +2305,7 @@ function renderTraffic(data){
   // ---- All-time most-read since the Ghost handoff ----
   const allPages = gt.top_pages_since_launch || [];
   const sinceLbl = gt.top_pages_since
-    ? new Date(gt.top_pages_since+"T00:00:00Z").toLocaleDateString("en-US",{month:"long",year:"numeric"})
+    ? new Date(gt.top_pages_since+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",year:"numeric",timeZone:"UTC"})
     : "launch";
   const maxA = Math.max(1, ...allPages.map(p=>p.visits||0));
   const topAll = allPages.length ? `
