@@ -2530,6 +2530,30 @@ function renderBigPicture(data){
       </div>`;
     }).join("");
     const first = listYears[0], last = listYears[listYears.length-1];
+    // Per-year newsletter performance, derived from campaign sends: Mailchimp
+    // gives open/click RATES per send, so total opens/clicks ≈ rate × recipients.
+    const camps = (data.mailchimp && data.mailchimp.campaigns) || [];
+    const emYr = {};
+    camps.forEach(c=>{ const y=+(String(c.sent||"").slice(0,4)); if(!y) return;
+      const e=(emYr[y]=emYr[y]||{sends:0,recip:0,opens:0,clicks:0});
+      const r=c.sent_to||0; e.sends++; e.recip+=r;
+      e.opens += r*(c.open_pct||0)/100; e.clicks += r*(c.click_pct||0)/100; });
+    const emRows = listYears.map(y=>{
+      const e=emYr[y.year]; if(!e || !e.recip) return "";
+      const orate=Math.round(e.opens/e.recip*100);
+      return `<tr>
+        <td style="font-weight:700">${y.year}${y.year>=curYear?'*':''}</td>
+        <td class="num">${fmtN(y.cum)}</td>
+        <td class="num">${fmtN(e.sends)}</td>
+        <td class="num">${orate}%</td>
+        <td class="num">${fmtN(Math.round(e.opens))}</td>
+        <td class="num">${fmtN(Math.round(e.clicks))}</td>
+      </tr>`;
+    }).join("");
+    const emTable = emRows ? `
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:24px 0 8px">Newsletter performance by year</div>
+      <table class="tbl" style="width:100%"><thead><tr><th>Year</th><th class="num">Subscribers (EOY)</th><th class="num">Sends</th><th class="num">Open rate</th><th class="num">Total opens</th><th class="num">Total clicks</th></tr></thead><tbody>${emRows}</tbody></table>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px;line-height:1.55">Total opens/clicks are estimated from each send's open/click rate × recipients (Mailchimp reports rates, not raw totals). <b>Open rate isn't comparable across the whole span</b> — Apple Mail Privacy Protection (Sept 2021+) auto-opens email, inflating opens from ~2022 on; treat open rate as directional and clicks as the cleaner engagement signal. ${curYear} is in progress.</div>` : "";
     listBlock = `
       <div style="border-top:1px solid var(--vc-cloud);margin-top:26px;padding-top:20px"></div>
       <div style="font-size:13px;color:var(--vc-charcoal);margin-bottom:16px;line-height:1.5">
@@ -2537,7 +2561,8 @@ function renderBigPicture(data){
       </div>
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:10px">Newsletter subscribers by year-end</div>
       <div style="display:flex;gap:14px;align-items:flex-end;height:180px">${lbars}</div>
-      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the total list size at that year's end; the number under it is new signups during the year. ${curYear} is in progress. Source: Mailchimp growth history — the list's system of record (a clean cumulative count, unlike the cookie-based visitor numbers above).</div>`;
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the total list size at that year's end; the number under it is new signups during the year. ${curYear} is in progress. Source: Mailchimp growth history — the list's system of record (a clean cumulative count, unlike the cookie-based visitor numbers above).</div>
+      ${emTable}`;
   }
 
   host.innerHTML = `
