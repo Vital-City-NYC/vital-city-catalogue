@@ -2162,7 +2162,7 @@ def pull_donorbox():
 # count, so the Social-followers total can still include all four platforms.
 MANUAL_FOLLOWERS = {
     "x":         {"followers": 4305, "as_of": "2026-06-15"},
-    "instagram": {"followers": 663,  "as_of": "2026-06-15"},
+    "instagram": {"followers": 665,  "as_of": "2026-06-15"},
 }
 
 
