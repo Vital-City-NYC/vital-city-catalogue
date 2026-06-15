@@ -703,7 +703,7 @@ function boot(data){
                   (ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs Ghost staff token ↗ · free");
       return {lbl:"Website visitors · 30d", num: n!=null ? fmtN(n) : "—", delta: sub,
               cls: (vp!=null) ? deltaClass(n-vp) : (n!=null ? "flat" : "na"),
-              tip:"Unique visitors to vitalcitynyc.org in the last 30 days, from Ghost's own analytics (same numbers as the admin Analytics tab).\n\nWhy it matters: This is the top of the funnel — the pool of people who could become subscribers and donors. Read it against New signups to see how well the site converts attention into list growth; a big gap is a conversion opportunity.\n\nSetup note: Ghost shares traffic only with a staff token (GHOST_STAFF_KEY) — the free 5-minute fix is on the How it works page. GA4 is an optional alternative that would also cover pre-April-2026 history."};
+              tip:"Unique visitors to vitalcitynyc.org in the last 30 days, from Ghost's own analytics (same numbers as the admin Analytics tab).\n\nWhy it matters: This is the top of the funnel — the pool of people who could become subscribers and donors. Read it against New signups to see how well the site converts attention into list growth; a big gap is a conversion opportunity.\n\nSource: Ghost's own analytics. Caveat: Ghost and Google Analytics 4 count visitors differently — bot filtering, what counts as a 'visit', time zones and consent all differ — so this won't exactly match the GA4-based 1-year tile, or any other tool. Treat traffic numbers as directional, not exact head counts."};
     })(),
     (function(){
       const gt = data.ghost_traffic || {};
@@ -713,7 +713,7 @@ function boot(data){
       if(ga4 && ga4.available && ga4.aau!=null){
         return {lbl:"Website visitors · 1 year", num: fmtN(ga4.aau),
                 delta: `${fmtN(ga4.pageviews_365d||0)} page views · via GA4`, cls:"flat",
-                tip:"Unique visitors to vitalcitynyc.org over the trailing 12 months, from Google Analytics 4 — which tracked the previous site too, so this is a real full year (Ghost's own analytics only begin at the April 2026 cutover).\n\nWhy it matters: the site's true annual reach — the right number for grant reporting and long-run trend."};
+                tip:"Unique visitors to vitalcitynyc.org over the trailing 12 months, from Google Analytics 4 — which tracked the previous site too, so this is a real full year (Ghost's own analytics only begin at the April 2026 cutover).\n\nWhy it matters: the site's true annual reach — the right number for grant reporting and long-run trend.\n\nCaveat: this comes from GA4, while the 30-day tile and the Website traffic card come from Ghost. The two systems count visitors differently, so don't compare them directly or treat them as one continuous series."};
       }
       // Fallback: Ghost-era cumulative, labeled by its true start month.
       const n = gt.available ? gt.visitors_365d : null;
@@ -2357,7 +2357,9 @@ function renderTraffic(data){
     </div>`).join("")}` :
     `<div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:16px">Traffic-source breakdown populates on the next daily build.</div>`;
 
-  host.innerHTML = header + trend + cadence + topPieces + topAll + sources;
+  const caveat = `<div style="font-size:11px;color:var(--vc-charcoal);line-height:1.55;border-top:1px dashed var(--vc-cloud);margin-top:18px;padding-top:10px">
+    <b style="color:var(--vc-black)">About these numbers:</b> this card and the 30-day visitor tile come from <b>Ghost</b>'s analytics; the 1-year visitor tile up top comes from <b>Google Analytics 4</b> (which also tracked the pre-April-2026 site). The two systems count visitors differently — bot filtering, what counts as a "visit", time zones and consent all differ — so figures across them won't reconcile, and neither is "wrong." Read traffic as directional, not exact. <a href="https://plausible.io/blog/why-analytics-numbers-dont-match" target="_blank" style="color:var(--vc-cerulean)">Why no two analytics tools agree &#8599;</a></div>`;
+  host.innerHTML = header + trend + cadence + topPieces + topAll + sources + caveat;
   if(trendPts){ const tsvg = document.querySelector("#trafficTrendSvg");
     if(tsvg) attachChartHover(tsvg, trendGeo.padT, trendGeo.innerH, trendPts); }
 }
