@@ -872,35 +872,17 @@ function boot(data){
       </div>`).join("")}
     </div>` : ''}
   ` : '';
-  $("#postsList").innerHTML=posts.length
-    ? moversBlock + `<ul class="feed">${posts.map(p=>{
-        const isMover=!!p.mover, isDonorMover=!!p.donor_mover;
-        // Signup badge — real attribution preferred
-        let subBadge = '';
-        if(isReal && p.direct_signups!=null){
-          const tip = `${p.direct_signups} people signed up for the newsletter from this page — directly attributed from Ghost's per-event data, not a window correlation.`;
-          subBadge = `<span class="signups-badge${isMover?' is-mover':''}" title="${esc(tip)}">+${p.direct_signups} signups${isMover?' · mover':''}</span>`;
-        } else if(p.signups_window!=null){
-          const tip = `${p.signups_window} new subs in the 4 days after this post published, vs a typical ~${baseline} for an active 4-day window. Correlational.`;
-          subBadge = `<span class="signups-badge${isMover?' is-mover':''}" title="${esc(tip)}">+${p.signups_window} in 4d${isMover?' · mover':''}</span>`;
-        }
-        // Donation badge intentionally omitted — see donor-movers block above.
-        const donBadge = '';
-        const accent = isMover ? 'rgba(87,170,74,.10)' : '';
-        const edge   = isMover ? 'var(--vc-green)' : '';
-        const styleAttr = accent ? ` style="background:linear-gradient(90deg, ${accent}, transparent 40%);border-left:3px solid ${edge};padding-left:9px;margin-left:-12px"` : '';
-        return `<li${styleAttr}>
-          <a href="${esc(p.url)}" target="_blank">${esc(p.title)}</a>
-          <span class="date">${esc(p.published)} · ${esc(p.primary_author||'')}</span>
-          ${subBadge}${donBadge}
-          <div class="snip">${esc((p.tags||[]).slice(0,4).join(' · '))}</div>
-        </li>`;
-      }).join("")}</ul>
-      ${allPosts.some(p=>p.mover) ? `
-        <div style="margin-top:14px;font-size:11.5px;color:var(--vc-charcoal);line-height:1.5;border-top:1px dashed var(--vc-cloud);padding-top:10px">
-          ${isReal ? `<b style="color:var(--vc-black)">Signup attribution (green):</b> Pulled directly from Ghost's per-event attribution — each newsletter signup carries the URL of the page the visitor was on when they signed up. Numbers are exact, not correlational. The green left-edge marks posts whose attributed signups are at least 3× the median attributed post (with a floor of 4 signups). Notes: homepage-routed signups attribute to "/" rather than to the post the reader landed on first, so this counts only direct-conversion-on-the-post-page signups.` :
-          `<b style="color:var(--vc-black)">Signup attribution (green):</b> Correlational — sum of signups in the 4-day window after publish, vs the typical active 4-day window. Multiple posts on the same day share the lift.`}
-        </div>` : ''}`
+  // The full per-post list (mostly "+0 signups") added clutter without signal —
+  // the green movers box above already surfaces the posts that actually drove
+  // signups. Keep that box + a short "how to read it" note.
+  $("#postsList").innerHTML = posts.length
+    ? moversBlock + (movers.length
+        ? `<div style="font-size:11.5px;color:var(--vc-charcoal);line-height:1.55;margin-top:2px">
+            ${isReal
+              ? `<b style="color:var(--vc-black)">How to read this:</b> Every newsletter signup carries the URL of the page the reader was on when they signed up — Ghost's per-event attribution, exact and not correlational. The pieces above are this window's standouts: their attributed signups are at least 3× the median attributed post (floor of 4). Homepage-routed signups attribute to "/" rather than the post, so this counts only direct-on-the-page conversions.`
+              : `<b style="color:var(--vc-black)">How to read this:</b> Correlational — signups in the 4-day window after each post published, vs a typical active window.`}
+          </div>`
+        : `<div style="font-size:12px;color:var(--vc-charcoal)">No standout signup-driving pieces in this window yet — see the publishing counts above and the most-read pieces in the Website traffic card.</div>`)
     : '<div style="font-size:12px;color:var(--vc-charcoal)">No posts available.</div>';
 
   // ----- Quality breakdown
@@ -2309,6 +2291,11 @@ function renderTraffic(data){
     for(let t=0;t<=yTop;t+=step){const yy=y(t);hh+=`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#e6e6e3" stroke-width="1"/><text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${fmtN(t)}</text>`;}
     let lastX=-1e9;
     series.forEach((s,i)=>{const isM=(i===0)||(s.wk.slice(0,7)!==series[i-1].wk.slice(0,7));if(isM&&x(i)-lastX>=46){hh+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="10" fill="#888">${esc(s.wk.slice(0,7))}</text>`;lastX=x(i);}});
+    // Dashed reference line at the average weekly visitors over the window, so
+    // each week reads against "typical", not just the week before.
+    const avgV = Math.round(series.reduce((a,s)=>a+(s.visitors||0),0)/series.length);
+    hh+=`<line x1="${padL}" x2="${W-padR}" y1="${y(avgV)}" y2="${y(avgV)}" stroke="#1F6FB2" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>`;
+    hh+=`<text x="${W-padR-2}" y="${Math.max(padT+9,y(avgV)-4)}" text-anchor="end" font-size="9.5" fill="#1F6FB2" opacity=".85">avg ${fmtN(avgV)} visitors/wk</text>`;
     hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.pageviews||0)}`).join(" ")}" fill="none" stroke="#E2772F" stroke-width="1.6" opacity=".85"/>`;
     hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.visitors||0)}`).join(" ")}" fill="none" stroke="#1F6FB2" stroke-width="2"/>`;
     trend = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 6px" title="Total visitors and page views to vitalcitynyc.org, bucketed by week, since Ghost analytics began recording. The whole-site trend — the top of the funnel.">Overall website traffic · weekly, whole site</div>
@@ -2818,6 +2805,16 @@ function renderTrendChart(act,posts,windowDays){
     const h=Math.max(0,((+r.subs||0)/yTop)*innerH);
     if(r.subs>0) html+=`<rect x="${x(i)-bw/2}" y="${y(r.subs)}" width="${bw}" height="${h}" fill="#57AA4A"><title>${weekly?'Week of ':''}${r.d}: ${r.subs} new signups · ${r.unsubs} unsubs</title></rect>`;
   });
+  // Dashed reference line at the average signups per period (over the window
+  // with real per-period detail), so each bar reads against "typical".
+  {
+    const sr=rows.slice(firstSub>0?firstSub:0);
+    if(sr.length){
+      const avgSub=sr.reduce((a,r)=>a+(+r.subs||0),0)/sr.length;
+      html+=`<line x1="${padL}" x2="${W-padR}" y1="${y(avgSub)}" y2="${y(avgSub)}" stroke="#57AA4A" stroke-width="1" stroke-dasharray="4 4" opacity=".5"/>`;
+      html+=`<text x="${W-padR-2}" y="${Math.max(padT+9,y(avgSub)-4)}" text-anchor="end" font-size="9.5" fill="#3b7d2f" opacity=".9">avg ${fmtN(Math.round(avgSub))} signups/${weekly?'wk':'day'}</text>`;
+    }
+  }
   // unsub line
   const pts=rows.map((r,i)=>`${x(i)},${y(+r.unsubs||0)}`).join(" ");
   html+=`<polyline points="${pts}" fill="none" stroke="#C8377E" stroke-width="1.6" opacity=".85"/>`;
