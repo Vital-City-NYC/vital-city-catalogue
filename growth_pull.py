@@ -1005,6 +1005,67 @@ def _ga4_engagement(prop, token, days, min_views=50, limit=60):
     return out[:limit]
 
 
+def _ga4_pretty_slug(slug):
+    t = slug.replace("-", " ").strip().title()
+    for a, b in (("Nyc", "NYC"), ("Nypd", "NYPD"), ("Mta", "MTA"), ("Lic", "LIC"),
+                 (" Ai ", " AI "), ("Us ", "US "), ("Nyc's", "NYC's")):
+        t = t.replace(a, b)
+    return t
+
+
+def _ga4_top_pages_since(prop, token, start_date, limit=15):
+    """Most-read articles by unique visitors since an absolute start date, from
+    GA4 — which covers the pre-Ghost-handoff period (back to 2026-01-01), so it
+    can build a 'since Jan 1' list Ghost's own analytics can't. Titles come from
+    the Ghost catalogue where the slug still matches; older URLs fall back to a
+    prettified slug."""
+    body = {
+        "dateRanges": [{"startDate": start_date, "endDate": "today"}],
+        "dimensions": [{"name": "pagePath"}],
+        "metrics": [{"name": "totalUsers"}, {"name": "screenPageViews"}],
+        "orderBys": [{"metric": {"metricName": "totalUsers"}, "desc": True}],
+        "limit": 250,
+    }
+    req = urllib.request.Request(
+        f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+        data=json.dumps(body).encode(),
+        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        rep = json.loads(r.read())
+    cat = {}
+    try:
+        for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
+            u = (c.get("url") or "").rstrip("/")
+            if u:
+                cat["/" + u.split("/")[-1] + "/"] = c.get("title")
+    except Exception:
+        pass
+    def is_article(p):
+        return not (p in ("/", "") or "/job" in p or "/career" in p or p in ("/about/", "/about")
+                    or p.startswith("/tag/") or p.startswith("/author/") or p.startswith("/contributor")
+                    or p.startswith("/issues") or p.startswith("/search")
+                    or p.startswith("/privacy") or p.startswith("/terms"))
+    # Merge by title so a piece that lived at both an old-site /articles/ URL
+    # and the new-site URL is counted once (its visitors summed), and prefer
+    # the canonical (catalogue-matching) path for the link.
+    agg = {}
+    for row in (rep.get("rows") or []):
+        path = (row["dimensionValues"][0]["value"] or "").split("?")[0]
+        if not is_article(path):
+            continue
+        slug = path.strip("/").split("/")[-1]
+        canon = cat.get("/" + slug + "/")
+        title = canon or _ga4_pretty_slug(slug)
+        e = agg.get(title)
+        if not e:
+            e = agg[title] = {"path": path, "title": title, "visitors": 0, "views": 0}
+        e["visitors"] += int(row["metricValues"][0]["value"] or 0)
+        e["views"]    += int(row["metricValues"][1]["value"] or 0)
+        if canon:
+            e["path"] = path   # link to the live URL when we recognize it
+    return sorted(agg.values(), key=lambda x: -x["visitors"])[:limit]
+
+
 def pull_ga4():
     """Website traffic from Google Analytics 4 (covers the pre-April-2026 site
     history Ghost's own analytics can't). Needs GA4_PROPERTY_ID + a
@@ -1028,12 +1089,17 @@ def pull_ga4():
             engagement = _ga4_engagement(prop, token, 90)
         except Exception as e:
             log(f"  ga4 engagement query failed: {e}"); engagement = []
-        log(f"  ga4: {u30:,} users / {s30:,} sessions (30d); {u365:,} users (1y); {len(engagement)} pieces w/ engagement time")
+        try:
+            since_pages = _ga4_top_pages_since(prop, token, "2026-01-01")
+        except Exception as e:
+            log(f"  ga4 since-Jan top pages failed: {e}"); since_pages = []
+        log(f"  ga4: {u30:,} users / {s30:,} sessions (30d); {u365:,} users (1y); {len(engagement)} eng pieces; {len(since_pages)} since-Jan pieces")
         return {
             "available": True, "property_id": prop,
             "mau": u30, "sessions_30": s30, "pageviews_30": p30,
             "aau": u365, "sessions_365": s365, "pageviews_365": p365,
             "engagement": engagement, "engagement_days": 90,
+            "top_pages_since": since_pages, "top_pages_since_date": "2026-01-01",
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:

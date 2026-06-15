@@ -2328,20 +2328,24 @@ function renderTraffic(data){
     </tr>`).join("")}
     </tbody></table>` : `<div style="font-size:12px;color:var(--vc-charcoal);margin-top:14px">No per-page traffic in the window yet.</div>`;
 
-  // ---- All-time most-read since the Ghost handoff ----
-  const allPages = gt.top_pages_since_launch || [];
-  const sinceLbl = gt.top_pages_since
-    ? new Date(gt.top_pages_since+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",year:"numeric",timeZone:"UTC"})
-    : "launch";
-  const maxA = Math.max(1, ...allPages.map(p=>p.visits||0));
+  // ---- Most-read since Jan 1, 2026 — GA4 covers the full window (incl. the
+  // pre-handoff site), so it can reach back further than Ghost's analytics.
+  // Falls back to Ghost's since-launch cumulative if GA4 isn't available.
+  const allViaGA4 = !!(ga4.available && ga4.top_pages_since && ga4.top_pages_since.length);
+  const allPages = allViaGA4 ? ga4.top_pages_since : (gt.top_pages_since_launch || []);
+  const allVal = (p)=> p.visitors!=null ? p.visitors : (p.visits||0);
+  const sinceLbl = allViaGA4
+    ? new Date((ga4.top_pages_since_date||"2026-01-01")+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"})
+    : (gt.top_pages_since ? new Date(gt.top_pages_since+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",year:"numeric",timeZone:"UTC"}) : "launch");
+  const maxA = Math.max(1, ...allPages.map(allVal));
   const topAll = allPages.length ? `
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Cumulative unique visitors per Vital City page since Ghost analytics began recording (the April 2026 site handoff). The all-time leaderboard, vs. the rolling 30-day list above.">Most-read pieces · all-time since ${esc(sinceLbl)}, ranked by unique visitors</div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Most-read articles by unique visitors since ${esc(sinceLbl)}.${allViaGA4 ? " From GA4, which tracked the site before the April 2026 Ghost handoff, so it reaches back to Jan 1. A piece that lived at both an old and new URL is merged. Titles come from the Ghost catalogue; a few older URLs may show a tidied-up slug." : " From Ghost analytics (since its recording began)."} The all-time leaderboard vs. the rolling 30-day list above.">Most-read pieces · since ${esc(sinceLbl)}, ranked by unique visitors${allViaGA4 ? ' <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span>' : ''}</div>
     <table class="tbl" style="width:100%"><tbody>
     ${allPages.map((p,i)=>`<tr>
       <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
       <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
-      <td style="width:30%"><div style="background:var(--vc-green);opacity:.5;height:8px;border-radius:2px;width:${Math.max(2,Math.round((p.visits||0)/maxA*100))}%"></div></td>
-      <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtN(p.visits||0)}</td>
+      <td style="width:30%"><div style="background:var(--vc-green);opacity:.5;height:8px;border-radius:2px;width:${Math.max(2,Math.round(allVal(p)/maxA*100))}%"></div></td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtN(allVal(p))}</td>
     </tr>`).join("")}
     </tbody></table>` : "";
 
@@ -2398,7 +2402,7 @@ function renderTraffic(data){
   }
 
   const caveat = `<div style="font-size:11px;color:var(--vc-charcoal);line-height:1.55;border-top:1px dashed var(--vc-cloud);margin-top:18px;padding-top:10px">
-    <b style="color:var(--vc-black)">About these numbers:</b> the trend, top-pieces and sources here — and the 30-day visitor tile — come from <b>Ghost</b>'s analytics; the 1-year visitor tile up top and the engagement-time list come from <b>Google Analytics 4</b> (which also tracked the pre-April-2026 site). The two systems count visitors differently — bot filtering, what counts as a "visit", time zones and consent all differ — so figures across them won't reconcile, and neither is "wrong." Read traffic as directional, not exact. <a href="https://plausible.io/blog/why-analytics-numbers-dont-match" target="_blank" style="color:var(--vc-cerulean)">Why no two analytics tools agree &#8599;</a></div>`;
+    <b style="color:var(--vc-black)">About these numbers — two sources:</b> the weekly trend, the 30-day top pieces, the sources, and the 30-day visitor tile come from <b>Ghost</b>; the 1-year tile, the "since Jan 1" list and the engagement times come from <b>Google Analytics 4</b> (which tracked the site before the April handoff). Don't compare the two head to head — watch each for direction over time. In general <b>Ghost reads higher</b>: it's first-party and cookieless, so ad blockers, Safari/Firefox tracking protection and consent banners don't suppress it the way they block GA4's third-party script. And because Ghost counts a returning reader once per 24-hour window (no cookies), its "unique visitors" drift above GA4's deduplicated users over longer ranges. Neither is "wrong" — they answer different questions. <a href="https://plausible.io/blog/why-analytics-numbers-dont-match" target="_blank" style="color:var(--vc-cerulean)">Why no two analytics tools agree &#8599;</a></div>`;
   host.innerHTML = header + trend + cadence + topPieces + topAll + engBlock + sources + caveat;
   if(trendPts){ const tsvg = document.querySelector("#trafficTrendSvg");
     if(tsvg) attachChartHover(tsvg, trendGeo.padT, trendGeo.innerH, trendPts); }
@@ -2406,10 +2410,11 @@ function renderTraffic(data){
   if(eng.length){
     const tbl=document.querySelector("#engTbl");
     const draw=(k)=>{
-      const rows=[...eng].sort((a,b)=> k==="total" ? (b.total_secs-a.total_secs) : (b.avg_secs-a.avg_secs)).slice(0,12);
-      const maxv=Math.max(1,...rows.map(r=> k==="total" ? r.total_secs : r.avg_secs));
+      const mv=(r)=> ((k==="total" ? r.total_secs : r.avg_secs) || 0);
+      const rows=[...eng].sort((a,b)=> mv(b)-mv(a)).slice(0,12);
+      const maxv=Math.max(1,...rows.map(mv));
       tbl.innerHTML=`<table class="tbl" style="width:100%"><tbody>${rows.map((p,i)=>{
-        const val = k==="total" ? p.total_secs : p.avg_secs;
+        const val = mv(p);
         return `<tr>
           <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
           <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
