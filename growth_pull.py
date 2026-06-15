@@ -911,16 +911,17 @@ def _b64url(b):
     return base64.urlsafe_b64encode(b).rstrip(b"=")
 
 
-def _ga4_access_token(creds):
-    """Mint a short-lived OAuth token from a service-account key by signing a
-    JWT (RS256) with the cryptography lib — no google-auth dependency needed."""
+def _sa_access_token(creds, scope):
+    """Mint a short-lived OAuth token from a service-account key for a given
+    scope, by signing a JWT (RS256) with the cryptography lib — no google-auth
+    dependency needed."""
     from cryptography.hazmat.primitives import hashes, serialization
     from cryptography.hazmat.primitives.asymmetric import padding
     now = int(time.time())
     header = {"alg": "RS256", "typ": "JWT"}
     claim = {
         "iss": creds["client_email"],
-        "scope": "https://www.googleapis.com/auth/analytics.readonly",
+        "scope": scope,
         "aud": "https://oauth2.googleapis.com/token",
         "iat": now, "exp": now + 3600,
     }
@@ -936,6 +937,10 @@ def _ga4_access_token(creds):
                                  headers={"Content-Type": "application/x-www-form-urlencoded"})
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.loads(r.read())["access_token"]
+
+
+def _ga4_access_token(creds):
+    return _sa_access_token(creds, "https://www.googleapis.com/auth/analytics.readonly")
 
 
 def _ga4_totals(prop, token, days):
@@ -1143,6 +1148,67 @@ def pull_ga4():
         log(f"  ga4: pull failed ({e})")
         return {"available": False, "reason": f"GA4 configured but the pull failed: {e}",
                 "setup": GA4_SETUP}
+
+
+GSC_SETUP = [
+    "1) In Google Cloud (same project as GA4), enable the 'Google Search Console API'.",
+    "2) In Search Console (search.google.com/search-console), open the vitalcitynyc.org property → Settings → Users and permissions → add the GA4 service-account email with Full or Restricted access.",
+    "3) Nothing else — the pull reuses GA4_CREDS_JSON and auto-detects the property (or set GSC_SITE_URL, e.g. sc-domain:vitalcitynyc.org).",
+]
+
+
+def pull_search_console():
+    """Google Search Console — how people find Vital City on Google: search
+    queries, impressions, clicks, CTR and average position (last 28 days).
+    Reuses the GA4 service account (added to the Search Console property);
+    auto-detects the property unless GSC_SITE_URL is set. Stub until access."""
+    raw = (os.environ.get("GSC_CREDS_JSON") or os.environ.get("GA4_CREDS_JSON") or "").strip()
+    if not raw:
+        return {"available": False, "reason": "no service-account creds", "setup": GSC_SETUP}
+    try:
+        try:
+            creds = json.loads(base64.b64decode(raw))
+        except Exception:
+            creds = json.loads(raw)
+        token = _sa_access_token(creds, "https://www.googleapis.com/auth/webmasters.readonly")
+        site = os.environ.get("GSC_SITE_URL", "").strip()
+        if not site:
+            req = urllib.request.Request("https://searchconsole.googleapis.com/webmasters/v3/sites",
+                                         headers={"Authorization": "Bearer " + token})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                entries = json.loads(r.read()).get("siteEntry", [])
+            usable = [e["siteUrl"] for e in entries if e.get("permissionLevel") != "siteUnverifiedUser"]
+            site = (next((s for s in usable if "vitalcitynyc" in s and s.startswith("sc-domain:")), None)
+                    or next((s for s in usable if "vitalcitynyc" in s), None)
+                    or (usable[0] if usable else ""))
+        if not site:
+            return {"available": False, "reason": "service account can't see any Search Console property", "setup": GSC_SETUP}
+        today = datetime.now(timezone.utc).date()
+        start = (today - timedelta(days=28)).isoformat()
+        end = today.isoformat()
+        enc = urllib.parse.quote(site, safe="")
+        def query(body):
+            req = urllib.request.Request(
+                f"https://searchconsole.googleapis.com/webmasters/v3/sites/{enc}/searchAnalytics/query",
+                data=json.dumps(body).encode(),
+                headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return json.loads(r.read()).get("rows", []) or []
+        tr = query({"startDate": start, "endDate": end})
+        t0 = tr[0] if tr else {}
+        totals = {"clicks": int(t0.get("clicks", 0)), "impressions": int(t0.get("impressions", 0)),
+                  "ctr": round((t0.get("ctr") or 0) * 100, 1), "position": round(t0.get("position") or 0, 1)}
+        qrows = query({"startDate": start, "endDate": end, "dimensions": ["query"], "rowLimit": 20})
+        top_queries = [{"query": r["keys"][0], "clicks": int(r.get("clicks", 0)),
+                        "impressions": int(r.get("impressions", 0)),
+                        "ctr": round((r.get("ctr") or 0) * 100, 1),
+                        "position": round(r.get("position") or 0, 1)} for r in qrows]
+        log(f"  search console: {totals['clicks']:,} clicks / {totals['impressions']:,} impressions, {len(top_queries)} queries ({site})")
+        return {"available": True, "site": site, "window_days": 28,
+                "totals": totals, "top_queries": top_queries, "as_of": end}
+    except Exception as e:
+        log(f"  search console pull failed: {e}")
+        return {"available": False, "reason": f"Search Console configured but the pull failed: {e}", "setup": GSC_SETUP}
 
 
 def pull_ghost_traffic():
@@ -2793,15 +2859,9 @@ def main():
         # Google Analytics 4 — website traffic (covers pre-April-2026 history).
         # Real pull when GA4_PROPERTY_ID + GA4_CREDS_JSON are set; stub w/ steps otherwise.
         "ga4": pull_ga4(),
-        "search_console": {
-            "available": False,
-            "reason": "Search Console service-account not configured",
-            "setup": [
-                "1) Same service account as GA4 (or a separate one) — enable Search Console API.",
-                "2) In Search Console, add the service-account email as a user on www.vitalcitynyc.org.",
-                "3) Add GSC_CREDS_JSON and GSC_SITE_URL (e.g. sc-domain:vitalcitynyc.org) as GitHub secrets.",
-            ],
-        },
+        # Google Search Console — search queries/impressions/clicks/position.
+        # Reuses the GA4 service account; auto-detects the property.
+        "search_console": pull_search_console(),
         "x_profile":  xprof,
         "instagram":  pull_instagram(),
     }

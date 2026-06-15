@@ -486,6 +486,11 @@
         <div id="trafficBody"></div>
       </div>
 
+      <div class="card" id="searchConsole">
+        <h2>How people find us on Google <span class="hint">search queries, clicks, impressions · Search Console</span></h2>
+        <div id="searchConsoleBody"></div>
+      </div>
+
       <div class="card" id="social">
         <h2>Social reach — X, LinkedIn, Bluesky, Instagram <span class="hint">followers + latest posts per platform · all free sources · coverage labeled per panel</span></h2>
         <div id="socialBody"></div>
@@ -774,6 +779,7 @@ function boot(data){
   renderEngagementExtras(data.engagement_extras || {});
   renderLifecycle(data.lifecycle || {});
   renderTraffic(data);
+  renderSearchConsole(data);
   renderBigPicture(data);
   renderGoogleTrends();
   // After every card has rendered, sprinkle clickable ⓘ icons on metric
@@ -2443,6 +2449,36 @@ function renderTraffic(data){
       b.classList.add("on"); draw(b.dataset.k);
     }));
   }
+}
+
+// Search Console — how people find Vital City on Google. Totals + top queries.
+function renderSearchConsole(data){
+  const host = $("#searchConsoleBody"); if(!host) return;
+  const gsc = data.search_console || {};
+  if(!gsc.available){
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">Search Console isn't connected yet${gsc.reason?` — ${esc(gsc.reason)}`:""}. It adds what people <i>search on Google</i> to find Vital City (queries, impressions, click-through, ranking) — see the How it works page.</div>`;
+    return;
+  }
+  const t = gsc.totals || {}, q = gsc.top_queries || [], win = gsc.window_days || 28;
+  const maxClk = Math.max(1, ...q.map(x=>x.clicks||0));
+  host.innerHTML = `
+    <div class="perfgrid">
+      <div class="perfcell" title="Clicks from Google search results to vitalcitynyc.org over the last ${win} days."><div class="pl">Clicks · ${win}d</div><div class="pn">${fmtN(t.clicks||0)}</div><div class="pd flat">visits from Google</div></div>
+      <div class="perfcell" title="How many times a Vital City page appeared in someone's Google results."><div class="pl">Impressions</div><div class="pn">${fmtN(t.impressions||0)}</div><div class="pd flat">times shown in results</div></div>
+      <div class="perfcell" title="Clicks ÷ impressions. Higher = the listing is compelling for what people searched."><div class="pl">Click-through rate</div><div class="pn">${t.ctr||0}%</div><div class="pd flat">clicks ÷ impressions</div></div>
+      <div class="perfcell" title="Average ranking position across all queries (1 = top of page one). Lower is better."><div class="pl">Avg position</div><div class="pn">${t.position||0}</div><div class="pd flat">1 = top of page one</div></div>
+    </div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:18px 0 8px" title="The actual searches that put Vital City in front of people. Branded terms ('vital city') rank ~1; the non-branded discovery queries are how new readers find you.">Top search queries · last ${win} days</div>
+    <table class="tbl" style="width:100%"><thead><tr><th>Query</th><th class="num">Clicks</th><th class="num">Impressions</th><th class="num">CTR</th><th class="num">Avg pos</th></tr></thead><tbody>
+    ${q.map(x=>`<tr>
+      <td>${esc(x.query)}</td>
+      <td class="num">${fmtN(x.clicks)}</td>
+      <td class="num">${fmtN(x.impressions)}</td>
+      <td class="num">${x.ctr}%</td>
+      <td class="num">${x.position}</td>
+    </tr>`).join("")}
+    </tbody></table>
+    <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55">From Google Search Console (${esc(gsc.site||'')}), last ${win} days. Branded queries ("vital city") sit near position 1; the discovery queries below them — what people Google about NYC topics — are where new readers find you. Search Console data lags ~2 days, so the most recent day or two is incomplete.</div>`;
 }
 
 // The long view — every year GA4 has tracked. All-time deduped total + a

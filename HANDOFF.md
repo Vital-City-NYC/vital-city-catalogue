@@ -97,7 +97,7 @@ data = json.loads(AESGCM(key).decrypt(base64.b64decode(b["iv"]), base64.b64decod
 | GA4 (`360033941`) | 30-day + 1-year visitors, "most-read since Jan 1", per-piece engagement time, by-year long view | ✅ live |
 | Social — LinkedIn, Bluesky | follower counts + recent posts | ✅ live |
 | Social — X, Instagram | follower counts | ✍️ **manual** (`MANUAL_FOLLOWERS` in `growth_pull.py`) |
-| Search Console | search queries/impressions/CTR/position | ❌ **not set up** (§7) |
+| Search Console | search queries, impressions, clicks, CTR, position | ✅ live — reuses the GA4 service account on `sc-domain:vitalcitynyc.org` |
 | Google Trends | search-interest embed | client-side |
 
 ---
@@ -116,24 +116,18 @@ data = json.loads(AESGCM(key).decrypt(base64.b64decode(b["iv"]), base64.b64decod
 
 ---
 
-## 7. Search Console — NOT set up; how to enable
+## 7. Search Console — LIVE
 
-Search Console would add **what people search on Google to find Vital City** (top queries,
-impressions, clicks, CTR, average position) — a different dataset from traffic counts. Currently
-the dashboard renders only a "connect this" stub.
+Shows **what people search on Google to find Vital City** — top queries, impressions, clicks, CTR,
+average position (last 28 days), in the "How people find us on Google" card (Reach & traffic).
 
-To turn it on:
-
-1. **Enable the API** — in Google Cloud (project `vital-city-dashboard`), enable **"Google Search Console API"**.
-2. **Grant the service account access** — in Search Console (search.google.com/search-console),
-   open the `vitalcitynyc.org` property → **Settings → Users and permissions → Add user**, paste
-   `vital-city-dashboard-reader@vital-city-dashboard.iam.gserviceaccount.com`, role **Full** or **Restricted**.
-3. **Note the property identifier** — either `sc-domain:vitalcitynyc.org` (domain property) or
-   `https://www.vitalcitynyc.org/` (URL-prefix property).
-4. **Then (code side):** reuse the existing `GA4_CREDS_JSON` service account, add a `GSC_SITE_URL`
-   secret with the identifier from step 3, and implement `pull_search_console()` in `growth_pull.py`
-   (sign the same service-account JWT → call the `searchanalytics.query` endpoint) plus a dashboard
-   panel. (Ask Claude Code to build this once steps 1–2 are done.)
+- **Source:** `pull_search_console()` in `growth_pull.py`. Reuses the **GA4 service account**
+  (`GA4_CREDS_JSON`) — no separate credential — with the `webmasters.readonly` scope.
+- **Property:** auto-detected via the Search Console `sites.list` API → `sc-domain:vitalcitynyc.org`
+  (the SA has `siteFullUser`). Override with a `GSC_SITE_URL` secret if you ever need a different one.
+- **Setup that was done:** enabled the Google Search Console API in the `vital-city-dashboard` GCP
+  project, and added the service-account email as a user on the Search Console property. No new secret.
+- **Caveat:** Search Console data lags ~2 days, so the most recent day or two is incomplete.
 
 ---
 
