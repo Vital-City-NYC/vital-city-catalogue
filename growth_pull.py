@@ -1113,6 +1113,13 @@ def pull_ghost_traffic():
         cur7   = pages_map(today - timedelta(days=7), today)
         out["top_pages_30d"] = build_pages(cur30, prev30p, 12)
         out["top_pages_7d"]  = build_pages(cur7, {}, 8)   # 7d list (week pulse) — no delta
+        # All-time leaders since the Ghost handoff (history_start onward).
+        hs = out.get("history_start")
+        if hs:
+            out["top_pages_since_launch"] = build_pages(pages_map(hs, today), {}, 15)
+            out["top_pages_since"] = hs
+        else:
+            out["top_pages_since_launch"] = []
         # Where the site's traffic comes from (referrer sources): this 30d vs prior 30d.
         def sources_map(d_from, d_to):
             try:
