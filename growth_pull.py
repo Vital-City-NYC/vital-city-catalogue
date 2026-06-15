@@ -1066,6 +1066,38 @@ def _ga4_top_pages_since(prop, token, start_date, limit=15):
     return sorted(agg.values(), key=lambda x: -x["visitors"])[:limit]
 
 
+def _ga4_by_year(prop, token):
+    """The long view: visitors / page views / sessions per calendar year across
+    all of GA4's history, plus a true (deduplicated) all-time total. Per-year
+    users are deduped within each year, so they must NOT be summed for an
+    all-time figure — the separate all-time query handles that."""
+    def runrep(body):
+        req = urllib.request.Request(
+            f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+            data=json.dumps(body).encode(),
+            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=40) as r:
+            return json.loads(r.read())
+    METRICS = [{"name": "totalUsers"}, {"name": "screenPageViews"}, {"name": "sessions"}]
+    RANGE = [{"startDate": "2020-01-01", "endDate": "today"}]
+    yr = runrep({"dateRanges": RANGE, "dimensions": [{"name": "year"}], "metrics": METRICS,
+                 "orderBys": [{"dimension": {"dimensionName": "year"}}]})
+    years = []
+    for row in (yr.get("rows") or []):
+        v = row["metricValues"]
+        years.append({"year": int(row["dimensionValues"][0]["value"]),
+                      "users": int(v[0]["value"]), "pageviews": int(v[1]["value"]),
+                      "sessions": int(v[2]["value"])})
+    tot = runrep({"dateRanges": RANGE, "metrics": METRICS})
+    tr = tot.get("rows") or []
+    if tr:
+        v = tr[0]["metricValues"]
+        alltime = {"users": int(v[0]["value"]), "pageviews": int(v[1]["value"]), "sessions": int(v[2]["value"])}
+    else:
+        alltime = {"users": 0, "pageviews": 0, "sessions": 0}
+    return {"years": years, "alltime": alltime}
+
+
 def pull_ga4():
     """Website traffic from Google Analytics 4 (covers the pre-April-2026 site
     history Ghost's own analytics can't). Needs GA4_PROPERTY_ID + a
@@ -1093,13 +1125,18 @@ def pull_ga4():
             since_pages = _ga4_top_pages_since(prop, token, "2026-01-01")
         except Exception as e:
             log(f"  ga4 since-Jan top pages failed: {e}"); since_pages = []
-        log(f"  ga4: {u30:,} users / {s30:,} sessions (30d); {u365:,} users (1y); {len(engagement)} eng pieces; {len(since_pages)} since-Jan pieces")
+        try:
+            by_year = _ga4_by_year(prop, token)
+        except Exception as e:
+            log(f"  ga4 by-year failed: {e}"); by_year = {"years": [], "alltime": {}}
+        log(f"  ga4: {u30:,} users (30d); {u365:,} users (1y); {len(engagement)} eng; {len(since_pages)} since-Jan; {len(by_year.get('years',[]))} yrs")
         return {
             "available": True, "property_id": prop,
             "mau": u30, "sessions_30": s30, "pageviews_30": p30,
             "aau": u365, "sessions_365": s365, "pageviews_365": p365,
             "engagement": engagement, "engagement_days": 90,
             "top_pages_since": since_pages, "top_pages_since_date": "2026-01-01",
+            "by_year": by_year,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:

@@ -497,6 +497,11 @@
         <div id="stubsList"></div>
       </div>
 
+      <div class="card" id="bigPicture">
+        <h2>The long view <span class="hint">every year GA4 has tracked — the whole-history picture</span></h2>
+        <div id="bigPictureBody"></div>
+      </div>
+
     </main>
 
     <aside class="brandwatch" id="brand">
@@ -689,10 +694,16 @@ function boot(data){
         ["IG",  ig.available ? ig.followers : null],
       ].filter(([,n]) => n != null).sort((a,b)=>b[1]-a[1]);
       const total = counts.reduce((s,[,n])=>s+n,0);
+      const NAMES={X:"X",LI:"LinkedIn",Bsky:"Bluesky",IG:"Instagram"};
+      const included = counts.map(([k])=>NAMES[k]||k);
+      const missing = [["X",xp.available],["IG",ig.available]].filter(([,a])=>!a).map(([k])=>NAMES[k]);
+      const missTxt = missing.length
+        ? ` ${missing.join(" and ")} ${missing.length>1?"aren't":"isn't"} counted: X's API is paid and Instagram's public follower count isn't reliably readable, so including ${missing.length>1?"them":"it"} would be guesswork.`
+        : "";
       return {lbl:"Social followers", num: counts.length ? fmtN(total) : "—",
               delta: counts.map(([k,n])=>`${fmtN(n)} ${k}`).join(" · "),
               cls:"flat",
-              tip:"Combined followers across X (@VitalCityNYC), the LinkedIn company page, Bluesky (@vitalcitynyc.bsky.social) and Instagram (@vitalcitynyc).\n\nWhy it matters: Followers are owned amplification reach beyond the inbox — the audience that can share Vital City's work into networks email never touches. A fast-growing platform (Bluesky here) signals where new readers are arriving and where to invest posting effort.\n\nSource: X and Instagram via public endpoints, LinkedIn via its public page"+(li.as_of?` (as of ${esc(li.as_of)})`:"")+", Bluesky via its open official API. Per-platform detail and coverage notes are in the Social reach card below."};
+              tip:`Combined followers across the platforms we can read for free — currently ${included.join(" + ")}.${missTxt}\n\nWhy it matters: Followers are owned amplification reach beyond the inbox — the audience that can share Vital City's work into networks email never touches.\n\nSource: LinkedIn via its public page${li.as_of?` (as of ${esc(li.as_of)})`:""}, Bluesky via its open official API. Per-platform detail and coverage notes are in the Social reach card below.`};
     })(),
     (function(){
       const gt = data.ghost_traffic || {};
@@ -761,6 +772,7 @@ function boot(data){
   renderEngagementExtras(data.engagement_extras || {});
   renderLifecycle(data.lifecycle || {});
   renderTraffic(data);
+  renderBigPicture(data);
   renderGoogleTrends();
   // After every card has rendered, sprinkle clickable ⓘ icons on metric
   // elements so users can read explanations without depending on hover.
@@ -2429,6 +2441,44 @@ function renderTraffic(data){
       b.classList.add("on"); draw(b.dataset.k);
     }));
   }
+}
+
+// The long view — every year GA4 has tracked. All-time deduped total + a
+// by-year bar chart. GA4-only (it tracked the site back to 2023).
+function renderBigPicture(data){
+  const host = $("#bigPictureBody"); if(!host) return;
+  const ga4 = data.ga4 || {};
+  const by = (ga4.available && ga4.by_year) ? ga4.by_year : null;
+  const years = (by && by.years) || [];
+  if(!years.length){
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal)">The long-view history needs GA4 — populates on the next daily build once it's connected.</div>`;
+    return;
+  }
+  const at = by.alltime || {};
+  const curYear = new Date().getUTCFullYear();
+  const maxU = Math.max(1, ...years.map(y=>y.users||0));
+  const bars = years.map(y=>{
+    const partial = y.year >= curYear;
+    const fill = partial
+      ? "repeating-linear-gradient(45deg,#57AA4A,#57AA4A 6px,#bfe0b6 6px,#bfe0b6 12px)"
+      : "#57AA4A";
+    return `<div style="flex:1;text-align:center;min-width:0" title="${y.year}${partial?' (year in progress)':''}: ${fmtN(y.users)} unique visitors · ${fmtN(y.pageviews)} page views · ${fmtN(y.sessions)} sessions">
+      <div style="font-size:13px;font-weight:700;color:var(--vc-black)">${fmtN(y.users)}</div>
+      <div style="background:${fill};opacity:.9;height:${Math.round((y.users||0)/maxU*130)+4}px;margin:4px auto 0;width:62%;border-radius:2px 2px 0 0"></div>
+      <div style="font-size:12px;color:var(--vc-black);margin-top:6px;font-weight:700">${y.year}${partial?'*':''}</div>
+      <div style="font-size:10px;color:var(--vc-charcoal)">${fmtN(y.pageviews)} views</div>
+    </div>`;
+  }).join("");
+  host.innerHTML = `
+    <div style="font-size:13px;color:var(--vc-charcoal);margin-bottom:18px;line-height:1.5">
+      <b style="color:var(--vc-black);font-size:21px;font-variant-numeric:tabular-nums">${fmtN(at.users||0)}</b> unique visitors all-time ·
+      <b style="color:var(--vc-black)">${fmtN(at.pageviews||0)}</b> page views · since ${years[0].year} <span style="opacity:.75">(Google Analytics 4)</span>
+    </div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:10px">Unique visitors by year</div>
+    <div style="display:flex;gap:14px;align-items:flex-end;height:180px">${bars}</div>
+    <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">
+      <b style="color:var(--vc-black)">*${curYear}</b> is a year in progress (through ${esc(ga4.as_of||'today')}), so its bar is hatched and not yet comparable to full years. The all-time figure is GA4's <b>deduplicated</b> unique users across the whole period — smaller than the yearly bars added together, because someone who visited in two different years counts once in the all-time total but once in each year's bar. GA4 only; see the source caveats in the Website traffic card above.
+    </div>`;
 }
 
 function renderLifecycle(lc){
