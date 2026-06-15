@@ -101,6 +101,9 @@
   table.tbl th.num{text-align:right}
   table.tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
   table.tbl tbody tr:hover td{background:var(--vc-paper2)}
+  /* Wide tables (e.g. campaigns) scroll horizontally inside their card on
+     narrow screens instead of pushing the whole page wide. */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .pillok{display:inline-block;background:var(--vc-green);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
   .pillwarn{display:inline-block;background:var(--vc-orange);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
   .pillinfo{display:inline-block;background:var(--vc-cerulean);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;letter-spacing:.04em;text-transform:uppercase}
@@ -286,6 +289,18 @@
     main{padding:14px 16px 40px}
     .confbar,header.mast{padding-left:16px;padding-right:16px}
     aside.brandwatch{padding:14px 16px 30px}
+    body{font-size:13.5px}
+    header.mast h1{font-size:22px}
+    .card{padding:14px 14px}
+    .sechead{margin:22px 0 12px}
+    /* tighten dense rows + stop fixed columns from overflowing */
+    .dombar{grid-template-columns:84px 1fr 32px;gap:6px}
+    table.tbl th,table.tbl td{padding:8px 7px}
+    .feed,.snip,.feed li{overflow-wrap:anywhere}
+    #peopleModalBody{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    #peopleModalBox{padding:18px 16px}
+    /* let charts breathe a little taller so axis labels stay legible */
+    svg.chart{height:200px}
   }
 </style>
 </head>
@@ -800,6 +815,7 @@ function boot(data){
         }
       });
     }
+    wrapTables();
   } else {
     $("#campTbl").innerHTML='<div style="font-size:12px;color:var(--vc-charcoal)">No campaign data available.</div>';
   }
@@ -1653,6 +1669,19 @@ document.addEventListener("DOMContentLoaded", () => {
 // finishes rendering, we walk certain selectors and attach a small ⓘ icon
 // that reads the explanation from the nearest title attribute. So every
 // existing tooltip becomes click-accessible without changing the data side.
+// Wrap every .tbl table in a horizontal-scroll container so wide tables
+// (e.g. campaigns) scroll inside their card on phones instead of stretching
+// the page. Idempotent — skips tables already wrapped.
+function wrapTables(){
+  document.querySelectorAll("table.tbl").forEach(t=>{
+    const p=t.parentElement;
+    if(p && !p.classList.contains("tscroll")){
+      const w=document.createElement("div"); w.className="tscroll";
+      p.insertBefore(w,t); w.appendChild(t);
+    }
+  });
+}
+
 function installInfoDots(){
   // Selectors of elements whose first child should get an ⓘ icon appended.
   // We only target the "label" of each tile, so the icon sits next to the
