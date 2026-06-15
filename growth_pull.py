@@ -1049,34 +1049,50 @@ def pull_ghost_traffic():
         else:
             out["history_start"] = None
         out["kpi_rows_30d"] = rows30[:40]   # raw sample for field-name debugging
-        # Top pieces of the last 7 days by visits (the spreadsheet's "top
-        # performers" category). Exclude the homepage and the jobs board;
-        # map each pathname to its article title from the catalogue.
+        # Top pieces by visits (the "top performers" view) over 7 and 30 days.
+        # Exclude the homepage, jobs board, tag/author index pages; map each
+        # pathname to its article title from the catalogue.
+        cat = {}
         try:
-            q7 = urllib.parse.urlencode({"site_uuid": site, "date_from": str(today - timedelta(days=7)),
-                                         "date_to": str(today), "limit": 30})
-            tp = json.loads(http_get(f"{endpoint}/v0/pipes/api_top_pages.json?{q7}",
-                headers={"Authorization": "Bearer " + token}, timeout=30)).get("data") or []
-            cat = {}
+            for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
+                u = (c.get("url") or "").rstrip("/")
+                if u: cat["/" + u.split("/")[-1] + "/"] = c.get("title")
+        except Exception:
+            pass
+        def top_pages(days, limit):
             try:
-                for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
-                    u = (c.get("url") or "").rstrip("/")
-                    if u: cat["/" + u.split("/")[-1] + "/"] = c.get("title")
-            except Exception:
-                pass
-            top = []
+                q = urllib.parse.urlencode({"site_uuid": site, "date_from": str(today - timedelta(days=days)),
+                                            "date_to": str(today), "limit": 60})
+                tp = json.loads(http_get(f"{endpoint}/v0/pipes/api_top_pages.json?{q}",
+                    headers={"Authorization": "Bearer " + token}, timeout=30)).get("data") or []
+            except Exception as e:
+                log(f"  ghost top pages ({days}d) failed: {e}"); return []
+            pages = []
             for r in tp:
                 path = (r.get("pathname") or "").strip()
                 if path in ("/", "") or "/job" in path or path.startswith("/tag/") or path.startswith("/author/"):
                     continue
                 title = cat.get(path) or path.strip("/").replace("-", " ").title()
-                top.append({"title": title, "path": path,
-                            "visits": int(r.get("visits") or r.get("hits") or 0)})
-                if len(top) >= 8: break
-            out["top_pages_7d"] = top
+                pages.append({"title": title, "path": path,
+                              "visits": int(r.get("visits") or r.get("hits") or 0)})
+                if len(pages) >= limit: break
+            return pages
+        out["top_pages_7d"]  = top_pages(7, 8)
+        out["top_pages_30d"] = top_pages(30, 12)
+        # Where the site's traffic comes from (referrer sources), last 30 days.
+        try:
+            qs = urllib.parse.urlencode({"site_uuid": site, "date_from": str(today - timedelta(days=30)),
+                                         "date_to": str(today), "limit": 12})
+            sd = json.loads(http_get(f"{endpoint}/v0/pipes/api_top_sources.json?{qs}",
+                headers={"Authorization": "Bearer " + token}, timeout=30)).get("data") or []
+            srcs = []
+            for r in sd:
+                name = (r.get("source") or r.get("referrer") or r.get("referrer_source") or "").strip() or "Direct / none"
+                srcs.append({"source": name, "visits": int(r.get("visits") or r.get("hits") or 0)})
+            out["top_sources_30d"] = [s for s in srcs if s["visits"] > 0][:10]
         except Exception as e:
-            log(f"  ghost top pages failed: {e}")
-            out["top_pages_7d"] = []
+            log(f"  ghost top sources failed: {e}")
+            out["top_sources_30d"] = []
         out["available"] = bool(rows30 or rows365)
         if not out["available"]:
             out["reason"] = "Tinybird responded but returned no rows"

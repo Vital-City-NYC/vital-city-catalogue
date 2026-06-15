@@ -466,6 +466,11 @@
         <div class="sechead-sub">Distribution signals — directional only. Followers and visits matter when they convert into subscribers and donors above.</div>
       </div>
 
+      <div class="card" id="trafficCard">
+        <h2>Website traffic <span class="hint">how much we published, what got read, and where readers came from · Ghost analytics</span></h2>
+        <div id="trafficBody"></div>
+      </div>
+
       <div class="card" id="social">
         <h2>Social reach — X, LinkedIn, Bluesky, Instagram <span class="hint">followers + latest posts per platform · all free sources · coverage labeled per panel</span></h2>
         <div id="socialBody"></div>
@@ -731,6 +736,7 @@ function boot(data){
   renderAcquisition(data.ghost_signup_attribution || {});
   renderEngagementExtras(data.engagement_extras || {});
   renderLifecycle(data.lifecycle || {});
+  renderTraffic(data);
   renderGoogleTrends();
   // After every card has rendered, sprinkle clickable ⓘ icons on metric
   // elements so users can read explanations without depending on hover.
@@ -2131,7 +2137,6 @@ function renderEngagementExtras(ex){
   }
   const mbox  = ex.mailbox_engagement || [];
   const power = ex.power_readers || {};
-  const ltv   = ex.channel_ltv || {available:false};
   const iwr   = ex.influence_weighted_reach || {};
   // Stash the actual subsets so the click-through opens a person list
   window._peopleSubsets["notable_in_mau"] = {list: iwr.notable_list || [], total: iwr.notable_in_mau||0};
@@ -2140,7 +2145,7 @@ function renderEngagementExtras(ex){
 
   // Card-level intro so the reader doesn't have to hover for context
   const intro = `<div style="font-size:12px;color:var(--vc-charcoal);margin:0 0 18px;line-height:1.55">
-    <b style="color:var(--vc-black)">Why this card:</b> The headline "open rate" has been broken since Apple Mail's privacy update (Apple's servers auto-open emails on the user's behalf, inflating opens without engagement). These four views work around that by focusing on what's still measurable cleanly — patterns by email provider, your most reliable readers, how acquisition channels actually convert to donor revenue, and how much of your reach is in policy-relevant rooms. Each one drives a specific decision.
+    <b style="color:var(--vc-black)">Why this card:</b> The headline "open rate" has been broken since Apple Mail's privacy update (Apple's servers auto-open emails on the user's behalf, inflating opens without engagement). These views work around that by focusing on what's still measurable cleanly — patterns by email provider, your most reliable readers, and how much of your reach is in policy-relevant rooms. Each one drives a specific decision.
   </div>`;
 
   // ---- Influence-weighted reach (single KPI strip) ----
@@ -2201,40 +2206,71 @@ function renderEngagementExtras(ex){
       </div>
     </div>` : '';
 
-  // ---- Channel LTV ----
-  let ltvSection = '';
-  if(ltv.available && ltv.channels && ltv.channels.length){
-    const rows = ltv.channels.map(c => `<tr>
-      <td>${esc(c.source)}</td>
-      <td class="num">${fmtN(c.signups)}</td>
-      <td class="num">${fmtN(c.donors)}</td>
-      <td class="num">${c.donor_rate}%</td>
-      <td class="num">${fmtUSD(c.total_raised)}</td>
-      <td class="num">${fmtUSD(c.ltv_per_signup)}</td>
-    </tr>`).join("");
-    const t = ltv.total;
-    ltvSection = `<div style="margin-bottom:18px">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="Lifetime value (LTV) = the total donation revenue a subscriber has generated since signing up. This table groups subscribers by where their signup came from (Ghost records the referrer for each one — Google, a partner site, an email campaign tag, etc.) and shows, per channel: how many signed up, how many later became donors, and how much they gave. The '$/signup' column is the channel's lifetime value per signup — total raised divided by all signups from that channel, donors or not. It tells you which channels bring in people who eventually give, not just people who subscribe. Caveat: limited to subscribers whose signup is in the Ghost member-events feed (~800 signups over the last 6 months, post-April-2026 cutover). Pre-cutover donors don't have a source we can attribute — so the absolute donor counts here are smaller than your total donor count.">Donor lifetime value by signup channel · which sources produce donors, not just subscribers</div>
-      <table class="tbl" style="width:100%">
-        <thead><tr><th>Source</th><th class="num">Signups</th><th class="num">Donors</th><th class="num">Donor rate</th><th class="num">Raised</th><th class="num">$/signup</th></tr></thead>
-        <tbody>${rows}</tbody>
-        <tfoot><tr style="font-weight:700;border-top:1px solid var(--vc-black)">
-          <td>Total tracked</td>
-          <td class="num">${fmtN(t.signups)}</td>
-          <td class="num">${fmtN(t.donors)}</td>
-          <td class="num">${t.donor_rate}%</td>
-          <td class="num">${fmtUSD(t.total_raised)}</td>
-          <td class="num">${fmtUSD(t.ltv_per_signup)}</td>
-        </tr></tfoot>
-      </table>
-      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">"$/signup" = lifetime value per signup: everything a channel's subscribers have donated, divided by all of that channel's signups. Limited to subscribers in Ghost's ${ltv.window_days||180}-day signup attribution feed. Compare donor rates &mdash; a channel can produce many cheap signups (Google) or few high-value ones (Academic Outreach UTM). The Total row is the bottom of that funnel for trackable signups only.</div>
+  host.innerHTML = iwrSection + mboxSection + powerSection +
+    `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:14px;line-height:1.55;border-top:1px dashed var(--vc-cloud);padding-top:10px">
+      <b>Why this card exists:</b> Standard open rate is broken (Apple Mail privacy inflates it). These views work around that by focusing on (a) provider-level patterns that reveal real engagement, (b) the top-decile readers you can rely on, and (c) which of your readers carry policy-circle weight. None of these are vanity numbers — each one drives a specific decision.
     </div>`;
+}
+
+function renderTraffic(data){
+  const host = $("#trafficBody"); if(!host) return;
+  const gt = data.ghost_traffic || {};
+  const posts = (data.ghost && data.ghost.posts) || [];
+
+  // ---- Publishing cadence: pieces published per ISO week, last 6 weeks ----
+  // (Always available from the post feed, even without the Ghost staff token.)
+  const isoWeek = (iso) => { const d=new Date(iso+"T00:00:00Z");
+    const off=(d.getUTCDay()===0?6:d.getUTCDay()-1);
+    return new Date(d.getTime()-off*86400000).toISOString().slice(0,10); };
+  const byWeek = {};
+  posts.forEach(p => { if(p.published){ const k=isoWeek(p.published); byWeek[k]=(byWeek[k]||0)+1; } });
+  const weeks = Object.keys(byWeek).sort().slice(-6);
+  const maxW = Math.max(1, ...weeks.map(k=>byWeek[k]));
+  const cadence = weeks.length ? `
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:8px" title="How many pieces Vital City published each week, from the post feed. The last bar is the current week in progress.">Pieces published · last ${weeks.length} weeks</div>
+    <div style="display:flex;gap:8px;align-items:flex-end;height:74px;margin-bottom:4px">
+      ${weeks.map(k=>{const n=byWeek[k];return `<div style="flex:1;text-align:center" title="Week of ${k}: ${n} piece${n===1?"":"s"}">
+        <div style="font-size:13px;font-weight:700;color:var(--vc-black)">${n}</div>
+        <div style="background:var(--vc-green);opacity:.8;height:${Math.round(n/maxW*46)+2}px;margin:3px auto 0;width:62%"></div>
+        <div style="font-size:9.5px;color:var(--vc-charcoal);margin-top:4px">${esc(k.slice(5))}</div>
+      </div>`;}).join("")}
+    </div>` : "";
+
+  if(!gt.available){
+    host.innerHTML = cadence + `<div style="font-size:12.5px;color:var(--vc-charcoal);margin-top:14px;line-height:1.55">
+      Per-piece traffic and sources need Ghost's analytics, which require a free staff token (~5-minute setup — see the <a href="about.html" target="_blank">How it works</a> page). Publishing cadence above comes from the post feed and works without it.</div>`;
+    return;
   }
 
-  host.innerHTML = iwrSection + mboxSection + powerSection + ltvSection +
-    `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:14px;line-height:1.55;border-top:1px dashed var(--vc-cloud);padding-top:10px">
-      <b>Why this card exists:</b> Standard open rate is broken (Apple Mail privacy inflates it). These four views work around that by focusing on (a) provider-level patterns that reveal real engagement, (b) the top-decile readers you can rely on, (c) how acquisition channels actually convert to donor revenue, and (d) which of your readers carry policy-circle weight. None of these are vanity numbers — each one drives a specific decision.
-    </div>`;
+  // ---- Top pieces by visitors (30d if available, else the 7d window) ----
+  const pages = (gt.top_pages_30d && gt.top_pages_30d.length) ? gt.top_pages_30d : (gt.top_pages_7d || []);
+  const win   = (gt.top_pages_30d && gt.top_pages_30d.length) ? "30 days" : "7 days";
+  const maxV  = Math.max(1, ...pages.map(p=>p.visits||0));
+  const topPieces = pages.length ? `
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:18px 0 8px" title="Vital City pages ranked by unique visitors over the window, from Ghost analytics. Homepage, jobs board and index pages are excluded so this is article performance.">Most-read pieces · last ${win}, ranked by unique visitors</div>
+    <table class="tbl" style="width:100%"><tbody>
+    ${pages.map((p,i)=>`<tr>
+      <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
+      <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
+      <td style="width:34%"><div style="background:var(--vc-cerulean);opacity:.55;height:8px;border-radius:2px;width:${Math.max(2,Math.round((p.visits||0)/maxV*100))}%"></div></td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtN(p.visits||0)}</td>
+    </tr>`).join("")}
+    </tbody></table>` : `<div style="font-size:12px;color:var(--vc-charcoal);margin-top:14px">No per-page traffic in the window yet.</div>`;
+
+  // ---- Where the traffic comes from (referrer sources, 30d) ----
+  const srcs = gt.top_sources_30d || [];
+  const totalSrc = srcs.reduce((a,s)=>a+(s.visits||0),0) || 1;
+  const sources = srcs.length ? `
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:20px 0 8px" title="Where site visitors came from over the last 30 days (Ghost's referrer breakdown). 'Direct / none' = typed the URL, a bookmark, or an app with no referrer.">Where the traffic comes from · last 30 days</div>
+    ${srcs.map(s=>`<div class="dombar">
+      <div style="font-size:12px">${esc(s.source)}</div>
+      <div class="bar" style="background:var(--vc-orange);width:${Math.round((s.visits||0)/totalSrc*100)}%"></div>
+      <div class="v">${Math.round((s.visits||0)/totalSrc*100)}%</div>
+      <div style="font-size:10.5px;color:var(--vc-charcoal);text-align:right;padding-right:4px">${fmtN(s.visits||0)} visits</div>
+    </div>`).join("")}` :
+    `<div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:16px">Traffic-source breakdown populates on the next daily build.</div>`;
+
+  host.innerHTML = cadence + topPieces + sources;
 }
 
 function renderLifecycle(lc){
