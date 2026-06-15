@@ -957,11 +957,12 @@ def _ga4_totals(prop, token, days):
     return (int(v[0]["value"]), int(v[1]["value"]), int(v[2]["value"]))
 
 
-def _ga4_engagement(prop, token, days, min_views=50, limit=12):
-    """Average engagement time per article — a read-depth proxy GA4 measures
-    (the seconds a reader's tab is actually focused on the page) and Ghost
-    can't. avg engaged seconds per view = userEngagementDuration / page views.
-    Filtered to article pages with enough views to be non-noisy."""
+def _ga4_engagement(prop, token, days, min_views=50, limit=60):
+    """Per-article engagement time — a read-depth proxy GA4 measures (the
+    seconds a reader's tab is actually focused on the page) and Ghost can't.
+    Per piece: views, avg engaged seconds/view (userEngagementDuration /
+    views), and total engaged seconds (audience-weighted). Filtered to
+    articles with enough views to be non-noisy; enough rows for a scatter."""
     body = {
         "dateRanges": [{"startDate": f"{days}daysAgo", "endDate": "today"}],
         "dimensions": [{"name": "pagePath"}],
@@ -998,7 +999,8 @@ def _ga4_engagement(prop, token, days, min_views=50, limit=12):
         key = "/" + path.strip("/").split("/")[-1] + "/"
         title = cat.get(key) or path.strip("/").replace("-", " ").title()
         out.append({"path": path, "title": title, "views": views,
-                    "avg_secs": round(eng / views, 1) if views else 0})
+                    "avg_secs": round(eng / views, 1) if views else 0,
+                    "total_secs": round(eng)})
     out.sort(key=lambda x: -x["avg_secs"])
     return out[:limit]
 

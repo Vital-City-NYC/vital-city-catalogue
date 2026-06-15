@@ -2358,28 +2358,72 @@ function renderTraffic(data){
     </div>`).join("")}` :
     `<div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:16px">Traffic-source breakdown populates on the next daily build.</div>`;
 
-  // ---- Pieces that held attention longest (GA4 engagement time) ----
+  // ---- Reader attention: engagement time per piece (GA4) ----
+  // Two ranked views via a toggle (avg time/view vs total audience-weighted
+  // engaged time) + a views-vs-depth scatter. Rendered after innerHTML.
   const eng = (ga4.available && ga4.engagement) ? ga4.engagement : [];
   const engDays = ga4.engagement_days || 90;
-  const fmtDur = (s)=>{ s=Math.round(s||0); const m=Math.floor(s/60), ss=s%60; return m ? `${m}m ${ss}s` : `${ss}s`; };
-  const maxE = Math.max(1, ...eng.map(p=>p.avg_secs||0));
-  const engBlock = eng.length ? `
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:20px 0 8px" title="Average engagement time per view — the time a reader's browser tab was actually focused on the page, measured by Google Analytics 4 (Ghost can't measure this). A read-depth signal: which pieces hold attention, not just which get clicked. Limited to articles with at least 50 views in the window so the averages aren't noise. Engaged time is an active-tab measure, not literal reading — treat it as a comparative indicator.">Pieces that held attention longest · avg engaged time, last ${engDays} days <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span></div>
-    <table class="tbl" style="width:100%"><tbody>
-    ${eng.map((p,i)=>`<tr>
-      <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
-      <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
-      <td style="width:26%"><div style="background:#7a5cc0;opacity:.5;height:8px;border-radius:2px;width:${Math.max(2,Math.round((p.avg_secs||0)/maxE*100))}%"></div></td>
-      <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtDur(p.avg_secs)}</td>
-      <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--vc-charcoal);font-size:11px;padding-left:8px">${fmtN(p.views)} views</td>
-    </tr>`).join("")}
-    </tbody></table>` : "";
+  const fmtDur = (s)=>{ s=Math.round(s||0); const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), ss=s%60;
+    return h ? `${h}h ${m}m` : (m ? `${m}m ${ss}s` : `${ss}s`); };
+  let engBlock = "";
+  if(eng.length){
+    // Scatter: x = views (log), y = avg engaged seconds. Spotlights quadrants.
+    const W=760,H=300,padL=46,padR=16,padT=16,padB=42, innerW=W-padL-padR, innerH=H-padT-padB;
+    const views=eng.map(p=>p.views), vmin=Math.min(...views), vmax=Math.max(...views);
+    const lmin=Math.log10(Math.max(1,vmin)), lmax=Math.log10(Math.max(2,vmax));
+    const tTop=Math.max(30, Math.ceil(Math.max(...eng.map(p=>p.avg_secs||0))/30)*30);
+    const x=(v)=> padL + (Math.log10(Math.max(1,v))-lmin)/((lmax-lmin)||1)*innerW;
+    const y=(s)=> padT+innerH - (s/tTop)*innerH;
+    let sc="";
+    for(let t=0;t<=tTop;t+=30){ const yy=y(t); sc+=`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#eee" stroke-width="1"/><text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="9.5" fill="#888">${t>=60?(Math.floor(t/60)+'m'+(t%60?' '+(t%60)+'s':'')):t+'s'}</text>`; }
+    [50,100,250,500,1000,2500,5000].filter(v=>v>=vmin*0.7 && v<=vmax*1.3).forEach(v=>{ const xx=x(v); sc+=`<line x1="${xx}" x2="${xx}" y1="${padT}" y2="${padT+innerH}" stroke="#f3f3f1" stroke-width="1"/><text x="${xx}" y="${H-24}" text-anchor="middle" font-size="9.5" fill="#888">${fmtN(v)}</text>`; });
+    sc+=`<text x="${padL+innerW/2}" y="${H-6}" text-anchor="middle" font-size="10" fill="#666">page views (log scale) →</text>`;
+    const srt=(a)=>[...a].sort((m,n)=>m-n);
+    const medV=srt(views)[Math.floor(eng.length/2)], medT=srt(eng.map(p=>p.avg_secs))[Math.floor(eng.length/2)];
+    sc+=`<line x1="${x(medV)}" x2="${x(medV)}" y1="${padT}" y2="${padT+innerH}" stroke="#c8c8c8" stroke-dasharray="3 3"/>`;
+    sc+=`<line x1="${padL}" x2="${W-padR}" y1="${y(medT)}" y2="${y(medT)}" stroke="#c8c8c8" stroke-dasharray="3 3"/>`;
+    sc+=`<text x="${padL+5}" y="${padT+11}" font-size="9" fill="#9a8fc0">deep read · small audience</text>`;
+    sc+=`<text x="${W-padR-3}" y="${padT+11}" text-anchor="end" font-size="9" fill="#3b7d2f">deep read · big audience</text>`;
+    sc+=`<text x="${W-padR-3}" y="${padT+innerH-5}" text-anchor="end" font-size="9" fill="#aaa">big audience · shallow</text>`;
+    eng.forEach(p=>{ sc+=`<circle cx="${x(p.views)}" cy="${y(p.avg_secs)}" r="4.5" fill="#7a5cc0" opacity=".55" stroke="#fff" stroke-width=".5"><title>${esc(p.title)}\n${fmtN(p.views)} views · ${fmtDur(p.avg_secs)} avg engaged · ${fmtDur(p.total_secs)} total</title></circle>`; });
+    engBlock = `
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Engagement time = the seconds a reader's browser tab was actually focused on the page, from Google Analytics 4 (Ghost can't measure this). A read-depth signal. 'Avg time per view' = engaged seconds ÷ views. 'Total engaged time' weights by audience (avg × views). Articles with 50+ views in the window only. Engaged time is an active-tab measure, not literal reading — a comparative indicator.">Reader attention by piece · last ${engDays} days <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span></div>
+      <div id="engToggle" style="display:flex;gap:6px;margin-bottom:8px">
+        <button class="winbtn on" data-k="avg">Avg time / view</button>
+        <button class="winbtn" data-k="total">Total engaged time</button>
+      </div>
+      <div id="engTbl"></div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 6px" title="Each dot is an article. Right = more views; higher = longer average engaged time. The dashed lines are the medians, splitting the field into quadrants: top-right is the sweet spot (big audience AND deep read); bottom-right is high-traffic-but-shallow; top-left is deeply read by a smaller audience. Hover a dot for the piece.">Views vs. depth of read</div>
+      <div class="chartwrap"><svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="height:auto;aspect-ratio:${W}/${H}">${sc}</svg></div>`;
+  }
 
   const caveat = `<div style="font-size:11px;color:var(--vc-charcoal);line-height:1.55;border-top:1px dashed var(--vc-cloud);margin-top:18px;padding-top:10px">
     <b style="color:var(--vc-black)">About these numbers:</b> the trend, top-pieces and sources here — and the 30-day visitor tile — come from <b>Ghost</b>'s analytics; the 1-year visitor tile up top and the engagement-time list come from <b>Google Analytics 4</b> (which also tracked the pre-April-2026 site). The two systems count visitors differently — bot filtering, what counts as a "visit", time zones and consent all differ — so figures across them won't reconcile, and neither is "wrong." Read traffic as directional, not exact. <a href="https://plausible.io/blog/why-analytics-numbers-dont-match" target="_blank" style="color:var(--vc-cerulean)">Why no two analytics tools agree &#8599;</a></div>`;
   host.innerHTML = header + trend + cadence + topPieces + topAll + engBlock + sources + caveat;
   if(trendPts){ const tsvg = document.querySelector("#trafficTrendSvg");
     if(tsvg) attachChartHover(tsvg, trendGeo.padT, trendGeo.innerH, trendPts); }
+  // Engagement table — render, and toggle between avg-per-view and total time.
+  if(eng.length){
+    const tbl=document.querySelector("#engTbl");
+    const draw=(k)=>{
+      const rows=[...eng].sort((a,b)=> k==="total" ? (b.total_secs-a.total_secs) : (b.avg_secs-a.avg_secs)).slice(0,12);
+      const maxv=Math.max(1,...rows.map(r=> k==="total" ? r.total_secs : r.avg_secs));
+      tbl.innerHTML=`<table class="tbl" style="width:100%"><tbody>${rows.map((p,i)=>{
+        const val = k==="total" ? p.total_secs : p.avg_secs;
+        return `<tr>
+          <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
+          <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
+          <td style="width:26%"><div style="background:#7a5cc0;opacity:.5;height:8px;border-radius:2px;width:${Math.max(2,Math.round(val/maxv*100))}%"></div></td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtDur(val)}</td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--vc-charcoal);font-size:11px;padding-left:8px">${fmtN(p.views)} views</td>
+        </tr>`;}).join("")}</tbody></table>`;
+    };
+    draw("avg");
+    document.querySelectorAll("#engToggle .winbtn").forEach(b=>b.addEventListener("click",()=>{
+      document.querySelectorAll("#engToggle .winbtn").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on"); draw(b.dataset.k);
+    }));
+  }
 }
 
 function renderLifecycle(lc){
