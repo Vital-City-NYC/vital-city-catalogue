@@ -44,6 +44,19 @@
     border-bottom: 1px solid var(--vc-black);
     padding: 26px 32px 20px;
     background: var(--vc-white);
+    position: relative;
+  }
+  .mastlinks {
+    position: absolute; right: 32px; top: 24px;
+    display: flex; gap: 14px;
+    font-family: var(--vc-sans);
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .mastlinks a { color: var(--vc-cerulean); text-decoration: none; white-space: nowrap; }
+  .mastlinks a:hover { text-decoration: underline; }
+  @media (max-width: 600px) {
+    .mastlinks { position: static; right: auto; top: auto; margin-bottom: 12px; flex-wrap: wrap; }
   }
   .wordmark {
     font-family: var(--vc-sans);
@@ -192,6 +205,10 @@
 </head>
 <body>
 <header class="masthead">
+  <div class="mastlinks">
+    <a href="growth/" title="Open the growth dashboard (staff)">Growth dashboard</a>
+    <a href="network/" title="Open the contact master search (staff)">Contacts</a>
+  </div>
   <div class="wordmark">Vital City</div>
   <h1>Content catalogue</h1>
   <div class="sub">Every article published on vitalcitynyc.org, searchable by author, topic, issue and date.</div>

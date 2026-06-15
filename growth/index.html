@@ -322,6 +322,7 @@
   <header class="mast">
     <div class="mastlinks">
       <a href="about.html" target="_blank">How it works ↗</a>
+      <a href="../" title="Open the public content catalogue">Catalogue</a>
       <a href="../network/" title="Open the contact master search">Contacts</a>
       <a href="#" id="themeToggle">🌙 Dark mode</a>
       <a href="#" id="forget" title="You stay logged in automatically on this device for 90 days (refreshed each visit) — and the same login covers the Contact tool too, so you shouldn't need to re-enter the passphrase. 'Lock' is the opposite: tap it to forget the saved passphrase and re-lock now, e.g. on a shared or public computer.">Lock</a>
@@ -351,6 +352,11 @@
         <a href="#sec-health">List health</a>
         <a href="#sec-reach">Reach &amp; traffic</a>
       </nav>
+
+      <div class="card" id="bigPicture">
+        <h2>The long view <span class="hint">every year GA4 has tracked — the whole-history picture</span></h2>
+        <div id="bigPictureBody"></div>
+      </div>
 
       <div class="sechead" id="sec-growth">
         <div class="sechead-title">Growing the list</div>
@@ -495,11 +501,6 @@
         <h2>Social reach — X, LinkedIn, Bluesky, Instagram <span class="hint">followers + latest posts per platform · all free sources · coverage labeled per panel</span></h2>
         <div id="socialBody"></div>
         <div id="urlShares" style="margin-top:18px"></div>
-      </div>
-
-      <div class="card" id="bigPicture">
-        <h2>The long view <span class="hint">every year GA4 has tracked — the whole-history picture</span></h2>
-        <div id="bigPictureBody"></div>
       </div>
 
     </main>
@@ -2503,14 +2504,19 @@ function renderBigPicture(data){
   const at = by.alltime || {};
   const curYear = new Date().getUTCFullYear();
   const maxU = Math.max(1, ...years.map(y=>y.users||0));
-  const bars = years.map(y=>{
+  // YoY % is shown inside each complete-year bar; the in-progress year is
+  // skipped (a partial year isn't comparable to a full one).
+  const bars = years.map((y,i)=>{
     const partial = y.year >= curYear;
+    const prev = i>0 ? (years[i-1].users||0) : 0;
+    const yoy = (!partial && i>0 && prev) ? Math.round((y.users-prev)/prev*100) : null;
+    const yoyTxt = yoy!=null ? (yoy>=0?'+':'')+yoy+'%' : '';
     const fill = partial
       ? "repeating-linear-gradient(45deg,#57AA4A,#57AA4A 6px,#bfe0b6 6px,#bfe0b6 12px)"
       : "#57AA4A";
-    return `<div style="flex:1;text-align:center;min-width:0" title="${y.year}${partial?' (year in progress)':''}: ${fmtN(y.users)} unique visitors · ${fmtN(y.pageviews)} page views · ${fmtN(y.sessions)} sessions">
+    return `<div style="flex:1;text-align:center;min-width:0" title="${y.year}${partial?' (year in progress)':''}: ${fmtN(y.users)} unique visitors · ${fmtN(y.pageviews)} page views · ${fmtN(y.sessions)} sessions${yoy!=null?` · ${yoyTxt} vs ${years[i-1].year}`:''}">
       <div style="font-size:13px;font-weight:700;color:var(--vc-black)">${fmtN(y.users)}</div>
-      <div style="background:${fill};opacity:.9;height:${Math.round((y.users||0)/maxU*130)+4}px;margin:4px auto 0;width:62%;border-radius:2px 2px 0 0"></div>
+      <div style="background:${fill};opacity:.9;height:${Math.round((y.users||0)/maxU*130)+4}px;margin:4px auto 0;width:62%;border-radius:2px 2px 0 0;display:flex;align-items:flex-start;justify-content:center;overflow:visible">${yoyTxt?`<span style="font-size:10.5px;font-weight:800;color:#fff;padding-top:4px;text-shadow:0 1px 1.5px rgba(0,0,0,.4)">${yoyTxt}</span>`:''}</div>
       <div style="font-size:12px;color:var(--vc-black);margin-top:6px;font-weight:700">${y.year}${partial?'*':''}</div>
       <div style="font-size:10px;color:var(--vc-charcoal)">${fmtN(y.pageviews)} views</div>
     </div>`;
@@ -2527,12 +2533,15 @@ function renderBigPicture(data){
   let listBlock = "";
   if(listYears.length >= 2){
     const maxL = Math.max(1, ...listYears.map(y=>y.cum));
-    const lbars = listYears.map(y=>{
+    const lbars = listYears.map((y,i)=>{
       const partial = y.year >= curYear;
+      const lprev = i>0 ? (listYears[i-1].cum||0) : 0;
+      const lyoy = (!partial && i>0 && lprev) ? Math.round((y.cum-lprev)/lprev*100) : null;
+      const lyoyTxt = lyoy!=null ? (lyoy>=0?'+':'')+lyoy+'%' : '';
       const fill = partial ? "repeating-linear-gradient(45deg,#1F6FB2,#1F6FB2 6px,#aacbe9 6px,#aacbe9 12px)" : "#1F6FB2";
-      return `<div style="flex:1;text-align:center;min-width:0" title="${y.year}${partial?' (year in progress)':''}: ${fmtN(y.cum)} subscribers at year-end · +${fmtN(y.neww)} new signups that year">
+      return `<div style="flex:1;text-align:center;min-width:0" title="${y.year}${partial?' (year in progress)':''}: ${fmtN(y.cum)} subscribers at year-end · +${fmtN(y.neww)} new signups that year${lyoy!=null?` · ${lyoyTxt} vs ${listYears[i-1].year}`:''}">
         <div style="font-size:13px;font-weight:700;color:var(--vc-black)">${fmtN(y.cum)}</div>
-        <div style="background:${fill};opacity:.9;height:${Math.round(y.cum/maxL*130)+4}px;margin:4px auto 0;width:62%;border-radius:2px 2px 0 0"></div>
+        <div style="background:${fill};opacity:.9;height:${Math.round(y.cum/maxL*130)+4}px;margin:4px auto 0;width:62%;border-radius:2px 2px 0 0;display:flex;align-items:flex-start;justify-content:center;overflow:visible">${lyoyTxt?`<span style="font-size:10.5px;font-weight:800;color:#fff;padding-top:4px;text-shadow:0 1px 1.5px rgba(0,0,0,.4)">${lyoyTxt}</span>`:''}</div>
         <div style="font-size:12px;color:var(--vc-black);margin-top:6px;font-weight:700">${y.year}${partial?'*':''}</div>
         <div style="font-size:10px;color:var(--vc-charcoal)">+${fmtN(y.neww)} signups</div>
       </div>`;
