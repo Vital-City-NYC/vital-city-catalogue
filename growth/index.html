@@ -2507,6 +2507,39 @@ function renderBigPicture(data){
       <div style="font-size:10px;color:var(--vc-charcoal)">${fmtN(y.pageviews)} views</div>
     </div>`;
   }).join("");
+
+  // ---- Mailing list by year-end (from Mailchimp growth history, back to 2021) ----
+  const ms = (data.mailchimp && data.mailchimp.monthly_signups) || [];
+  const lyMap = {};
+  ms.forEach(r=>{ const y=+(String(r.month||"").slice(0,4)); if(!y) return;
+    const e=(lyMap[y] = lyMap[y] || {year:y, cum:0, neww:0});
+    if(r.cum_subs!=null) e.cum = r.cum_subs;          // last month of the year wins
+    e.neww += (r.new_signups||0); });
+  const listYears = Object.values(lyMap).sort((a,b)=>a.year-b.year).filter(y=> y.cum >= 100);
+  let listBlock = "";
+  if(listYears.length >= 2){
+    const maxL = Math.max(1, ...listYears.map(y=>y.cum));
+    const lbars = listYears.map(y=>{
+      const partial = y.year >= curYear;
+      const fill = partial ? "repeating-linear-gradient(45deg,#1F6FB2,#1F6FB2 6px,#aacbe9 6px,#aacbe9 12px)" : "#1F6FB2";
+      return `<div style="flex:1;text-align:center;min-width:0" title="${y.year}${partial?' (year in progress)':''}: ${fmtN(y.cum)} subscribers at year-end · +${fmtN(y.neww)} new signups that year">
+        <div style="font-size:13px;font-weight:700;color:var(--vc-black)">${fmtN(y.cum)}</div>
+        <div style="background:${fill};opacity:.9;height:${Math.round(y.cum/maxL*130)+4}px;margin:4px auto 0;width:62%;border-radius:2px 2px 0 0"></div>
+        <div style="font-size:12px;color:var(--vc-black);margin-top:6px;font-weight:700">${y.year}${partial?'*':''}</div>
+        <div style="font-size:10px;color:var(--vc-charcoal)">+${fmtN(y.neww)} signups</div>
+      </div>`;
+    }).join("");
+    const first = listYears[0], last = listYears[listYears.length-1];
+    listBlock = `
+      <div style="border-top:1px solid var(--vc-cloud);margin-top:26px;padding-top:20px"></div>
+      <div style="font-size:13px;color:var(--vc-charcoal);margin-bottom:16px;line-height:1.5">
+        <b style="color:var(--vc-black);font-size:21px;font-variant-numeric:tabular-nums">${fmtN(last.cum)}</b> newsletter subscribers today · up from ${fmtN(first.cum)} at the end of ${first.year} <span style="opacity:.75">(Mailchimp)</span>
+      </div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:10px">Newsletter subscribers by year-end</div>
+      <div style="display:flex;gap:14px;align-items:flex-end;height:180px">${lbars}</div>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the total list size at that year's end; the number under it is new signups during the year. ${curYear} is in progress. Source: Mailchimp growth history — the list's system of record (a clean cumulative count, unlike the cookie-based visitor numbers above).</div>`;
+  }
+
   host.innerHTML = `
     <div style="font-size:13px;color:var(--vc-charcoal);margin-bottom:18px;line-height:1.5">
       <b style="color:var(--vc-black);font-size:21px;font-variant-numeric:tabular-nums">${fmtN(at.users||0)}</b> unique visitors all-time ·
@@ -2515,8 +2548,8 @@ function renderBigPicture(data){
     <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:10px">Unique visitors by year</div>
     <div style="display:flex;gap:14px;align-items:flex-end;height:180px">${bars}</div>
     <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">
-      <b style="color:var(--vc-black)">*${curYear}</b> is a year in progress (through ${esc(ga4.as_of||'today')}), so its bar is hatched and not yet comparable to full years. The all-time figure is GA4's <b>deduplicated</b> unique users across the whole period — smaller than the yearly bars added together, because someone who visited in two different years counts once in the all-time total but once in each year's bar. GA4 only; see the source caveats in the Website traffic card above.
-    </div>`;
+      <b style="color:var(--vc-black)">*${curYear}</b> is a year in progress (through ${esc(ga4.as_of||'today')}), hatched and not yet comparable to full years. <b>On the all-time number:</b> GA4 identifies a "user" by a browser cookie that rarely survives across years (cleared, expired, new device), so the same person is mostly re-counted each year — the all-time figure is only marginally below the yearly bars summed, i.e. read it as roughly "the yearly uniques added up," <i>not</i> a tally of distinct humans. GA4 only; see the source caveats in the Website traffic card above.
+    </div>` + listBlock;
 }
 
 function renderLifecycle(lc){
