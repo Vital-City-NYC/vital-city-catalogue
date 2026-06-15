@@ -2416,12 +2416,14 @@ function renderLifecycle(lc){
   const lists = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:18px">
     <div>
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">Sunset candidates · sample of ${Math.min(8, sunset.count)}</div>
-      <div style="font-size:11px;color:var(--vc-charcoal)">Suggested action: send a "still want to hear from us?" win-back with a clear unsubscribe link. Remove non-responders after 14 days.</div>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-bottom:4px"><b style="color:var(--vc-black)">Who these are:</b> Mailchimp rates them 1–2★, they've been on the list 6+ months, and they haven't opened anything in the last 30 days — long-tenured but disengaged.</div>
+      <div style="font-size:11px;color:var(--vc-charcoal)"><b style="color:var(--vc-black)">Suggested action:</b> send a "still want to hear from us?" win-back with a clear unsubscribe link. Remove non-responders after 14 days.</div>
       ${sampleList(sunset.sample||[])}
     </div>
     <div>
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">At-risk · sample of ${Math.min(8, atRisk.count)}</div>
-      <div style="font-size:11px;color:var(--vc-charcoal)">Suggested action: a re-engagement campaign featuring your best recent pieces. These people opened within the last year — they liked you once.</div>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-bottom:4px"><b style="color:var(--vc-black)">Who these are:</b> they opened at least one email in the past year but nothing in the last 30 days — drifting, but you've earned their attention before, so they're the most winnable-back.</div>
+      <div style="font-size:11px;color:var(--vc-charcoal)"><b style="color:var(--vc-black)">Suggested action:</b> a re-engagement campaign featuring your best recent pieces.</div>
       ${sampleList(atRisk.sample||[])}
     </div>
   </div>`;
