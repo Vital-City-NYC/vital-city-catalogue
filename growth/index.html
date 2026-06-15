@@ -707,20 +707,24 @@ function boot(data){
     })(),
     (function(){
       const gt = data.ghost_traffic || {};
-      const n = gt.available ? gt.visitors_365d : (ga4.aau!=null ? ga4.aau : null);
-      // Ghost analytics only began recording at the April 2026 site cutover,
-      // so a "1y" label would understate real traffic badly (GA4, which
-      // tracked the previous site too, shows ~500K active users for a full
-      // trailing year). Label the window by its true start month instead.
-      const start = gt.history_start || "";          // YYYY-MM-DD of first recorded traffic
+      // Prefer GA4 for the annual number: it tracked the pre-April-2026 site
+      // too, so it's a TRUE trailing 12 months (~500K), whereas Ghost's own
+      // analytics only start at the cutover and understate the year badly.
+      if(ga4 && ga4.available && ga4.aau!=null){
+        return {lbl:"Website visitors · 1 year", num: fmtN(ga4.aau),
+                delta: `${fmtN(ga4.pageviews_365d||0)} page views · via GA4`, cls:"flat",
+                tip:"Unique visitors to vitalcitynyc.org over the trailing 12 months, from Google Analytics 4 — which tracked the previous site too, so this is a real full year (Ghost's own analytics only begin at the April 2026 cutover).\n\nWhy it matters: the site's true annual reach — the right number for grant reporting and long-run trend."};
+      }
+      // Fallback: Ghost-era cumulative, labeled by its true start month.
+      const n = gt.available ? gt.visitors_365d : null;
+      const start = gt.history_start || "";
       const startLbl = start ? new Date(start+'T00:00:00Z')
         .toLocaleDateString('en-US',{month:'short',year:'numeric',timeZone:'UTC'}) : null;
-      const sub = gt.available ? `${fmtN(gt.pageviews_365d||0)} page views` :
-                  (ga4.aau!=null ? `${fmtN(ga4.sessions_365||0)} sessions` : "needs Ghost staff token ↗ · free");
+      const sub = gt.available ? `${fmtN(gt.pageviews_365d||0)} page views` : "needs Ghost staff token ↗ · free";
       return {lbl: gt.available && startLbl ? `Website visitors · since ${startLbl}` : "Website visitors · 1y",
               num: n!=null ? fmtN(n) : "—", delta: sub,
               cls: n!=null ? "flat" : "na",
-              tip:`Cumulative unique visitors since Ghost analytics began recording${startLbl ? ` (first traffic: ${esc(start)})` : " at the April 2026 cutover"}.\n\nWhy it matters: The site's total reach over its Ghost lifetime — useful context for grant reporting and long-run trend.\n\nNote: this is NOT a trailing year; it understates the true 12-month audience. GA4 tracked the old site too and shows roughly 500K active users for the year through June 2026. This window grows toward a real year as Ghost history accumulates.`};
+              tip:`Cumulative unique visitors since Ghost analytics began recording${startLbl ? ` (first traffic: ${esc(start)})` : " at the April 2026 cutover"}.\n\nNote: this understates the true 12-month audience; connect GA4 for a real trailing year (it tracked the old site too).`};
     })(),
   ];
   $("#kpis").innerHTML=kpis.map(k=>{
