@@ -2235,6 +2235,7 @@ function renderEngagementExtras(ex){
 function renderTraffic(data){
   const host = $("#trafficBody"); if(!host) return;
   const gt = data.ghost_traffic || {};
+  const ga4 = data.ga4 || {};
   const posts = (data.ghost && data.ghost.posts) || [];
 
   // ---- Publishing cadence: pieces published per ISO week, last 6 weeks ----
@@ -2357,9 +2358,26 @@ function renderTraffic(data){
     </div>`).join("")}` :
     `<div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:16px">Traffic-source breakdown populates on the next daily build.</div>`;
 
+  // ---- Pieces that held attention longest (GA4 engagement time) ----
+  const eng = (ga4.available && ga4.engagement) ? ga4.engagement : [];
+  const engDays = ga4.engagement_days || 90;
+  const fmtDur = (s)=>{ s=Math.round(s||0); const m=Math.floor(s/60), ss=s%60; return m ? `${m}m ${ss}s` : `${ss}s`; };
+  const maxE = Math.max(1, ...eng.map(p=>p.avg_secs||0));
+  const engBlock = eng.length ? `
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:20px 0 8px" title="Average engagement time per view — the time a reader's browser tab was actually focused on the page, measured by Google Analytics 4 (Ghost can't measure this). A read-depth signal: which pieces hold attention, not just which get clicked. Limited to articles with at least 50 views in the window so the averages aren't noise. Engaged time is an active-tab measure, not literal reading — treat it as a comparative indicator.">Pieces that held attention longest · avg engaged time, last ${engDays} days <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span></div>
+    <table class="tbl" style="width:100%"><tbody>
+    ${eng.map((p,i)=>`<tr>
+      <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
+      <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
+      <td style="width:26%"><div style="background:#7a5cc0;opacity:.5;height:8px;border-radius:2px;width:${Math.max(2,Math.round((p.avg_secs||0)/maxE*100))}%"></div></td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtDur(p.avg_secs)}</td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--vc-charcoal);font-size:11px;padding-left:8px">${fmtN(p.views)} views</td>
+    </tr>`).join("")}
+    </tbody></table>` : "";
+
   const caveat = `<div style="font-size:11px;color:var(--vc-charcoal);line-height:1.55;border-top:1px dashed var(--vc-cloud);margin-top:18px;padding-top:10px">
-    <b style="color:var(--vc-black)">About these numbers:</b> this card and the 30-day visitor tile come from <b>Ghost</b>'s analytics; the 1-year visitor tile up top comes from <b>Google Analytics 4</b> (which also tracked the pre-April-2026 site). The two systems count visitors differently — bot filtering, what counts as a "visit", time zones and consent all differ — so figures across them won't reconcile, and neither is "wrong." Read traffic as directional, not exact. <a href="https://plausible.io/blog/why-analytics-numbers-dont-match" target="_blank" style="color:var(--vc-cerulean)">Why no two analytics tools agree &#8599;</a></div>`;
-  host.innerHTML = header + trend + cadence + topPieces + topAll + sources + caveat;
+    <b style="color:var(--vc-black)">About these numbers:</b> the trend, top-pieces and sources here — and the 30-day visitor tile — come from <b>Ghost</b>'s analytics; the 1-year visitor tile up top and the engagement-time list come from <b>Google Analytics 4</b> (which also tracked the pre-April-2026 site). The two systems count visitors differently — bot filtering, what counts as a "visit", time zones and consent all differ — so figures across them won't reconcile, and neither is "wrong." Read traffic as directional, not exact. <a href="https://plausible.io/blog/why-analytics-numbers-dont-match" target="_blank" style="color:var(--vc-cerulean)">Why no two analytics tools agree &#8599;</a></div>`;
+  host.innerHTML = header + trend + cadence + topPieces + topAll + engBlock + sources + caveat;
   if(trendPts){ const tsvg = document.querySelector("#trafficTrendSvg");
     if(tsvg) attachChartHover(tsvg, trendGeo.padT, trendGeo.innerH, trendPts); }
 }

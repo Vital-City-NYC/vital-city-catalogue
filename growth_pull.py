@@ -957,6 +957,52 @@ def _ga4_totals(prop, token, days):
     return (int(v[0]["value"]), int(v[1]["value"]), int(v[2]["value"]))
 
 
+def _ga4_engagement(prop, token, days, min_views=50, limit=12):
+    """Average engagement time per article — a read-depth proxy GA4 measures
+    (the seconds a reader's tab is actually focused on the page) and Ghost
+    can't. avg engaged seconds per view = userEngagementDuration / page views.
+    Filtered to article pages with enough views to be non-noisy."""
+    body = {
+        "dateRanges": [{"startDate": f"{days}daysAgo", "endDate": "today"}],
+        "dimensions": [{"name": "pagePath"}],
+        "metrics": [{"name": "screenPageViews"}, {"name": "userEngagementDuration"}],
+        "orderBys": [{"metric": {"metricName": "screenPageViews"}, "desc": True}],
+        "limit": 300,
+    }
+    req = urllib.request.Request(
+        f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+        data=json.dumps(body).encode(),
+        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        rep = json.loads(r.read())
+    cat = {}
+    try:
+        for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
+            u = (c.get("url") or "").rstrip("/")
+            if u:
+                cat["/" + u.split("/")[-1] + "/"] = c.get("title")
+    except Exception:
+        pass
+    def is_article(p):
+        return not (p in ("/", "") or "/job" in p or p in ("/about/", "/about")
+                    or p.startswith("/tag/") or p.startswith("/author/"))
+    out = []
+    for row in (rep.get("rows") or []):
+        path = (row["dimensionValues"][0]["value"] or "").split("?")[0]
+        if not is_article(path):
+            continue
+        views = int(row["metricValues"][0]["value"] or 0)
+        eng = float(row["metricValues"][1]["value"] or 0)
+        if views < min_views:
+            continue
+        key = "/" + path.strip("/").split("/")[-1] + "/"
+        title = cat.get(key) or path.strip("/").replace("-", " ").title()
+        out.append({"path": path, "title": title, "views": views,
+                    "avg_secs": round(eng / views, 1) if views else 0})
+    out.sort(key=lambda x: -x["avg_secs"])
+    return out[:limit]
+
+
 def pull_ga4():
     """Website traffic from Google Analytics 4 (covers the pre-April-2026 site
     history Ghost's own analytics can't). Needs GA4_PROPERTY_ID + a
@@ -976,11 +1022,16 @@ def pull_ga4():
         token = _ga4_access_token(creds)
         u30, s30, p30 = _ga4_totals(prop, token, 30)
         u365, s365, p365 = _ga4_totals(prop, token, 365)
-        log(f"  ga4: {u30:,} users / {s30:,} sessions (30d); {u365:,} users (1y)")
+        try:
+            engagement = _ga4_engagement(prop, token, 90)
+        except Exception as e:
+            log(f"  ga4 engagement query failed: {e}"); engagement = []
+        log(f"  ga4: {u30:,} users / {s30:,} sessions (30d); {u365:,} users (1y); {len(engagement)} pieces w/ engagement time")
         return {
             "available": True, "property_id": prop,
             "mau": u30, "sessions_30": s30, "pageviews_30": p30,
             "aau": u365, "sessions_365": s365, "pageviews_365": p365,
+            "engagement": engagement, "engagement_days": 90,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:
