@@ -962,14 +962,15 @@ def _ga4_totals(prop, token, days):
     return (int(v[0]["value"]), int(v[1]["value"]), int(v[2]["value"]))
 
 
-def _ga4_engagement(prop, token, days, min_views=50, limit=60):
+def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=None):
     """Per-article engagement time — a read-depth proxy GA4 measures (the
     seconds a reader's tab is actually focused on the page) and Ghost can't.
     Per piece: views, avg engaged seconds/view (userEngagementDuration /
     views), and total engaged seconds (audience-weighted). Filtered to
-    articles with enough views to be non-noisy; enough rows for a scatter."""
+    articles with enough views to be non-noisy; enough rows for a scatter.
+    Pass start_date (YYYY-MM-DD) for an absolute window, else last `days`."""
     body = {
-        "dateRanges": [{"startDate": f"{days}daysAgo", "endDate": "today"}],
+        "dateRanges": [{"startDate": start_date or f"{days}daysAgo", "endDate": "today"}],
         "dimensions": [{"name": "pagePath"}],
         "metrics": [{"name": "screenPageViews"}, {"name": "userEngagementDuration"}],
         "orderBys": [{"metric": {"metricName": "screenPageViews"}, "desc": True}],
@@ -1122,8 +1123,11 @@ def pull_ga4():
         token = _ga4_access_token(creds)
         u30, s30, p30 = _ga4_totals(prop, token, 30)
         u365, s365, p365 = _ga4_totals(prop, token, 365)
+        ENG_SINCE = "2026-01-01"
         try:
-            engagement = _ga4_engagement(prop, token, 90)
+            # Reader attention since the start of 2026 (not a rolling 90d) — a
+            # longer window, so bump the min-views floor to keep it meaningful.
+            engagement = _ga4_engagement(prop, token, start_date=ENG_SINCE, min_views=100)
         except Exception as e:
             log(f"  ga4 engagement query failed: {e}"); engagement = []
         try:
@@ -1139,7 +1143,7 @@ def pull_ga4():
             "available": True, "property_id": prop,
             "mau": u30, "sessions_30": s30, "pageviews_30": p30,
             "aau": u365, "sessions_365": s365, "pageviews_365": p365,
-            "engagement": engagement, "engagement_days": 90,
+            "engagement": engagement, "engagement_since": ENG_SINCE,
             "top_pages_since": since_pages, "top_pages_since_date": "2026-01-01",
             "by_year": by_year,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
@@ -1184,7 +1188,6 @@ def pull_search_console():
         if not site:
             return {"available": False, "reason": "service account can't see any Search Console property", "setup": GSC_SETUP}
         today = datetime.now(timezone.utc).date()
-        start = (today - timedelta(days=28)).isoformat()
         end = today.isoformat()
         enc = urllib.parse.quote(site, safe="")
         def query(body):
@@ -1194,18 +1197,26 @@ def pull_search_console():
                 headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
             with urllib.request.urlopen(req, timeout=30) as r:
                 return json.loads(r.read()).get("rows", []) or []
-        tr = query({"startDate": start, "endDate": end})
-        t0 = tr[0] if tr else {}
-        totals = {"clicks": int(t0.get("clicks", 0)), "impressions": int(t0.get("impressions", 0)),
-                  "ctr": round((t0.get("ctr") or 0) * 100, 1), "position": round(t0.get("position") or 0, 1)}
-        qrows = query({"startDate": start, "endDate": end, "dimensions": ["query"], "rowLimit": 20})
-        top_queries = [{"query": r["keys"][0], "clicks": int(r.get("clicks", 0)),
-                        "impressions": int(r.get("impressions", 0)),
-                        "ctr": round((r.get("ctr") or 0) * 100, 1),
-                        "position": round(r.get("position") or 0, 1)} for r in qrows]
-        log(f"  search console: {totals['clicks']:,} clicks / {totals['impressions']:,} impressions, {len(top_queries)} queries ({site})")
+        def window(days):
+            start = (today - timedelta(days=days)).isoformat()
+            tr = query({"startDate": start, "endDate": end})
+            t0 = tr[0] if tr else {}
+            totals = {"clicks": int(t0.get("clicks", 0)), "impressions": int(t0.get("impressions", 0)),
+                      "ctr": round((t0.get("ctr") or 0) * 100, 1), "position": round(t0.get("position") or 0, 1)}
+            qrows = query({"startDate": start, "endDate": end, "dimensions": ["query"], "rowLimit": 25})
+            top_queries = [{"query": r["keys"][0], "clicks": int(r.get("clicks", 0)),
+                            "impressions": int(r.get("impressions", 0)),
+                            "ctr": round((r.get("ctr") or 0) * 100, 1),
+                            "position": round(r.get("position") or 0, 1)} for r in qrows]
+            return {"totals": totals, "top_queries": top_queries}
+        # Short / medium / long windows the dashboard can toggle between.
+        WINDOWS = [28, 90, 365]
+        windows = {str(d): window(d) for d in WINDOWS}
+        default = windows["28"]
+        log(f"  search console: {default['totals']['clicks']:,} clicks / {default['totals']['impressions']:,} impressions (28d), windows {WINDOWS} ({site})")
         return {"available": True, "site": site, "window_days": 28,
-                "totals": totals, "top_queries": top_queries, "as_of": end}
+                "windows": windows, "windows_avail": WINDOWS,
+                "totals": default["totals"], "top_queries": default["top_queries"], "as_of": end}
     except Exception as e:
         log(f"  search console pull failed: {e}")
         return {"available": False, "reason": f"Search Console configured but the pull failed: {e}", "setup": GSC_SETUP}

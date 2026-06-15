@@ -497,11 +497,6 @@
         <div id="urlShares" style="margin-top:18px"></div>
       </div>
 
-      <div class="card" id="stubsCard">
-        <h2>Connect more sources</h2>
-        <div id="stubsList"></div>
-      </div>
-
       <div class="card" id="bigPicture">
         <h2>The long view <span class="hint">every year GA4 has tracked — the whole-history picture</span></h2>
         <div id="bigPictureBody"></div>
@@ -946,17 +941,6 @@ function boot(data){
         <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">Useful for spotting institutional clusters (.edu, .gov) and for guessing Apple Mail share — iCloud + me.com domains are most likely to have privacy auto-open turned on.</div>
       </div>
     </div>`;
-
-  // ----- Stubs
-  const stubKeys=[
-    ["ga4","Google Analytics 4 — traffic + engagement time + signup conversions","data.ga4"],
-    ["search_console","Google Search Console — queries, impressions, clicks, position","data.search_console"],
-  ];
-  $("#stubsList").innerHTML=stubKeys.map(([k,label])=>{
-    const s=data[k]||{};
-    if(s.available)return "";
-    return `<div class="stub"><b>${esc(label)}</b><div style="font-size:11.5px;margin:4px 0 6px">${esc(s.reason||'')}</div>${s.setup?`<ol>${s.setup.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:''}</div>`;
-  }).join("");
 
   // ----- Media mentions (third-party press only — kind='media')
   const news = data.news_mentions || [];
@@ -2386,7 +2370,10 @@ function renderTraffic(data){
   // Two ranked views via a toggle (avg time/view vs total audience-weighted
   // engaged time) + a views-vs-depth scatter. Rendered after innerHTML.
   const eng = (ga4.available && ga4.engagement) ? ga4.engagement : [];
-  const engDays = ga4.engagement_days || 90;
+  const engSince = ga4.engagement_since
+    ? new Date(ga4.engagement_since+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"})
+    : (ga4.engagement_days ? `the last ${ga4.engagement_days} days` : "Jan 1, 2026");
+  const engWin = ga4.engagement_since ? `since ${engSince}` : engSince;
   const fmtDur = (s)=>{ s=Math.round(s||0); const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), ss=s%60;
     return h ? `${h}h ${m}m` : (m ? `${m}m ${ss}s` : `${ss}s`); };
   let engBlock = "";
@@ -2411,7 +2398,7 @@ function renderTraffic(data){
     sc+=`<text x="${W-padR-3}" y="${padT+innerH-5}" text-anchor="end" font-size="9" fill="#aaa">big audience · shallow</text>`;
     eng.forEach(p=>{ sc+=`<circle cx="${x(p.views)}" cy="${y(p.avg_secs)}" r="4.5" fill="#7a5cc0" opacity=".55" stroke="#fff" stroke-width=".5"><title>${esc(p.title)}\n${fmtN(p.views)} views · ${fmtDur(p.avg_secs)} avg engaged · ${fmtDur(p.total_secs)} total</title></circle>`; });
     engBlock = `
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Engagement time = the seconds a reader's browser tab was actually focused on the page, from Google Analytics 4 (Ghost can't measure this). A read-depth signal. 'Avg time per view' = engaged seconds ÷ views. 'Total engaged time' weights by audience (avg × views). Articles with 50+ views in the window only. Engaged time is an active-tab measure, not literal reading — a comparative indicator.">Reader attention by piece · last ${engDays} days <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span></div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Engagement time = the seconds a reader's browser tab was actually focused on the page, from Google Analytics 4 (Ghost can't measure this). A read-depth signal. 'Avg time per view' = engaged seconds ÷ views. 'Total engaged time' weights by audience (avg × views). Articles with 100+ views in the window only. Engaged time is an active-tab measure, not literal reading — a comparative indicator.">Reader attention by piece · ${engWin} <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span></div>
       <div id="engToggle" style="display:flex;gap:6px;margin-bottom:8px">
         <button class="winbtn on" data-k="avg">Avg time / view</button>
         <button class="winbtn" data-k="total">Total engaged time</button>
@@ -2459,26 +2446,47 @@ function renderSearchConsole(data){
     host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">Search Console isn't connected yet${gsc.reason?` — ${esc(gsc.reason)}`:""}. It adds what people <i>search on Google</i> to find Vital City (queries, impressions, click-through, ranking) — see the How it works page.</div>`;
     return;
   }
-  const t = gsc.totals || {}, q = gsc.top_queries || [], win = gsc.window_days || 28;
-  const maxClk = Math.max(1, ...q.map(x=>x.clicks||0));
-  host.innerHTML = `
-    <div class="perfgrid">
-      <div class="perfcell" title="Clicks from Google search results to vitalcitynyc.org over the last ${win} days."><div class="pl">Clicks · ${win}d</div><div class="pn">${fmtN(t.clicks||0)}</div><div class="pd flat">visits from Google</div></div>
-      <div class="perfcell" title="How many times a Vital City page appeared in someone's Google results."><div class="pl">Impressions</div><div class="pn">${fmtN(t.impressions||0)}</div><div class="pd flat">times shown in results</div></div>
-      <div class="perfcell" title="Clicks ÷ impressions. Higher = the listing is compelling for what people searched."><div class="pl">Click-through rate</div><div class="pn">${t.ctr||0}%</div><div class="pd flat">clicks ÷ impressions</div></div>
-      <div class="perfcell" title="Average ranking position across all queries (1 = top of page one). Lower is better."><div class="pl">Avg position</div><div class="pn">${t.position||0}</div><div class="pd flat">1 = top of page one</div></div>
-    </div>
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:18px 0 8px" title="The actual searches that put Vital City in front of people. Branded terms ('vital city') rank ~1; the non-branded discovery queries are how new readers find you.">Top search queries · last ${win} days</div>
-    <table class="tbl" style="width:100%"><thead><tr><th>Query</th><th class="num">Clicks</th><th class="num">Impressions</th><th class="num">CTR</th><th class="num">Avg pos</th></tr></thead><tbody>
-    ${q.map(x=>`<tr>
-      <td>${esc(x.query)}</td>
-      <td class="num">${fmtN(x.clicks)}</td>
-      <td class="num">${fmtN(x.impressions)}</td>
-      <td class="num">${x.ctr}%</td>
-      <td class="num">${x.position}</td>
-    </tr>`).join("")}
-    </tbody></table>
-    <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55">From Google Search Console (${esc(gsc.site||'')}), last ${win} days. Branded queries ("vital city") sit near position 1; the discovery queries below them — what people Google about NYC topics — are where new readers find you. Search Console data lags ~2 days, so the most recent day or two is incomplete.</div>`;
+  // Multi-window data ({windows:{"28":{totals,top_queries},...}}) with a
+  // toggle; gracefully fall back to the single top-level window if absent.
+  const avail = (gsc.windows_avail && gsc.windows_avail.length) ? gsc.windows_avail : [gsc.window_days || 28];
+  const winData = (d)=> (gsc.windows && gsc.windows[String(d)]) || {totals: gsc.totals||{}, top_queries: gsc.top_queries||[]};
+  const winLabel = (d)=> d>=360 ? "Last 12 months" : d>=180 ? "Last 6 months" : `Last ${d} days`;
+  const winShort = (d)=> d>=360 ? "12 mo" : d>=180 ? "6 mo" : `${d}d`;
+  const toggle = avail.length > 1
+    ? `<div id="gscToggle" style="display:flex;gap:6px;margin-bottom:14px">${avail.map((d,i)=>`<button class="winbtn${i===0?' on':''}" data-d="${d}">${winShort(d)}</button>`).join("")}</div>`
+    : "";
+
+  const body = (d)=>{
+    const w = winData(d), t = w.totals||{}, q = w.top_queries||[];
+    return `
+      <div class="perfgrid">
+        <div class="perfcell" title="Clicks from Google search results to vitalcitynyc.org over this window."><div class="pl">Clicks</div><div class="pn">${fmtN(t.clicks||0)}</div><div class="pd flat">visits from Google</div></div>
+        <div class="perfcell" title="How many times a Vital City page appeared in someone's Google results."><div class="pl">Impressions</div><div class="pn">${fmtN(t.impressions||0)}</div><div class="pd flat">times shown in results</div></div>
+        <div class="perfcell" title="Clicks ÷ impressions. Higher = the listing is compelling for what people searched."><div class="pl">Click-through rate</div><div class="pn">${t.ctr||0}%</div><div class="pd flat">clicks ÷ impressions</div></div>
+        <div class="perfcell" title="Average ranking position across all queries (1 = top of page one). Lower is better."><div class="pl">Avg position</div><div class="pn">${t.position||0}</div><div class="pd flat">1 = top of page one</div></div>
+      </div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:18px 0 8px" title="The actual searches that put Vital City in front of people, ranked by clicks. Branded terms ('vital city') rank ~1; the non-branded discovery queries are how new readers find you.">Top search queries · ${winLabel(d).toLowerCase()}</div>
+      <table class="tbl" style="width:100%"><thead><tr><th>Query</th><th class="num">Clicks</th><th class="num">Impressions</th><th class="num">CTR</th><th class="num">Avg pos</th></tr></thead><tbody>
+      ${q.map(x=>`<tr>
+        <td>${esc(x.query)}</td>
+        <td class="num">${fmtN(x.clicks)}</td>
+        <td class="num">${fmtN(x.impressions)}</td>
+        <td class="num">${x.ctr}%</td>
+        <td class="num">${x.position}</td>
+      </tr>`).join("")}
+      </tbody></table>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55">From Google Search Console (${esc(gsc.site||'')}), ${winLabel(d).toLowerCase()}. <b>Clicks</b> = visits to the site; <b>impressions</b> = times a page showed up in someone's results — together they show how much search demand each query carries. Branded queries ("vital city") sit near position 1; the discovery queries below them — what people Google about NYC topics — are where new readers find you. Search Console data lags ~2 days, so the most recent day or two is incomplete.</div>`;
+  };
+
+  host.innerHTML = toggle + `<div id="gscBody">${body(avail[0])}</div>`;
+  if(avail.length > 1){
+    host.querySelectorAll("#gscToggle .winbtn").forEach(b=>b.addEventListener("click",()=>{
+      host.querySelectorAll("#gscToggle .winbtn").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");
+      host.querySelector("#gscBody").innerHTML = body(+b.dataset.d);
+      wrapTables();
+    }));
+  }
 }
 
 // The long view — every year GA4 has tracked. All-time deduped total + a
@@ -2565,7 +2573,35 @@ function renderBigPicture(data){
       ${emTable}`;
   }
 
-  host.innerHTML = `
+  // ---- Whole-history summary strip: visitor + list growth multiples ----
+  const fullYrs = years.filter(y=>y.year < curYear);
+  const baseYr = years[0];
+  const lastFull = fullYrs.length ? fullYrs[fullYrs.length-1] : years[years.length-1];
+  const vMult = (baseYr.users && lastFull.users) ? lastFull.users/baseYr.users : 0;
+  const ppv = at.users ? at.pageviews/at.users : 0;
+  const sFirst = listYears.length ? listYears[0] : null;
+  const sLast  = listYears.length ? listYears[listYears.length-1] : null;
+  const sMult  = (sFirst && sFirst.cum && sLast) ? sLast.cum/sFirst.cum : 0;
+  const fmtMult = (m)=> m>=10 ? Math.round(m)+"×" : m>=2 ? m.toFixed(1)+"×" : m.toFixed(2)+"×";
+  const summary = `
+    <div class="perfgrid" style="margin-bottom:22px">
+      <div class="perfcell" title="Annual unique visitors in the most recent complete year (${lastFull.year}) versus the first year GA4 tracked (${baseYr.year}).">
+        <div class="pl">Visitors / year</div>
+        <div class="pn">${vMult?fmtMult(vMult):"—"}</div>
+        <div class="pd flat">${fmtN(baseYr.users)} (${baseYr.year}) &rarr; ${fmtN(lastFull.users)} (${lastFull.year})</div>
+      </div>
+      <div class="perfcell" title="All page views GA4 has recorded since ${baseYr.year}, and the average number of pages a visit touches.">
+        <div class="pl">Page views all-time</div>
+        <div class="pn">${fmtN(at.pageviews||0)}</div>
+        <div class="pd flat">${ppv?ppv.toFixed(1):"—"} per visit · since ${baseYr.year}</div>
+      </div>
+      <div class="perfcell" title="Newsletter list size today versus the end of ${sFirst?sFirst.year:''} (Mailchimp).">
+        <div class="pl">Newsletter list</div>
+        <div class="pn">${sMult?fmtMult(sMult):"—"}</div>
+        <div class="pd flat">${sFirst?fmtN(sFirst.cum):"—"} (${sFirst?sFirst.year:""}) &rarr; ${sLast?fmtN(sLast.cum):"—"} today</div>
+      </div>
+    </div>`;
+  host.innerHTML = summary + `
     <div style="font-size:13px;color:var(--vc-charcoal);margin-bottom:18px;line-height:1.5">
       <b style="color:var(--vc-black);font-size:21px;font-variant-numeric:tabular-nums">${fmtN(at.users||0)}</b> unique visitors all-time ·
       <b style="color:var(--vc-black)">${fmtN(at.pageviews||0)}</b> page views · since ${years[0].year} <span style="opacity:.75">(Google Analytics 4)</span>
