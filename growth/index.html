@@ -712,7 +712,7 @@ function boot(data){
       // analytics only start at the cutover and understate the year badly.
       if(ga4 && ga4.available && ga4.aau!=null){
         return {lbl:"Website visitors · 1 year", num: fmtN(ga4.aau),
-                delta: `${fmtN(ga4.pageviews_365d||0)} page views · via GA4`, cls:"flat",
+                delta: `${fmtN(ga4.pageviews_365||0)} page views · via GA4`, cls:"flat",
                 tip:"Unique visitors to vitalcitynyc.org over the trailing 12 months, from Google Analytics 4 — which tracked the previous site too, so this is a real full year (Ghost's own analytics only begin at the April 2026 cutover).\n\nWhy it matters: the site's true annual reach — the right number for grant reporting and long-run trend.\n\nCaveat: this comes from GA4, while the 30-day tile and the Website traffic card come from Ghost. The two systems count visitors differently, so don't compare them directly or treat them as one continuous series."};
       }
       // Fallback: Ghost-era cumulative, labeled by its true start month.
