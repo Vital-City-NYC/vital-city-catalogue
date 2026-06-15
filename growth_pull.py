@@ -685,14 +685,16 @@ def build_engagement_extras(mc, signup_attr, donorbox):
                     for em in (p.get("emails") or []):
                         em2p2[em.lower().strip()] = p
             except Exception: pass
+        # Keep composite-engagement order (rating × 20 + open rate), most to
+        # least — `top` is already sorted that way; do NOT re-sort by name.
         prl = [{
             "name":   (em2p2.get(em, {}).get("n") or "(no name)"),
             "email":  em,
             "inst":   em2p2.get(em, {}).get("inst") or "",
             "rating": rating,
             "open_pct": op,
+            "score":  round(rating * 20 + op, 1),
         } for em, rating, op in top]
-        prl.sort(key=_last_name_key)
         out["power_readers_list"] = prl
 
     return out
@@ -1053,6 +1055,24 @@ def pull_ghost_traffic():
         else:
             out["history_start"] = None
         out["kpi_rows_30d"] = rows30[:40]   # raw sample for field-name debugging
+        # Weekly visitors + page views over the real-traffic window, for the
+        # overall-traffic TREND chart. Bucket daily api_kpis rows by ISO week
+        # (Monday start) from history_start onward (skips the pre-launch trickle).
+        wseries = {}
+        wstart = out.get("history_start") or ""
+        for r in rows365:
+            d = (r.get("date") or "")[:10]
+            if not d or (wstart and d < wstart):
+                continue
+            try:
+                dd = datetime.strptime(d, "%Y-%m-%d").date()
+            except Exception:
+                continue
+            wk = (dd - timedelta(days=dd.weekday())).isoformat()
+            s = wseries.setdefault(wk, {"wk": wk, "visitors": 0, "pageviews": 0})
+            s["visitors"]  += int(r.get("visits") or r.get("visitors") or 0)
+            s["pageviews"] += int(r.get("pageviews") or r.get("page_views") or 0)
+        out["traffic_series"] = [wseries[k] for k in sorted(wseries)]
         # Top pieces by visits (the "top performers" view) over 7 and 30 days.
         # Exclude the homepage, jobs board, tag/author index pages; map each
         # pathname to its article title from the catalogue.

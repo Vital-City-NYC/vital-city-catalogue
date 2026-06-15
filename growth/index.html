@@ -1591,7 +1591,7 @@ function showPeople(key, title, note){
       </tr>`).join("")}</tbody>
     </table>
     <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px">
-      Sorted alphabetically by last name${(subset.total||rows.length) > rows.length ? `. Showing ${rows.length} of ${fmtN(subset.total)} — use "Open this entire subset in the Contact tool" above for the full list.` : '.'}
+      ${ ({power_readers:"Ranked by engagement — Mailchimp star rating × 20 + open rate, most to least",at_risk:"Sorted by Mailchimp star rating, highest first",sunset_candidates:"Sorted by longest tenure first"})[key] || "Sorted alphabetically by last name" }${(subset.total||rows.length) > rows.length ? `. Showing ${rows.length} of ${fmtN(subset.total)} — use "Open this entire subset in the Contact tool" above for the full list.` : '.'}
     </div>
   ` : '<div style="color:var(--vc-charcoal);padding:8px 0">No matching subscribers in this subset.</div>';
   document.getElementById("peopleModal").classList.add("on");
@@ -2256,9 +2256,34 @@ function renderTraffic(data){
 
   // ---- Site-visitor total, with change vs the prior 30 days ----
   const vNow = gt.visitors_30d||0, vPrev = gt.visitors_prev_30d;
-  const header = `<div style="margin-bottom:18px;font-size:13px;color:var(--vc-charcoal)">
+  const header = `<div style="margin-bottom:16px;font-size:13px;color:var(--vc-charcoal)">
     <b style="color:var(--vc-black);font-size:16px;font-variant-numeric:tabular-nums">${fmtN(vNow)}</b> unique site visitors · last 30 days
     ${vPrev!=null ? `&nbsp; ${pctBadge(vNow, vPrev)} <span style="opacity:.7">vs prior 30 days (${fmtN(vPrev)})</span>` : ""}</div>`;
+
+  // ---- Overall website-traffic TREND (weekly visitors + page views) ----
+  const series = gt.traffic_series || [];
+  let trend = "", trendPts = null, trendGeo = null;
+  if(series.length >= 2){
+    const W=760,H=160,padL=46,padR=12,padT=12,padB=22;
+    const innerW=W-padL-padR, innerH=H-padT-padB, n=series.length;
+    const x=(i)=>padL+(i/(n-1))*innerW;
+    const maxY=Math.max(1,...series.map(s=>Math.max(s.pageviews||0,s.visitors||0)));
+    const ns=(m,k)=>{const raw=m/k,pw=Math.pow(10,Math.floor(Math.log10(raw)));for(const f of[1,2,2.5,5,10])if(f*pw>=raw)return f*pw;};
+    const step=ns(maxY,4)||1, yTop=Math.ceil(maxY/step)*step;
+    const y=(v)=>padT+innerH-(v/yTop)*innerH;
+    let hh="";
+    for(let t=0;t<=yTop;t+=step){const yy=y(t);hh+=`<line x1="${padL}" x2="${W-padR}" y1="${yy}" y2="${yy}" stroke="#e6e6e3" stroke-width="1"/><text x="${padL-6}" y="${yy+3}" text-anchor="end" font-size="10" fill="#888">${fmtN(t)}</text>`;}
+    let lastX=-1e9;
+    series.forEach((s,i)=>{const isM=(i===0)||(s.wk.slice(0,7)!==series[i-1].wk.slice(0,7));if(isM&&x(i)-lastX>=46){hh+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="10" fill="#888">${esc(s.wk.slice(0,7))}</text>`;lastX=x(i);}});
+    hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.pageviews||0)}`).join(" ")}" fill="none" stroke="#E2772F" stroke-width="1.6" opacity=".85"/>`;
+    hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.visitors||0)}`).join(" ")}" fill="none" stroke="#1F6FB2" stroke-width="2"/>`;
+    trend = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 6px" title="Total visitors and page views to vitalcitynyc.org, bucketed by week, since Ghost analytics began recording. The whole-site trend — the top of the funnel.">Overall website traffic · weekly, whole site</div>
+      <div class="chartwrap"><svg class="chart" id="trafficTrendSvg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="height:auto;aspect-ratio:${W}/${H}">${hh}</svg></div>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin:4px 0 2px"><span style="color:#1F6FB2">■</span> unique visitors &nbsp;&nbsp; <span style="color:#E2772F">■</span> page views</div>`;
+    trendPts = series.map((s,i)=>({x:x(i),
+      html:`<div class="tipwk">Week of ${esc(s.wk)}</div><div><span style="color:#9fd0ef">■</span> ${fmtN(s.visitors||0)} visitors</div><div><span style="color:#f3b48c">■</span> ${fmtN(s.pageviews||0)} page views</div>`}));
+    trendGeo = {padT, innerH};
+  }
 
   // ---- Top pieces by visitors (30d if available, else the 7d window) ----
   const pages = (gt.top_pages_30d && gt.top_pages_30d.length) ? gt.top_pages_30d : (gt.top_pages_7d || []);
@@ -2290,7 +2315,9 @@ function renderTraffic(data){
     </div>`).join("")}` :
     `<div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:16px">Traffic-source breakdown populates on the next daily build.</div>`;
 
-  host.innerHTML = header + cadence + topPieces + sources;
+  host.innerHTML = header + trend + cadence + topPieces + sources;
+  if(trendPts){ const tsvg = document.querySelector("#trafficTrendSvg");
+    if(tsvg) attachChartHover(tsvg, trendGeo.padT, trendGeo.innerH, trendPts); }
 }
 
 function renderLifecycle(lc){
