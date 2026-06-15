@@ -1072,7 +1072,26 @@ def pull_ghost_traffic():
             s = wseries.setdefault(wk, {"wk": wk, "visitors": 0, "pageviews": 0})
             s["visitors"]  += int(r.get("visits") or r.get("visitors") or 0)
             s["pageviews"] += int(r.get("pageviews") or r.get("page_views") or 0)
-        out["traffic_series"] = [wseries[k] for k in sorted(wseries)]
+        ser = [wseries[k] for k in sorted(wseries)]
+        # Trim partial bookend weeks so they don't distort the trend line:
+        #  - leading: if Ghost recording began mid-week (history_start isn't a
+        #    Monday), that first ISO-week bucket holds only a day or two of real
+        #    data — drop it (e.g. the 2026-02-23 sliver from a 2026-03-01 start).
+        #  - trailing: the current week, when only 1-2 days in, is too partial
+        #    to plot honestly — drop it until at least 3 days have elapsed.
+        if ser and wstart:
+            try:
+                hs = datetime.strptime(wstart[:10], "%Y-%m-%d").date()
+                hs_monday = (hs - timedelta(days=hs.weekday())).isoformat()
+                if hs.weekday() != 0 and ser and ser[0]["wk"] == hs_monday:
+                    ser = ser[1:]
+            except Exception:
+                pass
+        if ser:
+            cur_monday = (today - timedelta(days=today.weekday())).isoformat()
+            if ser[-1]["wk"] == cur_monday and today.weekday() < 2:   # Mon/Tue → <3 days in
+                ser = ser[:-1]
+        out["traffic_series"] = ser
         # Top pieces by visits (the "top performers" view) over 7 and 30 days.
         # Exclude the homepage, jobs board, tag/author index pages; map each
         # pathname to its article title from the catalogue.
