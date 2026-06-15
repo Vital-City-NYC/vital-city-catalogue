@@ -2467,7 +2467,13 @@ function renderSearchConsole(data){
         <div class="perfcell" title="Average ranking position across all queries (1 = top of page one). Lower is better."><div class="pl">Avg position</div><div class="pn">${t.position||0}</div><div class="pd flat">1 = top of page one</div></div>
       </div>
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:18px 0 8px" title="The actual searches that put Vital City in front of people, ranked by clicks. Branded terms ('vital city') rank ~1; the non-branded discovery queries are how new readers find you.">Top search queries · ${winLabel(d).toLowerCase()}</div>
-      <table class="tbl" style="width:100%"><thead><tr><th>Query</th><th class="num">Clicks</th><th class="num">Impressions</th><th class="num">CTR</th><th class="num">Avg pos</th></tr></thead><tbody>
+      <table class="tbl" style="width:100%"><thead><tr>
+        <th title="The exact words someone typed into Google. A Vital City page appeared in their results for this search.">Query</th>
+        <th class="num" title="How many people clicked through to vitalcitynyc.org after this search — i.e. the actual visits Google sent for this query.">Clicks</th>
+        <th class="num" title="How many times a Vital City page showed up in someone's Google results for this query, whether or not they clicked. It measures how much search demand the query carries.">Impressions</th>
+        <th class="num" title="Click-through rate = clicks ÷ impressions. Of everyone who saw Vital City for this query, the share who clicked. Higher means the result is compelling for that search.">CTR</th>
+        <th class="num" title="Vital City's average ranking position for this query (1 = top of Google's first page). Lower is better; under ~10 is the first page.">Avg pos</th>
+      </tr></thead><tbody>
       ${q.map(x=>`<tr>
         <td>${esc(x.query)}</td>
         <td class="num">${fmtN(x.clicks)}</td>
