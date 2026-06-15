@@ -1370,6 +1370,15 @@ function renderPerfChart(monthly){
     html+=`<text x="${bx+4}" y="${padT+11}" font-size="9" fill="#5A5C61">Jul '25 break</text>`;
   }
   svg.innerHTML=html;
+
+  // Interactive hover — open/click rate + sends for the nearest month.
+  attachChartHover(svg, padT, innerH, last.map((r,i)=>({
+    x: x(i),
+    html: `<div class="tipwk">${esc(r.month)}</div>`+
+          `<div><span style="color:#9fd0ef">■</span> ${r.open_pct}% open rate</div>`+
+          `<div><span style="color:#f3b48c">■</span> ${r.click_pct}% click rate</div>`+
+          `<div style="opacity:.7">${fmtN(r.sends)} send${r.sends===1?'':'s'}</div>`,
+  })));
 }
 
 function renderYTD(mc, signups){
@@ -2548,6 +2557,46 @@ function showWeekNames(key){
   document.getElementById("peopleModal").classList.add("on");
 }
 
+// Reusable interactive hover for the hand-rolled SVG charts: a vertical guide
+// that snaps to the nearest data point and a tooltip with the real numbers —
+// works whether the cursor is over a bar, the line, or the gap between them.
+// pts: [{x, y (optional viewBox-px for a marker dot), html}]. Mirrors the
+// growth & reach chart's built-in hover.
+function attachChartHover(svg, padT, innerH, pts){
+  const wrap = svg.parentElement;
+  let guide = wrap.querySelector(".chart-guide"),
+      dot   = wrap.querySelector(".chart-dot"),
+      tip   = wrap.querySelector(".chart-tip");
+  if(!guide){ guide=document.createElement("div"); guide.className="chart-guide"; wrap.appendChild(guide); }
+  if(!dot){   dot=document.createElement("div");   dot.className="chart-dot";     wrap.appendChild(dot); }
+  if(!tip){   tip=document.createElement("div");   tip.className="chart-tip";     wrap.appendChild(tip); }
+  guide.style.height = innerH + "px"; guide.style.top = padT + "px";
+  svg._hoverPts = pts;
+  if(svg._hoverBound) return;
+  svg._hoverBound = true;
+  const move = (ev) => {
+    const ps = svg._hoverPts; if(!ps || !ps.length) return;
+    const rect = svg.getBoundingClientRect();
+    const vbW = (svg.viewBox.baseVal && svg.viewBox.baseVal.width) || rect.width;
+    const mx = (ev.clientX - rect.left) * (vbW / rect.width);
+    let best=ps[0], bd=Infinity;
+    for(const p of ps){ const d=Math.abs(p.x-mx); if(d<bd){bd=d;best=p;} }
+    const pxScale = rect.width / vbW;
+    const left = best.x * pxScale;
+    guide.style.display="block"; guide.style.left=left+"px";
+    if(best.y!=null){ dot.style.display="block"; dot.style.left=left+"px"; dot.style.top=(best.y*pxScale)+"px"; }
+    else dot.style.display="none";
+    tip.style.display="block"; tip.innerHTML = best.html;
+    tip.style.left=left+"px";
+    tip.style.top=Math.max((best.y!=null?best.y*pxScale:padT*pxScale)-12, 4)+"px";
+    const tr=tip.getBoundingClientRect();
+    if(tr.left < rect.left+4) tip.style.left=(left + (rect.left+4 - tr.left))+"px";
+    else if(tr.right > rect.right-4) tip.style.left=(left - (tr.right - (rect.right-4)))+"px";
+  };
+  svg.addEventListener("mousemove", move);
+  svg.addEventListener("mouseleave", ()=>{ guide.style.display="none"; dot.style.display="none"; tip.style.display="none"; });
+}
+
 function renderTrendChart(act,posts,windowDays){
   const svg=$("#trendChart");
   if(!act||!act.length){svg.innerHTML='<text x="400" y="120" text-anchor="middle" fill="#888">No activity data</text>';return;}
@@ -2641,6 +2690,15 @@ function renderTrendChart(act,posts,windowDays){
   // be useful. The "Recent signup movers" callout in the Content cadence card
   // is a better signal for which specific pieces drew traffic.)
   svg.innerHTML=html;
+
+  // Interactive hover — guide + tooltip with the day's/week's real numbers, so
+  // hovering anywhere (signup bar, unsub line, or the gap) shows the figures.
+  attachChartHover(svg, padT, innerH, rows.map((r,i)=>({
+    x: x(i),
+    html: `<div class="tipwk">${weekly?'Week of ':''}${esc(r.d)}</div>`+
+          `<div><span style="color:#9fe0a0">■</span> ${fmtN(+r.subs||0)} new signup${(+r.subs||0)===1?'':'s'}</div>`+
+          `<div><span style="color:#ef9ec9">■</span> ${fmtN(+r.unsubs||0)} unsubscribe${(+r.unsubs||0)===1?'':'s'}</div>`,
+  })));
 }
 
 $("#themeToggle")&&$("#themeToggle").addEventListener("click",e=>{e.preventDefault();const cur=document.documentElement.classList.contains("dark")?"light":"dark";localStorage.setItem("vc_theme",cur);applyTheme(cur);});
