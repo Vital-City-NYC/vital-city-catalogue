@@ -2431,22 +2431,29 @@ function renderTraffic(data){
     `<div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:16px">Traffic-source breakdown populates on the next daily build.</div>`;
 
   // ---- Reader attention: engagement time per piece (GA4) ----
-  // Two ranked views via a toggle (avg time/view vs total audience-weighted
-  // engaged time) + a views-vs-depth scatter. Rendered after innerHTML.
-  const eng = (ga4.available && ga4.engagement) ? ga4.engagement : [];
-  const engSince = ga4.engagement_since
-    ? new Date(ga4.engagement_since+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"})
-    : (ga4.engagement_days ? `the last ${ga4.engagement_days} days` : "Jan 1, 2026");
-  const engWin = ga4.engagement_since ? `since ${engSince}` : engSince;
+  // A year / all-time toggle (matching the most-read leaderboards); within
+  // each window, an avg-vs-total sub-toggle + a views-vs-depth scatter.
+  // Rendered after innerHTML so the controls can re-render on toggle.
+  const engByYear = (ga4.available && ga4.engagement_by_year && Object.keys(ga4.engagement_by_year).length) ? ga4.engagement_by_year : null;
+  const engSets = {};
+  if(engByYear) Object.assign(engSets, engByYear);
+  else if((ga4.engagement||[]).length) engSets[curYr] = ga4.engagement;
+  if(ga4.engagement_alltime && ga4.engagement_alltime.length) engSets["all"] = ga4.engagement_alltime;
+  const engKeys = Object.keys(engSets).sort((a,b)=> a==="all"?1:(b==="all"?-1:(+b)-(+a)));   // years desc, All time last
   const fmtDur = (s)=>{ s=Math.round(s||0); const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), ss=s%60;
     return h ? `${h}h ${m}m` : (m ? `${m}m ${ss}s` : `${ss}s`); };
-  let engBlock = "";
-  if(eng.length){
-    // Scatter: x = views (log), y = avg engaged seconds. Spotlights quadrants.
+  const engLbl = (k)=> k==="all" ? "All time" : (k===curYr ? k+" · YTD" : k);
+  const engCapTxt = (k)=>{
+    const tail = " Pieces with 100+ views in the window; engaged time is an active-tab measure, a comparative signal.";
+    return (k==="all" ? "All of GA4's history (since 2023)." : k===curYr ? `${k} so far — since January 1.` : `Full calendar year ${k}.`) + tail;
+  };
+  // Views-vs-depth scatter for one dataset (x = views log scale, y = avg secs).
+  const engScatterSVG = (pages)=>{
+    if(!pages || !pages.length) return "";
     const W=760,H=300,padL=46,padR=16,padT=16,padB=42, innerW=W-padL-padR, innerH=H-padT-padB;
-    const views=eng.map(p=>p.views), vmin=Math.min(...views), vmax=Math.max(...views);
+    const views=pages.map(p=>p.views), vmin=Math.min(...views), vmax=Math.max(...views);
     const lmin=Math.log10(Math.max(1,vmin)), lmax=Math.log10(Math.max(2,vmax));
-    const tTop=Math.max(30, Math.ceil(Math.max(...eng.map(p=>p.avg_secs||0))/30)*30);
+    const tTop=Math.max(30, Math.ceil(Math.max(...pages.map(p=>p.avg_secs||0))/30)*30);
     const x=(v)=> padL + (Math.log10(Math.max(1,v))-lmin)/((lmax-lmin)||1)*innerW;
     const y=(s)=> padT+innerH - (s/tTop)*innerH;
     let sc="";
@@ -2454,22 +2461,43 @@ function renderTraffic(data){
     [50,100,250,500,1000,2500,5000].filter(v=>v>=vmin*0.7 && v<=vmax*1.3).forEach(v=>{ const xx=x(v); sc+=`<line x1="${xx}" x2="${xx}" y1="${padT}" y2="${padT+innerH}" stroke="#f3f3f1" stroke-width="1"/><text x="${xx}" y="${H-24}" text-anchor="middle" font-size="9.5" fill="#888">${fmtN(v)}</text>`; });
     sc+=`<text x="${padL+innerW/2}" y="${H-6}" text-anchor="middle" font-size="10" fill="#666">page views (log scale) →</text>`;
     const srt=(a)=>[...a].sort((m,n)=>m-n);
-    const medV=srt(views)[Math.floor(eng.length/2)], medT=srt(eng.map(p=>p.avg_secs))[Math.floor(eng.length/2)];
+    const medV=srt(views)[Math.floor(pages.length/2)], medT=srt(pages.map(p=>p.avg_secs))[Math.floor(pages.length/2)];
     sc+=`<line x1="${x(medV)}" x2="${x(medV)}" y1="${padT}" y2="${padT+innerH}" stroke="#c8c8c8" stroke-dasharray="3 3"/>`;
     sc+=`<line x1="${padL}" x2="${W-padR}" y1="${y(medT)}" y2="${y(medT)}" stroke="#c8c8c8" stroke-dasharray="3 3"/>`;
     sc+=`<text x="${padL+5}" y="${padT+11}" font-size="9" fill="#9a8fc0">deep read · small audience</text>`;
     sc+=`<text x="${W-padR-3}" y="${padT+11}" text-anchor="end" font-size="9" fill="#3b7d2f">deep read · big audience</text>`;
     sc+=`<text x="${W-padR-3}" y="${padT+innerH-5}" text-anchor="end" font-size="9" fill="#aaa">big audience · shallow</text>`;
-    eng.forEach(p=>{ sc+=`<circle cx="${x(p.views)}" cy="${y(p.avg_secs)}" r="4.5" fill="#7a5cc0" opacity=".55" stroke="#fff" stroke-width=".5"><title>${esc(p.title)}\n${fmtN(p.views)} views · ${fmtDur(p.avg_secs)} avg engaged · ${fmtDur(p.total_secs)} total</title></circle>`; });
+    pages.forEach(p=>{ sc+=`<circle cx="${x(p.views)}" cy="${y(p.avg_secs)}" r="4.5" fill="#7a5cc0" opacity=".55" stroke="#fff" stroke-width=".5"><title>${esc(p.title)}\n${fmtN(p.views)} views · ${fmtDur(p.avg_secs)} avg engaged · ${fmtDur(p.total_secs)} total</title></circle>`; });
+    return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="height:auto;aspect-ratio:${W}/${H}">${sc}</svg>`;
+  };
+  const engTableHTML = (pages, k)=>{
+    const mv=(r)=> ((k==="total" ? r.total_secs : r.avg_secs) || 0);
+    const rows=[...(pages||[])].sort((a,b)=> mv(b)-mv(a)).slice(0,12);
+    const maxv=Math.max(1,...rows.map(mv));
+    return `<table class="tbl" style="width:100%"><tbody>${rows.map((p,i)=>{
+      const val = mv(p);
+      return `<tr>
+        <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
+        <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
+        <td style="width:26%"><div style="background:#7a5cc0;opacity:.5;height:8px;border-radius:2px;width:${Math.max(2,Math.round(val/maxv*100))}%"></div></td>
+        <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtDur(val)}</td>
+        <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--vc-charcoal);font-size:11px;padding-left:8px">${fmtN(p.views)} views</td>
+      </tr>`;}).join("")}</tbody></table>`;
+  };
+  let engBlock = "";
+  if(engKeys.length){
+    const yToggle = engKeys.length>1 ? `<div id="engYearToggle" style="display:flex;gap:6px;margin-bottom:8px">${engKeys.map((k,i)=>`<button class="winbtn${i===0?' on':''}" data-y="${k}">${engLbl(k)}</button>`).join("")}</div>` : "";
     engBlock = `
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Engagement time = the seconds a reader's browser tab was actually focused on the page, from Google Analytics 4 (Ghost can't measure this). A read-depth signal. 'Avg time per view' = engaged seconds ÷ views. 'Total engaged time' weights by audience (avg × views). Articles with 100+ views in the window only. Engaged time is an active-tab measure, not literal reading — a comparative indicator.">Reader attention by piece · ${engWin} <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span></div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Engagement time = the seconds a reader's browser tab was actually focused on the page, from Google Analytics 4 (Ghost can't measure this). A read-depth signal. 'Avg time per view' = engaged seconds ÷ views. 'Total engaged time' weights by audience (avg × views). Pieces with 100+ views in the window only. Engaged time is an active-tab measure, not literal reading — a comparative indicator.">Reader attention by piece <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span></div>
+      ${yToggle}
       <div id="engToggle" style="display:flex;gap:6px;margin-bottom:8px">
         <button class="winbtn on" data-k="avg">Avg time / view</button>
         <button class="winbtn" data-k="total">Total engaged time</button>
       </div>
+      <div id="engCap" style="font-size:11px;color:var(--vc-charcoal);margin:0 0 10px"></div>
       <div id="engTbl"></div>
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 6px" title="Each dot is an article. Right = more views; higher = longer average engaged time. The dashed lines are the medians, splitting the field into quadrants: top-right is the sweet spot (big audience AND deep read); bottom-right is high-traffic-but-shallow; top-left is deeply read by a smaller audience. Hover a dot for the piece.">Views vs. depth of read</div>
-      <div class="chartwrap"><svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="height:auto;aspect-ratio:${W}/${H}">${sc}</svg></div>`;
+      <div class="chartwrap" id="engScatter"></div>`;
   }
 
   const caveat = `<div style="font-size:11px;color:var(--vc-charcoal);line-height:1.55;border-top:1px dashed var(--vc-cloud);margin-top:18px;padding-top:10px">
@@ -2477,27 +2505,25 @@ function renderTraffic(data){
   host.innerHTML = header + trend + cadence + topPieces + topAll + engBlock + sources + caveat;
   if(trendPts){ const tsvg = document.querySelector("#trafficTrendSvg");
     if(tsvg) attachChartHover(tsvg, trendGeo.padT, trendGeo.innerH, trendPts); }
-  // Engagement table — render, and toggle between avg-per-view and total time.
-  if(eng.length){
-    const tbl=document.querySelector("#engTbl");
-    const draw=(k)=>{
-      const mv=(r)=> ((k==="total" ? r.total_secs : r.avg_secs) || 0);
-      const rows=[...eng].sort((a,b)=> mv(b)-mv(a)).slice(0,12);
-      const maxv=Math.max(1,...rows.map(mv));
-      tbl.innerHTML=`<table class="tbl" style="width:100%"><tbody>${rows.map((p,i)=>{
-        const val = mv(p);
-        return `<tr>
-          <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
-          <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
-          <td style="width:26%"><div style="background:#7a5cc0;opacity:.5;height:8px;border-radius:2px;width:${Math.max(2,Math.round(val/maxv*100))}%"></div></td>
-          <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtDur(val)}</td>
-          <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--vc-charcoal);font-size:11px;padding-left:8px">${fmtN(p.views)} views</td>
-        </tr>`;}).join("")}</tbody></table>`;
+  // Reader attention — year/all-time toggle + avg/total sub-toggle; both
+  // re-render the table and the scatter for the selected window.
+  if(engKeys.length){
+    let engYear = engKeys[0], engK = "avg";
+    const engRender = ()=>{
+      const pages = engSets[engYear] || [];
+      const tbl = document.querySelector("#engTbl"); if(tbl) tbl.innerHTML = engTableHTML(pages, engK);
+      const sct = document.querySelector("#engScatter"); if(sct) sct.innerHTML = engScatterSVG(pages);
+      const cap = document.querySelector("#engCap"); if(cap) cap.textContent = engCapTxt(engYear);
+      wrapTables();
     };
-    draw("avg");
+    engRender();
+    document.querySelectorAll("#engYearToggle .winbtn").forEach(b=>b.addEventListener("click",()=>{
+      document.querySelectorAll("#engYearToggle .winbtn").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on"); engYear = b.dataset.y; engRender();
+    }));
     document.querySelectorAll("#engToggle .winbtn").forEach(b=>b.addEventListener("click",()=>{
       document.querySelectorAll("#engToggle .winbtn").forEach(x=>x.classList.remove("on"));
-      b.classList.add("on"); draw(b.dataset.k);
+      b.classList.add("on"); engK = b.dataset.k; engRender();
     }));
   }
   // Most-read-pieces year toggle (2026 YTD / 2025 / 2024).

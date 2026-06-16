@@ -962,7 +962,7 @@ def _ga4_totals(prop, token, days):
     return (int(v[0]["value"]), int(v[1]["value"]), int(v[2]["value"]))
 
 
-def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=None):
+def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=None, end_date="today"):
     """Per-article engagement time — a read-depth proxy GA4 measures (the
     seconds a reader's tab is actually focused on the page) and Ghost can't.
     Per piece: views, avg engaged seconds/view (userEngagementDuration /
@@ -970,7 +970,7 @@ def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=Non
     articles with enough views to be non-noisy; enough rows for a scatter.
     Pass start_date (YYYY-MM-DD) for an absolute window, else last `days`."""
     body = {
-        "dateRanges": [{"startDate": start_date or f"{days}daysAgo", "endDate": "today"}],
+        "dateRanges": [{"startDate": start_date or f"{days}daysAgo", "endDate": end_date}],
         "dimensions": [{"name": "pagePath"}],
         "metrics": [{"name": "screenPageViews"}, {"name": "userEngagementDuration"}],
         "orderBys": [{"metric": {"metricName": "screenPageViews"}, "desc": True}],
@@ -1150,19 +1150,30 @@ def pull_ga4():
         u30, s30, p30 = _ga4_totals(prop, token, 30)
         u365, s365, p365 = _ga4_totals(prop, token, 365)
         ENG_SINCE = "2026-01-01"
+        cur_year = datetime.now(timezone.utc).year
         try:
             # Reader attention since the start of 2026 (not a rolling 90d) — a
             # longer window, so bump the min-views floor to keep it meaningful.
             engagement = _ga4_engagement(prop, token, start_date=ENG_SINCE, min_views=100)
         except Exception as e:
             log(f"  ga4 engagement query failed: {e}"); engagement = []
+        # Per-year + all-time engagement so the dashboard can offer the same
+        # year/all-time toggle as the most-read leaderboards.
+        eng_by_year, eng_alltime = {}, []
+        try:
+            eng_by_year[str(cur_year)] = engagement
+            for y in range(2024, cur_year):
+                eng_by_year[str(y)] = _ga4_engagement(
+                    prop, token, start_date=f"{y}-01-01", end_date=f"{y}-12-31", min_views=100)
+            eng_alltime = _ga4_engagement(prop, token, start_date="2020-01-01", min_views=100)
+        except Exception as e:
+            log(f"  ga4 per-year engagement failed: {e}")
         try:
             since_pages = _ga4_top_pages_since(prop, token, "2026-01-01")
         except Exception as e:
             log(f"  ga4 since-Jan top pages failed: {e}"); since_pages = []
         # Most-read pieces per calendar year (2024, 2025) + year-to-date 2026,
         # so the dashboard can offer a year toggle. 2026 reuses since_pages.
-        cur_year = datetime.now(timezone.utc).year
         top_by_year = {}
         try:
             top_by_year[str(cur_year)] = since_pages
@@ -1188,6 +1199,7 @@ def pull_ga4():
             "mau": u30, "sessions_30": s30, "pageviews_30": p30,
             "aau": u365, "sessions_365": s365, "pageviews_365": p365,
             "engagement": engagement, "engagement_since": ENG_SINCE,
+            "engagement_by_year": eng_by_year, "engagement_alltime": eng_alltime,
             "top_pages_since": since_pages, "top_pages_since_date": "2026-01-01",
             "top_pages_by_year": top_by_year,
             "top_pages_alltime": top_alltime,
