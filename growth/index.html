@@ -296,6 +296,22 @@
   html.dark .gatebox button{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
   html.dark .gatebox button:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:#161719}
   html.dark .confbar{background:#0b0b0d;color:#cfcfcf}
+  /* Dark mode: the SVG charts hard-code light-theme grays in presentation
+     attributes (axis text, gridlines), which can't read CSS vars. Author CSS
+     overrides presentation attributes, so remap just those structural grays
+     here — the brand data colors (cerulean/orange/green/purple/magenta) are
+     left untouched because they read fine on dark. */
+  html.dark .chart text[fill="#888"],
+  html.dark .chart text[fill="#999"],
+  html.dark .chart text[fill="#aaa"]{fill:#9a9ca2}
+  html.dark .chart text[fill="#666"]{fill:#bcbec4}
+  html.dark .chart text[fill="#3b7d2f"]{fill:#7CC974}
+  html.dark .chart line[stroke="#eee"],
+  html.dark .chart line[stroke="#e6e6e3"],
+  html.dark .chart line[stroke="#ddd"]{stroke:#34363d}
+  html.dark .chart line[stroke="#f3f3f1"]{stroke:#26282e}
+  html.dark .chart line[stroke="#c8c8c8"]{stroke:#4c4f57}
+  html.dark .chart line[stroke="#bbb"]{stroke:#5a5d65}
 
   /* Responsive */
   @media(max-width:1024px){
