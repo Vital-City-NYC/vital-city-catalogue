@@ -2470,7 +2470,7 @@ function renderSearchConsole(data){
       <table class="tbl" style="width:100%"><thead><tr>
         <th title="The exact words someone typed into Google. A Vital City page appeared in their results for this search.">Query</th>
         <th class="num" title="How many people clicked through to vitalcitynyc.org after this search — i.e. the actual visits Google sent for this query.">Clicks</th>
-        <th class="num" title="How many times a Vital City page showed up in someone's Google results for this query, whether or not they clicked. It measures how much search demand the query carries.">Impressions</th>
+        <th class="num" title="How many times a Vital City page showed up in someone's Google results for this query, whether or not they clicked. NOTE: this is NOT the total number of times the term was searched on Google — only the times Vital City appeared. Search Console can't report overall search volume (that needs Google Keyword Planner or a paid SEO tool).">Impressions</th>
         <th class="num" title="Click-through rate = clicks ÷ impressions. Of everyone who saw Vital City for this query, the share who clicked. Higher means the result is compelling for that search.">CTR</th>
         <th class="num" title="Vital City's average ranking position for this query (1 = top of Google's first page). Lower is better; under ~10 is the first page.">Avg pos</th>
       </tr></thead><tbody>
@@ -2482,7 +2482,7 @@ function renderSearchConsole(data){
         <td class="num">${x.position}</td>
       </tr>`).join("")}
       </tbody></table>
-      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55">From Google Search Console (${esc(gsc.site||'')}), ${winLabel(d).toLowerCase()}. <b>Clicks</b> = visits to the site; <b>impressions</b> = times a page showed up in someone's results — together they show how much search demand each query carries. Branded queries ("vital city") sit near position 1; the discovery queries below them — what people Google about NYC topics — are where new readers find you. Search Console data lags ~2 days, so the most recent day or two is incomplete.</div>`;
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55">From Google Search Console (${esc(gsc.site||'')}), ${winLabel(d).toLowerCase()}. <b>Clicks</b> = visits to the site; <b>impressions</b> = times a Vital City page showed up in someone's results. <b>Impressions are not total Google search volume</b> for a term — only the times Vital City appeared; Search Console can't report how often a term is searched overall (that needs Google Keyword Planner or a paid SEO tool). Branded queries ("vital city") sit near position 1; the discovery queries below them — what people Google about NYC topics — are where new readers find you. Search Console data lags ~2 days, so the most recent day or two is incomplete.</div>`;
   };
 
   host.innerHTML = toggle + `<div id="gscBody">${body(avail[0])}</div>`;
