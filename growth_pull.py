@@ -976,12 +976,22 @@ def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=Non
         "orderBys": [{"metric": {"metricName": "screenPageViews"}, "desc": True}],
         "limit": 300,
     }
-    req = urllib.request.Request(
-        f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
-        data=json.dumps(body).encode(),
-        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        rep = json.loads(r.read())
+    # Retry transient GA4 errors (timeouts / 429-503) so one flaky query
+    # doesn't silently empty a leaderboard on an unattended daily run.
+    rep = None
+    for attempt in range(3):
+        req = urllib.request.Request(
+            f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+            data=json.dumps(body).encode(),
+            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=45) as r:
+                rep = json.loads(r.read())
+            break
+        except Exception:
+            if attempt == 2:
+                raise
+            time.sleep(2 * (attempt + 1))
     cat = {}
     try:
         for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
@@ -1032,12 +1042,22 @@ def _ga4_top_pages_since(prop, token, start_date, limit=15, end_date="today"):
         "orderBys": [{"metric": {"metricName": "totalUsers"}, "desc": True}],
         "limit": 250,
     }
-    req = urllib.request.Request(
-        f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
-        data=json.dumps(body).encode(),
-        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        rep = json.loads(r.read())
+    # Retry transient GA4 errors (timeouts / 429-503) so one flaky query
+    # doesn't silently empty a leaderboard on an unattended daily run.
+    rep = None
+    for attempt in range(3):
+        req = urllib.request.Request(
+            f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+            data=json.dumps(body).encode(),
+            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=45) as r:
+                rep = json.loads(r.read())
+            break
+        except Exception:
+            if attempt == 2:
+                raise
+            time.sleep(2 * (attempt + 1))
     cat = {}
     try:
         for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
