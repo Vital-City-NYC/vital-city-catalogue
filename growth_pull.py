@@ -1046,11 +1046,17 @@ def _ga4_top_pages_since(prop, token, start_date, limit=15, end_date="today"):
                 cat["/" + u.split("/")[-1] + "/"] = c.get("title")
     except Exception:
         pass
+    # Hub / section landing pages (not individual pieces) — matched on the last
+    # path segment so a piece whose slug merely contains one of these words
+    # (e.g. ".../a-2125-map") is NOT excluded.
+    HUB_SLUGS = {"data", "data_hub", "data-hub", "explorer", "explore",
+                 "maps", "map", "vital_signs", "vital-signs"}
     def is_article(p):
         return not (p in ("/", "") or "/job" in p or "/career" in p or p in ("/about/", "/about")
                     or p.startswith("/tag/") or p.startswith("/author/") or p.startswith("/contributor")
                     or p.startswith("/issues") or p.startswith("/search")
-                    or p.startswith("/privacy") or p.startswith("/terms"))
+                    or p.startswith("/privacy") or p.startswith("/terms")
+                    or p.rstrip("/").rsplit("/", 1)[-1] in HUB_SLUGS)
     # Merge by title so a piece that lived at both an old-site /articles/ URL
     # and the new-site URL is counted once (its visitors summed), and prefer
     # the canonical (catalogue-matching) path for the link.
