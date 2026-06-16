@@ -2333,26 +2333,46 @@ function renderTraffic(data){
     </tr>`).join("")}
     </tbody></table>` : `<div style="font-size:12px;color:var(--vc-charcoal);margin-top:14px">No per-page traffic in the window yet.</div>`;
 
-  // ---- Most-read since Jan 1, 2026 — GA4 covers the full window (incl. the
-  // pre-handoff site), so it can reach back further than Ghost's analytics.
-  // Falls back to Ghost's since-launch cumulative if GA4 isn't available.
-  const allViaGA4 = !!(ga4.available && ga4.top_pages_since && ga4.top_pages_since.length);
-  const allPages = allViaGA4 ? ga4.top_pages_since : (gt.top_pages_since_launch || []);
+  // ---- Most-read pieces by year. GA4 tracked the site before the April 2026
+  // Ghost handoff (back to 2023), so it can build per-year leaderboards Ghost's
+  // analytics can't. A year toggle switches between the current year-to-date
+  // and full prior years. Falls back to a single "since Jan 1" / Ghost list if
+  // the per-year data isn't present yet (e.g. before the next rebuild).
+  const byYear = (ga4.available && ga4.top_pages_by_year && Object.keys(ga4.top_pages_by_year).length) ? ga4.top_pages_by_year : null;
   const allVal = (p)=> p.visitors!=null ? p.visitors : (p.visits||0);
-  const sinceLbl = allViaGA4
-    ? new Date((ga4.top_pages_since_date||"2026-01-01")+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"})
-    : (gt.top_pages_since ? new Date(gt.top_pages_since+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",year:"numeric",timeZone:"UTC"}) : "launch");
-  const maxA = Math.max(1, ...allPages.map(allVal));
-  const topAll = allPages.length ? `
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Most-read articles by unique visitors since ${esc(sinceLbl)}.${allViaGA4 ? " From GA4, which tracked the site before the April 2026 Ghost handoff, so it reaches back to Jan 1. A piece that lived at both an old and new URL is merged. Titles come from the Ghost catalogue; a few older URLs may show a tidied-up slug." : " From Ghost analytics (since its recording began)."} The all-time leaderboard vs. the rolling 30-day list above.">Most-read pieces · since ${esc(sinceLbl)}, ranked by unique visitors${allViaGA4 ? ' <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span>' : ''}</div>
-    <table class="tbl" style="width:100%"><tbody>
-    ${allPages.map((p,i)=>`<tr>
-      <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
-      <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
-      <td style="width:30%"><div style="background:var(--vc-green);opacity:.5;height:8px;border-radius:2px;width:${Math.max(2,Math.round(allVal(p)/maxA*100))}%"></div></td>
-      <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtN(allVal(p))}</td>
-    </tr>`).join("")}
-    </tbody></table>` : "";
+  const curYr = String(new Date().getUTCFullYear());
+  const asOf = ga4.as_of || "today";
+  const topAllTable = (pages, y)=>{
+    if(!pages || !pages.length) return `<div style="font-size:12px;color:var(--vc-charcoal);margin-top:8px">No GA4 page data for ${esc(y||"this period")}.</div>`;
+    const maxA = Math.max(1, ...pages.map(allVal));
+    const cap = !y ? "" : (y===curYr ? `${y} so far — January 1 to ${esc(asOf)} (year in progress, not comparable to full years).` : `Full calendar year ${y}.`);
+    return `<table class="tbl" style="width:100%"><tbody>
+      ${pages.map((p,i)=>`<tr>
+        <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
+        <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
+        <td style="width:30%"><div style="background:var(--vc-green);opacity:.5;height:8px;border-radius:2px;width:${Math.max(2,Math.round(allVal(p)/maxA*100))}%"></div></td>
+        <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtN(allVal(p))}</td>
+      </tr>`).join("")}
+      </tbody></table>${cap?`<div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">${cap}</div>`:""}`;
+  };
+  let topAll = "";
+  if(byYear){
+    const yrs = Object.keys(byYear).sort((a,b)=>(+b)-(+a));   // 2026, 2025, 2024
+    const toggle = `<div id="topAllToggle" style="display:flex;gap:6px;margin-bottom:8px">${yrs.map((y,i)=>`<button class="winbtn${i===0?' on':''}" data-y="${y}">${y===curYr?y+' · YTD':y}</button>`).join("")}</div>`;
+    topAll = `
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Most-read articles by unique visitors, by calendar year, from GA4 (which tracked the site before the April 2026 Ghost handoff, back to 2023). A piece that lived at both an old and new URL is merged and its visitors summed; titles come from the Ghost catalogue, and a few older URLs show a tidied-up slug. The current year is year-to-date and not comparable to full years.">Most-read pieces · ranked by unique visitors <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span></div>
+      ${toggle}
+      <div id="topAllBody">${topAllTable(byYear[yrs[0]], yrs[0])}</div>`;
+  } else {
+    const allViaGA4 = !!(ga4.available && ga4.top_pages_since && ga4.top_pages_since.length);
+    const allPages = allViaGA4 ? ga4.top_pages_since : (gt.top_pages_since_launch || []);
+    const sinceLbl = allViaGA4
+      ? new Date((ga4.top_pages_since_date||"2026-01-01")+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"})
+      : (gt.top_pages_since ? new Date(gt.top_pages_since+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",year:"numeric",timeZone:"UTC"}) : "launch");
+    topAll = allPages.length ? `
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Most-read articles by unique visitors since ${esc(sinceLbl)}.${allViaGA4 ? " From GA4, which tracked the site before the April 2026 Ghost handoff. A piece that lived at both an old and new URL is merged." : " From Ghost analytics."}">Most-read pieces · since ${esc(sinceLbl)}, ranked by unique visitors${allViaGA4 ? ' <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span>' : ''}</div>
+      ${topAllTable(allPages, null)}` : "";
+  }
 
   // ---- Where the traffic comes from (referrer sources, 30d) ----
   const srcs = gt.top_sources_30d || [];
@@ -2435,6 +2455,16 @@ function renderTraffic(data){
     document.querySelectorAll("#engToggle .winbtn").forEach(b=>b.addEventListener("click",()=>{
       document.querySelectorAll("#engToggle .winbtn").forEach(x=>x.classList.remove("on"));
       b.classList.add("on"); draw(b.dataset.k);
+    }));
+  }
+  // Most-read-pieces year toggle (2026 YTD / 2025 / 2024).
+  if(byYear){
+    document.querySelectorAll("#topAllToggle .winbtn").forEach(b=>b.addEventListener("click",()=>{
+      document.querySelectorAll("#topAllToggle .winbtn").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");
+      const y=b.dataset.y;
+      document.querySelector("#topAllBody").innerHTML = topAllTable(byYear[y], y);
+      wrapTables();
     }));
   }
 }

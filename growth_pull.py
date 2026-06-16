@@ -1019,14 +1019,14 @@ def _ga4_pretty_slug(slug):
     return t
 
 
-def _ga4_top_pages_since(prop, token, start_date, limit=15):
-    """Most-read articles by unique visitors since an absolute start date, from
-    GA4 — which covers the pre-Ghost-handoff period (back to 2026-01-01), so it
-    can build a 'since Jan 1' list Ghost's own analytics can't. Titles come from
-    the Ghost catalogue where the slug still matches; older URLs fall back to a
-    prettified slug."""
+def _ga4_top_pages_since(prop, token, start_date, limit=15, end_date="today"):
+    """Most-read articles by unique visitors over an absolute date range, from
+    GA4 — which covers the pre-Ghost-handoff period (back to 2023), so it can
+    build per-year 'most read' lists Ghost's own analytics can't. Titles come
+    from the Ghost catalogue where the slug still matches; older URLs fall back
+    to a prettified slug."""
     body = {
-        "dateRanges": [{"startDate": start_date, "endDate": "today"}],
+        "dateRanges": [{"startDate": start_date, "endDate": end_date}],
         "dimensions": [{"name": "pagePath"}],
         "metrics": [{"name": "totalUsers"}, {"name": "screenPageViews"}],
         "orderBys": [{"metric": {"metricName": "totalUsers"}, "desc": True}],
@@ -1134,6 +1134,17 @@ def pull_ga4():
             since_pages = _ga4_top_pages_since(prop, token, "2026-01-01")
         except Exception as e:
             log(f"  ga4 since-Jan top pages failed: {e}"); since_pages = []
+        # Most-read pieces per calendar year (2024, 2025) + year-to-date 2026,
+        # so the dashboard can offer a year toggle. 2026 reuses since_pages.
+        cur_year = datetime.now(timezone.utc).year
+        top_by_year = {}
+        try:
+            top_by_year[str(cur_year)] = since_pages
+            for y in range(2024, cur_year):
+                top_by_year[str(y)] = _ga4_top_pages_since(
+                    prop, token, f"{y}-01-01", end_date=f"{y}-12-31")
+        except Exception as e:
+            log(f"  ga4 per-year top pages failed: {e}")
         try:
             by_year = _ga4_by_year(prop, token)
         except Exception as e:
@@ -1145,6 +1156,7 @@ def pull_ga4():
             "aau": u365, "sessions_365": s365, "pageviews_365": p365,
             "engagement": engagement, "engagement_since": ENG_SINCE,
             "top_pages_since": since_pages, "top_pages_since_date": "2026-01-01",
+            "top_pages_by_year": top_by_year,
             "by_year": by_year,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
