@@ -57,6 +57,11 @@
   .readnote li:last-child{margin-bottom:0}
   .readnote li:before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--vc-cerulean)}
   .readnote li b{font-weight:700}
+  /* "Very clear flag" — an always-visible caveat so a number can't be read out of context. */
+  .flag{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:#8a4e10;background:#fbeede;border:1px solid #e7c79a;border-radius:3px;padding:1px 6px;margin-left:7px;vertical-align:middle;line-height:1.5}
+  .flagnote{font-size:11px;line-height:1.5;color:#7a4a12;background:#fbeede;border-left:3px solid var(--vc-orange);border-radius:0 3px 3px 0;padding:6px 10px;margin:8px 0 2px}
+  .flagnote b{color:#5a3608}
+  .flag.warn:before{content:"\26A0\FE0E";margin-right:4px}
   .kpi.stub .num{color:var(--vc-charcoal)}
   .kpi.stub .delta{color:var(--vc-cerulean);text-decoration:underline}
 
@@ -380,6 +385,11 @@
         <div id="bigPictureBody"></div>
       </div>
 
+      <div class="card" id="audienceQuality">
+        <h2>The funnel &amp; who's reading <span class="hint">the on-mission cuts: do visitors convert, do they come back, and are the right people reading</span></h2>
+        <div id="audienceQualityBody"></div>
+      </div>
+
       <div class="sechead" id="sec-growth">
         <div class="sechead-title">Growing the list</div>
         <div class="sechead-sub">The number one question: is the newsletter growing, and where is that growth coming from?</div>
@@ -684,7 +694,7 @@ function boot(data){
     // --- Newsletter ---
     {lbl:"Subscribers",num:fmtN(total),delta:`net ${fmtDelta(netNew30)} in 30d`,cls:deltaClass(netNew30),hero:true,
      tip:"Unique people on the Mailchimp list right now — each individual counted once, even if signed up under multiple emails.\n\nWhy it matters: The newsletter list is Vital City's core owned audience and the organization's number-one growth goal. Every other metric on this page ultimately serves growing and engaging it.\n\nSource: Mailchimp for unsubscribes, Ghost for signups, reconciled weekly."},
-    {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)}${pctChg(subs30,subsPrev30)} vs prior 30d`,cls:deltaClass(subs30-subsPrev30),
+    {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)}${pctChg(subs30,subsPrev30)} vs prior 30d <span class="flag">noisy window</span>`,cls:deltaClass(subs30-subsPrev30),
      tip:"New subscribers in the last 30 days vs the 30 days before.\n\nWhy it matters: This is the live pulse of list growth. Sustained month-over-month gains are the clearest sign the top of the funnel is working; a sustained decline is the earliest warning that acquisition needs attention.\n\nSource: merged Ghost+Mailchimp dataset (signups land in Ghost first, reconciled to Mailchimp weekly)."},
     (function(){
       const m=mc.mau||{}, n=m.active_users;
@@ -704,7 +714,7 @@ function boot(data){
     })(),
     // --- Fundraising (priority 2: donors) ---
     {lbl:"Raised · YTD", num: db.available ? fmtUSD((dWin.ytd||{}).amount||0) : "—",
-     delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts` : "Donorbox not connected",
+     delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts <span class="flag">online gifts only</span>` : "Donorbox not connected",
      cls:"flat",
      tip:"Total raised on Donorbox so far this year (gross, before processor fees). Donor count is unique people; gift count counts every transaction.\n\nWhy it matters: Fundraising is Vital City's second priority after list growth, and this is the headline number for the year. The Donors & influence section below breaks it down by channel, campaign and recurring base — and shows which signup sources actually produce donors."},
     // --- Reach & traffic (directional; tiles ordered last to match the page) ---
@@ -734,7 +744,7 @@ function boot(data){
       const gt = data.ghost_traffic || {};
       const n = gt.available ? gt.visitors_30d : (ga4.mau!=null ? ga4.mau : null);
       const vp = gt.available ? gt.visitors_prev_30d : null;
-      const chg = (vp!=null) ? `${fmtDelta(n-vp)}${pctChg(n,vp)} vs prior 30d · ` : "";
+      const chg = (vp!=null) ? `${fmtDelta(n-vp)}${pctChg(n,vp)} vs prior 30d <span class="flag">noisy window</span> · ` : "";
       const sub = gt.available ? `${chg}${fmtN(gt.pageviews_30d||0)} page views` :
                   (ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs Ghost staff token ↗ · free");
       return {lbl:"Website visitors · 30d", num: n!=null ? fmtN(n) : "—", delta: sub,
@@ -799,6 +809,7 @@ function boot(data){
   renderTraffic(data);
   renderSearchConsole(data);
   renderBigPicture(data);
+  renderAudienceQuality(data);
   renderGoogleTrends();
   // After every card has rendered, sprinkle clickable ⓘ icons on metric
   // elements so users can read explanations without depending on hover.
@@ -960,6 +971,7 @@ function boot(data){
       <div>
         <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">Rating distribution</div>
         ${ratingRow}
+        <div class="flagnote"><b>Don't read the 2★ pile as disengagement.</b> Mailchimp starts everyone at 2★ and Apple Mail's privacy auto-opens jam the scoring, so the ratings bunch at 2★ regardless of real interest. The active-subscriber (MAU/AAU) tiles up top are the truer engagement read.</div>
         <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">The 4–5★ slice = your <b style="color:var(--vc-black)">"will-open-the-next-email"</b> core. Compare against the MAU tile up top — should be roughly the same order of magnitude.</div>
       </div>
       <div>
@@ -2512,6 +2524,7 @@ function renderTraffic(data){
         <button class="winbtn on" data-k="avg">Avg time / view</button>
         <button class="winbtn" data-k="total">Total engaged time</button>
       </div>
+      <div class="flagnote"><b>"Total engaged time" is a comparative index, not literal reading hours.</b> It's the seconds a browser tab was focused (active-tab time, not eyes-on-page) multiplied by views — useful for ranking pieces against each other, not for claims like "people spent N hours reading this."</div>
       <div id="engCap" style="font-size:11px;color:var(--vc-charcoal);margin:0 0 10px"></div>
       <div id="engTbl"></div>
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 6px" title="Each dot is an article. Right = more views; higher = longer average engaged time. The dashed lines are the medians, splitting the field into quadrants: top-right is the sweet spot (big audience AND deep read); bottom-right is high-traffic-but-shallow; top-left is deeply read by a smaller audience. Hover a dot for the piece.">Views vs. depth of read</div>
@@ -2579,7 +2592,7 @@ function renderSearchConsole(data){
     return `
       <div class="perfgrid">
         <div class="perfcell" title="Clicks from Google search results to vitalcitynyc.org over this window."><div class="pl">Clicks</div><div class="pn">${fmtN(t.clicks||0)}</div><div class="pd flat">visits from Google</div></div>
-        <div class="perfcell" title="How many times a Vital City page appeared in someone's Google results."><div class="pl">Impressions</div><div class="pn">${fmtN(t.impressions||0)}</div><div class="pd flat">times shown in results</div></div>
+        <div class="perfcell" title="How many times a Vital City page appeared in someone's Google results."><div class="pl">Impressions</div><div class="pn">${fmtN(t.impressions||0)}</div><div class="pd flat">times shown <span class="flag">not search volume</span></div></div>
         <div class="perfcell" title="Clicks ÷ impressions. Higher = the listing is compelling for what people searched."><div class="pl">Click-through rate</div><div class="pn">${t.ctr||0}%</div><div class="pd flat">clicks ÷ impressions</div></div>
         <div class="perfcell" title="Average ranking position across all queries (1 = top of page one). Lower is better."><div class="pl">Avg position</div><div class="pn">${t.position||0}</div><div class="pd flat">1 = top of page one</div></div>
       </div>
@@ -2611,6 +2624,75 @@ function renderSearchConsole(data){
       wrapTables();
     }));
   }
+}
+
+// The funnel & who's reading — the on-mission cuts the rest of the page
+// doesn't make obvious: do visitors convert to subscribers, do readers come
+// back, and are the right (notable / government) people actually reading.
+function renderAudienceQuality(data){
+  const host = $("#audienceQualityBody"); if(!host) return;
+  const ga4 = data.ga4 || {}, mc = data.mailchimp || {}, ex = data.engagement_extras || {};
+  const curYr = new Date().getUTCFullYear();
+  let blocks = [];
+
+  // ---- 1) Visitor → subscriber conversion, by year (the funnel's first gate).
+  const usersByYear = {}; ((ga4.by_year && ga4.by_year.years) || []).forEach(y=> usersByYear[y.year] = y.users);
+  const newByYear = {}; (mc.monthly_signups || []).forEach(r=>{ const y=+String(r.month||"").slice(0,4); if(y) newByYear[y]=(newByYear[y]||0)+(r.new_signups||0); });
+  const convYrs = Object.keys(usersByYear).map(Number).filter(y=> newByYear[y] && usersByYear[y]).sort((a,b)=>a-b);
+  if(convYrs.length){
+    const rows = convYrs.map(y=>{
+      const conv = newByYear[y]/usersByYear[y]*100;
+      return `<tr>
+        <td style="font-weight:700">${y}${y>=curYr?'*':''}</td>
+        <td class="num">${fmtN(usersByYear[y])}</td>
+        <td class="num">${fmtN(newByYear[y])}</td>
+        <td class="num" style="font-weight:700">${conv.toFixed(conv<1?2:1)}%</td>
+      </tr>`;
+    }).join("");
+    blocks.push(`
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 8px">Visitor &rarr; subscriber conversion, by year</div>
+      <table class="tbl" style="width:100%"><thead><tr><th>Year</th><th class="num">Visitors</th><th class="num">New signups</th><th class="num">Conversion</th></tr></thead><tbody>${rows}</tbody></table>
+      <div class="flagnote"><b>Cross-source estimate.</b> Signups are counted in Ghost/Mailchimp and visitors in GA4, which tally people differently (see the traffic caveats below), so read the direction over the years, not the exact decimal. ${curYr} is a year in progress.</div>`);
+  }
+
+  // ---- 2) Returning vs new readers (loyalty — engagement over raw reach).
+  const ret = ga4.returning || {};
+  if(ret.d30 && (ret.d30.new || ret.d30.returning)){
+    const byY = ret.by_year || {};
+    const yrCells = Object.keys(byY).sort().map(y=>`<div style="flex:1;text-align:center"><div style="font-size:16px;font-weight:700;color:var(--vc-black)">${(byY[y].returning_pct||0).toFixed(0)}%</div><div style="font-size:11px;color:var(--vc-charcoal)">${y}${(+y)>=curYr?'*':''}</div></div>`).join("");
+    blocks.push(`
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px">Returning vs new readers</div>
+      <div style="font-size:13px;color:var(--vc-charcoal);margin-bottom:10px"><b style="color:var(--vc-black);font-size:21px;font-variant-numeric:tabular-nums">${(ret.d30.returning_pct||0).toFixed(0)}%</b> of readers in the last 30 days were returning &mdash; people choosing to come back, not one-and-done arrivals.</div>
+      <div style="display:flex;gap:10px;align-items:flex-end;border-top:1px solid var(--vc-cloud);padding-top:12px">${yrCells}</div>
+      <div class="flagnote"><b>A floor, not a ceiling.</b> GA4 spots a returning reader by a browser cookie, so anyone who cleared cookies, switched devices or blocks tracking is counted as "new" again &mdash; true loyalty runs higher than this.</div>`);
+  }
+
+  // ---- 3) Who's reading — the policy circle (the metric our mission turns on).
+  const iwr = ex.influence_weighted_reach || {};
+  if(iwr.raw_mau){
+    const phist = ex.policy_history || [];
+    let trend = "";
+    if(phist.length >= 2){
+      const f = phist[0], l = phist[phist.length-1];
+      const fSum = (f.notable_in_mau||0)+(f.gov_in_mau||0), lSum = (l.notable_in_mau||0)+(l.gov_in_mau||0);
+      trend = `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">Tracking since ${esc(f.date)}: ${fmtN(fSum)} &rarr; ${fmtN(lSum)} notable + government readers active.</div>`;
+    } else {
+      trend = `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">A month-by-month trend line will build here from today onward (no back-history exists for this cut).</div>`;
+    }
+    blocks.push(`
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px">Who's reading &mdash; the policy circle</div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:4px">
+        <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Notable readers · 30d</div><div class="pn">${fmtN(iwr.notable_in_mau||0)}</div><div class="pd flat">Wikipedia-notable, active</div></div>
+        <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Government readers · 30d</div><div class="pn">${fmtN(iwr.gov_in_mau||0)}</div><div class="pd flat">.gov / public-office inboxes</div></div>
+        <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Of active audience</div><div class="pn">${iwr.raw_mau?(((iwr.notable_in_mau||0)+(iwr.gov_in_mau||0))/iwr.raw_mau*100).toFixed(1):"—"}%</div><div class="pd flat">share of ${fmtN(iwr.raw_mau||0)} monthly actives</div></div>
+      </div>
+      <div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.5">For a publication built to move policy, this is the number that matters most: a few hundred decision-makers and notable New Yorkers reading every month is worth more than a spike of anonymous traffic. The full named list is in the Engagement &amp; influence card below.</div>
+      ${trend}
+      <div class="flagnote"><b>A floor, not a ceiling.</b> This counts only subscribers whose email matched a flagged person in the contact database; influential readers we haven't tagged (or who read without subscribing) aren't included, so the real policy reach is higher.</div>`);
+  }
+
+  host.innerHTML = blocks.length ? blocks.join("") :
+    `<div style="font-size:12.5px;color:var(--vc-charcoal)">Funnel and audience-quality metrics populate on the next daily build.</div>`;
 }
 
 // The long view — every year GA4 has tracked. All-time deduped total + a
@@ -2692,7 +2774,7 @@ function renderBigPicture(data){
     }).join("");
     const emTable = emRows ? `
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:24px 0 8px">Newsletter performance by year</div>
-      <table class="tbl" style="width:100%"><thead><tr><th>Year</th><th class="num">Subscribers (EOY)</th><th class="num">Sends</th><th class="num">Open rate</th><th class="num">Total opens</th><th class="num">Total clicks</th></tr></thead><tbody>${emRows}</tbody></table>
+      <table class="tbl" style="width:100%"><thead><tr><th>Year</th><th class="num">Subscribers (EOY)</th><th class="num">Sends</th><th class="num">Open rate <span class="flag">Apple Mail–inflated</span></th><th class="num">Total opens</th><th class="num">Total clicks <span class="flag">honest signal</span></th></tr></thead><tbody>${emRows}</tbody></table>
       <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px;line-height:1.55">Total opens/clicks are estimated from each send's open/click rate × recipients (Mailchimp reports rates, not raw totals). <b>Open rate isn't comparable across the whole span</b> — Apple Mail Privacy Protection (Sept 2021+) auto-opens email, inflating opens from ~2022 on; treat open rate as directional and clicks as the cleaner engagement signal. ${curYear} is in progress.</div>` : "";
     listBlock = `
       <div style="border-top:1px solid var(--vc-cloud);margin-top:26px;padding-top:20px"></div>
@@ -2732,13 +2814,15 @@ function renderBigPicture(data){
         <div class="pn">${sMult?fmtMult(sMult):"—"}</div>
         <div class="pd flat">${sFirst?fmtN(sFirst.cum):"—"} (${sFirst?sFirst.year:""}) &rarr; ${sLast?fmtN(sLast.cum):"—"} today</div>
       </div>
-    </div>`;
+    </div>
+    <div class="flagnote"><b>Multiples are off a small ${baseYr.year} base.</b> Going from a few thousand to tens of thousands produces a big "×", but it doesn't mean that pace continues — growth has slowed sharply since; the year-by-year bars below are the truer read.</div>`;
   host.innerHTML = summary + `
     <div style="font-size:13px;color:var(--vc-charcoal);margin-bottom:18px;line-height:1.5">
       <b style="color:var(--vc-black);font-size:21px;font-variant-numeric:tabular-nums">${fmtN(at.users||0)}</b> unique visitors all-time ·
       <b style="color:var(--vc-black)">${fmtN(at.pageviews||0)}</b> page views · since ${years[0].year} <span style="opacity:.75">(Google Analytics 4)</span>
+      <span class="flag warn">≈ yearly uniques summed — not distinct people</span>
     </div>
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:10px">Unique visitors by year</div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:10px">Unique visitors by year <span class="flag">${curYear} partial</span></div>
     <div style="display:flex;gap:14px;align-items:flex-end;height:180px">${bars}</div>
     <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">
       <b style="color:var(--vc-black)">*${curYear}</b> is a year in progress (through ${esc(ga4.as_of||'today')}), hatched and not yet comparable to full years. <b>On the all-time number:</b> GA4 identifies a "user" by a browser cookie that rarely survives across years (cleared, expired, new device), so the same person is mostly re-counted each year — the all-time figure is only marginally below the yearly bars summed, i.e. read it as roughly "the yearly uniques added up," <i>not</i> a tally of distinct humans. GA4 only; see the source caveats in the Website traffic card above.
@@ -2772,7 +2856,7 @@ function renderLifecycle(lc){
         <div class="pd flat">opened &lt;1yr ago, nothing in 30d <span style="color:var(--vc-cerulean)">· click to view</span></div>
       </div>
       <div class="perfcell" title="Subscribers who Mailchimp rates 1-2 stars AND have been on the list for more than 6 months AND haven't opened in 30 days. Pruning them improves deliverability. Click the number to see who they are.">
-        <div class="pl">Sunset candidates</div>
+        <div class="pl">Sunset candidates <span class="flag">a prune definition, not dead weight</span></div>
         <div class="pn"><span class="clickable-num" onclick="showPeople('sunset_candidates','Sunset candidates (low-engagement, long-tenured, no recent opens)','Subscribers who Mailchimp rates 1-2 stars AND have been on the list 6+ months AND haven\\'t opened in 30 days. Pruning them improves deliverability (Gmail/Outlook reduce inbox priority for senders with low engagement rates) and the open-rate denominator. Standard practice: send a single 'still want to hear from us?' campaign to this segment; remove non-responders after 14 days. Top 500 shown here, sorted by longest-tenure first.')">${fmtN(sunset.count||0)}</span></div>
         <div class="pd ${sunset.count > 1000 ? 'down' : 'flat'}">1-2★ · 6mo+ tenure · no recent open <span style="color:var(--vc-cerulean)">· click to view</span></div>
       </div>

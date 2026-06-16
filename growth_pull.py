@@ -697,6 +697,38 @@ def build_engagement_extras(mc, signup_attr, donorbox):
         } for em, rating, op in top]
         out["power_readers_list"] = prl
 
+    # Policy-circle reach history — one counts-only point per UTC day, persisted
+    # in data/ (public-repo safe: aggregate counts, never names) so the "who
+    # reads" metric can trend over time. No back-history exists, so the trend
+    # accrues from the first run onward.
+    iwr = out.get("influence_weighted_reach") or {}
+    if iwr.get("raw_mau"):
+        try:
+            hist_path = ROOT / "data" / "policy_reach_history.json"
+            hist = []
+            if hist_path.exists():
+                try: hist = json.loads(hist_path.read_text()) or []
+                except Exception: hist = []
+            today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+            point = {
+                "date":           today,
+                "notable_in_mau": iwr.get("notable_in_mau", 0),
+                "gov_in_mau":     iwr.get("gov_in_mau", 0),
+                "score":          iwr.get("score", 0),
+                "active_mau":     iwr.get("raw_mau", 0),
+                "power_readers":  (out.get("power_readers") or {}).get("count", 0),
+                "list_total":     mc.get("total_subscribers", 0),
+            }
+            hist = [h for h in hist if h.get("date") != today]   # upsert today's point
+            hist.append(point)
+            hist.sort(key=lambda h: h.get("date", ""))
+            hist = hist[-400:]                                    # cap ~13 months
+            hist_path.write_text(json.dumps(hist))
+            out["policy_history"] = hist
+        except Exception as e:
+            log(f"  policy-reach history capture failed: {e}")
+            out["policy_history"] = []
+
     return out
 
 
@@ -1130,6 +1162,41 @@ def _ga4_by_year(prop, token):
     return {"years": years, "alltime": alltime}
 
 
+def _ga4_returning(prop, token):
+    """Returning vs new visitors — a loyalty signal (do people come back, or
+    is it all one-and-done arrivals?). Share for the last 30 days and per
+    calendar year. GA4's newVsReturning has a chunk of '(not set)' rows; the
+    share is computed over classified users only."""
+    def q(start, end="today"):
+        body = {"dateRanges": [{"startDate": start, "endDate": end}],
+                "dimensions": [{"name": "newVsReturning"}],
+                "metrics": [{"name": "activeUsers"}]}
+        rep = None
+        for attempt in range(3):
+            req = urllib.request.Request(
+                f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+                data=json.dumps(body).encode(),
+                headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+            try:
+                with urllib.request.urlopen(req, timeout=45) as r:
+                    rep = json.loads(r.read())
+                break
+            except Exception:
+                if attempt == 2: raise
+                time.sleep(2 * (attempt + 1))
+        m = {}
+        for row in (rep.get("rows") or []):
+            m[(row["dimensionValues"][0]["value"] or "").lower()] = int(row["metricValues"][0]["value"] or 0)
+        nw, rt = m.get("new", 0), m.get("returning", 0)
+        tot = nw + rt
+        return {"new": nw, "returning": rt, "returning_pct": round(rt / tot * 100, 1) if tot else 0}
+    cur = datetime.now(timezone.utc).year
+    by_year = {}
+    for y in range(2024, cur + 1):
+        by_year[str(y)] = q(f"{y}-01-01", "today" if y == cur else f"{y}-12-31")
+    return {"d30": q("30daysAgo"), "by_year": by_year}
+
+
 def pull_ga4():
     """Website traffic from Google Analytics 4 (covers the pre-April-2026 site
     history Ghost's own analytics can't). Needs GA4_PROPERTY_ID + a
@@ -1193,6 +1260,10 @@ def pull_ga4():
             by_year = _ga4_by_year(prop, token)
         except Exception as e:
             log(f"  ga4 by-year failed: {e}"); by_year = {"years": [], "alltime": {}}
+        try:
+            returning = _ga4_returning(prop, token)
+        except Exception as e:
+            log(f"  ga4 returning-vs-new failed: {e}"); returning = {}
         log(f"  ga4: {u30:,} users (30d); {u365:,} users (1y); {len(engagement)} eng; {len(since_pages)} since-Jan; {len(by_year.get('years',[]))} yrs")
         return {
             "available": True, "property_id": prop,
@@ -1203,7 +1274,7 @@ def pull_ga4():
             "top_pages_since": since_pages, "top_pages_since_date": "2026-01-01",
             "top_pages_by_year": top_by_year,
             "top_pages_alltime": top_alltime,
-            "by_year": by_year,
+            "by_year": by_year, "returning": returning,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:
