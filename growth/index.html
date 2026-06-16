@@ -61,7 +61,9 @@
   .kpi.stub .delta{color:var(--vc-cerulean);text-decoration:underline}
 
   /* Cards */
-  .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:16px 18px;margin:0 0 20px}
+  .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:16px 18px;margin:0 0 20px;transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease}
+  .card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(15,16,17,.07);border-color:var(--vc-charcoal)}
+  @media (prefers-reduced-motion: reduce){ .card{transition:none} .card:hover{transform:none} }
   /* Sticky jump-nav + section headers (page ordered by org priority:
      grow the list → donors & influence → content engine → list health → reach) */
   .secnav{position:sticky;top:0;z-index:30;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);
