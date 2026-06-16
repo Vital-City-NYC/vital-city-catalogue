@@ -2670,6 +2670,11 @@ function renderAudienceQuality(data){
   // ---- 3) Who's reading — the policy circle (the metric our mission turns on).
   const iwr = ex.influence_weighted_reach || {};
   if(iwr.raw_mau){
+    // Register the named lists so the counts open the people popup (same
+    // mechanism as the lifecycle tiles). Self-contained, safe to re-register.
+    window._peopleSubsets = window._peopleSubsets || {};
+    window._peopleSubsets["notable_in_mau"] = {list: iwr.notable_list || [], total: iwr.notable_in_mau||0};
+    window._peopleSubsets["gov_in_mau"]     = {list: iwr.gov_list     || [], total: iwr.gov_in_mau||0};
     const phist = ex.policy_history || [];
     let trend = "";
     if(phist.length >= 2){
@@ -2682,8 +2687,8 @@ function renderAudienceQuality(data){
     blocks.push(`
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px">Who's reading &mdash; the policy circle</div>
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:4px">
-        <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Notable readers · 30d</div><div class="pn">${fmtN(iwr.notable_in_mau||0)}</div><div class="pd flat">Wikipedia-notable, active</div></div>
-        <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Government readers · 30d</div><div class="pn">${fmtN(iwr.gov_in_mau||0)}</div><div class="pd flat">.gov / public-office inboxes</div></div>
+        <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Notable readers · 30d</div><div class="pn"><span class="clickable-num" onclick="showPeople('notable_in_mau','Notable readers active in the last 30 days','Wikipedia-notable people on the list who opened at least one Vital City email in the last 30 days. Sorted alphabetically by last name.')">${fmtN(iwr.notable_in_mau||0)}</span></div><div class="pd flat">Wikipedia-notable, active <span style="color:var(--vc-cerulean)">· click to view</span></div></div>
+        <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Government readers · 30d</div><div class="pn"><span class="clickable-num" onclick="showPeople('gov_in_mau','Government readers active in the last 30 days','Subscribers at .gov / public-office inboxes (or tagged as government) who opened at least one Vital City email in the last 30 days. Sorted alphabetically by last name.')">${fmtN(iwr.gov_in_mau||0)}</span></div><div class="pd flat">.gov / public-office inboxes <span style="color:var(--vc-cerulean)">· click to view</span></div></div>
         <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Of active audience</div><div class="pn">${iwr.raw_mau?(((iwr.notable_in_mau||0)+(iwr.gov_in_mau||0))/iwr.raw_mau*100).toFixed(1):"—"}%</div><div class="pd flat">share of ${fmtN(iwr.raw_mau||0)} monthly actives</div></div>
       </div>
       <div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.5">For a publication built to move policy, this is the number that matters most: a few hundred decision-makers and notable New Yorkers reading every month is worth more than a spike of anonymous traffic. The full named list is in the Engagement &amp; influence card below.</div>
