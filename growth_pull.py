@@ -1146,6 +1146,13 @@ def pull_ga4():
         except Exception as e:
             log(f"  ga4 per-year top pages failed: {e}")
         try:
+            # All-time leaderboard: a single query over all of GA4's history
+            # (can't sum the per-year top lists — a piece can lead all-time
+            # without topping any single year).
+            top_alltime = _ga4_top_pages_since(prop, token, "2020-01-01")
+        except Exception as e:
+            log(f"  ga4 all-time top pages failed: {e}"); top_alltime = []
+        try:
             by_year = _ga4_by_year(prop, token)
         except Exception as e:
             log(f"  ga4 by-year failed: {e}"); by_year = {"years": [], "alltime": {}}
@@ -1157,6 +1164,7 @@ def pull_ga4():
             "engagement": engagement, "engagement_since": ENG_SINCE,
             "top_pages_since": since_pages, "top_pages_since_date": "2026-01-01",
             "top_pages_by_year": top_by_year,
+            "top_pages_alltime": top_alltime,
             "by_year": by_year,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
