@@ -50,6 +50,13 @@
   /* Stub tile: GA4/etc. tiles that need credentials. Click → setup docs. */
   .kpi.stub{background:repeating-linear-gradient(45deg, var(--vc-white), var(--vc-white) 8px, var(--vc-paper2) 8px, var(--vc-paper2) 16px);cursor:help}
   .kpi.stub:hover{background:var(--vc-paper2)}
+  .readnote{background:var(--vc-white);border:1px solid var(--vc-cloud);border-left:3px solid var(--vc-cerulean);padding:14px 18px;margin:0 0 22px;border-radius:0 4px 4px 0}
+  .readnote-h{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--vc-charcoal);margin-bottom:8px}
+  .readnote ul{margin:0;padding:0;list-style:none}
+  .readnote li{font-size:12.5px;line-height:1.55;color:var(--vc-black);padding-left:16px;position:relative;margin-bottom:7px}
+  .readnote li:last-child{margin-bottom:0}
+  .readnote li:before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--vc-cerulean)}
+  .readnote li b{font-weight:700}
   .kpi.stub .num{color:var(--vc-charcoal)}
   .kpi.stub .delta{color:var(--vc-cerulean);text-decoration:underline}
 
@@ -339,6 +346,14 @@
 
   <div class="layout">
     <main>
+      <div class="readnote">
+        <div class="readnote-h">How to read this</div>
+        <ul>
+          <li><b>Week-to-week swings are mostly noise.</b> One viral piece or a slow news cycle moves these numbers more than anything we do, so trust the long-run trend lines over the latest data point.</li>
+          <li><b>Engagement matters more than raw traffic.</b> A smaller audience that reads to the end, comes back and subscribes is worth far more than a spike of one-time visitors who never return.</li>
+          <li><b>Think in terms of the funnel.</b> Visitors count when they convert to subscribers, subscribers count when they stay engaged and engaged readers are the ones who eventually give, share or act — so watch where people drop off, not just how many arrive.</li>
+        </ul>
+      </div>
       <div class="kpis" id="kpis"></div>
 
       <div class="card" id="weekPulse" style="display:none">
