@@ -63,10 +63,14 @@
   .secnav a{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;
             color:var(--vc-cerulean);text-decoration:none;white-space:nowrap}
   .secnav a:hover{text-decoration:underline}
-  .sechead{margin:30px 0 14px;scroll-margin-top:46px}
+  .sechead{margin:30px 0 14px;scroll-margin-top:46px;cursor:pointer;user-select:none}
   .sechead-title{font-size:13px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--vc-black);
                  border-bottom:2px solid var(--vc-black);padding-bottom:5px}
+  .sechead .chev{display:inline-block;width:.9em;font-size:.82em;color:var(--vc-charcoal);transition:transform .15s;transform:rotate(90deg)}
+  .sechead.collapsed .chev{transform:rotate(0deg)}
+  .sechead.collapsed .sechead-title{opacity:.62}
   .sechead-sub{font-size:11.5px;color:var(--vc-charcoal);margin-top:5px;line-height:1.5}
+  .sechead.collapsed .sechead-sub{display:none}
   /* Time-window toggle row (Signups vs unsubscribes chart) */
   .winrow{display:flex;gap:6px;margin:0 0 10px}
   .winbtn{font:inherit;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
@@ -781,6 +785,10 @@ function boot(data){
   // After every card has rendered, sprinkle clickable ⓘ icons on metric
   // elements so users can read explanations without depending on hover.
   installInfoDots();
+  // Make each section foldable to tame the long scroll. State persists per
+  // device; on a first visit the "List health" section starts collapsed
+  // (it's the periodic-look section, per its own subtitle).
+  setupSectionCollapse();
 
   // ----- Campaigns table (collapsible — show 5, expand for the rest)
   const camp=mc.campaigns||[];
@@ -1675,6 +1683,37 @@ function wrapTables(){
       const w=document.createElement("div"); w.className="tscroll";
       p.insertBefore(w,t); w.appendChild(t);
     }
+  });
+}
+
+// Fold each priority section (sechead → all cards until the next sechead).
+// Click the header to collapse/expand; the choice is saved per device.
+function setupSectionCollapse(){
+  const KEY = "vc_growth_sections_collapsed";
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){}
+  // First-visit default: only "List health" starts folded.
+  const collapsed = new Set(Array.isArray(saved) ? saved : ["sec-health"]);
+  document.querySelectorAll(".sechead").forEach(head=>{
+    if(!head.id) return;
+    // The section body = every sibling up to (not including) the next sechead.
+    const body = [];
+    for(let el = head.nextElementSibling; el && !el.classList.contains("sechead"); el = el.nextElementSibling) body.push(el);
+    const title = head.querySelector(".sechead-title");
+    if(title && !title.querySelector(".chev")){
+      const c = document.createElement("span"); c.className = "chev"; c.textContent = "▸"; title.prepend(c);
+    }
+    const apply = (isColl)=>{
+      head.classList.toggle("collapsed", isColl);
+      body.forEach(b=> b.style.display = isColl ? "none" : "");
+    };
+    apply(collapsed.has(head.id));
+    head.addEventListener("click", ()=>{
+      const nowColl = !head.classList.contains("collapsed");
+      apply(nowColl);
+      nowColl ? collapsed.add(head.id) : collapsed.delete(head.id);
+      try { localStorage.setItem(KEY, JSON.stringify([...collapsed])); } catch(e){}
+    });
   });
 }
 
