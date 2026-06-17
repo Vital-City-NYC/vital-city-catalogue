@@ -90,12 +90,12 @@
 
   <h2 id="whitelist">Editing the media-mentions whitelist</h2>
   <p>The "Media mentions" sidebar pulls from Google News with site-restricted queries — one query per outlet for the exact phrase "Vital City", one for @vitalcitynyc, and one for any vitalcitynyc.org URL share. This means we only see mentions from outlets we've named in the whitelist; the trade-off is much higher precision (we don't get noise from random sites that use the generic phrase) for slightly narrower coverage.</p>
-  <p><b>Adding or removing an outlet</b> is a one-line edit to <code>growth_pull.py</code>, the file that runs in the daily refresh:</p>
+  <p><b>Adding or removing an outlet</b> is a one-line edit to <code>growth_pull.py</code>, the file that runs in the scheduled refresh:</p>
   <ol>
     <li>Open <code>growth_pull.py</code> on GitHub: <a href="https://github.com/vitalcity-nyc/vital-city-catalogue/blob/main/growth_pull.py" target="_blank">vitalcity-nyc/vital-city-catalogue → growth_pull.py</a>.</li>
     <li>Click the pencil ✏️ icon to edit in the browser, then find the <code>MENTION_OUTLETS</code> list near the top.</li>
     <li>Each line is a tuple: <code>("domain.com", "Display Name")</code>. To add: copy a line, change the values. To remove: delete the line. To rename for display only: change the second value.</li>
-    <li>Scroll down and click <b>Commit changes</b>. The next 11 UTC refresh will pick it up. To trigger sooner, go to <a href="https://github.com/vitalcity-nyc/vital-city-catalogue/actions/workflows/network-refresh.yml" target="_blank">Actions → network-refresh → Run workflow</a>.</li>
+    <li>Scroll down and click <b>Commit changes</b>. The next refresh (11:00 or 23:00 UTC) will pick it up. To trigger sooner, go to <a href="https://github.com/vitalcity-nyc/vital-city-catalogue/actions/workflows/network-refresh.yml" target="_blank">Actions → network-refresh → Run workflow</a>.</li>
   </ol>
   <p><b>What domain to use:</b> the bare hostname without <code>www.</code> works for most outlets (e.g. <code>nytimes.com</code>). For Substacks, use the publication-specific subdomain (<code>johnkroman.substack.com</code>). When in doubt, try the search yourself first at <code>news.google.com</code> with the query <code>"Vital City" site:DOMAIN</code> — if it returns relevant results, the domain works.</p>
   <p><b>Note on WNYC:</b> WNYC's content frequently mentions Vital City on radio segments, but those audio pieces don't get indexed by Google News (only the show-page transcripts do, when they exist). Most contemporary WNYC + Vital City content surfaces under the <code>gothamist.com</code> domain instead — Gothamist and WNYC share a newsroom (both belong to New York Public Radio), and Gothamist publishes web write-ups for many WNYC stories. So the dashboard relies on the Gothamist search to catch most WNYC-adjacent mentions, and the wnyc.org search catches only the small subset of show pages that explicitly print the phrase. The 2022 launch coverage from "All of It" and "Brian Lehrer" lives there; current radio appearances may be missed.</p>
@@ -110,7 +110,7 @@
     <li><b>Google Trends</b> — an embedded interactive widget showing search interest for "Vital City" + NYC disambiguators over the last 12 months. Search interest is relative (0–100 = peak in the window), so use it for shape not absolute volume. Spikes typically trail by 2–7 days after a piece breaks through, so it's useful as a "did people go looking for us?" signal after coverage or a viral post.</li>
   </ul>
   <p>X (Twitter) and Instagram numbers now live in their own card in the main column — see the "Social" section.</p>
-  <p><b>Two free upgrades worth considering later:</b> (1) Google Programmable Search offers 100 free queries per day against Google's full web index — better X/LinkedIn coverage than the Google News feed, still partial; needs a free API key and search-engine ID. (2) Once Google Analytics 4 is connected, referral traffic by source becomes the most honest social signal of all — it measures readers who actually arrived, with no scraping involved.</p>
+  <p><b>One optional upgrade worth considering later:</b> Google Programmable Search offers 100 free queries per day against Google's full web index — somewhat better X/LinkedIn coverage than the Google News feed, though still partial; it needs a free API key and a search-engine ID. (The most honest social signal — referral traffic by source, which measures readers who actually arrived rather than scraping mentions — is already shown in the Website traffic card, now that Google Analytics is connected.)</p>
 
   <h2 id="ghost-analytics">Website visitors — the free 5-minute fix (Ghost staff token)</h2>
   <p>Ghost already tracks site traffic — unique visitors, page views, sources, top pages — in its built-in Analytics tab (powered by Tinybird). The catch, verified directly against the live site: Ghost only shares those numbers with <b>staff</b> credentials. The integration key this dashboard normally uses gets "no permission" on every stats endpoint. The fix is free:</p>
@@ -119,7 +119,7 @@
     <li>Scroll to <b>"Staff access token"</b> and copy it (it looks like <code>id:secret</code>).</li>
     <li>Add it as a GitHub secret named <code>GHOST_STAFF_KEY</code> on the repo (Settings → Secrets → Actions) — or hand it to Claude to set up.</li>
   </ol>
-  <p>On the next daily refresh the two "Website visitors" tiles fill in from Ghost's own analytics. Two caveats: the token carries your staff permissions, so treat it like a password (a secret, never in the repo); and Ghost's traffic history only starts at the April 2026 site cutover, so the 1-year tile accumulates over time.</p>
+  <p>On the next scheduled refresh the two "Website visitors" tiles fill in from Ghost's own analytics. Two caveats: the token carries your staff permissions, so treat it like a password (a secret, never in the repo); and Ghost's traffic history only starts at the April 2026 site cutover, so the 1-year tile accumulates over time.</p>
 
   <h2 id="connect-more-sources">Data sources &amp; status</h2>
   <p>Where each part of the dashboard gets its data, and what's live:</p>
