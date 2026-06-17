@@ -8,7 +8,8 @@ name: network-refresh
 
 on:
   schedule:
-    - cron: "0 11 * * *"   # 11:00 UTC daily = 7am ET (EDT) / 6am ET (EST)
+    - cron: "0 11 * * *"   # 11:00 UTC = 7am ET (EDT) / 6am ET (EST)
+    - cron: "0 23 * * *"   # 23:00 UTC = 7pm ET (EDT) / 6pm ET (EST)
   workflow_dispatch:        # allow manual "Run workflow" from the Actions tab
 
 permissions:
