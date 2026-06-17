@@ -710,7 +710,7 @@ function boot(data){
     // --- Newsletter ---
     {lbl:"Subscribers",num:fmtN(total),delta:`net ${fmtDelta(netNew30)} in 30d`,cls:deltaClass(netNew30),hero:true,
      tip:"Unique people on the Mailchimp list right now — each individual counted once, even if signed up under multiple emails.\n\nWhy it matters: The newsletter list is Vital City's core owned audience and the organization's number-one growth goal. Every other metric on this page ultimately serves growing and engaging it.\n\nSource: Mailchimp for unsubscribes, Ghost for signups, reconciled weekly."},
-    {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)}${pctChg(subs30,subsPrev30)} vs prior 30d <span class="flag">noisy window</span>`,cls:deltaClass(subs30-subsPrev30),
+    {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)}${pctChg(subs30,subsPrev30)} vs prior 30d`,flag:"noisy window",cls:deltaClass(subs30-subsPrev30),
      tip:"New subscribers in the last 30 days vs the 30 days before.\n\nWhy it matters: This is the live pulse of list growth. Sustained month-over-month gains are the clearest sign the top of the funnel is working; a sustained decline is the earliest warning that acquisition needs attention.\n\nSource: merged Ghost+Mailchimp dataset (signups land in Ghost first, reconciled to Mailchimp weekly)."},
     (function(){
       const m=mc.mau||{}, n=m.active_users;
@@ -730,7 +730,8 @@ function boot(data){
     })(),
     // --- Fundraising (priority 2: donors) ---
     {lbl:"Raised · YTD", num: db.available ? fmtUSD((dWin.ytd||{}).amount||0) : "—",
-     delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts <span class="flag">online gifts only</span>` : "Donorbox not connected",
+     delta: db.available ? `${fmtN((dWin.ytd||{}).donors||0)} donors / ${fmtN((dWin.ytd||{}).count||0)} gifts` : "Donorbox not connected",
+     flag: db.available ? "online gifts only" : "",
      cls:"flat",
      tip:"Total raised on Donorbox so far this year (gross, before processor fees). Donor count is unique people; gift count counts every transaction.\n\nWhy it matters: Fundraising is Vital City's second priority after list growth, and this is the headline number for the year. The Donors & influence section below breaks it down by channel, campaign and recurring base — and shows which signup sources actually produce donors."},
     // --- Reach & traffic (directional; tiles ordered last to match the page) ---
@@ -760,10 +761,11 @@ function boot(data){
       const gt = data.ghost_traffic || {};
       const n = gt.available ? gt.visitors_30d : (ga4.mau!=null ? ga4.mau : null);
       const vp = gt.available ? gt.visitors_prev_30d : null;
-      const chg = (vp!=null) ? `${fmtDelta(n-vp)}${pctChg(n,vp)} vs prior 30d <span class="flag">noisy window</span> · ` : "";
+      const chg = (vp!=null) ? `${fmtDelta(n-vp)}${pctChg(n,vp)} vs prior 30d · ` : "";
       const sub = gt.available ? `${chg}${fmtN(gt.pageviews_30d||0)} page views` :
                   (ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs Ghost staff token ↗ · free");
       return {lbl:"Website visitors · 30d", num: n!=null ? fmtN(n) : "—", delta: sub,
+              flag: (vp!=null) ? "noisy window" : "",
               cls: (vp!=null) ? deltaClass(n-vp) : (n!=null ? "flat" : "na"),
               tip:"Unique visitors to vitalcitynyc.org in the last 30 days, from Ghost's own analytics (same numbers as the admin Analytics tab).\n\nWhy it matters: This is the top of the funnel — the pool of people who could become subscribers and donors. Read it against New signups to see how well the site converts attention into list growth; a big gap is a conversion opportunity.\n\nSource: Ghost's own analytics. Caveat: Ghost and Google Analytics 4 count visitors differently — bot filtering, what counts as a 'visit', time zones and consent all differ — so this won't exactly match the GA4-based 1-year tile, or any other tool. Treat traffic numbers as directional, not exact head counts."};
     })(),
@@ -799,7 +801,7 @@ function boot(data){
     return `${wrap}
        <div class="lbl">${esc(k.lbl)}</div>
        <div class="num">${k.num}</div>
-       <div class="delta ${k.cls}">${esc(k.delta)}</div>
+       <div class="delta ${k.cls}">${esc(k.delta)}${k.flag?` <span class="flag">${esc(k.flag)}</span>`:""}</div>
      ${close}`;
   }).join("");
 
