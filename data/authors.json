@@ -349,6 +349,29 @@
     "website": null
   },
   {
+    "name": "Aaron Chalfin",
+    "post_count": 13,
+    "slugs": [
+      "a-safer-city-and-nation-with-asterisks",
+      "crime-and-the-built-environment",
+      "crime-in-2022-and-2023-a-symposium",
+      "crime-in-context-locally-and-nationally",
+      "crime-reduction-trends-immigration-enforcement",
+      "how-rare-is-crime-on-the-subway",
+      "is-transformational-change-the-only-thing-that-matters",
+      "just-the-facts-on-new-york-city-subway-crime",
+      "rubber-meets-road-lighting-policy-primer",
+      "underground-safer-than-the-surface",
+      "what-the-data-show-about-subway-safety",
+      "when-city-streets-really-are-war-zones"
+    ],
+    "slug": "chalfin-aaron",
+    "bio": "is an associate professor of criminology at the University of Pennsylvania.",
+    "url": "https://www.vitalcitynyc.org/author/chalfin-aaron/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Errol Louis",
     "post_count": 13,
     "slugs": [
@@ -369,29 +392,6 @@
     "slug": "louis-errol",
     "bio": "is the political anchor of Spectrum News NY1, where he hosts Inside City Hall, a nightly prime-time show that focuses on New York politics. He is a Vital City contributing writer.",
     "url": "https://www.vitalcitynyc.org/author/louis-errol/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Aaron Chalfin",
-    "post_count": 12,
-    "slugs": [
-      "a-safer-city-and-nation-with-asterisks",
-      "crime-and-the-built-environment",
-      "crime-in-2022-and-2023-a-symposium",
-      "crime-in-context-locally-and-nationally",
-      "crime-reduction-trends-immigration-enforcement",
-      "how-rare-is-crime-on-the-subway",
-      "is-transformational-change-the-only-thing-that-matters",
-      "just-the-facts-on-new-york-city-subway-crime",
-      "rubber-meets-road-lighting-policy-primer",
-      "underground-safer-than-the-surface",
-      "what-the-data-show-about-subway-safety",
-      "when-city-streets-really-are-war-zones"
-    ],
-    "slug": "chalfin-aaron",
-    "bio": "is an associate professor of criminology at the University of Pennsylvania.",
-    "url": "https://www.vitalcitynyc.org/author/chalfin-aaron/",
     "twitter": null,
     "website": null
   },
@@ -519,24 +519,6 @@
     "website": null
   },
   {
-    "name": "John K. Roman",
-    "post_count": 7,
-    "slugs": [
-      "a-tale-of-two-divergent-paths",
-      "balancing-deterrence-and-prevention-the-role-of-research",
-      "forecasting-new-york-city-crime-in-2024",
-      "how-prevention-reduced-crime-suggestions-analysis",
-      "the-golden-age-of-crime-reduction-is-now",
-      "toward-a-new-discipline-macro-criminology",
-      "twenty-strategies-for-reducing-crime-in-cities"
-    ],
-    "slug": "roman-john-k",
-    "bio": "is a senior fellow at NORC at the University of Chicago. He also serves as the co-Director of the National Prevention Science Coalition.",
-    "url": "https://www.vitalcitynyc.org/author/roman-john-k/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Bradley Tusk",
     "post_count": 7,
     "slugs": [
@@ -585,6 +567,23 @@
     "slug": "ludwig-jens",
     "bio": "is the Edwin A. and Betty L. Bergman Distinguished Service Professor at the University of Chicago and Pritzker Director of the Crime Lab. He co-directs the Education Lab and NBER’s working group on economics of crime.",
     "url": "https://www.vitalcitynyc.org/author/ludwig-jens/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "John K. Roman",
+    "post_count": 6,
+    "slugs": [
+      "a-tale-of-two-divergent-paths",
+      "balancing-deterrence-and-prevention-the-role-of-research",
+      "forecasting-new-york-city-crime-in-2024",
+      "the-golden-age-of-crime-reduction-is-now",
+      "toward-a-new-discipline-macro-criminology",
+      "twenty-strategies-for-reducing-crime-in-cities"
+    ],
+    "slug": "roman-john-k",
+    "bio": "is a senior fellow at NORC at the University of Chicago. He also serves as the co-Director of the National Prevention Science Coalition.",
+    "url": "https://www.vitalcitynyc.org/author/roman-john-k/",
     "twitter": null,
     "website": null
   },
@@ -2249,6 +2248,42 @@
     "website": null
   },
   {
+    "name": "Rob Voigt",
+    "post_count": 1,
+    "slugs": [
+      "use-ai-to-analyze-bodyworn-camera-footage"
+    ],
+    "slug": "voigt-rob",
+    "bio": "is an assistant professor of linguistics at the University of California, Davis, whose work focuses on developing and applying computational methods to understand the linguistic mechanisms of real-world social issues.",
+    "url": "https://www.vitalcitynyc.org/author/voigt-rob/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Jennifer L. Eberhardt",
+    "post_count": 1,
+    "slugs": [
+      "use-ai-to-analyze-bodyworn-camera-footage"
+    ],
+    "slug": "eberhardt-jennifer-l",
+    "bio": "is a professor of organizational behavior and of psychology at Stanford University, who uses multiple methods to understand and address bias and inequality across contexts as well as to heal social divides.",
+    "url": "https://www.vitalcitynyc.org/author/eberhardt-jennifer-l/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Gavin Newsham",
+    "post_count": 1,
+    "slugs": [
+      "pele-nyc-cosmos-soccer"
+    ],
+    "slug": "newsham-gavin",
+    "bio": "has written books including a biography of the American golfer John Daly, “Letting The Big Dog Eat,” and “Once In A Lifetime: The Extraordinary Story of the New York Cosmos.” He is a contributing writer at the New York Post.",
+    "url": "https://www.vitalcitynyc.org/author/newsham-gavin/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "James Patchett",
     "post_count": 1,
     "slugs": [
@@ -3809,14 +3844,14 @@
     "website": null
   },
   {
-    "name": "Adam Cohen",
+    "name": "Richard Schragger",
     "post_count": 1,
     "slugs": [
-      "trumps-bizarro-new-deal"
+      "is-it-time-for-cities-to-go-it-alone"
     ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
+    "slug": "schragger-richard",
+    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
+    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
     "twitter": null,
     "website": null
   },
@@ -3833,14 +3868,14 @@
     "website": null
   },
   {
-    "name": "Richard Schragger",
+    "name": "Adam Cohen",
     "post_count": 1,
     "slugs": [
-      "is-it-time-for-cities-to-go-it-alone"
+      "trumps-bizarro-new-deal"
     ],
-    "slug": "schragger-richard",
-    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
-    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },

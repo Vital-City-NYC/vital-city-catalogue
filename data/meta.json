@@ -1,15 +1,28 @@
 {
-  "generated_at": "2026-06-17T12:30:09.181080+00:00",
+  "generated_at": "2026-06-17T17:11:05.108066+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 845,
-  "total_authors": 461,
+  "total_posts": 847,
+  "total_authors": 464,
   "total_issues": 29,
   "total_topics": 204,
   "date_range": [
     "2021-09-15",
-    "2026-06-12"
+    "2026-06-17"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 2,
+  "new_articles": [
+    {
+      "title": "Use AI to Analyze Bodyworn Camera Footage",
+      "url": "https://www.vitalcitynyc.org/use-ai-to-analyze-bodyworn-camera-footage/",
+      "published_date": "2026-06-17",
+      "primary_author": "Rob Voigt"
+    },
+    {
+      "title": "Pelé and New York",
+      "url": "https://www.vitalcitynyc.org/pele-nyc-cosmos-soccer/",
+      "published_date": "2026-06-17",
+      "primary_author": "Gavin Newsham"
+    }
+  ]
 }
