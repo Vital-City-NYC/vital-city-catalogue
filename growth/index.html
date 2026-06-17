@@ -79,8 +79,8 @@
             color:var(--vc-cerulean);text-decoration:none;white-space:nowrap}
   .secnav a:hover{text-decoration:underline}
   .sechead{margin:30px 0 14px;scroll-margin-top:46px;cursor:pointer;user-select:none}
-  .sechead-title{font-size:13px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--vc-black);
-                 border-bottom:2px solid var(--vc-black);padding-bottom:5px}
+  .sechead-title{font-size:15px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--vc-black);
+                 border-bottom:2px solid var(--vc-black);padding-bottom:6px}
   .sechead .chev{display:inline-block;width:.9em;font-size:.82em;color:var(--vc-charcoal);transition:transform .15s;transform:rotate(90deg)}
   .sechead.collapsed .chev{transform:rotate(0deg)}
   .sechead.collapsed .sechead-title{opacity:.62}
@@ -389,15 +389,6 @@
         <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">Each tile shows the rolling last 7 days with the change vs the 7 days before it. For unsubscribes, down is good (shown green). Underlined numbers (signups, unsubscribes, gifts) are clickable — see exactly who. Social-follower change isn't included — we don't capture daily follower counts, so a 7-day delta there would be guesswork.</div>
       </div>
 
-      <nav class="secnav" aria-label="Dashboard sections">
-        <span class="secnav-lbl">Jump to:</span>
-        <a href="#sec-growth">Growing the list</a>
-        <a href="#sec-donors">Donors &amp; influence</a>
-        <a href="#sec-content">The content engine</a>
-        <a href="#sec-health">List health</a>
-        <a href="#sec-reach">Reach &amp; traffic</a>
-      </nav>
-
       <div class="card" id="bigPicture">
         <h2>The long view <span class="hint">every year GA4 has tracked — the whole-history picture</span></h2>
         <div id="bigPictureBody"></div>
@@ -407,6 +398,15 @@
         <h2>The funnel &amp; who's reading <span class="hint">the on-mission cuts: do visitors convert, do they come back, and are the right people reading</span></h2>
         <div id="audienceQualityBody"></div>
       </div>
+
+      <nav class="secnav" aria-label="Dashboard sections">
+        <span class="secnav-lbl">Jump to:</span>
+        <a href="#sec-growth">Growing the list</a>
+        <a href="#sec-donors">Donors &amp; influence</a>
+        <a href="#sec-content">The content engine</a>
+        <a href="#sec-health">List health</a>
+        <a href="#sec-reach">Reach &amp; traffic</a>
+      </nav>
 
       <div class="sechead" id="sec-growth">
         <div class="sechead-title">Growing the list</div>
