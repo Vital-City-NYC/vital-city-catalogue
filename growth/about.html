@@ -32,21 +32,24 @@
   <h2>The headline KPIs</h2>
   <table>
     <tr><th>Tile</th><th>What it shows</th><th>Where it comes from</th></tr>
-    <tr><td><b>Subscribers</b></td><td>Current unique people on the Mailchimp newsletter list. Each individual counted once, even if they're on the list under 2 or 3 email addresses (so this reads slightly lower than Mailchimp's raw subscriber count).</td><td>Mailchimp list summary</td></tr>
-    <tr><td><b>New signups · 7 / 30 / 90 d</b></td><td>People who joined in each rolling window. The 7- and 30-day tiles also show the change vs the prior period of the same length.</td><td>Vital City's merged people dataset (Mailchimp + Ghost signup dates, deduped by person)</td></tr>
-    <tr><td><b>Unsubscribes · 30 d</b></td><td>People who left in the last 30 days, plus that as a percentage of the list. Healthy newsletters typically run well under 0.5% / month.</td><td>Mailchimp activity feed</td></tr>
-    <tr><td><b>Engaged subscribers</b></td><td>Share of subscribers Mailchimp rates 4–5 stars — the ones who reliably open most emails.</td><td>Mailchimp member ratings</td></tr>
+    <tr><td><b>Subscribers</b></td><td>Current unique people on the newsletter list, with net change over the last 30 days. Each individual counted once even if on the list under several addresses.</td><td>Mailchimp list, reconciled with Ghost signups</td></tr>
+    <tr><td><b>New signups · 30d</b></td><td>People who joined in the last 30 days vs the 30 before. Flagged "noisy window" — short-window deltas swing a lot.</td><td>Merged Ghost + Mailchimp people dataset (deduped by person)</td></tr>
+    <tr><td><b>Active subscribers · 30d / 1y</b></td><td>Unique people who opened at least one email in the last 30 days (MAU) and the last year (AAU). The gap between them is your lapsed-but-reachable audience.</td><td>Mailchimp per-campaign open data, deduped</td></tr>
+    <tr><td><b>Raised · YTD</b></td><td>Money raised so far this year, with donor and gift counts. Flagged "online gifts only."</td><td>Donorbox</td></tr>
+    <tr><td><b>Social followers</b></td><td>Combined followers across X, LinkedIn, Bluesky and Instagram.</td><td>LinkedIn + Bluesky live; X + Instagram hand-entered</td></tr>
+    <tr><td><b>Website visitors · 30d / 1 year</b></td><td>Unique visitors to vitalcitynyc.org recently and over a true trailing 12 months.</td><td>30d from Ghost; 1-year from Google Analytics 4</td></tr>
+    <tr><td><b>Avg engaged time / view</b></td><td>Average seconds a reader's tab was focused on a piece, per page view, vs last year. A read-depth signal; flagged "comparative, not literal reading."</td><td>Google Analytics 4</td></tr>
   </table>
 
-  <h2>The 90-day signup chart</h2>
-  <p>Green bars are new signups per day; the magenta line is unsubscribes per day; blue dots at the top mark days a Vital City post was published. The chart makes the relationship between content and signups visible — articles that spike the green bars tend to be the ones worth doing more of.</p>
-  <p><b>Important nuance:</b> daily signups are derived from the merged subscriber dataset. That dataset rebuilds once a day at 11:00 UTC, so the most recent 1–2 days may understate signups until the next rebuild. The Mailchimp <code>/activity</code> endpoint's own <code>subs</code> count drastically undercounts signups (it only sees direct-Mailchimp form signups, while most VC signups arrive via the Ghost form), which is why the dashboard uses the merged dataset instead.</p>
+  <h2>Newsletter growth &amp; reach</h2>
+  <p>A weekly chart since January 2025: the blue line is total list size (interpolated weekly), green bars are new signups per week and the orange line is total opens per week (right axis). It shows the list growing and how much of it is actually opening over time. Per-week signup bars only go back to December 2025, when Ghost's per-member event feed begins — earlier weeks are still captured in the blue list-size line, just not broken out as bars.</p>
+  <p><b>Nuance:</b> the most recent day or two can understate signups until the next rebuild. Signups come from the merged Ghost + Mailchimp dataset, because Mailchimp's own activity count only sees direct-Mailchimp form signups while most Vital City signups arrive via the Ghost form.</p>
 
   <h2>Recent newsletter sends</h2>
   <p>The last 12 sent campaigns with subject, recipient count, open rate, click rate and unsubscribe count. Open rate cell colors: green ≥35%, blue 22–35%, orange below. (Be aware that Apple Mail's "Mail Privacy Protection" auto-opens inflate open rates across the industry; click rate is the more honest engagement number.)</p>
 
-  <h2>Content cadence</h2>
-  <p>Posts published in the last 90 days, with quick counts for the 7- and 30-day windows. Use this to see whether the publishing rhythm is steady — gaps in publishing usually show up later as flat green bars on the signup chart.</p>
+  <h2>Where signups come from</h2>
+  <p>Also in "Growing the list": a breakdown of which referrer sources and which individual pieces drove recent newsletter signups, from Ghost's signup attribution. It answers what actually converts readers into subscribers — which isn't always what gets the most traffic.</p>
 
   <h2>Subscriber quality</h2>
   <p>Two views of the engaged half of the list:</p>
@@ -62,6 +65,28 @@
     <li><b>Active subscribers · 1y (AAU)</b> — the same calculation across the last 365 days. The gap between MAU and AAU is your "lapsed but reachable" audience — people who used to engage but haven't recently. Re-engagement campaigns target exactly that gap.</li>
   </ul>
   <p>Two caveats baked into the tooltips: Apple Mail's privacy auto-opens inflate this number across the industry (since the mail client opens emails on the user's behalf to fetch tracking pixels), so MAU/AAU should be read as a ceiling not a floor. And A/B-test ("variate") campaigns are excluded from the union because Mailchimp tracks openers against the child A/B sub-campaigns rather than the parent; the dashboard shows how many variate sends were skipped if that matters.</p>
+
+  <h2>The long view</h2>
+  <p>The whole-history picture, near the top of the dashboard. A summary strip of growth multiples (visitors per year, all-time page views, newsletter-list growth), then unique visitors by year (2023 onward, from Google Analytics 4), then the newsletter list by year-end and newsletter performance by year (sends, open rate, total opens, total clicks). Year-over-year change is shown inside each bar; the in-progress year is hatched and left without a comparison.</p>
+  <p><b>One number to read carefully:</b> the all-time visitor count is roughly the yearly uniques summed, not a tally of distinct humans — Google Analytics identifies a "user" by a browser cookie that rarely survives across years, so the same person is mostly re-counted each year. The dashboard flags this.</p>
+
+  <h2>The funnel &amp; who's reading</h2>
+  <p>The on-mission cuts, in a card near the top:</p>
+  <ul>
+    <li><b>Visitor → subscriber conversion, by year</b> — new signups divided by website visitors each year. A cross-source estimate (signups from Ghost/Mailchimp, visitors from GA4, which count differently), so read the direction over the years, not the exact decimal.</li>
+    <li><b>Returning vs new readers</b> — the share of website visitors who came back, for the last 30 days and by year (GA4). A loyalty signal. It's a floor, not a ceiling: anyone who cleared cookies or switched devices reads as "new" again.</li>
+    <li><b>Who's reading — the policy circle</b> — how many notable (Wikipedia-flagged) and government-inbox subscribers opened an email in the last 30 days, and their share of the active audience. The two counts are clickable to the named list. This is a floor too: it only counts subscribers matched to a flagged person in the contact database.</li>
+  </ul>
+
+  <h2>Reader attention &amp; most-read pieces</h2>
+  <p>Two article-level views in the "Reach &amp; traffic" section, both from GA4 (which tracked the site before the April 2026 Ghost handoff, so it reaches back further than Ghost's own analytics):</p>
+  <ul>
+    <li><b>Reader attention by piece</b> — for each piece, page views alongside average engaged time per view and total engaged time. Engaged time is the seconds a reader's browser tab was actually focused on the page — a read-depth proxy Ghost can't measure. A views-vs-depth scatter splits pieces into quadrants (big audience and deep read, high-traffic-but-shallow, deeply read by a smaller audience). It's an active-tab measure, not literal eyes-on-page reading — a comparative indicator.</li>
+    <li><b>Most-read pieces</b> — top pieces ranked by unique visitors, with a toggle for the current year-to-date, prior full years and all time. Section/hub pages are filtered out so it's article-only; a piece that lived at both an old and new URL is merged.</li>
+  </ul>
+
+  <h2>How people find us on Google (Search Console)</h2>
+  <p>In "Reach &amp; traffic": clicks, impressions, click-through rate and average ranking position for the searches that surface Vital City, with a toggle for the last 28 days, 90 days or 12 months and the top queries beneath. <b>Impressions are not total search volume</b> — they count only the times a Vital City page appeared in someone's results, not how often a term is searched overall. Source: Google Search Console, which reuses the Google Analytics service account (no separate credential); data lags about two days.</p>
 
   <h2 id="whitelist">Editing the media-mentions whitelist</h2>
   <p>The "Media mentions" sidebar pulls from Google News with site-restricted queries — one query per outlet for the exact phrase "Vital City", one for @vitalcitynyc, and one for any vitalcitynyc.org URL share. This means we only see mentions from outlets we've named in the whitelist; the trade-off is much higher precision (we don't get noise from random sites that use the generic phrase) for slightly narrower coverage.</p>
@@ -96,19 +121,22 @@
   </ol>
   <p>On the next daily refresh the two "Website visitors" tiles fill in from Ghost's own analytics. Two caveats: the token carries your staff permissions, so treat it like a password (a secret, never in the repo); and Ghost's traffic history only starts at the April 2026 site cutover, so the 1-year tile accumulates over time.</p>
 
-  <h2 id="connect-more-sources">Connect more sources</h2>
-  <p>These panels are stubbed with their setup steps. Each one needs credentials you'd need to set up once:</p>
+  <h2 id="connect-more-sources">Data sources &amp; status</h2>
+  <p>Where each part of the dashboard gets its data, and what's live:</p>
   <table>
-    <tr><th>Source</th><th>What it adds</th><th>What's needed</th></tr>
-    <tr><td><b>Ghost Analytics (built-in)</b></td><td>Unique visitors and page views for vitalcitynyc.org — the same numbers as Ghost Admin's Analytics tab.</td><td>A staff access token — see <a href="#ghost-analytics">the free 5-minute fix</a> above.</td></tr>
-    <tr><td><b>Google Analytics 4</b></td><td>An alternative/supplement to Ghost Analytics: sessions, engagement time, source/medium splits, plus any pre-April-2026 history from the old site if the property covered it.</td><td>GA4 service account → JSON key → add as Viewer on the GA4 property → store <code>GA4_CREDS_JSON</code> and <code>GA4_PROPERTY_ID</code> as GitHub secrets.</td></tr>
-    <tr><td><b>Google Search Console</b></td><td>Top queries, impressions, clicks, average position, rising queries (vs previous 28 days).</td><td>Add the same service-account email as a user on www.vitalcitynyc.org in Search Console; store <code>GSC_CREDS_JSON</code> and <code>GSC_SITE_URL</code>.</td></tr>
-    <tr><td><b>X / Twitter mentions</b></td><td>Recent mentions of @vitalcitynyc, replies and quote-tweets.</td><td>The free Twitter API was retired. Realistic options: pay for X Basic API (~$100/mo) and add <code>X_BEARER_TOKEN</code>; or pay for a listening service (Brand24, Mention) and feed its RSS; or monitor manually.</td></tr>
-    <tr><td><b>Instagram</b></td><td>@vitalcitynyc's own recent posts (and, with elevated review, tagged mentions).</td><td>Convert the Instagram account to a Business account linked to a Facebook Page; create a Meta app; get a long-lived Page token with <code>instagram_basic</code> scope; store <code>IG_ACCESS_TOKEN</code> and <code>IG_USER_ID</code>.</td></tr>
+    <tr><th>Source</th><th>What it powers</th><th>Status</th></tr>
+    <tr><td><b>Mailchimp</b></td><td>The list, signups, unsubscribes, opens, clicks, engagement ratings, newsletter performance.</td><td>Live</td></tr>
+    <tr><td><b>Ghost (admin + staff)</b></td><td>Members and signup attribution; plus the site's own visitors, page views, sources and weekly traffic (via a staff token — see the fix above).</td><td>Live</td></tr>
+    <tr><td><b>Donorbox</b></td><td>Online gifts, donors, YTD raised.</td><td>Live — online gifts only (no checks, wires or grants)</td></tr>
+    <tr><td><b>Google Analytics 4</b></td><td>Multi-year website traffic, engaged-reading time per piece, returning-vs-new readers, the long view and most-read-by-year lists.</td><td>Live — service account, read-only</td></tr>
+    <tr><td><b>Google Search Console</b></td><td>Search queries, impressions, clicks, CTR and ranking position.</td><td>Live — reuses the GA4 service account, no separate credential</td></tr>
+    <tr><td><b>Social — LinkedIn, Bluesky</b></td><td>Follower counts and recent posts.</td><td>Live</td></tr>
+    <tr><td><b>Social — X, Instagram</b></td><td>Follower counts.</td><td>Hand-entered (their live counts aren't free to read); update <code>MANUAL_FOLLOWERS</code> in <code>growth_pull.py</code></td></tr>
+    <tr><td><b>Contact database + catalogue</b></td><td>Flags which subscribers are notable or work in government (the "who's reading" card) and links pieces to their bylines.</td><td>Live</td></tr>
   </table>
 
   <h2>How often it refreshes</h2>
-  <p>Once a day at 11:00 UTC (≈ 7am ET in summer, 6am in winter). The same GitHub Action that updates the Contact tool also runs <code>growth_pull.py</code> → <code>encrypt_growth.py</code> and pushes the new encrypted file. The "Last refresh" timestamp at the top of the dashboard tells you exactly when this snapshot was taken.</p>
+  <p>Twice a day, at 11:00 and 23:00 UTC (≈ 7am and 7pm ET). The same GitHub Action that updates the Contact tool also runs <code>growth_pull.py</code> → <code>encrypt_growth.py</code> and pushes the new encrypted file. The second run is mainly for resilience — GitHub's scheduler often delays or skips cron jobs, so the evening run catches a missed morning one. The "Last refresh" timestamp at the top of the dashboard tells you exactly when this snapshot was taken.</p>
 
   <h2>Confidentiality</h2>
   <p>This page uses the same passphrase as the Contact tool and the same end-to-end encryption (AES-256-GCM, PBKDF2-SHA256 600k rounds). The dashboard contains aggregate metrics but no PII; it's password-protected anyway to keep our growth numbers internal.</p>
