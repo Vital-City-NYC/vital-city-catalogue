@@ -159,3 +159,20 @@ jobs:
             done
             [ -n "$ok" ] || { echo "ERROR: could not push after 5 attempts."; exit 1; }
           fi
+
+      # Mirror the published state to the institutional org (Vital-City-NYC) so
+      # anyone with access there has the live tool too. Pure downstream copy:
+      # the mirror's own Actions are disabled, so it never diverges. Needs a
+      # MIRROR_TOKEN secret (a PAT / fine-grained token with Contents:write on
+      # Vital-City-NYC/vital-city-catalogue). Absent or failing → skip without
+      # failing the daily job (the primary publish above already succeeded).
+      - name: Mirror to the institutional org
+        env:
+          MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+        run: |
+          if [ -z "$MIRROR_TOKEN" ]; then
+            echo "MIRROR_TOKEN not set — skipping institutional mirror."; exit 0
+          fi
+          git push "https://x-access-token:${MIRROR_TOKEN}@github.com/Vital-City-NYC/vital-city-catalogue.git" HEAD:main \
+            && echo "mirrored to Vital-City-NYC" \
+            || echo "WARNING: mirror push failed; the institutional copy will sync on the next run."
