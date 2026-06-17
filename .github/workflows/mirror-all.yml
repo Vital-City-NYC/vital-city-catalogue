@@ -1,0 +1,55 @@
+name: mirror-all
+
+# Institutional redundancy: mirror every PUBLIC vitalcity-nyc repo into the
+# Vital-City-NYC org. Sources are public (read needs no auth); pushes use a
+# MIRROR_TOKEN secret (org-scoped: repo create + contents write). Only public
+# sources are mirrored — a private repo is never published. Pure downstream
+# copy; the live sites stay on the vitalcity-nyc Pages links.
+#
+# Needs the MIRROR_TOKEN secret. Until it's set, this job skips cleanly.
+
+on:
+  schedule:
+    - cron: "0 12 * * *"     # 12:00 UTC — after the 11:00 network-refresh
+  workflow_dispatch:
+
+concurrency:
+  group: mirror-all
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror all public repos to the org
+        env:
+          GH_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+          MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+        run: |
+          if [ -z "$MIRROR_TOKEN" ]; then
+            echo "MIRROR_TOKEN not set — skipping institutional mirror."; exit 0
+          fi
+          SKIP="nyc-construction-timelines"   # org copy diverged — reconcile by hand
+          ok=0; skipped=0; failed=0
+          for r in $(gh api "users/vitalcity-nyc/repos?per_page=100&type=owner" --jq '.[].name'); do
+            case " $SKIP " in *" $r "*) echo "skip $r (diverged collision)"; skipped=$((skipped+1)); continue;; esac
+            # Safety: only ever mirror a verifiably PUBLIC source.
+            vis=$(gh api repos/vitalcity-nyc/$r --jq '.private' 2>/dev/null)
+            if [ "$vis" != "false" ]; then echo "skip $r (not public)"; skipped=$((skipped+1)); continue; fi
+            gh api repos/Vital-City-NYC/$r >/dev/null 2>&1 \
+              || gh repo create Vital-City-NYC/$r --public --description "Institutional mirror of vitalcity-nyc/$r" >/dev/null 2>&1 \
+              || { echo "create failed $r"; failed=$((failed+1)); continue; }
+            db=$(gh api repos/vitalcity-nyc/$r --jq .default_branch 2>/dev/null)
+            rm -rf /tmp/m
+            # Full clone (NOT shallow): a depth-1 clone produces an incomplete
+            # pack that the remote rejects with "index-pack failed".
+            git clone --quiet "https://github.com/vitalcity-nyc/$r.git" /tmp/m 2>/dev/null \
+              || { echo "clone failed $r"; failed=$((failed+1)); continue; }
+            if [ -z "$(git -C /tmp/m rev-list -n1 --all 2>/dev/null)" ]; then
+              echo "skip $r (empty repo)"; skipped=$((skipped+1)); continue
+            fi
+            if git -C /tmp/m push --quiet "https://x-access-token:${MIRROR_TOKEN}@github.com/Vital-City-NYC/$r.git" "+HEAD:refs/heads/$db" 2>/dev/null; then
+              echo "synced $r ($db)"; ok=$((ok+1))
+            else echo "push failed $r"; failed=$((failed+1)); fi
+          done
+          echo "=== mirror-all: synced=$ok skipped=$skipped failed=$failed ==="
