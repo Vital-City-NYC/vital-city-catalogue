@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 89,
+    "post_count": 90,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -46,6 +46,7 @@
       "new-york-citys-subways-moving-millions",
       "nyc-economy-data-story",
       "nyc-housing-permits-fast-track-construction-mamdani",
+      "nypd-crime-strategy-questions-michael-lipetri",
       "our-advice-to-the-new-york-times-about-a-vexing-editorial-decision",
       "predictability-begets-productivity",
       "questions-answers-trump-noem-dhs-ice",
@@ -101,7 +102,7 @@
   },
   {
     "name": "Elizabeth Glazer",
-    "post_count": 47,
+    "post_count": 46,
     "slugs": [
       "a-brief-history-of-the-3300-target",
       "a-rare-remedy-to-the-persistent-brutality-of-rikers",
@@ -939,6 +940,20 @@
     "website": null
   },
   {
+    "name": "Julia D. Day",
+    "post_count": 3,
+    "slugs": [
+      "mamdani-parks-public-spaces-nyc",
+      "social-infrastructure-nyc-mamdani",
+      "the-secret-ingredient-safe-pedestrian-friendly-streets"
+    ],
+    "slug": "day-julia-d",
+    "bio": "is a partner and team director at Gehl Studio.",
+    "url": "https://www.vitalcitynyc.org/author/day-julia-d/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Sherry Glied",
     "post_count": 3,
     "slugs": [
@@ -1490,19 +1505,6 @@
     "slug": "rudin-jody",
     "bio": "is president and CEO of the Institute for Community Living and a member of the Collaborative on Housing for Health.",
     "url": "https://www.vitalcitynyc.org/author/rudin-jody/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Julia D. Day",
-    "post_count": 2,
-    "slugs": [
-      "mamdani-parks-public-spaces-nyc",
-      "the-secret-ingredient-safe-pedestrian-friendly-streets"
-    ],
-    "slug": "day-julia-d",
-    "bio": "is a partner and team director at Gehl Studio.",
-    "url": "https://www.vitalcitynyc.org/author/day-julia-d/",
     "twitter": null,
     "website": null
   },
@@ -2244,6 +2246,18 @@
     "slug": "meares-tracey-l",
     "bio": "is the Walton Hale Hamilton Professor and founding director of the Justice Collaboratory at Yale Law School. She was previously a professor at the University of Chicago Law School.",
     "url": "https://www.vitalcitynyc.org/author/meares-tracey-l/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Eric Klinenberg",
+    "post_count": 1,
+    "slugs": [
+      "social-infrastructure-nyc-mamdani"
+    ],
+    "slug": "klinenberg-eric",
+    "bio": "is the Helen Gould Shepard Professor of Social Science and Director of the Institute for Public Knowledge at New York University. His books include “Palaces for the People,” “Heat Wave” and “2020.”",
+    "url": "https://www.vitalcitynyc.org/author/klinenberg-eric/",
     "twitter": null,
     "website": null
   },
