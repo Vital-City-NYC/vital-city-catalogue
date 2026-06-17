@@ -2522,14 +2522,21 @@ function renderTraffic(data){
     const mv=(r)=> ((k==="total" ? r.total_secs : r.avg_secs) || 0);
     const rows=[...(pages||[])].sort((a,b)=> mv(b)-mv(a)).slice(0,12);
     const maxv=Math.max(1,...rows.map(mv));
-    return `<table class="tbl" style="width:100%"><tbody>${rows.map((p,i)=>{
+    // Active sort metric gets bolded/black; the other engaged column + page
+    // views stay charcoal. Every row shows page views AND both engaged cuts.
+    const col=(active)=>`text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;${active?'font-weight:700;color:var(--vc-black)':'font-weight:400;color:var(--vc-charcoal)'}`;
+    const hdr=(label,active)=>`<th class="num" style="${active?'color:var(--vc-black)':''}">${label}</th>`;
+    return `<table class="tbl" style="width:100%">
+      <thead><tr><th></th><th>Piece</th><th class="num">Page views</th>${hdr('Avg / view',k!=='total')}${hdr('Total engaged',k==='total')}</tr></thead>
+      <tbody>${rows.map((p,i)=>{
       const val = mv(p);
       return `<tr>
         <td style="color:var(--vc-charcoal);width:20px;font-variant-numeric:tabular-nums">${i+1}</td>
-        <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a></td>
-        <td style="width:26%"><div style="background:#7a5cc0;opacity:.5;height:8px;border-radius:2px;width:${Math.max(2,Math.round(val/maxv*100))}%"></div></td>
-        <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600">${fmtDur(val)}</td>
-        <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--vc-charcoal);font-size:11px;padding-left:8px">${fmtN(p.views)} views</td>
+        <td><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" style="color:var(--vc-black);text-decoration:none;font-weight:600">${esc(p.title)}</a>
+          <div style="background:#7a5cc0;opacity:.5;height:5px;border-radius:2px;width:${Math.max(2,Math.round(val/maxv*100))}%;margin-top:4px"></div></td>
+        <td style="text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">${fmtN(p.views)}</td>
+        <td style="${col(k!=='total')}">${fmtDur(p.avg_secs)}</td>
+        <td style="${col(k==='total')}">${fmtDur(p.total_secs)}</td>
       </tr>`;}).join("")}</tbody></table>`;
   };
   let engBlock = "";
