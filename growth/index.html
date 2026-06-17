@@ -790,6 +790,23 @@ function boot(data){
               cls: n!=null ? "flat" : "na",
               tip:`Cumulative unique visitors since Ghost analytics began recording${startLbl ? ` (first traffic: ${esc(start)})` : " at the April 2026 cutover"}.\n\nNote: this understates the true 12-month audience; connect GA4 for a real trailing year (it tracked the old site too).`};
     })(),
+    (function(){
+      // Site-wide avg engaged time PER VIEW: audience-weighted across the
+      // tracked pieces (engaged seconds ÷ views). A read-depth headline.
+      const eng = (ga4 && ga4.engagement) || [];
+      if(!eng.length) return {lbl:"Avg engaged time / view", num:"—", delta:"GA4 engagement pending", cls:"na",
+        tip:"Average engaged seconds per page view (Google Analytics 4). Populates once GA4 engagement data is present."};
+      const dur=s=>{s=Math.round(s||0);const m=Math.floor(s/60);return m?`${m}m ${s%60}s`:`${s}s`;};
+      const wavg=lst=>{const v=lst.reduce((s,p)=>s+(p.views||0),0),t=lst.reduce((s,p)=>s+(p.total_secs||0),0);return v?t/v:0;};
+      const cur=wavg(eng), prev=wavg(((ga4.engagement_by_year||{})["2025"])||[]);
+      const totV=eng.reduce((s,p)=>s+(p.views||0),0);
+      return {lbl:"Avg engaged time / view",
+        num: dur(cur),
+        delta: prev ? `${pctChg(cur,prev)} vs 2025` : `across ${fmtN(totV)} views since Jan 1`,
+        flag:"comparative, not literal reading",
+        cls: prev ? deltaClass(cur-prev) : "flat",
+        tip:"Average seconds a reader's browser tab was actively focused on a piece, PER page view — engaged time ÷ views, audience-weighted across articles with 100+ views since Jan 1, 2026 (Google Analytics 4; Ghost can't measure this).\n\nWhy it matters: a read-depth signal — are people actually reading or bouncing? Watch the trend, not the absolute level.\n\nCaveat: active-tab time, not literal eyes-on-page; a comparative indicator only. Full per-piece breakdown is in the Reader attention card."};
+    })(),
   ];
   $("#kpis").innerHTML=kpis.map(k=>{
     // GA4 stub tiles get a click-through to the setup docs in about.html
