@@ -652,6 +652,7 @@ def fold(q, p):
     q["mem"], q["auth"], q["don"] = q["mem"] or p["mem"], q["auth"] or p["auth"], q["don"] or p["don"]
     q["unsub"] = q["unsub"] or p["unsub"]
     q["arts"] = max(q["arts"], p["arts"])
+    q["alast"] = max(q.get("alast", ""), p.get("alast", ""))   # most recent VC contribution date
     q["damt"] = round(q["damt"] + p["damt"], 2)
     q["dcnt"] += p["dcnt"]
     q["d7"] = round(q["d7"] + p["d7"], 2); q["d7c"] += p["d7c"]
@@ -758,7 +759,7 @@ def main():
             return by_tight[tight(name)]   # last resort: same letters, different spacing/punctuation
         p = {"n": "", "ns": "", "e": "", "emails": [], "inst": "", "role": "",
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
-             "aname": "", "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "udate": "",
+             "aname": "", "alast": "", "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "udate": "",
              "d7": 0.0, "d7c": 0, "d30": 0.0, "d30c": 0,
              "erate": 0, "eopen": 0, "eclick": 0, "wiki": 0, "src": []}
         people.append(p)
@@ -821,11 +822,16 @@ def main():
     except Exception:
         catalogue = []
     author_specs = {}   # norm author name -> set of specialty domains they've written about
+    author_last = {}    # norm author name -> most recent published_date (YYYY-MM-DD)
     for art in catalogue:
         specs = {TOPIC_MAP[t.lower()] for t in art.get("topics", []) if t.lower() in TOPIC_MAP}
-        if specs:
-            for au in art.get("authors", []):
-                author_specs.setdefault(norm(au), set()).update(specs)
+        d = art.get("published_date") or ""
+        for au in art.get("authors", []):
+            k = norm(au)
+            if specs:
+                author_specs.setdefault(k, set()).update(specs)
+            if d and d > author_last.get(k, ""):
+                author_last[k] = d
     authors_total = 0
     for a in authors:
         nn = norm(a["name"])
@@ -836,6 +842,7 @@ def main():
         p["auth"] = 1
         p["arts"] = a.get("post_count", 0)
         if not p.get("aname"): p["aname"] = a["name"]   # exact catalogue byline, for deep-linking
+        if author_last.get(nn, "") > p.get("alast", ""): p["alast"] = author_last[nn]   # latest VC piece date
         p["types"] = sorted(set(p["types"]) | {"VC contributor"})   # anyone who wrote for us is a contributor
         p["topics"] = sorted(set(p["topics"]) | author_specs.get(nn, set()))
         if "author" not in p["src"]: p["src"].append("author")
@@ -853,6 +860,7 @@ def main():
             set_email(p, e)
         p["types"] = sorted(set(p["types"]) | {"VC contributor"})
         p["auth"] = 1
+        if author_last.get(nn, "") > p.get("alast", ""): p["alast"] = author_last[nn]
         p["topics"] = sorted(set(p["topics"]) | author_specs.get(nn, set()))
         if "author" not in p["src"]: p["src"].append("author")
         index(p)

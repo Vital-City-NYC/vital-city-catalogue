@@ -402,6 +402,7 @@
               <option value="first:1">First name (A–Z)</option>
               <option value="since:-1">Recently subscribed</option>
               <option value="since:1">Longest subscribed</option>
+              <option value="alast:-1">Most recent contribution</option>
               <option value="arts:-1">Most published (VC pieces)</option>
               <option value="eng:-1">Most engaged</option>
               <option value="damt:-1">Donation size</option>
@@ -812,7 +813,7 @@ function init(){
   $("#edCopyLink").addEventListener("click",copyCardLink);
   $("#edRevertGuess").addEventListener("click",revertGuess);
   $("#editModal").addEventListener("click",e=>{if(e.target.id==="editModal")closeEdit();});
-  document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(!k)return;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=({arts:-1,since:-1,damt:-1,dlast:-1,eng:-1}[k])||1;}render();}));
+  document.querySelectorAll("table.people th").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.k;if(!k)return;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=({arts:-1,since:-1,damt:-1,dlast:-1,eng:-1,alast:-1}[k])||1;}render();}));
   $("#sortMenu").addEventListener("change",e=>{const [k,d]=e.target.value.split(":");sortKey=k;sortDir=+d;render();});
   $("#rows").addEventListener("click",e=>{
     const st=e.target.closest(".star"); if(st){e.stopPropagation();toggleStar(st.dataset.key);return;}
@@ -874,7 +875,7 @@ function syncToggles(){
   $("#repeatDonorWrap").style.display=showDon?"inline-flex":"none";
   if(!showDon) $("#fRepeatDonor").checked=false;
 }
-function setSort(k){ if(k==="mem"){sortKey="eng";sortDir=-1;} else if(k==="don"){sortKey="damt";sortDir=-1;} else {sortKey="arts";sortDir=-1;} }
+function setSort(k){ if(k==="mem"){sortKey="eng";sortDir=-1;} else if(k==="don"){sortKey="damt";sortDir=-1;} else if(k==="auth"){sortKey="alast";sortDir=-1;} else {sortKey="arts";sortDir=-1;} }
 // Chip: cycle off -> include -> exclude -> off (lets you ask e.g. donors who are NOT subscribers).
 function cycleWant(k){
   if(isOther()) want={mem:0,don:0,auth:0};
