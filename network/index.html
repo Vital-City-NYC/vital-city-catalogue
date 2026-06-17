@@ -1279,9 +1279,12 @@ function applyState(s){
 // Built-in views — always present, recompute live each refresh (they ride the
 // daily-updated power_reader / donor flags). NOT deletable, not localStorage.
 const BUILTIN_VIEWS=[
+  {name:"⚡ Most engaged", builtin:"engaged",
+   title:"All newsletter subscribers ranked by engagement, most to least — Mailchimp star rating first, then open rate. A fast read on who's actually reading. Caveat: open-based signals run high for Apple Mail users (privacy auto-opens), so treat the ordering as directional, not exact.",
+   state:{want:{mem:1,don:0,auth:0}, cats:[], engagement:"any", sortKey:"eng", sortDir:-1}},
   {name:"⭐ Fundraising prospects", builtin:"prospects",
    title:"Engaged newsletter subscribers who haven't given online — power readers, donors excluded. NOTE: 'donor' = a Donorbox online gift only; people who gave by check / wire / FCNY / at events still appear here, so cross-check against offline major-gift records before an ask.",
-   state:{want:{mem:1,don:-1,auth:0}, cats:[], engagement:"power"}},
+   state:{want:{mem:1,don:-1,auth:0}, cats:[], engagement:"power", sortKey:"eng", sortDir:-1}},
 ];
 function renderViews(){
   const v=loadViews();
