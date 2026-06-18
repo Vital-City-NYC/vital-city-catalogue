@@ -42,11 +42,15 @@ def d(s):
     try: return datetime.strptime(str(s)[:10], "%Y-%m-%d").date()
     except Exception: return None
 
-def is_article(path):
+def page_label(path):
+    """'' for an article; otherwise a short label (issue/section pages are
+    included in the top list, just tagged so they're not mistaken for stories)."""
     p = (path or "").lower()
-    bad = ("/", "")
-    return not (p in bad or p.startswith(("/issues", "/issue", "/tag/", "/author", "/contributor",
-            "/data", "/explorer", "/about", "/search", "/privacy", "/terms")) or "/job" in p)
+    if p in ("/", ""): return "homepage"
+    if p.startswith(("/issue", "/issues")): return "issue page"
+    if p.startswith(("/tag/", "/author", "/contributor", "/data", "/explorer", "/about", "/search", "/privacy", "/terms")) or "/job" in p:
+        return "section page"
+    return ""
 
 def fmtUSD(n): return "$" + format(round(n), ",")
 
@@ -82,8 +86,10 @@ def build(growth, people, run_date):
     gift_total = sum(x.get("amount", 0) for x in gifts)
     ytd = (db.get("windows", {}) or {}).get("ytd", {})
 
-    # Top pieces of the week (Ghost, unique visitors), article-only
-    top = [p for p in (gt.get("top_pages_7d") or []) if is_article(p.get("path"))][:5]
+    # Top pages of the week (Ghost, unique visitors) — articles plus issue/
+    # section pages, with the non-articles labeled.
+    top = (gt.get("top_pages_7d") or [])[:7]
+    top_articles = [p for p in top if not page_label(p.get("path"))]
 
     def delta(now, prev):
         if not prev: return "no prior-week baseline"
@@ -93,8 +99,8 @@ def build(growth, people, run_date):
     lines = []
     lines.append(f"# Vital City — weekly report")
     lines.append(f"**Seven days ending {run_date.strftime('%B %-d, %Y')}** · data snapshot {str(g.get('generated_at',''))[:10]}\n")
-    # TL;DR
-    top1 = top[0]["title"] if top else "—"
+    # TL;DR — "most-read piece" means the top actual article
+    top1 = (top_articles[0]["title"] if top_articles else (top[0]["title"] if top else "—"))
     lines.append(f"**In a line:** {sign7} new signups (net {('+' if sign7-unsub7>=0 else '')}{sign7-unsub7}), "
                  f"{(last_complete or {}).get('visitors',0):,} visitors in the last full week, and "
                  f"{fmtUSD(gift_total)} in online gifts. Most-read piece: “{top1}.”\n")
@@ -125,9 +131,11 @@ def build(growth, people, run_date):
     lines.append("- *Online Donorbox gifts only — no checks, wires or grants.*\n")
 
     lines.append("## Top performers of the week")
-    lines.append("*(unique visitors, last 7 days)*\n")
+    lines.append("*(unique visitors, last 7 days; issue/section pages are tagged)*\n")
     for i, p in enumerate(top, 1):
-        lines.append(f"{i}. {p.get('title')} — **{p.get('visits',0):,}**")
+        lab = page_label(p.get("path"))
+        tag = f" · *{lab}*" if lab else ""
+        lines.append(f"{i}. {p.get('title')}{tag} — **{p.get('visits',0):,}**")
     lines.append("")
 
     lines.append("---")
