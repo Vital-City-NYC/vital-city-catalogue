@@ -350,29 +350,6 @@
     "website": null
   },
   {
-    "name": "Aaron Chalfin",
-    "post_count": 13,
-    "slugs": [
-      "a-safer-city-and-nation-with-asterisks",
-      "crime-and-the-built-environment",
-      "crime-in-2022-and-2023-a-symposium",
-      "crime-in-context-locally-and-nationally",
-      "crime-reduction-trends-immigration-enforcement",
-      "how-rare-is-crime-on-the-subway",
-      "is-transformational-change-the-only-thing-that-matters",
-      "just-the-facts-on-new-york-city-subway-crime",
-      "rubber-meets-road-lighting-policy-primer",
-      "underground-safer-than-the-surface",
-      "what-the-data-show-about-subway-safety",
-      "when-city-streets-really-are-war-zones"
-    ],
-    "slug": "chalfin-aaron",
-    "bio": "is an associate professor of criminology at the University of Pennsylvania.",
-    "url": "https://www.vitalcitynyc.org/author/chalfin-aaron/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Errol Louis",
     "post_count": 13,
     "slugs": [
@@ -393,6 +370,29 @@
     "slug": "louis-errol",
     "bio": "is the political anchor of Spectrum News NY1, where he hosts Inside City Hall, a nightly prime-time show that focuses on New York politics. He is a Vital City contributing writer.",
     "url": "https://www.vitalcitynyc.org/author/louis-errol/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Aaron Chalfin",
+    "post_count": 12,
+    "slugs": [
+      "a-safer-city-and-nation-with-asterisks",
+      "crime-and-the-built-environment",
+      "crime-in-2022-and-2023-a-symposium",
+      "crime-in-context-locally-and-nationally",
+      "crime-reduction-trends-immigration-enforcement",
+      "how-rare-is-crime-on-the-subway",
+      "is-transformational-change-the-only-thing-that-matters",
+      "just-the-facts-on-new-york-city-subway-crime",
+      "rubber-meets-road-lighting-policy-primer",
+      "underground-safer-than-the-surface",
+      "what-the-data-show-about-subway-safety",
+      "when-city-streets-really-are-war-zones"
+    ],
+    "slug": "chalfin-aaron",
+    "bio": "is an associate professor of criminology at the University of Pennsylvania.",
+    "url": "https://www.vitalcitynyc.org/author/chalfin-aaron/",
     "twitter": null,
     "website": null
   },
@@ -520,6 +520,24 @@
     "website": null
   },
   {
+    "name": "John K. Roman",
+    "post_count": 7,
+    "slugs": [
+      "a-tale-of-two-divergent-paths",
+      "balancing-deterrence-and-prevention-the-role-of-research",
+      "forecasting-new-york-city-crime-in-2024",
+      "how-prevention-reduced-crime-suggestions-analysis",
+      "the-golden-age-of-crime-reduction-is-now",
+      "toward-a-new-discipline-macro-criminology",
+      "twenty-strategies-for-reducing-crime-in-cities"
+    ],
+    "slug": "roman-john-k",
+    "bio": "is a senior fellow at NORC at the University of Chicago. He also serves as the co-Director of the National Prevention Science Coalition.",
+    "url": "https://www.vitalcitynyc.org/author/roman-john-k/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Bradley Tusk",
     "post_count": 7,
     "slugs": [
@@ -568,23 +586,6 @@
     "slug": "ludwig-jens",
     "bio": "is the Edwin A. and Betty L. Bergman Distinguished Service Professor at the University of Chicago and Pritzker Director of the Crime Lab. He co-directs the Education Lab and NBER’s working group on economics of crime.",
     "url": "https://www.vitalcitynyc.org/author/ludwig-jens/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "John K. Roman",
-    "post_count": 6,
-    "slugs": [
-      "a-tale-of-two-divergent-paths",
-      "balancing-deterrence-and-prevention-the-role-of-research",
-      "forecasting-new-york-city-crime-in-2024",
-      "the-golden-age-of-crime-reduction-is-now",
-      "toward-a-new-discipline-macro-criminology",
-      "twenty-strategies-for-reducing-crime-in-cities"
-    ],
-    "slug": "roman-john-k",
-    "bio": "is a senior fellow at NORC at the University of Chicago. He also serves as the co-Director of the National Prevention Science Coalition.",
-    "url": "https://www.vitalcitynyc.org/author/roman-john-k/",
     "twitter": null,
     "website": null
   },
@@ -2246,6 +2247,18 @@
     "slug": "meares-tracey-l",
     "bio": "is the Walton Hale Hamilton Professor and founding director of the Justice Collaboratory at Yale Law School. She was previously a professor at the University of Chicago Law School.",
     "url": "https://www.vitalcitynyc.org/author/meares-tracey-l/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Terrence Watson",
+    "post_count": 1,
+    "slugs": [
+      "new-york-knicks-nba-championship"
+    ],
+    "slug": "watson-terrence",
+    "bio": "(aka Lower East Scribe) is a sports documentarian. He was nominated for an Emmy for his work on “NYC Point Gods” and a Tribeca Film Award for “Meal Ticket,” and has written about sports and culture for Complex, VIBE, SLAM and other publications. ",
+    "url": "https://www.vitalcitynyc.org/author/watson-terrence/",
     "twitter": null,
     "website": null
   },

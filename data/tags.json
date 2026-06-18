@@ -24,12 +24,12 @@
     "post_count": 78
   },
   {
-    "name": "Housing",
+    "name": "culture",
     "post_count": 72
   },
   {
-    "name": "culture",
-    "post_count": 71
+    "name": "Housing",
+    "post_count": 72
   },
   {
     "name": "Gun Violence",
@@ -37,7 +37,7 @@
   },
   {
     "name": "Police Reform",
-    "post_count": 51
+    "post_count": 52
   },
   {
     "name": "Politics",
@@ -184,10 +184,6 @@
     "post_count": 10
   },
   {
-    "name": "Immigration",
-    "post_count": 10
-  },
-  {
     "name": "Climate Change",
     "post_count": 10
   },
@@ -201,6 +197,10 @@
   },
   {
     "name": "Youth",
+    "post_count": 9
+  },
+  {
+    "name": "Immigration",
     "post_count": 9
   },
   {
@@ -344,6 +344,10 @@
     "post_count": 6
   },
   {
+    "name": "Sports",
+    "post_count": 5
+  },
+  {
     "name": "Wrenches in the Gears",
     "post_count": 5
   },
@@ -386,10 +390,6 @@
   {
     "name": "Projecting the Size of the Jail Population — More than Math",
     "post_count": 5
-  },
-  {
-    "name": "Sports",
-    "post_count": 4
   },
   {
     "name": "The $2 Trillion Question",

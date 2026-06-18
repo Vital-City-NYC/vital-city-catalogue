@@ -1,15 +1,28 @@
 {
-  "generated_at": "2026-06-18T12:13:59.356899+00:00",
+  "generated_at": "2026-06-18T23:41:14.039952+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 848,
-  "total_authors": 465,
+  "total_posts": 849,
+  "total_authors": 466,
   "total_issues": 29,
   "total_topics": 204,
   "date_range": [
     "2021-09-15",
-    "2026-06-17"
+    "2026-06-18"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 2,
+  "new_articles": [
+    {
+      "title": "Why This Knicks Championship Means So Much",
+      "url": "https://www.vitalcitynyc.org/new-york-knicks-nba-championship/",
+      "published_date": "2026-06-18",
+      "primary_author": "Terrence Watson"
+    },
+    {
+      "title": "How Prevention Reduced Crime and How To Get More of It",
+      "url": "https://www.vitalcitynyc.org/how-prevention-reduced-crime-suggestions-analysis/",
+      "published_date": "2026-02-19",
+      "primary_author": "John K. Roman"
+    }
+  ]
 }
