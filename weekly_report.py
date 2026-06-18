@@ -91,6 +91,30 @@ def build(growth, people, run_date):
     top = (gt.get("top_pages_7d") or [])[:7]
     top_articles = [p for p in top if not page_label(p.get("path"))]
 
+    # Notable joins / departures this week (Wikipedia-notable or .gov inbox)
+    def gov(p):
+        e = (p.get("e") or "").lower(); return ".gov" in (e.split("@")[-1] if "@" in e else "")
+    def notable(p): return bool(p.get("wiki")) or gov(p)
+    def person_line(p):
+        nm = p.get("n") or "(no confirmed name)"
+        inst = p.get("inst") or ((p.get("e","").split("@")[-1]) if "@" in (p.get("e") or "") else "")
+        tag = "Wikipedia-notable" if p.get("wiki") else "government" if gov(p) else ""
+        bits = [nm] + ([inst] if inst else []) + ([tag] if tag else [])
+        return " · ".join(bits)
+    notable_join = [p for p in people if inwin(p.get("since"), l7) and notable(p)]
+    notable_left = [p for p in people if p.get("unsub") and inwin(p.get("udate"), l7) and notable(p)]
+
+    # Search queries (Search Console; shortest window available is 28 days)
+    sc = g.get("search_console", {})
+    win28 = ((sc.get("windows", {}) or {}).get("28", {})) if sc.get("available") else {}
+    queries = (win28.get("top_queries") or sc.get("top_queries") or [])[:6]
+
+    # Returning vs new readers (GA4; 30-day cut, no clean 7-day in the data)
+    ret = ((g.get("ga4", {}).get("returning", {}) or {}).get("d30", {})) or {}
+
+    # Largest single online gift of the week
+    biggest = max(gifts, key=lambda x: x.get("amount", 0)) if gifts else None
+
     def delta(now, prev):
         if not prev: return "no prior-week baseline"
         pct = round((now - prev) / prev * 100)
@@ -109,6 +133,18 @@ def build(growth, people, run_date):
     lines.append(f"- **New signups: {sign7}** — {delta(sign7, signP)}; ~{avg_wk}/week is the 8-week average.")
     lines.append(f"- **Unsubscribes: {unsub7}** (vs {unsubP} prior week) → **net {('+' if sign7-unsub7>=0 else '')}{sign7-unsub7}**.\n")
 
+    lines.append("## Notable joins & departures")
+    lines.append("*Wikipedia-notable people or government inboxes, this week.*")
+    if notable_join:
+        lines.append("**Joined:**")
+        for p in notable_join: lines.append(f"- {person_line(p)}")
+    if notable_left:
+        lines.append("**Left:**")
+        for p in notable_left: lines.append(f"- {person_line(p)}")
+    if not notable_join and not notable_left:
+        lines.append("- None flagged this week.")
+    lines.append("")
+
     lines.append("## Email")
     if camps:
         for c in camps:
@@ -126,8 +162,27 @@ def build(growth, people, run_date):
         lines.append(f"- Current in-progress week ({cur.get('wk')}): {cur.get('visitors',0):,} so far.")
     lines.append("")
 
+    lines.append("## Returning vs new readers")
+    if ret.get("new") or ret.get("returning"):
+        lines.append(f"- **{ret.get('returning_pct',0):.0f}% returning** over the last 30 days "
+                     f"({ret.get('returning',0):,} returning vs {ret.get('new',0):,} new). A loyalty signal — "
+                     "people choosing to come back, not one-and-done arrivals. (30-day cut; GA4 has no clean 7-day window. "
+                     "Cookie-based, so it's a floor.)")
+    else:
+        lines.append("- Returning-reader data not available this run.")
+    lines.append("")
+
+    if queries:
+        lines.append("## Top search queries")
+        lines.append("*What people Googled to reach Vital City (last 28 days — Search Console has no 7-day window).*\n")
+        for q in queries:
+            lines.append(f"- “{q.get('query')}” — {q.get('clicks',0):,} clicks · pos {q.get('position','?')}")
+        lines.append("")
+
     lines.append("## Fundraising (online)")
     lines.append(f"- **{len(gifts)} gifts, {fmtUSD(gift_total)}** in the last seven days. YTD: **{fmtUSD(ytd.get('amount',0))} from {ytd.get('donors',0)} donors**.")
+    if biggest:
+        lines.append(f"- Largest gift this week: **{fmtUSD(biggest.get('amount',0))}** from {biggest.get('donor') or '(anonymous)'}.")
     lines.append("- *Online Donorbox gifts only — no checks, wires or grants.*\n")
 
     lines.append("## Top performers of the week")
