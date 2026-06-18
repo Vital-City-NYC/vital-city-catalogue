@@ -115,6 +115,27 @@ def build(growth, people, run_date):
     # Largest single online gift of the week
     biggest = max(gifts, key=lambda x: x.get("amount", 0)) if gifts else None
 
+    # ---- 30-day trend: last 30 days vs the 30 before ----
+    l30 = (run_date - timedelta(days=29), run_date)
+    p30 = (run_date - timedelta(days=59), run_date - timedelta(days=30))
+    s30  = sum(1 for p in people if inwin(p.get("since"), l30))
+    s30p = sum(1 for p in people if inwin(p.get("since"), p30))
+    u30  = sum(1 for p in people if p.get("unsub") and inwin(p.get("udate"), l30))
+    u30p = sum(1 for p in people if p.get("unsub") and inwin(p.get("udate"), p30))
+    vis30, vis30p = gt.get("visitors_30d"), gt.get("visitors_prev_30d")
+    pv30,  pv30p  = gt.get("pageviews_30d"), gt.get("pageviews_prev_30d")
+    ds = db.get("daily_series", [])
+    give30  = sum(x.get("amt", 0) for x in ds if inwin(x.get("d"), l30))
+    give30c = sum(x.get("gifts", 0) for x in ds if inwin(x.get("d"), l30))
+    give30p = sum(x.get("amt", 0) for x in ds if inwin(x.get("d"), p30))
+    # weekly visitor trajectory (shape of the trend)
+    traj = [f"{round(p['visitors']/1000,1)}k" for p in ts[-6:]]
+
+    def chg(now, prev):
+        if not prev or now is None: return "—"
+        p = round((now - prev) / prev * 100)
+        return f"{'+' if p>=0 else ''}{p}%"
+
     def delta(now, prev):
         if not prev: return "no prior-week baseline"
         pct = round((now - prev) / prev * 100)
@@ -128,6 +149,15 @@ def build(growth, people, run_date):
     lines.append(f"**In a line:** {sign7} new signups (net {('+' if sign7-unsub7>=0 else '')}{sign7-unsub7}), "
                  f"{(last_complete or {}).get('visitors',0):,} visitors in the last full week, and "
                  f"{fmtUSD(gift_total)} in online gifts. Most-read piece: “{top1}.”\n")
+
+    lines.append("## The 30-day trend")
+    lines.append("*The longer view — last 30 days vs the 30 before. Less noise than a single week.*")
+    lines.append(f"- **Signups:** {s30} ({chg(s30, s30p)} vs prior 30d) · **unsubscribes:** {u30} → **net {('+' if s30-u30>=0 else '')}{s30-u30}**")
+    lines.append(f"- **Website visitors:** {(vis30 or 0):,} ({chg(vis30, vis30p)}) · **page views:** {(pv30 or 0):,} ({chg(pv30, pv30p)})")
+    if traj:
+        lines.append(f"  - Weekly visitors, last 6 weeks: {' → '.join(traj)} *(last is partial)*")
+    lines.append(f"- **Online giving:** {fmtUSD(give30)} from {give30c} gifts ({chg(give30, give30p)} vs prior 30d).")
+    lines.append("*Note: one outsized week in either 30-day window can swing these deltas — the weekly trajectory above shows the real shape.*\n")
 
     lines.append("## Newsletter list")
     lines.append(f"- **New signups: {sign7}** — {delta(sign7, signP)}; ~{avg_wk}/week is the 8-week average.")
