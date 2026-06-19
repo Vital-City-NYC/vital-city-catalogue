@@ -1,15 +1,22 @@
 {
-  "generated_at": "2026-06-19T12:25:29.810234+00:00",
+  "generated_at": "2026-06-19T23:31:39.398407+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 849,
-  "total_authors": 466,
+  "total_posts": 850,
+  "total_authors": 467,
   "total_issues": 29,
   "total_topics": 204,
   "date_range": [
     "2021-09-15",
-    "2026-06-18"
+    "2026-06-19"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "New York is the Town and the Team is the Knicks",
+      "url": "https://www.vitalcitynyc.org/knicks-champions-new-york-why-it-matters/",
+      "published_date": "2026-06-19",
+      "primary_author": "Matthew Goodman"
+    }
+  ]
 }
