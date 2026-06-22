@@ -3268,10 +3268,13 @@ function rptCompute(from, to){
   nl.net = nl.signups - nl.unsubs;
   const nlPrev = { signups:sumRange(act,pFrom,pTo,"subs"), unsubs:sumRange(act,pFrom,pTo,"unsubs") };
   const actCov = act.length ? {min:act[0].d, max:act[act.length-1].d} : null;
-  // Ghost only began recording signups on this date; before it, signups lived in
-  // Mailchimp, so the daily signup series reads ~0 and any comparison across the
-  // boundary is meaningless. (unsubs/opens/clicks are Mailchimp, reliable to actCov.)
-  const signupCovStart = (d.ghost_signup_attribution||{}).coverage_start || (actCov?actCov.min:from);
+  // Ghost became the signup source of truth at the operational cutover on 2026-03-03.
+  // The account had a trickle of early/test signups from late Dec 2025 (data's
+  // coverage_start = 2025-12-27), but those undercount the real flow, which still came
+  // through the old form into Mailchimp until the move. So before 2026-03-03 we treat
+  // Mailchimp's all-source counts as authoritative for signups.
+  // (unsubs/opens/clicks are Mailchimp throughout, reliable back to actCov.min.)
+  const signupCovStart = "2026-03-03";
 
   const cs = camps.filter(c=>{const s=(c.sent||"").slice(0,10); return s>=from && s<=to;});
   let recip=0,wOpen=0,wClick=0,wCtor=0,cUnsub=0;
@@ -3368,7 +3371,7 @@ function rptModel(r){
     {l:"Net list change", v:(r.nl.net>=0?"+":"")+fmtN(r.nl.net), note:"signups minus unsubscribes"},
     {l:"Total email opens", v:fmtN(r.nl.opens), note:"Apple-Mail auto-opens inflate this"},
     {l:"Total email clicks", v:fmtN(r.nl.clicks), note:"the cleaner engagement signal"},
-  ], chart: rptChartSignups(r.from, r.to)});
+  ], chart: rptChartSignups(r.from, r.to, r.signupCovStart)});
   const emRows = r.em.sends ? [
     {l:"Newsletter sends", v:fmtN(r.em.sends)},
     {l:"Total recipients", v:fmtN(r.em.recipients), note:"summed across sends — one person on several sends counts each time"},
@@ -3501,7 +3504,7 @@ function rptBarsSVG(buckets,vals,color,unit,fmtFn,from,to){
   s+='<text x="'+(W-padR)+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61" text-anchor="end">'+to+'</text>';
   return s+'</svg>';
 }
-function rptChartSignups(from,to){
+function rptChartSignups(from,to,cutover){
   const act=((window.__GD||{}).mailchimp||{}).daily_activity||[];
   const {buckets,step}=rptBuckets(from,to);
   const pos=rptSumInto(buckets,act,'d','subs'), neg=rptSumInto(buckets,act,'d','unsubs');
@@ -3514,7 +3517,7 @@ function rptChartSignups(from,to){
   buckets.forEach((b,i)=>{ const lbl=b.s+(b.e!==b.s?' – '+b.e:'');
     if(pos[i]>0){const h=hUp(pos[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(mid-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#57AA4A"><title>'+lbl+': +'+pos[i]+' signups</title></rect>';}
     if(neg[i]>0){const h=hUp(neg[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+mid.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#C8377E"><title>'+lbl+': -'+neg[i]+' unsubscribes</title></rect>';}});
-  s+='<text x="'+padL+'" y="'+(padT-6)+'" font-size="9" fill="#5A5C61">signups (green, up) vs unsubscribes (magenta, down) · '+(step>1?'weekly':'daily')+'</text>';
+  s+='<text x="'+padL+'" y="'+(padT-6)+'" font-size="9" fill="#5A5C61">signups (green, up) vs unsubscribes (magenta, down) · '+(step>1?'weekly':'daily')+(cutover&&from<cutover?' · before '+cutover+' shows Ghost-recorded signups only (undercounts the real flow)':'')+'</text>';
   s+='<text x="'+padL+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61">'+from+'</text>';
   s+='<text x="'+(W-padR)+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61" text-anchor="end">'+to+'</text>';
   return s+'</svg>';
