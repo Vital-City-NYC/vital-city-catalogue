@@ -356,6 +356,7 @@
   table.rpt{width:100%;border-collapse:collapse;font-size:13.5px}
   table.rpt td{padding:7px 6px;border-bottom:1px solid var(--vc-cloud);vertical-align:baseline}
   table.rpt td.rl{color:var(--vc-charcoal);width:42%}
+  table.rpt .rl-tip{border-bottom:1px dotted var(--vc-charcoal);cursor:help}
   table.rpt td.rv{font-weight:700;font-variant-numeric:tabular-nums;color:var(--vc-black);width:22%}
   table.rpt td.rn{color:var(--vc-charcoal);font-size:11.5px}
   .rpt-delta-up{color:var(--vc-green);font-weight:700}
@@ -3309,8 +3310,10 @@ function rptModel(r){
 
   const S=[];
   S.push({name:"Newsletter list", rows:[
-    {l:"New signups", v:fmtN(r.nl.signups), delta:{now:r.nl.signups,prev:r.nlPrev.signups,goodUp:true}},
-    {l:"Unsubscribes", v:fmtN(r.nl.unsubs), delta:{now:r.nl.unsubs,prev:r.nlPrev.unsubs,goodUp:false}},
+    {l:"New signups", v:fmtN(r.nl.signups), delta:{now:r.nl.signups,prev:r.nlPrev.signups,goodUp:true},
+      tip:"Counted by each person's real Ghost signup date and current to the last data refresh — gross signups, including anyone who has since unsubscribed. The Thursday Ghost-to-Mailchimp batch does not delay this count; it only delays when new signups appear in the Mailchimp \"Subscribers\" total above."},
+    {l:"Unsubscribes", v:fmtN(r.nl.unsubs), delta:{now:r.nl.unsubs,prev:r.nlPrev.unsubs,goodUp:false},
+      tip:"Counted by each person's real Mailchimp unsubscribe date and current to the last refresh. Two small caveats: Mailchimp's daily activity can take about a day to settle, so the most recent day may rise slightly; and the contact tool reflects unsubscribes only on Thursdays, so it can trail this number by a few days."},
     {l:"Net list change", v:(r.nl.net>=0?"+":"")+fmtN(r.nl.net), note:"signups minus unsubscribes"},
     {l:"Total email opens", v:fmtN(r.nl.opens), note:"Apple-Mail auto-opens inflate this"},
     {l:"Total email clicks", v:fmtN(r.nl.clicks), note:"the cleaner engagement signal"},
@@ -3385,7 +3388,7 @@ function rptHTML(m){
   let h='<div class="rpt-period">Report for <b>'+esc(m.from)+'</b> to <b>'+esc(m.to)+'</b> · <b>'+m.dayCount+' day'+(m.dayCount===1?'':'s')+'</b>. Comparisons are vs the previous '+m.dayCount+' days.</div>';
   m.sections.forEach(s=>{
     h+='<div class="rpt-sec">'+esc(s.name)+'</div><table class="rpt"><tbody>';
-    s.rows.forEach(row=>{ h+='<tr><td class="rl">'+esc(row.l)+'</td><td class="rv">'+esc(row.v)+'</td><td class="rn">'+rptNoteHTML(row)+'</td></tr>'; });
+    s.rows.forEach(row=>{ const lbl=row.tip?'<span class="rl-tip" title="'+esc(row.tip)+'">'+esc(row.l)+'</span>':esc(row.l); h+='<tr><td class="rl">'+lbl+'</td><td class="rv">'+esc(row.v)+'</td><td class="rn">'+rptNoteHTML(row)+'</td></tr>'; });
     h+='</tbody></table>';
   });
   if(m.names && m.names.show){
