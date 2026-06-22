@@ -1671,36 +1671,40 @@ def pull_ghost_signup_attribution(days_back=180):
 
 def pull_recent_unsubs(days=21):
     """Recent unsubscribers with email + date, for the 7d-box click-through.
-    Source: Mailchimp per-campaign unsubscribe detail (/reports/{id}/unsubscribed)
-    — the same place the team's manual unsubscribe log comes from. Names are
-    often blank (Mailchimp rarely captures them); email + date always present."""
+    Source: Mailchimp list members with status=unsubscribed, sorted by
+    last_changed descending and filtered with since_last_changed. This captures
+    EVERY unsubscribe — campaign-link, profile page, admin or API — current to
+    today, unlike the per-campaign /reports/{id}/unsubscribed detail which only
+    sees campaign-link unsubscribes and therefore lags (it was leaving the 7-day
+    box's count unlinked once the newest campaign-attributed unsub aged out).
+    Names come from merge fields when Mailchimp has them."""
     key = mailchimp_key()
     if not key: return []
     dc = key.split("-")[-1]
+    list_id = os.environ.get("MAILCHIMP_LIST", "ec30bf0c4b")
     def mc(path):
         auth = base64.b64encode(f"anystring:{key}".encode()).decode()
         return json.loads(http_get(f"https://{dc}.api.mailchimp.com/3.0{path}",
             headers={"Authorization": "Basic " + auth}, timeout=60))
     cut = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
-    out, seen = [], set()
+    out, seen, offset = [], set(), 0
     try:
-        camps = mc(f"/campaigns?status=sent&count=20&sort_field=send_time&sort_dir=DESC"
-                   f"&since_send_time={urllib.parse.quote(cut)}&fields=campaigns.id").get("campaigns", [])
-        for c in camps:
-            try:
-                det = mc(f"/reports/{c['id']}/unsubscribed?count=200&fields="
-                         "unsubscribes.email_address,unsubscribes.timestamp,"
-                         "unsubscribes.merge_fields.FNAME,unsubscribes.merge_fields.LNAME").get("unsubscribes", [])
-            except Exception:
-                continue
-            for u in det:
-                ts = (u.get("timestamp") or "")
-                em = (u.get("email_address") or "").lower().strip()
+        while offset < 2000:
+            mems = mc(f"/lists/{list_id}/members?status=unsubscribed"
+                      f"&sort_field=last_changed&sort_dir=DESC&count=200&offset={offset}"
+                      f"&since_last_changed={urllib.parse.quote(cut)}&fields="
+                      "members.email_address,members.last_changed,"
+                      "members.merge_fields.FNAME,members.merge_fields.LNAME").get("members", [])
+            for m in mems:
+                ts = (m.get("last_changed") or "")
+                em = (m.get("email_address") or "").lower().strip()
                 if not em or em in seen or ts < cut: continue
                 seen.add(em)
-                mf = u.get("merge_fields") or {}
+                mf = m.get("merge_fields") or {}
                 nm = f"{mf.get('FNAME','')} {mf.get('LNAME','')}".strip()
                 out.append({"email": em, "name": nm, "date": ts[:10]})
+            if len(mems) < 200: break
+            offset += 200
     except Exception as e:
         log(f"  recent unsubs failed: {e}")
     log(f"  recent unsubs (last {days}d): {len(out)}")
