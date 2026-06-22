@@ -366,6 +366,8 @@
   table.rpt td{padding:7px 6px;border-bottom:1px solid var(--vc-cloud);vertical-align:baseline}
   table.rpt td.rl{color:var(--vc-charcoal);width:42%}
   table.rpt .rl-tip{border-bottom:1px dotted var(--vc-charcoal);cursor:help}
+  .rpttop td.r{text-align:right;width:auto}
+  .rpttop .rpthead td{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--vc-charcoal);font-weight:700;border-bottom:1px solid var(--vc-black)}
   .rptchartwrap{margin:6px 0 2px}
   .rptchart{display:block;width:100%}
   html.dark .rptchart line{stroke:#3a3d42}
@@ -3363,6 +3365,23 @@ function rptMcSignups(from,to){
   });
   return any?Math.round(total):null;
 }
+function fmtBigDur(sec){ sec=Math.round(sec||0); if(sec>=3600){const h=Math.floor(sec/3600),m=Math.round((sec%3600)/60); return h+'h '+m+'m';} if(sec>=60){return Math.floor(sec/60)+'m '+(sec%60)+'s';} return sec+'s'; }
+// Top stories for the GA4 window that best matches the range. Per-story page
+// views + engaged time only exist for fixed windows (calendar year / all-time),
+// not arbitrary dates — so we pick the closest and label it.
+function rptTopStories(from,to,N){
+  const g=(window.__GD||{}).ga4||{};
+  const eby=g.engagement_by_year||{};
+  const yF=from.slice(0,4), yT=to.slice(0,4), curY=String(new Date().getUTCFullYear());
+  let list=null, label='';
+  if(yF===yT && eby[yF]){ list=eby[yF]; label=(yF===curY ? yF+' year-to-date' : 'calendar year '+yF); }
+  else if((g.engagement_alltime||[]).length){ list=g.engagement_alltime; label='all time (since 2020)'; }
+  else if((g.engagement||[]).length){ list=g.engagement; label='since '+(g.engagement_since||'2026-01-01'); }
+  if(!list||!list.length) return null;
+  const rows=list.slice().sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,N)
+    .map(p=>({t:p.title||p.path||'(untitled)', pv:+(p.views||0), avg:+(p.avg_secs||0), tot:+(p.total_secs||0)}));
+  return {label, rows};
+}
 function rptModel(r){
   const d = window.__GD || {};
   const gt = d.ghost_traffic || {};
@@ -3460,7 +3479,8 @@ function rptModel(r){
     "Not sliceable to custom dates (fixed-window only, see their own cards): Google search queries, per-piece engaged-time, social-follower counts and most-read rankings.",
   ];
   return {from:r.from, to:r.to, dayCount:r.dayCount, generated:r.generated,
-    cmpShort, cmpDesc, sections:S, names:{show:namesShow, groups}, caveats:cav};
+    cmpShort, cmpDesc, sections:S, topStories:rptTopStories(r.from, r.to, 10),
+    names:{show:namesShow, groups}, caveats:cav};
 }
 
 function rptDeltaCalc(delta, label){
@@ -3491,6 +3511,13 @@ function rptHTML(m){
     h+='</tbody></table>';
     if(s.chart) h+='<div class="rptchartwrap">'+s.chart+'</div>';
   });
+  if(m.topStories){
+    h+='<div class="rpt-sec">Top stories · '+esc(m.topStories.label)+'</div>';
+    h+='<div style="font-size:11px;color:var(--vc-charcoal);margin:-2px 0 6px">Most-read pieces in this window by page views, with GA4 engaged time. Fixed GA4 window — not sliced to your exact dates.</div>';
+    h+='<table class="rpt rpttop"><tbody><tr class="rpthead"><td>Story</td><td class="r">Page views</td><td class="r">Avg engaged</td><td class="r">Total engaged</td></tr>';
+    m.topStories.rows.forEach((p,i)=>{ h+='<tr><td class="rl">'+(i+1)+'. '+esc(p.t)+'</td><td class="rv r">'+fmtN(p.pv)+'</td><td class="rn r">'+fmtDur(p.avg)+'/view</td><td class="rn r">'+fmtBigDur(p.tot)+'</td></tr>'; });
+    h+='</tbody></table>';
+  }
   if(m.names && m.names.show){
     m.names.groups.forEach(g=>{
       if(!g.rows.length) return;
@@ -3507,6 +3534,7 @@ function rptMarkdown(m){
   let o='# Vital City — growth report: '+m.from+' to '+m.to+' ('+m.dayCount+' days)\n\n';
   o+='_Comparisons vs '+m.cmpDesc+'. Dashboard data refreshed '+(m.generated||'')+'._\n';
   m.sections.forEach(s=>{ o+='\n## '+s.name+'\n'; s.rows.forEach(r=>{ const n=rptNotePlain(r, m.cmpShort); o+='- '+r.l+': '+r.v+(n?' ('+n+')':'')+'\n'; }); });
+  if(m.topStories){ o+='\n## Top stories ('+m.topStories.label+')\n'; m.topStories.rows.forEach((p,i)=>{ o+='- '+(i+1)+'. '+p.t+' — '+fmtN(p.pv)+' views · '+fmtDur(p.avg)+'/view avg · '+fmtBigDur(p.tot)+' total engaged\n'; }); }
   if(m.names&&m.names.show) m.names.groups.forEach(g=>{ if(!g.rows.length) return; o+='\n## '+g.name+' ('+g.rows.length+')\n'; g.rows.forEach(x=>{ o+='- '+x.a+(x.b?' — '+x.b:'')+(x.c?' ('+x.c+')':'')+'\n'; }); });
   o+='\n---\n'+m.caveats.map(c=>'- '+c).join('\n')+'\n';
   return o;
@@ -3515,6 +3543,7 @@ function rptCSV(m){
   const q=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
   const rows=[['Section','Indicator','Value','Note']];
   m.sections.forEach(s=>s.rows.forEach(r=>rows.push([s.name, r.l, r.v, rptNotePlain(r, m.cmpShort)])));
+  if(m.topStories) m.topStories.rows.forEach((p,i)=>rows.push(['Top stories ('+m.topStories.label+')', (i+1)+'. '+p.t, fmtN(p.pv)+' views', fmtDur(p.avg)+'/view · '+fmtBigDur(p.tot)+' total engaged']));
   if(m.names&&m.names.show) m.names.groups.forEach(g=>g.rows.forEach(x=>rows.push([g.name, x.a, x.b, x.c])));
   return rows.map(r=>r.map(q).join(',')).join('\r\n');
 }
@@ -3585,6 +3614,8 @@ function rptPrintDoc(m){
   let b='<div class="wm">Vital City</div><h1>Growth report</h1>';
   b+='<p class="period">'+esc(m.from)+' to '+esc(m.to)+' · '+m.dayCount+' days. Comparisons vs '+esc(m.cmpDesc)+'. Dashboard data refreshed '+esc(m.generated||'')+'.</p>';
   m.sections.forEach(s=>{ b+='<h2>'+esc(s.name)+'</h2><table>'; s.rows.forEach(r=>{ b+='<tr><td class="l">'+esc(r.l)+'</td><td class="v">'+esc(r.v)+'</td><td class="n">'+esc(rptNotePlain(r, m.cmpShort))+'</td></tr>'; }); b+='</table>'; if(s.chart) b+='<div class="pchart">'+s.chart+'</div>'; });
+  if(m.topStories){ b+='<h2>Top stories · '+esc(m.topStories.label)+'</h2><p style="font-size:10.5px;color:#5A5C61;margin:0 0 6px">Ranked by page views, with GA4 engaged time. Fixed GA4 window, not sliced to your exact dates.</p><table><tr><td class="l">Story</td><td class="v">Page views</td><td class="n">Avg engaged</td><td class="n">Total engaged</td></tr>';
+    m.topStories.rows.forEach((p,i)=>{ b+='<tr><td class="l">'+(i+1)+'. '+esc(p.t)+'</td><td class="v">'+fmtN(p.pv)+'</td><td class="n">'+fmtDur(p.avg)+'/view</td><td class="n">'+fmtBigDur(p.tot)+'</td></tr>'; }); b+='</table>'; }
   if(m.names&&m.names.show) m.names.groups.forEach(g=>{ if(!g.rows.length) return; b+='<h2>'+esc(g.name)+' ('+g.rows.length+')</h2><table>'; g.rows.forEach(x=>{ b+='<tr><td class="l">'+esc(x.a)+'</td><td class="v" style="font-weight:400">'+esc(x.b)+'</td><td class="n">'+esc(x.c)+'</td></tr>'; }); b+='</table>'; });
   b+='<div class="cav">'+m.caveats.map(esc).join('<br>')+'</div>';
   const css='body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#0F1011;max-width:720px;margin:32px auto;padding:0 24px;line-height:1.5}'
