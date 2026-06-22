@@ -7,7 +7,7 @@
     "type_basis": "default",
     "published_date": "2026-06-19",
     "published_at": "2026-06-19T15:33:33.000+00:00",
-    "updated_at": "2026-06-19T15:33:33.000+00:00",
+    "updated_at": "2026-06-22T18:45:19.000+00:00",
     "primary_author": "Matthew Goodman",
     "authors": [
       "Matthew Goodman"
@@ -20,8 +20,8 @@
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-18T104528.618-1.png",
     "featured": false,
     "visibility": "public",
-    "word_count": 2337,
-    "reading_minutes": 10,
+    "word_count": 2478,
+    "reading_minutes": 11,
     "id": "6a355d51c936bc0001afadd8"
   },
   {
@@ -3346,7 +3346,7 @@
     "slug": "gloria-gong-interview",
     "url": "https://www.vitalcitynyc.org/gloria-gong-interview/",
     "type": "q&a",
-    "type_basis": "tag:interview",
+    "type_basis": "tag:podcast",
     "published_date": "2026-02-12",
     "published_at": "2026-02-12T14:36:01.000+00:00",
     "updated_at": "2026-04-15T13:36:27.000+00:00",
