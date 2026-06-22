@@ -349,6 +349,15 @@
   .rptquick{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
   .qchip{font:inherit;font-size:11px;font-weight:600;padding:5px 10px;border:1px solid var(--vc-cloud);background:var(--vc-white);color:var(--vc-charcoal);cursor:pointer;border-radius:999px}
   .qchip:hover{border-color:var(--vc-cerulean);color:var(--vc-cerulean)}
+  .rptbar2{display:flex;align-items:center;gap:10px;margin:0 0 10px;flex-wrap:wrap}
+  .rptcmplbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);font-weight:700}
+  .rptcmp{display:inline-flex;border:1px solid var(--vc-cloud);border-radius:999px;overflow:hidden}
+  .cmpchip{font:inherit;font-size:11.5px;font-weight:600;padding:5px 12px;border:0;background:var(--vc-white);color:var(--vc-charcoal);cursor:pointer}
+  .cmpchip+.cmpchip{border-left:1px solid var(--vc-cloud)}
+  .cmpchip.on{background:var(--vc-black);color:#fff}
+  html.dark .rptcmp{border-color:#3a3d42}
+  html.dark .cmpchip{background:#26282c;color:#e8e8ea}html.dark .cmpchip+.cmpchip{border-left-color:#3a3d42}
+  html.dark .cmpchip.on{background:#e8e8ea;color:#0F1011}
   .rptexport{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--vc-cloud)}
   .rpt-period{font-size:13px;color:var(--vc-charcoal);margin:4px 0 16px}
   .rpt-period b{color:var(--vc-black)}
@@ -433,6 +442,13 @@
             <button class="qchip" data-q="90">Last 90d</button>
             <button class="qchip" data-q="mtd">This month</button>
             <button class="qchip" data-q="ytd">Year to date</button>
+          </span>
+        </div>
+        <div class="rptbar2 noprint">
+          <span class="rptcmplbl">Compare to</span>
+          <span class="rptcmp">
+            <button class="cmpchip on" data-cmp="prev">previous period</button>
+            <button class="cmpchip" data-cmp="yoy">same period last year</button>
           </span>
         </div>
         <div id="rptOut"></div>
@@ -3260,8 +3276,15 @@ function rptCompute(from, to){
   const wk = gt.traffic_series || [];
 
   const dayCount = Math.round((Date.parse(to) - Date.parse(from)) / 86400000) + 1;
-  const pTo = new Date(Date.parse(from) - 86400000).toISOString().slice(0,10);
-  const pFrom = new Date(Date.parse(from) - dayCount*86400000).toISOString().slice(0,10);
+  const cmp = (window._rptCmp==='yoy') ? 'yoy' : 'prev';
+  let pFrom, pTo;
+  if(cmp==='yoy'){
+    const sy=(iso)=>{const p=iso.split('-').map(Number); return new Date(Date.UTC(p[0]-1,p[1]-1,p[2])).toISOString().slice(0,10);};
+    pFrom=sy(from); pTo=sy(to);   // same calendar window, one year earlier
+  } else {
+    pTo = new Date(Date.parse(from) - 86400000).toISOString().slice(0,10);
+    pFrom = new Date(Date.parse(from) - dayCount*86400000).toISOString().slice(0,10);
+  }
 
   const nl = { signups:sumRange(act,from,to,"subs"), unsubs:sumRange(act,from,to,"unsubs"),
                opens:sumRange(act,from,to,"opens"), clicks:sumRange(act,from,to,"clicks") };
@@ -3309,7 +3332,7 @@ function rptCompute(from, to){
   const names={ signups:((d.ghost_signup_attribution||{}).recent_signups||[]).filter(r=>inR(r.date)),
     unsubs:(d.recent_unsubs||[]).filter(r=>inR(r.date)), gifts:((db.recent_gifts)||[]).filter(r=>inR(r.date)) };
 
-  return {from,to,dayCount,pFrom,pTo, nl,nlPrev, em, fr, traffic, names, actCov, signupCovStart, generated:d.generated_at};
+  return {from,to,dayCount,cmp,pFrom,pTo, nl,nlPrev, em, fr, traffic, names, actCov, signupCovStart, generated:d.generated_at};
 }
 
 // Mailchimp all-source signups for any window, by prorating monthly growth-history
@@ -3334,6 +3357,10 @@ function rptModel(r){
   const win = (d.ghost_signup_attribution||{}).window_days || 21;
   const recentStart = daysAgo(win-1);
   const namesShow = r.from >= recentStart;
+  const cmpYoy = r.cmp==='yoy';
+  const cmpShort = cmpYoy ? 'vs last year' : 'vs prior';
+  const cmpWord = cmpYoy ? 'the year-ago period' : 'the previous '+r.dayCount+' days';
+  const cmpDesc = cmpYoy ? ('the same dates a year earlier ('+r.pFrom+' to '+r.pTo+')') : ('the previous '+r.dayCount+' days');
 
   // Ghost-signup coverage gate: a prior-period % is only meaningful when both
   // windows fall in the Ghost era (signups before signupCovStart lived in Mailchimp).
@@ -3352,21 +3379,21 @@ function rptModel(r){
       else sigNote="signups before "+sigCov+" aren't available at this granularity";
     } else if(mcNow!=null && mcPrev!=null && mcPrev>0){
       sigBasis="mc-cmp"; sigDelta={now:mcNow,prev:mcPrev,goodUp:true};
-      sigNote="vs prior on Mailchimp's all-source basis — the only signup record spanning the pre-Ghost period (counts all list adds including imports, so it runs higher than the Ghost figure shown)";
+      sigNote=cmpShort+" on Mailchimp's all-source basis — the only signup record spanning the pre-Ghost period (counts all list adds including imports, so it runs higher than the Ghost figure shown)";
     } else {
-      sigNote="no prior-period comparison — the previous "+r.dayCount+" days predate our Mailchimp signup history";
+      sigNote="no comparison — no signup data for "+cmpWord;
     }
   }
   const sigTip = sigBasis==="mc"
     ? "Mailchimp all-source new list adds for this range (monthly figures prorated to your dates). Shown because the range predates Ghost signup tracking, which began "+sigCov+". Counts every list add including bulk imports, so it runs higher than Ghost newsletter-form signups."
-    : "Counted by each person's real Ghost signup date and current to the last refresh — gross signups, including anyone who has since unsubscribed. The Thursday Ghost-to-Mailchimp batch doesn't delay this count."+(sigBasis==="mc-cmp"?" The % comparison uses Mailchimp's all-source history because the prior period predates Ghost (which began recording signups "+sigCov+").":"");
+    : "Counted by each person's real Ghost signup date and current to the last refresh — gross signups, including anyone who has since unsubscribed. The Thursday Ghost-to-Mailchimp batch doesn't delay this count."+(sigBasis==="mc-cmp"?" The % comparison uses Mailchimp's all-source history because the comparison period predates Ghost (which began recording signups "+sigCov+").":"");
   // Unsubs are Mailchimp, reliable back to actCov.min — only gate truly ancient ranges.
   const unsubPriorOK=!r.actCov || r.pFrom>=r.actCov.min;
 
   const S=[];
   S.push({name:"Newsletter list", rows:[
     {l:sigLabel, v:sigVal, delta:sigDelta, note:sigNote, tip:sigTip},
-    {l:"Unsubscribes", v:fmtN(r.nl.unsubs), delta:(unsubPriorOK?{now:r.nl.unsubs,prev:r.nlPrev.unsubs,goodUp:false}:null), note:(unsubPriorOK?undefined:"no prior-period comparison — earlier than our Mailchimp activity history"),
+    {l:"Unsubscribes", v:fmtN(r.nl.unsubs), delta:(unsubPriorOK?{now:r.nl.unsubs,prev:r.nlPrev.unsubs,goodUp:false}:null), note:(unsubPriorOK?undefined:"no comparison — no Mailchimp activity history for "+cmpWord),
       tip:"Counted by each person's real Mailchimp unsubscribe date and current to the last refresh. Two small caveats: Mailchimp's daily activity can take about a day to settle, so the most recent day may rise slightly; and the contact tool reflects unsubscribes only on Thursdays, so it can trail this number by a few days."},
     {l:"Net list change", v:(r.nl.net>=0?"+":"")+fmtN(r.nl.net), note:"signups minus unsubscribes"},
     {l:"Total email opens", v:fmtN(r.nl.opens), note:"Apple-Mail auto-opens inflate this"},
@@ -3399,7 +3426,7 @@ function rptModel(r){
   const givPriorOK = !!(givStart && r.pFrom >= givStart);
   const raisedNote = "online Donorbox gifts only"
     + ((r.fr.cov && r.fr.cov.max < r.to)?"; counted through "+r.fr.cov.max+" (Donorbox lag — recent days not yet in)":"")
-    + (givPriorOK?"":"; no prior-period comparison — online-gift history only starts "+(givStart||"recently"));
+    + (givPriorOK?"":"; no "+(cmpYoy?'year-ago':'prior-period')+" comparison — online-gift history only starts "+(givStart||"recently"));
   const frRows = r.fr.available ? [
     {l:"Raised (online)", v:fmtUSD(r.fr.raised), delta:(givPriorOK?{now:r.fr.raised,prev:r.fr.raisedPrev,goodUp:true}:null), note:raisedNote},
     {l:"Gifts", v:fmtN(r.fr.gifts)},
@@ -3421,33 +3448,34 @@ function rptModel(r){
     "Not sliceable to custom dates (fixed-window only, see their own cards): Google search queries, per-piece engaged-time, social-follower counts and most-read rankings.",
   ];
   return {from:r.from, to:r.to, dayCount:r.dayCount, generated:r.generated,
-    sections:S, names:{show:namesShow, groups}, caveats:cav};
+    cmpShort, cmpDesc, sections:S, names:{show:namesShow, groups}, caveats:cav};
 }
 
-function rptDeltaCalc(delta){
+function rptDeltaCalc(delta, label){
+  label = label || "vs prior";
   if(!delta || delta.prev==null) return null;
-  if(delta.prev===0) return delta.now>0 ? {cls:"rpt-delta-up",txt:"new (prior 0)"} : null;
+  if(delta.prev===0) return delta.now>0 ? {cls:"rpt-delta-up",txt:"new ("+label+")"} : null;
   const p=Math.round((delta.now-delta.prev)/delta.prev*100);
-  if(p===0) return {cls:"",txt:"flat vs prior"};
+  if(p===0) return {cls:"",txt:"flat "+label};
   const up=p>0, good=delta.goodUp?up:!up;
-  return {cls:good?"rpt-delta-up":"rpt-delta-down", txt:(up?"+":"")+p+"% vs prior"};
+  return {cls:good?"rpt-delta-up":"rpt-delta-down", txt:(up?"+":"")+p+"% "+label};
 }
-function rptNoteHTML(row){
-  const parts=[]; const d=rptDeltaCalc(row.delta);
+function rptNoteHTML(row, cmpShort){
+  const parts=[]; const d=rptDeltaCalc(row.delta, cmpShort);
   if(d) parts.push('<span class="'+d.cls+'">'+d.txt+'</span>');
   if(row.note) parts.push(esc(row.note));
   return parts.join(" · ");
 }
-function rptNotePlain(row){
-  const parts=[]; const d=rptDeltaCalc(row.delta);
+function rptNotePlain(row, cmpShort){
+  const parts=[]; const d=rptDeltaCalc(row.delta, cmpShort);
   if(d&&d.txt) parts.push(d.txt); if(row.note) parts.push(row.note);
   return parts.join(" · ");
 }
 function rptHTML(m){
-  let h='<div class="rpt-period">Report for <b>'+esc(m.from)+'</b> to <b>'+esc(m.to)+'</b> · <b>'+m.dayCount+' day'+(m.dayCount===1?'':'s')+'</b>. Comparisons are vs the previous '+m.dayCount+' days.</div>';
+  let h='<div class="rpt-period">Report for <b>'+esc(m.from)+'</b> to <b>'+esc(m.to)+'</b> · <b>'+m.dayCount+' day'+(m.dayCount===1?'':'s')+'</b>. Comparisons are vs '+esc(m.cmpDesc)+'.</div>';
   m.sections.forEach(s=>{
     h+='<div class="rpt-sec">'+esc(s.name)+'</div><table class="rpt"><tbody>';
-    s.rows.forEach(row=>{ const lbl=row.tip?'<span class="rl-tip" title="'+esc(row.tip)+'">'+esc(row.l)+'</span>':esc(row.l); h+='<tr><td class="rl">'+lbl+'</td><td class="rv">'+esc(row.v)+'</td><td class="rn">'+rptNoteHTML(row)+'</td></tr>'; });
+    s.rows.forEach(row=>{ const lbl=row.tip?'<span class="rl-tip" title="'+esc(row.tip)+'">'+esc(row.l)+'</span>':esc(row.l); h+='<tr><td class="rl">'+lbl+'</td><td class="rv">'+esc(row.v)+'</td><td class="rn">'+rptNoteHTML(row, m.cmpShort)+'</td></tr>'; });
     h+='</tbody></table>';
     if(s.chart) h+='<div class="rptchartwrap">'+s.chart+'</div>';
   });
@@ -3465,8 +3493,8 @@ function rptHTML(m){
 }
 function rptMarkdown(m){
   let o='# Vital City — growth report: '+m.from+' to '+m.to+' ('+m.dayCount+' days)\n\n';
-  o+='_Comparisons vs the previous '+m.dayCount+' days. Dashboard data refreshed '+(m.generated||'')+'._\n';
-  m.sections.forEach(s=>{ o+='\n## '+s.name+'\n'; s.rows.forEach(r=>{ const n=rptNotePlain(r); o+='- '+r.l+': '+r.v+(n?' ('+n+')':'')+'\n'; }); });
+  o+='_Comparisons vs '+m.cmpDesc+'. Dashboard data refreshed '+(m.generated||'')+'._\n';
+  m.sections.forEach(s=>{ o+='\n## '+s.name+'\n'; s.rows.forEach(r=>{ const n=rptNotePlain(r, m.cmpShort); o+='- '+r.l+': '+r.v+(n?' ('+n+')':'')+'\n'; }); });
   if(m.names&&m.names.show) m.names.groups.forEach(g=>{ if(!g.rows.length) return; o+='\n## '+g.name+' ('+g.rows.length+')\n'; g.rows.forEach(x=>{ o+='- '+x.a+(x.b?' — '+x.b:'')+(x.c?' ('+x.c+')':'')+'\n'; }); });
   o+='\n---\n'+m.caveats.map(c=>'- '+c).join('\n')+'\n';
   return o;
@@ -3474,7 +3502,7 @@ function rptMarkdown(m){
 function rptCSV(m){
   const q=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
   const rows=[['Section','Indicator','Value','Note']];
-  m.sections.forEach(s=>s.rows.forEach(r=>rows.push([s.name, r.l, r.v, rptNotePlain(r)])));
+  m.sections.forEach(s=>s.rows.forEach(r=>rows.push([s.name, r.l, r.v, rptNotePlain(r, m.cmpShort)])));
   if(m.names&&m.names.show) m.names.groups.forEach(g=>g.rows.forEach(x=>rows.push([g.name, x.a, x.b, x.c])));
   return rows.map(r=>r.map(q).join(',')).join('\r\n');
 }
@@ -3537,8 +3565,8 @@ function rptChartGiving(from,to){
 }
 function rptPrintDoc(m){
   let b='<div class="wm">Vital City</div><h1>Growth report</h1>';
-  b+='<p class="period">'+esc(m.from)+' to '+esc(m.to)+' · '+m.dayCount+' days. Comparisons vs the previous '+m.dayCount+' days. Dashboard data refreshed '+esc(m.generated||'')+'.</p>';
-  m.sections.forEach(s=>{ b+='<h2>'+esc(s.name)+'</h2><table>'; s.rows.forEach(r=>{ b+='<tr><td class="l">'+esc(r.l)+'</td><td class="v">'+esc(r.v)+'</td><td class="n">'+esc(rptNotePlain(r))+'</td></tr>'; }); b+='</table>'; if(s.chart) b+='<div class="pchart">'+s.chart+'</div>'; });
+  b+='<p class="period">'+esc(m.from)+' to '+esc(m.to)+' · '+m.dayCount+' days. Comparisons vs '+esc(m.cmpDesc)+'. Dashboard data refreshed '+esc(m.generated||'')+'.</p>';
+  m.sections.forEach(s=>{ b+='<h2>'+esc(s.name)+'</h2><table>'; s.rows.forEach(r=>{ b+='<tr><td class="l">'+esc(r.l)+'</td><td class="v">'+esc(r.v)+'</td><td class="n">'+esc(rptNotePlain(r, m.cmpShort))+'</td></tr>'; }); b+='</table>'; if(s.chart) b+='<div class="pchart">'+s.chart+'</div>'; });
   if(m.names&&m.names.show) m.names.groups.forEach(g=>{ if(!g.rows.length) return; b+='<h2>'+esc(g.name)+' ('+g.rows.length+')</h2><table>'; g.rows.forEach(x=>{ b+='<tr><td class="l">'+esc(x.a)+'</td><td class="v" style="font-weight:400">'+esc(x.b)+'</td><td class="n">'+esc(x.c)+'</td></tr>'; }); b+='</table>'; });
   b+='<div class="cav">'+m.caveats.map(esc).join('<br>')+'</div>';
   const css='body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#0F1011;max-width:720px;margin:32px auto;padding:0 24px;line-height:1.5}'
@@ -3596,8 +3624,14 @@ function setupRangeReport(data){
   [fromEl,toEl].forEach(el=>{ el.min=minD; el.max=maxD; });
   toEl.value=maxD;
   fromEl.value=(function(){const f=new Date(Date.parse(maxD)-29*86400000).toISOString().slice(0,10); return f<minD?minD:f;})();
+  if(window._rptCmp==null) window._rptCmp="prev";
   if(setupRangeReport._wired) return; setupRangeReport._wired=true;
   $("#rptGo").addEventListener("click", rptGenerate);
+  document.querySelectorAll("#rangeReport .cmpchip").forEach(b=>b.addEventListener("click", ()=>{
+    window._rptCmp=b.dataset.cmp;
+    document.querySelectorAll("#rangeReport .cmpchip").forEach(x=>x.classList.toggle("on", x===b));
+    if(window._rptModel) rptGenerate();
+  }));
   document.querySelectorAll("#rangeReport .qchip").forEach(b=>b.addEventListener("click", ()=>{ rptQuick(b.dataset.q); rptGenerate(); }));
   $("#rptPdf").addEventListener("click", rptExportPDF);
   $("#rptMd").addEventListener("click", ()=>{ if(window._rptModel) rptDownload("vital-city-report_"+$("#rptFrom").value+"_to_"+$("#rptTo").value+".md", rptMarkdown(window._rptModel), "text/markdown"); });
