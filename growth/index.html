@@ -337,6 +337,33 @@
     /* let charts breathe a little taller so axis labels stay legible */
     svg.chart{height:200px}
   }
+
+  /* ---- Custom date-range report tool ---- */
+  .rptbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin-bottom:8px}
+  .rptbar label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);font-weight:700;display:flex;flex-direction:column;gap:4px}
+  .rptbar input[type=date]{font:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--vc-cloud);background:var(--vc-white);color:var(--vc-black)}
+  .btn-rpt{font:inherit;font-size:12px;font-weight:700;padding:8px 13px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);cursor:pointer}
+  .btn-rpt:hover{background:var(--vc-paper2)}
+  .btn-rpt.primary{background:var(--vc-black);color:#fff}
+  .btn-rpt.primary:hover{background:var(--vc-cerulean);border-color:var(--vc-cerulean)}
+  .rptquick{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+  .qchip{font:inherit;font-size:11px;font-weight:600;padding:5px 10px;border:1px solid var(--vc-cloud);background:var(--vc-white);color:var(--vc-charcoal);cursor:pointer;border-radius:999px}
+  .qchip:hover{border-color:var(--vc-cerulean);color:var(--vc-cerulean)}
+  .rptexport{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--vc-cloud)}
+  .rpt-period{font-size:13px;color:var(--vc-charcoal);margin:4px 0 16px}
+  .rpt-period b{color:var(--vc-black)}
+  .rpt-sec{margin:18px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:var(--vc-black);border-bottom:2px solid var(--vc-black);padding-bottom:4px}
+  table.rpt{width:100%;border-collapse:collapse;font-size:13.5px}
+  table.rpt td{padding:7px 6px;border-bottom:1px solid var(--vc-cloud);vertical-align:baseline}
+  table.rpt td.rl{color:var(--vc-charcoal);width:42%}
+  table.rpt td.rv{font-weight:700;font-variant-numeric:tabular-nums;color:var(--vc-black);width:22%}
+  table.rpt td.rn{color:var(--vc-charcoal);font-size:11.5px}
+  .rpt-delta-up{color:var(--vc-green);font-weight:700}
+  .rpt-delta-down{color:var(--vc-magenta);font-weight:700}
+  .rpt-caveat{font-size:11px;color:var(--vc-charcoal);line-height:1.55;margin-top:16px;background:var(--vc-paper2);padding:10px 13px;border-left:3px solid var(--vc-cloud)}
+  html.dark .rptbar input[type=date],html.dark .btn-rpt,html.dark .qchip{background:#26282c;color:#e8e8ea;border-color:#3a3d42}
+  html.dark .btn-rpt.primary{background:#e8e8ea;color:#0F1011}
+  html.dark .rpt-caveat{background:#26282c;border-left-color:#3a3d42}
 </style>
 </head>
 <body>
@@ -387,6 +414,29 @@
         <div class="perfgrid" id="weekPulseGrid"></div>
         <div id="weekPulseTop" style="margin-top:14px"></div>
         <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">Each tile shows the rolling last 7 days with the change vs the 7 days before it. For unsubscribes, down is good (shown green). Underlined numbers (signups, unsubscribes, gifts) are clickable — see exactly who. Social-follower change isn't included — we don't capture daily follower counts, so a 7-day delta there would be guesswork.</div>
+      </div>
+
+      <div class="card" id="rangeReport">
+        <h2>Custom report — any two dates <span class="hint">pick a start and end, get a summary of every indicator we can slice by date · export to PDF, text or CSV</span></h2>
+        <div class="rptbar noprint">
+          <label>From <input type="date" id="rptFrom"></label>
+          <label>To <input type="date" id="rptTo"></label>
+          <button class="btn-rpt primary" id="rptGo">Generate report</button>
+          <span class="rptquick">
+            <button class="qchip" data-q="7">Last 7d</button>
+            <button class="qchip" data-q="30">Last 30d</button>
+            <button class="qchip" data-q="90">Last 90d</button>
+            <button class="qchip" data-q="mtd">This month</button>
+            <button class="qchip" data-q="ytd">Year to date</button>
+          </span>
+        </div>
+        <div id="rptOut"></div>
+        <div class="rptexport noprint" id="rptExport" style="display:none">
+          <button class="btn-rpt" id="rptPdf">⬇ Download PDF</button>
+          <button class="btn-rpt" id="rptMd">⬇ Download .md</button>
+          <button class="btn-rpt" id="rptCsv">⬇ Download .csv</button>
+          <button class="btn-rpt" id="rptCopy">⧉ Copy as text</button>
+        </div>
       </div>
 
       <div class="card" id="bigPicture">
@@ -693,6 +743,7 @@ function daysAgo(n){const d=new Date();d.setUTCDate(d.getUTCDate()-n);return d.t
 function sumRange(rows,from,to,k){return rows.filter(r=>r.d>=from&&r.d<=to).reduce((s,r)=>s+(r[k]||0),0);}
 
 function boot(data){
+  window.__GD = data;   // stash for the custom date-range report tool
   $("#gate").style.display="none";
   $("#app").style.display="block";
 
@@ -843,6 +894,7 @@ function boot(data){
 
   // ----- Last 7 days rolling scorecard (weekly pulse, all categories)
   renderWeekPulse(data);
+  setupRangeReport(data);
 
   // ----- Trend chart (hand-rolled SVG)
   renderTrendChart(act, data.ghost && data.ghost.posts || []);
@@ -3184,6 +3236,251 @@ function renderWeekPulse(data){
   }
   const h=$("#weekPulseHint"); if(h) h.textContent=`rolling · ${curStart} → ${curEnd}, vs the 7 days before`;
   card.style.display="";
+}
+
+// ===== Custom date-range report tool =====================================
+// Builds an indicator summary for ANY [from,to] from the series we actually
+// hold day-by-day (newsletter activity, sends, online giving, traffic), with
+// honest notes on what can't be sliced to arbitrary dates. Exports to PDF
+// (a clean print window), Markdown, CSV and clipboard text.
+function rptCompute(from, to){
+  const d = window.__GD || {};
+  const mc = d.mailchimp || {};
+  const act = mc.daily_activity || [];
+  const camps = mc.campaigns || [];
+  const db = d.donorbox || {};
+  const ds = db.daily_series || [];
+  const gt = d.ghost_traffic || {};
+  const kpi = gt.kpi_rows_30d || [];
+  const wk = gt.traffic_series || [];
+
+  const dayCount = Math.round((Date.parse(to) - Date.parse(from)) / 86400000) + 1;
+  const pTo = new Date(Date.parse(from) - 86400000).toISOString().slice(0,10);
+  const pFrom = new Date(Date.parse(from) - dayCount*86400000).toISOString().slice(0,10);
+
+  const nl = { signups:sumRange(act,from,to,"subs"), unsubs:sumRange(act,from,to,"unsubs"),
+               opens:sumRange(act,from,to,"opens"), clicks:sumRange(act,from,to,"clicks") };
+  nl.net = nl.signups - nl.unsubs;
+  const nlPrev = { signups:sumRange(act,pFrom,pTo,"subs"), unsubs:sumRange(act,pFrom,pTo,"unsubs") };
+  const actCov = act.length ? {min:act[0].d, max:act[act.length-1].d} : null;
+
+  const cs = camps.filter(c=>{const s=(c.sent||"").slice(0,10); return s>=from && s<=to;});
+  let recip=0,wOpen=0,wClick=0,wCtor=0,cUnsub=0;
+  cs.forEach(c=>{const r=c.sent_to||0; recip+=r; wOpen+=(c.open_pct||0)*r; wClick+=(c.click_pct||0)*r; wCtor+=(c.ctor_pct||0)*r; cUnsub+=(c.unsubs||0);});
+  const em = {sends:cs.length, recipients:recip, unsubs:cUnsub,
+    open: recip?+(wOpen/recip).toFixed(1):null, click: recip?+(wClick/recip).toFixed(1):null, ctor: recip?+(wCtor/recip).toFixed(1):null};
+
+  const dsCov = ds.length ? {min:ds[0].d, max:ds[ds.length-1].d} : null;
+  const inDs = ds.filter(r=>r.d>=from && r.d<=to);
+  const inDsP = ds.filter(r=>r.d>=pFrom && r.d<=pTo);
+  const fr = {available: !!(db.available && ds.length), cov:dsCov,
+    raised: inDs.reduce((s,r)=>s+(r.amt||0),0), raisedPrev: inDsP.reduce((s,r)=>s+(r.amt||0),0),
+    gifts: inDs.reduce((s,r)=>s+(r.gifts||0),0)};
+
+  const kcov = kpi.length ? {min:kpi[0].date, max:kpi[kpi.length-1].date} : null;
+  const wcov = wk.length ? {min:wk[0].wk, max:wk[wk.length-1].wk} : null;
+  const dailyAgg=()=>{ const ink=kpi.filter(r=>r.date>=from && r.date<=to); if(!ink.length) return null;
+    const tv=ink.reduce((s,r)=>s+(r.visits||0),0);
+    return {mode:"daily", cov:kcov, days:ink.length, partial:(from<kcov.min||to>kcov.max),
+      visits:tv, pageviews:ink.reduce((s,r)=>s+(r.pageviews||0),0),
+      avgSession: tv? Math.round(ink.reduce((s,r)=>s+(r.avg_session_sec||0)*(r.visits||0),0)/tv) : 0}; };
+  const weeklyAgg=()=>{ const inw=wk.filter(w=>w.wk>=from && w.wk<=to); if(!inw.length) return null;
+    return {mode:"weekly", cov:wcov, weeks:inw.length, partial:(from<wcov.min),
+      visits:inw.reduce((s,w)=>s+(w.visitors||0),0), pageviews:inw.reduce((s,w)=>s+(w.pageviews||0),0)}; };
+  let traffic;
+  if(kcov && from>=kcov.min) traffic=dailyAgg();              // range fully inside daily window → precise
+  else if(wcov && from>=wcov.min) traffic=weeklyAgg();        // older range, weekly history covers it → full-range
+  else traffic=dailyAgg()||weeklyAgg();                       // only partial overlap with either
+  if(!traffic) traffic={mode:"none"};
+
+  const inR=(iso)=>{const x=(iso||"").slice(0,10); return x>=from && x<=to;};
+  const names={ signups:((d.ghost_signup_attribution||{}).recent_signups||[]).filter(r=>inR(r.date)),
+    unsubs:(d.recent_unsubs||[]).filter(r=>inR(r.date)), gifts:((db.recent_gifts)||[]).filter(r=>inR(r.date)) };
+
+  return {from,to,dayCount,pFrom,pTo, nl,nlPrev, em, fr, traffic, names, actCov, generated:d.generated_at};
+}
+
+function rptModel(r){
+  const d = window.__GD || {};
+  const gt = d.ghost_traffic || {};
+  const win = (d.ghost_signup_attribution||{}).window_days || 21;
+  const recentStart = daysAgo(win-1);
+  const namesShow = r.from >= recentStart;
+
+  const S=[];
+  S.push({name:"Newsletter list", rows:[
+    {l:"New signups", v:fmtN(r.nl.signups), delta:{now:r.nl.signups,prev:r.nlPrev.signups,goodUp:true}},
+    {l:"Unsubscribes", v:fmtN(r.nl.unsubs), delta:{now:r.nl.unsubs,prev:r.nlPrev.unsubs,goodUp:false}},
+    {l:"Net list change", v:(r.nl.net>=0?"+":"")+fmtN(r.nl.net), note:"signups minus unsubscribes"},
+    {l:"Total email opens", v:fmtN(r.nl.opens), note:"Apple-Mail auto-opens inflate this"},
+    {l:"Total email clicks", v:fmtN(r.nl.clicks), note:"the cleaner engagement signal"},
+  ]});
+  const emRows = r.em.sends ? [
+    {l:"Newsletter sends", v:fmtN(r.em.sends)},
+    {l:"Total recipients", v:fmtN(r.em.recipients), note:"summed across sends — one person on several sends counts each time"},
+    {l:"Avg open rate", v:(r.em.open!=null?r.em.open+"%":"—"), note:"recipient-weighted · nonprofit avg ~28-29% (M+R 2025)"},
+    {l:"Avg click rate", v:(r.em.click!=null?r.em.click+"%":"—"), note:"recipient-weighted · nonprofit avg ~3.3% (M+R 2025)"},
+    {l:"Click-to-open", v:(r.em.ctor!=null?r.em.ctor+"%":"—"), note:"of openers, share who clicked"},
+  ] : [{l:"Newsletter sends", v:"0", note:"no sends in this window"}];
+  S.push({name:"Email sends", rows:emRows});
+
+  let tRows;
+  const t=r.traffic;
+  if(t.mode==="daily") tRows=[
+    {l:"Website visits", v:fmtN(t.visits), note:(t.partial?"covers "+t.cov.min+"→"+t.cov.max+" (daily history doesn't reach the full range)":"")},
+    {l:"Page views", v:fmtN(t.pageviews)},
+    {l:"Avg session", v:fmtDur(t.avgSession), note:"visit-weighted average (Ghost analytics)"},
+  ];
+  else if(t.mode==="weekly") tRows=[
+    {l:"Website visits", v:fmtN(t.visits), note:"weekly approximation — daily history only since "+ (gt.history_start||"?") +"; sums whole weeks overlapping your range"},
+    {l:"Page views", v:fmtN(t.pageviews)},
+  ];
+  else tRows=[{l:"Website traffic", v:"not available", note:"daily traffic history starts "+(gt.history_start||"recently")+"; older ranges can't be sliced"}];
+  S.push({name:"Website traffic", rows:tRows});
+
+  const frRows = r.fr.available ? [
+    {l:"Raised (online)", v:fmtUSD(r.fr.raised), delta:{now:r.fr.raised,prev:r.fr.raisedPrev,goodUp:true}, note:"online Donorbox gifts only"+((r.fr.cov && r.fr.cov.max < r.to)?"; counted through "+r.fr.cov.max+" (Donorbox lag — recent days not yet in)":"")},
+    {l:"Gifts", v:fmtN(r.fr.gifts)},
+  ] : [{l:"Online giving", v:"not available", note:"Donorbox not connected or no daily data in range"}];
+  S.push({name:"Fundraising (online)", rows:frRows});
+
+  const groups=[
+    {name:"Who signed up", rows:r.names.signups.map(x=>({a:x.name||"(no name)", b:x.email||"", c:x.date||""}))},
+    {name:"Who unsubscribed", rows:r.names.unsubs.map(x=>({a:x.name||"(no name)", b:x.email||"", c:x.date||""}))},
+    {name:"Who gave", rows:r.names.gifts.map(x=>({a:x.donor||"(anonymous)", b:(x.amount!=null?fmtUSD(x.amount):""), c:x.date||""}))},
+  ];
+
+  const cav=[
+    "Exact from daily data: newsletter signups, unsubscribes, email opens and clicks"+(r.actCov?" (history since "+r.actCov.min+")":"")+", newsletter sends and rates, and online giving"+(r.fr.cov?" (since "+r.fr.cov.min+")":"")+".",
+    "Website traffic comes from Ghost analytics; daily detail only since "+(gt.history_start||"recently")+" and it won't exactly match the GA4 figures elsewhere (different counters).",
+    "Online gifts only — checks, wires and fiscal-sponsor gifts aren't counted, and Donorbox data can lag a few days.",
+    "The \"who\" lists draw from recent-activity feeds covering roughly the last 3-4 weeks"+(namesShow?"; for ranges that reach further back than that they may be partial":"; this range reaches further back, so they're omitted")+".",
+    "Not sliceable to custom dates (fixed-window only, see their own cards): Google search queries, per-piece engaged-time, social-follower counts and most-read rankings.",
+  ];
+  return {from:r.from, to:r.to, dayCount:r.dayCount, generated:r.generated,
+    sections:S, names:{show:namesShow, groups}, caveats:cav};
+}
+
+function rptDeltaCalc(delta){
+  if(!delta || delta.prev==null) return null;
+  if(delta.prev===0) return delta.now>0 ? {cls:"rpt-delta-up",txt:"new (prior 0)"} : null;
+  const p=Math.round((delta.now-delta.prev)/delta.prev*100);
+  if(p===0) return {cls:"",txt:"flat vs prior"};
+  const up=p>0, good=delta.goodUp?up:!up;
+  return {cls:good?"rpt-delta-up":"rpt-delta-down", txt:(up?"+":"")+p+"% vs prior"};
+}
+function rptNoteHTML(row){
+  const parts=[]; const d=rptDeltaCalc(row.delta);
+  if(d) parts.push('<span class="'+d.cls+'">'+d.txt+'</span>');
+  if(row.note) parts.push(esc(row.note));
+  return parts.join(" · ");
+}
+function rptNotePlain(row){
+  const parts=[]; const d=rptDeltaCalc(row.delta);
+  if(d&&d.txt) parts.push(d.txt); if(row.note) parts.push(row.note);
+  return parts.join(" · ");
+}
+function rptHTML(m){
+  let h='<div class="rpt-period">Report for <b>'+esc(m.from)+'</b> to <b>'+esc(m.to)+'</b> · <b>'+m.dayCount+' day'+(m.dayCount===1?'':'s')+'</b>. Comparisons are vs the previous '+m.dayCount+' days.</div>';
+  m.sections.forEach(s=>{
+    h+='<div class="rpt-sec">'+esc(s.name)+'</div><table class="rpt"><tbody>';
+    s.rows.forEach(row=>{ h+='<tr><td class="rl">'+esc(row.l)+'</td><td class="rv">'+esc(row.v)+'</td><td class="rn">'+rptNoteHTML(row)+'</td></tr>'; });
+    h+='</tbody></table>';
+  });
+  if(m.names && m.names.show){
+    m.names.groups.forEach(g=>{
+      if(!g.rows.length) return;
+      h+='<div class="rpt-sec">'+esc(g.name)+' ('+g.rows.length+')</div><table class="rpt"><tbody>';
+      g.rows.slice(0,30).forEach(x=>{ h+='<tr><td class="rl">'+esc(x.a)+'</td><td class="rv" style="font-weight:400">'+esc(x.b)+'</td><td class="rn">'+esc(x.c)+'</td></tr>'; });
+      h+='</tbody></table>';
+      if(g.rows.length>30) h+='<div style="font-size:11px;color:var(--vc-charcoal);margin-top:4px">+'+(g.rows.length-30)+' more — in the PDF / CSV export.</div>';
+    });
+  }
+  h+='<div class="rpt-caveat">'+m.caveats.map(esc).join('<br>')+'</div>';
+  return h;
+}
+function rptMarkdown(m){
+  let o='# Vital City — growth report: '+m.from+' to '+m.to+' ('+m.dayCount+' days)\n\n';
+  o+='_Comparisons vs the previous '+m.dayCount+' days. Dashboard data refreshed '+(m.generated||'')+'._\n';
+  m.sections.forEach(s=>{ o+='\n## '+s.name+'\n'; s.rows.forEach(r=>{ const n=rptNotePlain(r); o+='- '+r.l+': '+r.v+(n?' ('+n+')':'')+'\n'; }); });
+  if(m.names&&m.names.show) m.names.groups.forEach(g=>{ if(!g.rows.length) return; o+='\n## '+g.name+' ('+g.rows.length+')\n'; g.rows.forEach(x=>{ o+='- '+x.a+(x.b?' — '+x.b:'')+(x.c?' ('+x.c+')':'')+'\n'; }); });
+  o+='\n---\n'+m.caveats.map(c=>'- '+c).join('\n')+'\n';
+  return o;
+}
+function rptCSV(m){
+  const q=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
+  const rows=[['Section','Indicator','Value','Note']];
+  m.sections.forEach(s=>s.rows.forEach(r=>rows.push([s.name, r.l, r.v, rptNotePlain(r)])));
+  if(m.names&&m.names.show) m.names.groups.forEach(g=>g.rows.forEach(x=>rows.push([g.name, x.a, x.b, x.c])));
+  return rows.map(r=>r.map(q).join(',')).join('\r\n');
+}
+function rptPrintDoc(m){
+  let b='<div class="wm">Vital City</div><h1>Growth report</h1>';
+  b+='<p class="period">'+esc(m.from)+' to '+esc(m.to)+' · '+m.dayCount+' days. Comparisons vs the previous '+m.dayCount+' days. Dashboard data refreshed '+esc(m.generated||'')+'.</p>';
+  m.sections.forEach(s=>{ b+='<h2>'+esc(s.name)+'</h2><table>'; s.rows.forEach(r=>{ b+='<tr><td class="l">'+esc(r.l)+'</td><td class="v">'+esc(r.v)+'</td><td class="n">'+esc(rptNotePlain(r))+'</td></tr>'; }); b+='</table>'; });
+  if(m.names&&m.names.show) m.names.groups.forEach(g=>{ if(!g.rows.length) return; b+='<h2>'+esc(g.name)+' ('+g.rows.length+')</h2><table>'; g.rows.forEach(x=>{ b+='<tr><td class="l">'+esc(x.a)+'</td><td class="v" style="font-weight:400">'+esc(x.b)+'</td><td class="n">'+esc(x.c)+'</td></tr>'; }); b+='</table>'; });
+  b+='<div class="cav">'+m.caveats.map(esc).join('<br>')+'</div>';
+  const css='body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#0F1011;max-width:720px;margin:32px auto;padding:0 24px;line-height:1.5}'
+    +'.wm{font-size:11px;text-transform:uppercase;letter-spacing:.18em;font-weight:700;color:#5A5C61}'
+    +'h1{font-family:Georgia,serif;font-size:30px;margin:4px 0 2px}'
+    +'.period{color:#5A5C61;font-size:13px;margin:0 0 18px}'
+    +'h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid #0F1011;padding-bottom:4px;margin:22px 0 4px}'
+    +'table{width:100%;border-collapse:collapse;font-size:13px}'
+    +'td{padding:6px 4px;border-bottom:1px solid #ddd;vertical-align:baseline}'
+    +'td.l{color:#5A5C61;width:42%}td.v{font-weight:700;width:22%;font-variant-numeric:tabular-nums}td.n{color:#5A5C61;font-size:11px}'
+    +'.cav{font-size:10.5px;color:#5A5C61;margin-top:22px;border-top:1px solid #ddd;padding-top:10px}';
+  return '<!doctype html><html><head><meta charset="utf-8"><title>Vital City report '+esc(m.from)+' to '+esc(m.to)+'</title><style>'+css+'</style></head><body>'+b+'</body></html>';
+}
+function rptExportPDF(){
+  const m=window._rptModel; if(!m) return;
+  const w=window.open('','_blank');
+  if(!w){ alert('Allow pop-ups for this page to export the PDF — or use Download .md / .csv instead.'); return; }
+  w.document.write(rptPrintDoc(m)); w.document.close(); w.focus();
+  setTimeout(()=>{ try{ w.print(); }catch(e){} }, 400);
+}
+function rptDownload(name,text,mime){
+  const blob=new Blob([text],{type:mime+';charset=utf-8'});
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },500);
+}
+function rptFlash(btn,msg){ const o=btn.textContent; btn.textContent=msg; setTimeout(()=>{btn.textContent=o;},1400); }
+function fmtDur(sec){ sec=Math.round(sec||0); const m=Math.floor(sec/60), s=sec%60; return m+'m '+(s<10?'0':'')+s+'s'; }
+function rptQuick(q){
+  const to=($("#rptTo").max)||daysAgo(0); let from;
+  const D=new Date(Date.parse(to));
+  if(q==='7') from=new Date(Date.parse(to)-6*86400000).toISOString().slice(0,10);
+  else if(q==='30') from=new Date(Date.parse(to)-29*86400000).toISOString().slice(0,10);
+  else if(q==='90') from=new Date(Date.parse(to)-89*86400000).toISOString().slice(0,10);
+  else if(q==='mtd') from=new Date(Date.UTC(D.getUTCFullYear(),D.getUTCMonth(),1)).toISOString().slice(0,10);
+  else if(q==='ytd') from=new Date(Date.UTC(D.getUTCFullYear(),0,1)).toISOString().slice(0,10);
+  const minD=$("#rptFrom").min; if(minD && from<minD) from=minD;
+  $("#rptFrom").value=from; $("#rptTo").value=to;
+}
+function rptGenerate(){
+  let from=$("#rptFrom").value, to=$("#rptTo").value;
+  if(!from||!to){ $("#rptOut").innerHTML='<div class="rpt-caveat">Pick both a start and an end date.</div>'; $("#rptExport").style.display="none"; return; }
+  if(from>to){ const t=from; from=to; to=t; $("#rptFrom").value=from; $("#rptTo").value=to; }
+  const model=rptModel(rptCompute(from,to));
+  window._rptModel=model;
+  $("#rptOut").innerHTML=rptHTML(model);
+  $("#rptExport").style.display="flex";
+}
+function setupRangeReport(data){
+  const fromEl=$("#rptFrom"), toEl=$("#rptTo"); if(!fromEl||!toEl) return;
+  const act=(data.mailchimp||{}).daily_activity||[];
+  const minD=act.length?act[0].d:daysAgo(729);
+  const maxD=act.length?act[act.length-1].d:daysAgo(0);
+  [fromEl,toEl].forEach(el=>{ el.min=minD; el.max=maxD; });
+  toEl.value=maxD;
+  fromEl.value=(function(){const f=new Date(Date.parse(maxD)-29*86400000).toISOString().slice(0,10); return f<minD?minD:f;})();
+  if(setupRangeReport._wired) return; setupRangeReport._wired=true;
+  $("#rptGo").addEventListener("click", rptGenerate);
+  document.querySelectorAll("#rangeReport .qchip").forEach(b=>b.addEventListener("click", ()=>{ rptQuick(b.dataset.q); rptGenerate(); }));
+  $("#rptPdf").addEventListener("click", rptExportPDF);
+  $("#rptMd").addEventListener("click", ()=>{ if(window._rptModel) rptDownload("vital-city-report_"+$("#rptFrom").value+"_to_"+$("#rptTo").value+".md", rptMarkdown(window._rptModel), "text/markdown"); });
+  $("#rptCsv").addEventListener("click", ()=>{ if(window._rptModel) rptDownload("vital-city-report_"+$("#rptFrom").value+"_to_"+$("#rptTo").value+".csv", rptCSV(window._rptModel), "text/csv"); });
+  $("#rptCopy").addEventListener("click", ()=>{ if(window._rptModel) navigator.clipboard.writeText(rptMarkdown(window._rptModel)).then(()=>rptFlash($("#rptCopy"),"Copied!")); });
 }
 
 // Deep-link to the Contact tool, opened/searched to one person (by email, or
