@@ -3268,6 +3268,10 @@ function rptCompute(from, to){
   nl.net = nl.signups - nl.unsubs;
   const nlPrev = { signups:sumRange(act,pFrom,pTo,"subs"), unsubs:sumRange(act,pFrom,pTo,"unsubs") };
   const actCov = act.length ? {min:act[0].d, max:act[act.length-1].d} : null;
+  // Ghost only began recording signups on this date; before it, signups lived in
+  // Mailchimp, so the daily signup series reads ~0 and any comparison across the
+  // boundary is meaningless. (unsubs/opens/clicks are Mailchimp, reliable to actCov.)
+  const signupCovStart = (d.ghost_signup_attribution||{}).coverage_start || (actCov?actCov.min:from);
 
   const cs = camps.filter(c=>{const s=(c.sent||"").slice(0,10); return s>=from && s<=to;});
   let recip=0,wOpen=0,wClick=0,wCtor=0,cUnsub=0;
@@ -3302,7 +3306,7 @@ function rptCompute(from, to){
   const names={ signups:((d.ghost_signup_attribution||{}).recent_signups||[]).filter(r=>inR(r.date)),
     unsubs:(d.recent_unsubs||[]).filter(r=>inR(r.date)), gifts:((db.recent_gifts)||[]).filter(r=>inR(r.date)) };
 
-  return {from,to,dayCount,pFrom,pTo, nl,nlPrev, em, fr, traffic, names, actCov, generated:d.generated_at};
+  return {from,to,dayCount,pFrom,pTo, nl,nlPrev, em, fr, traffic, names, actCov, signupCovStart, generated:d.generated_at};
 }
 
 function rptModel(r){
@@ -3312,11 +3316,21 @@ function rptModel(r){
   const recentStart = daysAgo(win-1);
   const namesShow = r.from >= recentStart;
 
+  // Ghost-signup coverage gate: a prior-period % is only meaningful when both
+  // windows fall in the Ghost era (signups before signupCovStart lived in Mailchimp).
+  const sigCov=r.signupCovStart, sigOK=r.from>=sigCov, sigPriorOK=r.pFrom>=sigCov;
+  let sigDelta=null, sigNote;
+  if(!sigOK) sigNote="incomplete before "+sigCov+" — signups weren't recorded in Ghost yet (they're in Mailchimp's history)";
+  else if(!sigPriorOK) sigNote="no prior-period comparison — the previous "+r.dayCount+" days predate Ghost signup tracking (started "+sigCov+"), when Mailchimp was the source of truth";
+  else sigDelta={now:r.nl.signups,prev:r.nlPrev.signups,goodUp:true};
+  const sigTip="Counted by each person's real Ghost signup date and current to the last data refresh — gross signups, including anyone who has since unsubscribed. The Thursday Ghost-to-Mailchimp batch does not delay this count; it only delays when new signups appear in the Mailchimp \"Subscribers\" total above."+(sigNote?" Note: "+sigNote+". Ghost began recording signups "+sigCov+"; for earlier or whole-history signup totals use the long-view section, which uses Mailchimp's all-source counts.":"");
+  // Unsubs are Mailchimp, reliable back to actCov.min — only gate truly ancient ranges.
+  const unsubPriorOK=!r.actCov || r.pFrom>=r.actCov.min;
+
   const S=[];
   S.push({name:"Newsletter list", rows:[
-    {l:"New signups", v:fmtN(r.nl.signups), delta:{now:r.nl.signups,prev:r.nlPrev.signups,goodUp:true},
-      tip:"Counted by each person's real Ghost signup date and current to the last data refresh — gross signups, including anyone who has since unsubscribed. The Thursday Ghost-to-Mailchimp batch does not delay this count; it only delays when new signups appear in the Mailchimp \"Subscribers\" total above."},
-    {l:"Unsubscribes", v:fmtN(r.nl.unsubs), delta:{now:r.nl.unsubs,prev:r.nlPrev.unsubs,goodUp:false},
+    {l:"New signups", v:fmtN(r.nl.signups), delta:sigDelta, note:sigNote, tip:sigTip},
+    {l:"Unsubscribes", v:fmtN(r.nl.unsubs), delta:(unsubPriorOK?{now:r.nl.unsubs,prev:r.nlPrev.unsubs,goodUp:false}:null), note:(unsubPriorOK?undefined:"no prior-period comparison — earlier than our Mailchimp activity history"),
       tip:"Counted by each person's real Mailchimp unsubscribe date and current to the last refresh. Two small caveats: Mailchimp's daily activity can take about a day to settle, so the most recent day may rise slightly; and the contact tool reflects unsubscribes only on Thursdays, so it can trail this number by a few days."},
     {l:"Net list change", v:(r.nl.net>=0?"+":"")+fmtN(r.nl.net), note:"signups minus unsubscribes"},
     {l:"Total email opens", v:fmtN(r.nl.opens), note:"Apple-Mail auto-opens inflate this"},
@@ -3345,8 +3359,13 @@ function rptModel(r){
   else tRows=[{l:"Website traffic", v:"not available", note:"daily traffic history starts "+(gt.history_start||"recently")+"; older ranges can't be sliced"}];
   S.push({name:"Website traffic", rows:tRows, chart: rptChartTraffic(r.from, r.to, r.traffic)});
 
+  const givStart = r.fr.cov ? r.fr.cov.min : null;
+  const givPriorOK = !!(givStart && r.pFrom >= givStart);
+  const raisedNote = "online Donorbox gifts only"
+    + ((r.fr.cov && r.fr.cov.max < r.to)?"; counted through "+r.fr.cov.max+" (Donorbox lag — recent days not yet in)":"")
+    + (givPriorOK?"":"; no prior-period comparison — online-gift history only starts "+(givStart||"recently"));
   const frRows = r.fr.available ? [
-    {l:"Raised (online)", v:fmtUSD(r.fr.raised), delta:{now:r.fr.raised,prev:r.fr.raisedPrev,goodUp:true}, note:"online Donorbox gifts only"+((r.fr.cov && r.fr.cov.max < r.to)?"; counted through "+r.fr.cov.max+" (Donorbox lag — recent days not yet in)":"")},
+    {l:"Raised (online)", v:fmtUSD(r.fr.raised), delta:(givPriorOK?{now:r.fr.raised,prev:r.fr.raisedPrev,goodUp:true}:null), note:raisedNote},
     {l:"Gifts", v:fmtN(r.fr.gifts)},
   ] : [{l:"Online giving", v:"not available", note:"Donorbox not connected or no daily data in range"}];
   S.push({name:"Fundraising (online)", rows:frRows, chart: rptChartGiving(r.from, r.to)});
