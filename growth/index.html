@@ -3309,6 +3309,22 @@ function rptCompute(from, to){
   return {from,to,dayCount,pFrom,pTo, nl,nlPrev, em, fr, traffic, names, actCov, signupCovStart, generated:d.generated_at};
 }
 
+// Mailchimp all-source signups for any window, by prorating monthly growth-history
+// counts to the day. The only signup record that spans the pre-Ghost period.
+function rptMcSignups(from,to){
+  const ms=((window.__GD||{}).mailchimp||{}).monthly_signups||[];
+  if(!ms.length) return null;
+  let total=0, any=false;
+  ms.forEach(m=>{
+    const mo=m.month; if(!mo) return;
+    const y=+mo.slice(0,4), mm=+mo.slice(5,7), dim=new Date(Date.UTC(y,mm,0)).getUTCDate();
+    const mStart=mo+'-01', mEnd=mo+'-'+String(dim).padStart(2,'0');
+    const oS=from>mStart?from:mStart, oE=to<mEnd?to:mEnd;
+    if(oS<=oE){ const od=Math.round((Date.parse(oE)-Date.parse(oS))/86400000)+1;
+      total+=(+(m.new_signups||0))*(od/dim); any=true; }
+  });
+  return any?Math.round(total):null;
+}
 function rptModel(r){
   const d = window.__GD || {};
   const gt = d.ghost_traffic || {};
@@ -3318,18 +3334,35 @@ function rptModel(r){
 
   // Ghost-signup coverage gate: a prior-period % is only meaningful when both
   // windows fall in the Ghost era (signups before signupCovStart lived in Mailchimp).
+  // ---- Signups: Ghost daily within its coverage era; Mailchimp all-source as the
+  // ---- comparator (both sides) once a window reaches back before Ghost began. ----
   const sigCov=r.signupCovStart, sigOK=r.from>=sigCov, sigPriorOK=r.pFrom>=sigCov;
-  let sigDelta=null, sigNote;
-  if(!sigOK) sigNote="incomplete before "+sigCov+" — signups weren't recorded in Ghost yet (they're in Mailchimp's history)";
-  else if(!sigPriorOK) sigNote="no prior-period comparison — the previous "+r.dayCount+" days predate Ghost signup tracking (started "+sigCov+"), when Mailchimp was the source of truth";
-  else sigDelta={now:r.nl.signups,prev:r.nlPrev.signups,goodUp:true};
-  const sigTip="Counted by each person's real Ghost signup date and current to the last data refresh — gross signups, including anyone who has since unsubscribed. The Thursday Ghost-to-Mailchimp batch does not delay this count; it only delays when new signups appear in the Mailchimp \"Subscribers\" total above."+(sigNote?" Note: "+sigNote+". Ghost began recording signups "+sigCov+"; for earlier or whole-history signup totals use the long-view section, which uses Mailchimp's all-source counts.":"");
+  let sigLabel="New signups", sigVal=fmtN(r.nl.signups), sigDelta=null, sigNote, sigBasis="ghost";
+  if(sigOK && sigPriorOK){
+    sigDelta={now:r.nl.signups,prev:r.nlPrev.signups,goodUp:true};
+  } else {
+    const mcNow=rptMcSignups(r.from,r.to), mcPrev=rptMcSignups(r.pFrom,r.pTo);
+    if(!sigOK){
+      if(mcNow!=null){ sigBasis="mc"; sigLabel="New signups (Mailchimp all-source)"; sigVal=fmtN(mcNow);
+        sigDelta=(mcPrev!=null&&mcPrev>0)?{now:mcNow,prev:mcPrev,goodUp:true}:null;
+        sigNote="Mailchimp all-source list adds, monthly figures prorated — this range predates Ghost signup tracking (started "+sigCov+"); counts every add including imports"; }
+      else sigNote="signups before "+sigCov+" aren't available at this granularity";
+    } else if(mcNow!=null && mcPrev!=null && mcPrev>0){
+      sigBasis="mc-cmp"; sigDelta={now:mcNow,prev:mcPrev,goodUp:true};
+      sigNote="vs prior on Mailchimp's all-source basis — the only signup record spanning the pre-Ghost period (counts all list adds including imports, so it runs higher than the Ghost figure shown)";
+    } else {
+      sigNote="no prior-period comparison — the previous "+r.dayCount+" days predate our Mailchimp signup history";
+    }
+  }
+  const sigTip = sigBasis==="mc"
+    ? "Mailchimp all-source new list adds for this range (monthly figures prorated to your dates). Shown because the range predates Ghost signup tracking, which began "+sigCov+". Counts every list add including bulk imports, so it runs higher than Ghost newsletter-form signups."
+    : "Counted by each person's real Ghost signup date and current to the last refresh — gross signups, including anyone who has since unsubscribed. The Thursday Ghost-to-Mailchimp batch doesn't delay this count."+(sigBasis==="mc-cmp"?" The % comparison uses Mailchimp's all-source history because the prior period predates Ghost (which began recording signups "+sigCov+").":"");
   // Unsubs are Mailchimp, reliable back to actCov.min — only gate truly ancient ranges.
   const unsubPriorOK=!r.actCov || r.pFrom>=r.actCov.min;
 
   const S=[];
   S.push({name:"Newsletter list", rows:[
-    {l:"New signups", v:fmtN(r.nl.signups), delta:sigDelta, note:sigNote, tip:sigTip},
+    {l:sigLabel, v:sigVal, delta:sigDelta, note:sigNote, tip:sigTip},
     {l:"Unsubscribes", v:fmtN(r.nl.unsubs), delta:(unsubPriorOK?{now:r.nl.unsubs,prev:r.nlPrev.unsubs,goodUp:false}:null), note:(unsubPriorOK?undefined:"no prior-period comparison — earlier than our Mailchimp activity history"),
       tip:"Counted by each person's real Mailchimp unsubscribe date and current to the last refresh. Two small caveats: Mailchimp's daily activity can take about a day to settle, so the most recent day may rise slightly; and the contact tool reflects unsubscribes only on Thursdays, so it can trail this number by a few days."},
     {l:"Net list change", v:(r.nl.net>=0?"+":"")+fmtN(r.nl.net), note:"signups minus unsubscribes"},
