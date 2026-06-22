@@ -357,6 +357,10 @@
   table.rpt td{padding:7px 6px;border-bottom:1px solid var(--vc-cloud);vertical-align:baseline}
   table.rpt td.rl{color:var(--vc-charcoal);width:42%}
   table.rpt .rl-tip{border-bottom:1px dotted var(--vc-charcoal);cursor:help}
+  .rptchartwrap{margin:6px 0 2px}
+  .rptchart{display:block;width:100%}
+  html.dark .rptchart line{stroke:#3a3d42}
+  html.dark .rptchart text{fill:#9a9ca2}
   table.rpt td.rv{font-weight:700;font-variant-numeric:tabular-nums;color:var(--vc-black);width:22%}
   table.rpt td.rn{color:var(--vc-charcoal);font-size:11.5px}
   .rpt-delta-up{color:var(--vc-green);font-weight:700}
@@ -3317,7 +3321,7 @@ function rptModel(r){
     {l:"Net list change", v:(r.nl.net>=0?"+":"")+fmtN(r.nl.net), note:"signups minus unsubscribes"},
     {l:"Total email opens", v:fmtN(r.nl.opens), note:"Apple-Mail auto-opens inflate this"},
     {l:"Total email clicks", v:fmtN(r.nl.clicks), note:"the cleaner engagement signal"},
-  ]});
+  ], chart: rptChartSignups(r.from, r.to)});
   const emRows = r.em.sends ? [
     {l:"Newsletter sends", v:fmtN(r.em.sends)},
     {l:"Total recipients", v:fmtN(r.em.recipients), note:"summed across sends — one person on several sends counts each time"},
@@ -3339,13 +3343,13 @@ function rptModel(r){
     {l:"Page views", v:fmtN(t.pageviews)},
   ];
   else tRows=[{l:"Website traffic", v:"not available", note:"daily traffic history starts "+(gt.history_start||"recently")+"; older ranges can't be sliced"}];
-  S.push({name:"Website traffic", rows:tRows});
+  S.push({name:"Website traffic", rows:tRows, chart: rptChartTraffic(r.from, r.to, r.traffic)});
 
   const frRows = r.fr.available ? [
     {l:"Raised (online)", v:fmtUSD(r.fr.raised), delta:{now:r.fr.raised,prev:r.fr.raisedPrev,goodUp:true}, note:"online Donorbox gifts only"+((r.fr.cov && r.fr.cov.max < r.to)?"; counted through "+r.fr.cov.max+" (Donorbox lag — recent days not yet in)":"")},
     {l:"Gifts", v:fmtN(r.fr.gifts)},
   ] : [{l:"Online giving", v:"not available", note:"Donorbox not connected or no daily data in range"}];
-  S.push({name:"Fundraising (online)", rows:frRows});
+  S.push({name:"Fundraising (online)", rows:frRows, chart: rptChartGiving(r.from, r.to)});
 
   const groups=[
     {name:"Who signed up", rows:r.names.signups.map(x=>({a:x.name||"(no name)", b:x.email||"", c:x.date||""}))},
@@ -3390,6 +3394,7 @@ function rptHTML(m){
     h+='<div class="rpt-sec">'+esc(s.name)+'</div><table class="rpt"><tbody>';
     s.rows.forEach(row=>{ const lbl=row.tip?'<span class="rl-tip" title="'+esc(row.tip)+'">'+esc(row.l)+'</span>':esc(row.l); h+='<tr><td class="rl">'+lbl+'</td><td class="rv">'+esc(row.v)+'</td><td class="rn">'+rptNoteHTML(row)+'</td></tr>'; });
     h+='</tbody></table>';
+    if(s.chart) h+='<div class="rptchartwrap">'+s.chart+'</div>';
   });
   if(m.names && m.names.show){
     m.names.groups.forEach(g=>{
@@ -3418,10 +3423,67 @@ function rptCSV(m){
   if(m.names&&m.names.show) m.names.groups.forEach(g=>g.rows.forEach(x=>rows.push([g.name, x.a, x.b, x.c])));
   return rows.map(r=>r.map(q).join(',')).join('\r\n');
 }
+// --- mini charts (binned daily ≤45d, else weekly; inline SVG) ---
+function rptBuckets(from,to){
+  const day=86400000, days=Math.round((Date.parse(to)-Date.parse(from))/day)+1;
+  const step=days<=45?1:7, out=[];
+  for(let t=Date.parse(from+'T00:00:00Z'); t<=Date.parse(to+'T00:00:00Z'); t+=step*day){
+    const s=new Date(t).toISOString().slice(0,10);
+    let e=new Date(t+(step-1)*day).toISOString().slice(0,10); if(e>to) e=to;
+    out.push({s,e});
+  }
+  return {buckets:out, step};
+}
+function rptSumInto(buckets,rows,dk,vk){
+  return buckets.map(b=>rows.reduce((s,r)=>{const d=(r[dk]||'').slice(0,10); return (d>=b.s&&d<=b.e)?s+(+(r[vk]||0)):s;},0));
+}
+function rptBarsSVG(buckets,vals,color,unit,fmtFn,from,to){
+  const maxV=Math.max(...vals); if(!(maxV>0)) return '';
+  const W=800,H=120,padT=16,padB=22,padL=8,padR=8,base=H-padB,innerH=H-padT-padB,innerW=W-padL-padR;
+  const n=buckets.length,bw=Math.max(1,(innerW/n)*0.72),x=i=>padL+innerW*(i+0.5)/n;
+  let s='<svg class="rptchart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="width:100%;height:120px">';
+  s+='<line x1="'+padL+'" y1="'+base+'" x2="'+(W-padR)+'" y2="'+base+'" stroke="#D9D5CE"/>';
+  buckets.forEach((b,i)=>{ if(vals[i]>0){const h=(vals[i]/maxV)*innerH; s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(base-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="'+color+'"><title>'+b.s+(b.e!==b.s?' – '+b.e:'')+': '+fmtFn(vals[i])+'</title></rect>';}});
+  s+='<text x="'+padL+'" y="'+(padT-4)+'" font-size="9" fill="#5A5C61">'+unit+' · peak '+fmtFn(maxV)+'</text>';
+  s+='<text x="'+padL+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61">'+from+'</text>';
+  s+='<text x="'+(W-padR)+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61" text-anchor="end">'+to+'</text>';
+  return s+'</svg>';
+}
+function rptChartSignups(from,to){
+  const act=((window.__GD||{}).mailchimp||{}).daily_activity||[];
+  const {buckets,step}=rptBuckets(from,to);
+  const pos=rptSumInto(buckets,act,'d','subs'), neg=rptSumInto(buckets,act,'d','unsubs');
+  if(Math.max(...pos,...neg,0)<=0) return '';
+  const maxV=Math.max(1,...pos,...neg);
+  const W=800,H=150,padT=20,padB=22,padL=8,padR=8,innerH=H-padT-padB,innerW=W-padL-padR,mid=padT+innerH/2;
+  const n=buckets.length,bw=Math.max(1,(innerW/n)*0.72),x=i=>padL+innerW*(i+0.5)/n,hUp=v=>(v/maxV)*(innerH/2);
+  let s='<svg class="rptchart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="width:100%;height:150px">';
+  s+='<line x1="'+padL+'" y1="'+mid+'" x2="'+(W-padR)+'" y2="'+mid+'" stroke="#D9D5CE"/>';
+  buckets.forEach((b,i)=>{ const lbl=b.s+(b.e!==b.s?' – '+b.e:'');
+    if(pos[i]>0){const h=hUp(pos[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(mid-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#57AA4A"><title>'+lbl+': +'+pos[i]+' signups</title></rect>';}
+    if(neg[i]>0){const h=hUp(neg[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+mid.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#C8377E"><title>'+lbl+': -'+neg[i]+' unsubscribes</title></rect>';}});
+  s+='<text x="'+padL+'" y="'+(padT-6)+'" font-size="9" fill="#5A5C61">signups (green, up) vs unsubscribes (magenta, down) · '+(step>1?'weekly':'daily')+'</text>';
+  s+='<text x="'+padL+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61">'+from+'</text>';
+  s+='<text x="'+(W-padR)+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61" text-anchor="end">'+to+'</text>';
+  return s+'</svg>';
+}
+function rptChartTraffic(from,to,traffic){
+  const gt=(window.__GD||{}).ghost_traffic||{};
+  if(!traffic||traffic.mode==='none') return '';
+  if(traffic.mode==='daily'){ const {buckets}=rptBuckets(from,to); return rptBarsSVG(buckets,rptSumInto(buckets,(gt.kpi_rows_30d||[]),'date','visits'),'#1F6FB2','Website visits',fmtN,from,to); }
+  const wks=(gt.traffic_series||[]).filter(w=>w.wk>=from&&w.wk<=to);
+  if(!wks.length) return '';
+  return rptBarsSVG(wks.map(w=>({s:w.wk,e:w.wk})), wks.map(w=>+(w.visitors||0)),'#1F6FB2','Website visits · weekly',fmtN,from,to);
+}
+function rptChartGiving(from,to){
+  const ds=((window.__GD||{}).donorbox||{}).daily_series||[];
+  const {buckets}=rptBuckets(from,to);
+  return rptBarsSVG(buckets,rptSumInto(buckets,ds,'d','amt'),'#E2772F','Online giving',v=>fmtUSD(Math.round(v)),from,to);
+}
 function rptPrintDoc(m){
   let b='<div class="wm">Vital City</div><h1>Growth report</h1>';
   b+='<p class="period">'+esc(m.from)+' to '+esc(m.to)+' · '+m.dayCount+' days. Comparisons vs the previous '+m.dayCount+' days. Dashboard data refreshed '+esc(m.generated||'')+'.</p>';
-  m.sections.forEach(s=>{ b+='<h2>'+esc(s.name)+'</h2><table>'; s.rows.forEach(r=>{ b+='<tr><td class="l">'+esc(r.l)+'</td><td class="v">'+esc(r.v)+'</td><td class="n">'+esc(rptNotePlain(r))+'</td></tr>'; }); b+='</table>'; });
+  m.sections.forEach(s=>{ b+='<h2>'+esc(s.name)+'</h2><table>'; s.rows.forEach(r=>{ b+='<tr><td class="l">'+esc(r.l)+'</td><td class="v">'+esc(r.v)+'</td><td class="n">'+esc(rptNotePlain(r))+'</td></tr>'; }); b+='</table>'; if(s.chart) b+='<div class="pchart">'+s.chart+'</div>'; });
   if(m.names&&m.names.show) m.names.groups.forEach(g=>{ if(!g.rows.length) return; b+='<h2>'+esc(g.name)+' ('+g.rows.length+')</h2><table>'; g.rows.forEach(x=>{ b+='<tr><td class="l">'+esc(x.a)+'</td><td class="v" style="font-weight:400">'+esc(x.b)+'</td><td class="n">'+esc(x.c)+'</td></tr>'; }); b+='</table>'; });
   b+='<div class="cav">'+m.caveats.map(esc).join('<br>')+'</div>';
   const css='body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#0F1011;max-width:720px;margin:32px auto;padding:0 24px;line-height:1.5}'
@@ -3432,7 +3494,8 @@ function rptPrintDoc(m){
     +'table{width:100%;border-collapse:collapse;font-size:13px}'
     +'td{padding:6px 4px;border-bottom:1px solid #ddd;vertical-align:baseline}'
     +'td.l{color:#5A5C61;width:42%}td.v{font-weight:700;width:22%;font-variant-numeric:tabular-nums}td.n{color:#5A5C61;font-size:11px}'
-    +'.cav{font-size:10.5px;color:#5A5C61;margin-top:22px;border-top:1px solid #ddd;padding-top:10px}';
+    +'.cav{font-size:10.5px;color:#5A5C61;margin-top:22px;border-top:1px solid #ddd;padding-top:10px}'
+    +'.pchart{margin:6px 0 14px}.pchart svg{width:100%;display:block}';
   return '<!doctype html><html><head><meta charset="utf-8"><title>Vital City report '+esc(m.from)+' to '+esc(m.to)+'</title><style>'+css+'</style></head><body>'+b+'</body></html>';
 }
 function rptExportPDF(){
