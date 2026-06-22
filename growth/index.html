@@ -3442,13 +3442,13 @@ function rptModel(r){
   let tRows;
   const t=r.traffic;
   if(t.mode==="daily") tRows=[
-    {l:"Website visits", v:fmtN(t.visits), note:(t.partial?"covers "+t.cov.min+"→"+t.cov.max+" (daily history doesn't reach the full range)":"")},
+    {l:"Website visits", v:fmtN(t.visits), note:(t.partial?"range total over "+t.cov.min+" → "+t.cov.max+" (daily history doesn't reach the full range)":"total for the range (daily data)")},
     {l:"Page views", v:fmtN(t.pageviews)},
     {l:"Avg session", v:fmtDur(t.avgSession), note:"visit-weighted average (Ghost analytics)"},
   ];
   else if(t.mode==="weekly") tRows=[
-    {l:"Website visits", v:fmtN(t.visits), note:"weekly"+(t.mixed?" · GA4 before "+t.ghostStart+", Ghost after (different counters — GA4 reads lower)":" (Ghost analytics)")+(t.anyPartial?" · faded bars = partial weeks":"")},
-    {l:"Page views", v:fmtN(t.pageviews)},
+    {l:"Website visits", v:fmtN(t.visits), note:"range total, summed from weekly data"+(t.anyPartial?" (boundary weeks counted whole — faded on the chart)":"")+(t.mixed?" · GA4 before "+t.ghostStart+", Ghost after — different counters, GA4 reads lower":" · Ghost analytics")},
+    {l:"Page views", v:fmtN(t.pageviews), note:"range total, summed from weekly data"},
   ];
   else tRows=[{l:"Website traffic", v:"not available", note:"daily traffic history starts "+(gt.history_start||"recently")+"; older ranges can't be sliced"}];
   S.push({name:"Website traffic", rows:tRows, chart: rptChartTraffic(r.from, r.to, r.traffic)});
