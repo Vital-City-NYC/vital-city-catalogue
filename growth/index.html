@@ -3352,6 +3352,7 @@ function rptModel(r){
 
   const cav=[
     "Exact from daily data: newsletter signups, unsubscribes, email opens and clicks"+(r.actCov?" (history since "+r.actCov.min+")":"")+", newsletter sends and rates, and online giving"+(r.fr.cov?" (since "+r.fr.cov.min+")":"")+".",
+    "Signups are dated by their real Ghost signup date and unsubscribes by their Mailchimp date — each on the system that records it in real time, so the counts here aren't distorted by the weekly cross-sync. (Ghost signups only batch into Mailchimp on Thursdays, so the headline \"Subscribers\" total can trail recent signups by up to a week; unsubscribes hit Mailchimp at once but reflect in the contact tool on Thursdays.)",
     "Website traffic comes from Ghost analytics; daily detail only since "+(gt.history_start||"recently")+" and it won't exactly match the GA4 figures elsewhere (different counters).",
     "Online gifts only — checks, wires and fiscal-sponsor gifts aren't counted, and Donorbox data can lag a few days.",
     "The \"who\" lists draw from recent-activity feeds covering roughly the last 3-4 weeks"+(namesShow?"; for ranges that reach further back than that they may be partial":"; this range reaches further back, so they're omitted")+".",

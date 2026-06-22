@@ -134,9 +134,14 @@ def pull_mailchimp():
             today = datetime.now(timezone.utc).date()
             cutoff = (today - timedelta(days=180)).isoformat()
             for p in people:
-                # mem==1 and a real signup date within window
-                if not p.get("mem"): continue
-                if p.get("unsub"): continue
+                # Count a signup for anyone who joined the newsletter in-window,
+                # dated by their real Ghost signup date (`since`) — INCLUDING people
+                # who have since unsubscribed. Gross signups, not net-of-churn, so a
+                # past window's count stays stable and agrees with the weekly report.
+                # (Unsubscribes are tracked separately, on their Mailchimp date. The
+                # Thursday Ghost→Mailchimp batch doesn't matter here: `since` is the
+                # real Ghost signup date, never the Mailchimp add date.)
+                if not (p.get("mem") or p.get("unsub")): continue
                 s = (p.get("since") or "")[:10]
                 if not s or s < cutoff: continue
                 row = rows_by_day.setdefault(s, {"d": s, "subs": 0, "unsubs": 0, "opens": 0, "clicks": 0})
