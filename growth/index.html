@@ -3313,19 +3313,31 @@ function rptCompute(from, to){
     gifts: inDs.reduce((s,r)=>s+(r.gifts||0),0)};
 
   const kcov = kpi.length ? {min:kpi[0].date, max:kpi[kpi.length-1].date} : null;
-  const wcov = wk.length ? {min:wk[0].wk, max:wk[wk.length-1].wk} : null;
+  const ga4wk = (d.ga4||{}).traffic_weekly || [];
+  const ghostStart = gt.history_start || "9999-99-99";
+  const freshest = act.length ? act[act.length-1].d : to;
+  // Unified weekly traffic: GA4 (one consistent counter, full history) for weeks
+  // before Ghost's own analytics began; Ghost analytics after. GA4 reads lower
+  // (ad blockers / ITP), so the chart marks where the source changes.
+  const wkAll = ga4wk.filter(w=>w.wk < ghostStart).map(w=>({wk:w.wk, visitors:w.visits, pageviews:w.pageviews, src:"ga4"}))
+    .concat(wk.map(w=>({wk:w.wk, visitors:w.visitors, pageviews:w.pageviews, src:"ghost"})))
+    .sort((a,b)=>a.wk<b.wk?-1:(a.wk>b.wk?1:0));
   const dailyAgg=()=>{ const ink=kpi.filter(r=>r.date>=from && r.date<=to); if(!ink.length) return null;
     const tv=ink.reduce((s,r)=>s+(r.visits||0),0);
     return {mode:"daily", cov:kcov, days:ink.length, partial:(from<kcov.min||to>kcov.max),
       visits:tv, pageviews:ink.reduce((s,r)=>s+(r.pageviews||0),0),
       avgSession: tv? Math.round(ink.reduce((s,r)=>s+(r.avg_session_sec||0)*(r.visits||0),0)/tv) : 0}; };
-  const weeklyAgg=()=>{ const inw=wk.filter(w=>w.wk>=from && w.wk<=to); if(!inw.length) return null;
-    return {mode:"weekly", cov:wcov, weeks:inw.length, partial:(from<wcov.min),
+  const weeklyAgg=()=>{
+    const inw=wkAll.filter(w=>{const we=rptWeekEnd(w.wk); return we>=from && w.wk<=to;})
+      .map(w=>({...w, end:rptWeekEnd(w.wk), partial:(w.wk<from || rptWeekEnd(w.wk)>to || rptWeekEnd(w.wk)>freshest)}));
+    if(!inw.length) return null;
+    const srcs=[...new Set(inw.map(w=>w.src))];
+    return {mode:"weekly", series:inw, weeks:inw.length, mixed:srcs.length>1,
+      ghostStart: srcs.length>1 ? ghostStart : null, anyPartial: inw.some(w=>w.partial),
       visits:inw.reduce((s,w)=>s+(w.visitors||0),0), pageviews:inw.reduce((s,w)=>s+(w.pageviews||0),0)}; };
   let traffic;
-  if(kcov && from>=kcov.min) traffic=dailyAgg();              // range fully inside daily window → precise
-  else if(wcov && from>=wcov.min) traffic=weeklyAgg();        // older range, weekly history covers it → full-range
-  else traffic=dailyAgg()||weeklyAgg();                       // only partial overlap with either
+  if(kcov && from>=kcov.min && to<=kcov.max) traffic=dailyAgg();   // recent: precise daily Ghost
+  else traffic=weeklyAgg() || dailyAgg();                         // longer/older: combined weekly (GA4+Ghost)
   if(!traffic) traffic={mode:"none"};
 
   const inR=(iso)=>{const x=(iso||"").slice(0,10); return x>=from && x<=to;};
@@ -3416,7 +3428,7 @@ function rptModel(r){
     {l:"Avg session", v:fmtDur(t.avgSession), note:"visit-weighted average (Ghost analytics)"},
   ];
   else if(t.mode==="weekly") tRows=[
-    {l:"Website visits", v:fmtN(t.visits), note:"weekly approximation — daily history only since "+ (gt.history_start||"?") +"; sums whole weeks overlapping your range"},
+    {l:"Website visits", v:fmtN(t.visits), note:"weekly"+(t.mixed?" · GA4 before "+t.ghostStart+", Ghost after (different counters — GA4 reads lower)":" (Ghost analytics)")+(t.anyPartial?" · faded bars = partial weeks":"")},
     {l:"Page views", v:fmtN(t.pageviews)},
   ];
   else tRows=[{l:"Website traffic", v:"not available", note:"daily traffic history starts "+(gt.history_start||"recently")+"; older ranges can't be sliced"}];
@@ -3507,27 +3519,31 @@ function rptCSV(m){
   return rows.map(r=>r.map(q).join(',')).join('\r\n');
 }
 // --- mini charts (binned daily ≤45d, else weekly; inline SVG) ---
+function rptWeekEnd(wk){ return new Date(Date.parse(wk+'T00:00:00Z')+6*86400000).toISOString().slice(0,10); }
 function rptBuckets(from,to){
   const day=86400000, days=Math.round((Date.parse(to)-Date.parse(from))/day)+1;
   const step=days<=45?1:7, out=[];
   for(let t=Date.parse(from+'T00:00:00Z'); t<=Date.parse(to+'T00:00:00Z'); t+=step*day){
     const s=new Date(t).toISOString().slice(0,10);
-    let e=new Date(t+(step-1)*day).toISOString().slice(0,10); if(e>to) e=to;
-    out.push({s,e});
+    let e=new Date(t+(step-1)*day).toISOString().slice(0,10), partial=false;
+    if(e>to){ e=to; partial=(step>1); }   // last weekly bucket clamped to range end = partial week
+    out.push({s,e,partial});
   }
   return {buckets:out, step};
 }
 function rptSumInto(buckets,rows,dk,vk){
   return buckets.map(b=>rows.reduce((s,r)=>{const d=(r[dk]||'').slice(0,10); return (d>=b.s&&d<=b.e)?s+(+(r[vk]||0)):s;},0));
 }
-function rptBarsSVG(buckets,vals,color,unit,fmtFn,from,to){
+function rptBarsSVG(buckets,vals,color,unit,fmtFn,from,to,note){
   const maxV=Math.max(...vals); if(!(maxV>0)) return '';
-  const W=800,H=120,padT=16,padB=22,padL=8,padR=8,base=H-padB,innerH=H-padT-padB,innerW=W-padL-padR;
-  const n=buckets.length,bw=Math.max(1,(innerW/n)*0.72),x=i=>padL+innerW*(i+0.5)/n;
-  let s='<svg class="rptchart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="width:100%;height:120px">';
+  const W=800,H=122,padT=18,padB=22,padL=8,padR=8,base=H-padB,innerH=H-padT-padB,innerW=W-padL-padR;
+  const n=buckets.length,bw=Math.max(1,(innerW/n)*0.72),x=i=>padL+innerW*(i+0.5)/n; let anyPartial=false;
+  let s='<svg class="rptchart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="width:100%;height:122px">';
   s+='<line x1="'+padL+'" y1="'+base+'" x2="'+(W-padR)+'" y2="'+base+'" stroke="#D9D5CE"/>';
-  buckets.forEach((b,i)=>{ if(vals[i]>0){const h=(vals[i]/maxV)*innerH; s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(base-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="'+color+'"><title>'+b.s+(b.e!==b.s?' – '+b.e:'')+': '+fmtFn(vals[i])+'</title></rect>';}});
-  s+='<text x="'+padL+'" y="'+(padT-4)+'" font-size="9" fill="#5A5C61">'+unit+' · peak '+fmtFn(maxV)+'</text>';
+  buckets.forEach((b,i)=>{ if(vals[i]>0){const h=(vals[i]/maxV)*innerH; if(b.partial)anyPartial=true;
+    s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(base-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="'+(b.color||color)+'"'+(b.partial?' opacity=".4"':'')+'><title>'+b.s+(b.e&&b.e!==b.s?' – '+b.e:'')+': '+fmtFn(vals[i])+(b.partial?' (partial week)':'')+'</title></rect>';}});
+  const cap=unit+' · peak '+fmtFn(maxV)+(anyPartial?' · faded = partial week':'')+(note?' · '+note:'');
+  s+='<text x="'+padL+'" y="'+(padT-6)+'" font-size="9" fill="#5A5C61">'+cap+'</text>';
   s+='<text x="'+padL+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61">'+from+'</text>';
   s+='<text x="'+(W-padR)+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61" text-anchor="end">'+to+'</text>';
   return s+'</svg>';
@@ -3540,12 +3556,13 @@ function rptChartSignups(from,to,cutover){
   const maxV=Math.max(1,...pos,...neg);
   const W=800,H=150,padT=20,padB=22,padL=8,padR=8,innerH=H-padT-padB,innerW=W-padL-padR,mid=padT+innerH/2;
   const n=buckets.length,bw=Math.max(1,(innerW/n)*0.72),x=i=>padL+innerW*(i+0.5)/n,hUp=v=>(v/maxV)*(innerH/2);
+  let anyPartial=false;
   let s='<svg class="rptchart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="width:100%;height:150px">';
   s+='<line x1="'+padL+'" y1="'+mid+'" x2="'+(W-padR)+'" y2="'+mid+'" stroke="#D9D5CE"/>';
-  buckets.forEach((b,i)=>{ const lbl=b.s+(b.e!==b.s?' – '+b.e:'');
-    if(pos[i]>0){const h=hUp(pos[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(mid-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#57AA4A"><title>'+lbl+': +'+pos[i]+' signups</title></rect>';}
-    if(neg[i]>0){const h=hUp(neg[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+mid.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#C8377E"><title>'+lbl+': -'+neg[i]+' unsubscribes</title></rect>';}});
-  s+='<text x="'+padL+'" y="'+(padT-6)+'" font-size="9" fill="#5A5C61">signups (green, up) vs unsubscribes (magenta, down) · '+(step>1?'weekly':'daily')+(cutover&&from<cutover?' · before '+cutover+' shows Ghost-recorded signups only (undercounts the real flow)':'')+'</text>';
+  buckets.forEach((b,i)=>{ const lbl=b.s+(b.e!==b.s?' – '+b.e:''), op=b.partial?' opacity=".45"':''; if(b.partial)anyPartial=true;
+    if(pos[i]>0){const h=hUp(pos[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(mid-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#57AA4A"'+op+'><title>'+lbl+': +'+pos[i]+' signups'+(b.partial?' (partial week)':'')+'</title></rect>';}
+    if(neg[i]>0){const h=hUp(neg[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+mid.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#C8377E"'+op+'><title>'+lbl+': -'+neg[i]+' unsubscribes'+(b.partial?' (partial week)':'')+'</title></rect>';}});
+  s+='<text x="'+padL+'" y="'+(padT-6)+'" font-size="9" fill="#5A5C61">signups (green, up) vs unsubscribes (magenta, down) · '+(step>1?'weekly':'daily')+(anyPartial?' · faded = partial week':'')+(cutover&&from<cutover?' · before '+cutover+' = Ghost-recorded only (undercounts)':'')+'</text>';
   s+='<text x="'+padL+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61">'+from+'</text>';
   s+='<text x="'+(W-padR)+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61" text-anchor="end">'+to+'</text>';
   return s+'</svg>';
@@ -3554,9 +3571,10 @@ function rptChartTraffic(from,to,traffic){
   const gt=(window.__GD||{}).ghost_traffic||{};
   if(!traffic||traffic.mode==='none') return '';
   if(traffic.mode==='daily'){ const {buckets}=rptBuckets(from,to); return rptBarsSVG(buckets,rptSumInto(buckets,(gt.kpi_rows_30d||[]),'date','visits'),'#1F6FB2','Website visits',fmtN,from,to); }
-  const wks=(gt.traffic_series||[]).filter(w=>w.wk>=from&&w.wk<=to);
-  if(!wks.length) return '';
-  return rptBarsSVG(wks.map(w=>({s:w.wk,e:w.wk})), wks.map(w=>+(w.visitors||0)),'#1F6FB2','Website visits · weekly',fmtN,from,to);
+  const ser=traffic.series||[]; if(!ser.length) return '';
+  const buckets=ser.map(w=>({s:w.wk, e:w.end||rptWeekEnd(w.wk), partial:w.partial, color:(w.src==='ga4'?'#9CC3DE':'#1F6FB2')}));
+  const note=traffic.mixed ? ('before '+traffic.ghostStart+': GA4 (lighter); after: Ghost analytics — different counters') : 'Ghost analytics, weekly';
+  return rptBarsSVG(buckets, ser.map(w=>+(w.visitors||0)), '#1F6FB2','Website visits · weekly',fmtN,from,to,note);
 }
 function rptChartGiving(from,to){
   const ds=((window.__GD||{}).donorbox||{}).daily_series||[];

@@ -999,6 +999,36 @@ def _ga4_totals(prop, token, days):
     return (int(v[0]["value"]), int(v[1]["value"]), int(v[2]["value"]))
 
 
+def _ga4_weekly_traffic(prop, token, start_date="2025-01-01"):
+    """Daily sessions + page views aggregated to Monday-start weeks. Lets the
+    custom-report tool backfill weeks that predate Ghost's own analytics history.
+    GA4 is one consistent counter across the whole timeline — it reads LOWER than
+    Ghost (ad blockers / ITP suppress its third-party script), so where GA4 weeks
+    meet Ghost weeks the report flags the source change."""
+    body = {
+        "dateRanges": [{"startDate": start_date, "endDate": "today"}],
+        "dimensions": [{"name": "date"}],
+        "metrics": [{"name": "sessions"}, {"name": "screenPageViews"}],
+        "orderBys": [{"dimension": {"dimensionName": "date"}}],
+        "limit": 100000,
+    }
+    req = urllib.request.Request(
+        f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+        data=json.dumps(body).encode(),
+        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        rep = json.loads(r.read())
+    wk = {}
+    for row in rep.get("rows") or []:
+        d = row["dimensionValues"][0]["value"]            # YYYYMMDD
+        dt = datetime(int(d[:4]), int(d[4:6]), int(d[6:]))
+        monday = dt - timedelta(days=dt.weekday())
+        e = wk.setdefault(monday.strftime("%Y-%m-%d"), [0, 0])
+        v = row["metricValues"]
+        e[0] += int(v[0]["value"]); e[1] += int(v[1]["value"])
+    return [{"wk": k, "visits": wk[k][0], "pageviews": wk[k][1]} for k in sorted(wk)]
+
+
 def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=None, end_date="today"):
     """Per-article engagement time — a read-depth proxy GA4 measures (the
     seconds a reader's tab is actually focused on the page) and Ghost can't.
@@ -1269,6 +1299,10 @@ def pull_ga4():
             returning = _ga4_returning(prop, token)
         except Exception as e:
             log(f"  ga4 returning-vs-new failed: {e}"); returning = {}
+        try:
+            traffic_weekly = _ga4_weekly_traffic(prop, token, "2025-01-01")
+        except Exception as e:
+            log(f"  ga4 weekly traffic failed: {e}"); traffic_weekly = []
         log(f"  ga4: {u30:,} users (30d); {u365:,} users (1y); {len(engagement)} eng; {len(since_pages)} since-Jan; {len(by_year.get('years',[]))} yrs")
         return {
             "available": True, "property_id": prop,
@@ -1280,6 +1314,7 @@ def pull_ga4():
             "top_pages_by_year": top_by_year,
             "top_pages_alltime": top_alltime,
             "by_year": by_year, "returning": returning,
+            "traffic_weekly": traffic_weekly,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:
