@@ -3004,7 +3004,7 @@
     "type_basis": "default",
     "published_date": "2026-02-19",
     "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-04-15T13:42:31.000+00:00",
+    "updated_at": "2026-06-23T14:01:03.000+00:00",
     "primary_author": "John K. Roman",
     "authors": [
       "John K. Roman"
@@ -6334,39 +6334,6 @@
     "id": "69a04c0ad4006a00010a42a4"
   },
   {
-    "title": "What Hangs in the Balance Sheets",
-    "slug": "what-hangs-in-the-balance-sheets",
-    "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-16T19:02:02.000+00:00",
-    "primary_author": "Vital City",
-    "authors": [
-      "Vital City"
-    ],
-    "topics": [
-      "What We Can and Can't Afford",
-      "Economics",
-      "Government Operations"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Two New York City apartment buildings’ costs and revenue",
-    "excerpt": "Two New York City apartment buildings’ costs and revenue",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhfp2gnhvftpqhy_h_16282379-auto-format-compress-1776259678798.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 3276,
-    "reading_minutes": 14,
-    "id": "69a04c0ad4006a00010a401a"
-  },
-  {
     "title": "Learning from Jersey City",
     "slug": "learning-from-jersey-city",
     "url": "https://www.vitalcitynyc.org/learning-from-jersey-city/",
@@ -6663,6 +6630,39 @@
     "word_count": 4707,
     "reading_minutes": 20,
     "id": "69a04c0ad4006a00010a4280"
+  },
+  {
+    "title": "What Hangs in the Balance Sheets",
+    "slug": "what-hangs-in-the-balance-sheets",
+    "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-16T19:02:02.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "What We Can and Can't Afford",
+      "Economics",
+      "Government Operations"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Two New York City apartment buildings’ costs and revenue",
+    "excerpt": "Two New York City apartment buildings’ costs and revenue",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhfp2gnhvftpqhy_h_16282379-auto-format-compress-1776259678798.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 3276,
+    "reading_minutes": 14,
+    "id": "69a04c0ad4006a00010a401a"
   },
   {
     "title": "Local Democracy is Land-Use Policy",
@@ -9909,35 +9909,97 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "Is It Time for Cities to Go It Alone?",
-    "slug": "is-it-time-for-cities-to-go-it-alone",
-    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
+    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
+    "slug": "trumps-bizarro-new-deal",
+    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "Richard Schragger",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Adam Cohen",
     "authors": [
-      "Richard Schragger"
+      "Adam Cohen"
     ],
     "topics": [
-      "Where Do We Go From Here?",
-      "City Government",
-      "Politics"
+      "History",
+      "Repercussions",
+      "Government Operations"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
+    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1697,
+    "word_count": 1619,
     "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4049"
+    "id": "69a04c0ad4006a00010a41d5"
+  },
+  {
+    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
+    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
+    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Meryl Chertoff",
+    "authors": [
+      "Meryl Chertoff"
+    ],
+    "topics": [
+      "Government Operations",
+      "Repercussions",
+      "City Planning"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "The Sharpie and the damage done",
+    "excerpt": "The Sharpie and the damage done",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1313,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a404c"
+  },
+  {
+    "title": "Donald Trump vs. the Rule of Law, and New York City",
+    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
+    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:02.000+00:00",
+    "primary_author": "Harry Siegel",
+    "authors": [
+      "Harry Siegel"
+    ],
+    "topics": [
+      "Politics",
+      "Repercussions",
+      "Corruption"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1560,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a404b"
   },
   {
     "title": "What You Can Do About Trump",
@@ -9972,97 +10034,35 @@
     "id": "69a04c0ad4006a00010a404a"
   },
   {
-    "title": "Donald Trump vs. the Rule of Law, and New York City",
-    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
-    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
+    "title": "Is It Time for Cities to Go It Alone?",
+    "slug": "is-it-time-for-cities-to-go-it-alone",
+    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
     "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "Harry Siegel",
+    "primary_author": "Richard Schragger",
     "authors": [
-      "Harry Siegel"
+      "Richard Schragger"
     ],
     "topics": [
-      "Politics",
-      "Repercussions",
-      "Corruption"
+      "Where Do We Go From Here?",
+      "City Government",
+      "Politics"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
+    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1560,
+    "word_count": 1697,
     "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a404b"
-  },
-  {
-    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
-    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
-    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Meryl Chertoff",
-    "authors": [
-      "Meryl Chertoff"
-    ],
-    "topics": [
-      "Government Operations",
-      "Repercussions",
-      "City Planning"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "The Sharpie and the damage done",
-    "excerpt": "The Sharpie and the damage done",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1313,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a404c"
-  },
-  {
-    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
-    "slug": "trumps-bizarro-new-deal",
-    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Adam Cohen",
-    "authors": [
-      "Adam Cohen"
-    ],
-    "topics": [
-      "History",
-      "Repercussions",
-      "Government Operations"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1619,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a41d5"
+    "id": "69a04c0ad4006a00010a4049"
   },
   {
     "title": "A Real New York Mayoral Election",
