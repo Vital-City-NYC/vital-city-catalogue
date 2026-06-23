@@ -221,6 +221,38 @@ INST_DOMAINS = {
     "nycourts.gov": "New York State Courts", "courts.state.ny.us": "New York State Courts",
     "nysenate.gov": "New York State Senate", "exec.ny.gov": "New York State Executive Chamber",
     "comptroller.nyc.gov": "NYC Comptroller's Office", "advocate.nyc.gov": "NYC Public Advocate's Office",
+    # NYC agencies & offices — full names read better in the contact table than the
+    # auto-acronym fallback, and fix the ones it would mash (bronxda, cityhall, law).
+    "law.nyc.gov": "NYC Law Department", "cityhall.nyc.gov": "Office of the Mayor",
+    "mocj.nyc.gov": "Mayor's Office of Criminal Justice",
+    "dany.nyc.gov": "Manhattan District Attorney's Office",
+    "bronxda.nyc.gov": "Bronx District Attorney's Office",
+    "brooklynda.nyc.gov": "Brooklyn District Attorney's Office",
+    "queensda.nyc.gov": "Queens District Attorney's Office",
+    "health.nyc.gov": "NYC Department of Health and Mental Hygiene",
+    "dohmh.nyc.gov": "NYC Department of Health and Mental Hygiene",
+    "planning.nyc.gov": "NYC Department of City Planning",
+    "dss.nyc.gov": "NYC Department of Social Services",
+    "hra.nyc.gov": "NYC Human Resources Administration",
+    "acs.nyc.gov": "NYC Administration for Children's Services",
+    "dycd.nyc.gov": "NYC Department of Youth and Community Development",
+    "aging.nyc.gov": "NYC Department for the Aging", "dfta.nyc.gov": "NYC Department for the Aging",
+    "ibo.nyc.gov": "NYC Independent Budget Office",
+    "ccrb.nyc.gov": "NYC Civilian Complaint Review Board",
+    "doc.nyc.gov": "NYC Department of Correction",
+    "probation.nyc.gov": "NYC Department of Probation",
+    "sbs.nyc.gov": "NYC Small Business Services",
+    "lpc.nyc.gov": "NYC Landmarks Preservation Commission",
+    "dsny.nyc.gov": "NYC Department of Sanitation",
+    "oti.nyc.gov": "NYC Office of Technology and Innovation",
+    "parks.nyc.gov": "NYC Parks", "dob.nyc.gov": "NYC Department of Buildings",
+    "dof.nyc.gov": "NYC Department of Finance", "dep.nyc.gov": "NYC Department of Environmental Protection",
+    "dca.nyc.gov": "NYC Department of Consumer and Worker Protection",
+    "dcwp.nyc.gov": "NYC Department of Consumer and Worker Protection",
+    "dcla.nyc.gov": "NYC Department of Cultural Affairs",
+    "edc.nyc": "NYC Economic Development Corporation",
+    "correctionalassociation.org": "Correctional Association of New York",
+    "ny.frb.org": "Federal Reserve Bank of New York", "newyorkfed.org": "Federal Reserve Bank of New York",
     "boston.gov": "City of Boston", "nashville.gov": "Metro Nashville", "phoenix.gov": "City of Phoenix",
     "austintexas.gov": "City of Austin", "baltimorecity.gov": "City of Baltimore",
     "cityofchicago.org": "City of Chicago", "cityofboise.org": "City of Boise",
@@ -364,6 +396,17 @@ def refresh_stale_inst(people):
         cur = (p.get("inst") or "").strip()
         if not cur:
             continue
+        # Upgrade a generic 'New York City government' (a machine value) to the
+        # specific agency when one of the person's emails identifies it.
+        if cur == "New York City government":
+            for e in (p.get("emails") or []):
+                if "@" not in e:
+                    continue
+                dom = e.split("@")[-1].strip().lower()
+                better = _curated_inst(dom) or _nyc_gov_org(dom)
+                if better and better != cur:
+                    p["inst"] = better; fixed += 1; break
+            continue
         for e in (p.get("emails") or []):
             if "@" not in e:
                 continue
@@ -390,16 +433,40 @@ def _naive_garble(dom):
     return None
 
 
+# Host labels that aren't an agency (mail relays, web hosts) — fall back to the
+# generic name for these rather than coining "NYC MAIL".
+NYC_SUBDOMAIN_SKIP = {"www", "www1", "www2", "mail", "email", "smtp", "mx",
+                      "owa", "exchange", "m", "mobile", "portal", "my", "apps",
+                      "secure", "webmail", "mailgw"}
+
+
+def _nyc_gov_org(dom):
+    """Specific NYC agency from an X.nyc.gov email when the agency label is
+    identifiable (oath.nyc.gov -> 'NYC OATH', parks.nyc.gov -> 'NYC Parks'),
+    else generic 'New York City government'. Short labels read as acronyms
+    (uppercased); longer ones are title-cased. Returns None for non-nyc.gov."""
+    if dom == "nyc.gov":
+        return "New York City government"
+    if dom.endswith(".nyc.gov"):
+        parts = dom.split(".")                       # ['oath','nyc','gov'] / ['mail','dohmh','nyc','gov']
+        agency = parts[-3] if len(parts) >= 3 else ""
+        if agency and agency not in NYC_SUBDOMAIN_SKIP and re.fullmatch(r"[a-z]{2,}", agency):
+            return "NYC " + (agency.upper() if len(agency) <= 4 else agency.capitalize())
+        return "New York City government"
+    return None
+
+
 def infer_institution(emails):
     """Best-guess institution from an email domain. Curated map first, then
-    nyc.gov/.gov/.edu, then hyphenated org domains. Webmail → no guess."""
+    nyc.gov agency, .gov/.edu, then hyphenated org domains. Webmail → no guess."""
     for e in emails:
         dom = e.split("@")[-1].strip().lower()
         hit = _curated_inst(dom)
         if hit:
             return hit
-        if dom == "nyc.gov" or dom.endswith(".nyc.gov"):
-            return "New York City government"
+        g = _nyc_gov_org(dom)
+        if g:
+            return g
         if dom in WEBMAIL:
             continue
         if dom.endswith(".edu"):
