@@ -173,6 +173,23 @@
   <h3>The mirror spreadsheet</h3>
   <p>A consolidated spreadsheet that mirrors this tool — <a href="https://docs.google.com/spreadsheets/d/17v3wa1OMW5XXIcu0oN6tp4-NfOje7xPTVUv5Zb3XVVE/edit"><b>Vital City — Network (master)</b></a> — holds everyone with all fields for sorting/filtering in Sheets. (Editing that sheet doesn't feed back into the tool — use <b>Edit</b> here for that.)</p>
 
+  <h2>For maintainers — how to manage, maintain and improve this</h2>
+  <p>This tool was first built through Claude Code, but it is <b>not tied to any one person or account</b>. Everything it needs lives in a GitHub repository and runs on GitHub's servers, so anyone at Vital City with access to the repo and the shared secrets can run, fix and extend it. The companion <a href="https://github.com/vitalcity-nyc/vital-city-catalogue/blob/main/HANDOFF.md" target="_blank">maintainer's guide (HANDOFF.md)</a> has the full engineering detail; the essentials:</p>
+  <table>
+    <tr><th>Where it lives</th><td>Repo <code>vitalcity-nyc/vital-city-catalogue</code> (push as the <code>vitalcity-nyc</code> GitHub account). Live at <code>vitalcity-nyc.github.io/vital-city-catalogue/network/</code>, served by GitHub Pages from the <code>main</code> branch.</td></tr>
+    <tr><th>How it stays current</th><td>A scheduled GitHub Action (<code>network-refresh.yml</code>) runs <b>twice a day</b> on GitHub's servers — it pulls Ghost, Mailchimp, Donorbox, the contacts Sheet and the article catalogue, rebuilds the data, encrypts it and republishes. No one's computer has to be on.</td></tr>
+    <tr><td><b>Secrets</b></td><td>The passphrase and every API key live in <b>GitHub Actions secrets</b> (shared out-of-band), never in the code. The repo is public but the data is encrypted, so it's safe there.</td></tr>
+    <tr><td><b>How edits persist</b></td><td>Your in-tool edits, confirms and deletes save to a shared Google Sheet (the <code>overrides</code> and <code>add</code> tabs) and are folded back in on every refresh, so they hold for everyone. Deleting a row in those tabs undoes that edit.</td></tr>
+  </table>
+  <h3>Making changes</h3>
+  <ul>
+    <li><b>Wording, layout, colors</b> (anything visual): edit <code>network/index.html</code> and push — it deploys on its own, no rebuild.</li>
+    <li><b>Data or logic</b> (a new source, a new tag rule, better matching): edit the Python (<code>build_network.py</code>), push, then run the refresh workflow once; the page updates when it finishes.</li>
+    <li><b>Add a data source or a big list:</b> hand the file to Claude Code (or a developer) and say what it is — it's folded into the right source. Don't paste hundreds of rows by hand.</li>
+    <li><b>Improve the auto-fill:</b> the tool guesses names, organizations (from email domains) and types. Those rules live in <code>build_network.py</code> — the curated email-domain → organization map, and the agency rules for <code>nyc.gov</code> addresses. Add to them to flesh out more contacts automatically.</li>
+  </ul>
+  <p>The simplest way to manage all of this is to keep using Claude Code on the repo: describe what you want in plain language and it makes the change, runs the refresh and verifies it. A developer can do the same by hand from the HANDOFF guide.</p>
+
   <h2>Confidentiality</h2>
   <p>This contains subscriber, donor and contact data. The page is password-protected and the underlying data is encrypted — only people with the passphrase can read it. Don't redistribute it or the passphrase.</p>
   <p>After you enter the passphrase once, the device remembers it so you don't retype it each visit. On a shared or public computer, click <b>Lock</b> (top-right of the header) to forget the passphrase on this device and re-lock the tool.</p>

@@ -14,6 +14,21 @@ The data is encrypted in the browser with a shared passphrase, so the files can 
 
 ---
 
+## 0. Ownership & handover
+
+These tools were first built through Claude Code on a personal account, but **nothing depends on
+that person or account.** Everything required to run, fix and extend both tools lives in this repo
+and in **GitHub Actions** (code, the scheduled refresh, the secrets). Anyone at Vital City with
+access to the `vitalcity-nyc` GitHub account (which owns the repo) and the shared secrets can fully
+manage them — there is no local machine, cron job or personal credential in the critical path.
+
+To take over: get added to the `vitalcity-nyc` GitHub account, confirm the Actions secrets are in
+place (§5), and either (a) keep driving changes through Claude Code on the repo — the lowest-friction
+path — or (b) work the repo directly using this guide. Both tools' in-app "How it works" pages also
+carry a maintainer summary that points back here.
+
+---
+
 ## 1. The five golden rules
 
 1. **Always `gh auth switch --user vitalcity-nyc` before any push or `gh` call.** The `vitalcity-nyc`
