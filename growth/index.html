@@ -3371,6 +3371,21 @@ function fmtBigDur(sec){ sec=Math.round(sec||0); if(sec>=3600){const h=Math.floo
 // not arbitrary dates — so we pick the closest and label it.
 function rptTopStories(from,to,N){
   const g=(window.__GD||{}).ga4||{};
+  // 1) Exact-period ranking from the per-article weekly series, whenever the
+  //    range falls within its coverage (week resolution — sums the weeks that
+  //    overlap your dates, ranks by page views).
+  const sw=g.story_weekly;
+  if(sw && sw.rows && sw.rows.length && sw.pages){
+    let covMin=sw.rows[0][1]; for(const r of sw.rows){ if(r[1]<covMin) covMin=r[1]; }
+    if(from>=covMin){
+      const agg={};
+      sw.rows.forEach(r=>{ const wk=r[1]; if(rptWeekEnd(wk)>=from && wk<=to){ const a=agg[r[0]]||(agg[r[0]]=[0,0]); a[0]+=r[2]; a[1]+=r[3]; } });
+      const rows=Object.keys(agg).map(i=>{ const a=agg[i], pg=sw.pages[i]||{}; return {t:pg.t||pg.p||'(untitled)', pv:a[0], avg:a[0]?a[1]/a[0]:0, tot:a[1]}; })
+        .sort((x,y)=>y.pv-x.pv).slice(0,N);
+      if(rows.length) return {label:'your selected range', weekly:true, rows};
+    }
+  }
+  // 2) Fallback for ranges older than the weekly series: closest fixed GA4 window.
   const eby=g.engagement_by_year||{};
   const yF=from.slice(0,4), yT=to.slice(0,4), curY=String(new Date().getUTCFullYear());
   let list=null, label='';
@@ -3380,7 +3395,7 @@ function rptTopStories(from,to,N){
   if(!list||!list.length) return null;
   const rows=list.slice().sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,N)
     .map(p=>({t:p.title||p.path||'(untitled)', pv:+(p.views||0), avg:+(p.avg_secs||0), tot:+(p.total_secs||0)}));
-  return {label, rows};
+  return {label, weekly:false, rows};
 }
 function rptModel(r){
   const d = window.__GD || {};
@@ -3513,7 +3528,7 @@ function rptHTML(m){
   });
   if(m.topStories){
     h+='<div class="rpt-sec">Top stories · '+esc(m.topStories.label)+'</div>';
-    h+='<div style="font-size:11px;color:var(--vc-charcoal);margin:-2px 0 6px">Most-read pieces in this window by page views, with GA4 engaged time. Fixed GA4 window — not sliced to your exact dates.</div>';
+    h+='<div style="font-size:11px;color:var(--vc-charcoal);margin:-2px 0 6px">'+(m.topStories.weekly?'Most-read pieces over the weeks overlapping your range, ranked by page views, with GA4 engaged time (week resolution).':'Most-read pieces by page views, with GA4 engaged time. Your range predates the per-article weekly history, so this is the closest GA4 window.')+'</div>';
     h+='<table class="rpt rpttop"><tbody><tr class="rpthead"><td>Story</td><td class="r">Page views</td><td class="r">Avg engaged</td><td class="r">Total engaged</td></tr>';
     m.topStories.rows.forEach((p,i)=>{ h+='<tr><td class="rl">'+(i+1)+'. '+esc(p.t)+'</td><td class="rv r">'+fmtN(p.pv)+'</td><td class="rn r">'+fmtDur(p.avg)+'/view</td><td class="rn r">'+fmtBigDur(p.tot)+'</td></tr>'; });
     h+='</tbody></table>';
@@ -3614,7 +3629,7 @@ function rptPrintDoc(m){
   let b='<div class="wm">Vital City</div><h1>Growth report</h1>';
   b+='<p class="period">'+esc(m.from)+' to '+esc(m.to)+' · '+m.dayCount+' days. Comparisons vs '+esc(m.cmpDesc)+'. Dashboard data refreshed '+esc(m.generated||'')+'.</p>';
   m.sections.forEach(s=>{ b+='<h2>'+esc(s.name)+'</h2><table>'; s.rows.forEach(r=>{ b+='<tr><td class="l">'+esc(r.l)+'</td><td class="v">'+esc(r.v)+'</td><td class="n">'+esc(rptNotePlain(r, m.cmpShort))+'</td></tr>'; }); b+='</table>'; if(s.chart) b+='<div class="pchart">'+s.chart+'</div>'; });
-  if(m.topStories){ b+='<h2>Top stories · '+esc(m.topStories.label)+'</h2><p style="font-size:10.5px;color:#5A5C61;margin:0 0 6px">Ranked by page views, with GA4 engaged time. Fixed GA4 window, not sliced to your exact dates.</p><table><tr><td class="l">Story</td><td class="v">Page views</td><td class="n">Avg engaged</td><td class="n">Total engaged</td></tr>';
+  if(m.topStories){ b+='<h2>Top stories · '+esc(m.topStories.label)+'</h2><p style="font-size:10.5px;color:#5A5C61;margin:0 0 6px">'+(m.topStories.weekly?'Weeks overlapping your range, ranked by page views, with GA4 engaged time (week resolution).':'Ranked by page views, with GA4 engaged time. Range predates the per-article weekly history, so this is the closest GA4 window.')+'</p><table><tr><td class="l">Story</td><td class="v">Page views</td><td class="n">Avg engaged</td><td class="n">Total engaged</td></tr>';
     m.topStories.rows.forEach((p,i)=>{ b+='<tr><td class="l">'+(i+1)+'. '+esc(p.t)+'</td><td class="v">'+fmtN(p.pv)+'</td><td class="n">'+fmtDur(p.avg)+'/view</td><td class="n">'+fmtBigDur(p.tot)+'</td></tr>'; }); b+='</table>'; }
   if(m.names&&m.names.show) m.names.groups.forEach(g=>{ if(!g.rows.length) return; b+='<h2>'+esc(g.name)+' ('+g.rows.length+')</h2><table>'; g.rows.forEach(x=>{ b+='<tr><td class="l">'+esc(x.a)+'</td><td class="v" style="font-weight:400">'+esc(x.b)+'</td><td class="n">'+esc(x.c)+'</td></tr>'; }); b+='</table>'; });
   b+='<div class="cav">'+m.caveats.map(esc).join('<br>')+'</div>';

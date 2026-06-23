@@ -1029,6 +1029,69 @@ def _ga4_weekly_traffic(prop, token, start_date="2025-01-01"):
     return [{"wk": k, "visits": wk[k][0], "pageviews": wk[k][1]} for k in sorted(wk)]
 
 
+def _ga4_story_weekly(prop, token, days=300, top=120):
+    """Per-article weekly page views + engaged seconds, so the custom report can
+    rank top stories for the EXACT period the reader picks (week resolution)
+    rather than a fixed GA4 window. pagePath x date, aggregated to Monday weeks,
+    keeping the top `top` articles by total views over the window. Indexed
+    (pages[] + compact rows) to keep the payload small."""
+    body = {
+        "dateRanges": [{"startDate": f"{days}daysAgo", "endDate": "today"}],
+        "dimensions": [{"name": "pagePath"}, {"name": "date"}],
+        "metrics": [{"name": "screenPageViews"}, {"name": "userEngagementDuration"}],
+        "limit": 200000,
+    }
+    rep = None
+    for attempt in range(3):
+        req = urllib.request.Request(
+            f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+            data=json.dumps(body).encode(),
+            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=90) as r:
+                rep = json.loads(r.read()); break
+        except Exception:
+            if attempt == 2: raise
+            time.sleep(2 * (attempt + 1))
+    cat = {}
+    try:
+        for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
+            u = (c.get("url") or "").rstrip("/")
+            if u:
+                cat["/" + u.split("/")[-1] + "/"] = c.get("title")
+    except Exception:
+        pass
+    def is_article(p):
+        return not (p in ("/", "") or "/job" in p or p in ("/about/", "/about")
+                    or p.startswith("/tag/") or p.startswith("/author/"))
+    pages = {}
+    for row in (rep.get("rows") or []):
+        path = (row["dimensionValues"][0]["value"] or "").split("?")[0]
+        if not is_article(path):
+            continue
+        dt = row["dimensionValues"][1]["value"]   # YYYYMMDD
+        try:
+            d = datetime(int(dt[:4]), int(dt[4:6]), int(dt[6:]))
+        except Exception:
+            continue
+        wk = (d - timedelta(days=d.weekday())).strftime("%Y-%m-%d")   # Monday
+        v = int(row["metricValues"][0]["value"] or 0)
+        s = float(row["metricValues"][1]["value"] or 0)
+        key = "/" + path.strip("/").split("/")[-1] + "/"
+        title = cat.get(key) or path.strip("/").replace("-", " ").title()
+        e = pages.setdefault(path, {"title": title, "tot": 0, "weeks": {}})
+        e["tot"] += v
+        w = e["weeks"].setdefault(wk, [0, 0.0]); w[0] += v; w[1] += s
+    kept = sorted(pages.items(), key=lambda kv: -kv[1]["tot"])[:top]
+    plist = [{"p": path, "t": info["title"]} for path, info in kept]
+    rows = []
+    for i, (path, info) in enumerate(kept):
+        for wk, (v, s) in sorted(info["weeks"].items()):
+            rows.append([i, wk, v, round(s)])
+    log(f"  ga4 story-weekly: {len(plist)} articles, {len(rows)} page-weeks")
+    return {"pages": plist, "rows": rows}
+
+
 def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=None, end_date="today"):
     """Per-article engagement time — a read-depth proxy GA4 measures (the
     seconds a reader's tab is actually focused on the page) and Ghost can't.
@@ -1303,6 +1366,10 @@ def pull_ga4():
             traffic_weekly = _ga4_weekly_traffic(prop, token, "2025-01-01")
         except Exception as e:
             log(f"  ga4 weekly traffic failed: {e}"); traffic_weekly = []
+        try:
+            story_weekly = _ga4_story_weekly(prop, token)
+        except Exception as e:
+            log(f"  ga4 story weekly failed: {e}"); story_weekly = {"pages": [], "rows": []}
         log(f"  ga4: {u30:,} users (30d); {u365:,} users (1y); {len(engagement)} eng; {len(since_pages)} since-Jan; {len(by_year.get('years',[]))} yrs")
         return {
             "available": True, "property_id": prop,
@@ -1314,7 +1381,7 @@ def pull_ga4():
             "top_pages_by_year": top_by_year,
             "top_pages_alltime": top_alltime,
             "by_year": by_year, "returning": returning,
-            "traffic_weekly": traffic_weekly,
+            "traffic_weekly": traffic_weekly, "story_weekly": story_weekly,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:
