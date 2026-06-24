@@ -2101,10 +2101,16 @@ def pull_news_mentions():
                f"&hl=en-US&gl=US&ceid=US:en")
         # Indent the rest of the loop body
         if True:
-            try:
-                xml = http_get(url, headers={"User-Agent": UA_local}, timeout=20)
-            except Exception as e:
-                log(f"  news mentions {domain} ({shape}) failed: {e}"); continue
+            xml = None
+            for attempt in range(3):   # Google News RSS 503s transiently from CI IPs
+                try:
+                    xml = http_get(url, headers={"User-Agent": UA_local}, timeout=20); break
+                except Exception as e:
+                    if attempt == 2:
+                        log(f"  news mentions {domain} ({shape}) failed: {e}")
+                    else:
+                        _t.sleep(1.5 * (attempt + 1))
+            if xml is None: continue
             try:
                 root = ET.fromstring(xml)
             except Exception as e:
@@ -2191,6 +2197,27 @@ def pull_news_mentions():
     # since URL shares are the headline social signal and we want depth.
     media  = [it for it in deduped if it.get("kind") == "media"][:200]
     social = [it for it in deduped if it.get("kind") == "social"][:1500]
+    # Carry-forward cache. Google News RSS periodically 503s for a whole run from
+    # CI IP ranges, which would otherwise blank the third-party-press card. Cache
+    # the last good media pull; if this run scraped none, reuse the cache so a
+    # transient Google outage doesn't wipe the feed (items flagged `stale`).
+    cache_path = ROOT / "data" / "media_mentions_cache.json"
+    if media:
+        try:
+            cache_path.parent.mkdir(parents=True, exist_ok=True)
+            cache_path.write_text(json.dumps(
+                {"as_of": datetime.now(timezone.utc).isoformat(), "items": media}, ensure_ascii=False))
+        except Exception as e:
+            log(f"  media cache write failed: {e}")
+    elif cache_path.exists():
+        try:
+            cached = json.loads(cache_path.read_text())
+            media = cached.get("items", [])
+            for it in media: it["stale"] = True
+            log(f"  news mentions: live media scrape empty (Google News down?) — carried "
+                f"forward {len(media)} cached items from {str(cached.get('as_of',''))[:10]}")
+        except Exception as e:
+            log(f"  media cache read failed: {e}")
     out    = media + social
     log(f"  news mentions: {len(out)} items ({len(media)} media + {len(social)} social) across {len(set(i['domain'] for i in out))} outlets")
     return out

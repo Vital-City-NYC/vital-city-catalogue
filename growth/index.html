@@ -1120,9 +1120,10 @@ function boot(data){
   const news = data.news_mentions || [];
   const realPress = news.filter(it => it.kind === 'media');
   const socialItems = news.filter(it => it.kind === 'social');
+  const pressStale = realPress.length && realPress.every(p=>p.stale);
 
   $("#newsFeed").innerHTML = realPress.length
-    ? realPress.slice(0,80).map(p=>`<li>
+    ? (pressStale?`<li class="empty" style="color:var(--vc-charcoal)">Google News didn't respond on the last refresh — showing the most recent press mentions we have; this list updates as soon as the feed recovers.</li>`:'') + realPress.slice(0,80).map(p=>`<li>
         <span class="src">${esc(p.source||p.domain||'web')}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
         <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
         ${p.snippet?`<div class="snip">${esc(p.snippet)}</div>`:''}
