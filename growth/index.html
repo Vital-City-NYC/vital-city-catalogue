@@ -5,16 +5,19 @@
 <title>Growth dashboard — Vital City</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0F1A2A">
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
 <style>
+  /* Vital City brand fonts: Halyard Text (Typekit) + GascogneTS (self-hosted) */
+  @font-face{font-family:'GascogneTS';src:url('fonts/GascogneTS-Light.ttf') format('truetype');font-weight:300;font-style:normal;font-display:swap;}
   :root{
-    --vc-paper:#F5F1EB; --vc-white:#FFFFFF; --vc-black:#0F1011; --vc-charcoal:#5A5C61;
-    --vc-cloud:#D9D5CE; --vc-green:#57AA4A; --vc-orange:#E2772F; --vc-cerulean:#1F6FB2;
-    --vc-magenta:#C8377E; --vc-paper2:#EFE9DF;
-    --vc-sans:"Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
-    --vc-serif:"GT Sectra","Source Serif Pro",Georgia,Times,serif;
+    --vc-paper:#F5F1EB; --vc-white:#FFFFFF; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-green:#57AA4A; --vc-orange:#ff7c53; --vc-cerulean:#217ebe;
+    --vc-magenta:#e7466d; --vc-paper2:#EFE9DF;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+    --vc-serif:"GascogneTS","Source Serif 4",Georgia,Times,serif;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5}
+  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5;font-synthesis:none;-webkit-font-smoothing:antialiased}
   a{color:var(--vc-cerulean)}
   header.mast{border-bottom:1px solid var(--vc-black);padding:22px 30px 16px;background:var(--vc-white);position:relative}
   header.mast .wm{font-family:var(--vc-sans);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--vc-charcoal)}
@@ -219,12 +222,12 @@
   .soclist .lempty{font-size:12px;color:var(--vc-charcoal);padding:6px 0}
   .pcover{margin-top:10px;font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;align-self:flex-start;padding:2px 8px;border:1px solid;cursor:help}
   .pcover.full{color:#3E7E36;border-color:#57AA4A}
-  .pcover.part{color:#A4540F;border-color:#E2772F}
+  .pcover.part{color:#A4540F;border-color:#ff7c53}
   .pcover.mid{color:var(--vc-charcoal);border-color:var(--vc-charcoal)}
   html.dark .socpanel{background:var(--vc-white)}
   html.dark .socbar .bar{background:var(--vc-paper2)}
   html.dark .pcover.full{color:#7CC974;border-color:#57AA4A}
-  html.dark .pcover.part{color:#F0A06A;border-color:#E2772F}
+  html.dark .pcover.part{color:#F0A06A;border-color:#ff7c53}
   .socposts li{padding:7px 0;border-bottom:1px solid var(--vc-cloud);font-size:12px;line-height:1.4}
   .socposts li:last-child{border-bottom:none}
   .socposts .meta{font-size:10.5px;color:var(--vc-charcoal);margin-bottom:2px;display:flex;gap:10px}
@@ -363,7 +366,7 @@
   .cmpchip.on{background:var(--vc-black);color:#fff}
   html.dark .rptcmp{border-color:#3a3d42}
   html.dark .cmpchip{background:#26282c;color:#e8e8ea}html.dark .cmpchip+.cmpchip{border-left-color:#3a3d42}
-  html.dark .cmpchip.on{background:#e8e8ea;color:#0F1011}
+  html.dark .cmpchip.on{background:#e8e8ea;color:#050507}
   .rptexport{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--vc-cloud)}
   .rpt-period{font-size:13px;color:var(--vc-charcoal);margin:4px 0 16px}
   .rpt-period b{color:var(--vc-black)}
@@ -384,7 +387,7 @@
   .rpt-delta-down{color:var(--vc-magenta);font-weight:700}
   .rpt-caveat{font-size:11px;color:var(--vc-charcoal);line-height:1.55;margin-top:16px;background:var(--vc-paper2);padding:10px 13px;border-left:3px solid var(--vc-cloud)}
   html.dark .rptbar input[type=date],html.dark .btn-rpt,html.dark .qchip{background:#26282c;color:#e8e8ea;border-color:#3a3d42}
-  html.dark .btn-rpt.primary{background:#e8e8ea;color:#0F1011}
+  html.dark .btn-rpt.primary{background:#e8e8ea;color:#050507}
   html.dark .rpt-caveat{background:#26282c;border-left-color:#3a3d42}
 </style>
 </head>
@@ -1329,23 +1332,23 @@ function renderGrowthChart(mc){
   });
   // Cumulative subscribers line (interpolated weekly)
   const subPts = weeks.map((w,i) => `${x(i)},${ySubs(w.cum_subs)}`).join(" ");
-  html += `<polyline points="${subPts}" fill="none" stroke="#1F6FB2" stroke-width="2.5"/>`;
+  html += `<polyline points="${subPts}" fill="none" stroke="#217ebe" stroke-width="2.5"/>`;
   // Dots only at month boundaries (cleaner than 78 dots)
   weeks.forEach((w,i) => {
     const isMonthStart = (i === 0) || (w.wk.slice(0,7) !== weeks[i-1].wk.slice(0,7));
     if(isMonthStart || i === weeks.length-1){
-      html += `<circle cx="${x(i)}" cy="${ySubs(w.cum_subs)}" r="3" fill="#1F6FB2"><title>Week of ${w.wk}: ${fmtN(w.cum_subs)} subscribers</title></circle>`;
+      html += `<circle cx="${x(i)}" cy="${ySubs(w.cum_subs)}" r="3" fill="#217ebe"><title>Week of ${w.wk}: ${fmtN(w.cum_subs)} subscribers</title></circle>`;
     }
   });
   // Opens line — weekly total opens (right axis). Only plot weeks with sends.
   const openWeeks = weeks.map((w,i) => w.opens > 0 ? [i, w.opens] : null).filter(Boolean);
   if(openWeeks.length){
     const openPts = openWeeks.map(([i,o]) => `${x(i)},${yOpen(o)}`).join(" ");
-    html += `<polyline points="${openPts}" fill="none" stroke="#E2772F" stroke-width="1.4" stroke-dasharray="4 3" opacity=".65"/>`;
+    html += `<polyline points="${openPts}" fill="none" stroke="#ff7c53" stroke-width="1.4" stroke-dasharray="4 3" opacity=".65"/>`;
     // Small, light dots — they carry the hover tooltips but shouldn't
     // compete visually with the subscriber line.
     openWeeks.forEach(([i,o]) => {
-      html += `<circle cx="${x(i)}" cy="${yOpen(o)}" r="2" fill="#E2772F" opacity=".6"><title>Week of ${weeks[i].wk}: ~${fmtN(o)} total opens across that week's sends</title></circle>`;
+      html += `<circle cx="${x(i)}" cy="${yOpen(o)}" r="2" fill="#ff7c53" opacity=".6"><title>Week of ${weeks[i].wk}: ~${fmtN(o)} total opens across that week's sends</title></circle>`;
     });
   }
   // Annotate "in progress" for the current partial week so it's not read as a real drop
@@ -1521,18 +1524,18 @@ function renderPerfChart(monthly){
   }
   // Open rate line + dots
   const op=last.map((r,i)=>`${x(i)},${y(r.open_pct)}`).join(" ");
-  html+=`<polyline points="${op}" fill="none" stroke="#1F6FB2" stroke-width="2"/>`;
-  last.forEach((r,i)=>{html+=`<circle cx="${x(i)}" cy="${y(r.open_pct)}" r="2.5" fill="#1F6FB2"><title>${r.month}: open ${r.open_pct}% · click ${r.click_pct}% · ${r.sends} sends</title></circle>`;});
+  html+=`<polyline points="${op}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
+  last.forEach((r,i)=>{html+=`<circle cx="${x(i)}" cy="${y(r.open_pct)}" r="2.5" fill="#217ebe"><title>${r.month}: open ${r.open_pct}% · click ${r.click_pct}% · ${r.sends} sends</title></circle>`;});
   // Click rate (smaller line, secondary)
   const cl=last.map((r,i)=>`${x(i)},${y(r.click_pct)}`).join(" ");
-  html+=`<polyline points="${cl}" fill="none" stroke="#E2772F" stroke-width="1.4" opacity=".9"/>`;
-  last.forEach((r,i)=>{html+=`<circle cx="${x(i)}" cy="${y(r.click_pct)}" r="2" fill="#E2772F"/>`;});
+  html+=`<polyline points="${cl}" fill="none" stroke="#ff7c53" stroke-width="1.4" opacity=".9"/>`;
+  last.forEach((r,i)=>{html+=`<circle cx="${x(i)}" cy="${y(r.click_pct)}" r="2" fill="#ff7c53"/>`;});
   // Mark Apple Mail privacy "break" if Jul 2025 falls in the window
   const brkIdx=last.findIndex(r=>r.month==="2025-07");
   if(brkIdx>=0){
     const bx=x(brkIdx);
-    html+=`<line x1="${bx}" x2="${bx}" y1="${padT}" y2="${padT+innerH}" stroke="#5A5C61" stroke-dasharray="3 3" opacity=".4"/>`;
-    html+=`<text x="${bx+4}" y="${padT+11}" font-size="9" fill="#5A5C61">Jul '25 break</text>`;
+    html+=`<line x1="${bx}" x2="${bx}" y1="${padT}" y2="${padT+innerH}" stroke="#707175" stroke-dasharray="3 3" opacity=".4"/>`;
+    html+=`<text x="${bx+4}" y="${padT+11}" font-size="9" fill="#707175">Jul '25 break</text>`;
   }
   svg.innerHTML=html;
 
@@ -1662,16 +1665,16 @@ function renderSendChart(camps){
   last.forEach((c,i)=>{
     const h=Math.max(0,(c.open_pct/yMax)*innerH);
     const subj=(c.subject||'(no subject)').slice(0,80);
-    html+=`<rect x="${x(i)-bw/2}" y="${y(c.open_pct)}" width="${bw}" height="${h}" fill="#1F6FB2" opacity=".18"><title>${esc(c.sent)} — ${esc(subj)}\nopen ${c.open_pct}% · click ${c.click_pct}% · ${fmtN(c.sent_to)} recipients</title></rect>`;
+    html+=`<rect x="${x(i)-bw/2}" y="${y(c.open_pct)}" width="${bw}" height="${h}" fill="#217ebe" opacity=".18"><title>${esc(c.sent)} — ${esc(subj)}\nopen ${c.open_pct}% · click ${c.click_pct}% · ${fmtN(c.sent_to)} recipients</title></rect>`;
   });
   // Open-rate line
   const opPts=last.map((c,i)=>`${x(i)},${y(c.open_pct||0)}`).join(" ");
-  html+=`<polyline points="${opPts}" fill="none" stroke="#1F6FB2" stroke-width="2"/>`;
-  last.forEach((c,i)=>{html+=`<circle cx="${x(i)}" cy="${y(c.open_pct||0)}" r="3" fill="#1F6FB2"/>`;});
+  html+=`<polyline points="${opPts}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
+  last.forEach((c,i)=>{html+=`<circle cx="${x(i)}" cy="${y(c.open_pct||0)}" r="3" fill="#217ebe"/>`;});
   // Click-rate line
   const clPts=last.map((c,i)=>`${x(i)},${y(c.click_pct||0)}`).join(" ");
-  html+=`<polyline points="${clPts}" fill="none" stroke="#E2772F" stroke-width="1.5"/>`;
-  last.forEach((c,i)=>{html+=`<circle cx="${x(i)}" cy="${y(c.click_pct||0)}" r="2" fill="#E2772F"/>`;});
+  html+=`<polyline points="${clPts}" fill="none" stroke="#ff7c53" stroke-width="1.5"/>`;
+  last.forEach((c,i)=>{html+=`<circle cx="${x(i)}" cy="${y(c.click_pct||0)}" r="2" fill="#ff7c53"/>`;});
   // Rolling avg of open rate (window of 5)
   const avg=[]; last.forEach((c,i)=>{
     const s=Math.max(0,i-2), e=Math.min(last.length-1,i+2);
@@ -1679,7 +1682,7 @@ function renderSendChart(camps){
     avg.push(sum/n);
   });
   const avgPts=avg.map((v,i)=>`${x(i)},${y(v)}`).join(" ");
-  html+=`<polyline points="${avgPts}" fill="none" stroke="#5A5C61" stroke-width="1" stroke-dasharray="3 3" opacity=".6"/>`;
+  html+=`<polyline points="${avgPts}" fill="none" stroke="#707175" stroke-width="1" stroke-dasharray="3 3" opacity=".6"/>`;
   svg.innerHTML=html;
 
   // Insight line: compare last 5 vs prior 5
@@ -2209,12 +2212,12 @@ function renderDonors(db){
     // Bars
     months.forEach((m,i)=>{
       const h=Math.max(0,(m.amt/maxAmt)*innerH);
-      html+=`<rect x="${x(i)-bw/2}" y="${yAmt(m.amt)}" width="${bw}" height="${h}" fill="#E2772F" opacity=".85"><title>${m.m}: ${fmtUSD(m.amt)} from ${m.donors} donors (${m.gifts} gifts)</title></rect>`;
+      html+=`<rect x="${x(i)-bw/2}" y="${yAmt(m.amt)}" width="${bw}" height="${h}" fill="#ff7c53" opacity=".85"><title>${m.m}: ${fmtUSD(m.amt)} from ${m.donors} donors (${m.gifts} gifts)</title></rect>`;
     });
     // Donor line
     const pts=months.map((m,i)=>`${x(i)},${yDon(m.donors)}`).join(" ");
-    html+=`<polyline points="${pts}" fill="none" stroke="#1F6FB2" stroke-width="2"/>`;
-    months.forEach((m,i)=>{html+=`<circle cx="${x(i)}" cy="${yDon(m.donors)}" r="3" fill="#1F6FB2"/>`;});
+    html+=`<polyline points="${pts}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
+    months.forEach((m,i)=>{html+=`<circle cx="${x(i)}" cy="${yDon(m.donors)}" r="3" fill="#217ebe"/>`;});
     svg.innerHTML=html;
   }
 
@@ -2505,13 +2508,13 @@ function renderTraffic(data){
     // Dashed reference line at the average weekly visitors over the window, so
     // each week reads against "typical", not just the week before.
     const avgV = Math.round(series.reduce((a,s)=>a+(s.visitors||0),0)/series.length);
-    hh+=`<line x1="${padL}" x2="${W-padR}" y1="${y(avgV)}" y2="${y(avgV)}" stroke="#1F6FB2" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>`;
-    hh+=`<text x="${W-padR-2}" y="${Math.max(padT+9,y(avgV)-4)}" text-anchor="end" font-size="9.5" fill="#1F6FB2" opacity=".85">avg ${fmtN(avgV)} visitors/wk</text>`;
-    hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.pageviews||0)}`).join(" ")}" fill="none" stroke="#E2772F" stroke-width="1.6" opacity=".85"/>`;
-    hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.visitors||0)}`).join(" ")}" fill="none" stroke="#1F6FB2" stroke-width="2"/>`;
+    hh+=`<line x1="${padL}" x2="${W-padR}" y1="${y(avgV)}" y2="${y(avgV)}" stroke="#217ebe" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>`;
+    hh+=`<text x="${W-padR-2}" y="${Math.max(padT+9,y(avgV)-4)}" text-anchor="end" font-size="9.5" fill="#217ebe" opacity=".85">avg ${fmtN(avgV)} visitors/wk</text>`;
+    hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.pageviews||0)}`).join(" ")}" fill="none" stroke="#ff7c53" stroke-width="1.6" opacity=".85"/>`;
+    hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.visitors||0)}`).join(" ")}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
     trend = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 6px" title="Total visitors and page views to vitalcitynyc.org, bucketed by week, since Ghost analytics began recording. The whole-site trend — the top of the funnel.">Overall website traffic · weekly, whole site</div>
       <div class="chartwrap"><svg class="chart" id="trafficTrendSvg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="height:auto;aspect-ratio:${W}/${H}">${hh}</svg></div>
-      <div style="font-size:11px;color:var(--vc-charcoal);margin:4px 0 2px"><span style="color:#1F6FB2">■</span> unique visitors &nbsp;&nbsp; <span style="color:#E2772F">■</span> page views</div>`;
+      <div style="font-size:11px;color:var(--vc-charcoal);margin:4px 0 2px"><span style="color:#217ebe">■</span> unique visitors &nbsp;&nbsp; <span style="color:#ff7c53">■</span> page views</div>`;
     trendPts = series.map((s,i)=>({x:x(i),
       html:`<div class="tipwk">Week of ${esc(s.wk)}</div><div><span style="color:#9fd0ef">■</span> ${fmtN(s.visitors||0)} visitors</div><div><span style="color:#f3b48c">■</span> ${fmtN(s.pageviews||0)} page views</div>`}));
     trendGeo = {padT, innerH};
@@ -2897,7 +2900,7 @@ function renderBigPicture(data){
       const lprev = i>0 ? (listYears[i-1].cum||0) : 0;
       const lyoy = (!partial && i>0 && lprev) ? Math.round((y.cum-lprev)/lprev*100) : null;
       const lyoyTxt = lyoy!=null ? (lyoy>=0?'+':'')+lyoy+'%' : '';
-      const fill = partial ? "repeating-linear-gradient(45deg,#1F6FB2,#1F6FB2 6px,#aacbe9 6px,#aacbe9 12px)" : "#1F6FB2";
+      const fill = partial ? "repeating-linear-gradient(45deg,#217ebe,#217ebe 6px,#aacbe9 6px,#aacbe9 12px)" : "#217ebe";
       return `<div style="flex:1;text-align:center;min-width:0" title="${y.year}${partial?' (year in progress)':''}: ${fmtN(y.cum)} subscribers at year-end · +${fmtN(y.neww)} new signups that year${lyoy!=null?` · ${lyoyTxt} vs ${listYears[i-1].year}`:''}">
         <div style="font-size:13px;font-weight:700;color:var(--vc-black)">${fmtN(y.cum)}</div>
         <div style="background:${fill};opacity:.9;height:${Math.round(y.cum/maxL*130)+4}px;margin:4px auto 0;width:62%;border-radius:2px 2px 0 0;display:flex;align-items:flex-start;justify-content:center;overflow:visible">${lyoyTxt?`<span style="font-size:10.5px;font-weight:800;color:#fff;padding-top:4px;text-shadow:0 1px 1.5px rgba(0,0,0,.4)">${lyoyTxt}</span>`:''}</div>
@@ -3042,9 +3045,9 @@ function renderLifecycle(lc){
     });
     // line
     const pts = valid.map((c, i) => `${x(i)},${y(c.retention_pct||0)}`).join(" ");
-    h += `<polyline points="${pts}" fill="none" stroke="#1F6FB2" stroke-width="2.5"/>`;
+    h += `<polyline points="${pts}" fill="none" stroke="#217ebe" stroke-width="2.5"/>`;
     valid.forEach((c, i) => {
-      h += `<circle cx="${x(i)}" cy="${y(c.retention_pct||0)}" r="3.5" fill="#1F6FB2"><title>${c.label}: ${c.retention_pct}% of ${fmtN(c.subs)} subscribers still opening (n=${c.engaged} engaged)</title></circle>`;
+      h += `<circle cx="${x(i)}" cy="${y(c.retention_pct||0)}" r="3.5" fill="#217ebe"><title>${c.label}: ${c.retention_pct}% of ${fmtN(c.subs)} subscribers still opening (n=${c.engaged} engaged)</title></circle>`;
     });
     chart = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="For each signup cohort (grouped by how long ago they joined), the % whose email address shows up in this month's MAU set. The curve should slope down — newer subscribers should be more engaged. A flat or rising curve at the right end of the chart means new signups are LESS engaged than older ones, which is a recruitment-quality problem.">Retention curve: still engaged 30 days later?</div>
       <div class="chartwrap" style="max-width:${W}px"><svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="height:auto;aspect-ratio:${W}/${H}">${h}</svg></div>`;
@@ -3596,13 +3599,13 @@ function rptBarsSVG(buckets,vals,color,unit,fmtFn,from,to,note){
   const W=800,H=122,padT=18,padB=22,padL=8,padR=8,base=H-padB,innerH=H-padT-padB,innerW=W-padL-padR;
   const n=buckets.length,bw=Math.max(1,(innerW/n)*0.72),x=i=>padL+innerW*(i+0.5)/n; let anyPartial=false;
   let s='<svg class="rptchart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="width:100%;height:122px">';
-  s+='<line x1="'+padL+'" y1="'+base+'" x2="'+(W-padR)+'" y2="'+base+'" stroke="#D9D5CE"/>';
+  s+='<line x1="'+padL+'" y1="'+base+'" x2="'+(W-padR)+'" y2="'+base+'" stroke="#dddddd"/>';
   buckets.forEach((b,i)=>{ if(vals[i]>0){const h=(vals[i]/maxV)*innerH; if(b.partial)anyPartial=true;
     s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(base-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="'+(b.color||color)+'"'+(b.partial?' opacity=".4"':'')+'><title>'+b.s+(b.e&&b.e!==b.s?' – '+b.e:'')+': '+fmtFn(vals[i])+(b.partial?' (partial week)':'')+'</title></rect>';}});
   const cap=unit+' · peak '+fmtFn(maxV)+(anyPartial?' · faded = partial week':'')+(note?' · '+note:'');
-  s+='<text x="'+padL+'" y="'+(padT-6)+'" font-size="9" fill="#5A5C61">'+cap+'</text>';
-  s+='<text x="'+padL+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61">'+from+'</text>';
-  s+='<text x="'+(W-padR)+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61" text-anchor="end">'+to+'</text>';
+  s+='<text x="'+padL+'" y="'+(padT-6)+'" font-size="9" fill="#707175">'+cap+'</text>';
+  s+='<text x="'+padL+'" y="'+(H-6)+'" font-size="9" fill="#707175">'+from+'</text>';
+  s+='<text x="'+(W-padR)+'" y="'+(H-6)+'" font-size="9" fill="#707175" text-anchor="end">'+to+'</text>';
   return s+'</svg>';
 }
 function rptChartSignups(from,to,cutover){
@@ -3615,46 +3618,46 @@ function rptChartSignups(from,to,cutover){
   const n=buckets.length,bw=Math.max(1,(innerW/n)*0.72),x=i=>padL+innerW*(i+0.5)/n,hUp=v=>(v/maxV)*(innerH/2);
   let anyPartial=false;
   let s='<svg class="rptchart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="width:100%;height:150px">';
-  s+='<line x1="'+padL+'" y1="'+mid+'" x2="'+(W-padR)+'" y2="'+mid+'" stroke="#D9D5CE"/>';
+  s+='<line x1="'+padL+'" y1="'+mid+'" x2="'+(W-padR)+'" y2="'+mid+'" stroke="#dddddd"/>';
   buckets.forEach((b,i)=>{ const lbl=b.s+(b.e!==b.s?' – '+b.e:''), op=b.partial?' opacity=".45"':''; if(b.partial)anyPartial=true;
     if(pos[i]>0){const h=hUp(pos[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(mid-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#57AA4A"'+op+'><title>'+lbl+': +'+pos[i]+' signups'+(b.partial?' (partial week)':'')+'</title></rect>';}
-    if(neg[i]>0){const h=hUp(neg[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+mid.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#C8377E"'+op+'><title>'+lbl+': -'+neg[i]+' unsubscribes'+(b.partial?' (partial week)':'')+'</title></rect>';}});
-  s+='<text x="'+padL+'" y="'+(padT-6)+'" font-size="9" fill="#5A5C61">signups (green, up) vs unsubscribes (magenta, down) · '+(step>1?'weekly':'daily')+(anyPartial?' · faded = partial week':'')+(cutover&&from<cutover?' · before '+cutover+' = Ghost-recorded only (undercounts)':'')+'</text>';
-  s+='<text x="'+padL+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61">'+from+'</text>';
-  s+='<text x="'+(W-padR)+'" y="'+(H-6)+'" font-size="9" fill="#5A5C61" text-anchor="end">'+to+'</text>';
+    if(neg[i]>0){const h=hUp(neg[i]); s+='<rect x="'+(x(i)-bw/2).toFixed(1)+'" y="'+mid.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="#e7466d"'+op+'><title>'+lbl+': -'+neg[i]+' unsubscribes'+(b.partial?' (partial week)':'')+'</title></rect>';}});
+  s+='<text x="'+padL+'" y="'+(padT-6)+'" font-size="9" fill="#707175">signups (green, up) vs unsubscribes (magenta, down) · '+(step>1?'weekly':'daily')+(anyPartial?' · faded = partial week':'')+(cutover&&from<cutover?' · before '+cutover+' = Ghost-recorded only (undercounts)':'')+'</text>';
+  s+='<text x="'+padL+'" y="'+(H-6)+'" font-size="9" fill="#707175">'+from+'</text>';
+  s+='<text x="'+(W-padR)+'" y="'+(H-6)+'" font-size="9" fill="#707175" text-anchor="end">'+to+'</text>';
   return s+'</svg>';
 }
 function rptChartTraffic(from,to,traffic){
   const gt=(window.__GD||{}).ghost_traffic||{};
   if(!traffic||traffic.mode==='none') return '';
-  if(traffic.mode==='daily'){ const {buckets}=rptBuckets(from,to); return rptBarsSVG(buckets,rptSumInto(buckets,(gt.kpi_rows_30d||[]),'date','visits'),'#1F6FB2','Website visits',fmtN,from,to); }
+  if(traffic.mode==='daily'){ const {buckets}=rptBuckets(from,to); return rptBarsSVG(buckets,rptSumInto(buckets,(gt.kpi_rows_30d||[]),'date','visits'),'#217ebe','Website visits',fmtN,from,to); }
   const ser=traffic.series||[]; if(!ser.length) return '';
-  const buckets=ser.map(w=>({s:w.wk, e:w.end||rptWeekEnd(w.wk), partial:w.partial, color:(w.src==='ga4'?'#9CC3DE':'#1F6FB2')}));
+  const buckets=ser.map(w=>({s:w.wk, e:w.end||rptWeekEnd(w.wk), partial:w.partial, color:(w.src==='ga4'?'#90bfdf':'#217ebe')}));
   const note=traffic.mixed ? ('before '+traffic.ghostStart+': GA4 (lighter); after: Ghost analytics — different counters') : 'Ghost analytics, weekly';
-  return rptBarsSVG(buckets, ser.map(w=>+(w.visitors||0)), '#1F6FB2','Website visits · weekly',fmtN,from,to,note);
+  return rptBarsSVG(buckets, ser.map(w=>+(w.visitors||0)), '#217ebe','Website visits · weekly',fmtN,from,to,note);
 }
 function rptChartGiving(from,to){
   const ds=((window.__GD||{}).donorbox||{}).daily_series||[];
   const {buckets}=rptBuckets(from,to);
-  return rptBarsSVG(buckets,rptSumInto(buckets,ds,'d','amt'),'#E2772F','Online giving',v=>fmtUSD(Math.round(v)),from,to);
+  return rptBarsSVG(buckets,rptSumInto(buckets,ds,'d','amt'),'#ff7c53','Online giving',v=>fmtUSD(Math.round(v)),from,to);
 }
 function rptPrintDoc(m){
   let b='<div class="wm">Vital City</div><h1>Growth report</h1>';
   b+='<p class="period">'+esc(m.from)+' to '+esc(m.to)+' · '+m.dayCount+' days. Comparisons vs '+esc(m.cmpDesc)+'. Dashboard data refreshed '+esc(m.generated||'')+'.</p>';
   m.sections.forEach(s=>{ b+='<h2>'+esc(s.name)+'</h2><table>'; s.rows.forEach(r=>{ b+='<tr><td class="l">'+esc(r.l)+'</td><td class="v">'+esc(r.v)+'</td><td class="n">'+esc(rptNotePlain(r, m.cmpShort))+'</td></tr>'; }); b+='</table>'; if(s.chart) b+='<div class="pchart">'+s.chart+'</div>'; });
-  if(m.topStories){ b+='<h2>Top stories · '+esc(m.topStories.label)+'</h2><p style="font-size:10.5px;color:#5A5C61;margin:0 0 6px">'+(m.topStories.weekly?'Weeks overlapping your range, ranked by page views, with GA4 engaged time (week resolution).':'Ranked by page views, with GA4 engaged time. Range predates the per-article weekly history, so this is the closest GA4 window.')+'</p><table><tr><td class="l">Story</td><td class="v">Page views</td><td class="n">Avg engaged</td><td class="n">Total engaged</td></tr>';
+  if(m.topStories){ b+='<h2>Top stories · '+esc(m.topStories.label)+'</h2><p style="font-size:10.5px;color:#707175;margin:0 0 6px">'+(m.topStories.weekly?'Weeks overlapping your range, ranked by page views, with GA4 engaged time (week resolution).':'Ranked by page views, with GA4 engaged time. Range predates the per-article weekly history, so this is the closest GA4 window.')+'</p><table><tr><td class="l">Story</td><td class="v">Page views</td><td class="n">Avg engaged</td><td class="n">Total engaged</td></tr>';
     m.topStories.rows.forEach((p,i)=>{ b+='<tr><td class="l">'+(i+1)+'. '+esc(p.t)+'</td><td class="v">'+fmtN(p.pv)+'</td><td class="n">'+fmtDur(p.avg)+'/view</td><td class="n">'+fmtBigDur(p.tot)+'</td></tr>'; }); b+='</table>'; }
   if(m.names&&m.names.show) m.names.groups.forEach(g=>{ if(!g.rows.length) return; b+='<h2>'+esc(g.name)+' ('+g.rows.length+')</h2><table>'; g.rows.forEach(x=>{ b+='<tr><td class="l">'+esc(x.a)+'</td><td class="v" style="font-weight:400">'+esc(x.b)+'</td><td class="n">'+esc(x.c)+'</td></tr>'; }); b+='</table>'; });
   b+='<div class="cav">'+m.caveats.map(esc).join('<br>')+'</div>';
-  const css='body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#0F1011;max-width:720px;margin:32px auto;padding:0 24px;line-height:1.5}'
-    +'.wm{font-size:11px;text-transform:uppercase;letter-spacing:.18em;font-weight:700;color:#5A5C61}'
+  const css='body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#050507;max-width:720px;margin:32px auto;padding:0 24px;line-height:1.5}'
+    +'.wm{font-size:11px;text-transform:uppercase;letter-spacing:.18em;font-weight:700;color:#707175}'
     +'h1{font-family:Georgia,serif;font-size:30px;margin:4px 0 2px}'
-    +'.period{color:#5A5C61;font-size:13px;margin:0 0 18px}'
-    +'h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid #0F1011;padding-bottom:4px;margin:22px 0 4px}'
+    +'.period{color:#707175;font-size:13px;margin:0 0 18px}'
+    +'h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid #050507;padding-bottom:4px;margin:22px 0 4px}'
     +'table{width:100%;border-collapse:collapse;font-size:13px}'
     +'td{padding:6px 4px;border-bottom:1px solid #ddd;vertical-align:baseline}'
-    +'td.l{color:#5A5C61;width:42%}td.v{font-weight:700;width:22%;font-variant-numeric:tabular-nums}td.n{color:#5A5C61;font-size:11px}'
-    +'.cav{font-size:10.5px;color:#5A5C61;margin-top:22px;border-top:1px solid #ddd;padding-top:10px}'
+    +'td.l{color:#707175;width:42%}td.v{font-weight:700;width:22%;font-variant-numeric:tabular-nums}td.n{color:#707175;font-size:11px}'
+    +'.cav{font-size:10.5px;color:#707175;margin-top:22px;border-top:1px solid #ddd;padding-top:10px}'
     +'.pchart{margin:6px 0 14px}.pchart svg{width:100%;display:block}';
   return '<!doctype html><html><head><meta charset="utf-8"><title>Vital City report '+esc(m.from)+' to '+esc(m.to)+'</title><style>'+css+'</style></head><body>'+b+'</body></html>';
 }
@@ -3884,7 +3887,7 @@ function renderTrendChart(act,posts,windowDays){
   }
   // unsub line
   const pts=rows.map((r,i)=>`${x(i)},${y(+r.unsubs||0)}`).join(" ");
-  html+=`<polyline points="${pts}" fill="none" stroke="#C8377E" stroke-width="1.6" opacity=".85"/>`;
+  html+=`<polyline points="${pts}" fill="none" stroke="#e7466d" stroke-width="1.6" opacity=".85"/>`;
   // (Post-publish dots removed — Vital City publishes multiple times a week,
   // so a per-day binary "did anything publish today" marker is too noisy to
   // be useful. The "Recent signup movers" callout in the Content cadence card
