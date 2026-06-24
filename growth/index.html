@@ -632,11 +632,6 @@
         <div id="trafficBody"></div>
       </div>
 
-      <div class="card" id="trafficSources">
-        <h2>Where traffic comes from <span class="hint">search vs. newsletter vs. social vs. other · GA4 channel grouping</span></h2>
-        <div id="trafficSourcesBody"></div>
-      </div>
-
       <div class="card" id="searchConsole">
         <h2>How people find us on Google <span class="hint">search queries, clicks, impressions · Search Console</span></h2>
         <div id="searchConsoleBody"></div>
@@ -941,7 +936,6 @@ function boot(data){
   renderEngagementExtras(data.engagement_extras || {});
   renderLifecycle(data.lifecycle || {});
   renderTraffic(data);
-  renderTrafficSources(data);
   renderSearchConsole(data);
   renderBigPicture(data);
   renderAudienceQuality(data);
@@ -2585,8 +2579,18 @@ function renderTraffic(data){
   // ---- Where the traffic comes from (referrer sources, 30d) ----
   const srcs = gt.top_sources_30d || [];
   const totalSrc = srcs.reduce((a,s)=>a+(s.visits||0),0) || 1;
+  // Grouped rollup (Search / Newsletter / Social / Direct / Other) from the referrers.
+  const srcBucket=(name)=>{const c=(name||"").toLowerCase();
+    if(/twitter|x\.com|linkedin|bluesky|facebook|instagram|threads|reddit|mastodon|t\.co/.test(c)) return "Social";
+    if(/google|bing|duckduckgo|yahoo|ecosia|search/.test(c)) return "Search";
+    if(/newsletter|email|mailchimp/.test(c)) return "Newsletter";
+    if(/direct|none/.test(c)) return "Direct";
+    return "Other";};
+  const grp={}; srcs.forEach(s=>{const b=srcBucket(s.source); grp[b]=(grp[b]||0)+(s.visits||0);});
+  const grpLine=["Search","Direct","Social","Newsletter","Other"].filter(k=>grp[k]).map(k=>`${esc(k)} <b>${Math.round(grp[k]/totalSrc*100)}%</b>`).join(' &nbsp;·&nbsp; ');
   const sources = srcs.length ? `
     <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:20px 0 8px" title="Where site visitors came from over the last 30 days (Ghost's referrer breakdown). The bar/percent is each source's share of tracked traffic; the colored arrow is its change vs the prior 30 days. 'Direct / none' = typed the URL, a bookmark, or an app with no referrer.">Where the traffic comes from · last 30 days (share, and change vs prior 30d)</div>
+    <div style="font-size:12.5px;color:var(--vc-black);margin:0 0 14px"><span style="color:var(--vc-charcoal)">Grouped — </span>${grpLine}</div>
     ${srcs.map(s=>`<div class="dombar">
       <div style="font-size:12px">${esc(s.source)}</div>
       <div class="bar" style="background:var(--vc-orange);width:${Math.round((s.visits||0)/totalSrc*100)}%"></div>
@@ -2709,36 +2713,6 @@ function renderTraffic(data){
       wrapTables();
     }));
   }
-}
-
-// Where traffic comes from — GA4 channel grouping (Search / Newsletter / Social /
-// Referral / Direct / Other), 30-day and 12-month views.
-function renderTrafficSources(data){
-  const host=$("#trafficSourcesBody"); if(!host) return;
-  const g=data.ga4||{};
-  const win={'30':g.channels_30||[], '365':g.channels_365||[]};
-  if(!win['30'].length && !win['365'].length){
-    host.innerHTML='<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">GA4 channel data isn\'t in this build yet — it appears after the next refresh.</div>'; return; }
-  const COLORS={'Search':'#1F6FB2','Newsletter (email)':'#57AA4A','Social':'#C8377E','Referral':'#E2772F','Direct':'#5A5C61','Other':'#9aa0a6'};
-  const ORDER=['Search','Newsletter (email)','Social','Referral','Direct','Other'];
-  function draw(d){
-    const rows=(win[d]||[]).slice().sort((a,b)=>(ORDER.indexOf(a.channel)+99*(ORDER.indexOf(a.channel)<0))-(ORDER.indexOf(b.channel)+99*(ORDER.indexOf(b.channel)<0)));
-    const tot=rows.reduce((s,r)=>s+(r.sessions||0),0)||1;
-    let bar='<div style="display:flex;height:26px;border:1px solid var(--vc-black);overflow:hidden;border-radius:3px">';
-    rows.forEach(r=>{ const pct=(r.sessions||0)/tot*100; if(pct>0) bar+='<div title="'+esc(r.channel)+': '+fmtN(r.sessions)+' sessions ('+pct.toFixed(1)+'%)" style="width:'+pct+'%;background:'+(COLORS[r.channel]||'#999')+'"></div>'; });
-    bar+='</div>';
-    let list='<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:12px"><tbody>';
-    rows.forEach(r=>{ const pct=(r.sessions||0)/tot*100;
-      list+='<tr><td style="padding:6px 4px;border-bottom:1px solid var(--vc-cloud)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:'+(COLORS[r.channel]||'#999')+';margin-right:7px;vertical-align:1px"></span>'+esc(r.channel)+'</td>'
-        +'<td style="padding:6px 4px;border-bottom:1px solid var(--vc-cloud);text-align:right;font-weight:700;font-variant-numeric:tabular-nums">'+pct.toFixed(1)+'%</td>'
-        +'<td style="padding:6px 4px;border-bottom:1px solid var(--vc-cloud);text-align:right;color:var(--vc-charcoal);font-variant-numeric:tabular-nums">'+fmtN(r.sessions||0)+' sessions</td></tr>'; });
-    list+='</tbody></table>';
-    return bar+list;
-  }
-  host.innerHTML='<div style="display:flex;gap:6px;margin-bottom:12px"><button class="winbtn on" data-d="30">Last 30 days</button><button class="winbtn" data-d="365">Last 12 months</button></div>'
-    +'<div id="tsArea">'+draw('30')+'</div>'
-    +'<div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">GA4 sessions by default channel grouping. <b>Search</b> = Google/Bing organic; <b>Newsletter</b> = clicks tagged as email; <b>Social</b> = X, Bluesky, LinkedIn, Facebook, etc.; <b>Direct</b> = typed the URL or an untagged link; <b>Referral</b> = links from other sites. <b>Caveat:</b> a newsletter click only counts as Newsletter when its link is tagged (utm_medium=email); untagged Ghost-email clicks can land in Direct, so Newsletter is a floor, not the full newsletter pull. GA4 reads lower than Ghost overall (ad blockers / ITP).</div>';
-  host.querySelectorAll('.winbtn').forEach(b=>b.addEventListener('click',()=>{ host.querySelectorAll('.winbtn').forEach(x=>x.classList.toggle('on',x===b)); $("#tsArea").innerHTML=draw(b.dataset.d); }));
 }
 
 // Search Console — how people find Vital City on Google. Totals + top queries.

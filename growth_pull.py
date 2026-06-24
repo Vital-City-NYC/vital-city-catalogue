@@ -1092,45 +1092,6 @@ def _ga4_story_weekly(prop, token, days=300, top=120):
     return {"pages": plist, "rows": rows}
 
 
-def _ga4_chan_bucket(ch):
-    c = (ch or "").lower()
-    if "search" in c: return "Search"
-    if "social" in c: return "Social"
-    if c == "email": return "Newsletter (email)"
-    if c == "direct": return "Direct"
-    if "referral" in c: return "Referral"
-    return "Other"
-
-
-def _ga4_channels(prop, token, start_date, end_date="today"):
-    """Sessions + users grouped into friendly traffic-source buckets (Search /
-    Newsletter / Social / Referral / Direct / Other) via GA4's default channel
-    grouping. NOTE: newsletter clicks count as Email only when the link is
-    tagged (utm_medium=email); untagged Ghost-newsletter clicks can fall into
-    Direct or Referral, so Email is a floor, not the full newsletter pull."""
-    body = {
-        "dateRanges": [{"startDate": start_date, "endDate": end_date}],
-        "dimensions": [{"name": "sessionDefaultChannelGroup"}],
-        "metrics": [{"name": "sessions"}, {"name": "totalUsers"}],
-        "limit": 100,
-    }
-    req = urllib.request.Request(
-        f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
-        data=json.dumps(body).encode(),
-        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=45) as r:
-        rep = json.loads(r.read())
-    agg = {}
-    for row in rep.get("rows") or []:
-        b = _ga4_chan_bucket(row["dimensionValues"][0]["value"])
-        v = row["metricValues"]
-        e = agg.setdefault(b, [0, 0])
-        e[0] += int(v[0]["value"]); e[1] += int(v[1]["value"])
-    out = [{"channel": k, "sessions": agg[k][0], "users": agg[k][1]} for k in agg]
-    out.sort(key=lambda r: -r["sessions"])
-    return out
-
-
 def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=None, end_date="today"):
     """Per-article engagement time — a read-depth proxy GA4 measures (the
     seconds a reader's tab is actually focused on the page) and Ghost can't.
@@ -1406,11 +1367,6 @@ def pull_ga4():
         except Exception as e:
             log(f"  ga4 weekly traffic failed: {e}"); traffic_weekly = []
         try:
-            channels_30 = _ga4_channels(prop, token, "30daysAgo")
-            channels_365 = _ga4_channels(prop, token, "365daysAgo")
-        except Exception as e:
-            log(f"  ga4 channels failed: {e}"); channels_30 = channels_365 = []
-        try:
             story_weekly = _ga4_story_weekly(prop, token)
         except Exception as e:
             log(f"  ga4 story weekly failed: {e}"); story_weekly = {"pages": [], "rows": []}
@@ -1426,7 +1382,7 @@ def pull_ga4():
             "top_pages_alltime": top_alltime,
             "by_year": by_year, "returning": returning,
             "traffic_weekly": traffic_weekly,
-            "channels_30": channels_30, "channels_365": channels_365, "story_weekly": story_weekly,
+            "story_weekly": story_weekly,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:
