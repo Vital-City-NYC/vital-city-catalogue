@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 90,
+    "post_count": 91,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -37,6 +37,7 @@
       "james-essig-interview",
       "jens-ludwig-interview",
       "jonathan-mahler-thomas-dyja-gods-of-new-york",
+      "josh-tyrangiel-interview-ai-city-government",
       "leslie-day-interview-hudson-river-houseboat",
       "longtime-daily-news-opinion-and-editorial-page-editor-josh-greenman-joins-vital-city-as-managing-editor",
       "mamdani-first-100-days-scorecard-nyc",
@@ -204,7 +205,7 @@
   },
   {
     "name": "Jamie Rubin",
-    "post_count": 31,
+    "post_count": 32,
     "slugs": [
       "a-housing-agenda-for-the-next-mayor",
       "adam-lubinsky-interview",
@@ -233,6 +234,7 @@
       "remembering-michael-ray-richardson",
       "renita-francois-interview-neighborhood-safety",
       "ross-barkan-on-whos-not-running-and-why",
+      "the-myth-of-millionaire-flight",
       "vital-city-after-hours-a-conversation-with-ed-glaeser",
       "what-happens-if-adams-resigns",
       "whats-the-deal-with-seqra",
@@ -1263,6 +1265,19 @@
     "website": null
   },
   {
+    "name": "Anthony Flint",
+    "post_count": 2,
+    "slugs": [
+      "jane-jacobs-and-the-quest-for-goldilocks-density",
+      "value-capture-land-tax-transit-funding-nyc"
+    ],
+    "slug": "flint-anthony",
+    "bio": "is a senior fellow at the Lincoln Institute of Land Policy in Cambridge, Massachusetts.",
+    "url": "https://www.vitalcitynyc.org/author/flint-anthony/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Alicia Glen",
     "post_count": 2,
     "slugs": [
@@ -2247,6 +2262,30 @@
     "slug": "meares-tracey-l",
     "bio": "is the Walton Hale Hamilton Professor and founding director of the Justice Collaboratory at Yale Law School. She was previously a professor at the University of Chicago Law School.",
     "url": "https://www.vitalcitynyc.org/author/meares-tracey-l/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Enrique Silva",
+    "post_count": 1,
+    "slugs": [
+      "value-capture-land-tax-transit-funding-nyc"
+    ],
+    "slug": "enrique",
+    "bio": "is chief program officer at the Lincoln Institute of Land Policy.",
+    "url": "https://www.vitalcitynyc.org/author/enrique/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Ellen Schwartz",
+    "post_count": 1,
+    "slugs": [
+      "street-parking-charge-transit-funding-nyc"
+    ],
+    "slug": "ellen",
+    "bio": "is the manager of the UCLA Center for Parking Policy, which translates academic research on parking into accessible resources for policymakers and practitioners.",
+    "url": "https://www.vitalcitynyc.org/author/ellen/",
     "twitter": null,
     "website": null
   },
@@ -3259,18 +3298,6 @@
     "website": null
   },
   {
-    "name": "Anthony Flint",
-    "post_count": 1,
-    "slugs": [
-      "jane-jacobs-and-the-quest-for-goldilocks-density"
-    ],
-    "slug": "flint-anthony",
-    "bio": "is a senior fellow at the Lincoln Institute of Land Policy in Cambridge, Massachusetts.",
-    "url": "https://www.vitalcitynyc.org/author/flint-anthony/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Ned Resnikoff",
     "post_count": 1,
     "slugs": [
@@ -3883,18 +3910,6 @@
     "website": null
   },
   {
-    "name": "Adam Cohen",
-    "post_count": 1,
-    "slugs": [
-      "trumps-bizarro-new-deal"
-    ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Meryl Chertoff",
     "post_count": 1,
     "slugs": [
@@ -3903,6 +3918,18 @@
     "slug": "chertoff-meryl",
     "bio": "is adjunct professor of law at Georgetown University Law Center.",
     "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Adam Cohen",
+    "post_count": 1,
+    "slugs": [
+      "trumps-bizarro-new-deal"
+    ],
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },

@@ -8,12 +8,12 @@
     "post_count": 138
   },
   {
-    "name": "Government Operations",
-    "post_count": 118
+    "name": "City Government",
+    "post_count": 119
   },
   {
-    "name": "City Government",
-    "post_count": 117
+    "name": "Government Operations",
+    "post_count": 118
   },
   {
     "name": "City Planning",
@@ -40,12 +40,12 @@
     "post_count": 52
   },
   {
-    "name": "Politics",
+    "name": "Economics",
     "post_count": 51
   },
   {
-    "name": "Economics",
-    "post_count": 48
+    "name": "Politics",
+    "post_count": 51
   },
   {
     "name": "Jails",
@@ -56,16 +56,16 @@
     "post_count": 42
   },
   {
+    "name": "Transit",
+    "post_count": 32
+  },
+  {
     "name": "Public Health",
     "post_count": 32
   },
   {
-    "name": "Transit",
-    "post_count": 30
-  },
-  {
     "name": "Technology",
-    "post_count": 29
+    "post_count": 30
   },
   {
     "name": "Education",
@@ -77,7 +77,7 @@
   },
   {
     "name": "Podcast",
-    "post_count": 26
+    "post_count": 27
   },
   {
     "name": "Setting the Stage",
@@ -228,6 +228,10 @@
     "post_count": 9
   },
   {
+    "name": "Streets",
+    "post_count": 8
+  },
+  {
     "name": "More Money in More Pockets",
     "post_count": 8
   },
@@ -252,11 +256,11 @@
     "post_count": 8
   },
   {
-    "name": "Street Lighting",
+    "name": "Artifical Intelligence",
     "post_count": 7
   },
   {
-    "name": "Streets",
+    "name": "Street Lighting",
     "post_count": 7
   },
   {
@@ -282,10 +286,6 @@
   {
     "name": "Etc.",
     "post_count": 7
-  },
-  {
-    "name": "Artifical Intelligence",
-    "post_count": 6
   },
   {
     "name": "Environment",

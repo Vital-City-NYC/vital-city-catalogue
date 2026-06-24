@@ -1,5 +1,121 @@
 [
   {
+    "title": "The Myth of Millionaire Flight",
+    "slug": "the-myth-of-millionaire-flight",
+    "url": "https://www.vitalcitynyc.org/the-myth-of-millionaire-flight/",
+    "type": "q&a",
+    "type_basis": "tag:podcast",
+    "published_date": "2026-06-24",
+    "published_at": "2026-06-24T16:59:32.000+00:00",
+    "updated_at": "2026-06-24T16:59:32.000+00:00",
+    "primary_author": "Jamie Rubin",
+    "authors": [
+      "Jamie Rubin"
+    ],
+    "topics": [
+      "Podcast",
+      "Economics",
+      "City Government"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "New York might be next in a growing line of states adopting millionaire taxes — and the same old fear comes with it: tax the rich too hard and they'll…",
+    "excerpt": "New York might be next in a growing line of states adopting millionaire taxes — and the same old fear comes with it: tax the rich too hard and they'll leave, taking their businesses and their tax revenue with them. Cristobal Young, an economic sociologist at Cornell, has spent over twenty years testing that fear against actual IRS data, going back to New Jersey's first millionaire tax fight in 2004. His finding, consistently: millionaires barely move at all, and when they do, it's rarely f",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-24T122517.565.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 138,
+    "reading_minutes": 1,
+    "id": "6a3bfa2843fe120001fb6a8b"
+  },
+  {
+    "title": "What AI Can Do for Cities",
+    "slug": "josh-tyrangiel-interview-ai-city-government",
+    "url": "https://www.vitalcitynyc.org/josh-tyrangiel-interview-ai-city-government/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-24",
+    "published_at": "2026-06-24T14:50:04.000+00:00",
+    "updated_at": "2026-06-24T14:50:04.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Technology",
+      "Artifical Intelligence",
+      "City Government"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "A conversation with Josh Tyrangiel, the author of “AI for Good,” on the right uses of the transformative technology",
+    "excerpt": "A conversation with Josh Tyrangiel, the author of “AI for Good,” on the right uses of the transformative technology",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-24T104139.220.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 3933,
+    "reading_minutes": 17,
+    "id": "6a3a9d9353d37900019bb68c"
+  },
+  {
+    "title": "Taxing Land: An Old Idea is New Again",
+    "slug": "value-capture-land-tax-transit-funding-nyc",
+    "url": "https://www.vitalcitynyc.org/value-capture-land-tax-transit-funding-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-24",
+    "published_at": "2026-06-24T14:47:48.000+00:00",
+    "updated_at": "2026-06-24T15:59:27.000+00:00",
+    "primary_author": "Anthony Flint",
+    "authors": [
+      "Anthony Flint",
+      "Enrique Silva"
+    ],
+    "topics": [
+      "Economics",
+      "Transit"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "Value capture to fund transit is a solution hiding in plain sight.",
+    "excerpt": "Value capture to fund transit is a solution hiding in plain sight.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-24T095944.078.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1417,
+    "reading_minutes": 6,
+    "id": "6a3be2ac43fe120001fb696d"
+  },
+  {
+    "title": "Put a Price on Street Parking, Generate Billions",
+    "slug": "street-parking-charge-transit-funding-nyc",
+    "url": "https://www.vitalcitynyc.org/street-parking-charge-transit-funding-nyc/",
+    "type": "map/tool",
+    "type_basis": "html:vc-app-embed",
+    "published_date": "2026-06-24",
+    "published_at": "2026-06-24T14:40:00.000+00:00",
+    "updated_at": "2026-06-24T17:23:23.000+00:00",
+    "primary_author": "Ellen Schwartz",
+    "authors": [
+      "Ellen Schwartz"
+    ],
+    "topics": [
+      "Transit",
+      "Streets",
+      "Economics"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "Why does New York charge more to ride the subway than to store a car?",
+    "excerpt": "Why does New York charge more to ride the subway than to store a car? ",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-24T101358.467.png",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 875,
+    "reading_minutes": 4,
+    "id": "6a3be60343fe120001fb69cf"
+  },
+  {
     "title": "New York is the Town and the Team is the Knicks",
     "slug": "knicks-champions-new-york-why-it-matters",
     "url": "https://www.vitalcitynyc.org/knicks-champions-new-york-why-it-matters/",
@@ -473,7 +589,7 @@
     "type_basis": "default",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T16:09:00.000+00:00",
-    "updated_at": "2026-06-10T16:26:17.000+00:00",
+    "updated_at": "2026-06-24T20:02:11.000+00:00",
     "primary_author": "Sherry Glied",
     "authors": [
       "Sherry Glied"
@@ -492,7 +608,7 @@
     "summary": "Mamdani wants a growing, more livable city — but that goal is in tension with his core affordability promise.",
     "excerpt": "Mamdani wants a growing, more livable city — but that goal is in tension with his core affordability promise.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T095909.930.png",
-    "featured": false,
+    "featured": true,
     "visibility": "public",
     "word_count": 1397,
     "reading_minutes": 6,
@@ -772,7 +888,7 @@
     "type_basis": "html:vc-app-embed",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T16:01:27.000+00:00",
-    "updated_at": "2026-06-11T19:17:09.000+00:00",
+    "updated_at": "2026-06-24T20:00:25.000+00:00",
     "primary_author": "Andrew Rigie",
     "authors": [
       "Andrew Rigie"
@@ -791,7 +907,7 @@
     "summary": "How rising labor costs would affect businesses",
     "excerpt": "How rising labor costs would affect businesses",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T145842.053.png",
-    "featured": false,
+    "featured": true,
     "visibility": "public",
     "word_count": 757,
     "reading_minutes": 3,
@@ -904,7 +1020,7 @@
     "type_basis": "default",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T15:09:00.000+00:00",
-    "updated_at": "2026-06-10T16:07:11.000+00:00",
+    "updated_at": "2026-06-24T20:02:43.000+00:00",
     "primary_author": "Edward Glaeser",
     "authors": [
       "Edward Glaeser"
@@ -923,7 +1039,7 @@
     "summary": "Rather than a tax and spending binge, how about a campaign for competence?",
     "excerpt": "Rather than a tax and spending binge, how about a campaign for competence?",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T095200.930.png",
-    "featured": false,
+    "featured": true,
     "visibility": "public",
     "word_count": 2904,
     "reading_minutes": 13,
@@ -2997,37 +3113,6 @@
     "id": "69a04c0ad4006a00010a42dd"
   },
   {
-    "title": "How Prevention Reduced Crime and How To Get More of It",
-    "slug": "how-prevention-reduced-crime-suggestions-analysis",
-    "url": "https://www.vitalcitynyc.org/how-prevention-reduced-crime-suggestions-analysis/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-02-19",
-    "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-06-23T14:01:03.000+00:00",
-    "primary_author": "John K. Roman",
-    "authors": [
-      "John K. Roman"
-    ],
-    "topics": [
-      "Crime",
-      "Police Reform",
-      "Where We Are"
-    ],
-    "issues": [
-      "crime-looking-back-at-2025-and-ahead-to-2026"
-    ],
-    "issue_numbers": [],
-    "summary": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
-    "excerpt": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay-jhlwlo0xkeggt_nyc27760-auto-format-compress-1776260478549.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1897,
-    "reading_minutes": 8,
-    "id": "69a04c0ad4006a00010a42e3"
-  },
-  {
     "title": "The NYPD’s Crime-Reduction Strategy: Chief of Department Michael LiPetri in Conversation",
     "slug": "nypd-crime-strategy-questions-michael-lipetri",
     "url": "https://www.vitalcitynyc.org/nypd-crime-strategy-questions-michael-lipetri/",
@@ -3275,6 +3360,37 @@
     "word_count": 1167,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a42e9"
+  },
+  {
+    "title": "How Prevention Reduced Crime and How To Get More of It",
+    "slug": "how-prevention-reduced-crime-suggestions-analysis",
+    "url": "https://www.vitalcitynyc.org/how-prevention-reduced-crime-suggestions-analysis/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-02-19",
+    "published_at": "2026-02-19T17:00:54.000+00:00",
+    "updated_at": "2026-06-23T14:01:03.000+00:00",
+    "primary_author": "John K. Roman",
+    "authors": [
+      "John K. Roman"
+    ],
+    "topics": [
+      "Crime",
+      "Police Reform",
+      "Where We Are"
+    ],
+    "issues": [
+      "crime-looking-back-at-2025-and-ahead-to-2026"
+    ],
+    "issue_numbers": [],
+    "summary": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
+    "excerpt": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay-jhlwlo0xkeggt_nyc27760-auto-format-compress-1776260478549.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1897,
+    "reading_minutes": 8,
+    "id": "69a04c0ad4006a00010a42e3"
   },
   {
     "title": "The State of Crime in New York City: 2025 and Beyond",
@@ -9909,37 +10025,6 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
-    "slug": "trumps-bizarro-new-deal",
-    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Adam Cohen",
-    "authors": [
-      "Adam Cohen"
-    ],
-    "topics": [
-      "History",
-      "Repercussions",
-      "Government Operations"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1619,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a41d5"
-  },
-  {
     "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
     "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
     "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
@@ -9969,6 +10054,37 @@
     "word_count": 1313,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a404c"
+  },
+  {
+    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
+    "slug": "trumps-bizarro-new-deal",
+    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Adam Cohen",
+    "authors": [
+      "Adam Cohen"
+    ],
+    "topics": [
+      "History",
+      "Repercussions",
+      "Government Operations"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1619,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a41d5"
   },
   {
     "title": "Donald Trump vs. the Rule of Law, and New York City",

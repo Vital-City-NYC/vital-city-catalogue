@@ -1,15 +1,40 @@
 {
-  "generated_at": "2026-06-24T12:00:14.789391+00:00",
+  "generated_at": "2026-06-24T21:21:09.667533+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 850,
-  "total_authors": 467,
+  "total_posts": 854,
+  "total_authors": 469,
   "total_issues": 29,
   "total_topics": 204,
   "date_range": [
     "2021-09-15",
-    "2026-06-19"
+    "2026-06-24"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 4,
+  "new_articles": [
+    {
+      "title": "The Myth of Millionaire Flight",
+      "url": "https://www.vitalcitynyc.org/the-myth-of-millionaire-flight/",
+      "published_date": "2026-06-24",
+      "primary_author": "Jamie Rubin"
+    },
+    {
+      "title": "What AI Can Do for Cities",
+      "url": "https://www.vitalcitynyc.org/josh-tyrangiel-interview-ai-city-government/",
+      "published_date": "2026-06-24",
+      "primary_author": "Vital City"
+    },
+    {
+      "title": "Taxing Land: An Old Idea is New Again",
+      "url": "https://www.vitalcitynyc.org/value-capture-land-tax-transit-funding-nyc/",
+      "published_date": "2026-06-24",
+      "primary_author": "Anthony Flint"
+    },
+    {
+      "title": "Put a Price on Street Parking, Generate Billions",
+      "url": "https://www.vitalcitynyc.org/street-parking-charge-transit-funding-nyc/",
+      "published_date": "2026-06-24",
+      "primary_author": "Ellen Schwartz"
+    }
+  ]
 }
