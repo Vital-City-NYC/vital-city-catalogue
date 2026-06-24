@@ -93,8 +93,11 @@
   main .card > h2{cursor:pointer;user-select:none}
   main .card > h2 .cchev{display:inline-block;width:.85em;font-size:.72em;color:var(--vc-charcoal);transition:transform .15s;transform:rotate(90deg);margin-right:3px;vertical-align:2px}
   main .card.ccol > h2 .cchev{transform:rotate(0deg)}
-  main .card.ccol > h2{margin-bottom:0}
-  main .card.ccol > *:not(h2){display:none !important}
+  main .card .cardpeek{display:none;font-size:12.5px;color:var(--vc-charcoal);line-height:1.5;margin:2px 0 0}
+  main .card .cardpeek b{color:var(--vc-black);font-family:var(--vc-serif);font-weight:300;font-size:14px}
+  main .card.ccol > h2{margin-bottom:6px}
+  main .card.ccol > *:not(h2):not(.cardpeek){display:none !important}
+  main .card.ccol > .cardpeek{display:block}
   /* Time-window toggle row (Signups vs unsubscribes chart) */
   .winrow{display:flex;gap:6px;margin:0 0 10px}
   .winbtn{font:inherit;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
@@ -952,7 +955,7 @@ function boot(data){
   setupSectionCollapse();
   // Make each card foldable too (caret in its title); deeper/secondary cards
   // start folded so the headline cards and the at-a-glance strip carry the page.
-  setupCardCollapse();
+  setupCardCollapse(data);
 
   // ----- Campaigns table (collapsible — show 5, expand for the rest)
   const camp=mc.campaigns||[];
@@ -1860,9 +1863,43 @@ function setupSectionCollapse(){
   });
 }
 
+// A one-line data "peek" shown when a card is folded, so a collapsed card still
+// carries its headline number. Pulls from the same data the card renders; uses a
+// descriptive line (no number) only where a single stat would mislead.
+function cardPeek(id, d){
+  const mc=d.mailchimp||{}, act=mc.daily_activity||[], gt=d.ghost_traffic||{}, sc=d.search_console||{}, lc=d.lifecycle||{}, db=d.donorbox||{};
+  const F=fmtN, B=(x)=>'<b>'+x+'</b>';
+  const r=(k,n)=>sumRange(act,daysAgo(n-1),daysAgo(0),k);
+  const yt=(mc.windows||{}).ytd||{}, fw=(db.windows||{}).ytd||{};
+  const scT=sc.totals||((sc.windows&&sc.windows['28'])||{}).totals||{};
+  switch(id){
+    case 'weekPulse':   return 'Last 7 days: '+B('+'+F(r('subs',7)))+' signups · '+B('−'+F(r('unsubs',7)))+' unsubscribes';
+    case 'rangeReport': return 'Pick any two dates → a full indicator report, with PDF / CSV / Markdown export.';
+    case 'bigPicture':  return 'The whole-history picture — subscribers and website traffic by year.';
+    case 'audienceQuality': return 'The on-mission cuts — visitor → subscriber → engaged → donor, and who is reading.';
+    case 'perspective': return 'How the field is trending — email is the retention engine; clicks beat opens.';
+    case 'growthChart': return B(F(mc.total_subscribers||0))+' subscribers · weekly list size and reach since Jan 2025.';
+    case 'acquisition': return 'Where new subscribers come from — Direct and Google lead recent signups (Ghost attribution).';
+    case 'contentCard': return 'Which published pieces convert readers into newsletter subscribers.';
+    case 'trend':       { const s=r('subs',30),u=r('unsubs',30); return 'Last 30 days: '+B('+'+F(s))+' signups · '+B('−'+F(u))+' unsubscribes (net '+(s-u>=0?'+':'−')+F(Math.abs(s-u))+').'; }
+    case 'ytd':         return 'Signups, opens and clicks — 2026 year-to-date vs the same window in 2025.';
+    case 'fundraising': return fw.amount!=null ? B('$'+F(Math.round(fw.amount)))+' raised YTD · '+F(fw.donors)+' donors · '+F(fw.count)+' gifts.' : '';
+    case 'engagementExtras': return 'Who really reads — by mailbox provider and influence weight (post-Apple-privacy).';
+    case 'perf':        return yt.open_pct!=null ? B(yt.open_pct+'%')+' open · '+B(yt.click_pct+'%')+' click · '+F(yt.sends)+' sends (YTD).' : '';
+    case 'campaignsTrend': return yt.open_pct!=null ? 'Last sends average '+B(yt.open_pct+'%')+' open · '+B(yt.click_pct+'%')+' click (recipient-weighted, YTD).' : '';
+    case 'campaigns':   return 'The most recent 12 newsletter sends, with open and click rate per send.';
+    case 'quality':     return 'Mailchimp engagement ratings — most subscribers cluster at 2★ (Apple Mail privacy skews this).';
+    case 'lifecycle':   { const ar=(lc.at_risk||{}).count, su=(lc.sunset_candidates||{}).count; return (ar!=null?B(F(ar))+' at-risk (lapsed but reachable)':'')+(su!=null?' · '+B(F(su))+' sunset candidates':'')+'.'; }
+    case 'trafficCard': return gt.visitors_30d!=null ? B(F(gt.visitors_30d))+' visits · '+B(F(gt.pageviews_30d))+' page views · last 30 days (Ghost).' : '';
+    case 'searchConsole': return scT.clicks!=null ? B(F(scT.clicks))+' clicks from '+B(F(scT.impressions))+' impressions · avg position '+(scT.position||'?')+' (28-day window).' : '';
+    case 'social':      { const f={X:(d.x_profile||{}).followers,LinkedIn:(d.linkedin||{}).followers,Bluesky:(d.bluesky||{}).followers,Instagram:(d.instagram||{}).followers}; const tot=Object.values(f).reduce((s,v)=>s+(v||0),0); return B(F(tot))+' followers — '+Object.entries(f).filter(([,v])=>v).map(([k,v])=>k+' '+F(v)).join(' · ')+'.'; }
+    default: return '';
+  }
+}
+
 // Fold individual cards (caret in the title). Headline cards open by default;
 // deeper/secondary cards start folded to shorten the scroll. Per-device memory.
-function setupCardCollapse(){
+function setupCardCollapse(data){
   const KEY = "vc_growth_cards_collapsed";
   const OPEN = new Set(["weekPulse","bigPicture","audienceQuality","growthChart","fundraising","perf"]);
   const cards = [...document.querySelectorAll("main .card")].filter(c=>c.id && c.querySelector(":scope > h2"));
@@ -1871,6 +1908,10 @@ function setupCardCollapse(){
   cards.forEach(card=>{
     const h2 = card.querySelector(":scope > h2");
     if(!h2.querySelector(".cchev")){ const c=document.createElement("span"); c.className="cchev"; c.textContent="▸"; h2.prepend(c); }
+    if(!card.querySelector(":scope > .cardpeek")){
+      let pk=""; try { pk = cardPeek(card.id, data||{}); } catch(e){}
+      if(pk){ const div=document.createElement("div"); div.className="cardpeek"; div.innerHTML=pk; h2.insertAdjacentElement("afterend", div); }
+    }
     const apply = (isC)=> card.classList.toggle("ccol", isC);
     apply(collapsed.has(card.id));
     h2.addEventListener("click",(e)=>{
