@@ -1,15 +1,22 @@
 {
-  "generated_at": "2026-06-25T16:54:24.802637+00:00",
+  "generated_at": "2026-06-25T21:46:28.072492+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 854,
+  "total_posts": 855,
   "total_authors": 469,
   "total_issues": 29,
   "total_topics": 204,
   "date_range": [
     "2021-09-15",
-    "2026-06-24"
+    "2026-06-25"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "Darializa Avila Chevalier, Claire Valdez, Brad Lander, Zohran Mamdani and New York",
+      "url": "https://www.vitalcitynyc.org/darializa-avila-chevalier-claire-valdez-brad-lander-mamdani/",
+      "published_date": "2026-06-25",
+      "primary_author": "Josh Greenman"
+    }
+  ]
 }

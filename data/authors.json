@@ -248,12 +248,13 @@
   },
   {
     "name": "Josh Greenman",
-    "post_count": 18,
+    "post_count": 19,
     "slugs": [
       "age-diversity-in-cities-and-neighborhoods",
       "black-market-brooklyn",
       "brick-by-brick-rule-by-rule",
       "congestion-pricing-an-explainer",
+      "darializa-avila-chevalier-claire-valdez-brad-lander-mamdani",
       "editors-note-issue-16",
       "imagine-a-real-new-york-mayoral-election",
       "michael-oppenheimer-mark-chambers-interview",
@@ -3910,18 +3911,6 @@
     "website": null
   },
   {
-    "name": "Meryl Chertoff",
-    "post_count": 1,
-    "slugs": [
-      "trumps-executive-orders-have-cities-in-the-crosshairs"
-    ],
-    "slug": "chertoff-meryl",
-    "bio": "is adjunct professor of law at Georgetown University Law Center.",
-    "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Adam Cohen",
     "post_count": 1,
     "slugs": [
@@ -3930,6 +3919,18 @@
     "slug": "cohen-adam",
     "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
     "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Meryl Chertoff",
+    "post_count": 1,
+    "slugs": [
+      "trumps-executive-orders-have-cities-in-the-crosshairs"
+    ],
+    "slug": "chertoff-meryl",
+    "bio": "is adjunct professor of law at Georgetown University Law Center.",
+    "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
     "twitter": null,
     "website": null
   },

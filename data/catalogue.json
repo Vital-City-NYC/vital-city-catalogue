@@ -1,5 +1,33 @@
 [
   {
+    "title": "Darializa Avila Chevalier, Claire Valdez, Brad Lander, Zohran Mamdani and New York",
+    "slug": "darializa-avila-chevalier-claire-valdez-brad-lander-mamdani",
+    "url": "https://www.vitalcitynyc.org/darializa-avila-chevalier-claire-valdez-brad-lander-mamdani/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-25",
+    "published_at": "2026-06-25T17:34:48.000+00:00",
+    "updated_at": "2026-06-25T17:35:50.000+00:00",
+    "primary_author": "Josh Greenman",
+    "authors": [
+      "Josh Greenman"
+    ],
+    "topics": [
+      "Politics",
+      "Mamdani"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "What to make of this week’s Congressional primaries",
+    "excerpt": "What to make of this week’s Congressional primaries",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/26175176064238.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1540,
+    "reading_minutes": 7,
+    "id": "6a3d64ac43fe120001fb6bcb"
+  },
+  {
     "title": "The Myth of Millionaire Flight",
     "slug": "the-myth-of-millionaire-flight",
     "url": "https://www.vitalcitynyc.org/the-myth-of-millionaire-flight/",
@@ -3462,7 +3490,7 @@
     "slug": "gloria-gong-interview",
     "url": "https://www.vitalcitynyc.org/gloria-gong-interview/",
     "type": "q&a",
-    "type_basis": "tag:interview",
+    "type_basis": "tag:podcast",
     "published_date": "2026-02-12",
     "published_at": "2026-02-12T14:36:01.000+00:00",
     "updated_at": "2026-04-15T13:36:27.000+00:00",
@@ -10025,37 +10053,6 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
-    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
-    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Meryl Chertoff",
-    "authors": [
-      "Meryl Chertoff"
-    ],
-    "topics": [
-      "Government Operations",
-      "Repercussions",
-      "City Planning"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "The Sharpie and the damage done",
-    "excerpt": "The Sharpie and the damage done",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1313,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a404c"
-  },
-  {
     "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
     "slug": "trumps-bizarro-new-deal",
     "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
@@ -10085,6 +10082,38 @@
     "word_count": 1619,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a41d5"
+  },
+  {
+    "title": "What You Can Do About Trump",
+    "slug": "what-you-can-do-about-trump",
+    "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:02.000+00:00",
+    "primary_author": "A Survey",
+    "authors": [
+      "A Survey"
+    ],
+    "topics": [
+      "Politics",
+      "Where Do We Go From Here?",
+      "Journalism",
+      "Government Operations"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "Some advice for ordinary Americans concerned about the judgment of history",
+    "excerpt": "Some advice for ordinary Americans concerned about the judgment of history",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeoqviqrldabuac_johnhalpin__headerimage__trump100days_edited-png-auto-format-compress-1776259704726.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 4185,
+    "reading_minutes": 18,
+    "id": "69a04c0ad4006a00010a404a"
   },
   {
     "title": "Donald Trump vs. the Rule of Law, and New York City",
@@ -10118,36 +10147,35 @@
     "id": "69a04c0ad4006a00010a404b"
   },
   {
-    "title": "What You Can Do About Trump",
-    "slug": "what-you-can-do-about-trump",
-    "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
+    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
+    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
+    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "A Survey",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Meryl Chertoff",
     "authors": [
-      "A Survey"
+      "Meryl Chertoff"
     ],
     "topics": [
-      "Politics",
-      "Where Do We Go From Here?",
-      "Journalism",
-      "Government Operations"
+      "Government Operations",
+      "Repercussions",
+      "City Planning"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "Some advice for ordinary Americans concerned about the judgment of history",
-    "excerpt": "Some advice for ordinary Americans concerned about the judgment of history",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeoqviqrldabuac_johnhalpin__headerimage__trump100days_edited-png-auto-format-compress-1776259704726.jpg",
+    "summary": "The Sharpie and the damage done",
+    "excerpt": "The Sharpie and the damage done",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 4185,
-    "reading_minutes": 18,
-    "id": "69a04c0ad4006a00010a404a"
+    "word_count": 1313,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a404c"
   },
   {
     "title": "Is It Time for Cities to Go It Alone?",
