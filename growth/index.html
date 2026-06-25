@@ -12,7 +12,7 @@
   :root{
     --vc-paper:#f7f7f4; --vc-white:#FFFFFF; --vc-black:#050507; --vc-charcoal:#707175;
     --vc-cloud:#dddddd; --vc-green:#57aa4a; --vc-orange:#ff7c53; --vc-cerulean:#217ebe;
-    --vc-magenta:#e7466d; --vc-paper2:#eeeeec;
+    --vc-magenta:#e7466d; --vc-paper2:#eeeeec; --vc-chartreuse:#dde44c;
     --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
     --vc-serif:"GascogneTS","Source Serif 4",Georgia,Times,serif;
   }
@@ -49,7 +49,7 @@
   .kpi .delta.up{color:var(--vc-green)}
   .kpi .delta.down{color:#b5604e}
   .kpi .delta.flat{color:var(--vc-charcoal)}
-  .kpi.hero{background:var(--vc-paper2)}
+  .kpi.hero{background:var(--vc-paper2);box-shadow:inset 0 3px 0 0 var(--vc-chartreuse)}
   .kpi.hero .num{font-size:36px}
   /* Stub tile: GA4/etc. tiles that need credentials. Click → setup docs. */
   .kpi.stub{background:repeating-linear-gradient(45deg, var(--vc-white), var(--vc-white) 8px, var(--vc-paper2) 8px, var(--vc-paper2) 16px);cursor:help}
@@ -70,7 +70,7 @@
   .kpi.stub .delta{color:var(--vc-cerulean);text-decoration:underline}
 
   /* Cards */
-  .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:16px 18px;margin:0 0 20px;transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease}
+  .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:16px 18px;margin:0 0 20px;box-shadow:0 1px 2px rgba(5,5,7,.05);transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease}
   .card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(15,16,17,.07);border-color:var(--vc-charcoal)}
   @media (prefers-reduced-motion: reduce){ .card,.kpi{transition:none} .card:hover,.kpi:hover{transform:none} }
   /* Sticky jump-nav + section headers (page ordered by org priority:
@@ -83,7 +83,7 @@
   .secnav a:hover{text-decoration:underline}
   .sechead{margin:30px 0 14px;scroll-margin-top:46px;cursor:pointer;user-select:none}
   .sechead-title{font-size:15px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--vc-black);
-                 border-bottom:2px solid var(--vc-black);padding-bottom:6px}
+                 border-bottom:3px solid var(--vc-chartreuse);padding-bottom:6px}
   .sechead .chev{display:inline-block;width:.9em;font-size:.82em;color:var(--vc-charcoal);transition:transform .15s;transform:rotate(90deg)}
   .sechead.collapsed .chev{transform:rotate(0deg)}
   .sechead.collapsed .sechead-title{opacity:.62}
