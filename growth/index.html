@@ -124,6 +124,10 @@
   .chart-tip .tipsub{color:#9fd0ef}
   .chart-tip .tipgrn{color:#9fe0a0}
   .chart-tip .tipopn{color:#f3b48c}
+  /* Legibility: give every chart label a card-background halo so it stays
+     readable where it sits over a line or bar. --vc-white flips to the dark
+     card colour in dark mode, so the halo matches the background in both. */
+  .chart text, .rptchart text{paint-order:stroke;stroke:var(--vc-white);stroke-width:3px;stroke-linecap:round;stroke-linejoin:round}
   .legend{font-size:11px;color:var(--vc-charcoal);display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
   .legend .sw{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:middle}
 
@@ -1537,7 +1541,7 @@ function renderPerfChart(monthly){
   // Click rate (smaller line, secondary)
   const cl=last.map((r,i)=>`${x(i)},${y(r.click_pct)}`).join(" ");
   html+=`<polyline points="${cl}" fill="none" stroke="#ff7c53" stroke-width="1.4" opacity=".9"/>`;
-  last.forEach((r,i)=>{html+=`<circle cx="${x(i)}" cy="${y(r.click_pct)}" r="2" fill="#ff7c53"/>`;});
+  last.forEach((r,i)=>{html+=`<circle cx="${x(i)}" cy="${y(r.click_pct)}" r="2.5" fill="#ff7c53"><title>${r.month}: click ${r.click_pct}% · open ${r.open_pct}% · ${r.sends} sends</title></circle>`;});
   // Mark Apple Mail privacy "break" if Jul 2025 falls in the window
   const brkIdx=last.findIndex(r=>r.month==="2025-07");
   if(brkIdx>=0){
@@ -1678,11 +1682,11 @@ function renderSendChart(camps){
   // Open-rate line
   const opPts=last.map((c,i)=>`${x(i)},${y(c.open_pct||0)}`).join(" ");
   html+=`<polyline points="${opPts}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
-  last.forEach((c,i)=>{html+=`<circle cx="${x(i)}" cy="${y(c.open_pct||0)}" r="3" fill="#217ebe"/>`;});
+  last.forEach((c,i)=>{html+=`<circle cx="${x(i)}" cy="${y(c.open_pct||0)}" r="3" fill="#217ebe"><title>${esc(c.sent)}: open ${c.open_pct}% · click ${c.click_pct}% · ${fmtN(c.sent_to)} recipients</title></circle>`;});
   // Click-rate line
   const clPts=last.map((c,i)=>`${x(i)},${y(c.click_pct||0)}`).join(" ");
   html+=`<polyline points="${clPts}" fill="none" stroke="#ff7c53" stroke-width="1.5"/>`;
-  last.forEach((c,i)=>{html+=`<circle cx="${x(i)}" cy="${y(c.click_pct||0)}" r="2" fill="#ff7c53"/>`;});
+  last.forEach((c,i)=>{html+=`<circle cx="${x(i)}" cy="${y(c.click_pct||0)}" r="2.5" fill="#ff7c53"><title>${esc(c.sent)}: click ${c.click_pct}% · open ${c.open_pct}% · ${fmtN(c.sent_to)} recipients</title></circle>`;});
   // Rolling avg of open rate (window of 5)
   const avg=[]; last.forEach((c,i)=>{
     const s=Math.max(0,i-2), e=Math.min(last.length-1,i+2);
@@ -2300,7 +2304,7 @@ function renderDonors(db){
     // Donor line
     const pts=months.map((m,i)=>`${x(i)},${yDon(m.donors)}`).join(" ");
     html+=`<polyline points="${pts}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
-    months.forEach((m,i)=>{html+=`<circle cx="${x(i)}" cy="${yDon(m.donors)}" r="3" fill="#217ebe"/>`;});
+    months.forEach((m,i)=>{html+=`<circle cx="${x(i)}" cy="${yDon(m.donors)}" r="3" fill="#217ebe"><title>${m.m}: ${m.donors} donors · ${fmtUSD(m.amt)} · ${m.gifts} gifts</title></circle>`;});
     svg.innerHTML=html;
   }
 
