@@ -1898,7 +1898,7 @@ function cardSpark(id, d){
     case 'growthChart': return sparkSVG(last(mc.monthly_signups,'cum_subs',18),{color:'#217ebe'});
     case 'bigPicture':  return sparkSVG(((ga.by_year||{}).years||[]).map(y=>y.users),{color:'#217ebe',bars:true});
     case 'trend':       return sparkSVG(last(mc.monthly_signups,'new_signups',12),{color:'#57aa4a',bars:true});
-    case 'trafficCard': return sparkSVG((gt.traffic_series||[]).map(w=>w.visitors),{color:'#217ebe'});
+    case 'trafficCard': return sparkSVG((gt.traffic_series||[]).filter(w=>!w.partial).map(w=>w.visitors),{color:'#217ebe'});
     case 'perf':        return sparkSVG(last(mc.monthly_campaigns,'open_pct',12),{color:'#217ebe'});
     case 'campaignsTrend': return sparkSVG((mc.campaigns||[]).slice().sort((a,b)=>((a.sent||'')<(b.sent||'')?-1:1)).slice(-20).map(c=>c.open_pct),{color:'#217ebe'});
     case 'fundraising': { const ds=(db.daily_series||[]).map(r=>r.amt||0), wk=[]; for(let i=0;i<ds.length;i+=7) wk.push(ds.slice(i,i+7).reduce((s,v)=>s+v,0)); return sparkSVG(wk,{color:'#ff7c53',bars:true}); }
@@ -2594,16 +2594,27 @@ function renderTraffic(data){
     series.forEach((s,i)=>{const isM=(i===0)||(s.wk.slice(0,7)!==series[i-1].wk.slice(0,7));if(isM&&x(i)-lastX>=46){hh+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="10" fill="#888">${esc(s.wk.slice(0,7))}</text>`;lastX=x(i);}});
     // Dashed reference line at the average weekly visitors over the window, so
     // each week reads against "typical", not just the week before.
-    const avgV = Math.round(series.reduce((a,s)=>a+(s.visitors||0),0)/series.length);
+    const complete = series.filter(s=>!s.partial);   // exclude the in-progress week from the average
+    const avgBase = complete.length ? complete : series;
+    const avgV = Math.round(avgBase.reduce((a,s)=>a+(s.visitors||0),0)/avgBase.length);
     hh+=`<line x1="${padL}" x2="${W-padR}" y1="${y(avgV)}" y2="${y(avgV)}" stroke="#217ebe" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>`;
     hh+=`<text x="${W-padR-2}" y="${Math.max(padT+9,y(avgV)-4)}" text-anchor="end" font-size="9.5" fill="#217ebe" opacity=".85">avg ${fmtN(avgV)} visitors/wk</text>`;
     hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.pageviews||0)}`).join(" ")}" fill="none" stroke="#ff7c53" stroke-width="1.6" opacity=".85"/>`;
     hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.visitors||0)}`).join(" ")}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
+    // The last bucket is the current, still-incomplete week — flag it with hollow
+    // markers + a label so its lower point isn't read as a real drop in traffic.
+    const _li=series.length-1;
+    if(series[_li] && series[_li].partial){
+      const px=x(_li), pvy=y(series[_li].pageviews||0), vy=y(series[_li].visitors||0);
+      hh+=`<circle cx="${px}" cy="${pvy}" r="3" fill="var(--vc-white)" stroke="#ff7c53" stroke-width="1.5"/>`;
+      hh+=`<circle cx="${px}" cy="${vy}" r="3.6" fill="var(--vc-white)" stroke="#217ebe" stroke-width="1.8"/>`;
+      hh+=`<text x="${px-6}" y="${Math.max(padT+9,Math.min(pvy,vy)-7)}" text-anchor="end" font-size="9" fill="#217ebe">week in progress →</text>`;
+    }
     trend = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 6px" title="Total visitors and page views to vitalcitynyc.org, bucketed by week, since Ghost analytics began recording. The whole-site trend — the top of the funnel.">Overall website traffic · weekly, whole site</div>
       <div class="chartwrap"><svg class="chart" id="trafficTrendSvg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="height:auto;aspect-ratio:${W}/${H}">${hh}</svg></div>
       <div style="font-size:11px;color:var(--vc-charcoal);margin:4px 0 2px"><span style="color:#217ebe">■</span> unique visitors &nbsp;&nbsp; <span style="color:#ff7c53">■</span> page views</div>`;
     trendPts = series.map((s,i)=>({x:x(i),
-      html:`<div class="tipwk">Week of ${esc(s.wk)}</div><div><span style="color:#9fd0ef">■</span> ${fmtN(s.visitors||0)} visitors</div><div><span style="color:#f3b48c">■</span> ${fmtN(s.pageviews||0)} page views</div>`}));
+      html:`<div class="tipwk">Week of ${esc(s.wk)}${s.partial?' · in progress':''}</div><div><span style="color:#9fd0ef">■</span> ${fmtN(s.visitors||0)} visitors</div><div><span style="color:#f3b48c">■</span> ${fmtN(s.pageviews||0)} page views</div>${s.partial?'<div style="opacity:.75;margin-top:2px">partial — this week isn\'t over yet</div>':''}`}));
     trendGeo = {padT, innerH};
   }
 

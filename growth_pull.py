@@ -1559,8 +1559,12 @@ def pull_ghost_traffic():
                 pass
         if ser:
             cur_monday = (today - timedelta(days=today.weekday())).isoformat()
-            if ser[-1]["wk"] == cur_monday and today.weekday() < 2:   # Mon/Tue → <3 days in
-                ser = ser[:-1]
+            if ser[-1]["wk"] == cur_monday:
+                # The current week is always incomplete (Mon-Sun isn't over yet).
+                if today.weekday() < 2:      # Mon/Tue: barely 1-2 days — drop the stub
+                    ser = ser[:-1]
+                else:                        # mid-week: keep it but flag it partial so the
+                    ser[-1]["partial"] = True  # chart doesn't read the dip as a real decline
         out["traffic_series"] = ser
         # Top pieces by visits (the "top performers" view) over 7 and 30 days.
         # Exclude the homepage, jobs board, tag/author index pages; map each
@@ -2506,8 +2510,8 @@ def pull_donorbox():
 # these by hand (and bump as_of). Used only when the live fetch can't get a
 # count, so the Social-followers total can still include all four platforms.
 MANUAL_FOLLOWERS = {
-    "x":         {"followers": 4305, "as_of": "2026-06-15"},
-    "instagram": {"followers": 665,  "as_of": "2026-06-15"},
+    "x":         {"followers": 4320, "as_of": "2026-06-25"},
+    "instagram": {"followers": 675,  "as_of": "2026-06-25"},
 }
 
 
