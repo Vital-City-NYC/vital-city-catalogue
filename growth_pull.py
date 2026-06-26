@@ -254,6 +254,7 @@ def pull_mailchimp():
             # 4,167 winner; parent opens 3,345 = 1,660 test + 1,685 winner.
             # So one row per A/B is complete — we just surface the winner.
             variate_subjects, winner_subject, test_n = [], "", 0
+            ab_combos = []
             if c.get("type") == "variate":
                 vs = c.get("variate_settings") or {}
                 variate_subjects = vs.get("subject_lines") or []
@@ -266,6 +267,18 @@ def pull_mailchimp():
                         if isinstance(si, int) and 0 <= si < len(variate_subjects):
                             winner_subject = variate_subjects[si]
                         break
+                # Per-variant capture. The combination object's stat fields aren't
+                # documented consistently for 'variate' campaigns, so grab the
+                # subject + EVERY numeric field present — one rebuild then reveals
+                # whether per-variant opens/clicks are available or only recipients.
+                for cb in combos:
+                    si = cb.get("subject_line")
+                    subj = variate_subjects[si] if isinstance(si, int) and 0 <= si < len(variate_subjects) else str(si)
+                    row = {"subject": subj, "winner": cb.get("id") == win_id}
+                    for fk, fv in cb.items():
+                        if fk not in ("id", "subject_line") and isinstance(fv, (int, float)):
+                            row[fk] = fv
+                    ab_combos.append(row)
             op = (rs.get("open_rate")  or 0) * 100
             cl = (rs.get("click_rate") or 0) * 100
             ctor = (cl / op * 100) if op > 0 else 0
@@ -284,10 +297,43 @@ def pull_mailchimp():
                 "click_pct":round(cl, 1),
                 "ctor_pct": round(ctor, 1),   # click-to-open ratio = honest engagement
                 "unsubs":   unsub_by_id.get(c.get("id"), 0),  # exact, from /reports
+                "ab_combos": ab_combos,  # per-variant subject + stats (variate only)
             }
             entry["kind"] = _campaign_kind(entry)  # appeal | newsletter | other
             camp_out.append(entry)
         out["campaigns"] = camp_out
+
+        # Unsubscribe reasons by campaign kind (appeal vs newsletter vs other).
+        # /reports/{id}/unsubscribed carries each unsub's optional reason. We
+        # aggregate to COUNTS ONLY (never store emails or the free-text note) over
+        # the trailing 12 months — canonical Mailchimp reasons kept; custom notes
+        # bucketed so no personal content is published.
+        try:
+            from collections import Counter as _Counter
+            _cut = (datetime.now(timezone.utc).date() - timedelta(days=365)).isoformat()
+            CANON = {
+                "No longer want to receive these emails": "No longer want these emails",
+                "I never signed up for this list":        "Never signed up",
+                "The emails are inappropriate":           "Emails inappropriate",
+                "The emails are spam":                    "Marked as spam",
+            }
+            reasons = {"appeal": _Counter(), "newsletter": _Counter(), "other": _Counter()}
+            for e in camp_out:
+                if (e.get("sent") or "") < _cut or not e.get("unsubs"):
+                    continue
+                kind = e.get("kind", "other")
+                try:
+                    us = mc_get(f"/reports/{e['id']}/unsubscribed?count=200"
+                                f"&fields=unsubscribes.reason", key, dc).get("unsubscribes", [])
+                except Exception:
+                    continue
+                for u in us:
+                    raw = (u.get("reason") or "").strip()
+                    label = (CANON.get(raw) or "No reason given") if (raw in CANON or not raw) else "Other (custom note)"
+                    reasons[kind][label] += 1
+            out["unsub_reasons"] = {k: dict(v) for k, v in reasons.items()}
+        except Exception as e:
+            log(f"  unsubscribe reasons pull failed: {e}")
 
         # Monthly aggregates (recipient‑weighted rates) for the trend chart
         from collections import defaultdict as _dd
