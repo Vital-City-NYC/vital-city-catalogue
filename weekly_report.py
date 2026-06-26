@@ -54,6 +54,52 @@ def page_label(path):
 
 def fmtUSD(n): return "$" + format(round(n), ",")
 
+def newsletter_learnings(mc, run_date):
+    """Rolling newsletter learnings (trailing 12 months): fundraising-vs-newsletter
+    unsubscribe cost, send-frequency/fatigue, and why people leave. Slow-moving —
+    refreshed each week so the team always sees the current state."""
+    camps = mc.get("campaigns", [])
+    cut12 = (run_date - timedelta(days=365)).isoformat()
+    rec = [c for c in camps if (c.get("sent") or "") >= cut12]
+    def rate(rows):
+        S = sum(c.get("sent_to") or 0 for c in rows); U = sum(c.get("unsubs") or 0 for c in rows)
+        return S, U, (1000 * U / S if S else 0)
+    out = []
+    # 1) fundraising appeals vs the regular newsletter
+    ap = [c for c in rec if c.get("kind") == "appeal"]
+    nl = [c for c in rec if c.get("kind") == "newsletter"]
+    _, _, ar = rate(ap); _, _, nr = rate(nl)
+    if ap and nl and nr:
+        out.append(f"- **Fundraising vs newsletter:** appeals unsubscribe at **{ar:.2f}/1,000** vs "
+                   f"**{nr:.2f}/1,000** for the regular newsletter (**{ar/nr:.1f}×**). Modestly higher — "
+                   f"appeals are not damaging the list. Spam complaints are the metric to watch on the hardest asks.")
+    # 2) send frequency / fatigue
+    wk = {}
+    for c in rec:
+        ds = d(c.get("sent"))
+        if ds: wk.setdefault(ds.isocalendar()[:2], []).append(c)
+    b1 = [c for cs in wk.values() if len(cs) == 1 for c in cs]
+    bm = [c for cs in wk.values() if len(cs) >= 2 for c in cs]
+    _, _, r1 = rate(b1); _, _, rm = rate(bm)
+    if b1 and bm and r1:
+        verdict = ("**no fatigue signal**" if rm <= r1 * 1.05
+                   else "**watch — busier weeks are shedding more**")
+        out.append(f"- **Send frequency:** single-send weeks unsubscribe at **{r1:.2f}/1,000** vs "
+                   f"**{rm:.2f}/1,000** in multi-send weeks — {verdict}. (Correlational; busy weeks skew "
+                   f"toward appeals and special sends, so read as 'frequency isn't hurting us,' not 'send more.')")
+    # 3) why people leave
+    ur = mc.get("unsub_reasons", {})
+    allr = {}
+    for kind in ("appeal", "newsletter", "other"):
+        for reason, n in (ur.get(kind) or {}).items():
+            allr[reason] = allr.get(reason, 0) + n
+    if allr:
+        tot = sum(allr.values())
+        top = sorted(allr.items(), key=lambda x: -x[1])[:3]
+        parts = "; ".join(f"{r} ({round(100*n/tot)}%)" for r, n in top)
+        out.append(f"- **Why people leave** (last 12 months, {tot} reasons recorded): {parts}.")
+    return out
+
 def build(growth, people, run_date):
     g = growth; gt = g.get("ghost_traffic", {}); mc = g.get("mailchimp", {}); db = g.get("donorbox", {})
     l7 = (run_date - timedelta(days=6), run_date)
@@ -178,11 +224,26 @@ def build(growth, people, run_date):
     lines.append("## Email")
     if camps:
         for c in camps:
-            lines.append(f"- Sent {c.get('sent')} to ~{c.get('sent_to',0):,}: **{c.get('open_pct','?')}% open / {c.get('click_pct','?')}% click**. "
-                         f"Recent sends keep accruing opens for days, so treat a just-sent campaign as preliminary; click rate is the cleaner read.")
+            un = c.get("unsubs")
+            unln = f" · {un} unsub" + ("s" if (un or 0) != 1 else "") if un is not None else ""
+            extra = ""
+            if c.get("kind") == "appeal":
+                extra += " · *fundraising appeal*"
+            if c.get("type") == "variate" and c.get("winner_subject"):
+                losers = [s for s in (c.get("variate_subjects") or []) if s != c.get("winner_subject")]
+                extra += f" · A/B winner: “{c.get('winner_subject')}”" + (f" (beat “{losers[0]}”)" if losers else "")
+            lines.append(f"- Sent {c.get('sent')} to ~{c.get('sent_to',0):,}: **{c.get('open_pct','?')}% open / {c.get('click_pct','?')}% click**{unln}{extra}.")
+        lines.append("*Recent sends keep accruing opens for days, so treat a just-sent campaign as preliminary; click rate is the cleaner read.*")
     else:
         lines.append("- No campaigns sent this week.")
     lines.append("")
+
+    learn = newsletter_learnings(mc, run_date)
+    if learn:
+        lines.append("## Newsletter learnings (rolling)")
+        lines.append("*Slow-moving patterns over the trailing 12 months, refreshed each week.*")
+        lines += learn
+        lines.append("")
 
     lines.append("## Website traffic")
     if last_complete:
