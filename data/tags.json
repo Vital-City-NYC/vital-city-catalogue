@@ -1,7 +1,7 @@
 [
   {
     "name": "Crime",
-    "post_count": 141
+    "post_count": 142
   },
   {
     "name": "History",
@@ -9,7 +9,7 @@
   },
   {
     "name": "City Government",
-    "post_count": 119
+    "post_count": 120
   },
   {
     "name": "Government Operations",
@@ -24,16 +24,20 @@
     "post_count": 78
   },
   {
-    "name": "culture",
-    "post_count": 72
+    "name": "Housing",
+    "post_count": 73
   },
   {
-    "name": "Housing",
+    "name": "culture",
     "post_count": 72
   },
   {
     "name": "Gun Violence",
     "post_count": 66
+  },
+  {
+    "name": "Economics",
+    "post_count": 52
   },
   {
     "name": "Politics",
@@ -42,10 +46,6 @@
   {
     "name": "Police Reform",
     "post_count": 52
-  },
-  {
-    "name": "Economics",
-    "post_count": 51
   },
   {
     "name": "Jails",
@@ -216,6 +216,10 @@
     "post_count": 9
   },
   {
+    "name": "What Can Be Done?",
+    "post_count": 9
+  },
+  {
     "name": "The Great Debate",
     "post_count": 9
   },
@@ -241,10 +245,6 @@
   },
   {
     "name": "Pouring the Foundation",
-    "post_count": 8
-  },
-  {
-    "name": "What Can Be Done?",
     "post_count": 8
   },
   {
@@ -316,10 +316,6 @@
     "post_count": 6
   },
   {
-    "name": "Modern Evolution: Marketing and Profits",
-    "post_count": 6
-  },
-  {
     "name": "Where We Go From Here",
     "post_count": 6
   },
@@ -357,6 +353,10 @@
   },
   {
     "name": "Where We Are",
+    "post_count": 5
+  },
+  {
+    "name": "Modern Evolution: Marketing and Profits",
     "post_count": 5
   },
   {

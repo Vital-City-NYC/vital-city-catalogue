@@ -1,15 +1,22 @@
 {
-  "generated_at": "2026-06-26T11:57:01.727727+00:00",
+  "generated_at": "2026-06-26T18:07:01.394937+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 855,
-  "total_authors": 469,
+  "total_posts": 856,
+  "total_authors": 467,
   "total_issues": 29,
   "total_topics": 204,
   "date_range": [
     "2021-09-15",
-    "2026-06-25"
+    "2026-06-26"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "After the Mamdani Rent Freeze",
+      "url": "https://www.vitalcitynyc.org/mamdani-rent-freeze-agenda-nyc/",
+      "published_date": "2026-06-26",
+      "primary_author": "Arpit Gupta"
+    }
+  ]
 }
