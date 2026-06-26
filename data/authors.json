@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 91,
+    "post_count": 92,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -41,6 +41,7 @@
       "leslie-day-interview-hudson-river-houseboat",
       "longtime-daily-news-opinion-and-editorial-page-editor-josh-greenman-joins-vital-city-as-managing-editor",
       "mamdani-first-100-days-scorecard-nyc",
+      "mamdani-rent-freeze-conversation",
       "margaret-haney-interview",
       "michael-lipetri-interview",
       "new-york-city-deputy-mayors-on-how-things-really-get-done",
@@ -103,7 +104,7 @@
   },
   {
     "name": "Elizabeth Glazer",
-    "post_count": 46,
+    "post_count": 45,
     "slugs": [
       "a-brief-history-of-the-3300-target",
       "a-rare-remedy-to-the-persistent-brutality-of-rikers",
@@ -114,7 +115,6 @@
       "civic-life-can-create-safety",
       "could-our-jails-be-a-civic-asset",
       "crime-rhetoric-vs-crime-realities",
-      "editors-note-issue-13",
       "editors-note-issue-3",
       "editors-note-issue-4",
       "editors-note-issue-5",
@@ -641,22 +641,6 @@
     "website": null
   },
   {
-    "name": "Megan Kang",
-    "post_count": 5,
-    "slugs": [
-      "a-better-conversation-on-guns",
-      "editors-note-issue-13",
-      "state-gun-laws-matter",
-      "unraveling-the-threads-of-americas-gun-culture",
-      "what-we-know-and-dont-know-about-guns"
-    ],
-    "slug": "kang-megan",
-    "bio": "is a Ph.D. candidate in sociology at Princeton University and a research affiliate at the UChicago Crime Lab and the Princeton Violence and Inequality Project.",
-    "url": "https://www.vitalcitynyc.org/author/kang-megan/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Morgan C. Williams Jr.",
     "post_count": 5,
     "slugs": [
@@ -836,6 +820,21 @@
     "slug": "friedman-barry",
     "bio": "is the Jacob D. Fuchsberg Professor of Law and founding director of the Policing Project at NYU School of Law, a nonprofit research center promoting public safety through transparency and democratic accountability.",
     "url": "https://www.vitalcitynyc.org/author/friedman-barry/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Megan Kang",
+    "post_count": 4,
+    "slugs": [
+      "a-better-conversation-on-guns",
+      "state-gun-laws-matter",
+      "unraveling-the-threads-of-americas-gun-culture",
+      "what-we-know-and-dont-know-about-guns"
+    ],
+    "slug": "kang-megan",
+    "bio": "is a Ph.D. candidate in sociology at Princeton University and a research affiliate at the UChicago Crime Lab and the Princeton Violence and Inequality Project.",
+    "url": "https://www.vitalcitynyc.org/author/kang-megan/",
     "twitter": null,
     "website": null
   },
@@ -1692,6 +1691,18 @@
     "slug": "weisz-claire",
     "bio": "is the founding partner of WXY, the New York City-based architecture, urban design and planning firm.",
     "url": "https://www.vitalcitynyc.org/author/weisz-claire/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Greg Lickenbrock",
+    "post_count": 2,
+    "slugs": [
+      "the-money-behind-mass-shootings"
+    ],
+    "slug": "lickenbrock-greg",
+    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
     "twitter": null,
     "website": null
   },
@@ -3456,18 +3467,6 @@
     "website": null
   },
   {
-    "name": "Greg Lickenbrock",
-    "post_count": 1,
-    "slugs": [
-      "the-money-behind-mass-shootings"
-    ],
-    "slug": "lickenbrock-greg",
-    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Charles Buckhanan",
     "post_count": 1,
     "slugs": [
@@ -3480,6 +3479,30 @@
     "website": null
   },
   {
+    "name": "Stephen Hargarten",
+    "post_count": 1,
+    "slugs": [
+      "how-modern-bullets-maximize-lethality"
+    ],
+    "slug": "hargarten-stephen",
+    "bio": "is an American emergency physician, gun violence researcher and professor at the Medical College of Wisconsin in Milwaukee.",
+    "url": "https://www.vitalcitynyc.org/author/hargarten-stephen/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Jennifer Tucker",
+    "post_count": 1,
+    "slugs": [
+      "how-modern-bullets-maximize-lethality"
+    ],
+    "slug": "tucker-jennifer",
+    "bio": "is a professor of history at Wesleyan University and the founding director of Wesleyan’s Center for the Study of Guns and Society.",
+    "url": "https://www.vitalcitynyc.org/author/tucker-jennifer/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Samantha J. Simon",
     "post_count": 1,
     "slugs": [
@@ -3488,18 +3511,6 @@
     "slug": "simon-samantha-j",
     "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
     "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Nina Vinik",
-    "post_count": 1,
-    "slugs": [
-      "breaking-through-with-the-next-generation-on-firearms"
-    ],
-    "slug": "vinik-nina",
-    "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
-    "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
     "twitter": null,
     "website": null
   },

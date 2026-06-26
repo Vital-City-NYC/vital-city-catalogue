@@ -1,22 +1,28 @@
 {
-  "generated_at": "2026-06-26T18:07:01.394937+00:00",
+  "generated_at": "2026-06-26T18:35:43.409187+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 856,
-  "total_authors": 467,
+  "total_posts": 857,
+  "total_authors": 468,
   "total_issues": 29,
-  "total_topics": 204,
+  "total_topics": 205,
   "date_range": [
     "2021-09-15",
     "2026-06-26"
   ],
   "first_run": false,
-  "new_article_count": 1,
+  "new_article_count": 2,
   "new_articles": [
     {
-      "title": "After the Mamdani Rent Freeze",
-      "url": "https://www.vitalcitynyc.org/mamdani-rent-freeze-agenda-nyc/",
+      "title": "After the Rent Freeze: What Happens to New York City’s Regulated Housing Stock Now and in the Future",
+      "url": "https://www.vitalcitynyc.org/mamdani-rent-freeze-conversation/",
       "published_date": "2026-06-26",
-      "primary_author": "Arpit Gupta"
+      "primary_author": "Vital City"
+    },
+    {
+      "title": "How Modern Bullets Maximize Lethality",
+      "url": "https://www.vitalcitynyc.org/how-modern-bullets-maximize-lethality/",
+      "published_date": "2025-09-10",
+      "primary_author": "Stephen Hargarten"
     }
   ]
 }
