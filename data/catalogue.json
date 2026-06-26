@@ -7,7 +7,7 @@
     "type_basis": "default",
     "published_date": "2026-06-26",
     "published_at": "2026-06-26T18:16:12.000+00:00",
-    "updated_at": "2026-06-26T18:16:12.000+00:00",
+    "updated_at": "2026-06-26T20:34:58.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -2616,7 +2616,9 @@
     ],
     "topics": [
       "Housing",
-      "Federal Government"
+      "Federal Government",
+      "rent",
+      "Rent regulation"
     ],
     "issues": [],
     "issue_numbers": [],
@@ -2789,7 +2791,9 @@
     ],
     "topics": [
       "Housing",
-      "City Government"
+      "City Government",
+      "Rent regulation",
+      "rent"
     ],
     "issues": [],
     "issue_numbers": [],
