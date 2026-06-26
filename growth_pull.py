@@ -305,19 +305,16 @@ def pull_mailchimp():
 
         # Unsubscribe reasons by campaign kind (appeal vs newsletter vs other).
         # /reports/{id}/unsubscribed carries each unsub's optional reason. We
-        # aggregate to COUNTS ONLY (never store emails or the free-text note) over
-        # the trailing 12 months — canonical Mailchimp reasons kept; custom notes
-        # bucketed so no personal content is published.
+        # aggregate to COUNTS ONLY (never store emails). Mailchimp's fixed radio
+        # reasons recur hundreds of times identically; a member's free-text note is
+        # essentially never repeated — so we keep any reason that recurs >=5 times
+        # VERBATIM (those are the canonical options, whatever their exact wording)
+        # and bucket the rest as "Other (free text)" so no personal content leaks.
         try:
             from collections import Counter as _Counter
             _cut = (datetime.now(timezone.utc).date() - timedelta(days=365)).isoformat()
-            CANON = {
-                "No longer want to receive these emails": "No longer want these emails",
-                "I never signed up for this list":        "Never signed up",
-                "The emails are inappropriate":           "Emails inappropriate",
-                "The emails are spam":                    "Marked as spam",
-            }
-            reasons = {"appeal": _Counter(), "newsletter": _Counter(), "other": _Counter()}
+            NONE = "No reason given"
+            raw_by_kind = {"appeal": _Counter(), "newsletter": _Counter(), "other": _Counter()}
             for e in camp_out:
                 if (e.get("sent") or "") < _cut or not e.get("unsubs"):
                     continue
@@ -329,9 +326,20 @@ def pull_mailchimp():
                     continue
                 for u in us:
                     raw = (u.get("reason") or "").strip()
-                    label = (CANON.get(raw) or "No reason given") if (raw in CANON or not raw) else "Other (custom note)"
-                    reasons[kind][label] += 1
-            out["unsub_reasons"] = {k: dict(v) for k, v in reasons.items()}
+                    raw_by_kind[kind][raw or NONE] += 1
+            glob = _Counter()
+            for c in raw_by_kind.values():
+                glob.update(c)
+            canon = {s for s, n in glob.items() if s != NONE and n >= 5}
+            def _label(s):
+                return NONE if s == NONE else (s if s in canon else "Other (free text)")
+            reasons = {}
+            for kind, c in raw_by_kind.items():
+                agg = _Counter()
+                for s, n in c.items():
+                    agg[_label(s)] += n
+                reasons[kind] = dict(agg)
+            out["unsub_reasons"] = reasons
         except Exception as e:
             log(f"  unsubscribe reasons pull failed: {e}")
 

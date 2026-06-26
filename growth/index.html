@@ -592,6 +592,16 @@
         <div id="fundUnsubBody"></div>
       </div>
 
+      <div class="card" id="whyLeave">
+        <h2>Why people leave <span class="hint">unsubscribe reasons + whether send frequency matters</span></h2>
+        <div id="whyLeaveBody"></div>
+      </div>
+
+      <div class="card" id="abTests">
+        <h2>A/B subject-line tests <span class="hint">which subject won, and the patterns</span></h2>
+        <div id="abTestsBody"></div>
+      </div>
+
       <div class="card" id="engagementExtras">
         <h2>Engagement &amp; influence <span class="hint">post-Apple-privacy metrics: who really reads, by mailbox provider, by influence weight</span></h2>
         <div id="engagementExtrasBody"></div>
@@ -953,6 +963,8 @@ function boot(data){
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderFundUnsub(mc);
+  renderWhyLeave(mc);
+  renderABTests(mc);
   renderAcquisition(data.ghost_signup_attribution || {});
   renderEngagementExtras(data.engagement_extras || {});
   renderLifecycle(data.lifecycle || {});
@@ -2262,6 +2274,67 @@ function renderFundUnsub(mc){
     <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Appeals · trailing 12 months</div>
     <table class="tbl"><thead><tr><th>Sent</th><th>Subject</th><th class="num">Recipients</th><th class="num">Unsubs</th><th class="num">/1,000</th></tr></thead><tbody>${rows||`<tr><td colspan="5" style="color:var(--vc-charcoal)">No appeals tagged in the last 12 months.</td></tr>`}</tbody></table>
     <div style="font-size:10.5px;line-height:1.6;margin-top:10px;color:var(--vc-charcoal)">Unsubscribes are exact per-campaign counts from Mailchimp's reports. "Appeals" are auto-tagged by donation language in the subject (donate, match, year-end, your support, double your gift, etc.); "newsletter" = regular Thursday sends. Rates are recipient-weighted over the trailing 12 months. For context, anything under about 2 per 1,000 (0.2%) is a low, healthy unsubscribe rate.</div>`;
+}
+
+// Why people leave: unsubscribe reasons + a send-frequency / fatigue check.
+function renderWhyLeave(mc){
+  const host=$("#whyLeaveBody"); if(!host) return;
+  const lab=t=>`<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px">${t}</div>`;
+  const ur=mc.unsub_reasons||{};
+  const agg={}; let total=0;
+  ["appeal","newsletter","other"].forEach(k=>Object.entries(ur[k]||{}).forEach(([r,n])=>{agg[r]=(agg[r]||0)+n; total+=n;}));
+  let html="";
+  if(total){
+    const sorted=Object.entries(agg).sort((a,b)=>b[1]-a[1]);
+    html+=lab(`Why people unsubscribe · last 12 months (${fmtN(total)} recorded)`)+
+      `<table class="tbl"><tbody>`+
+      sorted.map(([r,n])=>`<tr><td>${esc(r)}</td><td class="num">${fmtN(n)}</td><td class="num">${Math.round(100*n/total)}%</td></tr>`).join("")+
+      `</tbody></table>`;
+  } else {
+    html+=`<div style="font-size:12px;color:var(--vc-charcoal);line-height:1.6">Unsubscribe-reason data populates on the next refresh (pulled from Mailchimp's reports).</div>`;
+  }
+  // Send-frequency / fatigue: per-send unsub rate in single- vs multi-send weeks.
+  const camps=mc.campaigns||[];
+  const cut=new Date(Date.now()-365*864e5).toISOString().slice(0,10);
+  const wkKey=ds=>{const dt=new Date(ds+"T00:00:00Z");const off=(dt.getUTCDay()+6)%7;dt.setUTCDate(dt.getUTCDate()-off);return dt.toISOString().slice(0,10);};
+  const byWeek={};
+  camps.filter(c=>(c.sent||"")>=cut && c.sent).forEach(c=>{(byWeek[wkKey(c.sent)]=byWeek[wkKey(c.sent)]||[]).push(c);});
+  const rate=arr=>{const S=arr.reduce((a,c)=>a+(c.sent_to||0),0),U=arr.reduce((a,c)=>a+(c.unsubs||0),0);return S?1000*U/S:0;};
+  const single=[],multi=[];
+  Object.values(byWeek).forEach(cs=>(cs.length===1?single:multi).push(...cs));
+  const r1=rate(single), rm=rate(multi);
+  if(r1&&rm){
+    const ok=rm<=r1*1.05;
+    const verdict=ok?"No fatigue signal":"Watch — busier weeks shedding more";
+    const vcol=ok?"var(--vc-green)":"var(--vc-orange)";
+    html+=lab("Does send frequency drive unsubscribes?").replace("margin-bottom:6px","margin:18px 0 6px");
+    html+=`<div style="display:flex;gap:26px;flex-wrap:wrap;align-items:flex-end">
+      <div><div style="font-family:var(--vc-serif);font-size:26px;line-height:1;color:var(--vc-cerulean)">${r1.toFixed(2)}<span style="font-size:12px;font-family:var(--vc-sans);color:var(--vc-charcoal)"> /1k</span></div><div style="font-size:11px;color:var(--vc-charcoal);margin-top:3px">single-send weeks</div></div>
+      <div><div style="font-family:var(--vc-serif);font-size:26px;line-height:1;color:var(--vc-cerulean)">${rm.toFixed(2)}<span style="font-size:12px;font-family:var(--vc-sans);color:var(--vc-charcoal)"> /1k</span></div><div style="font-size:11px;color:var(--vc-charcoal);margin-top:3px">multi-send weeks</div></div>
+      <div style="font-weight:800;color:${vcol};font-size:13px;padding-bottom:2px">${verdict}</div>
+    </div>
+    <div style="font-size:10.5px;line-height:1.6;margin-top:8px;color:var(--vc-charcoal)">Correlational: busy weeks skew toward fundraising appeals and special sends, so read this as "frequency isn't hurting the list" — not "send more." The regular weekly newsletter is the single biggest unsubscribe trigger simply because it's the consistent full-list touch.</div>`;
+  }
+  host.innerHTML=html;
+}
+
+// A/B subject-line test history. Mailchimp only reports the winning subject (not
+// each variant's open rate), so we show winner vs runner-up + the aggregate.
+function renderABTests(mc){
+  const host=$("#abTestsBody"); if(!host) return;
+  const tests=(mc.campaigns||[]).filter(c=>c.type==="variate"&&c.winner_subject&&(c.variate_subjects||[]).length>=2)
+    .slice().sort((a,b)=>((a.sent||"")<(b.sent||"")?1:-1));
+  if(!tests.length){ host.innerHTML=`<div style="font-size:12px;color:var(--vc-charcoal)">No A/B tests recorded yet.</div>`; return; }
+  const rows=tests.map(c=>{
+    const losers=(c.variate_subjects||[]).filter(s=>s!==c.winner_subject);
+    return `<tr>
+      <td>${esc(c.sent)}</td>
+      <td><span style="color:var(--vc-green);font-weight:800">✓</span> ${esc(c.winner_subject)}<div style="color:var(--vc-charcoal);font-size:11px;margin-top:2px">lost: ${esc(losers[0]||"—")}</div></td>
+      <td class="num">${c.open_pct}%</td>
+      <td class="num">${c.click_pct}%</td></tr>`;
+  }).join("");
+  host.innerHTML=`<table class="tbl"><thead><tr><th>Sent</th><th>Winner ✓ vs runner-up</th><th class="num">Open</th><th class="num">Click</th></tr></thead><tbody>${rows}</tbody></table>
+    <div style="font-size:10.5px;line-height:1.6;margin-top:10px;color:var(--vc-charcoal)">Mailchimp reports the winning subject only — not each variant's open rate — so margins aren't shown; open/click are whole-campaign aggregates. Patterns so far (n=${tests.length}): plain language beats "=" / "??" gimmicks; New York City-local and named (Mamdani, the Knicks) beats national or abstract; clarity beats insider jargon.</div>`;
 }
 
 function renderDonors(db){
