@@ -2281,15 +2281,19 @@ function renderWhyLeave(mc){
   const host=$("#whyLeaveBody"); if(!host) return;
   const lab=t=>`<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px">${t}</div>`;
   const ur=mc.unsub_reasons||{};
+  const NONE=new Set(["None given","No reason given"]);
   const agg={}; let total=0;
   ["appeal","newsletter","other"].forEach(k=>Object.entries(ur[k]||{}).forEach(([r,n])=>{agg[r]=(agg[r]||0)+n; total+=n;}));
+  const given=Object.entries(agg).filter(([r])=>!NONE.has(r)).sort((a,b)=>b[1]-a[1]);
+  const gtot=given.reduce((a,[,n])=>a+n,0);
   let html="";
-  if(total){
-    const sorted=Object.entries(agg).sort((a,b)=>b[1]-a[1]);
-    html+=lab(`Why people unsubscribe · last 12 months (${fmtN(total)} recorded)`)+
+  if(total && gtot){
+    html+=lab("Why people unsubscribe · last 12 months")+
+      `<div style="font-size:11px;color:var(--vc-charcoal);margin:-2px 0 7px">${fmtN(total)} unsubscribes · ${Math.round(100*gtot/total)}% gave a reason (${Math.round(100*(total-gtot)/total)}% gave none). Breakdown of those who did:</div>`+
       `<table class="tbl"><tbody>`+
-      sorted.map(([r,n])=>`<tr><td>${esc(r)}</td><td class="num">${fmtN(n)}</td><td class="num">${Math.round(100*n/total)}%</td></tr>`).join("")+
-      `</tbody></table>`;
+      given.map(([r,n])=>`<tr><td>${esc(r)}</td><td class="num">${fmtN(n)}</td><td class="num">${Math.round(100*n/gtot)}%</td></tr>`).join("")+
+      `</tbody></table>`+
+      `<div style="font-size:10.5px;color:var(--vc-charcoal);margin-top:6px;line-height:1.5">"Spammy content" is Mailchimp's category for readers who felt the email was unwanted — its prominence (especially on appeals) tracks with the higher spam-complaint rate on fundraising sends.</div>`;
   } else {
     html+=`<div style="font-size:12px;color:var(--vc-charcoal);line-height:1.6">Unsubscribe-reason data populates on the next refresh (pulled from Mailchimp's reports).</div>`;
   }

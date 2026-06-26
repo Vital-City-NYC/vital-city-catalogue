@@ -95,9 +95,14 @@ def newsletter_learnings(mc, run_date):
             allr[reason] = allr.get(reason, 0) + n
     if allr:
         tot = sum(allr.values())
-        top = sorted(allr.items(), key=lambda x: -x[1])[:3]
-        parts = "; ".join(f"{r} ({round(100*n/tot)}%)" for r, n in top)
-        out.append(f"- **Why people leave** (last 12 months, {tot} reasons recorded): {parts}.")
+        NONE = {"None given", "No reason given"}
+        given = {r: n for r, n in allr.items() if r not in NONE}
+        gtot = sum(given.values())
+        if gtot:
+            top = sorted(given.items(), key=lambda x: -x[1])[:3]
+            parts = "; ".join(f"{r} ({round(100*n/gtot)}%)" for r, n in top)
+            out.append(f"- **Why people leave** (of {tot} unsubscribes in the last 12 months, "
+                       f"{round(100*gtot/tot)}% gave a reason): {parts}.")
     return out
 
 def build(growth, people, run_date):
