@@ -57,14 +57,15 @@ def mc_get(path, key, dc):
     return json.loads(http_get(url, headers={"Authorization": "Basic " + auth}, timeout=120))
 
 
-# Fundraising-appeal detection. Conservative donation-language keywords (caught
-# all 7 of the Dec-2025 year-end appeals with no editorial false positives).
-# Everything else sent on the regular Thursday cadence is tagged "newsletter";
-# the rest is "other" (event invites, one-off editorial, etc.).
+# Fundraising-appeal detection. Donation-language keywords, validated against the
+# full Mailchimp export (June 2026): this set catches all 12 genuine appeals with
+# no false positives. Avoid bare "contribut" (hits editorial "contributor") and
+# "match"/"sustain" (hit "matchup"/"sustainability"). Everything else on the
+# regular Thursday cadence is "newsletter"; the rest is "other".
 _FUND_RE = re.compile(
     r"donat|\bgift\b|double your|generous|your support|support evidence|"
-    r"building vital|contribut|year[- ]?end|fundrais|tax-deduct|chip in|"
-    r"make a gift|sustain|membership drive", re.I)
+    r"building vital|year[- ]?end|fundrais|tax-deduct|chip in|"
+    r"make a gift|personal request|membership drive", re.I)
 
 def _campaign_kind(entry):
     txt = " ".join([entry.get("subject") or "", entry.get("winner_subject") or ""]
