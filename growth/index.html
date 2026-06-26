@@ -587,6 +587,11 @@
         </div>
       </div>
 
+      <div class="card" id="fundUnsub">
+        <h2>Cost of asking · unsubscribes <span class="hint">do fundraising appeals shed more subscribers than the regular newsletter?</span></h2>
+        <div id="fundUnsubBody"></div>
+      </div>
+
       <div class="card" id="engagementExtras">
         <h2>Engagement &amp; influence <span class="hint">post-Apple-privacy metrics: who really reads, by mailbox provider, by influence weight</span></h2>
         <div id="engagementExtrasBody"></div>
@@ -947,6 +952,7 @@ function boot(data){
   renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || [], data.linkedin || {}, data.bluesky || {});
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
+  renderFundUnsub(mc);
   renderAcquisition(data.ghost_signup_attribution || {});
   renderEngagementExtras(data.engagement_extras || {});
   renderLifecycle(data.lifecycle || {});
@@ -2204,6 +2210,58 @@ function fmtUSD(n){
   const v = Number(n||0);
   if(Math.abs(v) >= 100000) return "$" + Math.round(v/1000).toLocaleString() + "k";
   return "$" + v.toLocaleString(undefined,{maximumFractionDigits:0});
+}
+
+function campaignSubject(c){
+  let s=(c.subject||"").trim();
+  if(!s && c.variate_subjects && c.variate_subjects.length){
+    s=(c.winner_subject||"").trim() || c.variate_subjects[0].trim();
+  }
+  return s || "(no subject recorded)";
+}
+
+// Fundraising appeals vs the regular newsletter: do asks cost subscribers?
+// Uses exact per-campaign unsubscribes (Mailchimp /reports) + the backend's
+// kind tag (appeal | newsletter | other). Recipient-weighted, trailing 12mo.
+function renderFundUnsub(mc){
+  const host=$("#fundUnsubBody"); if(!host) return;
+  const camps=mc.campaigns||[];
+  const cut=new Date(Date.now()-365*864e5).toISOString().slice(0,10);
+  const recent=camps.filter(c=>(c.sent||"")>=cut);
+  const haveKind=recent.some(c=>c.kind);
+  const totUns=recent.reduce((a,c)=>a+(c.unsubs||0),0);
+  if(!recent.length || !haveKind || totUns===0){
+    host.innerHTML=`<div style="font-size:12px;line-height:1.6;color:var(--vc-charcoal)">Per-campaign unsubscribe data populates on the next scheduled refresh — it's pulled live from Mailchimp's reports API. Once it lands, this card compares how many subscribers fundraising appeals shed versus the regular Thursday newsletter.</div>`;
+    return;
+  }
+  const grp=k=>{const r=recent.filter(c=>c.kind===k);const S=r.reduce((a,c)=>a+(c.sent_to||0),0),U=r.reduce((a,c)=>a+(c.unsubs||0),0);return {r,n:r.length,S,U,per1k:S?1000*U/S:0};};
+  const ap=grp("appeal"), nl=grp("newsletter");
+  const ratio=nl.per1k?ap.per1k/nl.per1k:null;
+  const f2=x=>x.toFixed(2);
+  const stat=(label,g,color)=>`<div style="flex:1;min-width:148px">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">${label}</div>
+    <div style="font-family:var(--vc-serif);font-size:30px;line-height:1;color:${color}">${f2(g.per1k)}<span style="font-size:13px;font-family:var(--vc-sans);color:var(--vc-charcoal)"> /1,000</span></div>
+    <div style="font-size:11px;color:var(--vc-charcoal);margin-top:4px">${g.U} unsubs · ${g.n} send${g.n!==1?"s":""} · ${fmtN(g.S)} recipients</div>
+  </div>`;
+  const appeals=ap.r.slice().sort((a,b)=>((a.sent||"")<(b.sent||"")?1:-1));
+  const rows=appeals.map(c=>{
+    const r1k=c.sent_to?1000*c.unsubs/c.sent_to:0;
+    const pill=r1k>=2.5?"pillwarn":(r1k>=1.5?"pillinfo":"pillok");
+    return `<tr><td>${esc(c.sent)}</td><td>${esc(campaignSubject(c))}</td><td class="num">${fmtN(c.sent_to)}</td><td class="num">${c.unsubs}</td><td class="num"><span class="${pill}">${f2(r1k)}</span></td></tr>`;
+  }).join("");
+  host.innerHTML=`
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;margin-bottom:4px">
+      ${stat("Fundraising appeals",ap,"var(--vc-orange)")}
+      ${stat("Regular newsletter",nl,"var(--vc-cerulean)")}
+      <div style="flex:1;min-width:148px">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">Appeals run at</div>
+        <div style="font-family:var(--vc-serif);font-size:30px;line-height:1;color:var(--vc-black)">${ratio?ratio.toFixed(1)+"×":"—"}</div>
+        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:4px">the newsletter unsubscribe rate</div>
+      </div>
+    </div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Appeals · trailing 12 months</div>
+    <table class="tbl"><thead><tr><th>Sent</th><th>Subject</th><th class="num">Recipients</th><th class="num">Unsubs</th><th class="num">/1,000</th></tr></thead><tbody>${rows||`<tr><td colspan="5" style="color:var(--vc-charcoal)">No appeals tagged in the last 12 months.</td></tr>`}</tbody></table>
+    <div style="font-size:10.5px;line-height:1.6;margin-top:10px;color:var(--vc-charcoal)">Unsubscribes are exact per-campaign counts from Mailchimp's reports. "Appeals" are auto-tagged by donation language in the subject (donate, match, year-end, your support, double your gift, etc.); "newsletter" = regular Thursday sends. Rates are recipient-weighted over the trailing 12 months. For context, anything under about 2 per 1,000 (0.2%) is a low, healthy unsubscribe rate.</div>`;
 }
 
 function renderDonors(db){

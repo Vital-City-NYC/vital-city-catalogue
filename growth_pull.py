@@ -57,6 +57,29 @@ def mc_get(path, key, dc):
     return json.loads(http_get(url, headers={"Authorization": "Basic " + auth}, timeout=120))
 
 
+# Fundraising-appeal detection. Conservative donation-language keywords (caught
+# all 7 of the Dec-2025 year-end appeals with no editorial false positives).
+# Everything else sent on the regular Thursday cadence is tagged "newsletter";
+# the rest is "other" (event invites, one-off editorial, etc.).
+_FUND_RE = re.compile(
+    r"donat|\bgift\b|double your|generous|your support|support evidence|"
+    r"building vital|contribut|year[- ]?end|fundrais|tax-deduct|chip in|"
+    r"make a gift|sustain|membership drive", re.I)
+
+def _campaign_kind(entry):
+    txt = " ".join([entry.get("subject") or "", entry.get("winner_subject") or ""]
+                   + (entry.get("variate_subjects") or []))
+    if _FUND_RE.search(txt):
+        return "appeal"
+    try:
+        from datetime import date as _d
+        if _d.fromisoformat((entry.get("sent") or "")).weekday() == 3:  # Thursday
+            return "newsletter"
+    except Exception:
+        pass
+    return "other"
+
+
 def pull_mailchimp():
     key = mailchimp_key()
     if not key:
@@ -204,6 +227,18 @@ def pull_mailchimp():
             f"campaigns.variate_settings.winning_combination_id,"
             f"campaigns.variate_settings.combinations,campaigns.variate_settings.test_size",
             key, dc).get("campaigns", [])
+
+        # report_summary does NOT carry unsubscribes; the /reports list does.
+        # One paginated call maps campaign id -> total unsubscribes (exact,
+        # aggregated across A/B test + winner waves like emails_sent is).
+        unsub_by_id = {}
+        try:
+            reps = mc_get(f"/reports?count=1000&fields=reports.id,reports.unsubscribed",
+                          key, dc).get("reports", [])
+            unsub_by_id = {r.get("id"): int(r.get("unsubscribed") or 0) for r in reps}
+        except Exception as e:
+            log(f"  Mailchimp /reports (unsubscribes) fetch failed: {e}")
+
         camp_out = []
         for c in camp:
             rs = c.get("report_summary") or {}
@@ -234,7 +269,7 @@ def pull_mailchimp():
             cl = (rs.get("click_rate") or 0) * 100
             ctor = (cl / op * 100) if op > 0 else 0
             sent_to = c.get("emails_sent") or 0
-            camp_out.append({
+            entry = {
                 "id":       c.get("id"),
                 "subject":  (c.get("settings") or {}).get("subject_line", ""),
                 "variate_subjects": variate_subjects,
@@ -247,8 +282,10 @@ def pull_mailchimp():
                 "open_pct": round(op, 1),
                 "click_pct":round(cl, 1),
                 "ctor_pct": round(ctor, 1),   # click-to-open ratio = honest engagement
-                "unsubs":   rs.get("unsubscribed") or rs.get("unsubscribes") or 0,
-            })
+                "unsubs":   unsub_by_id.get(c.get("id"), 0),  # exact, from /reports
+            }
+            entry["kind"] = _campaign_kind(entry)  # appeal | newsletter | other
+            camp_out.append(entry)
         out["campaigns"] = camp_out
 
         # Monthly aggregates (recipient‑weighted rates) for the trend chart
@@ -263,7 +300,7 @@ def pull_mailchimp():
             mo[m]["recipients"] += sent
             mo[m]["wt_open"]  += float(rs.get("open_rate")  or 0) * sent
             mo[m]["wt_click"] += float(rs.get("click_rate") or 0) * sent
-            mo[m]["unsubs"]   += int(rs.get("unsubscribed") or rs.get("unsubscribes") or 0)
+            mo[m]["unsubs"]   += unsub_by_id.get(c.get("id"), 0)
         monthly = []
         for m in sorted(mo):
             r = mo[m]
