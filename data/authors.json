@@ -506,7 +506,7 @@
   },
   {
     "name": "Paul Reeping",
-    "post_count": 7,
+    "post_count": 8,
     "slugs": [
       "just-the-facts-on-new-york-city-subway-crime",
       "navigating-apartment-hunting-rising-rent-in-nyc",
@@ -637,6 +637,21 @@
     "slug": "yaruss-howard",
     "bio": "is an attorney and economist, and author of the book \"Understandable Economics.\"",
     "url": "https://www.vitalcitynyc.org/author/yaruss-howard/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Megan Kang",
+    "post_count": 5,
+    "slugs": [
+      "a-better-conversation-on-guns",
+      "state-gun-laws-matter",
+      "unraveling-the-threads-of-americas-gun-culture",
+      "what-we-know-and-dont-know-about-guns"
+    ],
+    "slug": "kang-megan",
+    "bio": "is a Ph.D. candidate in sociology at Princeton University and a research affiliate at the UChicago Crime Lab and the Princeton Violence and Inequality Project.",
+    "url": "https://www.vitalcitynyc.org/author/kang-megan/",
     "twitter": null,
     "website": null
   },
@@ -820,21 +835,6 @@
     "slug": "friedman-barry",
     "bio": "is the Jacob D. Fuchsberg Professor of Law and founding director of the Policing Project at NYU School of Law, a nonprofit research center promoting public safety through transparency and democratic accountability.",
     "url": "https://www.vitalcitynyc.org/author/friedman-barry/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Megan Kang",
-    "post_count": 4,
-    "slugs": [
-      "a-better-conversation-on-guns",
-      "state-gun-laws-matter",
-      "unraveling-the-threads-of-americas-gun-culture",
-      "what-we-know-and-dont-know-about-guns"
-    ],
-    "slug": "kang-megan",
-    "bio": "is a Ph.D. candidate in sociology at Princeton University and a research affiliate at the UChicago Crime Lab and the Princeton Violence and Inequality Project.",
-    "url": "https://www.vitalcitynyc.org/author/kang-megan/",
     "twitter": null,
     "website": null
   },
@@ -1695,26 +1695,14 @@
     "website": null
   },
   {
-    "name": "Greg Lickenbrock",
+    "name": "Kate Daugherty",
     "post_count": 2,
     "slugs": [
-      "the-money-behind-mass-shootings"
+      "what-we-know-and-dont-know-about-guns"
     ],
-    "slug": "lickenbrock-greg",
-    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Daniel Semenza",
-    "post_count": 2,
-    "slugs": [
-      "the-80-20-rule-of-gun-supply"
-    ],
-    "slug": "semenza-daniel",
-    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
+    "slug": "daugherty-kate",
+    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
     "twitter": null,
     "website": null
   },
@@ -2287,6 +2275,42 @@
     "slug": "meares-tracey-l",
     "bio": "is the Walton Hale Hamilton Professor and founding director of the Justice Collaboratory at Yale Law School. She was previously a professor at the University of Chicago Law School.",
     "url": "https://www.vitalcitynyc.org/author/meares-tracey-l/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Harold Holzer",
+    "post_count": 1,
+    "slugs": [
+      "the-history-that-was-made-at-bowling-green"
+    ],
+    "slug": "holzer-harold",
+    "bio": "is author or editor of more than 50 history books. He was appointed Manhattan borough historian this year by Borough President Brad Hoylman-Sigal.",
+    "url": "https://www.vitalcitynyc.org/author/holzer-harold/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Ted Knudsen",
+    "post_count": 1,
+    "slugs": [
+      "new-york-the-revolutionary-city-we-forgot"
+    ],
+    "slug": "knudsen-ted",
+    "bio": "is a visiting assistant professor of history at Queens College, CUNY. ",
+    "url": "https://www.vitalcitynyc.org/author/knudsen-ted/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Peter-Christian Aigner",
+    "post_count": 1,
+    "slugs": [
+      "new-york-the-revolutionary-city-we-forgot"
+    ],
+    "slug": "aigner-peterchristian",
+    "bio": "is the director of the Gotham Center for New York City History. Together with Ted Knudsen, he helped create the NYC Revolutionary Trail and Echoes of Revolution: New York, in collaboration with Ubisoft and Sugar Creative.",
+    "url": "https://www.vitalcitynyc.org/author/aigner-peterchristian/",
     "twitter": null,
     "website": null
   },
@@ -3455,14 +3479,26 @@
     "website": null
   },
   {
-    "name": "Kate Daugherty",
+    "name": "Greg Lickenbrock",
     "post_count": 1,
     "slugs": [
-      "what-we-know-and-dont-know-about-guns"
+      "the-money-behind-mass-shootings"
     ],
-    "slug": "daugherty-kate",
-    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
-    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+    "slug": "lickenbrock-greg",
+    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Daniel Semenza",
+    "post_count": 1,
+    "slugs": [
+      "the-80-20-rule-of-gun-supply"
+    ],
+    "slug": "semenza-daniel",
+    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
     "twitter": null,
     "website": null
   },
@@ -3511,6 +3547,18 @@
     "slug": "simon-samantha-j",
     "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
     "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Nina Vinik",
+    "post_count": 1,
+    "slugs": [
+      "breaking-through-with-the-next-generation-on-firearms"
+    ],
+    "slug": "vinik-nina",
+    "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
+    "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
     "twitter": null,
     "website": null
   },
@@ -3899,14 +3947,14 @@
     "website": null
   },
   {
-    "name": "Adam Cohen",
+    "name": "Richard Schragger",
     "post_count": 1,
     "slugs": [
-      "trumps-bizarro-new-deal"
+      "is-it-time-for-cities-to-go-it-alone"
     ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
+    "slug": "schragger-richard",
+    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
+    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
     "twitter": null,
     "website": null
   },
@@ -3923,14 +3971,14 @@
     "website": null
   },
   {
-    "name": "Richard Schragger",
+    "name": "Adam Cohen",
     "post_count": 1,
     "slugs": [
-      "is-it-time-for-cities-to-go-it-alone"
+      "trumps-bizarro-new-deal"
     ],
-    "slug": "schragger-richard",
-    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
-    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },

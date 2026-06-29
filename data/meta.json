@@ -1,15 +1,34 @@
 {
-  "generated_at": "2026-06-29T17:40:00.184386+00:00",
+  "generated_at": "2026-06-29T23:29:43.469140+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 857,
-  "total_authors": 468,
+  "total_posts": 859,
+  "total_authors": 472,
   "total_issues": 29,
   "total_topics": 206,
   "date_range": [
     "2021-09-15",
-    "2026-06-26"
+    "2026-06-29"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 3,
+  "new_articles": [
+    {
+      "title": "The History That Was Made at Bowling Green",
+      "url": "https://www.vitalcitynyc.org/the-history-that-was-made-at-bowling-green/",
+      "published_date": "2026-06-29",
+      "primary_author": "Harold Holzer"
+    },
+    {
+      "title": "New York: The Revolutionary City We Forgot",
+      "url": "https://www.vitalcitynyc.org/new-york-the-revolutionary-city-we-forgot/",
+      "published_date": "2026-06-29",
+      "primary_author": "Ted Knudsen"
+    },
+    {
+      "title": "Breaking Through With the Next Generation",
+      "url": "https://www.vitalcitynyc.org/breaking-through-with-the-next-generation-on-firearms/",
+      "published_date": "2025-09-10",
+      "primary_author": "Nina Vinik"
+    }
+  ]
 }

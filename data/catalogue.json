@@ -1,5 +1,60 @@
 [
   {
+    "title": "The History That Was Made at Bowling Green",
+    "slug": "the-history-that-was-made-at-bowling-green",
+    "url": "https://www.vitalcitynyc.org/the-history-that-was-made-at-bowling-green/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-29",
+    "published_at": "2026-06-29T19:44:41.000+00:00",
+    "updated_at": "2026-06-29T19:44:41.000+00:00",
+    "primary_author": "Harold Holzer",
+    "authors": [
+      "Harold Holzer"
+    ],
+    "topics": [
+      "History"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "On this 250th birthday of America, appreciate New York’s part in the Revolution",
+    "excerpt": "On this 250th birthday of America, appreciate New York’s part in the Revolution\n",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/1-Pulling-Down-the-Statue-of-King-George-III-1.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1225,
+    "reading_minutes": 5,
+    "id": "6a427fc143fe120001fb6e12"
+  },
+  {
+    "title": "New York: The Revolutionary City We Forgot",
+    "slug": "new-york-the-revolutionary-city-we-forgot",
+    "url": "https://www.vitalcitynyc.org/new-york-the-revolutionary-city-we-forgot/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-29",
+    "published_at": "2026-06-29T19:44:13.000+00:00",
+    "updated_at": "2026-06-29T19:44:13.000+00:00",
+    "primary_author": "Ted Knudsen",
+    "authors": [
+      "Ted Knudsen",
+      "Peter-Christian Aigner"
+    ],
+    "topics": [
+      "History"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "As America celebrates its 250th anniversary, New York should center its story as much as Philadelphia and Boston do.",
+    "excerpt": "As America celebrates its 250th anniversary, New York should center its story as much as Philadelphia and Boston do.\n",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/GettyImages-597612058-1.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1180,
+    "reading_minutes": 5,
+    "id": "6a3aec8e43fe120001fb6929"
+  },
+  {
     "title": "After the Rent Freeze: What Happens to New York City’s Regulated Housing Stock Now and in the Future",
     "slug": "mamdani-rent-freeze-conversation",
     "url": "https://www.vitalcitynyc.org/mamdani-rent-freeze-conversation/",
@@ -7533,55 +7588,24 @@
     "id": "69a04c0ad4006a00010a401e"
   },
   {
-    "title": "The Money Behind Mass Shootings",
-    "slug": "the-money-behind-mass-shootings",
-    "url": "https://www.vitalcitynyc.org/the-money-behind-mass-shootings/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
+    "title": "What We Know and Don’t Know About Guns",
+    "slug": "what-we-know-and-dont-know-about-guns",
+    "url": "https://www.vitalcitynyc.org/what-we-know-and-dont-know-about-guns/",
+    "type": "data analysis",
+    "type_basis": "html:17-chart-embeds",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
     "updated_at": "2026-04-15T13:36:50.000+00:00",
-    "primary_author": "Greg Lickenbrock",
+    "primary_author": "Kate Daugherty",
     "authors": [
-      "Greg Lickenbrock"
+      "Kate Daugherty",
+      "Paul Reeping",
+      "Megan Kang"
     ],
     "topics": [
+      "data",
+      "Overview",
       "Gun Violence",
-      "Modern Evolution: Marketing and Profits",
-      "Economics"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
-    "excerpt": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama5awgnhvfto1yk_gettyimages-107596655-auto-format-compress-1776259686592.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2177,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a401f"
-  },
-  {
-    "title": "The 80/20 Rule of Gun Supply",
-    "slug": "the-80-20-rule-of-gun-supply",
-    "url": "https://www.vitalcitynyc.org/the-80-20-rule-of-gun-supply/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
-    "primary_author": "Daniel Semenza",
-    "authors": [
-      "Daniel Semenza"
-    ],
-    "topics": [
-      "Gun Violence",
-      "What Can Be Done?",
-      "Crime",
       "History"
     ],
     "issues": [
@@ -7590,14 +7614,14 @@
     "issue_numbers": [
       13
     ],
-    "summary": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
-    "excerpt": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambmuwgnhvfto1_k_gettyimages-94668620-auto-format-compress-1776259687304.jpg",
+    "summary": "Parsing the data",
+    "excerpt": "Parsing the data",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amaxzmgnhvfto1qh_d23hn0-auto-format-compress-1776259687014.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 2361,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a4020"
+    "word_count": 1649,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a401e"
   },
   {
     "title": "The Money Behind Mass Shootings",
@@ -7798,6 +7822,39 @@
     "word_count": 2291,
     "reading_minutes": 10,
     "id": "69a04c0ad4006a00010a401d"
+  },
+  {
+    "title": "Breaking Through With the Next Generation",
+    "slug": "breaking-through-with-the-next-generation-on-firearms",
+    "url": "https://www.vitalcitynyc.org/breaking-through-with-the-next-generation-on-firearms/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:51.000+00:00",
+    "primary_author": "Nina Vinik",
+    "authors": [
+      "Nina Vinik"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Youth",
+      "What Can Be Done?"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "A new image of firearms is taking hold among younger Americans.",
+    "excerpt": "A new image of firearms is taking hold among younger Americans.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amb9y2gnhvfto2l__506651127239-auto-format-compress-1776259687255.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1635,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4024"
   },
   {
     "title": "Guns, My Family and Me",
@@ -10116,68 +10173,6 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
-    "slug": "trumps-bizarro-new-deal",
-    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Adam Cohen",
-    "authors": [
-      "Adam Cohen"
-    ],
-    "topics": [
-      "History",
-      "Repercussions",
-      "Government Operations"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1619,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a41d5"
-  },
-  {
-    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
-    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
-    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Meryl Chertoff",
-    "authors": [
-      "Meryl Chertoff"
-    ],
-    "topics": [
-      "Government Operations",
-      "Repercussions",
-      "City Planning"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "The Sharpie and the damage done",
-    "excerpt": "The Sharpie and the damage done",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1313,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a404c"
-  },
-  {
     "title": "Donald Trump vs. the Rule of Law, and New York City",
     "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
     "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
@@ -10270,6 +10265,68 @@
     "word_count": 1697,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4049"
+  },
+  {
+    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
+    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
+    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Meryl Chertoff",
+    "authors": [
+      "Meryl Chertoff"
+    ],
+    "topics": [
+      "Government Operations",
+      "Repercussions",
+      "City Planning"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "The Sharpie and the damage done",
+    "excerpt": "The Sharpie and the damage done",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1313,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a404c"
+  },
+  {
+    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
+    "slug": "trumps-bizarro-new-deal",
+    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Adam Cohen",
+    "authors": [
+      "Adam Cohen"
+    ],
+    "topics": [
+      "History",
+      "Repercussions",
+      "Government Operations"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1619,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a41d5"
   },
   {
     "title": "A Real New York Mayoral Election",
