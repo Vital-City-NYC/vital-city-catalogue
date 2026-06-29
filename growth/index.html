@@ -127,7 +127,7 @@
   /* Legibility: give every chart label a card-background halo so it stays
      readable where it sits over a line or bar. --vc-white flips to the dark
      card colour in dark mode, so the halo matches the background in both. */
-  .chart text, .rptchart text{paint-order:stroke;stroke:var(--vc-white);stroke-width:3px;stroke-linecap:round;stroke-linejoin:round}
+  .chart text, .rptchart text{font-family:var(--vc-sans);font-variant-numeric:tabular-nums;text-rendering:geometricPrecision;paint-order:stroke;stroke:var(--vc-white);stroke-width:2px;stroke-linecap:round;stroke-linejoin:round}
   .legend{font-size:11px;color:var(--vc-charcoal);display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
   .legend .sw{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:middle}
 
