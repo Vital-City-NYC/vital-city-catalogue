@@ -4244,34 +4244,73 @@ function copyCardLink(id,btn){
   if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok,()=>prompt("Copy this link:",url));
   else prompt("Copy this link:",url);
 }
+// Bake the on-screen computed styles into a detached SVG clone so it rasterizes
+// looking the same (fills, fonts, the avg-label pill, etc.).
+function bakeSvgStyles(src,dst){
+  const cs=getComputedStyle(src);
+  ["fill","fill-opacity","stroke","stroke-width","stroke-dasharray","stroke-linecap","stroke-linejoin","opacity","font-family","font-size","font-weight","text-anchor","paint-order"]
+    .forEach(p=>{ const v=cs.getPropertyValue(p); if(v) dst.style.setProperty(p,v); });
+  const sc=src.children, dc=dst.children;
+  for(let i=0;i<sc.length && i<dc.length;i++) bakeSvgStyles(sc[i],dc[i]);
+}
+// Rasterize an in-DOM <svg> to a PNG data URL (white background) so charts
+// survive pasting into Gmail, which strips inline SVG.
+function svgToPng(svg){
+  return new Promise(resolve=>{
+    try{
+      const r=svg.getBoundingClientRect(), vb=svg.viewBox&&svg.viewBox.baseVal;
+      const w=Math.max(1,Math.round(r.width||(vb&&vb.width)||640)), h=Math.max(1,Math.round(r.height||(vb&&vb.height)||240));
+      const c=svg.cloneNode(true); bakeSvgStyles(svg,c);
+      c.setAttribute("xmlns","http://www.w3.org/2000/svg"); c.setAttribute("width",w); c.setAttribute("height",h);
+      if(vb) c.setAttribute("viewBox",vb.x+" "+vb.y+" "+vb.width+" "+vb.height);
+      const url="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(new XMLSerializer().serializeToString(c));
+      const img=new Image(), scale=2;
+      img.onload=()=>{ try{
+        const cv=document.createElement("canvas"); cv.width=w*scale; cv.height=h*scale;
+        const ctx=cv.getContext("2d"); ctx.fillStyle="#fff"; ctx.fillRect(0,0,cv.width,cv.height); ctx.scale(scale,scale); ctx.drawImage(img,0,0,w,h);
+        resolve({png:cv.toDataURL("image/png"),w:w});
+      }catch(e){ resolve(null); } };
+      img.onerror=()=>resolve(null);
+      img.src=url;
+    }catch(e){ resolve(null); }
+  });
+}
 // Copy a card's content (rich HTML + plain text) so it can be pasted into an
-// email. Tables and text carry cleanly; charts are inline SVG, which some mail
-// clients keep (Apple Mail, Outlook) and some strip (Gmail web).
+// email. Charts are rasterized to PNG so they survive everywhere (incl. Gmail).
 function copyCardContent(id, btn){
   const card=document.getElementById(id); if(!card) return;
+  const root=document.documentElement, wasDark=root.classList.contains("dark");
+  if(wasDark) root.classList.remove("dark");   // raster charts in light colors on white
   const clone=card.cloneNode(true);
-  clone.classList.remove("ccol");   // include the full body even if folded
+  clone.classList.remove("ccol");
   clone.querySelectorAll(".cardtools,.cchev,.cardpeek,.chart-tip,.chart-guide,.chart-dot,.infodot,.winrow,.btn-link,button").forEach(e=>e.remove());
-  // light inline styling so it survives the paste into an email
-  clone.querySelectorAll("table").forEach(t=>t.setAttribute("style","border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;font-size:13px;margin:6px 0"));
-  clone.querySelectorAll("th,td").forEach(c=>c.setAttribute("style","border:1px solid #ccc;padding:4px 8px;text-align:left"));
-  const h2=clone.querySelector("h2"); if(h2) h2.setAttribute("style","font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;margin:0 0 8px");
-  const html='<div style="font-family:Arial,Helvetica,sans-serif;color:#111;line-height:1.5">'+clone.innerHTML+'</div>';
-  // plain-text fallback: attach off-screen so innerText lays tables out as tab/newline text
-  clone.style.position="fixed"; clone.style.left="-99999px"; clone.style.top="0"; clone.style.width="640px";
+  clone.style.position="fixed"; clone.style.left="-99999px"; clone.style.top="0"; clone.style.width="680px";
   document.body.appendChild(clone);
   const text=(clone.innerText||clone.textContent||"").replace(/\n{3,}/g,"\n\n").trim();
-  document.body.removeChild(clone);
-  const ok=()=>{const o="⧉ copy";btn.textContent="✓ copied";setTimeout(()=>btn.textContent=o,1400);};
-  const fail=()=>{btn.textContent="⚠ retry";setTimeout(()=>btn.textContent="⧉ copy",1400);};
-  try{
-    if(navigator.clipboard && window.ClipboardItem){
-      const item=new ClipboardItem({"text/html":new Blob([html],{type:"text/html"}),"text/plain":new Blob([text],{type:"text/plain"})});
+  const cleanup=()=>{ try{ if(clone.parentNode) clone.parentNode.removeChild(clone); }catch(e){} if(wasDark) root.classList.add("dark"); };
+  const ok=()=>{ cleanup(); btn.textContent="✓ copied"; setTimeout(()=>btn.textContent="⧉ copy",1400); };
+  const fail=()=>{ cleanup(); btn.textContent="⚠ retry"; setTimeout(()=>btn.textContent="⧉ copy",1400); };
+  const buildHtml=async()=>{
+    for(const svg of [...clone.querySelectorAll("svg")]){
+      const res=await svgToPng(svg).catch(()=>null);
+      if(res&&res.png){ const im=document.createElement("img"); im.src=res.png;
+        im.style.cssText="display:block;margin:6px 0;width:"+res.w+"px;max-width:100%;height:auto"; svg.replaceWith(im); }
+      else svg.remove();
+    }
+    clone.querySelectorAll("table").forEach(t=>t.setAttribute("style","border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;font-size:13px;margin:6px 0"));
+    clone.querySelectorAll("th,td").forEach(c=>c.setAttribute("style","border:1px solid #ccc;padding:4px 8px;text-align:left"));
+    const h2=clone.querySelector("h2"); if(h2) h2.setAttribute("style","font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;margin:0 0 8px");
+    return '<div style="font-family:Arial,Helvetica,sans-serif;color:#111;line-height:1.5">'+clone.innerHTML+'</div>';
+  };
+  if(navigator.clipboard && window.ClipboardItem){
+    try{
+      const htmlBlob=buildHtml().then(h=>new Blob([h],{type:"text/html"}));
+      const item=new ClipboardItem({"text/html":htmlBlob,"text/plain":new Blob([text],{type:"text/plain"})});
       navigator.clipboard.write([item]).then(ok,()=>navigator.clipboard.writeText(text).then(ok,fail));
-    } else if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(ok,fail);
-    } else { prompt("Copy this card's content:",text); }
-  }catch(e){ try{ navigator.clipboard.writeText(text).then(ok,fail); }catch(_){ prompt("Copy this card's content:",text); } }
+    }catch(e){ navigator.clipboard.writeText(text).then(ok,fail); }
+  } else if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(ok,fail);
+  } else { cleanup(); prompt("Copy this card's content:",text); }
 }
 function exportCard(id){
   const card=document.getElementById(id); if(!card) return;
