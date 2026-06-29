@@ -158,6 +158,10 @@
     main .card { break-inside: avoid; box-shadow:none !important; border:1px solid #d9d9d6 !important; margin:10px 0; }
     .sechead { break-after: avoid; break-inside: avoid; }
     .kpi, .perfcell, table.tbl tr { break-inside: avoid; }
+    /* condense tables on paper; cap the long "Recent newsletter sends" list */
+    table.tbl { font-size:8.5px; }
+    table.tbl th, table.tbl td { padding:2px 6px !important; line-height:1.3; }
+    #campTbody tr:nth-child(n+13){ display:none !important; }
     /* make bar/line/pill colors actually print */
     *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
@@ -4229,6 +4233,7 @@ function setupCardTools(){
     const mk=(txt,title,fn)=>{ const b=document.createElement("button"); b.type="button"; b.textContent=txt; b.title=title;
       b.addEventListener("click",e=>{ e.stopPropagation(); fn(b); }); return b; };
     tools.appendChild(mk("🔗 link","Copy a shareable link to this card", b=>copyCardLink(card.id,b)));
+    tools.appendChild(mk("⧉ copy","Copy this card's content (text + tables) to paste into an email", b=>copyCardContent(card.id,b)));
     tools.appendChild(mk("⤓ PDF","Export just this card as a PDF", ()=>exportCard(card.id)));
     card.appendChild(tools);
   });
@@ -4238,6 +4243,35 @@ function copyCardLink(id,btn){
   const ok=()=>{ const o=btn.textContent; btn.textContent="✓ copied"; setTimeout(()=>btn.textContent=o,1300); };
   if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok,()=>prompt("Copy this link:",url));
   else prompt("Copy this link:",url);
+}
+// Copy a card's content (rich HTML + plain text) so it can be pasted into an
+// email. Tables and text carry cleanly; charts are inline SVG, which some mail
+// clients keep (Apple Mail, Outlook) and some strip (Gmail web).
+function copyCardContent(id, btn){
+  const card=document.getElementById(id); if(!card) return;
+  const clone=card.cloneNode(true);
+  clone.classList.remove("ccol");   // include the full body even if folded
+  clone.querySelectorAll(".cardtools,.cchev,.cardpeek,.chart-tip,.chart-guide,.chart-dot,.infodot,.winrow,.btn-link,button").forEach(e=>e.remove());
+  // light inline styling so it survives the paste into an email
+  clone.querySelectorAll("table").forEach(t=>t.setAttribute("style","border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;font-size:13px;margin:6px 0"));
+  clone.querySelectorAll("th,td").forEach(c=>c.setAttribute("style","border:1px solid #ccc;padding:4px 8px;text-align:left"));
+  const h2=clone.querySelector("h2"); if(h2) h2.setAttribute("style","font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;margin:0 0 8px");
+  const html='<div style="font-family:Arial,Helvetica,sans-serif;color:#111;line-height:1.5">'+clone.innerHTML+'</div>';
+  // plain-text fallback: attach off-screen so innerText lays tables out as tab/newline text
+  clone.style.position="fixed"; clone.style.left="-99999px"; clone.style.top="0"; clone.style.width="640px";
+  document.body.appendChild(clone);
+  const text=(clone.innerText||clone.textContent||"").replace(/\n{3,}/g,"\n\n").trim();
+  document.body.removeChild(clone);
+  const ok=()=>{const o="⧉ copy";btn.textContent="✓ copied";setTimeout(()=>btn.textContent=o,1400);};
+  const fail=()=>{btn.textContent="⚠ retry";setTimeout(()=>btn.textContent="⧉ copy",1400);};
+  try{
+    if(navigator.clipboard && window.ClipboardItem){
+      const item=new ClipboardItem({"text/html":new Blob([html],{type:"text/html"}),"text/plain":new Blob([text],{type:"text/plain"})});
+      navigator.clipboard.write([item]).then(ok,()=>navigator.clipboard.writeText(text).then(ok,fail));
+    } else if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(ok,fail);
+    } else { prompt("Copy this card's content:",text); }
+  }catch(e){ try{ navigator.clipboard.writeText(text).then(ok,fail); }catch(_){ prompt("Copy this card's content:",text); } }
 }
 function exportCard(id){
   const card=document.getElementById(id); if(!card) return;
