@@ -70,7 +70,14 @@
   .kpi.stub .delta{color:var(--vc-cerulean);text-decoration:underline}
 
   /* Cards */
-  .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:16px 18px;margin:0 0 20px;box-shadow:0 1px 2px rgba(5,5,7,.05);transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease}
+  .card{position:relative;background:var(--vc-white);border:1px solid var(--vc-cloud);padding:16px 18px;margin:0 0 20px;box-shadow:0 1px 2px rgba(5,5,7,.05);transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease}
+  /* Per-card tools (link / export), hover-revealed at the top-right */
+  .cardtools{position:absolute;top:9px;right:12px;display:flex;gap:3px;opacity:0;transition:opacity .12s;z-index:4}
+  .card:hover > .cardtools, .card > .cardtools:focus-within{opacity:1}
+  .cardtools button{font-family:var(--vc-sans);font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;font-weight:700;color:var(--vc-charcoal);background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:3px;padding:2px 6px;cursor:pointer;line-height:1.5}
+  .cardtools button:hover{color:var(--vc-cerulean);border-color:var(--vc-cerulean)}
+  @keyframes cardflash{0%,70%{box-shadow:0 0 0 3px var(--vc-cerulean)}100%{box-shadow:0 1px 2px rgba(5,5,7,.05)}}
+  .card.cardflash{animation:cardflash 1.8s ease}
   .card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(15,16,17,.07);border-color:var(--vc-charcoal)}
   @media (prefers-reduced-motion: reduce){ .card,.kpi{transition:none} .card:hover,.kpi:hover{transform:none} }
   /* Sticky jump-nav + section headers (page ordered by org priority:
@@ -100,7 +107,7 @@
   main .card .cardpeek b{color:var(--vc-black);font-family:var(--vc-serif);font-weight:300;font-size:14px}
   .cardspark{display:block;width:172px;height:38px;opacity:.92}
   main .card.ccol > h2{margin-bottom:6px}
-  main .card.ccol > *:not(h2):not(.cardpeek){display:none !important}
+  main .card.ccol > *:not(h2):not(.cardpeek):not(.cardtools){display:none !important}
   main .card.ccol > .cardpeek{display:flex}
   /* Time-window toggle row (Signups vs unsubscribes chart) */
   .winrow{display:flex;gap:6px;margin:0 0 10px}
@@ -138,7 +145,10 @@
     /* interactive chrome that shouldn't appear on paper */
     .mastlinks, .noprint, .infodot, .cchev, .chev, .winrow, .winbtn,
     .btn-link, #campToggle, #rangeReport, .chart-tip, .chart-guide, .chart-dot,
-    #gate, .gate { display:none !important; }
+    .cardtools, #gate, .gate { display:none !important; }
+    /* "Export this card" — print just the one card (plus the masthead for context) */
+    body.print-one main .card:not(.print-target){ display:none !important; }
+    body.print-one .sechead, body.print-one .confbar, body.print-one .activitybar { display:none !important; }
     /* belt-and-suspenders: never show a folded peek; reveal folded card bodies */
     main .card.ccol > *:not(h2):not(.cardpeek){ display:revert !important; }
     main .card .cardpeek { display:none !important; }
@@ -1006,6 +1016,8 @@ function boot(data){
   // Make each card foldable too (caret in its title); deeper/secondary cards
   // start folded so the headline cards and the at-a-glance strip carry the page.
   setupCardCollapse(data);
+  setupCardTools();          // per-card "link" + "PDF" buttons (top-right, on hover)
+  gotoCardFromHash();        // if the URL has #cardId, expand + scroll to it
 
   // ----- Campaigns table (collapsible — show 5, expand for the rest)
   const camp=mc.campaigns||[];
@@ -4208,6 +4220,58 @@ function printFullReport(){
   setTimeout(()=>window.print(),90);  // let layout/charts reflow after expanding
 }
 $("#printReport")&&$("#printReport").addEventListener("click",e=>{e.preventDefault();printFullReport();});
+
+// ---- Per-card tools: copy a deep link, or export just this card to PDF ----
+function setupCardTools(){
+  document.querySelectorAll("main .card[id]").forEach(card=>{
+    if(card.querySelector(":scope > .cardtools")) return;
+    const tools=document.createElement("div"); tools.className="cardtools";
+    const mk=(txt,title,fn)=>{ const b=document.createElement("button"); b.type="button"; b.textContent=txt; b.title=title;
+      b.addEventListener("click",e=>{ e.stopPropagation(); fn(b); }); return b; };
+    tools.appendChild(mk("🔗 link","Copy a shareable link to this card", b=>copyCardLink(card.id,b)));
+    tools.appendChild(mk("⤓ PDF","Export just this card as a PDF", ()=>exportCard(card.id)));
+    card.appendChild(tools);
+  });
+}
+function copyCardLink(id,btn){
+  const url=location.origin+location.pathname+"#"+id;
+  const ok=()=>{ const o=btn.textContent; btn.textContent="✓ copied"; setTimeout(()=>btn.textContent=o,1300); };
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok,()=>prompt("Copy this link:",url));
+  else prompt("Copy this link:",url);
+}
+function exportCard(id){
+  const card=document.getElementById(id); if(!card) return;
+  const root=document.documentElement, body=document.body;
+  const st={dark:root.classList.contains("dark"), ccol:card.classList.contains("ccol"), hidden:card.style.display==="none", camp:false};
+  if(st.dark) root.classList.remove("dark");
+  card.classList.remove("ccol");
+  if(st.hidden) card.style.display="";
+  const ct=card.querySelector("#campToggle"); if(ct&&ct.dataset.open!=="1"){ ct.click(); st.camp=true; }
+  card.classList.add("print-target"); body.classList.add("print-one");
+  const restore=()=>{
+    if(st.dark) root.classList.add("dark");
+    if(st.ccol) card.classList.add("ccol");
+    if(st.hidden) card.style.display="none";
+    if(st.camp){ const b=card.querySelector("#campToggle"); if(b&&b.dataset.open==="1") b.click(); }
+    card.classList.remove("print-target"); body.classList.remove("print-one");
+    window.removeEventListener("afterprint",restore);
+  };
+  window.addEventListener("afterprint",restore);
+  setTimeout(()=>window.print(),90);
+}
+function gotoCardFromHash(){
+  const id=(location.hash||"").replace(/^#/,""); if(!id) return;
+  const card=document.getElementById(id); if(!card||!card.classList.contains("card")) return;
+  card.classList.remove("ccol");
+  let s=card.previousElementSibling; while(s&&!s.classList.contains("sechead")) s=s.previousElementSibling;
+  if(s&&s.classList.contains("collapsed")){
+    s.classList.remove("collapsed");
+    for(let el=s.nextElementSibling; el&&!el.classList.contains("sechead"); el=el.nextElementSibling){ if(el.style.display==="none") el.style.display=""; }
+  }
+  if(card.style.display==="none") card.style.display="";
+  setTimeout(()=>{ card.scrollIntoView({behavior:"smooth",block:"start"}); card.classList.add("cardflash"); setTimeout(()=>card.classList.remove("cardflash"),1800); },150);
+}
+window.addEventListener("hashchange",gotoCardFromHash);
 </script>
 </body>
 </html>
