@@ -131,6 +131,26 @@
   /* Background pill behind an on-chart annotation label so it stays legible over bars/lines. */
   .chart rect.avgbg{fill:var(--vc-white);opacity:.86;stroke:none}
   .chart text.avglbl{font-weight:600;stroke-width:0}
+  /* ---- Print / "Print full report as PDF" ---- */
+  @media print {
+    @page { margin: 12mm; }
+    html, body { background:#fff !important; }
+    /* interactive chrome that shouldn't appear on paper */
+    .mastlinks, .noprint, .infodot, .cchev, .chev, .winrow, .winbtn,
+    .btn-link, #campToggle, #rangeReport, .chart-tip, .chart-guide, .chart-dot,
+    #gate, .gate { display:none !important; }
+    /* belt-and-suspenders: never show a folded peek; reveal folded card bodies */
+    main .card.ccol > *:not(h2):not(.cardpeek){ display:revert !important; }
+    main .card .cardpeek { display:none !important; }
+    .sechead.collapsed .sechead-sub { display:block !important; }
+    /* paper layout */
+    #app, main { max-width:none !important; width:auto !important; }
+    main .card { break-inside: avoid; box-shadow:none !important; border:1px solid #d9d9d6 !important; margin:10px 0; }
+    .sechead { break-after: avoid; break-inside: avoid; }
+    .kpi, .perfcell, table.tbl tr { break-inside: avoid; }
+    /* make bar/line/pill colors actually print */
+    *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
   .legend{font-size:11px;color:var(--vc-charcoal);display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
   .legend .sw{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:middle}
 
@@ -423,6 +443,7 @@
   <header class="mast">
     <div class="mastlinks">
       <a href="about.html" target="_blank">How it works ↗</a>
+      <a href="#" id="printReport" title="Print or save the whole dashboard as a nicely formatted PDF">🖨 Print / PDF</a>
       <a href="../" title="Open the public content catalogue">Catalogue</a>
       <a href="../network/" title="Open the contact master search">Contacts</a>
       <a href="#" id="themeToggle">🌙 Dark mode</a>
@@ -4158,6 +4179,35 @@ function renderTrendChart(act,posts,windowDays){
 
 $("#themeToggle")&&$("#themeToggle").addEventListener("click",e=>{e.preventDefault();const cur=document.documentElement.classList.contains("dark")?"light":"dark";localStorage.setItem("vc_theme",cur);applyTheme(cur);});
 $("#forget")&&$("#forget").addEventListener("click",e=>{e.preventDefault();clearPass();location.reload();});
+
+// Print / save the whole dashboard as a PDF: expand every collapsed card and
+// section, force light mode, open all "show more" rows, print, then restore.
+function printFullReport(){
+  const root=document.documentElement;
+  const st={dark:root.classList.contains("dark"),cards:[],hidden:[],secs:[],camp:false};
+  if(st.dark) root.classList.remove("dark");
+  document.querySelectorAll("main .card.ccol").forEach(c=>{c.classList.remove("ccol");st.cards.push(c);});
+  document.querySelectorAll(".sechead.collapsed").forEach(head=>{
+    st.secs.push(head);
+    head.classList.remove("collapsed");
+    for(let el=head.nextElementSibling; el && !el.classList.contains("sechead"); el=el.nextElementSibling){
+      if(el.style.display==="none"){ el.style.display=""; st.hidden.push(el); }
+    }
+  });
+  const ct=$("#campToggle");
+  if(ct && ct.dataset.open!=="1"){ ct.click(); st.camp=true; }
+  const restore=()=>{
+    if(st.dark) root.classList.add("dark");
+    st.cards.forEach(c=>c.classList.add("ccol"));
+    st.secs.forEach(h=>h.classList.add("collapsed"));
+    st.hidden.forEach(el=>el.style.display="none");
+    if(st.camp){ const b=$("#campToggle"); if(b&&b.dataset.open==="1") b.click(); }
+    window.removeEventListener("afterprint",restore);
+  };
+  window.addEventListener("afterprint",restore);
+  setTimeout(()=>window.print(),90);  // let layout/charts reflow after expanding
+}
+$("#printReport")&&$("#printReport").addEventListener("click",e=>{e.preventDefault();printFullReport();});
 </script>
 </body>
 </html>
