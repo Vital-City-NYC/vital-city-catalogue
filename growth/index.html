@@ -1773,6 +1773,31 @@ function renderSendChart(camps){
 // Each row links to the Contact tool with the email pre-searched, so Josh can
 // jump straight to the full record (with notes, edit, type tags, etc.).
 window._peopleSubsets = {};   // populated by renderers; keyed by short id
+window._donorLists = {};      // populated by renderDonors; backs the KPI drill-ins
+
+// Donor/gift drill-in: reuse the people-modal shell to list the records behind
+// a fundraising KPI (Donorbox).
+function showDonorList(key){
+  const L=(window._donorLists||{})[key]; if(!L || !(L.rows||[]).length) return;
+  document.getElementById("peopleModalTitle").textContent=L.title;
+  const note=document.getElementById("peopleModalNote"); if(note) note.innerHTML="";
+  const rows=L.rows; let inner;
+  if(L.kind==="donors"){
+    inner=`<table><thead><tr><th>Donor</th><th class="r">Total</th><th class="r">Gifts</th><th>Last gift</th></tr></thead><tbody>`+
+      rows.map(r=>`<tr><td><b>${esc(r.donor)}</b>${r.recurring?' <span style="color:var(--vc-cerulean);font-size:11px">↻ recurring</span>':''}</td>`+
+        `<td class="r">${fmtUSD(r.amount||0)}</td><td class="r">${fmtN(r.gifts||0)}</td><td style="font-size:12px;white-space:nowrap">${esc(r.last||'')}</td></tr>`).join("")+
+      `</tbody></table>`;
+  } else {
+    inner=`<table><thead><tr><th>Date</th><th>Donor</th><th class="r">Amount</th><th>Campaign</th></tr></thead><tbody>`+
+      rows.map(r=>`<tr><td style="font-size:12px;white-space:nowrap">${esc(r.date||'')}</td>`+
+        `<td><b>${esc(r.donor)}</b>${r.recurring?' <span style="color:var(--vc-cerulean);font-size:11px">↻</span>':''}</td>`+
+        `<td class="r">${fmtUSD(r.amount||0)}</td><td style="font-size:12px">${esc(r.campaign||'')}</td></tr>`).join("")+
+      `</tbody></table>`;
+  }
+  inner+=`<div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px">${fmtN(rows.length)} ${L.kind==='donors'?'donors':'gifts'} · live from Donorbox · names as entered by donors at checkout.</div>`;
+  document.getElementById("peopleModalBody").innerHTML=inner;
+  document.getElementById("peopleModal").classList.add("on");
+}
 // Map dashboard subset keys to Contact-tool filter hashes so the modal
 // can offer a "see all in Contact tool" link instead of just per-person
 // search links.
@@ -2432,12 +2457,25 @@ function renderDonors(db){
       d:`${fmtN(allt.donors||0)} donors / ${fmtN(allt.count||0)} gifts`, cls:"flat",
       tip:"Every paid donation in this Donorbox account back to the earliest record; refunds and failed charges excluded.\n\nWhy it matters: The long-run scale of individual giving through Donorbox — context for how this year compares to the lifetime total, and a number funders often ask for."},
   ];
-  $("#donorKpis").innerHTML=cells.map(c=>
-    `<div class="perfcell" title="${esc(c.tip)}">
+  // drill-in lists behind each KPI (for the donor-list modal)
+  window._donorLists = {
+    gifts_ytd:  {title:"Gifts · this year",        kind:"gifts",  rows:db.gifts_ytd||[]},
+    gifts_30:   {title:"Gifts · last 30 days",     kind:"gifts",  rows:db.gifts_30||[]},
+    donors_ytd: {title:"Donors · this year",       kind:"donors", rows:db.donors_ytd||[]},
+    donors_all: {title:"Donors · all time",        kind:"donors", rows:db.donors_all||[]},
+    recurring:  {title:"Active recurring donors",  kind:"donors", rows:db.recurring_donors||[]},
+  };
+  const DONOR_LINKS={"Raised · YTD":"gifts_ytd","Unique donors · YTD":"donors_ytd","Gifts · YTD":"gifts_ytd","Recurring · MRR":"recurring","Last 30 days":"gifts_30","All time on Donorbox":"donors_all"};
+  $("#donorKpis").innerHTML=cells.map(c=>{
+    const lk=DONOR_LINKS[c.lbl], L=lk&&window._donorLists[lk];
+    const num=(L&&(L.rows||[]).length)
+      ? `<span class="clickable-num" title="Click to see the list" onclick="showDonorList('${lk}')">${c.n}</span>` : c.n;
+    return `<div class="perfcell" title="${esc(c.tip)}">
        <div class="pl">${esc(c.lbl)}</div>
-       <div class="pn">${c.n}</div>
+       <div class="pn">${num}</div>
        <div class="pd ${c.cls}">${esc(c.d)}</div>
-     </div>`).join("");
+     </div>`;
+  }).join("");
 
   // Monthly chart — dual series: $ raised (orange bars) + donor count (blue line)
   const months=(db.monthly_series||[]).slice(-18);

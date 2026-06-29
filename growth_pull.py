@@ -2568,6 +2568,28 @@ def pull_donorbox():
     oldest = min((_day(d) for d in paid if _day(d)), default="")
     yoy_ok = bool(oldest and oldest < py_start.isoformat())
 
+    # ---- Per-window gift + donor lists so the headline KPIs can drill in ----
+    def _name(d): return ((d.get("donor") or {}).get("name") or "").strip() or "Anonymous"
+    def _lean(d):
+        return {"amount": _amt(d), "date": _day(d), "donor": _name(d),
+                "recurring": _recurring(d), "campaign": _campaign(d)}
+    def _donor_agg(rows):   # dedupe by email (matches the unique-donor counts)
+        agg = {}
+        for d in rows:
+            key = _email(d) or ("name:" + _name(d).lower())
+            a = agg.setdefault(key, {"donor": _name(d), "amount": 0.0, "gifts": 0, "last": "", "recurring": False})
+            a["amount"] += _amt(d); a["gifts"] += 1
+            if _day(d) > a["last"]: a["last"] = _day(d)
+            if _recurring(d): a["recurring"] = True
+        return sorted(({**v, "amount": round(v["amount"], 2)} for v in agg.values()), key=lambda x: -x["amount"])
+    _ytd_rows = _in(paid, ytd_start, today)
+    gifts_ytd = [_lean(d) for d in sorted(_ytd_rows, key=_day, reverse=True)]
+    gifts_30  = [_lean(d) for d in sorted(_in(paid, d30, today), key=_day, reverse=True)]
+    donors_ytd = _donor_agg(_ytd_rows)
+    donors_all = _donor_agg(paid)
+    rec_rows = [d for d in last90 if _recurring(d) and _email(d)]
+    recurring_donors = _donor_agg(rec_rows)
+
     return {
         "available": True,
         "donations_paid": len(paid),
@@ -2589,6 +2611,11 @@ def pull_donorbox():
         "recent_gifts":   recent_gifts,    # all gifts last 21d (for 7d-box click-through)
         "active_recurring_donors": len(rec_donors),
         "mrr_estimate":   round(mrr, 2),
+        "gifts_ytd":         gifts_ytd,          # every YTD gift (drill-in for Raised/Gifts YTD)
+        "gifts_30":          gifts_30,           # gifts in the last 30 days
+        "donors_ytd":        donors_ytd,         # unique YTD donors, email-deduped
+        "donors_all":        donors_all,         # unique all-time donors
+        "recurring_donors":  recurring_donors,   # active recurring donors (last 90d)
     }
 
 
