@@ -1714,6 +1714,10 @@ function renderSendChart(camps){
   const avgPts=avg.map((v,i)=>`${x(i)},${y(v)}`).join(" ");
   html+=`<polyline points="${avgPts}" fill="none" stroke="#707175" stroke-width="1" stroke-dasharray="3 3" opacity=".6"/>`;
   svg.innerHTML=html;
+  attachChartHover(svg, padT, innerH, last.map((c,i)=>({
+    x:x(i), y:y(c.open_pct||0),
+    html:`<b>${esc(c.sent)}</b><br>open ${c.open_pct}% · click ${c.click_pct}%<br>${fmtN(c.sent_to)} recipients`
+  })));
 
   // Insight line: compare last 5 vs prior 5
   if(last.length>=10){
@@ -2441,6 +2445,10 @@ function renderDonors(db){
     html+=`<polyline points="${pts}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
     months.forEach((m,i)=>{html+=`<circle cx="${x(i)}" cy="${yDon(m.donors)}" r="3" fill="#217ebe"><title>${m.m}: ${m.donors} donors · ${fmtUSD(m.amt)} · ${m.gifts} gifts</title></circle>`;});
     svg.innerHTML=html;
+    attachChartHover(svg, padT, innerH, months.map((m,i)=>({
+      x:x(i), y:yDon(m.donors),
+      html:`<b>${esc(m.m)}</b><br>${fmtUSD(m.amt)} · ${m.donors} donors · ${m.gifts} gifts`
+    })));
   }
 
   // Top campaigns YTD
@@ -3275,6 +3283,11 @@ function renderLifecycle(lc){
     valid.forEach((c, i) => {
       h += `<text x="${x(i)}" y="${H-22}" text-anchor="middle" font-size="10" fill="#888">${esc(c.label.replace(' days','d'))}</text>`;
       h += `<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="9.5" fill="#999">n=${fmtN(c.subs)}</text>`;
+    });
+    // full-column hover bands so the value shows anywhere over the line, not just on dots
+    const colW = innerW/(maxX-1||1);
+    valid.forEach((c, i) => {
+      h += `<rect x="${(x(i)-colW/2).toFixed(1)}" y="${padT}" width="${colW.toFixed(1)}" height="${innerH}" fill="transparent"><title>${esc(c.label)}: ${c.retention_pct}% of ${fmtN(c.subs)} subscribers still engaged 30 days on (n=${c.engaged})</title></rect>`;
     });
     // line
     const pts = valid.map((c, i) => `${x(i)},${y(c.retention_pct||0)}`).join(" ");
