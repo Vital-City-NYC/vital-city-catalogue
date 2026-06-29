@@ -128,6 +128,9 @@
      readable where it sits over a line or bar. --vc-white flips to the dark
      card colour in dark mode, so the halo matches the background in both. */
   .chart text, .rptchart text{font-family:var(--vc-sans);font-variant-numeric:tabular-nums;text-rendering:geometricPrecision;paint-order:stroke;stroke:var(--vc-white);stroke-width:2px;stroke-linecap:round;stroke-linejoin:round}
+  /* Background pill behind an on-chart annotation label so it stays legible over bars/lines. */
+  .chart rect.avgbg{fill:var(--vc-white);opacity:.86;stroke:none}
+  .chart text.avglbl{font-weight:600;stroke-width:0}
   .legend{font-size:11px;color:var(--vc-charcoal);display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
   .legend .sw{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:middle}
 
@@ -2741,9 +2744,11 @@ function renderTraffic(data){
     const avgBase = complete.length ? complete : series;
     const avgV = Math.round(avgBase.reduce((a,s)=>a+(s.visitors||0),0)/avgBase.length);
     hh+=`<line x1="${padL}" x2="${W-padR}" y1="${y(avgV)}" y2="${y(avgV)}" stroke="#217ebe" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>`;
-    hh+=`<text x="${W-padR-2}" y="${Math.max(padT+9,y(avgV)-4)}" text-anchor="end" font-size="9.5" fill="#217ebe" opacity=".85">avg ${fmtN(avgV)} visitors/wk</text>`;
     hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.pageviews||0)}`).join(" ")}" fill="none" stroke="#ff7c53" stroke-width="1.6" opacity=".85"/>`;
     hh+=`<polyline points="${series.map((s,i)=>`${x(i)},${y(s.visitors||0)}`).join(" ")}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
+    {const _l=`avg ${fmtN(avgV)} visitors/wk`, _ly=Math.max(padT+9,y(avgV)-4), _lw=_l.length*5.3+8;
+     hh+=`<rect class="avgbg" x="${(W-padR-2-_lw).toFixed(1)}" y="${(_ly-9.5).toFixed(1)}" width="${_lw.toFixed(1)}" height="13" rx="2.5"/>`;
+     hh+=`<text class="avglbl" x="${W-padR-2}" y="${_ly}" text-anchor="end" font-size="9.5" fill="#217ebe">${_l}</text>`;}
     // The last bucket is the current, still-incomplete week — flag it with hollow
     // markers + a label so its lower point isn't read as a real drop in traffic.
     const _li=series.length-1;
@@ -4123,17 +4128,23 @@ function renderTrendChart(act,posts,windowDays){
   });
   // Dashed reference line at the average signups per period (over the window
   // with real per-period detail), so each bar reads against "typical".
+  let _avgSubV=null;
   {
     const sr=rows.slice(firstSub>0?firstSub:0);
     if(sr.length){
-      const avgSub=sr.reduce((a,r)=>a+(+r.subs||0),0)/sr.length;
-      html+=`<line x1="${padL}" x2="${W-padR}" y1="${y(avgSub)}" y2="${y(avgSub)}" stroke="#57AA4A" stroke-width="1" stroke-dasharray="4 4" opacity=".5"/>`;
-      html+=`<text x="${W-padR-2}" y="${Math.max(padT+9,y(avgSub)-4)}" text-anchor="end" font-size="9.5" fill="#3b7d2f" opacity=".9">avg ${fmtN(Math.round(avgSub))} signups/${weekly?'wk':'day'}</text>`;
+      _avgSubV=sr.reduce((a,r)=>a+(+r.subs||0),0)/sr.length;
+      html+=`<line x1="${padL}" x2="${W-padR}" y1="${y(_avgSubV)}" y2="${y(_avgSubV)}" stroke="#57AA4A" stroke-width="1" stroke-dasharray="4 4" opacity=".5"/>`;
     }
   }
   // unsub line
   const pts=rows.map((r,i)=>`${x(i)},${y(+r.unsubs||0)}`).join(" ");
   html+=`<polyline points="${pts}" fill="none" stroke="#e7466d" stroke-width="1.6" opacity=".85"/>`;
+  // avg label drawn LAST (with a background pill) so neither the bars nor the unsub line cross it
+  if(_avgSubV!=null){
+    const _l=`avg ${fmtN(Math.round(_avgSubV))} signups/${weekly?'wk':'day'}`, _ly=Math.max(padT+9,y(_avgSubV)-4), _lw=_l.length*5.3+8;
+    html+=`<rect class="avgbg" x="${(W-padR-2-_lw).toFixed(1)}" y="${(_ly-9.5).toFixed(1)}" width="${_lw.toFixed(1)}" height="13" rx="2.5"/>`;
+    html+=`<text class="avglbl" x="${W-padR-2}" y="${_ly}" text-anchor="end" font-size="9.5" fill="#3b7d2f">${_l}</text>`;
+  }
   // (Post-publish dots removed — Vital City publishes multiple times a week,
   // so a per-day binary "did anything publish today" marker is too noisy to
   // be useful. The "Recent signup movers" callout in the Content cadence card
