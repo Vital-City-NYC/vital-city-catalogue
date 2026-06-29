@@ -236,15 +236,22 @@ def pull_mailchimp():
             key, dc).get("campaigns", [])
 
         # report_summary does NOT carry unsubscribes; the /reports list does.
-        # One paginated call maps campaign id -> total unsubscribes (exact,
-        # aggregated across A/B test + winner waves like emails_sent is).
-        unsub_by_id = {}
+        # One paginated call maps campaign id -> total unsubscribes + DELIVERED
+        # count (emails_sent minus hard/soft bounces). Unsubscribe rates use
+        # delivered as the denominator (the people who actually got the email).
+        unsub_by_id, deliv_by_id = {}, {}
         try:
-            reps = mc_get(f"/reports?count=1000&fields=reports.id,reports.unsubscribed",
-                          key, dc).get("reports", [])
-            unsub_by_id = {r.get("id"): int(r.get("unsubscribed") or 0) for r in reps}
+            reps = mc_get(f"/reports?count=1000&fields=reports.id,reports.unsubscribed,"
+                          f"reports.emails_sent,reports.bounces", key, dc).get("reports", [])
+            for r in reps:
+                rid = r.get("id")
+                unsub_by_id[rid] = int(r.get("unsubscribed") or 0)
+                es = int(r.get("emails_sent") or 0)
+                bo = r.get("bounces") or {}
+                bounced = int(bo.get("hard_bounces") or 0) + int(bo.get("soft_bounces") or 0)
+                deliv_by_id[rid] = max(0, es - bounced)
         except Exception as e:
-            log(f"  Mailchimp /reports (unsubscribes) fetch failed: {e}")
+            log(f"  Mailchimp /reports (unsubscribes/bounces) fetch failed: {e}")
 
         camp_out = []
         for c in camp:
@@ -299,6 +306,7 @@ def pull_mailchimp():
                 "type":     c.get("type") or "regular",
                 "sent":     (c.get("send_time") or "")[:10],
                 "sent_to":  sent_to,
+                "delivered": deliv_by_id.get(c.get("id"), sent_to),  # sent − bounces
                 "open_pct": round(op, 1),
                 "click_pct":round(cl, 1),
                 "ctor_pct": round(ctor, 1),   # click-to-open ratio = honest engagement

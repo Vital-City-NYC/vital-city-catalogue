@@ -61,8 +61,9 @@ def newsletter_learnings(mc, run_date):
     camps = mc.get("campaigns", [])
     cut12 = (run_date - timedelta(days=365)).isoformat()
     rec = [c for c in camps if (c.get("sent") or "") >= cut12]
-    def rate(rows):
-        S = sum(c.get("sent_to") or 0 for c in rows); U = sum(c.get("unsubs") or 0 for c in rows)
+    def rate(rows):   # per 1,000 delivered (sent − bounces)
+        S = sum((c.get("delivered") or c.get("sent_to") or 0) for c in rows)
+        U = sum(c.get("unsubs") or 0 for c in rows)
         return S, U, (1000 * U / S if S else 0)
     out = []
     # 1) fundraising appeals vs the regular newsletter
