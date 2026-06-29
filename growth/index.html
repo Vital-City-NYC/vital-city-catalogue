@@ -625,7 +625,7 @@
       </div>
 
       <div class="card" id="campaignsTrend">
-        <h2>Send-by-send open &amp; click rate <span class="hint">last 20 newsletter sends, oldest → newest</span></h2>
+        <h2>Send-by-send open &amp; click rate <span class="hint">last 20 sends, oldest → newest · one point = one send (A/B tests counted once)</span></h2>
         <div class="chartwrap"><svg class="chart" id="sendChart" viewBox="0 0 800 200" preserveAspectRatio="none"></svg></div>
         <div class="legend">
           <span><span class="sw" style="background:var(--vc-cerulean)"></span>Open rate</span>
@@ -1693,13 +1693,8 @@ function renderSendChart(camps){
       html+=`<text x="${x(i)}" y="${H-14}" text-anchor="middle" font-size="9" fill="#888">${(c.sent||'').slice(5)}</text>`;
     }
   });
-  // Open-rate bars (light) underneath
-  const bw=Math.max(8, innerW/last.length*0.55);
-  last.forEach((c,i)=>{
-    const h=Math.max(0,(c.open_pct/yMax)*innerH);
-    const subj=(c.subject||'(no subject)').slice(0,80);
-    html+=`<rect x="${x(i)-bw/2}" y="${y(c.open_pct)}" width="${bw}" height="${h}" fill="#217ebe" opacity=".18"><title>${esc(c.sent)} — ${esc(subj)}\nopen ${c.open_pct}% · click ${c.click_pct}% · ${fmtN(c.sent_to)} recipients</title></rect>`;
-  });
+  // (Removed the faint open-rate bars — they duplicated the open-rate line below
+  //  and read as ambiguous "columns." Open rate is the blue line; one dot per send.)
   // Open-rate line
   const opPts=last.map((c,i)=>`${x(i)},${y(c.open_pct||0)}`).join(" ");
   html+=`<polyline points="${opPts}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
