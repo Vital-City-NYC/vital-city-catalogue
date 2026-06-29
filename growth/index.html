@@ -2301,18 +2301,19 @@ function campaignSubject(c){
 // kind tag (appeal | newsletter | other). Recipient-weighted, trailing 12mo.
 function renderFundUnsub(mc){
   const host=$("#fundUnsubBody"); if(!host) return;
-  const camps=mc.campaigns||[];
-  const cut=new Date(Date.now()-365*864e5).toISOString().slice(0,10);
-  const recent=camps.filter(c=>(c.sent||"")>=cut);
-  const haveKind=recent.some(c=>c.kind);
-  const totUns=recent.reduce((a,c)=>a+(c.unsubs||0),0);
-  if(!recent.length || !haveKind || totUns===0){
-    host.innerHTML=`<div style="font-size:12px;line-height:1.6;color:var(--vc-charcoal)">Per-campaign unsubscribe data populates on the next scheduled refresh — it's pulled live from Mailchimp's reports API. Once it lands, this card compares how many subscribers fundraising appeals shed versus the regular Thursday newsletter.</div>`;
+  const dlv=c=>c.delivered||c.sent_to||0;   // delivered = sent − bounces
+  // Full history, not a 12-month slice. "Regular" = every non-appeal send with a
+  // real audience (>=500 delivered) — newsletters AND their resends/invites —
+  // so the baseline is broad (~240 sends), not just the Thursday newsletter.
+  const camps=(mc.campaigns||[]).filter(c=>c.kind && dlv(c)>0);
+  const totUns=camps.reduce((a,c)=>a+(c.unsubs||0),0);
+  if(!camps.length || totUns===0){
+    host.innerHTML=`<div style="font-size:12px;line-height:1.6;color:var(--vc-charcoal)">Per-campaign unsubscribe data populates on the next scheduled refresh — it's pulled live from Mailchimp's reports API. Once it lands, this card compares how many subscribers fundraising appeals shed versus every regular (non-fundraising) send.</div>`;
     return;
   }
-  const dlv=c=>c.delivered||c.sent_to||0;   // delivered = sent − bounces
-  const grp=k=>{const r=recent.filter(c=>c.kind===k);const S=r.reduce((a,c)=>a+dlv(c),0),U=r.reduce((a,c)=>a+(c.unsubs||0),0);return {r,n:r.length,S,U,per1k:S?1000*U/S:0};};
-  const ap=grp("appeal"), nl=grp("newsletter");
+  const agg=arr=>{const S=arr.reduce((a,c)=>a+dlv(c),0),U=arr.reduce((a,c)=>a+(c.unsubs||0),0);return {r:arr,n:arr.length,S,U,per1k:S?1000*U/S:0};};
+  const ap=agg(camps.filter(c=>c.kind==='appeal'));
+  const nl=agg(camps.filter(c=>c.kind!=='appeal' && dlv(c)>=500));
   const ratio=nl.per1k?ap.per1k/nl.per1k:null;
   const f2=x=>x.toFixed(2);
   const stat=(label,g,color)=>`<div style="flex:1;min-width:148px">
@@ -2329,16 +2330,16 @@ function renderFundUnsub(mc){
   host.innerHTML=`
     <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;margin-bottom:4px">
       ${stat("Fundraising appeals",ap,"var(--vc-orange)")}
-      ${stat("Regular newsletter",nl,"var(--vc-cerulean)")}
+      ${stat("All regular sends",nl,"var(--vc-cerulean)")}
       <div style="flex:1;min-width:148px">
         <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">Appeals run at</div>
         <div style="font-family:var(--vc-serif);font-size:30px;line-height:1;color:var(--vc-black)">${ratio?ratio.toFixed(1)+"×":"—"}</div>
-        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:4px">the newsletter unsubscribe rate</div>
+        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:4px">the rate of all other sends</div>
       </div>
     </div>
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Appeals · trailing 12 months</div>
-    <table class="tbl"><thead><tr><th>Sent</th><th>Subject</th><th class="num">Delivered</th><th class="num">Unsubs</th><th class="num">/1,000</th></tr></thead><tbody>${rows||`<tr><td colspan="5" style="color:var(--vc-charcoal)">No appeals tagged in the last 12 months.</td></tr>`}</tbody></table>
-    <div style="font-size:10.5px;line-height:1.6;margin-top:10px;color:var(--vc-charcoal)">Unsubscribes are exact per-campaign counts from Mailchimp's reports. Rates are <b>per 1,000 delivered</b> (emails sent minus bounces), delivery-weighted over the trailing 12 months. "Appeals" cover both the winter year-end and spring drives (donation-language subjects plus the seasonal drives, which use soft subject lines and are matched explicitly); "newsletter" = regular Thursday sends. For context, anything under about 2 per 1,000 (0.2%) is a low, healthy unsubscribe rate.</div>`;
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Every fundraising appeal · all time</div>
+    <table class="tbl"><thead><tr><th>Sent</th><th>Subject</th><th class="num">Delivered</th><th class="num">Unsubs</th><th class="num">/1,000</th></tr></thead><tbody>${rows||`<tr><td colspan="5" style="color:var(--vc-charcoal)">No appeals tagged.</td></tr>`}</tbody></table>
+    <div style="font-size:10.5px;line-height:1.6;margin-top:10px;color:var(--vc-charcoal)">Unsubscribes are exact per-campaign counts from Mailchimp's reports. Rates are <b>per 1,000 delivered</b> (emails sent minus bounces). The baseline is <b>${nl.n} regular sends</b> — every non-fundraising email with a real audience (newsletters and their resends/invites; tiny automations excluded), all time. "Appeals" are the winter year-end and spring drives. Note: resends to non-openers push the regular baseline up, so this is a conservative comparison. Anything under about 2 per 1,000 (0.2%) is a low, healthy unsubscribe rate.</div>`;
 }
 
 // Why people leave: unsubscribe reasons + a send-frequency / fatigue check.

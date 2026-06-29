@@ -66,14 +66,16 @@ def newsletter_learnings(mc, run_date):
         U = sum(c.get("unsubs") or 0 for c in rows)
         return S, U, (1000 * U / S if S else 0)
     out = []
-    # 1) fundraising appeals vs the regular newsletter
-    ap = [c for c in rec if c.get("kind") == "appeal"]
-    nl = [c for c in rec if c.get("kind") == "newsletter"]
+    # 1) fundraising appeals (all time) vs EVERY regular non-appeal send (>=500
+    #    delivered) — broad baseline, not just the trailing-12mo Thursday slice.
+    ap = [c for c in camps if c.get("kind") == "appeal"]
+    nl = [c for c in camps if c.get("kind") != "appeal" and (c.get("delivered") or c.get("sent_to") or 0) >= 500]
     _, _, ar = rate(ap); _, _, nr = rate(nl)
     if ap and nl and nr:
-        out.append(f"- **Fundraising vs newsletter:** appeals unsubscribe at **{ar:.2f}/1,000** vs "
-                   f"**{nr:.2f}/1,000** for the regular newsletter (**{ar/nr:.1f}×**). Modestly higher — "
-                   f"appeals are not damaging the list. Spam complaints are the metric to watch on the hardest asks.")
+        out.append(f"- **Fundraising vs regular sends:** appeals unsubscribe at **{ar:.2f}/1,000** vs "
+                   f"**{nr:.2f}/1,000** across all {len(nl)} regular (non-fundraising) sends (**{ar/nr:.1f}×**). "
+                   f"Modestly higher — appeals are not damaging the list. (Resends to non-openers lift the "
+                   f"regular baseline, so this is conservative.) Spam complaints are the metric to watch on the hardest asks.")
     # 2) send frequency / fatigue
     wk = {}
     for c in rec:
