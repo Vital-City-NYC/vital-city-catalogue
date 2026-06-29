@@ -65,7 +65,13 @@ def mc_get(path, key, dc):
 _FUND_RE = re.compile(
     r"donat|\bgift\b|double your|generous|your support|support evidence|"
     r"building vital|year[- ]?end|fundrais|tax-deduct|chip in|"
-    r"make a gift|personal request|membership drive", re.I)
+    r"make a gift|personal request|membership drive|"
+    # Seasonal drives use soft subject lines with NO donation keywords, so they
+    # are matched explicitly. The Spring 2026 drive below was confirmed against
+    # the Donorbox "Spring 2026" campaign gift dates (e.g. 18 gifts on 5/12 ==
+    # "New mayor. New moment."). Add new drives here as they run.
+    r"new mayor.{0,3}new moment|this is why we exist|"
+    r"what people who shape cities need|best ideas need the best people", re.I)
 
 def _campaign_kind(entry):
     txt = " ".join([entry.get("subject") or "", entry.get("winner_subject") or ""]
