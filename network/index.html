@@ -225,6 +225,7 @@
   .b-mem{background:var(--vc-green);color:#fff}
   .b-auth{border:1px solid var(--vc-magenta);color:var(--vc-magenta)}
   .b-don{background:var(--vc-orange);color:var(--vc-black)}
+  .b-press{background:var(--vc-cerulean);color:#fff}
   .muted{color:var(--vc-cloud)}
   /* ---- responsive ---- */
   .modalbox{max-width:92vw}
@@ -334,7 +335,8 @@
       <button class="tg" id="tSub" title="Click once to include, again to exclude (Not subscribers), again for off. Newsletter subscribers.">Subscribers</button>
       <button class="tg" id="tDon" title="Click once to include, again to exclude (Not donors), again for off. People who have given.">Donors</button>
       <button class="tg" id="tAuth" title="Click once to include, again to exclude (Not authors), again for off. Vital City contributors.">Authors</button>
-      <button class="tg" id="tOther" title="People who are none of the three — not a subscriber, donor or author (often CRM contacts). Click once to include, again to exclude, again for off.">Other</button>
+      <button class="tg" id="tPress" title="Click once to include, again to exclude (Not press), again for off. Curated press/media contacts — reporters and editors. Some are also subscribers or donors.">Press</button>
+      <button class="tg" id="tOther" title="People who are none of the four — not a subscriber, donor, author or press contact (often CRM contacts). Click once to include, again to exclude, again for off.">Other</button>
     </div>
     <span class="toglegend">Click a category to cycle it: <span class="lg lg-inc">✓ include</span> → <span class="lg lg-exc">✕ exclude</span> → <span class="lg lg-off">off</span>.</span>
     <input type="search" id="q" placeholder="Search name, email, institution, notes…" autocomplete="off" aria-label="Search by name, email, institution or notes (press / to focus)" title="Type to narrow the list. Matches names, email addresses, institutions and your notes — and updates as you type. Shortcut: press / to jump here.">
@@ -592,9 +594,9 @@ let selectedCats=new Set();   // chosen type/specialty categories (OR within)
 // Three combinable category filters. 0 = ignore, 1 = require, -1 = exclude.
 // Subscribers/Donors/Authors toggle 0↔1 (overlap when more than one is on);
 // "Other" sets all three to -1 (= none of the three).
-let want={mem:0,don:0,auth:0};
+let want={mem:0,don:0,auth:0,press:0};
 let reviewMode="";   // "" | "guessed" | "noinst" — the needs-review queue filter
-const isOther=()=>want.mem===-1&&want.don===-1&&want.auth===-1;
+const isOther=()=>want.mem===-1&&want.don===-1&&want.auth===-1&&want.press===-1;
 let lastSorted=[], shownCount=0; const PAGE=300;   // infinite-scroll paging
 
 // ---- Theme (light/dark) ----
@@ -673,7 +675,8 @@ function buildStats(){
   const cur=PEOPLE.filter(p=>!p.unsub);    // current (non-unsubscribed) universe
   const memTotal=cur.filter(p=>p.mem).length;
   const auth=cur.filter(p=>p.auth).length;
-  const other=cur.filter(p=>!p.mem&&!p.don&&!p.auth).length;   // none of the three
+  const press=cur.filter(p=>p.press).length;
+  const other=cur.filter(p=>!p.mem&&!p.don&&!p.auth&&!p.press).length;   // none of the four
   const donors=cur.filter(p=>p.don).length;
   const unsub=PEOPLE.length-cur.length;
   const S=[
@@ -681,7 +684,8 @@ function buildStats(){
     [memTotal.toLocaleString(),"subscribers","subs","Unique newsletter subscribers — each person counted once, even if they're on the Mailchimp list under 2 or 3 email addresses. So this number can read a little lower than Mailchimp's raw subscriber count (which counts addresses, not people). Click to toggle the Subscribers filter.",""],
     [donors.toLocaleString(),"donors","donors","Donors — toggle the Donors filter",""],
     [auth.toLocaleString(),"authors","authors","Vital City contributors — toggle the Authors filter",""],
-    [other.toLocaleString(),"other","other","None of subscriber, donor or author",""],
+    [press.toLocaleString(),"press","press","Curated press/media contacts — reporters and editors. Some are also subscribers or donors. Click to toggle the Press filter.",""],
+    [other.toLocaleString(),"other","other","None of subscriber, donor, author or press",""],
     [unsub.toLocaleString(),"unsubscribed","unsub","Former contacts who left the list"," unsubnum"],
   ];
   $("#stats").innerHTML=S.map(([n,l,a,t,cls])=>`<div class="stat clickable" data-action="${a}" data-stat="${a}" title="${t}"><div class="num${cls}">${n}</div><div class="lbl">${l}</div><div class="tilestate"></div></div>`).join("");
@@ -707,6 +711,7 @@ function init(){
   $("#tSub").addEventListener("click",()=>cycleWant("mem"));
   $("#tDon").addEventListener("click",()=>cycleWant("don"));
   $("#tAuth").addEventListener("click",()=>cycleWant("auth"));
+  $("#tPress").addEventListener("click",()=>cycleWant("press"));
   $("#tOther").addEventListener("click",toggleOther);
   // Debounce live-typing inputs so we don't filter+sort+repaint ~13k rows on every keystroke.
   const renderSoon=debounce(render,180);
@@ -850,14 +855,15 @@ function syncToggles(){
   // chip labels spell out the state: include (✓), off (plain), exclude (✕ Not …)
   const LAB={tSub:["Subscribers","✓ Subscribers","✕ Not subscribers"],
              tDon:["Donors","✓ Donors","✕ Not donors"],
-             tAuth:["Authors","✓ Authors","✕ Not authors"]};
+             tAuth:["Authors","✓ Authors","✕ Not authors"],
+             tPress:["Press","✓ Press","✕ Not press"]};
   const set=(id,v)=>{const e=$(id);const on=!other&&v===1,ex=!other&&v===-1;
     e.classList.toggle("on",on);e.classList.toggle("excl",ex);
     e.textContent=other?LAB[id.slice(1)][0]:LAB[id.slice(1)][v===1?1:v===-1?2:0];};
-  set("#tSub",want.mem); set("#tDon",want.don); set("#tAuth",want.auth);
+  set("#tSub",want.mem); set("#tDon",want.don); set("#tAuth",want.auth); set("#tPress",want.press);
   $("#tOther").classList.toggle("on",other);
   // KPI tiles mirror the same state: green = included, magenta = excluded, with a word.
-  const st={subs:want.mem,donors:want.don,authors:want.auth};
+  const st={subs:want.mem,donors:want.don,authors:want.auth,press:want.press};
   document.querySelectorAll(".stat[data-stat]").forEach(s=>{
     const k=s.dataset.stat, ts=s.querySelector(".tilestate");
     if((k in st) && !other){
@@ -875,28 +881,28 @@ function syncToggles(){
   $("#repeatDonorWrap").style.display=showDon?"inline-flex":"none";
   if(!showDon) $("#fRepeatDonor").checked=false;
 }
-function setSort(k){ if(k==="mem"){sortKey="eng";sortDir=-1;} else if(k==="don"){sortKey="damt";sortDir=-1;} else if(k==="auth"){sortKey="alast";sortDir=-1;} else {sortKey="arts";sortDir=-1;} }
+function setSort(k){ if(k==="mem"){sortKey="eng";sortDir=-1;} else if(k==="don"){sortKey="damt";sortDir=-1;} else if(k==="auth"){sortKey="alast";sortDir=-1;} else if(k==="press"){sortKey="last";sortDir=1;} else {sortKey="arts";sortDir=-1;} }
 // Chip: cycle off -> include -> exclude -> off (lets you ask e.g. donors who are NOT subscribers).
 function cycleWant(k){
-  if(isOther()) want={mem:0,don:0,auth:0};
+  if(isOther()) want={mem:0,don:0,auth:0,press:0};
   want[k]= want[k]===0?1 : (want[k]===1?-1:0);
   if(want[k]===1) setSort(k);
   syncToggles(); render();
 }
 // Headline number: simple include on/off (keeps the click-numbers-to-combine behavior).
 function toggleWant(k){
-  if(isOther()) want={mem:0,don:0,auth:0};
+  if(isOther()) want={mem:0,don:0,auth:0,press:0};
   want[k]= want[k]===1?0:1;
   if(want[k]===1) setSort(k);
   syncToggles(); render();
 }
 function toggleOther(){
-  want=isOther()?{mem:0,don:0,auth:0}:{mem:-1,don:-1,auth:-1};
+  want=isOther()?{mem:0,don:0,auth:0,press:0}:{mem:-1,don:-1,auth:-1,press:-1};
   sortKey="last"; sortDir=1;
   syncToggles(); render();
 }
 function clearAll(){
-  selectedCats.clear(); want={mem:0,don:0,auth:0}; reviewMode="";
+  selectedCats.clear(); want={mem:0,don:0,auth:0,press:0}; reviewMode="";
   $("#q").value=""; $("#dFrom").value=""; $("#dTo").value="";
   onlyUnsub=false; $("#fUnsub").checked=false; $("#fStar").checked=false; $("#fWiki").checked=false; $("#fMultiSub").checked=false; $("#fNoEmail").checked=false; $("#fNoName").checked=false; $("#fName").value="any"; $("#fEngagement").value="any";
   document.querySelectorAll(".facet").forEach(l=>{l.classList.remove("on");const cb=l.querySelector("input");if(cb)cb.checked=false;});
@@ -913,6 +919,7 @@ function statAction(a){
   if(a==="subs") cycleWant("mem");
   else if(a==="donors") cycleWant("don");
   else if(a==="authors") cycleWant("auth");
+  else if(a==="press") cycleWant("press");
   else if(a==="other") toggleOther();
 }
 function buildMatrix(){
@@ -939,6 +946,8 @@ function filtered(){
     if(want.don===-1&&p.don)return false;
     if(want.auth===1&&!p.auth)return false;
     if(want.auth===-1&&p.auth)return false;
+    if(want.press===1&&!p.press)return false;
+    if(want.press===-1&&p.press)return false;
     if($("#fRepeatDonor").checked && !((p.dcnt||0)>1)) return false;
     if($("#fStar").checked && !p.star) return false;
     if($("#fWiki").checked && !p.wiki) return false;
@@ -1179,6 +1188,7 @@ function emailCard(){
   if(p.topics&&p.topics.length) L.push("Areas: "+p.topics.join(", "));
   const st=[]; if(p.mem)st.push("newsletter subscriber"+(p.since?" since "+p.since.slice(0,4):""));
   if(p.auth)st.push((p.arts?p.arts+" ":"")+"VC contributor"); if(p.don)st.push("donor ($"+Math.round(p.damt).toLocaleString()+(p.dlast?", last "+p.dlast:"")+")");
+  if(p.press)st.push("press contact"+(p.poutlet?" ("+p.poutlet+")":""));
   if(st.length) L.push("Status: "+st.join(" · "));
   if(p.note) L.push("Notes: "+p.note);
   const subject="Vital City contact: "+(p.n||p.e||""), body=L.join("\n");
@@ -1219,10 +1229,10 @@ function measureSticky(){
 
 // Plain-English summary of the active filters (shown under the result count).
 function describeFilters(){
-  const inc=[], exc=[]; const lab={mem:"Subscribers",don:"Donors",auth:"Authors"};
+  const inc=[], exc=[]; const lab={mem:"Subscribers",don:"Donors",auth:"Authors",press:"Press"};
   const parts=[];
-  if(isOther()) parts.push("<b>none of</b> subscriber, donor or author");
-  else { ["mem","don","auth"].forEach(k=>{ if(want[k]===1)inc.push(lab[k]); else if(want[k]===-1)exc.push(lab[k]); });
+  if(isOther()) parts.push("<b>none of</b> subscriber, donor, author or press");
+  else { ["mem","don","auth","press"].forEach(k=>{ if(want[k]===1)inc.push(lab[k]); else if(want[k]===-1)exc.push(lab[k]); });
     if(inc.length) parts.push(inc.join(" <b>AND</b> "));
     if(exc.length) parts.push((inc.length?"<b>excluding</b> ":"<b>Excluding</b> ")+exc.join(", ")); }
   if(reviewMode==="guessed") parts.push("<b>needs review:</b> guessed names");
@@ -1268,7 +1278,7 @@ function currentState(){ return {want:Object.assign({},want), cats:[...selectedC
   dFrom:$("#dFrom").value, dTo:$("#dTo").value, repeat:$("#fRepeatDonor").checked, star:$("#fStar").checked,
   wiki:$("#fWiki").checked, multisub:$("#fMultiSub").checked, noEmail:$("#fNoEmail").checked, noName:$("#fNoName").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, name:$("#fName").value, engagement:$("#fEngagement").value, sortKey:sortKey, sortDir:sortDir}; }
 function applyState(s){
-  want=Object.assign({mem:0,don:0,auth:0}, s.want||{});
+  want=Object.assign({mem:0,don:0,auth:0,press:0}, s.want||{});
   selectedCats=new Set(s.cats||[]);
   $("#q").value=s.q||""; $("#dFrom").value=s.dFrom||""; $("#dTo").value=s.dTo||"";
   $("#fUnsub").checked=!!s.unsub; onlyUnsub=!!s.onlyUnsub; $("#fStar").checked=!!s.star; $("#fWiki").checked=!!s.wiki; $("#fMultiSub").checked=!!s.multisub; $("#fNoEmail").checked=!!s.noEmail; $("#fNoName").checked=!!s.noName; $("#fName").value=s.name||"any"; $("#fEngagement").value=s.engagement||"any";
@@ -1296,7 +1306,7 @@ function renderViews(){
 // ---- Permalink: encode the active filters in the URL hash so a view is shareable ----
 function updateHash(){
   const s=currentState(), o={};
-  if(s.want.mem)o.m=s.want.mem; if(s.want.don)o.d=s.want.don; if(s.want.auth)o.a=s.want.auth;
+  if(s.want.mem)o.m=s.want.mem; if(s.want.don)o.d=s.want.don; if(s.want.auth)o.a=s.want.auth; if(s.want.press)o.pr=s.want.press;
   if(s.cats.length)o.c=s.cats; if(s.q)o.q=s.q; if(s.dFrom)o.f=s.dFrom; if(s.dTo)o.t=s.dTo;
   if(s.repeat)o.r=1; if(s.unsub)o.u=1; if(s.onlyUnsub)o.o=1; if(s.star)o.st=1; if(s.wiki)o.wk=1; if(s.multisub)o.ms=1;
   if(s.name && s.name!=="any") o.nm=s.name;
@@ -1308,7 +1318,7 @@ function updateHash(){
 function applyHash(){
   if(!location.hash||location.hash.length<2) return false;
   try{ const o=JSON.parse(decodeURIComponent(location.hash.slice(1)));
-    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,multisub:!!o.ms,name:o.nm||"any",engagement:o.eg||"any",sortKey:o.sk||"last",sortDir:o.sd||1});
+    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0,press:o.pr||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,multisub:!!o.ms,name:o.nm||"any",engagement:o.eg||"any",sortKey:o.sk||"last",sortDir:o.sd||1});
     // A per-contact link (#{"person":"<id>"}) opens that person's card.
     if(o.person){
       const p=PEOPLE.find(x=>pidFor(personKey(x))===o.person);
@@ -1364,7 +1374,7 @@ function showDuplicates(){
   $("#dupList").innerHTML = groups.slice(0,80).map(gr=>{
     const keys=gr.people.map(personKey);
     const rows=gr.people.map(p=>{
-      const tags=[p.mem?"sub":"",p.don?"donor":"",p.auth?"author":""].filter(Boolean).join(" · ");
+      const tags=[p.mem?"sub":"",p.don?"donor":"",p.auth?"author":"",p.press?"press":""].filter(Boolean).join(" · ");
       return `<div class="dupperson"><span><b>${esc(p.n||"—")}</b>${tags?' · '+tags:''} <span style="color:var(--vc-charcoal)">${esc((p.emails||[]).join(", "))||"no email"}</span></span><a data-key="${esc(personKey(p))}">✎ edit</a></div>`;
     }).join("");
     return `<div class="dupgroup"><div class="gh">${esc(gr.why)}<button class="btn mergebtn" data-merge="${esc(JSON.stringify(keys))}" title="Combine these ${gr.people.length} records into one — keeps every email, type and note, and the strongest status (subscriber/donor/author). Saved for everyone.">⤵ Merge these ${gr.people.length}</button></div>${rows}</div>`;
@@ -1403,9 +1413,9 @@ function copyEmails(){
 function csvCell(v){v=v==null?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
 function exportCSV(){
   const rows=sortRows(filtered());
-  const cols=["first_name","last_name","name","email","institution","role","types","specialties","subscriber","subscribed_since","author","articles","donor","donation_total","donation_count","last_donation","engagement_rating","open_rate","notable_wikipedia","starred","notes"];
+  const cols=["first_name","last_name","name","email","institution","role","types","specialties","subscriber","subscribed_since","author","articles","press","press_outlet","press_twitter","donor","donation_total","donation_count","last_donation","engagement_rating","open_rate","notable_wikipedia","starred","notes"];
   const lines=[cols.join(",")];
-  rows.forEach(p=>lines.push([firstName(p),lastName(p),p.n,(p.emails||[]).join("; "),p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.don?"yes":"no",p.damt||0,p.dcnt||0,p.dlast||"",p.erate||0,(p.eopen||0)+"%",p.wiki?"yes":"no",p.star?"yes":"no",p.note||""].map(csvCell).join(",")));
+  rows.forEach(p=>lines.push([firstName(p),lastName(p),p.n,(p.emails||[]).join("; "),p.inst,p.role,(p.types||[]).join("; "),(p.topics||[]).join("; "),p.mem?"yes":"no",p.since||"",p.auth?"yes":"no",p.arts||0,p.press?"yes":"no",p.poutlet||"",p.ptw||"",p.don?"yes":"no",p.damt||0,p.dcnt||0,p.dlast||"",p.erate||0,(p.eopen||0)+"%",p.wiki?"yes":"no",p.star?"yes":"no",p.note||""].map(csvCell).join(",")));
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download=`vital-city-network-${new Date().toISOString().slice(0,10)}.csv`;
@@ -1489,7 +1499,7 @@ function rowHTML(p){
     <tr data-key="${key}"${p.unsub?' title="Unsubscribed — former contact. Click to view details."':''}>
       <td>${star} <span class="nm${g}"${nmTitle}>${esc(np.first)||'<span class="muted">—</span>'}</span></td>
       <td><span class="nm${g}"${nmTitle}>${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
-      <td data-label="Type(s)" class="c-type${bl(p.types&&p.types.length)}">${types}</td>
+      <td data-label="Type(s)" class="c-type${bl((p.types&&p.types.length)||p.press)}">${p.press?`<span class="badge b-press" title="Curated press contact${p.poutlet?' · '+esc(p.poutlet):''}${p.ptw?' · '+esc(p.ptw):''}">PRESS</span> `:''}${types}</td>
       <td data-label="Subscriber" class="c-mem${bl(p.unsub||p.mem)}">${p.unsub?`<span class="badge" style="background:#c8102e;color:#fff"${p.udate?` title="Unsubscribed ${esc(p.udate)}"`:''}>Unsubscribed</span>${p.udate?`<div class="sub-d">on ${esc(p.udate)}</div>`:''}`:(p.mem?`<span class="badge b-mem"${p.since?` title="Subscribed ${esc(p.since)}"`:''}>Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>${p.since?`<div class="sub-d">since ${esc(p.since)}</div>`:''}${p.erate?`<span class="erate" title="Average newsletter open rate from Mailchimp — the share of our emails this subscriber opens${p.eclick?` (${p.eclick}% click rate)`:''}. Note: Apple Mail's auto-open can inflate open rates, and a brand-new subscriber can show a high % off just a few emails.">${p.eopen}% opens</span>`:''}`:'<span class="muted">—</span>')}</td>
       <td data-label="Donor" class="c-don${bl(p.don)}">${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
       <td data-label="Institution" class="c-inst${bl(p.inst)}">${esc(p.inst)||'<span class="muted">—</span>'}</td>

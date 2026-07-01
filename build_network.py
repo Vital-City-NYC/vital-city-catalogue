@@ -828,7 +828,8 @@ def main():
              "types": [], "topics": [], "mem": 0, "since": "", "auth": 0, "arts": 0,
              "aname": "", "alast": "", "don": 0, "damt": 0.0, "dcnt": 0, "dlast": "", "unsub": 0, "udate": "",
              "d7": 0.0, "d7c": 0, "d30": 0.0, "d30c": 0,
-             "erate": 0, "eopen": 0, "eclick": 0, "wiki": 0, "src": []}
+             "erate": 0, "eopen": 0, "eclick": 0, "wiki": 0,
+             "press": 0, "poutlet": "", "ptw": "", "src": []}
         people.append(p)
         return p
 
@@ -978,6 +979,40 @@ def main():
                 if "donor" not in p["src"]:
                     p["src"].append("donor")
                 index(p)
+
+    # ---- 4b2. Press contacts (curated media list) — flagged press, may also be
+    #      subscribers/donors. Merges by email/name onto the existing record. ----
+    press_path = PRIV / "press_source.csv"
+    press_total = 0
+    if press_path.exists():
+        with open(press_path, newline="") as f:
+            for row in csv.DictReader(f):
+                email = email_norm(row.get("email"))
+                name = (row.get("name") or "").strip()
+                if not email and not name:
+                    continue
+                press_total += 1
+                p = get_or_make(emails=[email], name=norm(name), fl=firstlast(name))
+                set_name(p, name, True)
+                if email:
+                    set_email(p, email)
+                p["press"] = 1
+                outlet = (row.get("outlet") or "").strip()
+                title  = (row.get("title") or "").strip()
+                tw     = (row.get("twitter") or "").strip()
+                if outlet:
+                    p["poutlet"] = outlet
+                    if not p["inst"]:
+                        p["inst"] = outlet
+                if title and not p["role"]:
+                    p["role"] = title
+                if tw and not p.get("ptw"):
+                    p["ptw"] = tw
+                p["types"] = sorted(set(p["types"]) | {"journalist"})
+                if "press" not in p["src"]:
+                    p["src"].append("press")
+                index(p)
+    print(f"press contacts: {press_total}")
 
     # ---- 4c. Unsubscribed (Mailchimp export) — former newsletter contacts ----
     unsub_path = PRIV / "unsubscribed_source.csv"
@@ -1259,7 +1294,7 @@ def main():
     # No email AND not a subscriber, author, donor or unsubscribed = just a name
     # in the contacts sheet (e.g. an official with no email). Not useful here.
     def keep(p):
-        return bool(p["emails"] or p["mem"] or p["auth"] or p["don"] or p["unsub"] or p.get("added"))
+        return bool(p["emails"] or p["mem"] or p["auth"] or p["don"] or p["unsub"] or p.get("added") or p.get("press"))
     dropped = [p for p in people if not keep(p)]
     people = [p for p in people if keep(p)]
     print(f"dropped {len(dropped)} no-contact-info entries", file=__import__("sys").stderr)

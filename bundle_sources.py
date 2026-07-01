@@ -30,6 +30,7 @@ ITERS = 600_000
 SOURCES = [
     "contacts_source.csv",
     "donors_source.csv",
+    "press_source.csv",        # curated media/press contacts
     "vc_authors.csv",
     "unsubscribed_source.csv",
     "extra_contributors.csv",
