@@ -54,33 +54,36 @@
   </ol>
 
   <h2>What's in it</h2>
-  <p>Each person is one row, built by merging four sources (matched by email, then by name):</p>
+  <p>Each person is one row, built by merging several sources (matched by email, then by name):</p>
   <table>
     <tr><th>Source</th><th>What it adds</th></tr>
     <tr><td><b>Newsletter subscribers</b> (from Ghost)</td><td>The <span class="pill b-mem">Subscriber</span> badge + the year they joined. <b>"Subscriber" means the free email list</b> — not the same as a donor.</td></tr>
     <tr><td><b>Contacts</b> (the Google Sheet your team maintains)</td><td>The <span class="pill">type</span> tags: VC contributor, VC advisor, journalist, academic, foundation leadership, nonprofit leadership, city gov, current nyc.gov, state gov, fed gov, judge — plus specialty areas (criminal justice, housing, transit, budget, urban planning, education, public health, economy, technology, politics &amp; government, race &amp; equity, culture, architecture).</td></tr>
     <tr><td><b>Donors</b> (from Donorbox)</td><td>The <span class="pill b-don">$ amount</span> badge (total given) and the date of their most recent gift.</td></tr>
     <tr><td><b>Authors</b> (vitalcitynyc.org)</td><td>The "N pieces" badge (articles written).</td></tr>
+    <tr><td><b>Press</b> (a curated media list)</td><td>The blue <span class="pill" style="background:#217ebe;color:#fff;border-color:#217ebe">PRESS</span> badge — a hand-picked reporter or editor, with their <b>news outlet</b> and <b>Twitter/X handle</b> (hover the badge to see them). This is the list Vital City deliberately keeps for media outreach.</td></tr>
   </table>
   <div class="note"><b>Subscriber ≠ donor.</b> Someone can be a donor without being a newsletter subscriber, and vice-versa. Turn on <b>Donors</b> and set <b>Subscribers</b> to "Not subscribers" to see donors who haven't joined the email list — good people to invite to subscribe.</div>
+
+  <div class="note"><b>Press is its own group, and it can overlap the others.</b> A reporter on the press list may <i>also</i> be a newsletter subscriber or a donor — they keep every one of those flags, so they're never buried inside "Other." The blue <b>PRESS</b> badge marks them wherever they appear. Turn on <b>Press</b> alone to see just the media list; combine <b>Press + Subscribers</b> to see which reporters also read the newsletter. Note: "Press" is the curated, hand-picked list — it's stricter and more reliable than the auto-inferred <i>journalist</i> type (which is guessed from someone's email domain).</div>
 
   <div class="note"><b>The big numbers count people, not email addresses.</b> Every row is one human, with all of their known email addresses merged onto a single record. So a subscriber who's on the Mailchimp list under 2 or 3 different addresses counts <i>once</i> here. That means the <b>Subscribers</b> total can read a little lower than the raw number Mailchimp shows (which counts every address as its own line). Use the <b>"2+ newsletter emails"</b> refine chip to see exactly who is signed up under multiple addresses.</div>
 
   <h3>How types &amp; domains get assigned</h3>
   <p>Beyond what's in the contacts sheet, the tool fills in categories automatically:</p>
   <ul>
-    <li><b>Journalists</b> are also inferred from the email someone subscribed with — if it's a known news-outlet domain (nytimes.com, wnyc.org, thecity.nyc, politico.com, etc.), they're tagged <i>journalist</i>.</li>
+    <li><b>Journalists</b> are also inferred from the email someone subscribed with — if it's a known news-outlet domain (nytimes.com, wnyc.org, thecity.nyc, politico.com, etc.), they're tagged <i>journalist</i>. (This is a guess. For the hand-picked media list Vital City actually pitches, use the <b>Press</b> filter, not this inferred tag.)</li>
     <li><b>Current nyc.gov</b> flags anyone who subscribed with an active New York City email (anything ending <code>nyc.gov</code> — agencies, city hall, DAs). It's separate from <i>city gov</i> (which is the hand-maintained list and can include former officials), so after an administration change you can find who's currently inside city government.</li>
     <li><b>Domain interests</b> are inferred from what people have <i>written</i> for Vital City — an author of pieces tagged Housing gets the <i>housing</i> domain, Budget → <i>budget</i>, and so on.</li>
     <li><b>New authors</b> are added automatically whenever a new piece is published: on the next refresh they appear tagged <i>author</i>, with the domains they wrote about, and their email filled in if they're already in any source list.</li>
   </ul>
 
   <h2>The Show toggles — overlaps and exclusions</h2>
-  <p>The <b>Show:</b> row has four chips — <b>Subscribers · Donors · Authors · Other</b>. Each one cycles through three states as you click it:</p>
+  <p>The <b>Show:</b> row has five chips — <b>Subscribers · Donors · Authors · Press · Other</b>. Each one cycles through three states as you click it:</p>
   <ul>
-    <li><b>Off</b> → <b>Include</b> (colored) → <b>Exclude</b> (turns magenta and reads "Not subscribers / Not donors / Not authors") → off again.</li>
-    <li><b>Combine them for overlaps.</b> Subscribers + Authors (both Include) = people who are both. <b>Donors + "Not subscribers"</b> = donors who haven't joined the email list. <b>Authors + "Not subscribers"</b> = contributors who don't get the newsletter. Any mix works.</li>
-    <li><b>Other</b> = none of the three (not a subscriber, donor or author).</li>
+    <li><b>Off</b> → <b>Include</b> (colored) → <b>Exclude</b> (turns magenta and reads "Not subscribers / Not donors / Not authors / Not press") → off again.</li>
+    <li><b>Combine them for overlaps.</b> Subscribers + Authors (both Include) = people who are both. <b>Donors + "Not subscribers"</b> = donors who haven't joined the email list. <b>Press + Subscribers</b> = reporters who also read the newsletter. Any mix works.</li>
+    <li><b>Other</b> = none of the four (not a subscriber, donor, author or press contact).</li>
     <li>When <b>Donors</b> is on, a <b>Repeat donors (2+ gifts)</b> checkbox appears to narrow to people who have given more than once.</li>
   </ul>
 
@@ -159,6 +162,7 @@
     <tr><td><b>Your edits / confirms / deletes</b></td><td><b>Automatic</b></td><td>Saved to the shared store as you make them; folded in on the next daily refresh.</td></tr>
     <tr><td><b>Donors</b></td><td><b>Automatic, daily</b></td><td>Pulled live from the Donorbox API — gifts, totals and last-gift dates refresh on their own.</td></tr>
     <tr><td><b>Contacts / CRM types</b></td><td><b>Manual</b></td><td>Maintained in the team's contacts Google Sheet; refreshed when that export is updated.</td></tr>
+    <tr><td><b>Press / media list</b></td><td><b>Curated</b></td><td>A hand-picked list of reporters and editors, kept as a source file. Everyone on it gets the blue <b>PRESS</b> badge, their outlet and Twitter/X handle, and the <i>journalist</i> type — merged onto their existing record if they're already a subscriber or donor. To add or replace reporters, hand the updated list to Claude Code.</td></tr>
   </table>
 
   <h3>Donors (Donorbox)</h3>
