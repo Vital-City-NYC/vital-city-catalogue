@@ -104,7 +104,7 @@
   },
   {
     "name": "Elizabeth Glazer",
-    "post_count": 45,
+    "post_count": 46,
     "slugs": [
       "a-brief-history-of-the-3300-target",
       "a-rare-remedy-to-the-persistent-brutality-of-rikers",
@@ -115,6 +115,7 @@
       "civic-life-can-create-safety",
       "could-our-jails-be-a-civic-asset",
       "crime-rhetoric-vs-crime-realities",
+      "editors-note-issue-13",
       "editors-note-issue-3",
       "editors-note-issue-4",
       "editors-note-issue-5",
@@ -486,6 +487,25 @@
     "website": null
   },
   {
+    "name": "Bradley Tusk",
+    "post_count": 8,
+    "slugs": [
+      "assessing-mamdani-six-months-in",
+      "can-eric-adams-really-win-a-second-term",
+      "guiding-new-york-city-in-a-storm-an-interview-with-deputy-mayors",
+      "how-eric-adams-could-pull-through-a-10-step-survival-guide",
+      "how-zohran-mamdani-could-succeed-as-mayor",
+      "is-there-any-path-to-victory-for-eric-adams-as-an-independent",
+      "self-esteem-and-the-modern-city",
+      "zohran-mamdanis-year-one-a-time-for-testing"
+    ],
+    "slug": "tusk-bradley",
+    "bio": "is a venture capitalist, political strategist, philanthropist and writer. His new book, \"Vote With Your Phone: Why Mobile Voting Is Our Final Shot at Saving Democracy,\" was published on September 17. ",
+    "url": "https://www.vitalcitynyc.org/author/tusk-bradley/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "David Schleicher",
     "post_count": 8,
     "slugs": [
@@ -506,7 +526,7 @@
   },
   {
     "name": "Paul Reeping",
-    "post_count": 8,
+    "post_count": 7,
     "slugs": [
       "just-the-facts-on-new-york-city-subway-crime",
       "navigating-apartment-hunting-rising-rent-in-nyc",
@@ -537,24 +557,6 @@
     "slug": "roman-john-k",
     "bio": "is a senior fellow at NORC at the University of Chicago. He also serves as the co-Director of the National Prevention Science Coalition.",
     "url": "https://www.vitalcitynyc.org/author/roman-john-k/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Bradley Tusk",
-    "post_count": 7,
-    "slugs": [
-      "can-eric-adams-really-win-a-second-term",
-      "guiding-new-york-city-in-a-storm-an-interview-with-deputy-mayors",
-      "how-eric-adams-could-pull-through-a-10-step-survival-guide",
-      "how-zohran-mamdani-could-succeed-as-mayor",
-      "is-there-any-path-to-victory-for-eric-adams-as-an-independent",
-      "self-esteem-and-the-modern-city",
-      "zohran-mamdanis-year-one-a-time-for-testing"
-    ],
-    "slug": "tusk-bradley",
-    "bio": "is a venture capitalist, political strategist, philanthropist and writer. His new book, \"Vote With Your Phone: Why Mobile Voting Is Our Final Shot at Saving Democracy,\" was published on September 17. ",
-    "url": "https://www.vitalcitynyc.org/author/tusk-bradley/",
     "twitter": null,
     "website": null
   },
@@ -645,6 +647,7 @@
     "post_count": 5,
     "slugs": [
       "a-better-conversation-on-guns",
+      "editors-note-issue-13",
       "state-gun-laws-matter",
       "unraveling-the-threads-of-americas-gun-culture",
       "what-we-know-and-dont-know-about-guns"
@@ -1691,18 +1694,6 @@
     "slug": "weisz-claire",
     "bio": "is the founding partner of WXY, the New York City-based architecture, urban design and planning firm.",
     "url": "https://www.vitalcitynyc.org/author/weisz-claire/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Kate Daugherty",
-    "post_count": 2,
-    "slugs": [
-      "what-we-know-and-dont-know-about-guns"
-    ],
-    "slug": "daugherty-kate",
-    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
-    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
     "twitter": null,
     "website": null
   },
@@ -3479,6 +3470,18 @@
     "website": null
   },
   {
+    "name": "Kate Daugherty",
+    "post_count": 1,
+    "slugs": [
+      "what-we-know-and-dont-know-about-guns"
+    ],
+    "slug": "daugherty-kate",
+    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Greg Lickenbrock",
     "post_count": 1,
     "slugs": [
@@ -3947,18 +3950,6 @@
     "website": null
   },
   {
-    "name": "Richard Schragger",
-    "post_count": 1,
-    "slugs": [
-      "is-it-time-for-cities-to-go-it-alone"
-    ],
-    "slug": "schragger-richard",
-    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
-    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Meryl Chertoff",
     "post_count": 1,
     "slugs": [
@@ -3979,6 +3970,18 @@
     "slug": "cohen-adam",
     "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
     "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Richard Schragger",
+    "post_count": 1,
+    "slugs": [
+      "is-it-time-for-cities-to-go-it-alone"
+    ],
+    "slug": "schragger-richard",
+    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
+    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
     "twitter": null,
     "website": null
   },
@@ -4037,7 +4040,7 @@
       "want-to-fix-the-subway-stop-asking-it-to-be-something-its-not"
     ],
     "slug": "feinberg-sarah",
-    "bio": "is an appointee of then-Gov. Andrew Cuomo, served as the interim president of New York City Transit, as an MTA board member and a safety regulator for the U.S. rail system during the Obama administration. ",
+    "bio": "served as the interim president of New York City Transit, as an MTA board member and a safety regulator for the U.S. rail system during the Obama administration. ",
     "url": "https://www.vitalcitynyc.org/author/feinberg-sarah/",
     "twitter": null,
     "website": null

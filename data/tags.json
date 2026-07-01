@@ -1,11 +1,11 @@
 [
   {
-    "name": "History",
+    "name": "Crime",
     "post_count": 141
   },
   {
-    "name": "Crime",
-    "post_count": 141
+    "name": "History",
+    "post_count": 140
   },
   {
     "name": "City Government",
@@ -36,11 +36,11 @@
     "post_count": 66
   },
   {
-    "name": "Economics",
-    "post_count": 52
+    "name": "Politics",
+    "post_count": 53
   },
   {
-    "name": "Politics",
+    "name": "Economics",
     "post_count": 52
   },
   {
@@ -68,11 +68,11 @@
     "post_count": 30
   },
   {
-    "name": "data",
-    "post_count": 30
+    "name": "Education",
+    "post_count": 29
   },
   {
-    "name": "Education",
+    "name": "data",
     "post_count": 29
   },
   {
@@ -156,6 +156,10 @@
     "post_count": 13
   },
   {
+    "name": "Mamdani",
+    "post_count": 12
+  },
+  {
     "name": "State Government",
     "post_count": 12
   },
@@ -170,10 +174,6 @@
   {
     "name": "What to Do Now",
     "post_count": 12
-  },
-  {
-    "name": "Mamdani",
-    "post_count": 11
   },
   {
     "name": "policy",
@@ -644,6 +644,10 @@
     "post_count": 2
   },
   {
+    "name": "Mayoralty",
+    "post_count": 1
+  },
+  {
     "name": "Jobs",
     "post_count": 1
   },
@@ -713,6 +717,10 @@
   },
   {
     "name": "Policymakers",
+    "post_count": 1
+  },
+  {
+    "name": "terminology",
     "post_count": 1
   },
   {
