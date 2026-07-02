@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 92,
+    "post_count": 93,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -12,6 +12,7 @@
       "case-studies-from-large-cities-people-in-crisis-on-streets-and-subways",
       "chidinma-ume-erin-pilnyak-interview",
       "conditions-inside-the-citys-jails-continue-to-be-violent-a-data-story",
+      "crime-in-new-york-city-midyear-the-big-picture",
       "crime-in-new-york-city-trends-statistics",
       "curtis-sliwa-talks-public-safety",
       "dan-garodnick-housing-zoning-city-of-yes-interview",
@@ -3950,18 +3951,6 @@
     "website": null
   },
   {
-    "name": "Meryl Chertoff",
-    "post_count": 1,
-    "slugs": [
-      "trumps-executive-orders-have-cities-in-the-crosshairs"
-    ],
-    "slug": "chertoff-meryl",
-    "bio": "is adjunct professor of law at Georgetown University Law Center.",
-    "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Adam Cohen",
     "post_count": 1,
     "slugs": [
@@ -3970,6 +3959,18 @@
     "slug": "cohen-adam",
     "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
     "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Meryl Chertoff",
+    "post_count": 1,
+    "slugs": [
+      "trumps-executive-orders-have-cities-in-the-crosshairs"
+    ],
+    "slug": "chertoff-meryl",
+    "bio": "is adjunct professor of law at Georgetown University Law Center.",
+    "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
     "twitter": null,
     "website": null
   },
