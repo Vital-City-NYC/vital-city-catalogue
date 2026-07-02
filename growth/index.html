@@ -565,8 +565,8 @@
         <div class="chartwrap"><svg class="chart" id="growthSvg" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
         <div class="legend">
-          <span><span class="sw" style="background:var(--vc-green)"></span>New signups (per week)</span>
-          <span><span class="sw" style="background:var(--vc-cerulean)"></span>Subscriber list size (interpolated weekly)</span>
+          <span title="Organic signups from Ghost `since` dates, counted the week they happened. Real-time, not netted against unsubscribes."><span class="sw" style="background:var(--vc-green)"></span>New signups per week (Ghost, real-time)</span>
+          <span title="Total Mailchimp list size, interpolated weekly from monthly anchors. Net of unsubscribes and includes any manual imports — so it can move differently from the green signup bars."><span class="sw" style="background:var(--vc-cerulean)"></span>List size — net of churn &amp; imports</span>
           <span><span class="sw" style="background:var(--vc-orange);opacity:.6"></span>Total opens per week (right axis)</span>
         </div>
         <div id="growthInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55"></div>
@@ -1505,7 +1505,12 @@ function renderGrowthChart(mc){
   const first = months[0], last = months[months.length-1];
   if(first && last && first.cum_subs && last.cum_subs){
     const growthMult = (last.cum_subs / first.cum_subs).toFixed(1);
-    const totalNew = months.reduce((s,m) => s + (m.new_signups||0), 0);
+    const netGain = last.cum_subs - first.cum_subs;
+    // Gross organic signups this year, from Ghost `since` dates (real-time,
+    // not netted against churn or padded by imports) — the honest "how many
+    // people actually signed up" number to sit beside the net list growth.
+    const gYtd = (mc.signup_windows||{}).ytd_ghost || 0;
+    const gYear = new Date().getUTCFullYear();
     // Slice complete-week opens (drop the trailing in-progress week)
     const todayMs = Date.now();
     const completeOpens = weeks
@@ -1522,8 +1527,11 @@ function renderGrowthChart(mc){
         openLine = ` Avg total opens per week is ${Math.abs(lift).toFixed(0)}% lower comparing the first 8 weeks to the last 8 complete weeks — list growth wasn't enough to offset the per-email engagement drop. The Newsletter performance card below has click rate, the honest engagement signal (clicks aren't inflated by Apple Mail auto-opens).`;
       }
     }
+    const grossLine = gYtd > 0
+      ? ` Organic signups tracked in Ghost run about <b>${gYtd.toLocaleString()}</b> so far in ${gYear} (real-time, before any unsubscribes) — the green bars show them week by week; the blue line is the net list total after churn and imports.`
+      : '';
     $("#growthInsight").innerHTML =
-      `<b style="color:var(--vc-black)">The long view:</b> Subscribers went from ${fmtN(first.cum_subs)} (${esc(first.month)}) to ${fmtN(last.cum_subs)} (today) — that's ${growthMult}× the list, ${totalNew.toLocaleString()} new signups in 18 months.${openLine}`;
+      `<b style="color:var(--vc-black)">The long view:</b> Subscribers went from ${fmtN(first.cum_subs)} (${esc(first.month)}) to ${fmtN(last.cum_subs)} (today) — that's ${growthMult}× the list, a net gain of ${netGain.toLocaleString()} subscribers over 18 months (after unsubscribes, including any list imports).${grossLine}${openLine}`;
   }
 }
 
@@ -1623,9 +1631,12 @@ function renderYTD(mc, signups){
   const w=(mc.windows)||{};
   const ytd=w.ytd||{}, prior=w.prior_ytd||{};
   const rows=[
-    {label:"New signups", now:signups.ytd, prev:signups.prior_ytd, ok:signups.prior_ytd_ok, positiveGood:true,
+    {label:"New signups (Ghost, organic)", now:signups.ytd_ghost, prev:null, ok:false, positiveGood:true,
+     na:signups.ghost_source ||
+        `Organic signups counted the day they happened, straight from Ghost's member signup dates. Real-time — current through today, not netted against later unsubscribes and not padded by manual bulk imports. Ghost only became the site's signup intake in April 2026, so there's no comparable 2025 Ghost figure; use the 'Net list change' row below for the year-over-year view.`},
+    {label:"Net list change (all-source)", now:signups.ytd, prev:signups.prior_ytd, ok:signups.prior_ytd_ok, positiveGood:true,
      na:signups.prior_ytd_source ||
-        `2026 YTD signups are pulled from Ghost (the site moved to Ghost in April 2026 and signups now come through there). 2025 YTD signups are pulled from Mailchimp's growth-history — that's the canonical record of every net addition to the list regardless of which form fed it (Prismic-hosted form, MC form, or manual import). The comparison is methodology-fair; the absolute 2025 numbers reflect whatever ingestion was happening then including any list imports.`},
+        `Net additions to the list from Mailchimp's growth-history — every net add regardless of which form fed it (Ghost form, MC form, or a manual import), reduced by unsubscribes. Lags the real-time Ghost count because Ghost signups transfer to Mailchimp on the weekly reconcile. Methodology-fair for the year-over-year comparison; a sharp 2025 jump likely reflects a one-time list integration.`},
     {label:"Unsubscribes", now:signups.unsub_ytd, prev:signups.unsub_prior_ytd, ok:true, positiveGood:false,
      na:""},
     {label:"Newsletter sends", now:ytd.sends, prev:prior.sends, ok:true, positiveGood:true,
@@ -1662,10 +1673,9 @@ function renderYTD(mc, signups){
       <th>Metric</th><th class="num">YTD 2026</th><th class="num">YTD 2025<br><span style="font-weight:400;text-transform:none;letter-spacing:0">same period</span></th><th class="num">YoY</th>
     </tr></thead><tbody>${body}</tbody></table>
     <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">
-      <b>Source of truth:</b> signups → Ghost (the website signup form is the canonical intake since vitalcitynyc.org moved to Ghost in <b>April 2026</b>; transferred to Mailchimp on the weekly reconcile).
-      Unsubscribes → Mailchimp (people click the footer link there; transferred out of Ghost on the same reconcile).
-      Newsletter performance numbers are recipient-weighted from Mailchimp campaign reports.
-      <br><b>Signup YoY method:</b> 2026 YTD comes from Ghost. 2025 YTD comes from Mailchimp's growth-history (cumulative net subscriber count per month) — the same record regardless of whether a signup arrived through the prior Prismic-hosted form, the Mailchimp form, or a list import. The methodology is the same for both years. If 2025's headline number jumps (the May-Jun 2025 months spike sharply in the chart), that's likely a one-time list integration — Josh would know which.
+      <b>Two signup rows, on purpose:</b> <b>New signups (Ghost, organic)</b> is the real-time count of people who actually signed up through the website — current through today, straight from Ghost's member dates. <b>Net list change (all-source)</b> is Mailchimp's growth-history: net additions after unsubscribes, including manual list imports, and it lags because Ghost signups transfer over on the weekly reconcile. The two differ on purpose — organic signups show acquisition momentum; net list change shows the list's actual size trend.
+      <br><b>Why no 2025 Ghost figure:</b> vitalcitynyc.org only moved to Ghost in <b>April 2026</b>, so the organic row has no comparable prior year. The year-over-year column lives on the net-list-change row, which uses Mailchimp's growth-history the same way for both years. If 2025's number spikes (see the May-Jun 2025 months in the chart), that's likely a one-time list integration.
+      Unsubscribes → Mailchimp; newsletter performance numbers are recipient-weighted from Mailchimp campaign reports.
     </div>`;
 }
 

@@ -198,6 +198,16 @@ def pull_mailchimp():
         return sum(int(r.get(key) or 0) for r in rows if s <= r["d"] <= e)
 
     rows = out["daily_activity"]
+    # Gross signups by month, straight from the real-time Ghost `since` dates (the
+    # daily_activity overlay). This is the "true signups" count that's current
+    # through today; the Mailchimp new_signups above is net of churn and lags the
+    # Thursday Ghost->Mailchimp batch. Attach both so the dashboard can show them.
+    from collections import Counter as _Cg
+    _gm = _Cg()
+    for r in rows:
+        _gm[(r.get("d") or "")[:7]] += int(r.get("subs") or 0)
+    for m in (out.get("monthly_signups") or []):
+        m["ghost_signups"] = _gm.get(m.get("month"), 0)
     ytd_start  = _date(y, 1, 1);   ytd_end = today
     py_start   = _date(y-1, 1, 1); py_end  = _date(y-1, today.month, today.day)
 
@@ -218,6 +228,12 @@ def pull_mailchimp():
         "prior_ytd_ok":     sig_prior_ytd > 0,
         "prior_ytd_source": "Mailchimp growth-history (monthly subscriber counts) — counts every net addition to the list, whether the signup came in via Ghost form, the MC form, or a manual import.",
         "ghost_cutover":    GHOST_CUTOVER.isoformat(),
+        # Gross, real-time signups straight from Ghost `since` dates. Current
+        # through today (no Thursday-batch lag), not netted against churn.
+        "ytd_ghost":        _sum(rows, ytd_start, ytd_end, "subs"),
+        "last30_ghost":     _sum(rows, today - timedelta(days=30), today, "subs"),
+        "last7_ghost":      _sum(rows, today - timedelta(days=7),  today, "subs"),
+        "ghost_source":     "Ghost member signup dates (organic form signups), counted the day they happened. Current through today; not reduced by later unsubscribes and does not include manual bulk imports.",
         "unsub_ytd":        _sum(rows, ytd_start, ytd_end, "unsubs"),
         "unsub_prior_ytd":  _sum(rows, py_start,  py_end,  "unsubs"),
     }
