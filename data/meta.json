@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-07-02T19:41:01.303350+00:00",
+  "generated_at": "2026-07-02T23:31:08.128040+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 861,
+  "total_posts": 862,
   "total_authors": 472,
   "total_issues": 29,
   "total_topics": 208,
@@ -10,6 +10,13 @@
     "2026-07-02"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "What Has Mamdani Done So Far?",
+      "url": "https://www.vitalcitynyc.org/what-has-mamdani-done-so-far/",
+      "published_date": "2026-07-02",
+      "primary_author": "Aaron Short"
+    }
+  ]
 }

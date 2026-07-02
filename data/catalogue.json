@@ -1,5 +1,34 @@
 [
   {
+    "title": "What Has Mamdani Done So Far?",
+    "slug": "what-has-mamdani-done-so-far",
+    "url": "https://www.vitalcitynyc.org/what-has-mamdani-done-so-far/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-07-02",
+    "published_at": "2026-07-02T20:58:00.000+00:00",
+    "updated_at": "2026-07-02T20:58:00.000+00:00",
+    "primary_author": "Aaron Short",
+    "authors": [
+      "Aaron Short"
+    ],
+    "topics": [
+      "Mamdani",
+      "Mayoralty",
+      "Politics"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "A concise catalog of his achievements and stumbles six months in",
+    "excerpt": "A concise catalog of his achievements and stumbles six months in",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/07/55357594016_1d9120afa6.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2526,
+    "reading_minutes": 11,
+    "id": "6a46cf2f53354f000134c12e"
+  },
+  {
     "title": "Crime in New York City Midyear: The Big Picture",
     "slug": "crime-in-new-york-city-midyear-the-big-picture",
     "url": "https://www.vitalcitynyc.org/crime-in-new-york-city-midyear-the-big-picture/",
@@ -10258,37 +10287,6 @@
     "id": "69a04c0ad4006a00010a41d5"
   },
   {
-    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
-    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
-    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
-    "primary_author": "Meryl Chertoff",
-    "authors": [
-      "Meryl Chertoff"
-    ],
-    "topics": [
-      "Government Operations",
-      "Repercussions",
-      "City Planning"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "The Sharpie and the damage done",
-    "excerpt": "The Sharpie and the damage done",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1313,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a404c"
-  },
-  {
     "title": "Donald Trump vs. the Rule of Law, and New York City",
     "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
     "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
@@ -10318,6 +10316,37 @@
     "word_count": 1560,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a404b"
+  },
+  {
+    "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
+    "slug": "trumps-executive-orders-have-cities-in-the-crosshairs",
+    "url": "https://www.vitalcitynyc.org/trumps-executive-orders-have-cities-in-the-crosshairs/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "primary_author": "Meryl Chertoff",
+    "authors": [
+      "Meryl Chertoff"
+    ],
+    "topics": [
+      "Government Operations",
+      "Repercussions",
+      "City Planning"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "The Sharpie and the damage done",
+    "excerpt": "The Sharpie and the damage done",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeglviqrldabuxo_gettyimages-2211670830_edited-png-auto-format-compress-1776259706043.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1313,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a404c"
   },
   {
     "title": "What You Can Do About Trump",
