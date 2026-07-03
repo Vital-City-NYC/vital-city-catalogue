@@ -83,6 +83,12 @@ jobs:
       - name: Refresh article catalogue (live)
         run: python3 scrape.py
 
+      # Recompute the catalogue-analysis aggregates (data/catalogue_analysis.json)
+      # that the /catalogue-analysis charts read. Pure recomputation from the
+      # freshly scraped catalogue.json + authors.json; non-fatal.
+      - name: Analyze catalogue for the breakdown charts
+        run: python3 analyze_catalogue.py || echo "WARNING: analyze_catalogue failed; analysis page will be stale"
+
       - name: Flag influential people (Wikipedia, incremental)
         run: |
           python3 build_network.py >/dev/null 2>&1 || true   # need people.json for the candidate list

@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Vital City catalogue, analyzed</title>
+<style>
+  @font-face{font-family:'GascogneTS';src:url('../growth/fonts/GascogneTS-Light.ttf') format('truetype');font-weight:300 900;font-style:normal;font-display:swap;}
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-green:#57aa4a; --vc-orange:#ff7c53; --vc-cerulean:#217ebe;
+    --vc-magenta:#e7466d; --vc-paper2:#eeeeec; --vc-chartreuse:#dde44c; --vc-plum:#7a5ea6;
+    --vc-teal:#2fa89b; --vc-gold:#d9a441; --vc-slate:#5b6b7a;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+    --vc-serif:"GascogneTS","Source Serif 4",Georgia,Times,serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--vc-cerulean)}
+  .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  header.mast{border-bottom:1px solid var(--vc-black);padding:24px 30px 18px;background:var(--vc-white)}
+  header.mast .wm{font-weight:900;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+  header.mast h1{font-weight:900;font-size:30px;margin:8px 0 4px;letter-spacing:-.01em}
+  header.mast .sub{font-size:13.5px;color:var(--vc-charcoal);max-width:820px}
+  header.mast .sub b{color:var(--vc-black)}
+  .wrap{max-width:1060px;margin:0 auto;padding:22px 30px 60px}
+  .secnav{position:sticky;top:0;z-index:30;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:9px 30px;display:flex;gap:16px;flex-wrap:wrap;font-size:11px}
+  .secnav a{color:var(--vc-charcoal);text-decoration:none;text-transform:uppercase;letter-spacing:.07em;font-weight:700}
+  .secnav a:hover{color:var(--vc-cerulean)}
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin:0 0 26px}
+  .kpi{background:var(--vc-white);padding:14px 15px}
+  .kpi .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700}
+  .kpi .num{font-family:var(--vc-serif);font-weight:900;font-size:30px;line-height:1.05;margin-top:5px}
+  .kpi .fine{font-size:10.5px;color:var(--vc-charcoal);margin-top:3px}
+  .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:18px 20px 16px;margin:0 0 22px;box-shadow:0 1px 2px rgba(5,5,7,.05)}
+  .card h2{font-size:19px;font-weight:900;margin:0 0 3px;letter-spacing:-.01em}
+  .card .hint{font-size:12px;color:var(--vc-charcoal);font-weight:400;margin:0 0 14px}
+  .card .insight{font-size:12.5px;color:var(--vc-black);line-height:1.55;margin:12px 0 0;border-left:3px solid var(--vc-cerulean);padding:2px 0 2px 12px}
+  .card .src{font-size:10.5px;color:var(--vc-charcoal);margin-top:11px;line-height:1.45}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:820px){.kpis{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}.wrap{padding:18px 16px 50px}}
+  svg{display:block;width:100%;height:auto;overflow:visible}
+  .bar-lbl{font-size:11.5px;fill:var(--vc-black)}
+  .bar-val{font-size:11px;fill:var(--vc-charcoal);font-weight:700}
+  .ax{font-size:10px;fill:var(--vc-charcoal)}
+  .gridline{stroke:var(--vc-cloud);stroke-width:1}
+  .legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:12px;font-size:11px;color:var(--vc-black)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:11px;height:11px;border-radius:2px;display:inline-block}
+  .toggle{display:inline-flex;border:1px solid var(--vc-cloud);border-radius:4px;overflow:hidden;font-size:10.5px;font-weight:700}
+  .toggle button{background:var(--vc-white);border:0;padding:4px 10px;cursor:pointer;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.05em;font-family:inherit}
+  .toggle button.on{background:var(--vc-black);color:#fff}
+  .sm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:820px){.sm-grid{grid-template-columns:repeat(2,1fr)}}
+  .sm{border:1px solid var(--vc-cloud);padding:8px 9px 6px}
+  .sm .t{font-size:11px;font-weight:700;margin-bottom:2px}
+  .sm .d{font-size:10px;color:var(--vc-charcoal);margin-bottom:5px}
+  table.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+  table.tbl td{padding:5px 6px;border-bottom:1px solid var(--vc-paper2)}
+  table.tbl td.n{text-align:right;font-variant-numeric:tabular-nums;color:var(--vc-charcoal);font-weight:700}
+  .methsec h3{font-size:13px;margin:16px 0 5px;text-transform:uppercase;letter-spacing:.05em}
+  .methsec p,.methsec li{font-size:12px;color:#33343a;line-height:1.6}
+  .methsec ul{margin:5px 0 5px 0;padding-left:18px}
+  .aibtn{background:#7a1f2b;color:#fff;border:0;border-radius:4px;padding:6px 12px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;font-family:inherit}
+  .aipop{display:none;background:#101b2e;color:#e8edf5;border-radius:6px;padding:16px 18px;margin-top:10px;font-size:12px;line-height:1.6;max-width:820px}
+  .aipop.open{display:block}
+  .aipop b{color:#fff}
+  .loading{padding:40px;text-align:center;color:var(--vc-charcoal)}
+</style>
+</head>
+<body>
+<div class="confbar"><span>Vital City &middot; internal analysis</span><span id="stamp"></span></div>
+<header class="mast">
+  <div class="wm">Vital City</div>
+  <h1>The catalogue, analyzed</h1>
+  <div class="sub">Every piece Vital City has published on vitalcitynyc.org, broken down by <b>format, subject, contributor background, length and time</b>. Built from the same Ghost content pull that powers the searchable <a href="../">catalogue</a>.</div>
+</header>
+<nav class="secnav">
+  <a href="#time">Over time</a><a href="#format">Format</a><a href="#subject">Subject</a>
+  <a href="#credentials">Who writes</a><a href="#focus">Focus shifts</a><a href="#length">Length</a>
+  <a href="#collab">Collaboration</a><a href="#method">How we did this</a>
+</nav>
+<div class="wrap">
+  <div id="kpis" class="kpis"></div>
+  <div id="app"><div class="loading">Loading catalogue data&hellip;</div></div>
+
+  <div class="card methsec" id="method">
+    <h2>How we did this</h2>
+    <div class="hint">Full transparency on sources, definitions and limits — nothing here is a black box.</div>
+    <h3>Data source</h3>
+    <p>Every published post on <a href="https://www.vitalcitynyc.org">vitalcitynyc.org</a>, pulled from the Ghost Content API and mirrored to <code>data/catalogue.json</code>; author bios and post counts from the Ghost authors endpoint (<code>data/authors.json</code>). This page reads the pre-aggregated <code>data/catalogue_analysis.json</code>, recomputed by <code>analyze_catalogue.py</code> on each catalogue refresh. Counts reflect the pull stamped at top right.</p>
+    <h3>Key definitions</h3>
+    <ul>
+      <li><b>Format</b> is Vital City's own content type (opinion/commentary, Q&amp;A, data analysis, map/tool, book review), inferred by the catalogue pipeline from each post's structure.</li>
+      <li><b>Subject</b> uses the topic tags attached to each post in Ghost. A post can carry several topics, so topic counts sum to more than the number of pieces.</li>
+      <li><b>Contributor background</b> is a single label per piece, applied to the piece's <b>primary author</b>. It is assigned by an automated reading of the author's bio: the first professional role named in the bio wins (bios are written "is a <i>[main role]</i> and&hellip;"), with a short hand-checked override list for the most prolific contributors. It is an approximate heuristic, not a hand-verified label for all 472 authors.</li>
+    </ul>
+    <h3>Limitations worth keeping in mind</h3>
+    <ul>
+      <li><b>2021 and 2026 are partial years.</b> Vital City launched in September 2021, and 2026 runs only through the pull date — so those bars are not comparable to full years. They are flagged in the chart.</li>
+      <li><b>Contributor background is single-label and heuristic.</b> Many contributors hold several credentials at once — a former prosecutor who now teaches law, a reporter who runs a nonprofit. We assign the role the bio leads with. Roughly one in ten pieces lands in "Other / unclassified" (mostly one-time contributors whose bios don't state a clear role) or "Unknown / no bio."</li>
+      <li>The "Vital City (institutional)" slice is pieces bylined to the journal itself (staff-written explainers, surveys, round-ups), not a person.</li>
+      <li>Topic tagging is applied by editors over time and is not perfectly consistent across five years.</li>
+    </ul>
+    <h3>Reproducibility</h3>
+    <p>The aggregation is a single stdlib-only script, <code>analyze_catalogue.py</code>, which reads the two JSON inputs and writes the numbers charted here. The credential keyword rules and override list live in that file, commented.</p>
+    <div style="margin-top:14px">
+      <button class="aibtn" onclick="document.getElementById('aipop').classList.toggle('open')">&#9888; A note on AI &amp; accuracy</button>
+      <div class="aipop" id="aipop">
+        <p style="margin:0 0 8px"><b>This analysis was assembled with AI assistance (Claude). Here is exactly what was and wasn't checked.</b></p>
+        <p style="margin:0 0 8px"><b>Verified:</b> Piece, author, topic and issue counts are exact recomputations from the Ghost pull — every number here traces to a row in <code>catalogue.json</code>. The date range, format counts, length stats and time series were cross-checked against the raw data.</p>
+        <p style="margin:0 0 8px"><b>Approximate by design:</b> The contributor-background breakdown is produced by keyword-reading bios, not by hand-verifying all 472 authors. The most prolific contributors were spot-checked; the long tail was not. Treat that one chart as directional.</p>
+        <p style="margin:0"><b>Not claimed:</b> No engagement, readership or quality judgement is implied by any count — this is a census of what was published, not how it performed.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CO = {  // credential -> color
+  "Academic":"#217ebe","Government / public official":"#e7466d","Journalist / media":"#ff7c53",
+  "Nonprofit / advocacy":"#57aa4a","Think tank / research institute":"#7a5ea6","Legal practitioner":"#2fa89b",
+  "Business / private sector":"#d9a441","Architecture / design / planning":"#5b6b7a",
+  "Vital City (institutional)":"#050507","Survey / reader poll":"#b9bcc2","Other / unclassified":"#c7cad0","Unknown / no bio":"#e2e4e8"
+};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const nf=n=>n.toLocaleString();
+
+// horizontal bar chart -> svg string
+function hbar(rows, {w=520,color=null,unit="",labelW=170,valSuffix=""}={}){
+  const rh=26, pad=6, h=rows.length*rh+pad*2, max=Math.max(...rows.map(r=>r.v))||1;
+  const bw=w-labelW-54;
+  let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
+  rows.forEach((r,i)=>{
+    const y=pad+i*rh, len=Math.max(2,r.v/max*bw), c=r.c||color||"#217ebe";
+    s+=`<text class="bar-lbl" x="${labelW-8}" y="${y+rh/2+4}" text-anchor="end">${esc(r.k)}</text>`;
+    s+=`<rect x="${labelW}" y="${y+3}" width="${len}" height="${rh-9}" rx="2" fill="${c}"><title>${esc(r.k)}: ${nf(r.v)}${valSuffix}</title></rect>`;
+    s+=`<text class="bar-val" x="${labelW+len+6}" y="${y+rh/2+4}">${nf(r.v)}${valSuffix}${r.pct!=null?' · '+r.pct+'%':''}</text>`;
+  });
+  return s+`</svg>`;
+}
+// vertical bar chart
+function vbar(rows,{w=520,h=230,color="#217ebe",flag=[]}={}){
+  const padB=34,padT=14,padL=34, iw=w-padL-10, ih=h-padB-padT;
+  const max=Math.max(...rows.map(r=>r.v))||1, bw=iw/rows.length*0.62, gap=iw/rows.length;
+  let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
+  for(let g=0;g<=4;g++){const gv=Math.round(max*g/4),gy=padT+ih-ih*g/4;
+    s+=`<line class="gridline" x1="${padL}" x2="${w-10}" y1="${gy}" y2="${gy}"/><text class="ax" x="${padL-5}" y="${gy+3}" text-anchor="end">${gv}</text>`;}
+  rows.forEach((r,i)=>{
+    const x=padL+i*gap+(gap-bw)/2, bh=r.v/max*ih, y=padT+ih-bh;
+    const isFlag=flag.includes(r.k);
+    s+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="2" fill="${color}" opacity="${isFlag?0.42:1}"><title>${esc(r.k)}: ${nf(r.v)}${isFlag?' (partial year)':''}</title></rect>`;
+    s+=`<text class="bar-val" x="${x+bw/2}" y="${y-4}" text-anchor="middle">${nf(r.v)}</text>`;
+    s+=`<text class="ax" x="${x+bw/2}" y="${h-padB+16}" text-anchor="middle">${esc(r.k)}${isFlag?' *':''}</text>`;
+  });
+  return s+`</svg>`;
+}
+// mini sparkline bars for small multiples (share %)
+function spark(vals,{w=180,h=48,color="#217ebe",years}={}){
+  const max=Math.max(...vals,1),bw=w/vals.length*0.66,gap=w/vals.length;
+  let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
+  vals.forEach((v,i)=>{const x=i*gap+(gap-bw)/2,bh=v/max*(h-16),y=h-14-bh;
+    s+=`<rect x="${x}" y="${y}" width="${bw}" height="${Math.max(1,bh)}" rx="1" fill="${color}"><title>${years[i]}: ${v}%</title></rect>`;
+    s+=`<text class="ax" x="${x+bw/2}" y="${h-3}" text-anchor="middle" style="font-size:8px">${years[i].slice(2)}</text>`;});
+  return s+`</svg>`;
+}
+
+fetch("../data/catalogue_analysis.json?cb="+Date.now()).then(r=>r.json()).then(D=>{
+  const total=D.total_pieces;
+  document.getElementById("stamp").textContent="Data pull: "+(D.meta.generated_at||"").slice(0,10);
+  // KPIs
+  const dr=D.meta.date_range;
+  const kpi=[
+    ["Pieces published",nf(total),(dr[0].slice(0,4))+"–"+(dr[1].slice(0,4))],
+    ["Contributors",nf(D.meta.total_authors),"distinct bylines"],
+    ["Topic tags",nf(D.n_topics_total),"across all pieces"],
+    ["Themed issues",nf(D.n_issues),"curated collections"],
+    ["Median length",nf(D.wc_stats.median),"words · "+Math.round(D.wc_stats.median/230)+" min read"],
+    ["Co-authored",Math.round((total-D.by_nauthors["1"])/total*100)+"%",nf(total-D.by_nauthors["1"])+" pieces"]
+  ];
+  document.getElementById("kpis").innerHTML=kpi.map(k=>`<div class="kpi"><div class="lbl">${k[0]}</div><div class="num">${k[1]}</div><div class="fine">${k[2]}</div></div>`).join("");
+
+  const years=Object.keys(D.by_year);
+  const partial=[dr[0].slice(0,4),dr[1].slice(0,4)];  // launch year + current year
+  let html="";
+
+  // 1. Over time
+  html+=`<div class="card" id="time"><h2>Publishing has grown every full year</h2>
+    <div class="hint">Pieces published per calendar year. Faded bars are partial years — Vital City launched September 2021, and ${partial[1]} runs only through the pull date.</div>
+    ${vbar(years.map(y=>({k:y,v:D.by_year[y]})),{color:"#217ebe",flag:partial})}
+    <div class="insight">Output roughly doubled from 2022 to 2023 and again toward 2025, the first full year above ${nf(D.by_year["2025"])} pieces — a cadence of about ${Math.round(D.by_year["2025"]/52*10)/10} pieces a week.</div>
+    <div class="src">* Partial year. Source: Vital City catalogue (Ghost Content API), ${dr[0]} to ${dr[1]}.</div></div>`;
+
+  // 2 + 3 side by side
+  const typeRows=D.by_type.map(t=>({k:t[0],v:t[1],c:"#050507",pct:Math.round(t[1]/total*100)}));
+  const topicRows=D.by_topic_top25.slice(0,15).map(t=>({k:t[0],v:t[1],c:"#217ebe"}));
+  html+=`<div class="grid2">
+    <div class="card" id="format"><h2>Format: an opinion journal, first</h2>
+      <div class="hint">Share of all ${nf(total)} pieces by content type.</div>
+      ${hbar(typeRows,{labelW:150,valSuffix:""})}
+      <div class="insight">More than 8 in 10 pieces are opinion or commentary. Data analysis and interactive maps/tools are a small but distinct minority — ${D.by_type.find(t=>t[0]==='data analysis')[1]+D.by_type.find(t=>t[0]==='map/tool')[1]} pieces combined.</div>
+      <div class="src">Format is Vital City's own content type, inferred from post structure.</div></div>
+    <div class="card" id="subject"><h2>Subject matter: crime, history, city hall</h2>
+      <div class="hint">Top 15 of ${D.n_topics_total} topic tags. Pieces carry multiple tags, so these exceed the piece count.</div>
+      ${hbar(topicRows,{labelW:150})}
+      <div class="insight">Public safety runs through the catalogue — Crime, Justice, Gun Violence and Police Reform together tag hundreds of pieces — alongside a deep bench of City Planning, Housing and Government Operations.</div>
+      <div class="src">Source: Ghost topic tags. A piece counts once per tag it carries.</div></div>
+  </div>`;
+
+  // 4. Credentials
+  const credRows=D.by_credential_pieces.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999",pct:Math.round(c[1]/total*100)}));
+  const credAuthRows=D.by_credential_authors.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999"}));
+  html+=`<div class="card" id="credentials"><h2>Who writes for Vital City</h2>
+    <div class="hint">Primary author's professional background, by pieces. <span class="toggle" id="credTog"><button data-m="pieces" class="on">By pieces</button><button data-m="authors">By distinct authors</button></span></div>
+    <div id="credChart">${hbar(credRows,{labelW:220})}</div>
+    <div class="insight">Academics are the single largest group of bylines — about a quarter of all pieces — but the mix is deliberately broad: former public officials, journalists, nonprofit and advocacy voices, think-tank researchers, lawyers and private-sector leaders all appear in numbers. It reads like a policy journal that pulls practitioners and scholars into the same pages.</div>
+    <div class="src">Single label per piece, applied to the primary author via an automated bio reading (see <a href="#method">How we did this</a>). Approximate; many contributors hold several credentials at once.</div></div>`;
+
+  // 5. Focus over time (small multiples, share of year)
+  const smYears=years.filter(y=>D.by_year[y]>=10); // drop 2021
+  const sm=D.top_topics_for_stack.map(t=>{
+    const vals=smYears.map(y=>Math.round((D.topic_by_year[t][y]||0)/D.by_year[y]*100));
+    return `<div class="sm"><div class="t">${esc(t)}</div><div class="d">% of each year's pieces</div>${spark(vals,{color:"#217ebe",years:smYears})}</div>`;
+  }).join("");
+  html+=`<div class="card" id="focus"><h2>How the focus has shifted</h2>
+    <div class="hint">For the eight most-tagged topics, the share of each year's pieces carrying that tag (${smYears[0]}–${smYears[smYears.length-1]}). Share, not count, so the growing volume doesn't distort the trend.</div>
+    <div class="sm-grid">${sm}</div>
+    <div class="insight">History has climbed into a recurring feature of the mix, and City Planning holds steady, while Crime — still the most-tagged single subject overall — has eased as a share of a widening catalogue.</div>
+    <div class="src">Source: Ghost topic tags ÷ pieces published that year. 2021 omitted (one piece).</div></div>`;
+
+  // 6 + 7
+  const wcRows=D.wc_buckets.map(b=>({k:b[0],v:b[1],c:"#57aa4a"}));
+  const naMap={"1":"Solo","2":"Two authors","3":"Three","4":"Four","10":"Ten (survey)"};
+  const naRows=Object.keys(D.by_nauthors).map(k=>({k:naMap[k]||k+" authors",v:D.by_nauthors[k],c:"#7a5ea6"}));
+  html+=`<div class="grid2">
+    <div class="card" id="length"><h2>Length: the 1,000–2,000 word essay</h2>
+      <div class="hint">Word count per piece. Median ${nf(D.wc_stats.median)}, mean ${nf(D.wc_stats.mean)} (a long tail pulls the mean up); longest ${nf(D.wc_stats.max)}.</div>
+      ${hbar(wcRows,{labelW:110,valSuffix:""})}
+      <div class="insight">The house style is the tight policy essay: about ${Math.round(D.wc_buckets.find(b=>b[0]==='1,000-1,999')[1]/total*100)}% of pieces land between 1,000 and 2,000 words — a 5-to-9-minute read.</div>
+      <div class="src">Source: Ghost word_count (${nf(D.wc_stats.n)} pieces with a count).</div></div>
+    <div class="card" id="collab"><h2>Mostly single-author</h2>
+      <div class="hint">Number of bylines per piece.</div>
+      ${hbar(naRows,{labelW:110})}
+      <div class="insight">${Math.round(D.by_nauthors["1"]/total*100)}% of pieces carry a single byline; co-authoring is the exception, used for collaborative research and cross-disciplinary pieces.</div>
+      <div class="src">Source: Ghost author lists. The 10-author piece is a group survey.</div></div>
+  </div>`;
+
+  // 8. Prolific authors
+  const pr=D.prolific.slice(0,15);
+  html+=`<div class="card" id="prolific"><h2>The most prolific contributors</h2>
+    <div class="hint">Top 15 by piece count, colored by background. "Vital City" is the institutional byline.</div>
+    ${hbar(pr.map(p=>({k:p.name,v:p.posts,c:CO[p.credential]||"#999"})),{labelW:180})}
+    <div class="legend">${[...new Set(pr.map(p=>p.credential))].map(c=>`<span><i class="sw" style="background:${CO[c]||'#999'}"></i>${esc(c)}</span>`).join("")}</div>
+    <div class="src">Source: Ghost author post counts. Background assigned per the method note.</div></div>`;
+
+  document.getElementById("app").innerHTML=html;
+
+  // credential toggle
+  const cc=document.getElementById("credChart");
+  document.querySelectorAll("#credTog button").forEach(b=>b.onclick=()=>{
+    document.querySelectorAll("#credTog button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    cc.innerHTML = b.dataset.m==="authors" ? hbar(credAuthRows,{labelW:220}) : hbar(credRows,{labelW:220});
+  });
+}).catch(e=>{document.getElementById("app").innerHTML='<div class="loading">Could not load catalogue data. Run <code>python3 analyze_catalogue.py</code> first.</div>';console.error(e);});
+</script>
+</body>
+</html>

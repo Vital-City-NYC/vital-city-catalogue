@@ -1,0 +1,526 @@
+{
+  "meta": {
+    "generated_at": "2026-07-02T17:06:54.032697+00:00",
+    "site": "https://www.vitalcitynyc.org",
+    "total_posts": 861,
+    "total_authors": 472,
+    "total_issues": 29,
+    "total_topics": 208,
+    "date_range": [
+      "2021-09-15",
+      "2026-07-02"
+    ],
+    "first_run": false,
+    "new_article_count": 1,
+    "new_articles": [
+      {
+        "title": "Crime in New York City Midyear: The Big Picture",
+        "url": "https://www.vitalcitynyc.org/crime-in-new-york-city-midyear-the-big-picture/",
+        "published_date": "2026-07-02",
+        "primary_author": "Vital City"
+      }
+    ]
+  },
+  "total_pieces": 861,
+  "by_year": {
+    "2021": 1,
+    "2022": 46,
+    "2023": 155,
+    "2024": 223,
+    "2025": 287,
+    "2026": 149
+  },
+  "by_month": {
+    "2021-09": 1,
+    "2022-01": 13,
+    "2022-02": 1,
+    "2022-04": 1,
+    "2022-05": 6,
+    "2022-07": 1,
+    "2022-08": 1,
+    "2022-10": 18,
+    "2022-11": 2,
+    "2022-12": 3,
+    "2023-01": 5,
+    "2023-02": 8,
+    "2023-03": 40,
+    "2023-04": 4,
+    "2023-05": 8,
+    "2023-06": 21,
+    "2023-07": 1,
+    "2023-08": 5,
+    "2023-09": 21,
+    "2023-10": 2,
+    "2023-11": 14,
+    "2023-12": 26,
+    "2024-01": 5,
+    "2024-02": 16,
+    "2024-03": 50,
+    "2024-04": 6,
+    "2024-05": 17,
+    "2024-06": 33,
+    "2024-07": 4,
+    "2024-08": 5,
+    "2024-09": 13,
+    "2024-10": 55,
+    "2024-11": 11,
+    "2024-12": 8,
+    "2025-01": 27,
+    "2025-02": 24,
+    "2025-03": 29,
+    "2025-04": 20,
+    "2025-05": 15,
+    "2025-06": 13,
+    "2025-07": 19,
+    "2025-08": 14,
+    "2025-09": 60,
+    "2025-10": 23,
+    "2025-11": 22,
+    "2025-12": 21,
+    "2026-01": 18,
+    "2026-02": 23,
+    "2026-03": 17,
+    "2026-04": 23,
+    "2026-05": 22,
+    "2026-06": 44,
+    "2026-07": 2
+  },
+  "by_type": [
+    [
+      "opinion/commentary",
+      730
+    ],
+    [
+      "q&a",
+      62
+    ],
+    [
+      "data analysis",
+      46
+    ],
+    [
+      "map/tool",
+      16
+    ],
+    [
+      "book review",
+      5
+    ],
+    [
+      "something else",
+      2
+    ]
+  ],
+  "by_topic_top25": [
+    [
+      "Crime",
+      142
+    ],
+    [
+      "History",
+      140
+    ],
+    [
+      "City Government",
+      120
+    ],
+    [
+      "Government Operations",
+      118
+    ],
+    [
+      "City Planning",
+      108
+    ],
+    [
+      "Justice",
+      78
+    ],
+    [
+      "Housing",
+      74
+    ],
+    [
+      "culture",
+      72
+    ],
+    [
+      "Gun Violence",
+      66
+    ],
+    [
+      "Politics",
+      53
+    ],
+    [
+      "Economics",
+      52
+    ],
+    [
+      "Police Reform",
+      52
+    ],
+    [
+      "Jails",
+      48
+    ],
+    [
+      "Social Science",
+      42
+    ],
+    [
+      "Transit",
+      32
+    ],
+    [
+      "Public Health",
+      32
+    ],
+    [
+      "data",
+      30
+    ],
+    [
+      "Technology",
+      30
+    ],
+    [
+      "Education",
+      29
+    ],
+    [
+      "Podcast",
+      27
+    ],
+    [
+      "Setting the Stage",
+      26
+    ],
+    [
+      "Budget",
+      25
+    ],
+    [
+      "Quality of Life",
+      25
+    ],
+    [
+      "interview",
+      24
+    ],
+    [
+      "Infrastructure",
+      22
+    ]
+  ],
+  "n_topics_total": 208,
+  "by_credential_pieces": [
+    [
+      "Academic",
+      214
+    ],
+    [
+      "Nonprofit / advocacy",
+      100
+    ],
+    [
+      "Journalist / media",
+      95
+    ],
+    [
+      "Vital City (institutional)",
+      93
+    ],
+    [
+      "Other / unclassified",
+      88
+    ],
+    [
+      "Government / public official",
+      83
+    ],
+    [
+      "Business / private sector",
+      56
+    ],
+    [
+      "Think tank / research institute",
+      51
+    ],
+    [
+      "Architecture / design / planning",
+      29
+    ],
+    [
+      "Legal practitioner",
+      27
+    ],
+    [
+      "Survey / reader poll",
+      14
+    ],
+    [
+      "Unknown / no bio",
+      11
+    ]
+  ],
+  "by_credential_authors": [
+    [
+      "Academic",
+      150
+    ],
+    [
+      "Other / unclassified",
+      100
+    ],
+    [
+      "Nonprofit / advocacy",
+      69
+    ],
+    [
+      "Journalist / media",
+      34
+    ],
+    [
+      "Government / public official",
+      29
+    ],
+    [
+      "Think tank / research institute",
+      28
+    ],
+    [
+      "Business / private sector",
+      21
+    ],
+    [
+      "Legal practitioner",
+      16
+    ],
+    [
+      "Architecture / design / planning",
+      14
+    ],
+    [
+      "Unknown / no bio",
+      9
+    ],
+    [
+      "Vital City (institutional)",
+      1
+    ],
+    [
+      "Survey / reader poll",
+      1
+    ]
+  ],
+  "top_topics_for_stack": [
+    "Crime",
+    "History",
+    "City Government",
+    "Government Operations",
+    "City Planning",
+    "Justice",
+    "Housing",
+    "culture"
+  ],
+  "topic_by_year": {
+    "Crime": {
+      "2022": 18,
+      "2023": 37,
+      "2024": 38,
+      "2025": 31,
+      "2026": 18
+    },
+    "History": {
+      "2022": 12,
+      "2023": 28,
+      "2024": 38,
+      "2025": 52,
+      "2026": 10
+    },
+    "City Government": {
+      "2023": 4,
+      "2024": 20,
+      "2025": 54,
+      "2026": 42
+    },
+    "Government Operations": {
+      "2022": 1,
+      "2023": 16,
+      "2024": 38,
+      "2025": 57,
+      "2026": 6
+    },
+    "City Planning": {
+      "2022": 6,
+      "2023": 18,
+      "2024": 31,
+      "2025": 39,
+      "2026": 14
+    },
+    "Justice": {
+      "2022": 4,
+      "2023": 27,
+      "2024": 26,
+      "2025": 13,
+      "2026": 8
+    },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 37,
+      "2026": 21
+    },
+    "culture": {
+      "2022": 4,
+      "2023": 19,
+      "2024": 26,
+      "2025": 18,
+      "2026": 5
+    }
+  },
+  "wc_stats": {
+    "n": 852,
+    "median": 1618,
+    "mean": 1903,
+    "p90": 2837,
+    "max": 30332
+  },
+  "wc_buckets": [
+    [
+      "<500",
+      37
+    ],
+    [
+      "500-999",
+      61
+    ],
+    [
+      "1,000-1,999",
+      501
+    ],
+    [
+      "2,000-2,999",
+      179
+    ],
+    [
+      "3,000-4,999",
+      50
+    ],
+    [
+      "5,000+",
+      24
+    ]
+  ],
+  "by_nauthors": {
+    "1": 730,
+    "2": 104,
+    "3": 25,
+    "4": 1,
+    "10": 1
+  },
+  "prolific": [
+    {
+      "name": "Vital City",
+      "posts": 93,
+      "credential": "Vital City (institutional)"
+    },
+    {
+      "name": "Elizabeth Glazer",
+      "posts": 46,
+      "credential": "Government / public official"
+    },
+    {
+      "name": "Greg Berman",
+      "posts": 34,
+      "credential": "Nonprofit / advocacy"
+    },
+    {
+      "name": "Jamie Rubin",
+      "posts": 32,
+      "credential": "Business / private sector"
+    },
+    {
+      "name": "Josh Greenman",
+      "posts": 19,
+      "credential": "Journalist / media"
+    },
+    {
+      "name": "A Survey",
+      "posts": 15,
+      "credential": "Survey / reader poll"
+    },
+    {
+      "name": "Vishaan Chakrabarti",
+      "posts": 14,
+      "credential": "Architecture / design / planning"
+    },
+    {
+      "name": "Harry Siegel",
+      "posts": 14,
+      "credential": "Journalist / media"
+    },
+    {
+      "name": "Errol Louis",
+      "posts": 13,
+      "credential": "Journalist / media"
+    },
+    {
+      "name": "Aaron Chalfin",
+      "posts": 12,
+      "credential": "Academic"
+    },
+    {
+      "name": "Ted Alcorn",
+      "posts": 12,
+      "credential": "Journalist / media"
+    },
+    {
+      "name": "Brandon del Pozo",
+      "posts": 11,
+      "credential": "Academic"
+    },
+    {
+      "name": "Nicole Gelinas",
+      "posts": 10,
+      "credential": "Think tank / research institute"
+    },
+    {
+      "name": "John Hall",
+      "posts": 9,
+      "credential": "Government / public official"
+    },
+    {
+      "name": "Bradley Tusk",
+      "posts": 8,
+      "credential": "Business / private sector"
+    },
+    {
+      "name": "David Schleicher",
+      "posts": 8,
+      "credential": "Academic"
+    },
+    {
+      "name": "Paul Reeping",
+      "posts": 7,
+      "credential": "Think tank / research institute"
+    },
+    {
+      "name": "John K. Roman",
+      "posts": 7,
+      "credential": "Think tank / research institute"
+    },
+    {
+      "name": "Vincent Schiraldi",
+      "posts": 6,
+      "credential": "Government / public official"
+    },
+    {
+      "name": "Jens Ludwig",
+      "posts": 6,
+      "credential": "Academic"
+    }
+  ],
+  "n_issues": 29
+}
