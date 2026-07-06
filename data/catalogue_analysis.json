@@ -1,34 +1,46 @@
 {
   "meta": {
-    "generated_at": "2026-07-02T17:06:54.032697+00:00",
+    "generated_at": "2026-07-06T22:07:52.009827+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 861,
-    "total_authors": 472,
+    "total_posts": 865,
+    "total_authors": 476,
     "total_issues": 29,
-    "total_topics": 208,
+    "total_topics": 210,
     "date_range": [
       "2021-09-15",
-      "2026-07-02"
+      "2026-07-06"
     ],
     "first_run": false,
-    "new_article_count": 1,
+    "new_article_count": 3,
     "new_articles": [
       {
-        "title": "Crime in New York City Midyear: The Big Picture",
-        "url": "https://www.vitalcitynyc.org/crime-in-new-york-city-midyear-the-big-picture/",
-        "published_date": "2026-07-02",
-        "primary_author": "Vital City"
+        "title": "Expert Advice for Mamdani\u2019s Commission on Government Efficiency",
+        "url": "https://www.vitalcitynyc.org/expert-advice-for-mamdanis-commission-on-government-efficiency/",
+        "published_date": "2026-07-06",
+        "primary_author": "Sarah Feinberg"
+      },
+      {
+        "title": "The Right Path to a More Efficient New York City",
+        "url": "https://www.vitalcitynyc.org/the-right-path-to-better-government-coge-mamdani/",
+        "published_date": "2026-07-06",
+        "primary_author": "Ashwini Chhabra"
+      },
+      {
+        "title": "A Striving Government for a Thriving City",
+        "url": "https://www.vitalcitynyc.org/a-striving-government-for-a-thriving-city-coge-mamdani/",
+        "published_date": "2026-07-06",
+        "primary_author": "Robert Joyce"
       }
     ]
   },
-  "total_pieces": 861,
+  "total_pieces": 865,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 155,
     "2024": 223,
     "2025": 287,
-    "2026": 149
+    "2026": 153
   },
   "by_month": {
     "2021-09": 1,
@@ -83,12 +95,12 @@
     "2026-04": 23,
     "2026-05": 22,
     "2026-06": 44,
-    "2026-07": 2
+    "2026-07": 6
   },
   "by_type": [
     [
       "opinion/commentary",
-      730
+      734
     ],
     [
       "q&a",
@@ -121,12 +133,12 @@
       140
     ],
     [
-      "City Government",
-      120
+      "Government Operations",
+      121
     ],
     [
-      "Government Operations",
-      118
+      "City Government",
+      121
     ],
     [
       "City Planning",
@@ -150,7 +162,7 @@
     ],
     [
       "Politics",
-      53
+      54
     ],
     [
       "Economics",
@@ -213,7 +225,7 @@
       22
     ]
   ],
-  "n_topics_total": 208,
+  "n_topics_total": 210,
   "by_credential_pieces": [
     [
       "Academic",
@@ -221,11 +233,11 @@
     ],
     [
       "Nonprofit / advocacy",
-      100
+      101
     ],
     [
       "Journalist / media",
-      95
+      96
     ],
     [
       "Vital City (institutional)",
@@ -233,7 +245,7 @@
     ],
     [
       "Other / unclassified",
-      88
+      90
     ],
     [
       "Government / public official",
@@ -267,15 +279,15 @@
   "by_credential_authors": [
     [
       "Academic",
-      150
+      151
     ],
     [
       "Other / unclassified",
-      100
+      101
     ],
     [
       "Nonprofit / advocacy",
-      69
+      71
     ],
     [
       "Journalist / media",
@@ -317,8 +329,8 @@
   "top_topics_for_stack": [
     "Crime",
     "History",
-    "City Government",
     "Government Operations",
+    "City Government",
     "City Planning",
     "Justice",
     "Housing",
@@ -339,18 +351,18 @@
       "2025": 52,
       "2026": 10
     },
-    "City Government": {
-      "2023": 4,
-      "2024": 20,
-      "2025": 54,
-      "2026": 42
-    },
     "Government Operations": {
       "2022": 1,
       "2023": 16,
       "2024": 38,
       "2025": 57,
-      "2026": 6
+      "2026": 9
+    },
+    "City Government": {
+      "2023": 4,
+      "2024": 20,
+      "2025": 54,
+      "2026": 43
     },
     "City Planning": {
       "2022": 6,
@@ -381,10 +393,10 @@
     }
   },
   "wc_stats": {
-    "n": 852,
-    "median": 1618,
-    "mean": 1903,
-    "p90": 2837,
+    "n": 856,
+    "median": 1619,
+    "mean": 1907,
+    "p90": 2838,
     "max": 30332
   },
   "wc_buckets": [
@@ -398,15 +410,15 @@
     ],
     [
       "1,000-1,999",
-      501
+      502
     ],
     [
       "2,000-2,999",
-      179
+      181
     ],
     [
       "3,000-4,999",
-      50
+      51
     ],
     [
       "5,000+",
@@ -414,10 +426,11 @@
     ]
   ],
   "by_nauthors": {
-    "1": 730,
-    "2": 104,
+    "1": 732,
+    "2": 105,
     "3": 25,
     "4": 1,
+    "8": 1,
     "10": 1
   },
   "prolific": [
@@ -428,7 +441,7 @@
     },
     {
       "name": "Elizabeth Glazer",
-      "posts": 46,
+      "posts": 47,
       "credential": "Government / public official"
     },
     {
@@ -487,6 +500,11 @@
       "credential": "Think tank / research institute"
     },
     {
+      "name": "David Schleicher",
+      "posts": 9,
+      "credential": "Academic"
+    },
+    {
       "name": "John Hall",
       "posts": 9,
       "credential": "Government / public official"
@@ -495,11 +513,6 @@
       "name": "Bradley Tusk",
       "posts": 8,
       "credential": "Business / private sector"
-    },
-    {
-      "name": "David Schleicher",
-      "posts": 8,
-      "credential": "Academic"
     },
     {
       "name": "Paul Reeping",

@@ -105,7 +105,7 @@
   },
   {
     "name": "Elizabeth Glazer",
-    "post_count": 46,
+    "post_count": 47,
     "slugs": [
       "a-brief-history-of-the-3300-target",
       "a-rare-remedy-to-the-persistent-brutality-of-rikers",
@@ -125,6 +125,7 @@
       "editors-note-issue-8",
       "editors-note-megalopolis-subway-where-romance-and-reality-meet",
       "editors-note-what-role-should-nonprofits-play-in-cities",
+      "expert-advice-for-mamdanis-commission-on-government-efficiency",
       "fixing-new-york-citys-jails-a-federal-receiver",
       "fixing-new-york-citys-jails-a-federal-receiver-closing-remarks",
       "for-new-york-city-crime-trends-a-good-month",
@@ -468,6 +469,26 @@
     "website": null
   },
   {
+    "name": "David Schleicher",
+    "post_count": 9,
+    "slugs": [
+      "big-cities-bigger-integrity-problems",
+      "expert-advice-for-mamdanis-commission-on-government-efficiency",
+      "local-democracy-is-land-use-policy",
+      "mamdanis-facilitators-frenemiesor-foes",
+      "new-york-rent-stabilization-law-supreme-court-clash",
+      "nyc-declining-murders-politics",
+      "the-failures-of-urban-governance",
+      "the-most-interesting-thing-on-the-ballot-this-fall",
+      "why-does-everything-cost-so-much"
+    ],
+    "slug": "schleicher-david",
+    "bio": "is the Walter E. Meyer Professor of Property and Urban Law at Yale Law School.",
+    "url": "https://www.vitalcitynyc.org/author/schleicher-david/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "John Hall",
     "post_count": 9,
     "slugs": [
@@ -503,25 +524,6 @@
     "slug": "tusk-bradley",
     "bio": "is a venture capitalist, political strategist, philanthropist and writer. His new book, \"Vote With Your Phone: Why Mobile Voting Is Our Final Shot at Saving Democracy,\" was published on September 17. ",
     "url": "https://www.vitalcitynyc.org/author/tusk-bradley/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "David Schleicher",
-    "post_count": 8,
-    "slugs": [
-      "big-cities-bigger-integrity-problems",
-      "local-democracy-is-land-use-policy",
-      "mamdanis-facilitators-frenemiesor-foes",
-      "new-york-rent-stabilization-law-supreme-court-clash",
-      "nyc-declining-murders-politics",
-      "the-failures-of-urban-governance",
-      "the-most-interesting-thing-on-the-ballot-this-fall",
-      "why-does-everything-cost-so-much"
-    ],
-    "slug": "schleicher-david",
-    "bio": "is the Walter E. Meyer Professor of Property and Urban Law at Yale Law School.",
-    "url": "https://www.vitalcitynyc.org/author/schleicher-david/",
     "twitter": null,
     "website": null
   },
@@ -963,6 +965,34 @@
     "website": null
   },
   {
+    "name": "Robert Gordon",
+    "post_count": 3,
+    "slugs": [
+      "expert-advice-for-mamdanis-commission-on-government-efficiency",
+      "mamdani-nyc-vendors-contractors-staff",
+      "new-yorks-mamdani-ny-civil-service-system"
+    ],
+    "slug": "gordon-robert",
+    "bio": "is with the Recoding America Fund to build state capacity. He worked at the NYC Department of Education under Mayor Bloomberg and served as deputy assistant to the president in the Biden administration.",
+    "url": "https://www.vitalcitynyc.org/author/gordon-robert/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Carl Weisbrod",
+    "post_count": 3,
+    "slugs": [
+      "congestion-pricing-to-the-rescue",
+      "expert-advice-for-mamdanis-commission-on-government-efficiency",
+      "zohran-mamdanis-real-world-constraints"
+    ],
+    "slug": "weisbrod-carl",
+    "bio": "is a senior advisor at HR&A Advisors, former chair of the New York City Planning Commission and former president of the Downtown-Lower Manhattan Association.",
+    "url": "https://www.vitalcitynyc.org/author/weisbrod-carl/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Julia D. Day",
     "post_count": 3,
     "slugs": [
@@ -1271,6 +1301,45 @@
     "website": null
   },
   {
+    "name": "Sarah Feinberg",
+    "post_count": 2,
+    "slugs": [
+      "expert-advice-for-mamdanis-commission-on-government-efficiency",
+      "want-to-fix-the-subway-stop-asking-it-to-be-something-its-not"
+    ],
+    "slug": "feinberg-sarah",
+    "bio": "served as the interim president of New York City Transit, as an MTA board member and a safety regulator for the U.S. rail system during the Obama administration. ",
+    "url": "https://www.vitalcitynyc.org/author/feinberg-sarah/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Robert Joyce",
+    "post_count": 2,
+    "slugs": [
+      "a-striving-government-for-a-thriving-city-coge-mamdani",
+      "what-can-mamdani-do-nyc-budget"
+    ],
+    "slug": "joyce-robert",
+    "bio": "is Abundance New York's senior policy advisor.",
+    "url": "https://www.vitalcitynyc.org/author/joyce-robert/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Catherine Vaughan",
+    "post_count": 2,
+    "slugs": [
+      "a-striving-government-for-a-thriving-city-coge-mamdani",
+      "what-can-mamdani-do-nyc-budget"
+    ],
+    "slug": "vaughan-catherine",
+    "bio": "is executive director of Abundance New York.",
+    "url": "https://www.vitalcitynyc.org/author/vaughan-catherine/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Anthony Flint",
     "post_count": 2,
     "slugs": [
@@ -1423,19 +1492,6 @@
     "slug": "bloomfield-david",
     "bio": "is a professor of education leadership, law and policy at Brooklyn College and The CUNY Graduate Center. He was general counsel to the New York City Board of Education prior to mayoral control.",
     "url": "https://www.vitalcitynyc.org/author/bloomfield-david/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Robert Gordon",
-    "post_count": 2,
-    "slugs": [
-      "mamdani-nyc-vendors-contractors-staff",
-      "new-yorks-mamdani-ny-civil-service-system"
-    ],
-    "slug": "gordon-robert",
-    "bio": "is with the Recoding America Fund to build state capacity. He worked at the NYC Department of Education under Mayor Bloomberg and served as deputy assistant to the president in the Biden administration.",
-    "url": "https://www.vitalcitynyc.org/author/gordon-robert/",
     "twitter": null,
     "website": null
   },
@@ -1618,19 +1674,6 @@
     "slug": "buery-richard-jr",
     "bio": "is the CEO of Robin Hood.",
     "url": "https://www.vitalcitynyc.org/author/buery-richard-jr/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Carl Weisbrod",
-    "post_count": 2,
-    "slugs": [
-      "congestion-pricing-to-the-rescue",
-      "zohran-mamdanis-real-world-constraints"
-    ],
-    "slug": "weisbrod-carl",
-    "bio": "is a senior advisor at HR&A Advisors, former chair of the New York City Planning Commission and former president of the Downtown-Lower Manhattan Association.",
-    "url": "https://www.vitalcitynyc.org/author/weisbrod-carl/",
     "twitter": null,
     "website": null
   },
@@ -2272,6 +2315,54 @@
     "website": null
   },
   {
+    "name": "Michael Samuelian",
+    "post_count": 1,
+    "slugs": [
+      "expert-advice-for-mamdanis-commission-on-government-efficiency"
+    ],
+    "slug": "samuelian-michael",
+    "bio": "is director of Urban Tech at Cornell Tech, where he works at the intersection of AI, technology and the future of cities.\n\n",
+    "url": "https://www.vitalcitynyc.org/author/samuelian-michael/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Maria Torres-Springer",
+    "post_count": 1,
+    "slugs": [
+      "expert-advice-for-mamdanis-commission-on-government-efficiency"
+    ],
+    "slug": "torresspringer-maria",
+    "bio": "is president of the Charles H. Revson Foundation. She has served as New York City’s first deputy mayor, as commissioner of the Department of Housing Preservation and Development and as president and CEO of the city's Economic Development Corporation.",
+    "url": "https://www.vitalcitynyc.org/author/torresspringer-maria/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Polly Trottenberg",
+    "post_count": 1,
+    "slugs": [
+      "expert-advice-for-mamdanis-commission-on-government-efficiency"
+    ],
+    "slug": "trottenberg-polly",
+    "bio": "is dean of NYU Wagner. She has served as deputy secretary of the U.S. Department of Transportation and as New York City’s transportation commissioner and as a board member of the Metropolitan Transportation Authority.",
+    "url": "https://www.vitalcitynyc.org/author/trottenberg-polly/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Ashwini Chhabra",
+    "post_count": 1,
+    "slugs": [
+      "the-right-path-to-better-government-coge-mamdani"
+    ],
+    "slug": "chhabra-ashwini",
+    "bio": "is the founding director of the Urban Innovation Fellowship at Cornell Tech's Urban Tech Hub.",
+    "url": "https://www.vitalcitynyc.org/author/chhabra-ashwini/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Harold Holzer",
     "post_count": 1,
     "slugs": [
@@ -2808,30 +2899,6 @@
     "slug": "takahashi-rial-sachi",
     "bio": "is an advocate for local civic engagement. She writes a substack called NYC Politics 101 and formerly served on Manhattan Community Board 5.",
     "url": "https://www.vitalcitynyc.org/author/takahashi-rial-sachi/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Robert Joyce",
-    "post_count": 1,
-    "slugs": [
-      "what-can-mamdani-do-nyc-budget"
-    ],
-    "slug": "joyce-robert",
-    "bio": "is Abundance New York's senior policy advisor.",
-    "url": "https://www.vitalcitynyc.org/author/joyce-robert/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Catherine Vaughan",
-    "post_count": 1,
-    "slugs": [
-      "what-can-mamdani-do-nyc-budget"
-    ],
-    "slug": "vaughan-catherine",
-    "bio": "is executive director of Abundance New York.",
-    "url": "https://www.vitalcitynyc.org/author/vaughan-catherine/",
     "twitter": null,
     "website": null
   },
@@ -3952,6 +4019,18 @@
     "website": null
   },
   {
+    "name": "Richard Schragger",
+    "post_count": 1,
+    "slugs": [
+      "is-it-time-for-cities-to-go-it-alone"
+    ],
+    "slug": "schragger-richard",
+    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
+    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Adam Cohen",
     "post_count": 1,
     "slugs": [
@@ -3972,18 +4051,6 @@
     "slug": "chertoff-meryl",
     "bio": "is adjunct professor of law at Georgetown University Law Center.",
     "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Richard Schragger",
-    "post_count": 1,
-    "slugs": [
-      "is-it-time-for-cities-to-go-it-alone"
-    ],
-    "slug": "schragger-richard",
-    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
-    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
     "twitter": null,
     "website": null
   },
@@ -4032,18 +4099,6 @@
     "slug": "plane-marshall",
     "bio": "is a Research Assistant at The Immigration Lab.",
     "url": "https://www.vitalcitynyc.org/author/plane-marshall/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Sarah Feinberg",
-    "post_count": 1,
-    "slugs": [
-      "want-to-fix-the-subway-stop-asking-it-to-be-something-its-not"
-    ],
-    "slug": "feinberg-sarah",
-    "bio": "served as the interim president of New York City Transit, as an MTA board member and a safety regulator for the U.S. rail system during the Obama administration. ",
-    "url": "https://www.vitalcitynyc.org/author/feinberg-sarah/",
     "twitter": null,
     "website": null
   },

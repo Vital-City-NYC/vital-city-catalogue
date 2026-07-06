@@ -1,15 +1,34 @@
 {
-  "generated_at": "2026-07-03T11:51:18.379695+00:00",
+  "generated_at": "2026-07-06T22:07:52.009827+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 862,
-  "total_authors": 472,
+  "total_posts": 865,
+  "total_authors": 476,
   "total_issues": 29,
-  "total_topics": 208,
+  "total_topics": 210,
   "date_range": [
     "2021-09-15",
-    "2026-07-02"
+    "2026-07-06"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 3,
+  "new_articles": [
+    {
+      "title": "Expert Advice for Mamdani’s Commission on Government Efficiency",
+      "url": "https://www.vitalcitynyc.org/expert-advice-for-mamdanis-commission-on-government-efficiency/",
+      "published_date": "2026-07-06",
+      "primary_author": "Sarah Feinberg"
+    },
+    {
+      "title": "The Right Path to a More Efficient New York City",
+      "url": "https://www.vitalcitynyc.org/the-right-path-to-better-government-coge-mamdani/",
+      "published_date": "2026-07-06",
+      "primary_author": "Ashwini Chhabra"
+    },
+    {
+      "title": "A Striving Government for a Thriving City",
+      "url": "https://www.vitalcitynyc.org/a-striving-government-for-a-thriving-city-coge-mamdani/",
+      "published_date": "2026-07-06",
+      "primary_author": "Robert Joyce"
+    }
+  ]
 }
