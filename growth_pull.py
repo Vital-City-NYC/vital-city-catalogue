@@ -1562,12 +1562,32 @@ def pull_search_console():
             t0 = tr[0] if tr else {}
             totals = {"clicks": int(t0.get("clicks", 0)), "impressions": int(t0.get("impressions", 0)),
                       "ctr": round((t0.get("ctr") or 0) * 100, 1), "position": round(t0.get("position") or 0, 1)}
-            qrows = query({"startDate": start, "endDate": end, "dimensions": ["query"], "rowLimit": 25})
-            top_queries = [{"query": r["keys"][0], "clicks": int(r.get("clicks", 0)),
-                            "impressions": int(r.get("impressions", 0)),
-                            "ctr": round((r.get("ctr") or 0) * 100, 1),
-                            "position": round(r.get("position") or 0, 1)} for r in qrows]
-            return {"totals": totals, "top_queries": top_queries}
+            # Pull a wide slice (Search Console returns rows sorted by clicks
+            # desc). The first 25 are the familiar "top queries by clicks"; the
+            # long tail is where the page-2 opportunities hide — queries with
+            # real impressions but too low a rank to earn clicks.
+            qrows = query({"startDate": start, "endDate": end, "dimensions": ["query"], "rowLimit": 1000})
+            allq = [{"query": r["keys"][0], "clicks": int(r.get("clicks", 0)),
+                     "impressions": int(r.get("impressions", 0)),
+                     "ctr": round((r.get("ctr") or 0) * 100, 1),
+                     "position": round(r.get("position") or 0, 1)} for r in qrows]
+            top_queries = allq[:25]
+            # "Striking distance": ranked roughly on page two (avg position 8-20)
+            # with enough impressions to matter — demand Google already ties to
+            # Vital City, but where we sit too low for searchers to find us.
+            # Impression floor scales gently with the window so longer windows
+            # (more accumulated impressions) don't fill the list with noise.
+            floor = max(10, days // 6)
+            opps = [x for x in allq if 7.5 <= x["position"] <= 20.5 and x["impressions"] >= floor]
+            # Rough upside: clicks we'd expect if the query reached the top of
+            # page one. Assumes a ~10% click-through at a top-3 rank (a
+            # deliberately conservative point on published organic CTR curves);
+            # clearly an estimate, surfaced only to help prioritize.
+            for x in opps:
+                x["potential_clicks"] = max(0, round(x["impressions"] * 0.10) - x["clicks"])
+            opps.sort(key=lambda x: -x["impressions"])
+            return {"totals": totals, "top_queries": top_queries,
+                    "opportunities": opps[:15], "opp_impr_floor": floor}
         # Short / medium / long windows the dashboard can toggle between.
         WINDOWS = [28, 90, 365]
         windows = {str(d): window(d) for d in WINDOWS}
