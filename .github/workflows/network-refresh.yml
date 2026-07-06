@@ -87,7 +87,8 @@ jobs:
       # that the /catalogue-analysis charts read. Pure recomputation from the
       # freshly scraped catalogue.json + authors.json; non-fatal.
       - name: Analyze catalogue for the breakdown charts
-        run: python3 analyze_catalogue.py || echo "WARNING: analyze_catalogue failed; analysis page will be stale"
+        run: |
+          python3 analyze_catalogue.py || echo "WARNING: analyze_catalogue failed; analysis page will be stale"
 
       - name: Flag influential people (Wikipedia, incremental)
         run: |
