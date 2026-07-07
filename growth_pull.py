@@ -1553,25 +1553,33 @@ def pull_search_console():
         # ---- Catalogue matcher: link each page-2 opportunity query to the
         # Vital City piece that already ranks for it (so the panel becomes an
         # action list, not just a diagnosis). Approximate, IDF-weighted keyword
-        # overlap: distinctive query terms (e.g. "tammany") outweigh common ones
-        # (e.g. "hall"), accents are folded ("Pelé"->"pele"), trailing plurals
-        # trimmed. A confident hit needs most of the query's *weight* covered and
-        # at least one strong term in the title/slug; otherwise it's left blank
-        # (a possible content gap to verify by hand, never a false link).
+        # overlap over unigrams AND adjacent-word phrases ("bigrams"), so
+        # distinctive terms outweigh common ones ("tammany" beats "hall") and
+        # proper nouns that split across the stopword filter still match
+        # ("la guardia"->"laguardia", "co-op"->"coop", "Pelé"->"pele"). A hit is
+        # accepted only when it's confident — either the query's weight is well
+        # covered with a title/slug term, or a genuinely distinctive term
+        # (idf>=5.3, i.e. in ~<1% of pieces) matches the title/slug. Otherwise
+        # left blank: a possible content gap to eyeball, never a false link.
         import math as _math, unicodedata as _ud, re as _re
         _STOP = set("the a an of in on to for is are be and or vs why so how did what has does do "
                     "can will not new city nyc york at by with from your our who when where all more "
                     "most one make".split())
         def _fold(s): return _ud.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode()
         def _norm(t): return t[:-1] if len(t) > 3 and t.endswith("s") else t
-        def _toks(s): return {_norm(w) for w in _re.findall(r"[a-z']+", _fold(s).lower())
-                              if len(w) > 2 and w not in _STOP}
+        def _uni(s): return {_norm(w) for w in _re.findall(r"[a-z']+", _fold(s).lower())
+                             if len(w) > 2 and w not in _STOP}
+        def _bg(s):                                   # adjacent content-word phrases
+            r = _re.findall(r"[a-z0-9']+", _fold(s).lower())
+            return {r[i] + r[i+1] for i in range(len(r) - 1)
+                    if r[i] not in _STOP and r[i+1] not in _STOP}
+        def _strong(c): return _uni(c.get("title")) | _uni(c.get("slug")) | _bg(c.get("title")) | _bg(c.get("slug"))
+        def _full(c): return _strong(c) | _uni(c.get("summary")) | _uni(c.get("excerpt")) \
+                             | _bg(c.get("summary")) | {_norm(_fold(t).lower()) for t in (c.get("topics") or [])}
         _idx, _df = [], {}
         try:
             for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
-                strong = _toks(c.get("title")) | _toks(c.get("slug"))          # title + slug
-                full = strong | _toks(c.get("summary")) | _toks(c.get("excerpt")) \
-                       | {_norm(_fold(t).lower()) for t in (c.get("topics") or [])}
+                strong, full = _strong(c), _full(c)
                 if full:
                     _idx.append((strong, full, c.get("title"), c.get("url")))
                     for t in full:
@@ -1583,7 +1591,7 @@ def pull_search_console():
         _mmemo = {}
         def match_piece(q):
             if q in _mmemo: return _mmemo[q]
-            qt = _toks(q); res = None
+            qt = _uni(q) | _bg(q); res = None
             if qt and _idx:
                 W = sum(_idf(t) for t in qt) or 1.0
                 best = None
@@ -1591,10 +1599,12 @@ def pull_search_console():
                     inter = qt & full
                     if not inter: continue
                     cov = sum(_idf(t) for t in inter) / W
-                    tcov = sum(_idf(t) for t in (qt & strong)) / W
-                    k = (round(tcov, 3), round(cov, 3))
-                    if best is None or k > best[0]: best = (k, title, url)
-                if best and best[0][1] >= 0.55 and best[0][0] >= 0.30:
+                    sint = qt & strong
+                    tcov = sum(_idf(t) for t in sint) / W
+                    smax = max((_idf(t) for t in sint), default=0.0)
+                    k = (round(smax, 3), round(tcov, 3), round(cov, 3))
+                    if best is None or k > best[0]: best = (k, title, url, cov, tcov, smax)
+                if best and ((best[3] >= 0.55 and best[4] >= 0.30) or best[5] >= 5.3):
                     res = {"title": best[1], "url": best[2]}
             _mmemo[q] = res
             return res
