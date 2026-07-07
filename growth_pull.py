@@ -1549,6 +1549,56 @@ def pull_search_console():
         today = datetime.now(timezone.utc).date()
         end = today.isoformat()
         enc = urllib.parse.quote(site, safe="")
+
+        # ---- Catalogue matcher: link each page-2 opportunity query to the
+        # Vital City piece that already ranks for it (so the panel becomes an
+        # action list, not just a diagnosis). Approximate, IDF-weighted keyword
+        # overlap: distinctive query terms (e.g. "tammany") outweigh common ones
+        # (e.g. "hall"), accents are folded ("Pelé"->"pele"), trailing plurals
+        # trimmed. A confident hit needs most of the query's *weight* covered and
+        # at least one strong term in the title/slug; otherwise it's left blank
+        # (a possible content gap to verify by hand, never a false link).
+        import math as _math, unicodedata as _ud, re as _re
+        _STOP = set("the a an of in on to for is are be and or vs why so how did what has does do "
+                    "can will not new city nyc york at by with from your our who when where all more "
+                    "most one make".split())
+        def _fold(s): return _ud.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode()
+        def _norm(t): return t[:-1] if len(t) > 3 and t.endswith("s") else t
+        def _toks(s): return {_norm(w) for w in _re.findall(r"[a-z']+", _fold(s).lower())
+                              if len(w) > 2 and w not in _STOP}
+        _idx, _df = [], {}
+        try:
+            for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
+                strong = _toks(c.get("title")) | _toks(c.get("slug"))          # title + slug
+                full = strong | _toks(c.get("summary")) | _toks(c.get("excerpt")) \
+                       | {_norm(_fold(t).lower()) for t in (c.get("topics") or [])}
+                if full:
+                    _idx.append((strong, full, c.get("title"), c.get("url")))
+                    for t in full:
+                        _df[t] = _df.get(t, 0) + 1
+        except Exception as e:
+            log(f"  search console: catalogue match unavailable ({e})")
+        _N = len(_idx) or 1
+        def _idf(t): return _math.log(1 + _N / _df.get(t, 0.5))
+        _mmemo = {}
+        def match_piece(q):
+            if q in _mmemo: return _mmemo[q]
+            qt = _toks(q); res = None
+            if qt and _idx:
+                W = sum(_idf(t) for t in qt) or 1.0
+                best = None
+                for strong, full, title, url in _idx:
+                    inter = qt & full
+                    if not inter: continue
+                    cov = sum(_idf(t) for t in inter) / W
+                    tcov = sum(_idf(t) for t in (qt & strong)) / W
+                    k = (round(tcov, 3), round(cov, 3))
+                    if best is None or k > best[0]: best = (k, title, url)
+                if best and best[0][1] >= 0.55 and best[0][0] >= 0.30:
+                    res = {"title": best[1], "url": best[2]}
+            _mmemo[q] = res
+            return res
+
         def query(body):
             req = urllib.request.Request(
                 f"https://searchconsole.googleapis.com/webmasters/v3/sites/{enc}/searchAnalytics/query",
@@ -1586,8 +1636,11 @@ def pull_search_console():
             for x in opps:
                 x["potential_clicks"] = max(0, round(x["impressions"] * 0.10) - x["clicks"])
             opps.sort(key=lambda x: -x["impressions"])
+            top_opps = opps[:15]
+            for x in top_opps:            # link each to the VC piece that ranks for it
+                x["piece"] = match_piece(x["query"])
             return {"totals": totals, "top_queries": top_queries,
-                    "opportunities": opps[:15], "opp_impr_floor": floor}
+                    "opportunities": top_opps, "opp_impr_floor": floor}
         # Short / medium / long windows the dashboard can toggle between.
         WINDOWS = [28, 90, 365]
         windows = {str(d): window(d) for d in WINDOWS}

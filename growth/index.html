@@ -3072,7 +3072,7 @@ function renderSearchConsole(data){
     const opps = w.opportunities||[];
     const oppSection = opps.length ? `
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Queries where Google already ranks Vital City around page two (average position 8-20) and real people are searching (impressions), but we sit too low to earn the click. Moving these up a few spots is the cheapest growth on this page — the demand and the relevance already exist.">Search demand we're missing &middot; page-2 opportunities</div>
-      <div style="font-size:11.5px;color:var(--vc-charcoal);margin:0 0 8px;line-height:1.5">Queries ranked around <b>page two (avg position 8&ndash;20)</b> with real impressions but few clicks &mdash; Google already considers Vital City relevant and people are searching, but we&rsquo;re ranked too low for them to scroll down and find us. Sorted by impressions (the size of the missed demand).</div>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin:0 0 8px;line-height:1.5">Queries ranked around <b>page two (avg position 8&ndash;20)</b> with real impressions but few clicks &mdash; Google already considers Vital City relevant and people are searching, but we&rsquo;re ranked too low for them to scroll down and find us. Sorted by impressions (the size of the missed demand). Each query links to the <b>Vital City piece that already ranks for it</b> &mdash; so most rows are a nudge (help an existing piece climb), not a gap.</div>
       <table class="tbl" style="width:100%"><thead><tr>
         <th title="The search someone typed. Vital City ranks around page two for it — relevant enough to show, too low to get the click.">Query</th>
         <th class="num" title="Times a Vital City page appeared in results for this query over the window. The bigger this is at a page-two rank, the more demand we're leaving on the table.">Impressions</th>
@@ -3082,7 +3082,9 @@ function renderSearchConsole(data){
         <th class="num" title="ESTIMATE ONLY. Roughly how many more clicks per window this query could send if it climbed into the top of page one — assumes a conservative ~10% click-through at a top-3 rank, minus the clicks we already get. A prioritization aid, not a promise.">Upside*</th>
       </tr></thead><tbody>
       ${opps.map(x=>`<tr>
-        <td>${esc(x.query)}</td>
+        <td>${esc(x.query)}${x.piece
+            ? `<div style="font-size:10.5px;margin-top:2px;line-height:1.35"><span style="color:var(--vc-charcoal)">&#8627; ranks for </span><a href="${esc(x.piece.url)}" target="_blank" rel="noopener">${esc(x.piece.title)}</a></div>`
+            : `<div style="font-size:10.5px;margin-top:2px;line-height:1.35;color:#9a6a1a" title="Our catalogue matcher didn't find a piece clearly about this query. Could be a genuine content gap worth a piece — or just a phrasing the matcher missed. Worth an eye.">&#8627; no clear match &mdash; possible content gap</div>`}</td>
         <td class="num">${fmtN(x.impressions)}</td>
         <td class="num">${x.position}</td>
         <td class="num">${fmtN(x.clicks)}</td>
@@ -3090,7 +3092,7 @@ function renderSearchConsole(data){
         <td class="num" style="color:var(--vc-green);font-weight:700">+${fmtN(x.potential_clicks||0)}</td>
       </tr>`).join("")}
       </tbody></table>
-      <div class="flagnote"><b>*Upside is a rough estimate.</b> It assumes a query that climbs into the top of page one would convert at about a 10% click-through (a conservative point on published organic click curves) and subtracts the clicks we already get. Real gains depend on the query, the competition and the snippet. Use it to <i>rank</i> opportunities, not to forecast traffic. Only queries with at least ${fmtN(w.opp_impr_floor||10)} impressions in this window are shown.</div>` : "";
+      <div class="flagnote"><b>*Upside is a rough estimate.</b> It assumes a query that climbs into the top of page one would convert at about a 10% click-through (a conservative point on published organic click curves) and subtracts the clicks we already get. Real gains depend on the query, the competition and the snippet. Use it to <i>rank</i> opportunities, not to forecast traffic. Only queries with at least ${fmtN(w.opp_impr_floor||10)} impressions in this window are shown. The linked piece under each query is an automated keyword match against the catalogue &mdash; usually right, occasionally off; &ldquo;possible content gap&rdquo; means no clear match was found, worth an editor&rsquo;s eye.</div>` : "";
     return `
       <div class="perfgrid">
         <div class="perfcell" title="Clicks from Google search results to vitalcitynyc.org over this window."><div class="pl">Clicks</div><div class="pn">${fmtN(t.clicks||0)}</div><div class="pd flat">visits from Google</div></div>
