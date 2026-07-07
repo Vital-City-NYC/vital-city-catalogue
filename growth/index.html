@@ -710,6 +710,11 @@
         <div id="searchConsoleBody"></div>
       </div>
 
+      <div class="card" id="topSearches">
+        <h2>What New York is Googling <span class="hint">top NYC politics &amp; policy searches this year · whether or not they reach Vital City</span></h2>
+        <div id="topSearchesBody"></div>
+      </div>
+
       <div class="card" id="social">
         <h2>Social reach — X, LinkedIn, Bluesky, Instagram <span class="hint">followers + latest posts per platform · all free sources · coverage labeled per panel</span></h2>
         <div id="socialBody"></div>
@@ -1008,6 +1013,7 @@ function boot(data){
   renderLifecycle(data.lifecycle || {});
   renderTraffic(data);
   renderSearchConsole(data);
+  renderTopSearches(data);
   renderBigPicture(data);
   renderAudienceQuality(data);
   // After every card has rendered, sprinkle clickable ⓘ icons on metric
@@ -3050,6 +3056,52 @@ function renderTraffic(data){
 }
 
 // Search Console — how people find Vital City on Google. Totals + top queries.
+// What New York is Googling — top NYC politics/policy searches this year,
+// whether or not they reach Vital City. Impression-ranked from Search Console
+// (the broadest free demand signal), with a live filter box.
+function renderTopSearches(data){
+  const host = $("#topSearchesBody"); if(!host) return;
+  const gsc = data.search_console || {};
+  const rows = gsc.topic_searches || [];
+  if(!gsc.available){
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">Connect Search Console to populate this &mdash; see the How it works page.</div>`;
+    return;
+  }
+  if(!rows.length){
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal)">No NYC politics or policy searches surfaced for this year yet.</div>`;
+    return;
+  }
+  const yr = (gsc.topic_search_start||'').slice(0,4) || 'this year';
+  const rowHTML = r => `<tr>
+    <td>${esc(r.query)}</td>
+    <td class="num">${fmtN(r.impressions)}</td>
+    <td class="num">${r.position}</td>
+    <td>${r.piece
+        ? `<a href="${esc(r.piece.url)}" target="_blank" rel="noopener">${esc(r.piece.title)}</a>`
+        : `<span style="color:#9a6a1a" title="No clearly-matching Vital City piece — a possible story idea.">not yet covered</span>`}</td>
+  </tr>`;
+  host.innerHTML = `
+    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:10px">The searches New Yorkers actually run about city politics and policy in ${yr}, ranked by how often each one happened &mdash; <b>whether or not anyone clicked through to Vital City</b>. A quick read on where public attention is going, and which of those questions Vital City has (or hasn&rsquo;t) answered.</div>
+    <input id="tsFilter" type="search" placeholder="Filter these searches &mdash; try &ldquo;housing&rdquo;, &ldquo;mamdani&rdquo;, &ldquo;rent&rdquo;&hellip;" autocomplete="off"
+      style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid var(--vc-cloud);border-radius:6px;font-family:inherit;font-size:13px;margin-bottom:10px;background:var(--vc-white);color:var(--vc-black)">
+    <div id="tsCount" style="font-size:11px;color:var(--vc-charcoal);margin-bottom:6px"></div>
+    <table class="tbl" style="width:100%"><thead><tr>
+      <th title="The words New Yorkers typed into Google.">Search</th>
+      <th class="num" title="How many times this search happened and a Vital City page appeared in the results this year (impressions) — the best free proxy for demand. See the note below.">Times shown</th>
+      <th class="num" title="Vital City's average ranking for this search. 1 = top of Google's first page; higher means buried further down.">Avg pos</th>
+      <th title="The Vital City piece that ranks for this search, if any. 'Not yet covered' means the automated match found no clear piece — a possible story idea.">On Vital City?</th>
+    </tr></thead><tbody id="tsBody"></tbody></table>
+    <div class="flagnote" style="margin-top:10px"><b>What this is &mdash; and isn&rsquo;t.</b> Source: Google Search Console, ${yr} to date. These are searches where a Vital City page appeared in Google&rsquo;s results at least once, ranked by impressions &mdash; the <b>broadest free read on demand, but not the entire universe of searches.</b> A term Vital City has never ranked for at all won&rsquo;t show up here; capturing those needs Google Keyword Planner (free, some setup) or a paid SEO tool. &ldquo;Times shown&rdquo; is not the same as a term&rsquo;s total Google search volume. NYC-politics/policy relevance is an automated keyword filter, so a stray entry may be off-topic.</div>`;
+  const inp = host.querySelector("#tsFilter"), tb = host.querySelector("#tsBody"), cnt = host.querySelector("#tsCount");
+  const draw = f => {
+    const list = f ? rows.filter(r => r.query.toLowerCase().includes(f)) : rows;
+    tb.innerHTML = list.map(rowHTML).join("");
+    cnt.textContent = `${list.length} search${list.length===1?'':'es'}${f?` matching “${f}”`:` this year, most-searched first`}`;
+  };
+  inp.addEventListener("input", () => draw(inp.value.toLowerCase().trim()));
+  draw("");
+}
+
 function renderSearchConsole(data){
   const host = $("#searchConsoleBody"); if(!host) return;
   const gsc = data.search_console || {};

@@ -1656,9 +1656,57 @@ def pull_search_console():
         windows = {str(d): window(d) for d in WINDOWS}
         default = windows["28"]
         log(f"  search console: {default['totals']['clicks']:,} clicks / {default['totals']['impressions']:,} impressions (28d), windows {WINDOWS} ({site})")
+
+        # ---- Top New York politics/policy searches, year-to-date, regardless of
+        # whether the searcher clicked through to Vital City. Search Console can
+        # only report queries where a VC page *appeared* in results at least
+        # once, so this is the broadest free demand signal we have — NOT the whole
+        # search universe (that needs Keyword Planner or a paid SEO tool). Ranked
+        # by impressions (how often searched-and-shown). Branded VC lookups are
+        # dropped and a keyword filter keeps it to NYC politics/policy.
+        ytd_start = today.replace(month=1, day=1).isoformat()
+        _BRAND = re.compile(r"vital\s*-?\s*city", re.I)
+        # NYC relevance: places, political figures, agencies and NYC-flavored
+        # policy topics. A query needs at least one to count. Heuristic — errs
+        # toward inclusion; the dashboard notes it's an automated filter.
+        # Short/ambiguous tokens get word boundaries (so "doe" doesn't match
+        # "does"); longer stems match open-ended (so "rent stabiliz" catches
+        # "stabilized" and "migrant" catches "migrants").
+        _NYC = re.compile(
+            r"(?:\b(?:nyc|bronx|koch|doe|dob|hpd|tlc|mta|g and t|3-?k|pre-?k)\b)"
+            r"|new york|manhattan|brooklyn|queens|staten island|harlem"
+            r"|mamdani|cuomo|adams|hochul|bloomberg|de ?blasio|giuliani|dinkins|lindsay"
+            r"|la ?guardia|sliwa|brad lander|\blander\b|mark levine|tish james|letitia"
+            r"|nypd|fdny|nycha|rikers|tammany|city council|city hall|comptroller"
+            r"|public advocate|borough president|albany"
+            r"|congestion|rent stabiliz|rent control|rent freeze|right to shelter|broker fee"
+            r"|co-?op city|nimby|upzon|migrant|asylum|outdoor dining|open streets"
+            r"|specialized high school|gifted and talented|zoning|homeless|shelter"
+            r"|precinct|stop and frisk|subway", re.I)
+        try:
+            yrows = query({"startDate": ytd_start, "endDate": end,
+                           "dimensions": ["query"], "rowLimit": 5000})
+            topic = []
+            for r in yrows:
+                q = r["keys"][0]
+                if _BRAND.search(q) or not _NYC.search(q):
+                    continue
+                topic.append({"query": q, "clicks": int(r.get("clicks", 0)),
+                              "impressions": int(r.get("impressions", 0)),
+                              "ctr": round((r.get("ctr") or 0) * 100, 1),
+                              "position": round(r.get("position") or 0, 1),
+                              "piece": match_piece(q)})
+            topic.sort(key=lambda x: -x["impressions"])
+            topic_searches = topic[:40]
+            log(f"  search console: {len(topic_searches)} top NYC politics/policy searches YTD (from {len(yrows)} queries since {ytd_start})")
+        except Exception as e:
+            log(f"  search console: top-searches pull failed ({e})")
+            topic_searches = []
+
         return {"available": True, "site": site, "window_days": 28,
                 "windows": windows, "windows_avail": WINDOWS,
-                "totals": default["totals"], "top_queries": default["top_queries"], "as_of": end}
+                "totals": default["totals"], "top_queries": default["top_queries"], "as_of": end,
+                "topic_searches": topic_searches, "topic_search_start": ytd_start}
     except Exception as e:
         log(f"  search console pull failed: {e}")
         return {"available": False, "reason": f"Search Console configured but the pull failed: {e}", "setup": GSC_SETUP}
