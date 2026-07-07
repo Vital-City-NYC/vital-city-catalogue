@@ -1,5 +1,35 @@
 [
   {
+    "title": "Cities Aren’t Putting Police Officers Where They’re Needed Most",
+    "slug": "cities-arent-putting-police-officers-where-theyre-needed-most",
+    "url": "https://www.vitalcitynyc.org/cities-arent-putting-police-officers-where-theyre-needed-most/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-07-07",
+    "published_at": "2026-07-07T14:00:48.000+00:00",
+    "updated_at": "2026-07-07T14:00:48.000+00:00",
+    "primary_author": "Richard Day",
+    "authors": [
+      "Richard Day"
+    ],
+    "topics": [
+      "Crime",
+      "Police-Community Relations",
+      "Police Reform",
+      "Chicago"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "On a troubling trend from New York to Chicago and beyond",
+    "excerpt": "On a troubling trend from New York to Chicago and beyond",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/07/41345082320_c2d0d61d51.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1474,
+    "reading_minutes": 6,
+    "id": "6a45cd6e85fc730001843f39"
+  },
+  {
     "title": "Expert Advice for Mamdani’s Commission on Government Efficiency",
     "slug": "expert-advice-for-mamdanis-commission-on-government-efficiency",
     "url": "https://www.vitalcitynyc.org/expert-advice-for-mamdanis-commission-on-government-efficiency/",
@@ -134,7 +164,7 @@
     "type_basis": "html:7-chart-embeds",
     "published_date": "2026-07-02",
     "published_at": "2026-07-02T13:00:29.000+00:00",
-    "updated_at": "2026-07-02T13:00:29.000+00:00",
+    "updated_at": "2026-07-07T17:24:06.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -150,7 +180,7 @@
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/07/55182666993_a7832ff94e.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 829,
+    "word_count": 898,
     "reading_minutes": 4,
     "id": "6a45437a85fc730001843e7d"
   },
@@ -3791,7 +3821,7 @@
     "slug": "gloria-gong-interview",
     "url": "https://www.vitalcitynyc.org/gloria-gong-interview/",
     "type": "q&a",
-    "type_basis": "tag:interview",
+    "type_basis": "tag:podcast",
     "published_date": "2026-02-12",
     "published_at": "2026-02-12T14:36:01.000+00:00",
     "updated_at": "2026-04-15T13:36:27.000+00:00",
@@ -10354,35 +10384,36 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "Is It Time for Cities to Go It Alone?",
-    "slug": "is-it-time-for-cities-to-go-it-alone",
-    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
+    "title": "What You Can Do About Trump",
+    "slug": "what-you-can-do-about-trump",
+    "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
     "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "Richard Schragger",
+    "primary_author": "A Survey",
     "authors": [
-      "Richard Schragger"
+      "A Survey"
     ],
     "topics": [
+      "Politics",
       "Where Do We Go From Here?",
-      "City Government",
-      "Politics"
+      "Journalism",
+      "Government Operations"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
+    "summary": "Some advice for ordinary Americans concerned about the judgment of history",
+    "excerpt": "Some advice for ordinary Americans concerned about the judgment of history",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeoqviqrldabuac_johnhalpin__headerimage__trump100days_edited-png-auto-format-compress-1776259704726.jpg",
     "featured": false,
     "visibility": "public",
-    "word_count": 1697,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4049"
+    "word_count": 4185,
+    "reading_minutes": 18,
+    "id": "69a04c0ad4006a00010a404a"
   },
   {
     "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
@@ -10414,38 +10445,6 @@
     "word_count": 1619,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a41d5"
-  },
-  {
-    "title": "What You Can Do About Trump",
-    "slug": "what-you-can-do-about-trump",
-    "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": "A Survey",
-    "authors": [
-      "A Survey"
-    ],
-    "topics": [
-      "Politics",
-      "Where Do We Go From Here?",
-      "Journalism",
-      "Government Operations"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "Some advice for ordinary Americans concerned about the judgment of history",
-    "excerpt": "Some advice for ordinary Americans concerned about the judgment of history",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeoqviqrldabuac_johnhalpin__headerimage__trump100days_edited-png-auto-format-compress-1776259704726.jpg",
-    "featured": false,
-    "visibility": "public",
-    "word_count": 4185,
-    "reading_minutes": 18,
-    "id": "69a04c0ad4006a00010a404a"
   },
   {
     "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
@@ -10508,6 +10507,37 @@
     "word_count": 1560,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a404b"
+  },
+  {
+    "title": "Is It Time for Cities to Go It Alone?",
+    "slug": "is-it-time-for-cities-to-go-it-alone",
+    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:02.000+00:00",
+    "primary_author": "Richard Schragger",
+    "authors": [
+      "Richard Schragger"
+    ],
+    "topics": [
+      "Where Do We Go From Here?",
+      "City Government",
+      "Politics"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1697,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4049"
   },
   {
     "title": "A Real New York Mayoral Election",

@@ -1,27 +1,34 @@
 {
   "meta": {
-    "generated_at": "2026-07-07T12:05:56.012115+00:00",
+    "generated_at": "2026-07-07T17:32:06.564657+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 865,
-    "total_authors": 476,
+    "total_posts": 866,
+    "total_authors": 477,
     "total_issues": 29,
-    "total_topics": 210,
+    "total_topics": 211,
     "date_range": [
       "2021-09-15",
-      "2026-07-06"
+      "2026-07-07"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 1,
+    "new_articles": [
+      {
+        "title": "Cities Aren\u2019t Putting Police Officers Where They\u2019re Needed Most",
+        "url": "https://www.vitalcitynyc.org/cities-arent-putting-police-officers-where-theyre-needed-most/",
+        "published_date": "2026-07-07",
+        "primary_author": "Richard Day"
+      }
+    ]
   },
-  "total_pieces": 865,
+  "total_pieces": 866,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 155,
     "2024": 223,
     "2025": 287,
-    "2026": 153
+    "2026": 154
   },
   "by_month": {
     "2021-09": 1,
@@ -76,12 +83,12 @@
     "2026-04": 23,
     "2026-05": 22,
     "2026-06": 44,
-    "2026-07": 6
+    "2026-07": 7
   },
   "by_type": [
     [
       "opinion/commentary",
-      734
+      735
     ],
     [
       "q&a",
@@ -107,7 +114,7 @@
   "by_topic_top25": [
     [
       "Crime",
-      142
+      143
     ],
     [
       "History",
@@ -146,11 +153,11 @@
       54
     ],
     [
-      "Economics",
-      52
+      "Police Reform",
+      53
     ],
     [
-      "Police Reform",
+      "Economics",
       52
     ],
     [
@@ -206,7 +213,7 @@
       22
     ]
   ],
-  "n_topics_total": 210,
+  "n_topics_total": 211,
   "by_credential_pieces": [
     [
       "Academic",
@@ -230,7 +237,7 @@
     ],
     [
       "Government / public official",
-      83
+      84
     ],
     [
       "Business / private sector",
@@ -276,7 +283,7 @@
     ],
     [
       "Government / public official",
-      29
+      30
     ],
     [
       "Think tank / research institute",
@@ -323,7 +330,7 @@
       "2023": 37,
       "2024": 38,
       "2025": 31,
-      "2026": 18
+      "2026": 19
     },
     "History": {
       "2022": 12,
@@ -374,7 +381,7 @@
     }
   },
   "wc_stats": {
-    "n": 856,
+    "n": 857,
     "median": 1619,
     "mean": 1907,
     "p90": 2838,
@@ -391,7 +398,7 @@
     ],
     [
       "1,000-1,999",
-      502
+      503
     ],
     [
       "2,000-2,999",
@@ -407,7 +414,7 @@
     ]
   ],
   "by_nauthors": {
-    "1": 732,
+    "1": 733,
     "2": 105,
     "3": 25,
     "4": 1,
