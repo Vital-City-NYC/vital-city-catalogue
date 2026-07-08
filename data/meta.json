@@ -1,15 +1,22 @@
 {
-  "generated_at": "2026-07-08T11:41:30.321802+00:00",
+  "generated_at": "2026-07-08T23:29:48.559342+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 866,
-  "total_authors": 477,
+  "total_posts": 867,
+  "total_authors": 478,
   "total_issues": 29,
   "total_topics": 211,
   "date_range": [
     "2021-09-15",
-    "2026-07-07"
+    "2026-07-08"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "The Origins of ‘Lived Experience’",
+      "url": "https://www.vitalcitynyc.org/the-origins-of-lived-eexperience/",
+      "published_date": "2026-07-08",
+      "primary_author": "Sage Lattman"
+    }
+  ]
 }

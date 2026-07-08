@@ -1,27 +1,34 @@
 {
   "meta": {
-    "generated_at": "2026-07-08T11:41:30.321802+00:00",
+    "generated_at": "2026-07-08T23:29:48.559342+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 866,
-    "total_authors": 477,
+    "total_posts": 867,
+    "total_authors": 478,
     "total_issues": 29,
     "total_topics": 211,
     "date_range": [
       "2021-09-15",
-      "2026-07-07"
+      "2026-07-08"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 1,
+    "new_articles": [
+      {
+        "title": "The Origins of \u2018Lived Experience\u2019",
+        "url": "https://www.vitalcitynyc.org/the-origins-of-lived-eexperience/",
+        "published_date": "2026-07-08",
+        "primary_author": "Sage Lattman"
+      }
+    ]
   },
-  "total_pieces": 866,
+  "total_pieces": 867,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 155,
     "2024": 223,
     "2025": 287,
-    "2026": 154
+    "2026": 155
   },
   "by_month": {
     "2021-09": 1,
@@ -76,12 +83,12 @@
     "2026-04": 23,
     "2026-05": 22,
     "2026-06": 44,
-    "2026-07": 7
+    "2026-07": 8
   },
   "by_type": [
     [
       "opinion/commentary",
-      735
+      736
     ],
     [
       "q&a",
@@ -135,7 +142,7 @@
     ],
     [
       "culture",
-      72
+      73
     ],
     [
       "Gun Violence",
@@ -143,7 +150,7 @@
     ],
     [
       "Politics",
-      54
+      55
     ],
     [
       "Police Reform",
@@ -218,7 +225,7 @@
     ],
     [
       "Journalist / media",
-      96
+      97
     ],
     [
       "Vital City (institutional)",
@@ -272,7 +279,7 @@
     ],
     [
       "Journalist / media",
-      34
+      35
     ],
     [
       "Government / public official",
@@ -370,13 +377,13 @@
       "2023": 19,
       "2024": 26,
       "2025": 18,
-      "2026": 5
+      "2026": 6
     }
   },
   "wc_stats": {
-    "n": 857,
-    "median": 1619,
-    "mean": 1907,
+    "n": 858,
+    "median": 1618,
+    "mean": 1906,
     "p90": 2838,
     "max": 30332
   },
@@ -391,7 +398,7 @@
     ],
     [
       "1,000-1,999",
-      503
+      504
     ],
     [
       "2,000-2,999",
@@ -407,7 +414,7 @@
     ]
   ],
   "by_nauthors": {
-    "1": 733,
+    "1": 734,
     "2": 105,
     "3": 25,
     "4": 1,
