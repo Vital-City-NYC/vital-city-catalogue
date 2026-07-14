@@ -105,6 +105,42 @@
   .controls label.chk:has(input:checked) span{text-decoration-color:#fff!important;color:#fff}
   .refinehint{font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
   .refine{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}
+  /* ---- Popover menus (Filters, Use this list, Manage) ------------------- */
+  .menu{position:relative;display:inline-block}
+  .menubtn{display:inline-flex;align-items:center;gap:6px}
+  .menubtn .caret{font-size:9px;opacity:.65}
+  .menu.open .menubtn{background:var(--vc-black);color:#fff}
+  .menu.open .menubtn .caret{opacity:1}
+  /* A count of the filters currently switched on, so nothing is ever silently active */
+  .badge-n{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;
+           background:var(--vc-green);color:#fff;font-size:10px;font-weight:700;border-radius:999px;letter-spacing:0}
+  .badge-n[hidden]{display:none}   /* display:inline-flex would otherwise beat the hidden attribute */
+  .menu.open .badge-n{background:var(--vc-white);color:var(--vc-black)}
+  .menupanel{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:40;min-width:230px;
+             background:var(--vc-white);border:1px solid var(--vc-black);box-shadow:5px 5px 0 rgba(5,5,7,.13);padding:9px}
+  .menupanel.wide{min-width:290px}
+  .menu.open .menupanel{display:block}
+  .menu.right .menupanel{left:auto;right:0}   /* set by JS when a left-aligned panel would run off-screen */
+  .menusec{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--vc-charcoal);
+           padding:6px 4px 5px;border-bottom:1px solid var(--vc-cloud);margin-bottom:6px}
+  .menusec:not(:first-child){margin-top:10px}
+  .menunote{display:block;text-transform:none;letter-spacing:0;font-weight:300;font-size:11px;color:var(--vc-charcoal);margin-top:3px;line-height:1.4}
+  .menusplit{height:1px;background:var(--vc-cloud);margin:7px 0}
+  .menuitem{display:block;width:100%;text-align:left;font:inherit;font-size:12.5px;font-weight:700;padding:8px 9px;
+            border:none;background:transparent;color:var(--vc-black);cursor:pointer;white-space:nowrap}
+  .menuitem:hover{background:var(--vc-black);color:#fff}
+  .menufield{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--vc-charcoal);padding:2px 9px 7px}
+  .menufield select{display:block;width:100%;margin-top:4px;font:inherit;font-size:13px;font-weight:300;text-transform:none;letter-spacing:0;
+                    padding:6px 8px;border:1px solid var(--vc-black);background:#fff;border-radius:0;color:var(--vc-black)}
+  /* The refine checkboxes keep their pill styling inside the panel, just stacked */
+  .menupanel label.chk{font-size:12px;display:flex;align-items:center;gap:5px;color:var(--vc-charcoal);cursor:pointer;
+        text-transform:uppercase;letter-spacing:.05em;font-weight:700;padding:6px 11px;margin-bottom:5px;
+        border:1px solid var(--vc-cloud);border-radius:999px;background:var(--vc-white)}
+  .menupanel label.chk:hover{border-color:var(--vc-charcoal)}
+  .menupanel label.chk input{position:absolute;opacity:0;width:0;height:0}
+  .menupanel label.chk:has(input:checked){background:var(--vc-green);border-color:var(--vc-green);color:#fff}
+  .menupanel label.chk:has(input:checked) span{text-decoration-color:#fff!important;color:#fff}
+  .menupanel > select{width:100%;font:inherit;font-size:13px;padding:7px 8px;border:1px solid var(--vc-black);background:#fff;border-radius:0;color:var(--vc-black)}
   .toggles{display:inline-flex;flex-wrap:wrap;gap:8px}
   .tg{font:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:8px 13px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-charcoal);cursor:pointer}
   .tg.on{background:var(--vc-green);border-color:var(--vc-green);color:#fff}
@@ -287,6 +323,15 @@
   html.dark .controls label.chk:has(input:checked){background:var(--vc-green);border-color:var(--vc-green);color:#fff}
   html.dark .btn.ghost{background:transparent;color:var(--vc-charcoal)}
   html.dark .btn.ghost:hover{background:transparent;color:var(--vc-black)}
+  /* Menus: --vc-black inverts to near-white in dark, so the black-fill hovers
+     from the light theme would put white text on a white slab. Use cerulean. */
+  html.dark .menu.open .menubtn{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  html.dark .menu.open .badge-n{background:#fff;color:var(--vc-cerulean)}
+  html.dark .menupanel{background:#212329;box-shadow:5px 5px 0 rgba(0,0,0,.45)}
+  html.dark .menuitem{color:var(--vc-black)}
+  html.dark .menuitem:hover{background:var(--vc-cerulean);color:#fff}
+  html.dark .menupanel label.chk{background:var(--vc-white);border-color:var(--vc-cloud)}
+  html.dark .menupanel label.chk:has(input:checked){background:var(--vc-green);border-color:var(--vc-green);color:#fff}
   html.dark .gatebox{background:var(--vc-white)}
   html.dark .gatebox button{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
   html.dark .gatebox button:hover{background:var(--vc-orange);border-color:var(--vc-orange);color:#161719}
@@ -340,40 +385,43 @@
     </div>
     <span class="toglegend">Click a category to cycle it: <span class="lg lg-inc">✓ include</span> → <span class="lg lg-exc">✕ exclude</span> → <span class="lg lg-off">off</span>.</span>
     <input type="search" id="q" placeholder="Search name, email, institution, notes…" autocomplete="off" aria-label="Search by name, email, institution or notes (press / to focus)" title="Type to narrow the list. Matches names, email addresses, institutions and your notes — and updates as you type. Shortcut: press / to jump here.">
-    <span class="refine"><span class="refinehint">Refine:</span>
-      <label class="chk" id="repeatDonorWrap" style="display:none" title="Show only donors who have given more than once (appears when the Donors filter is on)."><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
-      <label class="chk" title="Show only contacts you've starred. Star anyone by clicking the ☆ at the start of their row."><input type="checkbox" id="fStar"> ★ Starred</label>
-      <label class="chk" title="Show only people flagged 'notable' — they appear to have an English Wikipedia page (matched conservatively using context clues, so it's a rough signal of public profile)."><input type="checkbox" id="fWiki"> <span style="text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px">Notable</span></label>
-      <label class="chk" title="Show only people who are subscribed to the newsletter under two or more email addresses (each tagged ✉ newsletter) — i.e. they're on the list more than once."><input type="checkbox" id="fMultiSub"> 2+ newsletter emails</label>
-      <label class="chk" title="Show only people we have NO email address for — usually authors or contacts added by name without a known address. Useful for filling in missing contact info."><input type="checkbox" id="fNoEmail"> No email</label>
-      <label class="chk" title="Show only people whose name isn't confirmed yet — a gray guessed name (from their email handle) or no name at all. Combine with Power readers or Donors to find high-value contacts that still need a real name."><input type="checkbox" id="fNoName"> No confirmed name</label>
-      <label class="chk" title="Also show people who left the newsletter. They're hidden by default and appear in red when shown."><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
-    </span>
-    <label class="sortctl" title="Filter by how complete a contact's name is — useful for prioritizing name-confirmation work. Guessed names appear in gray in the list and have a ✓ button to confirm. Combine with the Donors or Subscribers filter to find your highest-value contacts that still need a real name.">Name:
-      <select id="fName" aria-label="Filter by name quality">
-        <option value="any">(any)</option>
-        <option value="confirmed_full">Confirmed first + last</option>
-        <option value="confirmed_partial">Confirmed partial (first OR last only)</option>
-        <option value="confirmed_any">Any confirmed name</option>
-        <option value="guessed">Guessed (gray — from email handle)</option>
-        <option value="missing">No name at all</option>
-        <option value="needs_work">Needs work (guessed or missing)</option>
-      </select>
-    </label>
-    <label class="sortctl" title="Filter to engagement subsets the Growth dashboard surfaces. Active = opened a Vital City newsletter in the last 30 days (MAU) or year (AAU). Power readers = top decile by composite engagement. At-risk = opened in last year but not last 30 days — re-engagement target. Sunset candidates = 1-2★ + 6mo+ tenure + no recent open, pruning candidates. Refreshes daily.">Engagement:
-      <select id="fEngagement" aria-label="Filter by newsletter engagement">
-        <option value="any">(any)</option>
-        <option value="mau">Active · last 30 days (MAU)</option>
-        <option value="aau">Active · last year (AAU)</option>
-        <option value="power">Power readers (top decile)</option>
-        <option value="at_risk">At-risk (lapsed but reachable)</option>
-        <option value="sunset">Sunset candidates (prune list)</option>
-      </select>
-    </label>
+    <!-- Every refinement lives in one popover. The badge shows how many are
+         active, so a filter can never be silently on without you seeing it. -->
+    <div class="menu" id="mFilters">
+      <button class="btn menubtn" id="filtersBtn" aria-expanded="false" aria-haspopup="true" title="All the extra filters — starred, notable, name quality, newsletter engagement and more. The number on the button is how many are switched on right now.">Filters<span class="badge-n" id="filtersCount" hidden>0</span> <span class="caret">▾</span></button>
+      <div class="menupanel wide" role="group" aria-label="Extra filters">
+        <div class="menusec">Refine</div>
+        <label class="chk" id="repeatDonorWrap" style="display:none" title="Show only donors who have given more than once (appears when the Donors filter is on)."><input type="checkbox" id="fRepeatDonor"> Repeat donors (2+ gifts)</label>
+        <label class="chk" title="Show only contacts you've starred. Star anyone by clicking the ☆ at the start of their row."><input type="checkbox" id="fStar"> ★ Starred</label>
+        <label class="chk" title="Show only people flagged 'notable' — they appear to have an English Wikipedia page (matched conservatively using context clues, so it's a rough signal of public profile)."><input type="checkbox" id="fWiki"> <span style="text-decoration:underline;text-decoration-color:var(--vc-cerulean);text-decoration-thickness:2px;text-underline-offset:3px">Notable</span></label>
+        <label class="chk" title="Show only people who are subscribed to the newsletter under two or more email addresses (each tagged ✉ newsletter) — i.e. they're on the list more than once."><input type="checkbox" id="fMultiSub"> 2+ newsletter emails</label>
+        <label class="chk" title="Show only people we have NO email address for — usually authors or contacts added by name without a known address. Useful for filling in missing contact info."><input type="checkbox" id="fNoEmail"> No email</label>
+        <label class="chk" title="Also show people who left the newsletter. They're hidden by default and appear in red when shown."><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
+        <div class="menusec">Name<span class="menunote">how complete a contact's name is — for prioritizing name-confirmation work</span></div>
+        <select id="fName" aria-label="Filter by name quality" title="Guessed names appear in gray in the list and have a ✓ button to confirm. Combine with Donors or Subscribers to find your highest-value contacts that still need a real name.">
+          <option value="any">(any)</option>
+          <option value="confirmed_full">Confirmed first + last</option>
+          <option value="confirmed_partial">Confirmed partial (first OR last only)</option>
+          <option value="confirmed_any">Any confirmed name</option>
+          <option value="guessed">Guessed (gray — from email handle)</option>
+          <option value="missing">No name at all</option>
+          <option value="needs_work">Needs work (guessed or missing)</option>
+        </select>
+        <div class="menusec">Engagement<span class="menunote">the subsets the Growth dashboard surfaces · refreshes daily</span></div>
+        <select id="fEngagement" aria-label="Filter by newsletter engagement" title="Active = opened a Vital City newsletter in the last 30 days (MAU) or year (AAU). Power readers = top decile by composite engagement. At-risk = opened in the last year but not the last 30 days — a re-engagement target. Sunset candidates = 1-2★ + 6mo+ tenure + no recent open, i.e. pruning candidates.">
+          <option value="any">(any)</option>
+          <option value="mau">Active · last 30 days (MAU)</option>
+          <option value="aau">Active · last year (AAU)</option>
+          <option value="power">Power readers (top decile)</option>
+          <option value="at_risk">At-risk (lapsed but reachable)</option>
+          <option value="sunset">Sunset candidates (prune list)</option>
+        </select>
+      </div>
+    </div>
     <button class="btn ghost" id="clear" title="Reset every filter and return to the full list">Reset all</button>
   </div>
   <div class="savedviews" id="savedViews"></div>
-  <div class="hint"><b>New here?</b> Hover over any button, column heading or tag for a plain-English explanation — or read the <a href="about.html" target="_blank" class="hintlink">full guide ↗</a>. Click anyone's <b>name</b> (or anywhere on their row) to view their full details — then edit or delete from there. <b>✓</b> confirms a <span class="g">gray</span> guessed name; click the <b>☆</b> to star someone. Press <kbd>?</kbd> for keyboard shortcuts. <a href="#" id="exportFixes" class="hintlink" title="Download a backup file of all the edits, confirmations and deletions made in this tool. Not normally needed — edits already save automatically.">Export edits →</a></div>
+  <div class="hint"><b>New here?</b> Hover over any button, column heading or tag for a plain-English explanation — or read the <a href="about.html" target="_blank" class="hintlink">full guide ↗</a>. Click anyone's <b>name</b> (or anywhere on their row) to view their full details — then edit or delete from there. <b>✓</b> confirms a <span class="g">gray</span> guessed name; click the <b>☆</b> to star someone. Press <kbd>?</kbd> for keyboard shortcuts. Extra filters live under <b>Filters ▾</b>; exporting, copying and emailing the list live under <b>Use this list ▾</b>.</div>
   <div class="layout">
     <aside>
       <h2>Filter by type<span class="infodot" title="Types are pieced together from our contact CRM plus automatic inference: 'VC contributor' from a published byline, 'journalist' from a news-outlet email domain, 'current nyc.gov' from an active city email, and others from the CRM. They are approximate and may be incomplete or out of date — edit any row to correct it.">i</span><span class="facetbulk"><a href="#" data-bulk="types:all" title="Tick every type at once">all</a> · <a href="#" data-bulk="types:none" title="Untick every type">clear</a></span></h2>
@@ -406,17 +454,36 @@
               <option value="since:1">Longest subscribed</option>
               <option value="alast:-1">Most recent contribution</option>
               <option value="arts:-1">Most published (VC pieces)</option>
-              <option value="eng:-1">Most engaged</option>
+              <option value="eng:-1" title="Ranks by engagement score = Mailchimp star rating x 20 + open rate. Shown in the Subscriber column as ★rating · opens.">Most engaged</option>
               <option value="damt:-1">Donation size</option>
               <option value="dlast:-1">Recently donated</option>
             </select>
           </label>
-          <button class="btn" id="addPerson" title="Manually add one new person">+ Add person</button>
-          <button class="btn" id="needsReview" title="Records that could use a human check (incl. possible duplicates)">Needs review</button>
-          <button class="btn" id="export" title="Download everyone currently shown as a spreadsheet (.csv) — opens in Excel or Google Sheets. Respects your filters and sort.">Export CSV</button>
-          <button class="btn" id="copyEmails" title="Copy the email addresses of everyone currently shown to your clipboard, ready to paste anywhere.">Copy emails</button>
-          <select id="emailField" title="Which address field the emails go into when you click 'Email group': Bcc (recipients can't see each other — best for newsletters), To, or Cc."><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
-          <button class="btn" id="emailGroup" title="Open a new message in your email app addressed to everyone currently shown (in the Bcc/To/Cc field you picked). For big lists, 'Copy emails' is more reliable.">Email group</button>
+          <!-- Everything that acts on the list as currently filtered. -->
+          <div class="menu" id="mList">
+            <button class="btn menubtn" id="listBtn" aria-expanded="false" aria-haspopup="true" title="Export, copy or email everyone currently shown. Every action here respects your filters and sort.">Use this list <span class="caret">▾</span></button>
+            <div class="menupanel" role="menu">
+              <div class="menusec">Everyone currently shown<span class="menunote" id="listBtnCount"></span></div>
+              <button class="menuitem" id="export" role="menuitem" title="Download everyone currently shown as a spreadsheet (.csv) — opens in Excel or Google Sheets. Respects your filters and sort.">Export CSV</button>
+              <button class="menuitem" id="copyEmails" role="menuitem" title="Copy the email addresses of everyone currently shown to your clipboard, ready to paste anywhere.">Copy emails</button>
+              <div class="menusplit"></div>
+              <label class="menufield" title="Which address field the emails go into: Bcc (recipients can't see each other — best for newsletters), To, or Cc.">Address them in
+                <select id="emailField"><option value="bcc">Bcc</option><option value="to">To</option><option value="cc">Cc</option></select>
+              </label>
+              <button class="menuitem" id="emailGroup" role="menuitem" title="Open a new message in your email app addressed to everyone currently shown (in the Bcc/To/Cc field you picked). For big lists, 'Copy emails' is more reliable.">Email group…</button>
+            </div>
+          </div>
+          <!-- Record maintenance. 'Export edits' used to be buried as a link in
+               the help paragraph below; it belongs with the other admin tools. -->
+          <div class="menu" id="mManage">
+            <button class="btn menubtn" id="manageBtn" aria-expanded="false" aria-haspopup="true" title="Add a contact, review records that need a human check, or back up your edits.">Manage <span class="caret">▾</span></button>
+            <div class="menupanel" role="menu">
+              <button class="menuitem" id="addPerson" role="menuitem" title="Manually add one new person">+ Add person</button>
+              <button class="menuitem" id="needsReview" role="menuitem" title="Records that could use a human check (incl. possible duplicates)">Needs review…</button>
+              <div class="menusplit"></div>
+              <button class="menuitem" id="exportFixes" role="menuitem" title="Download a backup file of all the edits, confirmations and deletions made in this tool. Not normally needed — edits already save automatically.">Export edits (backup)</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="tablewrap">
@@ -588,6 +655,21 @@ function canonFirst(f){ f=sortName(f); return NICK[f]||f; }
 // Normalize a name part for sorting: lowercase, drop punctuation/accents so
 // "O'Brien", "“Gary”" etc. sort by their letters, not by leading symbols.
 function sortName(s){return (s||"").toLowerCase().normalize("NFKD").replace(/[^a-z0-9 ]+/g,"").trim();}
+// Composite engagement score — the SAME definition the Growth dashboard uses to
+// pick power readers: Mailchimp star rating (0-5) x 20, plus open rate (0-100).
+// Both tools now rank "most engaged" identically.
+//
+// The old formula was erate*1000 + eopen, which is a lexicographic sort: the
+// star rating (invisible in the table, and 2 for ~71% of the list) outranked
+// open rate absolutely, so a 4-star/32%-open reader sorted above a 2-star reader
+// who opens every single email. The column then read 99%, 82%, 36%, 32%, 100% —
+// which is why the sort looked broken. At x20 a full 5 stars is worth 100 points,
+// the same as going from 0% to 100% opens, so neither term can bury the other.
+function engScore(p){ return (p.erate||0)*20 + (p.eopen||0); }
+// Full sort key for engagement, most-engaged first. Clicks break ties (a click
+// is a stronger signal than an open, which Apple Mail's privacy auto-opens
+// inflate), then name, so equal scores never reshuffle between renders.
+function nameKey(p){ return sortName(lastName(p))+"|"+sortName(firstName(p)); }
 let PEOPLE=[], sortKey="last", sortDir=1;
 let onlyUnsub=false;   // banner "unsubscribed" → show only former contacts
 let selectedCats=new Set();   // chosen type/specialty categories (OR within)
@@ -703,6 +785,70 @@ function computeActivity(){
   const seg=(ns,un,g,gc)=>`<b class="up">+${ns.toLocaleString()}</b> subscribers · <b class="down">−${un.toLocaleString()}</b> unsubscribed · <b class="gift">${money(g)}</b> from ${gc} gift${gc===1?"":"s"}`;
   $("#activityBar").innerHTML=`<span class="albl">Recent activity</span><b>Last 7 days:</b> ${seg(ns7,un7,g7,g7c)} &nbsp;&middot;&nbsp; <b>Last 30 days:</b> ${seg(ns30,un30,g30,g30c)}`;
 }
+// ---- Popover menus -----------------------------------------------------
+// Three menus replace what used to be seven loose refine checkboxes, two bare
+// selects and six buttons. Nothing was dropped — it all moved inside.
+function closeMenus(except){
+  document.querySelectorAll(".menu.open").forEach(m=>{
+    if(m===except) return;
+    m.classList.remove("open");
+    const b=m.querySelector(".menubtn"); if(b) b.setAttribute("aria-expanded","false");
+  });
+}
+// Keep an open panel inside the viewport: prefer left-aligned, flip to
+// right-aligned if that would overflow the right edge, and stay left if the
+// flip would overflow the left edge instead.
+function placeMenu(menu){
+  const panel=menu.querySelector(".menupanel");
+  menu.classList.remove("right");
+  const r=panel.getBoundingClientRect(), vw=document.documentElement.clientWidth;
+  if(r.right>vw-8){
+    menu.classList.add("right");
+    if(panel.getBoundingClientRect().left<8) menu.classList.remove("right");
+  }
+}
+function initMenus(){
+  document.querySelectorAll(".menu").forEach(menu=>{
+    const btn=menu.querySelector(".menubtn");
+    btn.addEventListener("click",e=>{
+      e.stopPropagation();
+      const open=!menu.classList.contains("open");
+      closeMenus(menu);
+      menu.classList.toggle("open",open);
+      btn.setAttribute("aria-expanded",String(open));
+      // The Filters button sits at the right end of a flex bar and the actions
+      // menus sit at the right edge of the results row, so a left-aligned panel
+      // runs off the page. Flip to right-aligned only when it actually would —
+      // on a narrow screen the same button can wrap left, where flipping would
+      // push the panel off the OTHER edge.
+      if(open) placeMenu(menu);
+    });
+    // Clicks INSIDE the panel must not close it — the Filters panel is a
+    // checklist you tick several boxes in. Action items close it themselves.
+    menu.querySelector(".menupanel").addEventListener("click",e=>{
+      e.stopPropagation();
+      if(e.target.closest(".menuitem")) closeMenus();
+    });
+  });
+  document.addEventListener("click",()=>closeMenus());
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeMenus(); });
+}
+// The badge on the Filters button — how many refinements are switched on. With
+// the filters tucked inside a popover this is the only thing standing between
+// you and a silently-filtered list, so it has to be exact.
+function activeFilterCount(){
+  let n=0;
+  ["#fRepeatDonor","#fStar","#fWiki","#fMultiSub","#fNoEmail","#fUnsub"].forEach(s=>{ if($(s).checked) n++; });
+  if($("#fName").value!=="any") n++;
+  if($("#fEngagement").value!=="any") n++;
+  return n;
+}
+function syncMenuChrome(shown){
+  const n=activeFilterCount(), b=$("#filtersCount");
+  b.textContent=n; b.hidden=(n===0);
+  $("#filtersBtn").classList.toggle("hasfilters",n>0);
+  $("#listBtnCount").textContent=shown.toLocaleString()+(shown===1?" person":" people");
+}
 function init(){
   buildStats();
   computeActivity();
@@ -721,7 +867,6 @@ function init(){
   $("#fWiki").addEventListener("change",render);
   $("#fMultiSub").addEventListener("change",render);
   $("#fNoEmail").addEventListener("change",render);
-  $("#fNoName").addEventListener("change",render);
   $("#fName").addEventListener("change",render);
   $("#fEngagement").addEventListener("change",render);
   $("#fUnsub").addEventListener("change",()=>{onlyUnsub=false;render();});
@@ -735,6 +880,7 @@ function init(){
   $("#themeToggle").addEventListener("click",e=>{e.preventDefault(); const t=document.documentElement.classList.contains("dark")?"light":"dark"; localStorage.setItem("vc_theme",t); applyTheme(t);});
   $("#addPerson").addEventListener("click",openAdd);
   $("#needsReview").addEventListener("click",showReview);
+  initMenus();
   $("#reviewClose").addEventListener("click",()=>$("#reviewModal").style.display="none");
   $("#reviewModal").addEventListener("click",e=>{if(e.target.id==="reviewModal")$("#reviewModal").style.display="none";});
   $("#reviewList").addEventListener("click",e=>{const a=e.target.closest(".rvlink");if(!a)return; $("#reviewModal").style.display="none";
@@ -762,8 +908,12 @@ function init(){
     const del=e.target.closest(".x[data-del]"); if(del){ e.stopPropagation(); const v=loadViews(); v.splice(+del.dataset.del,1); localStorage.setItem(VKEY,JSON.stringify(v)); renderViews(); return; }
     if(e.target.id==="svAdd"){ const name=prompt("Name this view (e.g. \"Housing reporters '24+\"):"); if(name&&name.trim()){ const v=loadViews(); v.push({name:name.trim(),state:currentState()}); localStorage.setItem(VKEY,JSON.stringify(v)); renderViews(); toast("View saved"); } return; }
     if(e.target.id==="svLink"){ navigator.clipboard.writeText(location.href).then(()=>toast("Link to this view copied")).catch(()=>toast("Copy failed")); return; }
-    const bchip=e.target.closest(".svchip-built"); if(bchip){ const b=BUILTIN_VIEWS[+bchip.dataset.builtin]; if(b) applyState(b.state); return; }
-    const chip=e.target.closest(".svchip"); if(chip){ const v=loadViews()[+chip.dataset.i]; if(v) applyState(v.state); }
+    // A view is a whole preset, not just a sort — applying one REPLACES every
+    // filter, including Name and Engagement. That used to happen silently, so
+    // "filter to confirmed names, then click ⚡ Most engaged" quietly dropped the
+    // name filter and looked like the sort was misbehaving. Say so out loud.
+    const bchip=e.target.closest(".svchip-built"); if(bchip){ const b=BUILTIN_VIEWS[+bchip.dataset.builtin]; if(b){ applyState(b.state); toast(`View "${b.name}" applied — it replaced all your filters`); } return; }
+    const chip=e.target.closest(".svchip"); if(chip){ const v=loadViews()[+chip.dataset.i]; if(v){ applyState(v.state); toast(`View "${v.name}" applied — it replaced all your filters`); } }
   });
   window.addEventListener("resize",measureSticky);
   // Infinite scroll: append the next page as the bottom comes into view.
@@ -878,7 +1028,7 @@ function syncToggles(){
   });
   // Repeat-donor sub-filter + Donorbox note are only meaningful while viewing donors.
   const showDon=want.don===1;
-  $("#repeatDonorWrap").style.display=showDon?"inline-flex":"none";
+  $("#repeatDonorWrap").style.display=showDon?"flex":"none";   // stacked in the Filters panel now, not inline
   if(!showDon) $("#fRepeatDonor").checked=false;
 }
 function setSort(k){ if(k==="mem"){sortKey="eng";sortDir=-1;} else if(k==="don"){sortKey="damt";sortDir=-1;} else if(k==="auth"){sortKey="alast";sortDir=-1;} else if(k==="press"){sortKey="last";sortDir=1;} else {sortKey="arts";sortDir=-1;} }
@@ -904,7 +1054,7 @@ function toggleOther(){
 function clearAll(){
   selectedCats.clear(); want={mem:0,don:0,auth:0,press:0}; reviewMode="";
   $("#q").value=""; $("#dFrom").value=""; $("#dTo").value="";
-  onlyUnsub=false; $("#fUnsub").checked=false; $("#fStar").checked=false; $("#fWiki").checked=false; $("#fMultiSub").checked=false; $("#fNoEmail").checked=false; $("#fNoName").checked=false; $("#fName").value="any"; $("#fEngagement").value="any";
+  onlyUnsub=false; $("#fUnsub").checked=false; $("#fStar").checked=false; $("#fWiki").checked=false; $("#fMultiSub").checked=false; $("#fNoEmail").checked=false; $("#fName").value="any"; $("#fEngagement").value="any";
   document.querySelectorAll(".facet").forEach(l=>{l.classList.remove("on");const cb=l.querySelector("input");if(cb)cb.checked=false;});
   syncToggles(); render();
 }
@@ -953,7 +1103,6 @@ function filtered(){
     if($("#fWiki").checked && !p.wiki) return false;
     if($("#fMultiSub").checked && !(p.sub_emails && p.sub_emails.length>1)) return false;
     if($("#fNoEmail").checked && ((p.e||"").trim() || (p.emails||[]).some(e=>(e||"").trim()))) return false;
-    if($("#fNoName").checked){ const nq=nameQuality(p); if(nq==="confirmed_full"||nq==="confirmed_partial") return false; }
     {
       const ef=$("#fEngagement").value;
       if(ef && ef!=="any"){
@@ -1242,7 +1391,6 @@ function describeFilters(){
   if($("#fWiki").checked) parts.push("<b>notable</b> (Wikipedia)");
   if($("#fMultiSub").checked) parts.push("<b>2+ newsletter emails</b>");
   if($("#fNoEmail").checked) parts.push("<b>no email on file</b>");
-  if($("#fNoName").checked) parts.push("<b>no confirmed name</b>");
   {
     const nf=$("#fName").value, nfLabels={
       "confirmed_full":"<b>name</b>: confirmed full",
@@ -1276,12 +1424,18 @@ const VKEY="vc_views";
 function loadViews(){ try{return JSON.parse(localStorage.getItem(VKEY)||"[]");}catch(e){return [];} }
 function currentState(){ return {want:Object.assign({},want), cats:[...selectedCats], q:$("#q").value,
   dFrom:$("#dFrom").value, dTo:$("#dTo").value, repeat:$("#fRepeatDonor").checked, star:$("#fStar").checked,
-  wiki:$("#fWiki").checked, multisub:$("#fMultiSub").checked, noEmail:$("#fNoEmail").checked, noName:$("#fNoName").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, name:$("#fName").value, engagement:$("#fEngagement").value, sortKey:sortKey, sortDir:sortDir}; }
+  wiki:$("#fWiki").checked, multisub:$("#fMultiSub").checked, noEmail:$("#fNoEmail").checked, unsub:$("#fUnsub").checked, onlyUnsub:onlyUnsub, name:$("#fName").value, engagement:$("#fEngagement").value, sortKey:sortKey, sortDir:sortDir}; }
 function applyState(s){
   want=Object.assign({mem:0,don:0,auth:0,press:0}, s.want||{});
   selectedCats=new Set(s.cats||[]);
   $("#q").value=s.q||""; $("#dFrom").value=s.dFrom||""; $("#dTo").value=s.dTo||"";
-  $("#fUnsub").checked=!!s.unsub; onlyUnsub=!!s.onlyUnsub; $("#fStar").checked=!!s.star; $("#fWiki").checked=!!s.wiki; $("#fMultiSub").checked=!!s.multisub; $("#fNoEmail").checked=!!s.noEmail; $("#fNoName").checked=!!s.noName; $("#fName").value=s.name||"any"; $("#fEngagement").value=s.engagement||"any";
+  $("#fUnsub").checked=!!s.unsub; onlyUnsub=!!s.onlyUnsub; $("#fStar").checked=!!s.star; $("#fWiki").checked=!!s.wiki; $("#fMultiSub").checked=!!s.multisub; $("#fNoEmail").checked=!!s.noEmail;
+  // Legacy: the old "No confirmed name" checkbox selected exactly the same people
+  // as Name -> "Needs work", so it was deleted. Saved views written before the
+  // merge carry noName:true AND name:"any" (currentState always emitted both) —
+  // so test noName explicitly rather than falling back on an empty name.
+  const _nm=s.name&&s.name!=="any" ? s.name : (s.noName ? "needs_work" : "any");
+  $("#fName").value=_nm; $("#fEngagement").value=s.engagement||"any";
   if(s.sortKey){ sortKey=s.sortKey; sortDir=s.sortDir||1; }
   syncToggles(); $("#fRepeatDonor").checked=!!s.repeat;
   document.querySelectorAll(".facet").forEach(l=>{const on=selectedCats.has(l.dataset.cat);l.classList.toggle("on",on);const cb=l.querySelector("input");if(cb)cb.checked=on;});
@@ -1291,7 +1445,7 @@ function applyState(s){
 // daily-updated power_reader / donor flags). NOT deletable, not localStorage.
 const BUILTIN_VIEWS=[
   {name:"⚡ Most engaged", builtin:"engaged",
-   title:"All newsletter subscribers ranked by engagement, most to least — Mailchimp star rating first, then open rate. A fast read on who's actually reading. Caveat: open-based signals run high for Apple Mail users (privacy auto-opens), so treat the ordering as directional, not exact.",
+   title:"Applying this view REPLACES all your current filters. All newsletter subscribers ranked by engagement score (Mailchimp star rating x 20 + open rate), most to least — a fast read on who's actually reading. Caveat: open-based signals run high for Apple Mail users (privacy auto-opens), so treat the ordering as directional, not exact. To rank a list you've already filtered, use the Sort menu instead — that keeps your filters.",
    state:{want:{mem:1,don:0,auth:0}, cats:[], engagement:"any", sortKey:"eng", sortDir:-1}},
   {name:"⭐ Fundraising prospects", builtin:"prospects",
    title:"Engaged newsletter subscribers who haven't given online — power readers, donors excluded. NOTE: 'donor' = a Donorbox online gift only; people who gave by check / wire / FCNY / at events still appear here, so cross-check against offline major-gift records before an ask.",
@@ -1309,6 +1463,7 @@ function updateHash(){
   if(s.want.mem)o.m=s.want.mem; if(s.want.don)o.d=s.want.don; if(s.want.auth)o.a=s.want.auth; if(s.want.press)o.pr=s.want.press;
   if(s.cats.length)o.c=s.cats; if(s.q)o.q=s.q; if(s.dFrom)o.f=s.dFrom; if(s.dTo)o.t=s.dTo;
   if(s.repeat)o.r=1; if(s.unsub)o.u=1; if(s.onlyUnsub)o.o=1; if(s.star)o.st=1; if(s.wiki)o.wk=1; if(s.multisub)o.ms=1;
+  if(s.noEmail)o.ne=1;   // was missing, so a reload or a shared link silently dropped it
   if(s.name && s.name!=="any") o.nm=s.name;
   if(s.engagement && s.engagement!=="any") o.eg=s.engagement;
   if(s.sortKey!=="last"||s.sortDir!==1){o.sk=s.sortKey;o.sd=s.sortDir;}
@@ -1318,7 +1473,7 @@ function updateHash(){
 function applyHash(){
   if(!location.hash||location.hash.length<2) return false;
   try{ const o=JSON.parse(decodeURIComponent(location.hash.slice(1)));
-    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0,press:o.pr||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,multisub:!!o.ms,name:o.nm||"any",engagement:o.eg||"any",sortKey:o.sk||"last",sortDir:o.sd||1});
+    applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0,press:o.pr||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,multisub:!!o.ms,noEmail:!!o.ne,noName:!!o.nn,name:o.nm||"any",engagement:o.eg||"any",sortKey:o.sk||"last",sortDir:o.sd||1});
     // A per-contact link (#{"person":"<id>"}) opens that person's card.
     if(o.person){
       const p=PEOPLE.find(x=>pidFor(personKey(x))===o.person);
@@ -1424,11 +1579,18 @@ function exportCSV(){
 function sortRows(rows){
   return rows.sort((a,b)=>{
     let va,vb;
+    // Engagement gets its own full comparator: score, then clicks, then name.
+    // Every step is decisive, so the order is identical on every render — no
+    // ties left for the engine to break however it likes.
+    if(sortKey==="eng"){
+      const d=(engScore(a)-engScore(b)) || ((a.eclick||0)-(b.eclick||0));
+      if(d) return d*sortDir;
+      return nameKey(a).localeCompare(nameKey(b));   // alphabetical within a tie, both directions
+    }
     if(sortKey==="last"){va=sortName(lastName(a))?sortName(lastName(a))+"|"+sortName(firstName(a)):"￿";vb=sortName(lastName(b))?sortName(lastName(b))+"|"+sortName(firstName(b)):"￿";}
     else if(sortKey==="first"){va=sortName(firstName(a))?sortName(firstName(a))+"|"+sortName(lastName(a)):"￿";vb=sortName(firstName(b))?sortName(firstName(b))+"|"+sortName(lastName(b)):"￿";}
     else if(sortKey==="types"){va=(a.types||[]).join(" ");vb=(b.types||[]).join(" ");}
     else if(sortKey==="mem"){va=a.mem;vb=b.mem;}
-    else if(sortKey==="eng"){va=(a.erate||0)*1000+(a.eopen||0);vb=(b.erate||0)*1000+(b.eopen||0);}
     else{va=a[sortKey];vb=b[sortKey];}
     if(va==null)va="";if(vb==null)vb="";
     if(typeof va==="number")return (va-vb)*sortDir;
@@ -1450,6 +1612,7 @@ function render(){
   lastSorted=sortRows(filtered());
   shownCount=Math.min(PAGE,lastSorted.length);
   $("#filterSentence").innerHTML=describeFilters();
+  syncMenuChrome(lastSorted.length);
   updateHash();
   paintRows();
   measureSticky();
@@ -1500,7 +1663,7 @@ function rowHTML(p){
       <td>${star} <span class="nm${g}"${nmTitle}>${esc(np.first)||'<span class="muted">—</span>'}</span></td>
       <td><span class="nm${g}"${nmTitle}>${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
       <td data-label="Type(s)" class="c-type${bl((p.types&&p.types.length)||p.press)}">${p.press?`<span class="badge b-press" title="Curated press contact${p.poutlet?' · '+esc(p.poutlet):''}${p.ptw?' · '+esc(p.ptw):''}">PRESS</span> `:''}${types}</td>
-      <td data-label="Subscriber" class="c-mem${bl(p.unsub||p.mem)}">${p.unsub?`<span class="badge" style="background:#c8102e;color:#fff"${p.udate?` title="Unsubscribed ${esc(p.udate)}"`:''}>Unsubscribed</span>${p.udate?`<div class="sub-d">on ${esc(p.udate)}</div>`:''}`:(p.mem?`<span class="badge b-mem"${p.since?` title="Subscribed ${esc(p.since)}"`:''}>Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>${p.since?`<div class="sub-d">since ${esc(p.since)}</div>`:''}${p.erate?`<span class="erate" title="Average newsletter open rate from Mailchimp — the share of our emails this subscriber opens${p.eclick?` (${p.eclick}% click rate)`:''}. Note: Apple Mail's auto-open can inflate open rates, and a brand-new subscriber can show a high % off just a few emails.">${p.eopen}% opens</span>`:''}`:'<span class="muted">—</span>')}</td>
+      <td data-label="Subscriber" class="c-mem${bl(p.unsub||p.mem)}">${p.unsub?`<span class="badge" style="background:#c8102e;color:#fff"${p.udate?` title="Unsubscribed ${esc(p.udate)}"`:''}>Unsubscribed</span>${p.udate?`<div class="sub-d">on ${esc(p.udate)}</div>`:''}`:(p.mem?`<span class="badge b-mem"${p.since?` title="Subscribed ${esc(p.since)}"`:''}>Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>${p.since?`<div class="sub-d">since ${esc(p.since)}</div>`:''}${(p.erate||p.eopen)?`<span class="erate" title="Engagement score ${engScore(p)} of 200 — Mailchimp star rating (${p.erate||0} of 5) x 20, plus open rate (${p.eopen||0}%). This is what 'Most engaged' sorts by, and it's the same score the Growth dashboard uses to pick power readers.${p.eclick?` Click rate ${p.eclick}%.`:''} Note: Apple Mail's auto-open can inflate open rates, and a brand-new subscriber can show a high % off just a few emails.">★${p.erate||0} · ${p.eopen||0}% opens</span>`:''}`:'<span class="muted">—</span>')}</td>
       <td data-label="Donor" class="c-don${bl(p.don)}">${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
       <td data-label="Institution" class="c-inst${bl(p.inst)}">${esc(p.inst)||'<span class="muted">—</span>'}</td>
       <td data-label="Email" class="em${p.unsub?' unsub':''}${bl(p.emails&&p.emails.length)}">${emailCell}</td>

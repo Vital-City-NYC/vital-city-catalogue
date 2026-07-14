@@ -1000,6 +1000,12 @@ def build_lifecycle(mc):
             # nudge), but the modal list is alphabetical by last name.
             "sample": sorted(sunset, key=lambda x: -x["tenure_days"])[:20],
             "list":   sorted(sunset, key=_last_name_key)[:500],
+            # `list` is capped at 500 purely to keep the dashboard modal light.
+            # The Contact tool's Engagement filter derives its per-person flags
+            # from this block, so it needs every match, not the first 500 —
+            # otherwise the filter silently returns a 500-row subset. Emails
+            # only: no names, and the growth payload is encrypted anyway.
+            "emails_all": [x["email"] for x in sunset if x.get("email")],
         },
         "at_risk": {
             "count": len(at_risk),
@@ -1008,6 +1014,7 @@ def build_lifecycle(mc):
             # subscribers. The modal list is alphabetical by last name.
             "sample": sorted(at_risk, key=lambda x: -(x.get("rating") or 0))[:20],
             "list":   sorted(at_risk, key=_last_name_key)[:500],
+            "emails_all": [x["email"] for x in at_risk if x.get("email")],   # see note above
         },
     }
 
@@ -3306,8 +3313,13 @@ def main():
         if people is not None:
             # Pull the engagement subsets we computed
             power_emails = {r["email"] for r in (engagement_extras.get("power_readers_list") or [])}
-            at_risk_emails = {r["email"] for r in (lifecycle.get("at_risk", {}).get("list") or []) if r.get("email")}
-            sunset_emails  = {r["email"] for r in (lifecycle.get("sunset_candidates", {}).get("list") or []) if r.get("email")}
+            # Use the UNCAPPED email lists — `list` is truncated to 500 for the
+            # dashboard modal, and reading the flags off it meant the Contact
+            # tool's "At-risk" and "Sunset candidates" filters only ever matched
+            # the first 500 people alphabetically.
+            _ar, _sc = lifecycle.get("at_risk", {}), lifecycle.get("sunset_candidates", {})
+            at_risk_emails = {e for e in (_ar.get("emails_all") or [r["email"] for r in (_ar.get("list") or []) if r.get("email")])}
+            sunset_emails  = {e for e in (_sc.get("emails_all") or [r["email"] for r in (_sc.get("list") or []) if r.get("email")])}
             updated = 0
             for p in people:
                 em_list = [e.lower().strip() for e in (p.get("emails") or [p.get("e","")]) if e]

@@ -47,8 +47,9 @@
   <ol>
     <li><b>Find someone:</b> type a name, email or organization in the <b>search box</b> at the top. Results filter as you type.</li>
     <li><b>See a group:</b> click <b>Subscribers</b>, <b>Donors</b> or <b>Authors</b> (the buttons under "Show:"), or click one of the big numbers across the top. Click a second one to see the overlap.</li>
-    <li><b>Order the list:</b> use the <b>Sort</b> menu (e.g. "Recently subscribed", "Recently donated", "Most engaged").</li>
-    <li><b>Do something with the result:</b> <b>Export CSV</b> (a spreadsheet), <b>Copy emails</b>, or <b>Email group</b>.</li>
+    <li><b>Narrow it further:</b> open <b>Filters ▾</b> for starred, notable, name quality, newsletter engagement and the rest. The number on the button tells you how many are switched on, so a filter can never be quietly left on.</li>
+    <li><b>Order the list:</b> use the <b>Sort</b> menu (e.g. "Recently subscribed", "Recently donated", "Most engaged"). The Sort menu <i>keeps</i> your filters — unlike a saved <b>View</b>, which is a whole preset and replaces them.</li>
+    <li><b>Do something with the result:</b> open <b>Use this list ▾</b> — <b>Export CSV</b> (a spreadsheet), <b>Copy emails</b>, or <b>Email group</b>.</li>
     <li><b>View someone's details:</b> click their <b>name</b> (or anywhere on their row) to open their full card — name, organization, every email, types and notes. Edit or delete right from there. Click the star <b>☆</b> to flag someone you'll want again.</li>
     <li><b>Share:</b> <b>Copy link to this view</b> (a saved search) or open a person and hit <b>🔗 Copy link</b> (that one contact's card).</li>
   </ol>
@@ -67,7 +68,7 @@
 
   <div class="note"><b>Press is its own group, and it can overlap the others.</b> A reporter on the press list may <i>also</i> be a newsletter subscriber or a donor — they keep every one of those flags, so they're never buried inside "Other." The blue <b>PRESS</b> badge marks them wherever they appear. Turn on <b>Press</b> alone to see just the media list; combine <b>Press + Subscribers</b> to see which reporters also read the newsletter. Note: "Press" is the curated, hand-picked list — it's stricter and more reliable than the auto-inferred <i>journalist</i> type (which is guessed from someone's email domain).</div>
 
-  <div class="note"><b>The big numbers count people, not email addresses.</b> Every row is one human, with all of their known email addresses merged onto a single record. So a subscriber who's on the Mailchimp list under 2 or 3 different addresses counts <i>once</i> here. That means the <b>Subscribers</b> total can read a little lower than the raw number Mailchimp shows (which counts every address as its own line). Use the <b>"2+ newsletter emails"</b> refine chip to see exactly who is signed up under multiple addresses.</div>
+  <div class="note"><b>The big numbers count people, not email addresses.</b> Every row is one human, with all of their known email addresses merged onto a single record. So a subscriber who's on the Mailchimp list under 2 or 3 different addresses counts <i>once</i> here. That means the <b>Subscribers</b> total can read a little lower than the raw number Mailchimp shows (which counts every address as its own line). Use the <b>"2+ newsletter emails"</b> option under <b>Filters ▾</b> to see exactly who is signed up under multiple addresses.</div>
 
   <h3>How types &amp; domains get assigned</h3>
   <p>Beyond what's in the contacts sheet, the tool fills in categories automatically:</p>
@@ -110,8 +111,17 @@
   </ul>
   <p>You can also sort by clicking any <b>column header</b> (an arrow ▲/▼ shows the direction); the Sort menu stays in sync. People who lack the value you're sorting by — e.g. non-donors when sorting by gift date — fall to the bottom.</p>
 
-  <h3>Email engagement (open rate)</h3>
-  <p>Under each subscriber you'll see their average newsletter <b>open rate</b> (e.g. <b>72% opens</b>), pulled from Mailchimp — the share of our emails that person opens. Two caveats: Apple Mail's privacy feature auto-opens messages, which can inflate the number; and a brand-new subscriber can show a high % off just a handful of emails. Sort by <b>Most engaged</b> to rank readers by Mailchimp's overall engagement score (which also weighs clicks and how long they've been on the list).</p>
+  <h3>Email engagement — how "Most engaged" is calculated</h3>
+  <p>Under each subscriber you'll see two numbers, e.g. <b>★4 · 72% opens</b>:</p>
+  <ul>
+    <li><b>★ the Mailchimp star rating</b>, 0 to 5 — Mailchimp's own summary of a subscriber, which weighs opens, clicks and how long they've been on the list.</li>
+    <li><b>the open rate</b>, 0 to 100% — the share of our emails that person opens.</li>
+  </ul>
+  <p>Sorting by <b>Most engaged</b> ranks people by an <b>engagement score</b> that combines the two:</p>
+  <p style="margin:10px 0 12px;padding:11px 14px;border:1px solid var(--cloud,#ddd);background:#fff;font-weight:700">engagement score = (star rating × 20) + open rate &nbsp;&nbsp;<span style="font-weight:400;color:#666">— a 0-to-200 scale</span></p>
+  <p>The ×20 is what puts the two terms on an equal footing: a perfect 5 stars is worth 100 points, and so is going from a 0% to a 100% open rate. Neither can bury the other. This is the <b>same score the Growth dashboard uses</b> to pick its power readers, so the two tools now rank people identically. Hover any subscriber's engagement line to see their exact score.</p>
+  <div class="note"><b>Changed July 2026.</b> The sort used to be a strict star-rating ranking, with the open rate only breaking ties <i>within</i> a star band. Because the star rating isn't shown in the table and is a <b>2</b> for about 71% of the list, the order looked arbitrary: a 5-star reader who opens 32% of emails sorted <i>above</i> a 2-star reader who opens every single one, and the visible column read 99%, 82%, 36%, 32%, 100%… The score above fixes the ranking, and the star is now printed next to the open rate so the order is explainable from what's on screen.</div>
+  <p><b>Two caveats on the open rate</b>, unchanged: Apple Mail's privacy feature auto-opens messages, which can inflate the number; and a brand-new subscriber can show a high % off just a handful of emails. Treat the ordering as directional, not exact.</p>
 
   <h3>Notable (Wikipedia) flag</h3>
   <p>Names shown with a <b><span style="text-decoration:underline;text-decoration-color:var(--cerulean);text-decoration-thickness:2px;text-underline-offset:3px">cerulean underline</span></b> are flagged <b>notable</b> — they appear to have an English Wikipedia page. The match is deliberately conservative: a hit only counts when the Wikipedia summary also contains a context clue for <i>this</i> person (a word from their institution, a keyword for their type/specialty or "New York"), so an unrelated same-named person doesn't get tagged. Tick the <b>Notable</b> checkbox to see only these. It's a rough signal of public profile, not a judgment — and it's only ever checked against named, known contacts, never anonymous subscribers.</p>
@@ -120,6 +130,7 @@
   <p>People who left the newsletter are kept <b>separate</b> and <b style="color:#c8102e">shown in red</b>. They're <b>hidden by default</b> — tick <b>Include unsubscribed</b> to mix them in, or click the red <b>unsubscribed</b> banner number to see only them. The other banner counts reflect <i>current</i> contacts only. This list <b>syncs automatically from Mailchimp each day</b>, so when someone unsubscribes there they drop off the subscriber list on the next refresh. <b>If they come back</b> — i.e. Ghost shows them actively subscribed again — they're automatically moved back to being a current subscriber (Ghost's live status always wins over an old unsubscribe).</p>
 
   <h2>Getting lists out</h2>
+  <p>These all live under the <b>Use this list ▾</b> button above the table, and every one of them acts on <i>exactly</i> what your filters and sort are currently showing (the menu reminds you how many people that is).</p>
   <ul>
     <li><b>Export CSV</b> — downloads the full filtered list. Includes separate <b>first_name</b> and <b>last_name</b> columns (alongside the full name) so you can mail-merge a greeting like "Dear [first_name]," plus email, types, member/author/donor status and giving.</li>
     <li><b>Copy emails</b> — copies the subset's unique emails to your clipboard (comma-separated), ready to paste anywhere.</li>
@@ -131,8 +142,8 @@
     <li><b>Save current view</b> — name any filter + sort combination (e.g. "Housing reporters '24+") and it's saved on your device, one click to reapply.</li>
     <li><b>Copy link to this view</b> — copies a link that reopens the exact same filters, sort and search for anyone with the passphrase. (The current view is also kept in the page address as you go, so a normal bookmark works too.)</li>
     <li><b>Link to one person's card</b> — open anyone (click <b>✎</b>) and hit <b>🔗 Copy link</b> to copy a link that opens straight to that contact's card. Handy for "here's so-and-so" in an email or Slack. The link works for anyone with the passphrase, and it carries a scrambled id rather than the person's email, so no address leaks into the URL.</li>
-    <li><b>Needs review</b> — a guided queue of records that could use a human check: educated-guess names, missing institutions and possible duplicates. The tool already de-duplicates automatically (matching the same person across lists by email and name), so this is a short clean-up list, not a pile.</li>
-    <li><b>Merge duplicates</b> — open <b>Needs review → possible duplicates</b>. Each likely-duplicate group has a <b>⤵ Merge these</b> button that combines them into one record: it keeps every email (bolding the subscription one), every type and note, and the strongest status — if any copy is a subscriber, donor or author, the merged record is too. Use this when, say, confirming a guessed name accidentally creates a second copy of someone already in the list. The merge saves for everyone.</li>
+    <li><b>Needs review</b> (under <b>Manage ▾</b>) — a guided queue of records that could use a human check: educated-guess names, missing institutions and possible duplicates. The tool already de-duplicates automatically (matching the same person across lists by email and name), so this is a short clean-up list, not a pile.</li>
+    <li><b>Merge duplicates</b> — open <b>Manage ▾ → Needs review → possible duplicates</b>. Each likely-duplicate group has a <b>⤵ Merge these</b> button that combines them into one record: it keeps every email (bolding the subscription one), every type and note, and the strongest status — if any copy is a subscriber, donor or author, the merged record is too. Use this when, say, confirming a guessed name accidentally creates a second copy of someone already in the list. The merge saves for everyone.</li>
   </ul>
 
   <h2>Dark mode &amp; using it on your phone</h2>
@@ -169,7 +180,7 @@
   <p>Donor data now <b>syncs automatically from Donorbox every day</b> — new gifts, updated lifetime totals, gift counts and last-gift dates flow in on the daily refresh. Nothing manual to do.</p>
 
   <h3>Adding people</h3>
-  <p><b>One new person</b> — a single new donor, author or contact — can be added right here: click <b>+ Add person</b> (top of the list), fill in their details, tick what they are (subscriber / author / donor, with a donation total if relevant), and Save.</p>
+  <p><b>One new person</b> — a single new donor, author or contact — can be added right here: click <b>Manage ▾ → + Add person</b> (above the list), fill in their details, tick what they are (subscriber / author / donor, with a donation total if relevant), and Save.</p>
   <p><b>A few at a time</b> — type rows in the Google Sheet's <b>"add"</b> tab (plain columns: name, email, institution, types, specialties, subscriber/author/donor, donation). They appear in the tool on the next refresh.</p>
   <div class="note"><b>Leave those rows in the Sheet.</b> The <code>add</code> tab is re-read on every refresh — it's the permanent home for hand-added people, not a one-time inbox. <b>Deleting a row removes that person</b> from the tool (unless they also come from a live source). Same for the <code>overrides</code> tab: deleting a row undoes that edit.</div>
   <p><b>A whole list</b> of new people (a big CSV) is a source update, not a one-off. Don't add them one-by-one. <b>Hand the CSV to Claude Code</b> and say what it is (new contacts, a donor export, a partner list); it folds the file into the right source and they all appear on the next refresh.</p>
