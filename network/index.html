@@ -147,6 +147,13 @@
   .toggles{display:inline-flex;flex-wrap:wrap;gap:8px}
   .tg{font:inherit;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:8px 13px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-charcoal);cursor:pointer}
   .tg.on{background:var(--vc-green);border-color:var(--vc-green);color:#fff}
+  /* "Unconfirmed names" is a plain on/off toggle, not one of the tri-state
+     category chips, so it gets its own colour to avoid reading as one of them. */
+  #tUnconfirmed{display:inline-flex;align-items:center;gap:6px}
+  #tUnconfirmed.on{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  .tgcount{font-size:10px;font-weight:700;letter-spacing:0;padding:1px 5px;border-radius:999px;
+           background:var(--vc-cloud);color:var(--vc-charcoal)}
+  #tUnconfirmed.on .tgcount{background:rgba(255,255,255,.9);color:var(--vc-cerulean)}
   #tOther.on{background:var(--vc-black);border-color:var(--vc-black);color:#fff}
   .tg.excl{background:var(--vc-magenta);border-color:var(--vc-magenta);color:#fff}
   .toghint{font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
@@ -391,7 +398,11 @@
     </div>
     <span class="toglegend">Click a category to cycle it: <span class="lg lg-inc">✓ include</span> → <span class="lg lg-exc">✕ exclude</span> → <span class="lg lg-off">off</span>.</span>
     <input type="search" id="q" placeholder="Search name, email, institution, notes…" autocomplete="off" aria-label="Search by name, email, institution or notes (press / to focus)" title="Type to narrow the list. Matches names, email addresses, institutions and your notes — and updates as you type. Shortcut: press / to jump here.">
-    <!-- Every refinement lives in one popover. The badge shows how many are
+    <!-- The one name-quality question anyone actually asks, straight on the bar.
+         It's a shortcut to the Name dropdown's "Unconfirmed" option, not a
+         separate filter — both write the same state, so they can't disagree. -->
+    <button class="tg" id="tUnconfirmed" title="Show only people whose name we haven't confirmed — a gray guess the tool made up from their email handle, OR a blank row where there was nothing to guess from. These are the people to put a real name to. Combine with Donors or Subscribers to work the highest-value ones first.">Unconfirmed names<span class="tgcount" id="unconfCount"></span></button>
+    <!-- Every other refinement lives in one popover. The badge shows how many are
          active, so a filter can never be silently on without you seeing it. -->
     <div class="menu" id="mFilters">
       <button class="btn menubtn" id="filtersBtn" aria-expanded="false" aria-haspopup="true" title="All the extra filters — starred, notable, name quality, newsletter engagement and more. The number on the button is how many are switched on right now.">Filters<span class="badge-n" id="filtersCount" hidden>0</span> <span class="caret">▾</span></button>
@@ -403,15 +414,15 @@
         <label class="chk" title="Show only people who are subscribed to the newsletter under two or more email addresses (each tagged ✉ newsletter) — i.e. they're on the list more than once."><input type="checkbox" id="fMultiSub"> 2+ newsletter emails</label>
         <label class="chk" title="Show only people we have NO email address for — usually authors or contacts added by name without a known address. Useful for filling in missing contact info."><input type="checkbox" id="fNoEmail"> No email</label>
         <label class="chk" title="Also show people who left the newsletter. They're hidden by default and appear in red when shown."><input type="checkbox" id="fUnsub"> Include unsubscribed</label>
-        <div class="menusec">Name<span class="menunote">how complete a contact's name is — for prioritizing name-confirmation work</span></div>
-        <select id="fName" aria-label="Filter by name quality" title="Guessed names appear in gray in the list and have a ✓ button to confirm. Combine with Donors or Subscribers to find your highest-value contacts that still need a real name.">
-          <option value="any">(any)</option>
-          <option value="confirmed_full">Confirmed first + last</option>
-          <option value="confirmed_partial">Confirmed partial (first OR last only)</option>
-          <option value="confirmed_any">Any confirmed name</option>
-          <option value="guessed">Guessed (gray — from email handle)</option>
-          <option value="missing">No name at all</option>
-          <option value="needs_work">Needs work (guessed or missing)</option>
+        <div class="menusec">Name<span class="menunote">Finer slices of the same thing the "Unconfirmed names" button does. A name is either one we trust (black in the table) or one we don't — a gray guess the tool built from the email handle, or a blank row.</span></div>
+        <select id="fName" aria-label="Filter by name quality" title="A gray guess and a blank row are both names we have NOT confirmed — the difference is only whether there was anything in the email handle to guess from. The 'Unconfirmed names' button on the toolbar is these two together, which is what you usually want.">
+          <option value="any">(any name)</option>
+          <option value="needs_work">Unconfirmed — gray guess or blank (the toolbar button)</option>
+          <option value="guessed">…of those, just the gray guesses (jane.doe@ → "Jane Doe")</option>
+          <option value="missing">…of those, just the blanks (nothing to guess from)</option>
+          <option value="confirmed_any">Confirmed — a name we trust</option>
+          <option value="confirmed_full">…of those, the complete ones (first AND last)</option>
+          <option value="confirmed_partial">…of those, only half a name (first OR last)</option>
         </select>
         <div class="menusec">Engagement<span class="menunote">the subsets the Growth dashboard surfaces · refreshes daily</span></div>
         <select id="fEngagement" aria-label="Filter by newsletter engagement" title="Active = opened a Vital City newsletter in the last 30 days (MAU) or year (AAU). Power readers = top decile by composite engagement. At-risk = opened in the last year but not the last 30 days — a re-engagement target. Sunset candidates = 1-2★ + 6mo+ tenure + no recent open, i.e. pruning candidates.">
@@ -854,6 +865,18 @@ function syncMenuChrome(shown){
   b.textContent=n; b.hidden=(n===0);
   $("#filtersBtn").classList.toggle("hasfilters",n>0);
   $("#listBtnCount").textContent=shown.toLocaleString()+(shown===1?" person":" people");
+  // Light the toolbar button whenever the Name filter is on "Unconfirmed" —
+  // however that happened (the button, the dropdown, a saved view, a permalink).
+  $("#tUnconfirmed").classList.toggle("on", $("#fName").value==="needs_work");
+}
+// How many people still need a real name. Shown on the button so the size of the
+// job is visible without clicking it. Counts the current (non-unsubscribed) universe.
+function unconfirmedCount(){
+  return PEOPLE.reduce((n,p)=>{
+    if(p.unsub) return n;
+    const q=nameQuality(p);
+    return n + (q==="confirmed_full"||q==="confirmed_partial" ? 0 : 1);
+  },0);
 }
 function init(){
   buildStats();
@@ -874,6 +897,15 @@ function init(){
   $("#fMultiSub").addEventListener("change",render);
   $("#fNoEmail").addEventListener("change",render);
   $("#fName").addEventListener("change",render);
+  // The toolbar button is just a shortcut to Name → "Unconfirmed". It sets the
+  // same value the dropdown does rather than keeping a second flag, so the two
+  // can never drift apart (the old "No confirmed name" checkbox was a duplicate
+  // of this option and had to be kept in sync by hand).
+  $("#tUnconfirmed").addEventListener("click",()=>{
+    const f=$("#fName");
+    f.value = (f.value==="needs_work") ? "any" : "needs_work";
+    render();
+  });
   $("#fEngagement").addEventListener("change",render);
   $("#fUnsub").addEventListener("change",()=>{onlyUnsub=false;render();});
   $("#export").addEventListener("click",exportCSV);
@@ -886,6 +918,7 @@ function init(){
   $("#themeToggle").addEventListener("click",e=>{e.preventDefault(); const t=document.documentElement.classList.contains("dark")?"light":"dark"; localStorage.setItem("vc_theme",t); applyTheme(t);});
   $("#addPerson").addEventListener("click",openAdd);
   $("#needsReview").addEventListener("click",showReview);
+  $("#unconfCount").textContent=unconfirmedCount().toLocaleString();
   initMenus();
   $("#reviewClose").addEventListener("click",()=>$("#reviewModal").style.display="none");
   $("#reviewModal").addEventListener("click",e=>{if(e.target.id==="reviewModal")$("#reviewModal").style.display="none";});
@@ -1399,12 +1432,12 @@ function describeFilters(){
   if($("#fNoEmail").checked) parts.push("<b>no email on file</b>");
   {
     const nf=$("#fName").value, nfLabels={
-      "confirmed_full":"<b>name</b>: confirmed full",
-      "confirmed_partial":"<b>name</b>: confirmed partial",
-      "confirmed_any":"<b>name</b>: confirmed (any)",
-      "guessed":"<b>name</b>: guessed (gray)",
-      "missing":"<b>name</b>: missing",
-      "needs_work":"<b>name</b>: needs work (guessed or missing)",
+      "needs_work":"<b>unconfirmed names</b> (gray guess or blank)",
+      "guessed":"<b>gray guessed names</b> only",
+      "missing":"<b>blank names</b> only",
+      "confirmed_any":"<b>confirmed names</b>",
+      "confirmed_full":"<b>confirmed names</b>, first and last",
+      "confirmed_partial":"<b>confirmed names</b>, only half a name",
     };
     if(nf && nfLabels[nf]) parts.push(nfLabels[nf]);
   }

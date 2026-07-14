@@ -47,7 +47,8 @@
   <ol>
     <li><b>Find someone:</b> type a name, email or organization in the <b>search box</b> at the top. Results filter as you type.</li>
     <li><b>See a group:</b> click <b>Subscribers</b>, <b>Donors</b> or <b>Authors</b> (the buttons under "Show:"), or click one of the big numbers across the top. Click a second one to see the overlap.</li>
-    <li><b>Narrow it further:</b> open <b>Filters ▾</b> for starred, notable, name quality, newsletter engagement and the rest. The number on the button tells you how many are switched on, so a filter can never be quietly left on.</li>
+    <li><b>Find who still needs a real name:</b> hit <b>Unconfirmed names</b> on the toolbar — the count on the button is how many there are. See <a href="#">Names we haven't confirmed</a> below.</li>
+    <li><b>Narrow it further:</b> open <b>Filters ▾</b> for starred, notable, newsletter engagement and the rest. The number on the button tells you how many are switched on, so a filter can never be quietly left on.</li>
     <li><b>Order the list:</b> use the <b>Sort</b> menu (e.g. "Recently subscribed", "Recently donated", "Most engaged"). The Sort menu <i>keeps</i> your filters — unlike a saved <b>View</b>, which is a whole preset and replaces them.</li>
     <li><b>Do something with the result:</b> open <b>Use this list ▾</b> — <b>Export CSV</b> (a spreadsheet), <b>Copy emails</b>, or <b>Email group</b>.</li>
     <li><b>View someone's details:</b> click their <b>name</b> (or anywhere on their row) to open their full card — name, organization, every email, types and notes. Edit or delete right from there. Click the star <b>☆</b> to flag someone you'll want again.</li>
@@ -152,6 +153,18 @@
     <li><b>On a phone</b>, the table reflows into one tidy <b>card per person</b> (name, then the fields that person actually has) instead of a cramped, side-scrolling grid.</li>
     <li><b>Install it as an app.</b> The tool is an installable web app. On <b>iPhone (Safari)</b>: Share → <b>Add to Home Screen</b>. On <b>Android (Chrome)</b>: menu → <b>Install app</b> / Add to Home screen. It then opens full-screen with its own icon, like a native app, and still asks for the passphrase. It even opens (from its cached copy) when you're offline, showing the last data it loaded.</li>
   </ul>
+
+  <h2>Names we haven't confirmed</h2>
+  <p>Most people arrive as an email address with no name attached. The tool tries to invent one from the email handle, and whether it can produces the only two states that matter:</p>
+  <table>
+    <tr><th>What you see</th><th>What it means</th></tr>
+    <tr><td><span class="g">Gray italic name</span></td><td>The tool <b>made this name up from the email handle</b> — <code>jane.doe@x.org</code> → <span class="g">Jane Doe</span>. Nobody has checked it. It may be wrong.</td></tr>
+    <tr><td><b>Blank</b></td><td>There was <b>nothing to guess from</b> — <code>nyc4ever88@gmail.com</code> gives you nothing — so the name is empty.</td></tr>
+    <tr><td>Black name</td><td><b>Confirmed.</b> A real name from a source we trust, or one a person has verified with <b>✓</b>.</td></tr>
+  </table>
+  <p>A gray guess and a blank are both <b>names we have not confirmed</b> — the difference between them is only whether the email happened to contain something name-shaped. That's a technicality, not a distinction worth acting on, so the toolbar gives you the two of them together:</p>
+  <div class="note"><b>The "Unconfirmed names" button</b> (on the toolbar, next to the search box) shows everyone who still needs a real name, with a running count on the button. Each row has a <b>✓</b> to confirm the guess or a <b>✎</b> to correct it. Combine it with <b>Donors</b> or <b>Subscribers</b> to put names to your most valuable contacts first.</div>
+  <p>If you ever need a finer slice, <b>Filters ▾ → Name</b> can split the same set further — just the gray guesses, just the blanks, or the confirmed side (and, within that, whether you have a full first-and-last or only half a name). Most of the time the button is what you want.</p>
 
   <h2>Viewing, fixing or cutting an entry</h2>
   <p><b>Click anyone's name — or anywhere on their row — to open their full card.</b> (The pencil <b>✎</b> does the same thing.) From that card you can read everything and also change that person: <b>name, institution, emails, types and specialties</b>, add a private <b>note</b>, or <b>Delete entry</b> (the delete button lives inside the card, so it can't be hit by accident). Nothing changes until you click <b>Save</b>, so it's safe to open a card just to look. A <span class="g">gray italic</span> name is an educated guess from the email (e.g. <code>aaron@naparstek.com</code> → <span class="g">Aaron Naparstek</span>); the <b>✓</b> next to one confirms it's right (turns it black). Opening a card and looking around won't confirm anything — only changing the name or clicking <b>✓</b> does. If a name ever turns black by mistake, open the card and click <b>↩ Revert to guess</b> to make it gray again.</p>
