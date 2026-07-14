@@ -46,7 +46,10 @@
   .sub{color:var(--vc-charcoal);font-size:13px}
   .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.1em;padding:4px 30px;font-weight:700}
 
-  .stats{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid var(--vc-black);background:var(--vc-paper)}
+  /* There are SEVEN tiles. Any column count that leaves a remainder of 1 strands
+     "unsubscribed" alone on its own line, which is what 6 (and 3, and 2) all did.
+     Pick counts that divide 7 cleanly or leave a remainder of 3. */
+  .stats{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--vc-black);background:var(--vc-paper)}
   .stat.active{background:var(--vc-black)}
   .stat.active .num,.stat.active .lbl{color:#fff}
   .stat.inc{background:var(--vc-green)}
@@ -269,7 +272,7 @@
   @media(max-width:820px){
     .layout{grid-template-columns:1fr}
     aside{border-right:none;border-bottom:1px solid var(--vc-cloud);position:static;max-height:none;overflow:visible}
-    .stats{grid-template-columns:repeat(3,1fr)}
+    .stats{grid-template-columns:repeat(4,1fr)}   /* 4 + 3, no stranded tile */
     .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
     table.people{min-width:660px}      /* scroll sideways instead of squishing on small screens */
     header.mast{padding:18px 16px 14px}
@@ -279,7 +282,10 @@
     table.people th{position:static}
   }
   @media(max-width:480px){
+    /* 7 into 2 columns leaves a remainder of 1, so let the last tile take the
+       whole width instead of sitting in a half-empty row. */
     .stats{grid-template-columns:repeat(2,1fr)}
+    .stat:last-child{grid-column:1/-1;border-right:none}
     .stat{padding:10px 12px}
     .stat .num{font-size:22px}
     header.mast h1{font-size:21px}
