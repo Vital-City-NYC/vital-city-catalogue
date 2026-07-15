@@ -1,27 +1,46 @@
 {
   "meta": {
-    "generated_at": "2026-07-15T13:14:25.460685+00:00",
+    "generated_at": "2026-07-15T23:24:16.025984+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 867,
-    "total_authors": 478,
+    "total_posts": 870,
+    "total_authors": 480,
     "total_issues": 29,
     "total_topics": 211,
     "date_range": [
       "2021-09-15",
-      "2026-07-08"
+      "2026-07-15"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 3,
+    "new_articles": [
+      {
+        "title": "New York Noise",
+        "url": "https://www.vitalcitynyc.org/nyc-noise-regulation-history/",
+        "published_date": "2026-07-15",
+        "primary_author": "Daniel Loehr"
+      },
+      {
+        "title": "The Lifeguard Fiefdom",
+        "url": "https://www.vitalcitynyc.org/lifeguard-hiring-problem-nyc/",
+        "published_date": "2026-07-15",
+        "primary_author": "Jamie Rubin"
+      },
+      {
+        "title": "An Agenda for New York City\u2019s Sidewalks",
+        "url": "https://www.vitalcitynyc.org/nyc-department-of-sidewalks-agenda/",
+        "published_date": "2026-07-15",
+        "primary_author": "Michael Pollack"
+      }
+    ]
   },
-  "total_pieces": 867,
+  "total_pieces": 870,
   "by_year": {
     "2021": 1,
     "2022": 46,
-    "2023": 155,
-    "2024": 223,
+    "2023": 154,
+    "2024": 224,
     "2025": 287,
-    "2026": 155
+    "2026": 158
   },
   "by_month": {
     "2021-09": 1,
@@ -36,7 +55,7 @@
     "2022-12": 3,
     "2023-01": 5,
     "2023-02": 8,
-    "2023-03": 40,
+    "2023-03": 39,
     "2023-04": 4,
     "2023-05": 8,
     "2023-06": 21,
@@ -51,7 +70,7 @@
     "2024-03": 50,
     "2024-04": 6,
     "2024-05": 17,
-    "2024-06": 33,
+    "2024-06": 34,
     "2024-07": 4,
     "2024-08": 5,
     "2024-09": 13,
@@ -76,16 +95,16 @@
     "2026-04": 23,
     "2026-05": 22,
     "2026-06": 44,
-    "2026-07": 8
+    "2026-07": 11
   },
   "by_type": [
     [
       "opinion/commentary",
-      736
+      737
     ],
     [
       "q&a",
-      62
+      63
     ],
     [
       "data analysis",
@@ -93,7 +112,7 @@
     ],
     [
       "map/tool",
-      16
+      17
     ],
     [
       "book review",
@@ -111,19 +130,19 @@
     ],
     [
       "History",
-      140
+      142
+    ],
+    [
+      "City Government",
+      123
     ],
     [
       "Government Operations",
       121
     ],
     [
-      "City Government",
-      121
-    ],
-    [
       "City Planning",
-      108
+      109
     ],
     [
       "Justice",
@@ -143,7 +162,7 @@
     ],
     [
       "Politics",
-      55
+      54
     ],
     [
       "Police Reform",
@@ -183,7 +202,11 @@
     ],
     [
       "Podcast",
-      27
+      28
+    ],
+    [
+      "Quality of Life",
+      26
     ],
     [
       "Setting the Stage",
@@ -191,10 +214,6 @@
     ],
     [
       "Budget",
-      25
-    ],
-    [
-      "Quality of Life",
       25
     ],
     [
@@ -210,7 +229,7 @@
   "by_credential_pieces": [
     [
       "Academic",
-      214
+      216
     ],
     [
       "Nonprofit / advocacy",
@@ -226,7 +245,7 @@
     ],
     [
       "Other / unclassified",
-      90
+      91
     ],
     [
       "Government / public official",
@@ -234,7 +253,7 @@
     ],
     [
       "Business / private sector",
-      56
+      57
     ],
     [
       "Think tank / research institute",
@@ -250,7 +269,7 @@
     ],
     [
       "Survey / reader poll",
-      14
+      13
     ],
     [
       "Unknown / no bio",
@@ -260,7 +279,7 @@
   "by_credential_authors": [
     [
       "Academic",
-      151
+      153
     ],
     [
       "Other / unclassified",
@@ -310,8 +329,8 @@
   "top_topics_for_stack": [
     "Crime",
     "History",
-    "Government Operations",
     "City Government",
+    "Government Operations",
     "City Planning",
     "Justice",
     "Housing",
@@ -329,8 +348,14 @@
       "2022": 12,
       "2023": 28,
       "2024": 38,
-      "2025": 52,
-      "2026": 10
+      "2025": 53,
+      "2026": 11
+    },
+    "City Government": {
+      "2023": 4,
+      "2024": 20,
+      "2025": 54,
+      "2026": 45
     },
     "Government Operations": {
       "2022": 1,
@@ -339,18 +364,12 @@
       "2025": 57,
       "2026": 9
     },
-    "City Government": {
-      "2023": 4,
-      "2024": 20,
-      "2025": 54,
-      "2026": 43
-    },
     "City Planning": {
       "2022": 6,
-      "2023": 18,
-      "2024": 31,
+      "2023": 17,
+      "2024": 32,
       "2025": 39,
-      "2026": 14
+      "2026": 15
     },
     "Justice": {
       "2022": 4,
@@ -374,16 +393,16 @@
     }
   },
   "wc_stats": {
-    "n": 858,
+    "n": 861,
     "median": 1618,
-    "mean": 1906,
-    "p90": 2838,
+    "mean": 1901,
+    "p90": 2823,
     "max": 30332
   },
   "wc_buckets": [
     [
       "<500",
-      37
+      38
     ],
     [
       "500-999",
@@ -391,15 +410,15 @@
     ],
     [
       "1,000-1,999",
-      504
+      506
     ],
     [
       "2,000-2,999",
-      181
+      182
     ],
     [
       "3,000-4,999",
-      51
+      50
     ],
     [
       "5,000+",
@@ -407,7 +426,7 @@
     ]
   ],
   "by_nauthors": {
-    "1": 734,
+    "1": 737,
     "2": 105,
     "3": 25,
     "4": 1,
@@ -432,18 +451,13 @@
     },
     {
       "name": "Jamie Rubin",
-      "posts": 32,
+      "posts": 33,
       "credential": "Business / private sector"
     },
     {
       "name": "Josh Greenman",
       "posts": 19,
       "credential": "Journalist / media"
-    },
-    {
-      "name": "A Survey",
-      "posts": 15,
-      "credential": "Survey / reader poll"
     },
     {
       "name": "Vishaan Chakrabarti",
@@ -454,6 +468,11 @@
       "name": "Harry Siegel",
       "posts": 14,
       "credential": "Journalist / media"
+    },
+    {
+      "name": "A Survey",
+      "posts": 14,
+      "credential": "Survey / reader poll"
     },
     {
       "name": "Errol Louis",

@@ -1,15 +1,34 @@
 {
-  "generated_at": "2026-07-15T13:14:25.460685+00:00",
+  "generated_at": "2026-07-15T23:24:16.025984+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 867,
-  "total_authors": 478,
+  "total_posts": 870,
+  "total_authors": 480,
   "total_issues": 29,
   "total_topics": 211,
   "date_range": [
     "2021-09-15",
-    "2026-07-08"
+    "2026-07-15"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 3,
+  "new_articles": [
+    {
+      "title": "New York Noise",
+      "url": "https://www.vitalcitynyc.org/nyc-noise-regulation-history/",
+      "published_date": "2026-07-15",
+      "primary_author": "Daniel Loehr"
+    },
+    {
+      "title": "The Lifeguard Fiefdom",
+      "url": "https://www.vitalcitynyc.org/lifeguard-hiring-problem-nyc/",
+      "published_date": "2026-07-15",
+      "primary_author": "Jamie Rubin"
+    },
+    {
+      "title": "An Agenda for New York City’s Sidewalks",
+      "url": "https://www.vitalcitynyc.org/nyc-department-of-sidewalks-agenda/",
+      "published_date": "2026-07-15",
+      "primary_author": "Michael Pollack"
+    }
+  ]
 }
