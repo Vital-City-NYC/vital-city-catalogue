@@ -7,7 +7,7 @@
     "type_basis": "html:vc-app-embed",
     "published_date": "2026-07-15",
     "published_at": "2026-07-15T15:46:16.000+00:00",
-    "updated_at": "2026-07-15T19:53:56.000+00:00",
+    "updated_at": "2026-07-16T18:17:36.000+00:00",
     "primary_author": "Daniel Loehr",
     "authors": [
       "Daniel Loehr"
@@ -24,7 +24,7 @@
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/07/Cropping-Tool---2026-07-15T094358.783.png",
     "featured": false,
     "visibility": "public",
-    "word_count": 2693,
+    "word_count": 2692,
     "reading_minutes": 12,
     "id": "6a578ed91dca6e0001ff1bc0"
   },
@@ -598,7 +598,9 @@
     "authors": [
       "Matthew Goodman"
     ],
-    "topics": [],
+    "topics": [
+      "Sports"
+    ],
     "issues": [],
     "issue_numbers": [],
     "summary": "A tribute to basketball, this squad and the spirit of the city",
@@ -3936,7 +3938,7 @@
     "slug": "gloria-gong-interview",
     "url": "https://www.vitalcitynyc.org/gloria-gong-interview/",
     "type": "q&a",
-    "type_basis": "tag:podcast",
+    "type_basis": "tag:interview",
     "published_date": "2026-02-12",
     "published_at": "2026-02-12T14:36:01.000+00:00",
     "updated_at": "2026-04-15T13:36:27.000+00:00",
