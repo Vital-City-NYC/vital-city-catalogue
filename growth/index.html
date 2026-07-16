@@ -3322,22 +3322,35 @@ function renderBigPicture(data){
       const e=(emYr[y]=emYr[y]||{sends:0,recip:0,opens:0,clicks:0});
       const r=c.sent_to||0; e.sends++; e.recip+=r;
       e.opens += r*(c.open_pct||0)/100; e.clicks += r*(c.click_pct||0)/100; });
+    // Weeks of the calendar year that have actually elapsed — full years get
+    // their real length, the in-progress year only counts to today. Dividing by
+    // this is what makes the current year comparable to complete ones (its raw
+    // totals are otherwise low purely because the year isn't over).
+    const weeksIn = (yr)=>{
+      const s = Date.UTC(yr,0,1);
+      const e = (yr >= curYear) ? Date.now() : Date.UTC(yr+1,0,1);
+      return Math.max(1, (e-s)/(7*86400000));
+    };
     const emRows = listYears.map(y=>{
       const e=emYr[y.year]; if(!e || !e.recip) return "";
       const orate=Math.round(e.opens/e.recip*100);
+      const wks=weeksIn(y.year);
+      const opw=Math.round(e.opens/wks), cpw=Math.round(e.clicks/wks);
       return `<tr>
         <td style="font-weight:700">${y.year}${y.year>=curYear?'*':''}</td>
         <td class="num">${fmtN(y.cum)}</td>
         <td class="num">${fmtN(e.sends)}</td>
         <td class="num">${orate}%</td>
         <td class="num">${fmtN(Math.round(e.opens))}</td>
+        <td class="num" title="${fmtN(Math.round(e.opens))} opens ÷ ${wks.toFixed(1)} weeks elapsed in ${y.year}">${fmtN(opw)}</td>
         <td class="num">${fmtN(Math.round(e.clicks))}</td>
+        <td class="num" title="${fmtN(Math.round(e.clicks))} clicks ÷ ${wks.toFixed(1)} weeks elapsed in ${y.year}">${fmtN(cpw)}</td>
       </tr>`;
     }).join("");
     const emTable = emRows ? `
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:24px 0 8px">Newsletter performance by year</div>
-      <table class="tbl" style="width:100%"><thead><tr><th>Year</th><th class="num">Subscribers (EOY)</th><th class="num">Sends</th><th class="num">Open rate <span class="flag">Apple Mail–inflated</span></th><th class="num">Total opens</th><th class="num">Total clicks <span class="flag">honest signal</span></th></tr></thead><tbody>${emRows}</tbody></table>
-      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px;line-height:1.55">Total opens/clicks are estimated from each send's open/click rate × recipients (Mailchimp reports rates, not raw totals). <b>Open rate isn't comparable across the whole span</b> — Apple Mail Privacy Protection (Sept 2021+) auto-opens email, inflating opens from ~2022 on; treat open rate as directional and clicks as the cleaner engagement signal. ${curYear} is in progress.</div>` : "";
+      <table class="tbl" style="width:100%"><thead><tr><th>Year</th><th class="num">Subscribers (EOY)</th><th class="num">Sends</th><th class="num">Open rate <span class="flag">Apple Mail–inflated</span></th><th class="num">Total opens</th><th class="num" title="Total opens ÷ the weeks of that year that have elapsed. This is the number to compare across years — the in-progress year's raw total is low only because the year isn't over.">Opens / week</th><th class="num">Total clicks <span class="flag">honest signal</span></th><th class="num" title="Total clicks ÷ the weeks of that year that have elapsed. Clicks aren't inflated by Apple Mail auto-opens, so this is the cleanest year-over-year engagement trend on the page.">Clicks / week <span class="flag">best trend line</span></th></tr></thead><tbody>${emRows}</tbody></table>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px;line-height:1.55">Total opens/clicks are estimated from each send's open/click rate × recipients (Mailchimp reports rates, not raw totals). <b>Open rate isn't comparable across the whole span</b> — Apple Mail Privacy Protection (Sept 2021+) auto-opens email, inflating opens from ~2022 on; treat open rate as directional and clicks as the cleaner engagement signal. <b>Per-week columns divide by the weeks of that year that have actually elapsed</b>, so ${curYear} can be read against complete years — its raw totals are lower only because the year is still running. ${curYear} is in progress.</div>` : "";
     listBlock = `
       <div style="border-top:1px solid var(--vc-cloud);margin-top:26px;padding-top:20px"></div>
       <div style="font-size:13px;color:var(--vc-charcoal);margin-bottom:16px;line-height:1.5">
