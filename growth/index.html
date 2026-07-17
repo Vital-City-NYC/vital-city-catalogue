@@ -730,7 +730,7 @@
       </div>
 
       <div class="card" id="xfollowers">
-        <h2>Who follows Vital City on X <span class="hint" id="xfHint">the influence sitting in the follower list</span></h2>
+        <h2>Who follows Vital City on X <span class="hint" id="xfHint">point-in-time snapshot · not live</span></h2>
         <div id="xfollowersBody"></div>
       </div>
 
@@ -2234,10 +2234,13 @@ function renderXFollowers(data){
       <td class="num">${fmtN(f.followers)}</td>
       <td>${tagFor(f)}</td></tr>`;
   const located = xf.have_location||0, nycPct = located?Math.round(xf.nyc_area/located*100):0;
+  const asof = xf.as_of || "unknown date";
+  const hint = $("#xfHint"); if(hint) hint.textContent = `point-in-time snapshot · ${asof} · not live`;
 
   host.innerHTML = `
+    <div style="display:inline-block;font-size:11px;font-weight:700;color:#7a4a12;background:#fbeede;border:1px solid var(--vc-orange);border-radius:3px;padding:4px 10px;margin-bottom:12px">📸 Point-in-time snapshot &mdash; X followers as of <b>${esc(asof)}</b>. Not live; frozen at the moment this list was exported.</div>
     <div class="perfgrid">
-      <div class="perfcell" title="Total X followers in this snapshot."><div class="pl">Followers</div><div class="pn">${fmtN(xf.total)}</div><div class="pd flat">as of ${esc(xf.as_of||"?")}</div></div>
+      <div class="perfcell" title="Total X followers in this snapshot."><div class="pl">Followers</div><div class="pn">${fmtN(xf.total)}</div><div class="pd flat">snapshot ${esc(asof)}</div></div>
       <div class="perfcell" title="Sum of every follower's own follower count — the theoretical audience one step out. Not deduped, so treat it as a ceiling on reach, not a headcount."><div class="pl">Combined reach</div><div class="pn">${compact(xf.combined_reach||0)}</div><div class="pd flat">their audiences, summed <span class="flag">ceiling, not headcount</span></div></div>
       <div class="perfcell" title="Followers with 10,000+ of their own followers — accounts whose repost puts Vital City in front of a real crowd."><div class="pl">High-reach followers</div><div class="pn">${fmtN((xf.bands.find(b=>b[0]==='100k+')||[0,0])[1]+(xf.bands.find(b=>b[0]==='10k-100k')||[0,0])[1])}</div><div class="pd flat">10k+ own audience</div></div>
       <div class="perfcell" title="Share of followers with a location that reads as New York City / New York State."><div class="pl">NYC-area</div><div class="pn">${fmtN(xf.nyc_area)}</div><div class="pd flat">${nycPct}% of the ${fmtN(located)} who list a location</div></div>
