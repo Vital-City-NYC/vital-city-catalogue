@@ -2810,6 +2810,81 @@ def _manual_follower_stub(platform, handle, reason):
     return {"available": False, "reason": reason}
 
 
+def pull_x_followers():
+    """Who follows Vital City on X — from a point-in-time follower export
+    (private/x_followers_source.csv, dropped by hand; X's API is paid, so this
+    is a manual snapshot, NOT live). Computes reach + a named list of the most
+    influential followers, and cross-matches them to the contact database so
+    the growth dashboard can show which high-profile followers we already have
+    on the newsletter vs. who's reaching us only on social.
+    Refresh: overwrite the CSV (and x_followers_asof.txt), re-pack the bundle."""
+    import csv as _csv, re as _re, unicodedata as _ud, collections
+    src = PRIV / "x_followers_source.csv"
+    if not src.exists():
+        return {"available": False, "reason": "no follower export bundled yet"}
+    try:
+        rows = list(_csv.DictReader(open(src, encoding="utf-8-sig")))
+        asof_f = PRIV / "x_followers_asof.txt"
+        as_of = asof_f.read_text().strip() if asof_f.exists() else ""
+        def num(r, k):
+            try: return int((r.get(k) or "0").replace(",", "") or 0)
+            except Exception: return 0
+        def norm(s):
+            s = _ud.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode().lower()
+            return _re.sub(r"[^a-z ]+", " ", s).strip()
+        total = len(rows)
+        reach = sum(num(r, "Followers Count") for r in rows)
+        loc = [(r.get("Location") or "").strip() for r in rows]
+        have_loc = sum(1 for l in loc if l)
+        nyc = sum(1 for l in loc if _re.search(r"new york|nyc|brooklyn|manhattan|queens|bronx|\bny\b", l, _re.I))
+        def band(n): return ("100k+" if n >= 100_000 else "10k-100k" if n >= 10_000 else "1k-10k" if n >= 1000 else "<1k")
+        bc = collections.Counter(band(num(r, "Followers Count")) for r in rows)
+        bands = [[b, bc.get(b, 0)] for b in ["100k+", "10k-100k", "1k-10k", "<1k"]]
+
+        # Cross-match the influential followers (>=5k own-audience) to the
+        # contact DB by name (and press Twitter handle where we have it).
+        by_name, by_tw = {}, {}
+        try:
+            for p in json.loads((PRIV / "people.json").read_text()):
+                nm = norm(p.get("n"))
+                if len(nm.split()) >= 2: by_name.setdefault(nm, p)
+                tw = (p.get("ptw") or "").lower().lstrip("@").strip()
+                if tw: by_tw[tw] = p
+        except Exception as e:
+            log(f"  x_followers: contact cross-match skipped ({e})")
+        def match(f):
+            return by_tw.get((f.get("Username") or "").lower().strip()) or by_name.get(norm(f.get("Name")))
+
+        infl = sorted((r for r in rows if num(r, "Followers Count") >= 5000),
+                      key=lambda r: -num(r, "Followers Count"))
+        in_db = subs = notable = 0
+        def entry(f, p):
+            return {"name": (f.get("Name") or "").strip(), "handle": (f.get("Username") or "").strip(),
+                    "followers": num(f, "Followers Count"), "bio": (f.get("Bio") or "").strip()[:120],
+                    "in_db": bool(p), "sub": bool(p and p.get("mem") and not p.get("unsub")),
+                    "notable": bool(p and p.get("wiki"))}
+        top, net_new = [], []
+        for f in infl:
+            p = match(f)
+            if p:
+                in_db += 1
+                if p.get("mem") and not p.get("unsub"): subs += 1
+                if p.get("wiki"): notable += 1
+            else:
+                net_new.append(entry(f, None))
+            if len(top) < 40: top.append(entry(f, p))
+        log(f"  x_followers: {total:,} followers, {reach:,} combined reach ({as_of}); {len(infl)} with 5k+, {in_db} already in contacts")
+        return {"available": True, "as_of": as_of, "total": total, "combined_reach": reach,
+                "have_location": have_loc, "nyc_area": nyc, "bands": bands,
+                "influential": len(infl), "top": top,
+                "crossmatch": {"influential": len(infl), "in_db": in_db, "subscribers": subs,
+                               "notable_db": notable, "net_new": len(net_new)},
+                "net_new_top": net_new[:24]}
+    except Exception as e:
+        log(f"  x_followers pull failed: {e}")
+        return {"available": False, "reason": f"follower export present but parse failed: {e}"}
+
+
 def pull_x():
     import re as _re
     url = "https://syndication.twitter.com/srv/timeline-profile/screen-name/vitalcitynyc"
@@ -3438,6 +3513,10 @@ def main():
         # Reuses the GA4 service account; auto-detects the property.
         "search_console": pull_search_console(),
         "x_profile":  xprof,
+        # Who follows VC on X — point-in-time follower export, cross-matched to
+        # the contact DB. Manual snapshot (X's API is paid); refresh by dropping
+        # a new CSV into the bundle.
+        "x_followers": pull_x_followers(),
         "instagram":  pull_instagram(),
     }
     OUT.write_text(json.dumps(out, indent=2))

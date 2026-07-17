@@ -31,6 +31,8 @@ SOURCES = [
     "contacts_source.csv",
     "donors_source.csv",
     "press_source.csv",        # curated media/press contacts
+    "x_followers_source.csv",  # point-in-time X follower export (manual snapshot)
+    "x_followers_asof.txt",    # its as-of date
     "vc_authors.csv",
     "unsubscribed_source.csv",
     "extra_contributors.csv",
