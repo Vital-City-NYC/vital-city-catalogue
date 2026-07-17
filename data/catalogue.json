@@ -1,13 +1,13 @@
 [
   {
-    "title": "New York Noise",
+    "title": "New York Needs a Better Noise Strategy",
     "slug": "nyc-noise-regulation-history",
     "url": "https://www.vitalcitynyc.org/nyc-noise-regulation-history/",
     "type": "map/tool",
     "type_basis": "html:vc-app-embed",
     "published_date": "2026-07-15",
     "published_at": "2026-07-15T15:46:16.000+00:00",
-    "updated_at": "2026-07-16T18:17:36.000+00:00",
+    "updated_at": "2026-07-17T13:20:28.000+00:00",
     "primary_author": "Daniel Loehr",
     "authors": [
       "Daniel Loehr"
@@ -19,8 +19,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "The City needs a smarter strategy for designing its soundscape.",
-    "excerpt": "The City needs a smarter strategy for designing its soundscape.",
+    "summary": "The City needs a smarter approach to its sometimes punishing soundscape.",
+    "excerpt": "The City needs a smarter approach to its sometimes punishing soundscape.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/07/Cropping-Tool---2026-07-15T094358.783.png",
     "featured": false,
     "visibility": "public",
@@ -3938,7 +3938,7 @@
     "slug": "gloria-gong-interview",
     "url": "https://www.vitalcitynyc.org/gloria-gong-interview/",
     "type": "q&a",
-    "type_basis": "tag:interview",
+    "type_basis": "tag:podcast",
     "published_date": "2026-02-12",
     "published_at": "2026-02-12T14:36:01.000+00:00",
     "updated_at": "2026-04-15T13:36:27.000+00:00",
