@@ -79,6 +79,7 @@
   .modalbtns{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
   .modalbtns .lbl-note{font-size:11px;flex:1 1 100%}
   .stat .num.unsubnum{color:#c8102e}
+  .stat .num.wikinum{color:var(--vc-cerulean)}   /* matches the notable underline + badge */
   .stat{padding:14px 18px;border-right:1px solid var(--vc-cloud)}
   .stat:last-child{border-right:none}
   .stat .num{font-family:var(--vc-serif);font-weight:200;font-size:30px;line-height:1;font-synthesis:none}
@@ -272,6 +273,7 @@
   .b-auth{border:1px solid var(--vc-magenta);color:var(--vc-magenta)}
   .b-don{background:var(--vc-orange);color:var(--vc-black)}
   .b-press{background:var(--vc-cerulean);color:#fff}
+  .b-wiki{border:1px solid var(--vc-cerulean);color:var(--vc-cerulean);background:var(--vc-white)}
   .muted{color:var(--vc-cloud)}
   /* ---- responsive ---- */
   .modalbox{max-width:92vw}
@@ -472,6 +474,7 @@
               <option value="alast:-1">Most recent contribution</option>
               <option value="arts:-1">Most published (VC pieces)</option>
               <option value="eng:-1" title="Ranks by engagement score = Mailchimp star rating x 20 + open rate. Shown in the Subscriber column as ★rating · opens.">Most engaged</option>
+              <option value="notable:-1" title="Floats notable people (apparent Wikipedia profile) to the top, most-engaged first, then everyone else. Pairs well with the Subscribers filter to see your highest-profile active readers.">Most notable</option>
               <option value="damt:-1">Donation size</option>
               <option value="dlast:-1">Recently donated</option>
             </select>
@@ -777,6 +780,10 @@ function buildStats(){
   const press=cur.filter(p=>p.press).length;
   const other=cur.filter(p=>!p.mem&&!p.don&&!p.auth&&!p.press).length;   // none of the four
   const donors=cur.filter(p=>p.don).length;
+  // Notable is an ATTRIBUTE, not a constituent category: it cuts across
+  // subscribers/donors/authors/press, so it is deliberately left out of the
+  // "other" definition above and never sums with the category tiles.
+  const notable=cur.filter(p=>p.wiki).length;
   const unsub=PEOPLE.length-cur.length;
   const S=[
     [cur.length.toLocaleString(),"people","all","Unique people in the tool right now — each individual counted once even if they have multiple emails. Click to reset all filters.",""],
@@ -784,6 +791,7 @@ function buildStats(){
     [donors.toLocaleString(),"donors","donors","Donors — toggle the Donors filter",""],
     [auth.toLocaleString(),"authors","authors","Vital City contributors — toggle the Authors filter",""],
     [press.toLocaleString(),"press","press","Curated press/media contacts — reporters and editors. Some are also subscribers or donors. Click to toggle the Press filter.",""],
+    [notable.toLocaleString(),"notable","notable","People who appear to have an English Wikipedia page — a rough signal of public profile. This cuts ACROSS the other tiles (most notables are also subscribers, and many are Vital City authors), so it doesn't add up with them. Click to show only notables."," wikinum"],
     [other.toLocaleString(),"other","other","None of subscriber, donor, author or press",""],
     [unsub.toLocaleString(),"unsubscribed","unsub","Former contacts who left the list"," unsubnum"],
   ];
@@ -1061,8 +1069,9 @@ function syncToggles(){
       if(ts) ts.textContent = v===1?"✓ included" : v===-1?"✕ excluded" : "";
     } else {
       s.classList.remove("inc","exc");
-      s.classList.toggle("active", k==="other"?other : k==="unsub"?onlyUnsub : false);
-      if(ts) ts.textContent = (k==="other"&&other)?"✓ showing" : (k==="unsub"&&onlyUnsub)?"✓ showing" : "";
+      const wikiOn = k==="notable" && $("#fWiki").checked;
+      s.classList.toggle("active", k==="other"?other : k==="unsub"?onlyUnsub : wikiOn);
+      if(ts) ts.textContent = (k==="other"&&other)?"✓ showing" : (k==="unsub"&&onlyUnsub)?"✓ showing" : wikiOn?"✓ showing" : "";
     }
   });
   // Repeat-donor sub-filter + Donorbox note are only meaningful while viewing donors.
@@ -1103,6 +1112,13 @@ function statAction(a){
   if(a==="unsub"){
     if(onlyUnsub){ clearAll(); return; }   // click again to turn off
     clearAll(); onlyUnsub=true; $("#fUnsub").checked=true; sortKey="last"; sortDir=1; syncToggles(); render(); return;
+  }
+  if(a==="notable"){
+    // Notable is a plain on/off attribute filter (it isn't a constituent
+    // category), so the tile just drives the existing Filters checkbox
+    // rather than carrying its own duplicate state.
+    $("#fWiki").checked = !$("#fWiki").checked;
+    syncToggles(); render(); return;
   }
   // KPI tiles cycle the same way as the chips: include → exclude → off.
   if(a==="subs") cycleWant("mem");
@@ -1626,6 +1642,13 @@ function sortRows(rows){
       if(d) return d*sortDir;
       return nameKey(a).localeCompare(nameKey(b));   // alphabetical within a tie, both directions
     }
+    // Notable-first: notables above non-notables (direction-independent), then
+    // most-engaged within each group, then name — fully decisive, stable order.
+    if(sortKey==="notable"){
+      if((a.wiki?1:0)!==(b.wiki?1:0)) return (b.wiki?1:0)-(a.wiki?1:0);
+      const d=engScore(b)-engScore(a);
+      return d || nameKey(a).localeCompare(nameKey(b));
+    }
     if(sortKey==="last"){va=sortName(lastName(a))?sortName(lastName(a))+"|"+sortName(firstName(a)):"￿";vb=sortName(lastName(b))?sortName(lastName(b))+"|"+sortName(firstName(b)):"￿";}
     else if(sortKey==="first"){va=sortName(firstName(a))?sortName(firstName(a))+"|"+sortName(lastName(a)):"￿";vb=sortName(firstName(b))?sortName(firstName(b))+"|"+sortName(lastName(b)):"￿";}
     else if(sortKey==="types"){va=(a.types||[]).join(" ");vb=(b.types||[]).join(" ");}
@@ -1701,7 +1724,7 @@ function rowHTML(p){
     <tr data-key="${key}"${p.unsub?' title="Unsubscribed — former contact. Click to view details."':''}>
       <td>${star} <span class="nm${g}"${nmTitle}>${esc(np.first)||'<span class="muted">—</span>'}</span></td>
       <td><span class="nm${g}"${nmTitle}>${esc(np.last)||'<span class="muted">—</span>'}</span>${acts}</td>
-      <td data-label="Type(s)" class="c-type${bl((p.types&&p.types.length)||p.press)}">${p.press?`<span class="badge b-press" title="Curated press contact${p.poutlet?' · '+esc(p.poutlet):''}${p.ptw?' · '+esc(p.ptw):''}">PRESS</span> `:''}${types}</td>
+      <td data-label="Type(s)" class="c-type${bl((p.types&&p.types.length)||p.press||p.wiki)}">${p.wiki?`<span class="badge b-wiki" title="Notable — appears to have an English Wikipedia page (matched conservatively from context clues, so it's a rough signal of public profile, not a verified fact).">★ NOTABLE</span> `:''}${p.press?`<span class="badge b-press" title="Curated press contact${p.poutlet?' · '+esc(p.poutlet):''}${p.ptw?' · '+esc(p.ptw):''}">PRESS</span> `:''}${types}</td>
       <td data-label="Subscriber" class="c-mem${bl(p.unsub||p.mem)}">${p.unsub?`<span class="badge" style="background:#c8102e;color:#fff"${p.udate?` title="Unsubscribed ${esc(p.udate)}"`:''}>Unsubscribed</span>${p.udate?`<div class="sub-d">on ${esc(p.udate)}</div>`:''}`:(p.mem?`<span class="badge b-mem"${p.since?` title="Subscribed ${esc(p.since)}"`:''}>Subscriber${p.since?" '"+p.since.slice(2,4):""}</span>${p.since?`<div class="sub-d">since ${esc(p.since)}</div>`:''}${(p.erate||p.eopen)?`<span class="erate" title="Engagement score ${engScore(p)} of 200 — Mailchimp star rating (${p.erate||0} of 5) x 20, plus open rate (${p.eopen||0}%). This is what 'Most engaged' sorts by, and it's the same score the Growth dashboard uses to pick power readers.${p.eclick?` Click rate ${p.eclick}%.`:''} Note: Apple Mail's auto-open can inflate open rates, and a brand-new subscriber can show a high % off just a few emails.">★${p.erate||0} · ${p.eopen||0}% opens</span>`:''}`:'<span class="muted">—</span>')}</td>
       <td data-label="Donor" class="c-don${bl(p.don)}">${p.don?`<span class="badge b-don">$${Math.round(p.damt).toLocaleString()}</span>${p.dlast?`<div class="sub-d">last ${p.dlast}</div>`:''}`:'<span class="muted">—</span>'}</td>
       <td data-label="Institution" class="c-inst${bl(p.inst)}">${esc(p.inst)||'<span class="muted">—</span>'}</td>
