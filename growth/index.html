@@ -2214,6 +2214,10 @@ function timeAgo(iso){
 function renderXFollowers(data){
   const host = $("#xfollowersBody"); if(!host) return;
   const xf = data.x_followers || {};
+  const hintEl = $("#xfHint");
+  if(hintEl) hintEl.textContent = xf.available && xf.as_of
+    ? `point-in-time snapshot · ${xf.as_of} · not live`
+    : "point-in-time snapshot · not live";
   if(!xf.available){
     host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">No follower snapshot loaded yet${xf.reason?` — ${esc(xf.reason)}`:""}. Drop a follower export into the source bundle to populate this.</div>`;
     return;
@@ -3388,6 +3392,16 @@ function renderAudienceQuality(data){
     ).filter(p=>{ const k=(p.name||"").trim().toLowerCase(); if(!k||_seenNm.has(k)) return false; _seenNm.add(k); return true; }).slice(0,14);
     const chips = preview.map(p=>`<span style="display:inline-block;background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:3px;padding:2px 7px;margin:0 4px 5px 0;font-size:11.5px"><b>${esc(p.name||"—")}</b>${p.inst?` <span style="color:var(--vc-charcoal)">· ${esc(p.inst)}</span>`:""}</span>`).join("");
 
+    // A second influence channel: high-profile accounts that follow VC on X.
+    // Different audience from the email readers above (social vs owned), so
+    // it's a labeled complement, not folded into the reader counts.
+    const xf = data.x_followers || {};
+    const compactX = n => n>=1e6 ? (n/1e6).toFixed(1).replace(/\.0$/,"")+"M" : n>=1e3 ? Math.round(n/1e3)+"k" : ""+n;
+    const highReach = xf.available ? ((xf.bands||[]).find(b=>b[0]==='100k+')||[0,0])[1]+((xf.bands||[]).find(b=>b[0]==='10k-100k')||[0,0])[1] : 0;
+    const xline = xf.available ? `
+      <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-top:12px;border-left:3px solid var(--vc-cerulean);padding:2px 0 2px 12px">
+        <b>Influence beyond the inbox:</b> ${fmtN(xf.total)} accounts follow Vital City on <b>X</b> (${compactX(xf.combined_reach||0)} combined reach), <b>${fmtN(highReach)}</b> of them with 10k+ audiences of their own &mdash; a social-reach cut that barely overlaps the readers above (only ${fmtN((xf.crossmatch||{}).in_db||0)} of ${fmtN((xf.crossmatch||{}).influential||0)} high-reach followers are even in our contacts). Named breakdown in the <a href="#xfollowers" style="color:var(--vc-cerulean)">Who follows Vital City on X</a> card. <span style="color:var(--vc-charcoal)">Snapshot ${esc(xf.as_of||"")}.</span></div>` : "";
+
     blocks.push(`
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px">Who's reading &mdash; the policy circle</div>
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:4px">
@@ -3396,6 +3410,7 @@ function renderAudienceQuality(data){
         <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Of active audience</div><div class="pn">${iwr.raw_mau?(((iwr.notable_in_mau||0)+(iwr.gov_in_mau||0))/iwr.raw_mau*100).toFixed(1):"—"}%</div><div class="pd flat">share of ${fmtN(iwr.raw_mau||0)} monthly actives</div></div>
       </div>
       <div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.5">For a publication built to move policy, this is the number that matters most: a few hundred decision-makers and notable New Yorkers reading every month is worth more than a spike of anonymous traffic.</div>
+      ${xline}
       ${trend}
       <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:18px 0 6px">Who the ${fmtN(nlist.length)} notable readers are</div>
       ${sectorBars}
