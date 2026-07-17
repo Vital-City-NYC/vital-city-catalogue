@@ -3272,14 +3272,64 @@ function renderAudienceQuality(data){
     window._peopleSubsets["notable_in_mau"] = {list: iwr.notable_list || [], total: iwr.notable_in_mau||0};
     window._peopleSubsets["gov_in_mau"]     = {list: iwr.gov_list     || [], total: iwr.gov_in_mau||0};
     const phist = ex.policy_history || [];
+    // 30-day trend sparkline: notable + government active readers over time.
+    // Both series sit well under 250, so they can share one honest scale.
     let trend = "";
     if(phist.length >= 2){
       const f = phist[0], l = phist[phist.length-1];
-      const fSum = (f.notable_in_mau||0)+(f.gov_in_mau||0), lSum = (l.notable_in_mau||0)+(l.gov_in_mau||0);
-      trend = `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">Tracking since ${esc(f.date)}: ${fmtN(fSum)} &rarr; ${fmtN(lSum)} notable + government readers active.</div>`;
+      const W=560,H=78,pad=6,n=phist.length;
+      const mx=Math.max(1,...phist.map(p=>Math.max(p.notable_in_mau||0,p.gov_in_mau||0)));
+      const X=i=>pad+i/(n-1)*(W-2*pad), Y=v=>H-16-(v/mx)*(H-26);
+      const lineOf=(k,c)=>`<polyline points="${phist.map((p,i)=>X(i)+','+Y(p[k]||0)).join(' ')}" fill="none" stroke="${c}" stroke-width="1.8"/><circle cx="${X(n-1)}" cy="${Y(phist[n-1][k]||0)}" r="2.6" fill="${c}"/>`;
+      const dir=(a,b)=>b>a?`up ${b-a}`:b<a?`down ${a-b}`:"flat";
+      trend = `<div style="margin-top:14px">
+        <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">Active notable + government readers, last ${n} days</div>
+        <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;overflow:visible" role="img">
+          ${lineOf("notable_in_mau","#217ebe")}${lineOf("gov_in_mau","#7a5ea6")}
+          <text x="${X(0)}" y="${H-2}" font-size="9" fill="#999">${esc(f.date)}</text>
+          <text x="${X(n-1)}" y="${H-2}" text-anchor="end" font-size="9" fill="#999">${esc(l.date)}</text>
+        </svg>
+        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:2px">
+          <span style="color:#217ebe;font-weight:700">■</span> Notable ${fmtN(f.notable_in_mau||0)}&rarr;${fmtN(l.notable_in_mau||0)} (${dir(f.notable_in_mau||0,l.notable_in_mau||0)}) &nbsp;
+          <span style="color:#7a5ea6;font-weight:700">■</span> Government ${fmtN(f.gov_in_mau||0)}&rarr;${fmtN(l.gov_in_mau||0)} (${dir(f.gov_in_mau||0,l.gov_in_mau||0)})</div></div>`;
     } else {
-      trend = `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">A month-by-month trend line will build here from today onward (no back-history exists for this cut).</div>`;
+      trend = `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">A day-by-day trend line will build here as history accrues.</div>`;
     }
+
+    // "Who they are" — sector mix of the notable readers. A notable can wear
+    // several hats; we pick the most telling one (a professor who also writes
+    // for VC reads as Academia, not "VC contributor"), so the bars sum to the
+    // notable count.
+    const SECT = [
+      ["Government & judiciary", ["judge","city gov","state gov","fed gov","current nyc.gov"], "#e7466d"],
+      ["Media", ["journalist"], "#ff7c53"],
+      ["Academia", ["academic"], "#217ebe"],
+      ["Nonprofit & philanthropy", ["nonprofit leadership","foundation leadership"], "#57aa4a"],
+      ["Vital City contributors/advisors", ["VC contributor","VC advisor"], "#7a5ea6"],
+    ];
+    const sectorOf = p => { const t=new Set(p.types||[]); for(const [lbl,keys] of SECT) if(keys.some(k=>t.has(k))) return lbl; return "Other / uncategorized"; };
+    const nlist = iwr.notable_list || [];
+    const scount = {}; nlist.forEach(p=>{ const s=sectorOf(p); scount[s]=(scount[s]||0)+1; });
+    const order = SECT.map(s=>s[0]).concat(["Other / uncategorized"]);
+    const colorFor = l => (SECT.find(s=>s[0]===l)||[])[2] || "#b9bcc2";
+    const smax = Math.max(1, ...Object.values(scount));
+    const sectorBars = order.filter(l=>scount[l]).map(l=>{
+      const v=scount[l], w=Math.max(3, v/smax*100);
+      return `<div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:11.5px">
+        <span style="flex:0 0 168px;color:var(--vc-black)">${l}</span>
+        <span style="flex:1;background:#eee;height:12px;border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:${w}%;background:${colorFor(l)}"></span></span>
+        <span style="flex:0 0 26px;text-align:right;font-weight:700;color:var(--vc-charcoal)">${v}</span></div>`;
+    }).join("");
+
+    // Named preview — the most-engaged notable readers, inline, so you see
+    // WHO's reading without opening the popup. Full list stays one click away.
+    const _seenNm = new Set();
+    const preview = nlist.slice().sort((a,b)=>
+      (b.rating||0)-(a.rating||0) ||
+      ((a.name||"").split(" ").pop()).localeCompare((b.name||"").split(" ").pop())
+    ).filter(p=>{ const k=(p.name||"").trim().toLowerCase(); if(!k||_seenNm.has(k)) return false; _seenNm.add(k); return true; }).slice(0,14);
+    const chips = preview.map(p=>`<span style="display:inline-block;background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:3px;padding:2px 7px;margin:0 4px 5px 0;font-size:11.5px"><b>${esc(p.name||"—")}</b>${p.inst?` <span style="color:var(--vc-charcoal)">· ${esc(p.inst)}</span>`:""}</span>`).join("");
+
     blocks.push(`
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px">Who's reading &mdash; the policy circle</div>
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:4px">
@@ -3287,9 +3337,13 @@ function renderAudienceQuality(data){
         <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Government readers · 30d</div><div class="pn"><span class="clickable-num" onclick="showPeople('gov_in_mau','Government readers active in the last 30 days','Subscribers at .gov / public-office inboxes (or tagged as government) who opened at least one Vital City email in the last 30 days. Sorted alphabetically by last name.')">${fmtN(iwr.gov_in_mau||0)}</span></div><div class="pd flat">.gov / public-office inboxes <span style="color:var(--vc-cerulean)">· click to view</span></div></div>
         <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Of active audience</div><div class="pn">${iwr.raw_mau?(((iwr.notable_in_mau||0)+(iwr.gov_in_mau||0))/iwr.raw_mau*100).toFixed(1):"—"}%</div><div class="pd flat">share of ${fmtN(iwr.raw_mau||0)} monthly actives</div></div>
       </div>
-      <div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.5">For a publication built to move policy, this is the number that matters most: a few hundred decision-makers and notable New Yorkers reading every month is worth more than a spike of anonymous traffic. The full named list is in the Engagement &amp; influence card below.</div>
+      <div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.5">For a publication built to move policy, this is the number that matters most: a few hundred decision-makers and notable New Yorkers reading every month is worth more than a spike of anonymous traffic.</div>
       ${trend}
-      <div class="flagnote"><b>A floor, not a ceiling.</b> This counts only subscribers whose email matched a flagged person in the contact database; influential readers we haven't tagged (or who read without subscribing) aren't included, so the real policy reach is higher.</div>`);
+      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:18px 0 6px">Who the ${fmtN(nlist.length)} notable readers are</div>
+      ${sectorBars}
+      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Most-engaged notable readers now</div>
+      <div>${chips}<span class="clickable-num" style="font-size:11.5px" onclick="showPeople('notable_in_mau','Notable readers active in the last 30 days','Wikipedia-notable people who opened at least one Vital City email in the last 30 days.')">view all ${fmtN(nlist.length)} &rarr;</span></div>
+      <div class="flagnote" style="margin-top:12px"><b>A floor, not a ceiling.</b> This counts only subscribers whose email matched a flagged person in the contact database; influential readers we haven't tagged (or who read without subscribing) aren't included, so the real policy reach is higher. "Notable" is a conservative Wikipedia-name match, so treat it as a strong signal, not a verified fact.</div>`);
   }
 
   host.innerHTML = blocks.length ? blocks.join("") :
