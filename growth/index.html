@@ -397,6 +397,10 @@
   }
 
   /* ---- Custom date-range report tool ---- */
+  .rpttabs{display:flex;gap:2px;border-bottom:1px solid var(--vc-cloud);margin:2px 0 12px}
+  .rpttab{font:inherit;font-size:12px;font-weight:700;letter-spacing:.02em;padding:7px 14px;border:0;border-bottom:2px solid transparent;background:none;color:var(--vc-charcoal);cursor:pointer}
+  .rpttab:hover{color:var(--vc-black)}
+  .rpttab.on{color:var(--vc-black);border-bottom-color:var(--vc-black)}
   .rptbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin-bottom:8px}
   .rptbar label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);font-weight:700;display:flex;flex-direction:column;gap:4px}
   .rptbar input[type=date]{font:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--vc-cloud);background:var(--vc-white);color:var(--vc-black)}
@@ -492,7 +496,16 @@
       </div>
 
       <div class="card" id="rangeReport">
-        <h2>Custom report — any two dates <span class="hint">pick a start and end, get a summary of every indicator we can slice by date · export to PDF, text or CSV</span></h2>
+        <h2>Custom reports <span class="hint">build a report on any date range, any piece or any author</span></h2>
+
+        <div class="rpttabs noprint" id="rptTabs" role="tablist">
+          <button class="rpttab on" data-tab="range" role="tab">By date range</button>
+          <button class="rpttab" data-tab="piece" role="tab">By piece</button>
+          <button class="rpttab" data-tab="author" role="tab">By author</button>
+        </div>
+
+        <div class="rptpane" id="rptPaneRange">
+        <div style="font-size:12px;color:var(--vc-charcoal);line-height:1.5;margin:2px 0 10px">Pick a start and end for a summary of every indicator we can slice by date &mdash; export to PDF, text or CSV.</div>
         <div class="rptbar noprint">
           <label>From <input type="date" id="rptFrom"></label>
           <label>To <input type="date" id="rptTo"></label>
@@ -518,6 +531,17 @@
           <button class="btn-rpt" id="rptMd">⬇ Download .md</button>
           <button class="btn-rpt" id="rptCsv">⬇ Download .csv</button>
           <button class="btn-rpt" id="rptCopy">⧉ Copy as text</button>
+        </div>
+        </div><!-- /range pane -->
+
+        <div class="rptpane" id="rptPanePiece" hidden>
+          <div style="font-size:12px;color:var(--vc-charcoal);line-height:1.5;margin:2px 0 10px" id="plHint">type a headline for its full performance report</div>
+          <div id="pieceLookupBody"></div>
+        </div>
+
+        <div class="rptpane" id="rptPaneAuthor" hidden>
+          <div style="font-size:12px;color:var(--vc-charcoal);line-height:1.5;margin:2px 0 10px" id="alHint">every piece they've written, summarized</div>
+          <div id="authorLookupBody"></div>
         </div>
       </div>
 
@@ -658,15 +682,6 @@
         <div id="benchmarksBody"></div>
       </div>
 
-      <div class="card" id="pieceLookup">
-        <h2>Look up any piece <span class="hint" id="plHint">type a headline for its full performance report</span></h2>
-        <div id="pieceLookupBody"></div>
-      </div>
-
-      <div class="card" id="authorLookup">
-        <h2>Look up any author <span class="hint" id="alHint">every piece they've written, summarized</span></h2>
-        <div id="authorLookupBody"></div>
-      </div>
 
       <div class="card" id="perf">
         <h2>Newsletter performance <span class="hint">recipient-weighted averages · YoY = same window last year</span></h2>
@@ -1035,6 +1050,7 @@ function boot(data){
   renderPieceBenchmarks(data);
   renderPieceLookup(data);
   renderAuthorLookup(data);
+  setupReportTabs();
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderFundUnsub(mc);
@@ -2401,6 +2417,23 @@ function renderPieceLookup(data){
     }));
   }
   inp.addEventListener("input", ()=>{ rep.innerHTML=""; suggest(inp.value); });
+}
+
+// Custom reports card: three ways in (date range / piece / author). Bound once;
+// re-rendering the panes doesn't need to re-bind, and the range pane stays the
+// default so the card behaves exactly as before for anyone who used it.
+function setupReportTabs(){
+  const tabs = document.getElementById("rptTabs");
+  if(!tabs || tabs._bound) return;
+  tabs._bound = true;
+  const panes = {range: $("#rptPaneRange"), piece: $("#rptPanePiece"), author: $("#rptPaneAuthor")};
+  tabs.querySelectorAll(".rpttab").forEach(b => b.addEventListener("click", () => {
+    tabs.querySelectorAll(".rpttab").forEach(x => x.classList.toggle("on", x === b));
+    Object.entries(panes).forEach(([k, el]) => { if(el) el.hidden = (k !== b.dataset.tab); });
+    // focus the search box when switching to a look-up tab
+    const inp = b.dataset.tab === "piece" ? $("#plInput") : b.dataset.tab === "author" ? $("#alInput") : null;
+    if(inp) setTimeout(() => inp.focus(), 30);
+  }));
 }
 
 // Look up any author and get their whole body of work in one summary — how much
