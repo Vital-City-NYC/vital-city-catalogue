@@ -333,6 +333,45 @@ def pull_mailchimp():
             camp_out.append(entry)
         out["campaigns"] = camp_out
 
+        # ---- Per-LINK clicks: which piece in each send actually got clicked.
+        # Campaign-level click rate tells you a send worked; /click-details tells
+        # you WHICH article did the work. Aggregated by article slug across sends,
+        # so the piece look-up can show "newsletter clicks" alongside web traffic.
+        # Capped to the most recent CLICK_SENDS campaigns — one API call each, and
+        # older sends add little (the list was a fraction of today's size).
+        try:
+            CLICK_SENDS = 120
+            recent = [e for e in sorted(camp_out, key=lambda e: e.get("sent") or "", reverse=True)
+                      if e.get("sent")][:CLICK_SENDS]
+            by_slug, n_ok = {}, 0
+            for e in recent:
+                try:
+                    det = mc_get(f"/reports/{e['id']}/click-details?count=1000"
+                                 f"&fields=urls_clicked.url,urls_clicked.total_clicks,"
+                                 f"urls_clicked.unique_clicks", key, dc).get("urls_clicked", [])
+                except Exception:
+                    continue
+                n_ok += 1
+                for u in det:
+                    url = (u.get("url") or "").split("?")[0]
+                    if "vitalcitynyc.org" not in url:
+                        continue                       # skip social/donate/footer links
+                    sl = url.rstrip("/").rsplit("/", 1)[-1].lower()
+                    if not sl or sl in ("vitalcitynyc.org", "www.vitalcitynyc.org"):
+                        continue
+                    r = by_slug.setdefault(sl, {"clicks": 0, "unique": 0, "sends": 0})
+                    r["clicks"] += int(u.get("total_clicks") or 0)
+                    r["unique"] += int(u.get("unique_clicks") or 0)
+                    r["sends"] += 1
+            out["link_clicks"] = {"available": True, "sends_scanned": n_ok,
+                                  "cap": CLICK_SENDS, "n_slugs": len(by_slug),
+                                  "by_slug": by_slug,
+                                  "window_start": min((e.get("sent") or "") for e in recent) if recent else ""}
+            log(f"  mailchimp link clicks: {len(by_slug)} article URLs across {n_ok} sends")
+        except Exception as e:
+            log(f"  mailchimp link-clicks pull failed: {e}")
+            out["link_clicks"] = {"available": False, "reason": str(e)}
+
         # Unsubscribe reasons by campaign kind (appeal vs newsletter vs other).
         # /reports/{id}/unsubscribed carries each unsub's optional reason. We
         # aggregate to COUNTS ONLY (never store emails). Mailchimp's fixed radio
@@ -3784,8 +3823,20 @@ def main():
                 tgt = by_title.get(t)
                 if tgt: tgt["signups"] = n
             idx["signup_window_days"] = att.get("window_days")
+            # 3) Newsletter clicks per piece, from the per-link click details
+            lc = (out.get("mailchimp") or {}).get("link_clicks") or {}
+            n_lc = 0
+            for slug, r in (lc.get("by_slug") or {}).items():
+                tgt = by_slug.get(slug)
+                if tgt and r.get("clicks"):
+                    tgt["nl_clicks"] = r["clicks"]
+                    tgt["nl_unique"] = r.get("unique") or 0
+                    tgt["nl_sends"] = r.get("sends") or 0
+                    n_lc += 1
+            idx["link_click_sends"] = lc.get("sends_scanned")
             log(f"  piece index enriched: {len(seen_q)} pieces w/ search queries, "
-                f"{sum(1 for p in pieces if p.get('signups'))} w/ attributed signups")
+                f"{sum(1 for p in pieces if p.get('signups'))} w/ attributed signups, "
+                f"{n_lc} w/ newsletter clicks")
     except Exception as e:
         log(f"  piece index enrichment failed: {e}")
 

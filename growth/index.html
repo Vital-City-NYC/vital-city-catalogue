@@ -663,6 +663,11 @@
         <div id="pieceLookupBody"></div>
       </div>
 
+      <div class="card" id="authorLookup">
+        <h2>Look up any author <span class="hint" id="alHint">every piece they've written, summarized</span></h2>
+        <div id="authorLookupBody"></div>
+      </div>
+
       <div class="card" id="perf">
         <h2>Newsletter performance <span class="hint">recipient-weighted averages · YoY = same window last year</span></h2>
         <div class="perfgrid" id="perfKpis"></div>
@@ -1029,6 +1034,7 @@ function boot(data){
   renderXFollowers(data);
   renderPieceBenchmarks(data);
   renderPieceLookup(data);
+  renderAuthorLookup(data);
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderFundUnsub(mc);
@@ -2370,6 +2376,7 @@ function renderPieceLookup(data){
           <tr><td>Attention band</td><td>${badge(h30)}</td></tr>
           <tr><td>Depth band</td><td>${badge(dTier)}</td></tr>
           ${fmt?`<tr><td>vs its format</td><td style="font-size:12px">${vsFmt!=null?`<b>${vsFmt}%</b> of the median <b>${esc(p.type)}</b> (${fmtN(fmt.p50)} views, n=${fmtN(fmt.n)})`:`median ${esc(p.type)} = ${fmtN(fmt.p50)} views`}</td></tr>`:""}
+          ${p.nl_clicks?`<tr><td>Newsletter clicks</td><td style="font-size:12px"><b>${fmtN(p.nl_clicks)}</b> clicks${p.nl_unique?` · ${fmtN(p.nl_unique)} unique`:""}${p.nl_sends?` · linked in ${fmtN(p.nl_sends)} send${p.nl_sends===1?"":"s"}`:""} <span style="color:var(--vc-charcoal)">(last ${fmtN(idx.link_click_sends||0)} sends scanned)</span></td></tr>`:""}
           ${p.signups?`<tr><td>Newsletter signups</td><td style="font-size:12px"><b>${fmtN(p.signups)}</b> attributed as landing page <span style="color:var(--vc-charcoal)">(only a ~${fmtN(idx.signup_window_days||0)}-day attribution window &mdash; absence here is not evidence of zero)</span></td></tr>`:""}
         </tbody></table>
 
@@ -2392,6 +2399,115 @@ function renderPieceLookup(data){
     sug.querySelectorAll(".plHit").forEach(btn=>btn.addEventListener("click",()=>{
       const p = pieces[+btn.dataset.i]; inp.value = p.title; report(p);
     }));
+  }
+  inp.addEventListener("input", ()=>{ rep.innerHTML=""; suggest(inp.value); });
+}
+
+// Look up any author and get their whole body of work in one summary — how much
+// they publish, how it performs against the house bands, and every piece ranked.
+function renderAuthorLookup(data){
+  const host = $("#authorLookupBody"); if(!host) return;
+  const idx = (data.ga4 || {}).piece_index || {};
+  const bm  = (data.ga4 || {}).piece_benchmarks || {};
+  const hint = $("#alHint");
+  const pieces = (idx.pieces || []).filter(p => (p.author || "").trim());
+  if(!idx.available || !pieces.length){
+    if(hint) hint.textContent = "author look-up";
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">The per-piece index populates on the next build${idx.reason?` &mdash; ${esc(idx.reason)}`:""}.</div>`;
+    return;
+  }
+  const b = bm.bands || {}, hb = bm.hours_bands || {};
+  // Group by author
+  const byAuthor = {};
+  pieces.forEach(p => (byAuthor[p.author] = byAuthor[p.author] || []).push(p));
+  const authors = Object.keys(byAuthor).sort();
+  if(hint) hint.textContent = `${fmtN(authors.length)} bylines with analytics · type a name`;
+  const med = arr => { if(!arr.length) return 0; const s=[...arr].sort((a,b)=>a-b); const m=s.length>>1;
+    return s.length%2 ? s[m] : Math.round((s[m-1]+s[m])/2); };
+  const tierOf = (v, bands) => {
+    if(!bands || bands.p25==null || v==null) return null;
+    if(v >= bands.p95) return ["Exceptional","#e7466d"];
+    if(v >= bands.p90) return ["Great","#217ebe"];
+    if(v >= bands.p75) return ["Strong","#57aa4a"];
+    if(v >= bands.p25) return ["Typical","#707175"];
+    return ["Under-performing","#c8102e"];
+  };
+  const hrs = s => s ? (s/3600 >= 10 ? Math.round(s/3600) : (s/3600).toFixed(1)) + "h" : "—";
+
+  host.innerHTML = `
+    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:10px">Every byline with analytics. Start typing a name for their full body of work, scored against the same house bands.</div>
+    <input id="alInput" type="search" autocomplete="off" placeholder="e.g. Glazer, Francis, Chakrabarti&hellip;"
+      style="width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--vc-cloud);border-radius:6px;font-family:inherit;font-size:14px;background:var(--vc-white);color:var(--vc-black)">
+    <div id="alSuggest" style="margin-top:6px"></div>
+    <div id="alReport" style="margin-top:14px"></div>`;
+
+  const inp = host.querySelector("#alInput"), sug = host.querySelector("#alSuggest"), rep = host.querySelector("#alReport");
+  const norm = s => (s||"").toLowerCase().normalize("NFKD").replace(/[^a-z0-9 ]+/g," ");
+
+  function report(name){
+    sug.innerHTML = "";
+    const ps = [...byAuthor[name]].sort((a,b)=>(b.views||0)-(a.views||0));
+    const withOpen = ps.filter(p=>p.views30!=null);
+    const medOpen = med(withOpen.map(p=>p.views30));
+    const totalViews = ps.reduce((s,p)=>s+(p.views||0),0);
+    const totalSecs  = ps.reduce((s,p)=>s+(p.secs||0),0);
+    const nlClicks   = ps.reduce((s,p)=>s+(p.nl_clicks||0),0);
+    const sigs       = ps.reduce((s,p)=>s+(p.signups||0),0);
+    const searchImpr = ps.reduce((s,p)=>s+(p.search_impr||0),0);
+    const depth = totalViews ? Math.round(totalSecs/totalViews) : 0;
+    const medTier = tierOf(medOpen, b);
+    // How the body of work spreads across the reach bands
+    const dist = {};
+    withOpen.forEach(p=>{ const t=tierOf(p.views30,b); if(t) dist[t[0]]=(dist[t[0]]||0)+1; });
+    const ORDER=[["Exceptional","#e7466d"],["Great","#217ebe"],["Strong","#57aa4a"],["Typical","#707175"],["Under-performing","#c8102e"]];
+    const distBars = withOpen.length ? ORDER.filter(([l])=>dist[l]).map(([l,c])=>`
+      <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:11.5px">
+        <span style="flex:0 0 128px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${c};margin-right:6px"></span>${l}</span>
+        <span style="flex:1;background:#eee;height:11px;border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:${Math.max(3,dist[l]/withOpen.length*100)}%;background:${c}"></span></span>
+        <span style="flex:0 0 54px;text-align:right;font-weight:700;color:var(--vc-charcoal)">${dist[l]} (${Math.round(dist[l]/withOpen.length*100)}%)</span></div>`).join("") : "";
+    const types = {}; ps.forEach(p=>types[p.type]=(types[p.type]||0)+1);
+    const typeStr = Object.entries(types).sort((a,b)=>b[1]-a[1]).map(([t,n])=>`${esc(t)} ×${n}`).join(", ");
+    const kpi=(l,v,s,t)=>`<div class="perfcell" title="${esc(t||'')}"><div class="pl">${l}</div><div class="pn">${v}</div><div class="pd flat">${s}</div></div>`;
+    const rows = ps.map(p=>{
+      const t = p.views30!=null ? tierOf(p.views30,b) : null;
+      return `<tr>
+        <td>${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:var(--vc-black)">${esc(p.title)}</a>`:esc(p.title)}
+          <div style="font-size:10.5px;color:var(--vc-charcoal)">${esc(p.pub||"")} · ${esc(p.type||"")}</div></td>
+        <td class="num">${p.views30!=null?fmtN(p.views30):"—"}</td>
+        <td class="num">${fmtN(p.views||0)}</td>
+        <td class="num">${hrs(p.secs)}</td>
+        <td>${t?`<span style="display:inline-block;background:${t[1]};color:#fff;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:1px 6px;border-radius:3px">${t[0]}</span>`:`<span style="color:var(--vc-charcoal);font-size:11px">—</span>`}</td></tr>`;
+    }).join("");
+    rep.innerHTML = `
+      <div style="border:1px solid var(--vc-cloud);background:var(--vc-white);padding:14px 16px">
+        <div style="font-size:17px;font-weight:700">${esc(name)}</div>
+        <div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:3px">${fmtN(ps.length)} piece${ps.length===1?"":"s"} with analytics · ${esc(typeStr)}</div>
+        <div class="perfgrid" style="margin-top:12px">
+          ${kpi("Median opening", withOpen.length?fmtN(medOpen):"—", withOpen.length?`vs ${fmtN(b.p50)} house median`:"no first-30d data","Median first-30-day views across this author's pieces — the fairest single number for a body of work, since it isn't skewed by one hit.")}
+          ${kpi("Lifetime views", fmtN(totalViews), `${fmtN(ps.length)} pieces`,"Total GA4 page views across everything they've written.")}
+          ${kpi("Total reader-hours", hrs(totalSecs), `${fmtN(depth)}s per view`,"Total time readers spent with their work, and the average depth per view.")}
+          ${kpi("Newsletter clicks", nlClicks?fmtN(nlClicks):"—", nlClicks?`across their pieces`:"none in scanned sends","Clicks their articles drew from newsletter sends (per-link Mailchimp data).")}
+        </div>
+        <table class="tbl" style="width:100%;margin-top:12px"><tbody>
+          <tr><td style="width:170px">Typical piece lands</td><td>${medTier?`<span style="display:inline-block;background:${medTier[1]};color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:3px">${medTier[0]}</span> <span style="font-size:11.5px;color:var(--vc-charcoal)">by the house bands</span>`:`<span style="font-size:11.5px;color:var(--vc-charcoal)">—</span>`}</td></tr>
+          ${searchImpr?`<tr><td>Search impressions</td><td style="font-size:12px"><b>${fmtN(searchImpr)}</b> across their pieces</td></tr>`:""}
+          ${sigs?`<tr><td>Signups attributed</td><td style="font-size:12px"><b>${fmtN(sigs)}</b> <span style="color:var(--vc-charcoal)">(short attribution window &mdash; a floor, not a total)</span></td></tr>`:""}
+        </tbody></table>
+        ${distBars?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">How their ${fmtN(withOpen.length)} scoreable pieces spread across the bands</div>${distBars}`:""}
+        <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Every piece, best first</div>
+        <table class="tbl" style="width:100%"><thead><tr><th>Piece</th><th class="num">First 30d</th><th class="num">Lifetime</th><th class="num">Reader-hrs</th><th>Band</th></tr></thead><tbody>${rows}</tbody></table>
+        <div class="flagnote" style="margin-top:12px"><b>Read the median, not the total.</b> Lifetime views favour whoever has been publishing longest, and one viral piece can carry an author's average &mdash; the median opening is the fairer comparison. Pieces published before GA4 coverage or in the last 30 days have no first-30-day figure and are excluded from the median and the band spread (but still counted in lifetime totals). Bylines come from the catalogue's primary author, so co-authored pieces are credited to the first name only.</div>
+      </div>`;
+  }
+
+  function suggest(q){
+    const n = norm(q).trim();
+    if(n.length < 2){ sug.innerHTML=""; return; }
+    const hits = authors.filter(a => norm(a).includes(n)).slice(0,8);
+    if(!hits.length){ sug.innerHTML = `<div style="font-size:12px;color:var(--vc-charcoal);padding:4px 0">No byline matches that.</div>`; return; }
+    sug.innerHTML = hits.map(a=>`<button class="alHit" data-a="${esc(a)}" style="display:block;width:100%;text-align:left;background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:4px;padding:6px 10px;margin-bottom:4px;cursor:pointer;font-family:inherit;font-size:12.5px">
+        <b>${esc(a)}</b> <span style="color:var(--vc-charcoal)">· ${fmtN(byAuthor[a].length)} piece${byAuthor[a].length===1?"":"s"}</span></button>`).join("");
+    sug.querySelectorAll(".alHit").forEach(btn=>btn.addEventListener("click",()=>{ inp.value=btn.dataset.a; report(btn.dataset.a); }));
   }
   inp.addEventListener("input", ()=>{ rep.innerHTML=""; suggest(inp.value); });
 }
