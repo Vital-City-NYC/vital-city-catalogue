@@ -2246,6 +2246,22 @@ function renderPieceBenchmarks(data){
       <td class="num" style="font-weight:700">${fmtN(bt[t].p50)}</td>
       <td class="num">${fmtN(bt[t].p90)}</td></tr>`).join("");
   const mins = bm.median_secs_per_view ? (bm.median_secs_per_view/60) : 0;
+  // Attention (reader-hours) + depth (seconds/view) tiers — same opening window
+  // as the view bands, so a piece can be scored on all three.
+  const hb = bm.hours_bands || {}, db = bm.depth_bands || {};
+  const hr = v => (v==null?"—":(v>=10?Math.round(v):v.toFixed(1))+"h");
+  const hoursRows = hb.p50!=null ? [
+    ["Under-performing", `under ${hr(hb.p25)}`, "#c8102e"],
+    ["Typical",          `${hr(hb.p25)}–${hr(hb.p75)}`, "#707175"],
+    ["Strong",           `${hr(hb.p75)}–${hr(hb.p90)}`, "#57aa4a"],
+    ["Great",            `${hr(hb.p90)}–${hr(hb.p95)}`, "#217ebe"],
+    ["Exceptional",      `${hr(hb.p95)}+`, "#e7466d"],
+  ].map(([lbl,rng,c])=>`<tr>
+      <td style="white-space:nowrap"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${c};margin-right:7px"></span><b>${lbl}</b></td>
+      <td class="num" style="white-space:nowrap;font-weight:700">${rng}</td></tr>`).join("") : "";
+  const depthRow = db.p50!=null ? `<tr>
+      <td class="num">${fmtN(db.p25)}s</td><td class="num" style="font-weight:700">${fmtN(db.p50)}s</td>
+      <td class="num">${fmtN(db.p75)}s</td><td class="num">${fmtN(db.p90)}s</td></tr>` : "";
 
   host.innerHTML = `
     <div class="perfgrid">
@@ -2255,11 +2271,21 @@ function renderPieceBenchmarks(data){
       <div class="perfcell" title="Median engaged seconds per view across pieces with real traffic — a read-depth benchmark, not a reach one."><div class="pl">Typical read depth</div><div class="pn">${bm.median_secs_per_view?fmtN(bm.median_secs_per_view)+"s":"—"}</div><div class="pd flat">${mins?`about ${mins.toFixed(1)} min per view`:"engaged time per view"}</div></div>
     </div>
 
-    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin:14px 0 10px">Every piece is scored on <b>page views in its own first ${bm.first_days} days</b>, so a new piece and a two-year-old one are judged the same way. Bands come from the <b>${fmtN(bm.n_pieces)} pieces</b> published between ${esc(bm.window_start)} and ${esc(bm.window_end)}.</div>
+    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin:14px 0 10px">Every piece is scored over <b>its own first ${bm.first_days} days</b>, so a new piece and a two-year-old one are judged the same way. Bands come from the <b>${fmtN(bm.n_pieces)} pieces</b> published between ${esc(bm.window_start)} and ${esc(bm.window_end)}. Three lenses, deliberately: <b>reach</b> (who showed up), <b>attention</b> (reader-hours &mdash; whether they stayed) and <b>depth</b> (seconds per view). A piece that clears one and misses another is telling you something real.</div>
+
+    <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Reach &mdash; page views in the first ${bm.first_days} days</div>
 
     <table class="tbl" style="width:100%"><thead><tr><th>Band</th><th class="num">First-${bm.first_days}-day views</th><th>What it means</th></tr></thead><tbody>${tierRows}</tbody></table>
 
-    ${typeRows?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:18px 0 6px">Bands differ by format — judge like against like</div>
+    ${hoursRows?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:20px 0 6px">Attention &mdash; total reader-hours in the first ${bm.first_days} days</div>
+    <div style="font-size:12px;color:var(--vc-charcoal);line-height:1.5;margin-bottom:6px">Views &times; time actually spent. The honest counterweight to reach: a piece can win on traffic and lose here, and a dense explainer that holds people can clear this bar on modest views.</div>
+    <table class="tbl" style="width:100%"><thead><tr><th>Band</th><th class="num">Reader-hours</th></tr></thead><tbody>${hoursRows}</tbody></table>`:""}
+
+    ${depthRow?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:20px 0 6px">Depth &mdash; engaged seconds per view</div>
+    <div style="font-size:12px;color:var(--vc-charcoal);line-height:1.5;margin-bottom:6px">Independent of how many showed up &mdash; this is how hard the piece held the ones who did. Across ${fmtN(bm.n_depth||0)} pieces with enough traffic to be stable.</div>
+    <table class="tbl" style="width:100%"><thead><tr><th class="num">Bottom quarter</th><th class="num">Median</th><th class="num">Top quarter</th><th class="num">Top 10%</th></tr></thead><tbody>${depthRow}</tbody></table>`:""}
+
+    ${typeRows?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:20px 0 6px">Bands differ by format — judge like against like</div>
     <table class="tbl" style="width:100%"><thead><tr><th>Format</th><th class="num">Pieces</th><th class="num">Median</th><th class="num">Top 10% starts</th></tr></thead><tbody>${typeRows}</tbody></table>`:""}
 
     <div class="flagnote" style="margin-top:12px"><b>Read these as rules of thumb, not targets.</b> Views are GA4 page views, which count devices rather than people (one reader on phone and laptop counts twice), and the first-${bm.first_days}-day window deliberately ignores the long tail &mdash; evergreen explainers keep earning readers for years, so a modest opening is not the same as a weak piece. Pieces published in the last ${bm.first_days} days are excluded because their window hasn't closed yet. Search-driven pieces also ramp slowly as Google indexes them.</div>`;

@@ -1312,12 +1312,22 @@ def _ga4_piece_benchmarks(prop, token, days=400, first_days=30):
         v = sorted(vals); i = (len(v) - 1) * q
         lo_i, hi_i = int(i), min(int(i) + 1, len(v) - 1)
         return round(v[lo_i] + (v[hi_i] - v[lo_i]) * (i - lo_i))
+    def pctf(vals, q):           # same, but keeps decimals (for reader-hours)
+        if not vals: return 0.0
+        v = sorted(vals); i = (len(v) - 1) * q
+        lo_i, hi_i = int(i), min(int(i) + 1, len(v) - 1)
+        return v[lo_i] + (v[hi_i] - v[lo_i]) * (i - lo_i)
+    QS = (("p10", .10), ("p25", .25), ("p50", .50), ("p75", .75), ("p90", .90), ("p95", .95))
     vv = [p["views"] for p in pieces]
-    bands = {q: pct(vv, f) for q, f in
-             (("p10", .10), ("p25", .25), ("p50", .50), ("p75", .75), ("p90", .90), ("p95", .95))}
-    # Median seconds-per-view (read depth) across pieces that got real traffic.
-    spv = sorted((p["secs"] / p["views"]) for p in pieces if p["views"] >= 30)
-    med_spv = round(spv[len(spv) // 2]) if spv else 0
+    bands = {q: pct(vv, f) for q, f in QS}
+    # Attention: total reader-hours in the same opening window. Views x depth —
+    # rewards pieces that actually hold people, not just pieces that got clicked.
+    hrs = [p["secs"] / 3600.0 for p in pieces]
+    hours_bands = {q: round(pctf(hrs, f), 1) for q, f in QS}
+    # Depth: seconds per view, across pieces with enough traffic to be stable.
+    spv = [(p["secs"] / p["views"]) for p in pieces if p["views"] >= 30]
+    depth_bands = {q: round(pctf(spv, f)) for q, f in QS}
+    med_spv = depth_bands.get("p50", 0)
     by_type = {}
     for t in set(p["type"] for p in pieces):
         sub = [p["views"] for p in pieces if p["type"] == t]
@@ -1329,6 +1339,8 @@ def _ga4_piece_benchmarks(prop, token, days=400, first_days=30):
     return {"available": True, "n_pieces": len(pieces), "first_days": first_days,
             "window_days": days, "window_start": lo, "window_end": hi,
             "bands": bands, "median_secs_per_view": med_spv,
+            "hours_bands": hours_bands, "depth_bands": depth_bands,
+            "n_depth": len(spv),
             "by_type": by_type,
             "top": [{"title": p["title"], "views": p["views"], "pub": p["pub"]} for p in top],
             "as_of": today.isoformat()}
