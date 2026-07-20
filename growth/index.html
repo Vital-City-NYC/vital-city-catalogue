@@ -658,6 +658,11 @@
         <div id="benchmarksBody"></div>
       </div>
 
+      <div class="card" id="pieceLookup">
+        <h2>Look up any piece <span class="hint" id="plHint">type a headline for its full performance report</span></h2>
+        <div id="pieceLookupBody"></div>
+      </div>
+
       <div class="card" id="perf">
         <h2>Newsletter performance <span class="hint">recipient-weighted averages · YoY = same window last year</span></h2>
         <div class="perfgrid" id="perfKpis"></div>
@@ -1023,6 +1028,7 @@ function boot(data){
   renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || [], data.linkedin || {}, data.bluesky || {});
   renderXFollowers(data);
   renderPieceBenchmarks(data);
+  renderPieceLookup(data);
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderFundUnsub(mc);
@@ -2289,6 +2295,105 @@ function renderPieceBenchmarks(data){
     <table class="tbl" style="width:100%"><thead><tr><th>Format</th><th class="num">Pieces</th><th class="num">Median</th><th class="num">Top 10% starts</th></tr></thead><tbody>${typeRows}</tbody></table>`:""}
 
     <div class="flagnote" style="margin-top:12px"><b>Read these as rules of thumb, not targets.</b> Views are GA4 page views, which count devices rather than people (one reader on phone and laptop counts twice), and the first-${bm.first_days}-day window deliberately ignores the long tail &mdash; evergreen explainers keep earning readers for years, so a modest opening is not the same as a weak piece. Pieces published in the last ${bm.first_days} days are excluded because their window hasn't closed yet. Search-driven pieces also ramp slowly as Google indexes them.</div>`;
+}
+
+// Look up any published piece and get its full performance report — reach,
+// attention, depth, how it ranks against the benchmark bands (overall and
+// against its own format), the searches it wins and any signups it drove.
+function renderPieceLookup(data){
+  const host = $("#pieceLookupBody"); if(!host) return;
+  const idx = (data.ga4 || {}).piece_index || {};
+  const bm  = (data.ga4 || {}).piece_benchmarks || {};
+  const hint = $("#plHint");
+  const pieces = idx.pieces || [];
+  if(!idx.available || !pieces.length){
+    if(hint) hint.textContent = "piece look-up";
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">The per-piece index populates on the next build${idx.reason?` &mdash; ${esc(idx.reason)}`:""}.</div>`;
+    return;
+  }
+  if(hint) hint.textContent = `${fmtN(pieces.length)} pieces with analytics · type a headline`;
+  const b = bm.bands || {}, hb = bm.hours_bands || {}, db = bm.depth_bands || {};
+  const bt = bm.by_type || {};
+  // Which band does a value fall in, given a percentile ladder?
+  const tierOf = (v, bands) => {
+    if(!bands || bands.p25==null || v==null) return null;
+    if(v >= bands.p95) return ["Exceptional","#e7466d","top 5%"];
+    if(v >= bands.p90) return ["Great","#217ebe","top 10%"];
+    if(v >= bands.p75) return ["Strong","#57aa4a","top quarter"];
+    if(v >= bands.p25) return ["Typical","#707175","middle half"];
+    return ["Under-performing","#c8102e","bottom quarter"];
+  };
+  const pctRank = (v, arr) => {
+    if(v==null || !arr.length) return null;
+    const below = arr.filter(x => x < v).length;
+    return Math.round(below / arr.length * 100);
+  };
+  const allViews30 = pieces.filter(p=>p.views30!=null).map(p=>p.views30).sort((a,b)=>a-b);
+  const badge = t => t ? `<span style="display:inline-block;background:${t[1]};color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:3px">${t[0]}</span> <span style="font-size:11px;color:var(--vc-charcoal)">${t[2]}</span>` : `<span style="font-size:11px;color:var(--vc-charcoal)">—</span>`;
+  const hrs = s => s ? (s/3600 >= 10 ? Math.round(s/3600) : (s/3600).toFixed(1)) + "h" : "—";
+
+  host.innerHTML = `
+    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:10px">Every piece with analytics, scored against the bands above. Start typing a headline &mdash; partial words are fine.</div>
+    <input id="plInput" type="search" autocomplete="off" placeholder="e.g. rent freeze, Tammany, congestion pricing&hellip;"
+      style="width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--vc-cloud);border-radius:6px;font-family:inherit;font-size:14px;background:var(--vc-white);color:var(--vc-black)">
+    <div id="plSuggest" style="margin-top:6px"></div>
+    <div id="plReport" style="margin-top:14px"></div>`;
+
+  const inp = host.querySelector("#plInput"), sug = host.querySelector("#plSuggest"), rep = host.querySelector("#plReport");
+  const norm = s => (s||"").toLowerCase().normalize("NFKD").replace(/[^a-z0-9 ]+/g," ");
+
+  function report(p){
+    sug.innerHTML = "";
+    const t30 = tierOf(p.views30, b);
+    const h30 = p.secs30!=null ? tierOf(p.secs30/3600, hb) : null;
+    const spv = p.views ? Math.round(p.secs / p.views) : 0;
+    const dTier = tierOf(spv, db);
+    const rank = pctRank(p.views30, allViews30);
+    const fmt = bt[p.type];
+    const vsFmt = (fmt && p.views30!=null) ? Math.round(p.views30 / fmt.p50 * 100) : null;
+    const qs = p.queries || [];
+    const kpi = (lbl,val,sub,tip) => `<div class="perfcell" title="${esc(tip||'')}"><div class="pl">${lbl}</div><div class="pn">${val}</div><div class="pd flat">${sub}</div></div>`;
+    rep.innerHTML = `
+      <div style="border:1px solid var(--vc-cloud);background:var(--vc-white);padding:14px 16px">
+        <div style="font-size:16px;font-weight:700;line-height:1.3">${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:var(--vc-black)">${esc(p.title)}</a>`:esc(p.title)}</div>
+        <div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:3px">${esc(p.pub||"")} · ${esc(p.type||"")}${p.author?` · ${esc(p.author)}`:""}${p.words?` · ${fmtN(p.words)} words`:""}${(p.topics||[]).length?` · ${(p.topics||[]).map(esc).join(", ")}`:""}</div>
+
+        <div class="perfgrid" style="margin-top:12px">
+          ${kpi("Views · first 30d", p.views30!=null?fmtN(p.views30):"—", p.views30!=null?`vs ${fmtN(b.p50)} median`:"published before GA4 coverage","Page views in the piece's own first 30 days — the apples-to-apples reach number the bands are built on.")}
+          ${kpi("Reader-hours · first 30d", p.secs30!=null?hrs(p.secs30):"—", p.secs30!=null?`vs ${hb.p50!=null?hb.p50+"h":"—"} median`:"—","Views x time actually spent in the first 30 days.")}
+          ${kpi("Depth", spv?fmtN(spv)+"s":"—", `vs ${fmtN(db.p50||bm.median_secs_per_view||0)}s median`,"Engaged seconds per view across the piece's whole life — how hard it held the people who came.")}
+          ${kpi("Lifetime views", fmtN(p.views||0), `${fmtN(p.users||0)} users · ${hrs(p.secs)} total`,"Everything GA4 has ever recorded for this piece, across both old and new URL shapes.")}
+        </div>
+
+        <table class="tbl" style="width:100%;margin-top:14px"><tbody>
+          <tr><td style="width:150px">Reach band</td><td>${badge(t30)}${rank!=null?` <span style="font-size:11px;color:var(--vc-charcoal)">· beat ${rank}% of pieces</span>`:""}</td></tr>
+          <tr><td>Attention band</td><td>${badge(h30)}</td></tr>
+          <tr><td>Depth band</td><td>${badge(dTier)}</td></tr>
+          ${fmt?`<tr><td>vs its format</td><td style="font-size:12px">${vsFmt!=null?`<b>${vsFmt}%</b> of the median <b>${esc(p.type)}</b> (${fmtN(fmt.p50)} views, n=${fmtN(fmt.n)})`:`median ${esc(p.type)} = ${fmtN(fmt.p50)} views`}</td></tr>`:""}
+          ${p.signups?`<tr><td>Newsletter signups</td><td style="font-size:12px"><b>${fmtN(p.signups)}</b> attributed as landing page <span style="color:var(--vc-charcoal)">(only a ~${fmtN(idx.signup_window_days||0)}-day attribution window &mdash; absence here is not evidence of zero)</span></td></tr>`:""}
+        </tbody></table>
+
+        ${qs.length?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Searches this piece wins${p.search_impr?` &mdash; ${fmtN(p.search_impr)} impressions`:""}</div>
+        <table class="tbl" style="width:100%"><thead><tr><th>Query</th><th class="num">Impressions</th><th class="num">Avg pos</th><th class="num">Clicks</th></tr></thead><tbody>
+        ${qs.map(q=>`<tr><td>${esc(q.q)}</td><td class="num">${fmtN(q.impr||0)}</td><td class="num">${q.pos!=null?q.pos:"—"}</td><td class="num">${fmtN(q.clicks||0)}</td></tr>`).join("")}
+        </tbody></table>`:""}
+
+        <div class="flagnote" style="margin-top:12px"><b>How to read this.</b> Bands compare the piece to everything else we published, on its own first 30 days. Pieces published before GA4 coverage (or in the last 30 days) show no first-30-day figure &mdash; their lifetime numbers still apply. Depth uses the whole life, so an old evergreen piece is judged on all its readers, not just launch week. Search and signup rows appear only where we have that data.</div>
+      </div>`;
+  }
+
+  function suggest(q){
+    const n = norm(q).trim();
+    if(n.length < 2){ sug.innerHTML = ""; return; }
+    const hits = pieces.filter(p => norm(p.title).includes(n)).slice(0, 8);
+    if(!hits.length){ sug.innerHTML = `<div style="font-size:12px;color:var(--vc-charcoal);padding:4px 0">No published piece matches that.</div>`; return; }
+    sug.innerHTML = hits.map((p,i)=>`<button class="plHit" data-i="${pieces.indexOf(p)}" style="display:block;width:100%;text-align:left;background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:4px;padding:6px 10px;margin-bottom:4px;cursor:pointer;font-family:inherit;font-size:12.5px">
+        <b>${esc(p.title)}</b> <span style="color:var(--vc-charcoal)">· ${esc(p.pub||"")} · ${fmtN(p.views||0)} lifetime views</span></button>`).join("");
+    sug.querySelectorAll(".plHit").forEach(btn=>btn.addEventListener("click",()=>{
+      const p = pieces[+btn.dataset.i]; inp.value = p.title; report(p);
+    }));
+  }
+  inp.addEventListener("input", ()=>{ rep.innerHTML=""; suggest(inp.value); });
 }
 
 // Who follows Vital City on X — a point-in-time follower snapshot, cross-matched

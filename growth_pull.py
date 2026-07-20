@@ -1341,9 +1341,88 @@ def _ga4_piece_benchmarks(prop, token, days=400, first_days=30):
             "bands": bands, "median_secs_per_view": med_spv,
             "hours_bands": hours_bands, "depth_bands": depth_bands,
             "n_depth": len(spv),
+            # Per-piece first-30-day rows, consumed by _ga4_piece_index and
+            # stripped before publishing (underscore key — see pull_ga4).
+            "_pieces": pieces,
             "by_type": by_type,
             "top": [{"title": p["title"], "views": p["views"], "pub": p["pub"]} for p in top],
             "as_of": today.isoformat()}
+
+
+def _ga4_piece_index(prop, token, bench=None):
+    """Per-piece performance index for the look-up tool: EVERY catalogue piece
+    GA4 has data for, with lifetime views/engaged-time and (where the piece is
+    young enough for GA4 to cover its debut) its first-30-day numbers.
+
+    Deliberately un-truncated — the other page pulls cap at top-15/60/120,
+    which is fine for leaderboards but useless for "look up any piece". Reuses
+    the benchmark pull's first-30-day figures rather than re-querying."""
+    body = {
+        "dateRanges": [{"startDate": "2020-01-01", "endDate": "today"}],
+        "dimensions": [{"name": "pagePath"}],
+        "metrics": [{"name": "screenPageViews"}, {"name": "userEngagementDuration"},
+                    {"name": "totalUsers"}],
+        "limit": 100000,
+    }
+    rep = None
+    for attempt in range(3):
+        req = urllib.request.Request(
+            f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+            data=json.dumps(body).encode(),
+            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=90) as r:
+                rep = json.loads(r.read()); break
+        except Exception:
+            if attempt == 2: raise
+            time.sleep(2 * (attempt + 1))
+    def slug_of(p):
+        s = (p or "").split("?")[0].strip("/")
+        s = re.sub(r"^articles/", "", s)
+        return s.strip("/").lower()
+    life = {}
+    for row in (rep.get("rows") or []):
+        sl = slug_of(row["dimensionValues"][0]["value"] or "")
+        if not sl or "/" in sl:
+            continue
+        e = life.setdefault(sl, [0, 0.0, 0])
+        e[0] += int(row["metricValues"][0]["value"] or 0)
+        e[1] += float(row["metricValues"][1]["value"] or 0)
+        e[2] += int(row["metricValues"][2]["value"] or 0)
+    # first-30-day numbers computed by the benchmark pull (same GA4 window)
+    first30 = {p["slug"]: p for p in ((bench or {}).get("_pieces") or [])}
+    out = []
+    try:
+        cat = json.loads((ROOT / "data" / "catalogue.json").read_text())
+    except Exception as e:
+        log(f"  ga4 piece index: catalogue unavailable ({e})")
+        return {"available": False, "reason": f"catalogue unavailable: {e}"}
+    for c in cat:
+        sl = (c.get("slug") or "").lower()
+        if not sl:
+            continue
+        lv = life.get(sl)
+        f3 = first30.get(sl)
+        if not lv and not f3:
+            continue                      # no GA4 trace at all — skip
+        rec = {"slug": sl, "title": c.get("title") or sl,
+               "pub": (c.get("published_date") or "")[:10],
+               "type": c.get("type") or "unknown",
+               "author": c.get("primary_author") or "",
+               "topics": (c.get("topics") or [])[:4],
+               "words": c.get("word_count") or 0,
+               "url": c.get("url") or "",
+               "views": (lv or [0, 0, 0])[0],
+               "secs": round((lv or [0, 0, 0])[1]),
+               "users": (lv or [0, 0, 0])[2]}
+        if f3:
+            rec["views30"] = f3["views"]
+            rec["secs30"] = round(f3["secs"])
+        out.append(rec)
+    out.sort(key=lambda r: -(r.get("views") or 0))
+    log(f"  ga4 piece index: {len(out)} pieces with GA4 data ({sum(1 for r in out if 'views30' in r)} with first-30d)")
+    return {"available": True, "n": len(out), "pieces": out,
+            "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d")}
 
 
 def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=None, end_date="today"):
@@ -1629,6 +1708,14 @@ def pull_ga4():
         except Exception as e:
             log(f"  ga4 piece benchmarks failed: {e}")
             piece_benchmarks = {"available": False, "reason": str(e)}
+        try:
+            piece_index = _ga4_piece_index(prop, token, piece_benchmarks)
+        except Exception as e:
+            log(f"  ga4 piece index failed: {e}")
+            piece_index = {"available": False, "reason": str(e)}
+        # Drop the working per-piece rows now that the index has consumed them
+        # (they'd otherwise bloat the published payload with a duplicate copy).
+        piece_benchmarks.pop("_pieces", None)
         log(f"  ga4: {u30:,} users (30d); {u365:,} users (1y); {len(engagement)} eng; {len(since_pages)} since-Jan; {len(by_year.get('years',[]))} yrs")
         return {
             "available": True, "property_id": prop,
@@ -1643,6 +1730,7 @@ def pull_ga4():
             "traffic_weekly": traffic_weekly,
             "story_weekly": story_weekly,
             "piece_benchmarks": piece_benchmarks,
+            "piece_index": piece_index,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:
@@ -3650,6 +3738,57 @@ def main():
         "x_followers": pull_x_followers(),
         "instagram":  pull_instagram(),
     }
+
+    # ---- Enrich the per-piece index with the signals that live in OTHER pulls,
+    # so the look-up tool can show one piece's full picture in one place:
+    #   * search queries it ranks for (Search Console, matched to pieces by the
+    #     same catalogue matcher the opportunities panel uses)
+    #   * newsletter signups attributed to it as a landing page (Ghost)
+    # Both are best-effort: a piece with neither simply shows nothing there.
+    try:
+        idx = ((out.get("ga4") or {}).get("piece_index") or {})
+        pieces = idx.get("pieces") or []
+        if pieces:
+            by_slug = {p["slug"]: p for p in pieces}
+            by_title = {(p["title"] or "").strip().lower(): p for p in pieces}
+            # 1) Search queries per piece, from every GSC window we pulled
+            sc = out.get("search_console") or {}
+            seen_q = {}
+            def _add_q(q, rec):
+                pc = (q or {}).get("piece") or {}
+                url = (pc.get("url") or "").rstrip("/").rsplit("/", 1)[-1].lower()
+                tgt = by_slug.get(url) or by_title.get((pc.get("title") or "").strip().lower())
+                if not tgt: return
+                bucket = seen_q.setdefault(tgt["slug"], {})
+                prev = bucket.get(q["query"])
+                if not prev or (q.get("impressions") or 0) > (prev.get("impressions") or 0):
+                    bucket[q["query"]] = rec
+            for win in (sc.get("windows") or {}).values():
+                for q in (win.get("opportunities") or []):
+                    _add_q(q, {"q": q["query"], "impr": q.get("impressions"),
+                               "pos": q.get("position"), "clicks": q.get("clicks")})
+            for q in (sc.get("topic_searches") or []):
+                _add_q(q, {"q": q["query"], "impr": q.get("impressions"),
+                           "pos": q.get("position"), "clicks": q.get("clicks")})
+            for slug, qs in seen_q.items():
+                rows = sorted(qs.values(), key=lambda r: -(r.get("impr") or 0))[:6]
+                by_slug[slug]["queries"] = rows
+                by_slug[slug]["search_impr"] = sum(r.get("impr") or 0 for r in rows)
+            # 2) Newsletter signups attributed to the piece as landing page
+            att = out.get("ghost_signup_attribution") or {}
+            sig = {}
+            for s in (att.get("recent_signups") or []):
+                t = (s.get("landing_title") or "").strip().lower()
+                if t: sig[t] = sig.get(t, 0) + 1
+            for t, n in sig.items():
+                tgt = by_title.get(t)
+                if tgt: tgt["signups"] = n
+            idx["signup_window_days"] = att.get("window_days")
+            log(f"  piece index enriched: {len(seen_q)} pieces w/ search queries, "
+                f"{sum(1 for p in pieces if p.get('signups'))} w/ attributed signups")
+    except Exception as e:
+        log(f"  piece index enrichment failed: {e}")
+
     OUT.write_text(json.dumps(out, indent=2))
     size_kb = OUT.stat().st_size // 1024
     mc = out["mailchimp"]; gh = out["ghost"]
