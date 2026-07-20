@@ -2423,7 +2423,37 @@ function renderPieceLookup(data){
         </tbody></table>`:""}
 
         <div class="flagnote" style="margin-top:12px"><b>How to read this.</b> Bands compare the piece to everything else we published, on its own first 30 days. Pieces published before GA4 coverage (or in the last 30 days) show no first-30-day figure &mdash; their lifetime numbers still apply. Depth uses the whole life, so an old evergreen piece is judged on all its readers, not just launch week. Search and signup rows appear only where we have that data.</div>
+        ${lookupExportBar("plExport")}
       </div>`;
+    // Export: same copy / CSV / md / print affordances as the range report.
+    bindLookupExport("plExport", () => {
+      const rows = [
+        ["Metric","Value","Context"],
+        ["Published", p.pub||"", p.type||""],
+        ["Byline", ((p.authors&&p.authors.length)?p.authors:(p.author?[p.author]:[])).join("; "), ""],
+        ["Views · first 30d", p.views30!=null?p.views30:"", p.views30!=null?`house median ${b.p50}`:"no first-30d figure"],
+        ["Reach band", t30?t30[0]:"", era.era?`judged vs ${era.era} peers (n=${era.n})`:"judged vs house bands"],
+        ["Percentile", rank!=null?rank+"% of pieces beaten":"", ""],
+        ["Reader-hours · first 30d", p.secs30!=null?(p.secs30/3600).toFixed(1):"", h30?h30[0]:""],
+        ["Depth (secs/view)", spv||"", dTier?dTier[0]:""],
+        ["Lifetime views", p.views||0, `${p.users||0} users`],
+        ["Lifetime reader-hours", ((p.secs||0)/3600).toFixed(1), ""],
+        ["vs its format", vsFmt!=null?vsFmt+"%":"", fmt?`median ${p.type} = ${fmt.p50} (n=${fmt.n})`:""],
+        ["Newsletter clicks", p.nl_clicks||0, p.nl_sends?`linked in ${p.nl_sends} sends`:""],
+        ["Attributed signups", p.signups||0, "short attribution window — a floor"],
+        ["Search impressions", p.search_impr||0, qs.length?`${qs.length} queries`:""],
+      ];
+      qs.forEach(q=>rows.push(["Query: "+q.q, q.impr||0, `pos ${q.pos!=null?q.pos:"—"}, ${q.clicks||0} clicks`]));
+      const md = [`# ${p.title}`, ``, `${p.pub||""} · ${p.type||""}${p.url?` · ${p.url}`:""}`, ``,
+        ...rows.slice(1).filter(r=>r[1]!==""&&r[1]!=null).map(r=>`- **${r[0]}:** ${r[1]}${r[2]?`  _(${r[2]})_`:""}`),
+        ``, `_Bands compare each piece on its own first 30 days${era.era?`; this piece is judged against ${era.era} peers`:""}. Generated from the Vital City growth dashboard._`
+      ].join("\n");
+      const html = `<h1>${esc(p.title)}</h1><div class="muted">${esc(p.pub||"")} · ${esc(p.type||"")}</div>`+
+        `<table><tbody>${rows.slice(1).filter(r=>r[1]!==""&&r[1]!=null).map(r=>`<tr><td>${esc(r[0])}</td><td class="num">${esc(r[1])}</td><td class="muted">${esc(r[2]||"")}</td></tr>`).join("")}</tbody></table>`;
+      return {name: "vital-city-piece_"+(p.slug||"report"),
+              text: md, html,
+              csv: rows.map(r=>r.map(csvCellRpt).join(",")).join("\n")};
+    });
   }
 
   function suggest(q){
@@ -2521,10 +2551,20 @@ function renderAuthorLookup(data){
     const searchImpr = ps.reduce((s,p)=>s+(p.search_impr||0),0);
     const depth = totalViews ? Math.round(totalSecs/totalViews) : 0;
     const nCo = ps.filter(p => bylines(p).length > 1).length;
-    const medTier = tierOf(medOpen, b);
-    // How the body of work spreads across the reach bands
+    // How the body of work spreads across the reach bands (era-fair per piece)
     const dist = {};
-    withOpen.forEach(p=>{ const t=tierOf(p.views30,bandsFor(p)); if(t) dist[t[0]]=(dist[t[0]]||0)+1; });
+    const perTier = [];
+    withOpen.forEach(p=>{ const t=tierOf(p.views30,bandsFor(p)); if(t){ dist[t[0]]=(dist[t[0]]||0)+1; perTier.push(t); } });
+    // "Typical piece lands" = the MEDIAN of the per-piece era-fair bands, not
+    // today's bands applied to a median opening. An author publishing since
+    // 2023 would otherwise be graded against an audience that didn't exist
+    // then, contradicting the per-piece rows right below it.
+    const TIER_RANK = ["Under-performing","Typical","Strong","Great","Exceptional"];
+    let medTier = null;
+    if(perTier.length){
+      const sorted = perTier.slice().sort((x,y)=>TIER_RANK.indexOf(x[0])-TIER_RANK.indexOf(y[0]));
+      medTier = sorted[Math.floor((sorted.length-1)/2)];
+    }
     const ORDER=[["Exceptional","#e7466d"],["Great","#217ebe"],["Strong","#57aa4a"],["Typical","#707175"],["Under-performing","#c8102e"]];
     const distBars = withOpen.length ? ORDER.filter(([l])=>dist[l]).map(([l,c])=>`
       <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:11.5px">
@@ -2556,7 +2596,7 @@ function renderAuthorLookup(data){
           ${kpi("Newsletter clicks", nlClicks?fmtN(nlClicks):"—", nlClicks?`across their pieces`:"none in scanned sends","Clicks their articles drew from newsletter sends (per-link Mailchimp data).")}
         </div>
         <table class="tbl" style="width:100%;margin-top:12px"><tbody>
-          <tr><td style="width:170px">Typical piece lands</td><td>${medTier?`<span style="display:inline-block;background:${medTier[1]};color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:3px">${medTier[0]}</span> <span style="font-size:11.5px;color:var(--vc-charcoal)">by the house bands</span>`:`<span style="font-size:11.5px;color:var(--vc-charcoal)">—</span>`}</td></tr>
+          <tr><td style="width:170px">Typical piece lands</td><td>${medTier?`<span style="display:inline-block;background:${medTier[1]};color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:3px">${medTier[0]}</span> <span style="font-size:11.5px;color:var(--vc-charcoal)" title="The median band across their scoreable pieces, with each piece judged against its own publication year — so a long-tenured author isn't graded against an audience that didn't exist when they wrote.">median band across their pieces, each judged against its own year</span>`:`<span style="font-size:11.5px;color:var(--vc-charcoal)">—</span>`}</td></tr>
           ${searchImpr?`<tr><td>Search impressions</td><td style="font-size:12px"><b>${fmtN(searchImpr)}</b> across their pieces</td></tr>`:""}
           ${sigs?`<tr><td>Signups attributed</td><td style="font-size:12px"><b>${fmtN(sigs)}</b> <span style="color:var(--vc-charcoal)">(short attribution window &mdash; a floor, not a total)</span></td></tr>`:""}
         </tbody></table>
@@ -2564,7 +2604,43 @@ function renderAuthorLookup(data){
         <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Every piece, best first</div>
         <table class="tbl" style="width:100%"><thead><tr><th>Piece</th><th class="num">First 30d</th><th class="num">Lifetime</th><th class="num">Reader-hrs</th><th>Band</th></tr></thead><tbody>${rows}</tbody></table>
         <div class="flagnote" style="margin-top:12px"><b>Read the median, not the total.</b> Lifetime views favour whoever has been publishing longest, and one viral piece can carry an author's average &mdash; the median opening is the fairer comparison. Pieces published before GA4 coverage or in the last 30 days have no first-30-day figure and are excluded from the median and the band spread (but still counted in lifetime totals). <b>Co-authored pieces count for every contributor</b>, so a shared piece appears in full under each byline &mdash; author totals across the masthead will therefore add up to more than the catalogue's piece count, and a co-authored hit lifts everyone who worked on it.</div>
+        ${lookupExportBar("alExport")}
       </div>`;
+    // Export: the CSV is the whole body of work, one row per piece — the most
+    // useful shape for a masthead review or a contributor conversation.
+    bindLookupExport("alExport", () => {
+      const head = ["Piece","Published","Type","Co-authors","First 30d views","Lifetime views","Reader-hours","Depth (s/view)","Newsletter clicks","Band","URL"];
+      const body = ps.slice().sort((x,y)=>(y.views30??-1)-(x.views30??-1)||(y.views||0)-(x.views||0)).map(p=>{
+        const t = p.views30!=null ? tierOf(p.views30, bandsFor(p)) : null;
+        return [p.title, p.pub||"", p.type||"", bylines(p).filter(a=>a!==name).join("; "),
+                p.views30!=null?p.views30:"", p.views||0, ((p.secs||0)/3600).toFixed(1),
+                p.views?Math.round(p.secs/p.views):"", p.nl_clicks||0, t?t[0]:"", p.url||""];
+      });
+      const summary = [
+        ["Author", name], ["Pieces with analytics", ps.length], ["Co-authored", nCo],
+        ["Median opening (first 30d)", withOpen.length?medOpen:""],
+        ["House median", b.p50||""],
+        ["Typical piece lands", medTier?medTier[0]:""],
+        ["Lifetime views", totalViews], ["Total reader-hours", (totalSecs/3600).toFixed(1)],
+        ["Depth (s/view)", depth], ["Newsletter clicks", nlClicks||0],
+        ["Search impressions", searchImpr||0], ["Signups attributed", sigs||0],
+      ];
+      const md = [`# ${name}`, ``,
+        ...summary.filter(r=>r[1]!==""&&r[1]!=null).map(r=>`- **${r[0]}:** ${r[1]}`), ``,
+        `## Every piece, best first`, ``,
+        `| Piece | Published | First 30d | Lifetime | Reader-hrs | Band |`,
+        `|---|---|---|---|---|---|`,
+        ...body.map(r=>`| ${String(r[0]).replace(/\|/g,"\\|")} | ${r[1]} | ${r[4]||"—"} | ${r[5]} | ${r[6]} | ${r[9]||"—"} |`),
+        ``, `_Co-authored pieces count for every contributor. Median opening excludes pieces with no first-30-day figure. Generated from the Vital City growth dashboard._`
+      ].join("\n");
+      const html = `<h1>${esc(name)}</h1>`+
+        `<table><tbody>${summary.filter(r=>r[1]!==""&&r[1]!=null).map(r=>`<tr><td>${esc(r[0])}</td><td class="num">${esc(r[1])}</td></tr>`).join("")}</tbody></table>`+
+        `<h2>Every piece, best first</h2><table><thead><tr><th>Piece</th><th>Published</th><th class="num">First 30d</th><th class="num">Lifetime</th><th class="num">Reader-hrs</th><th>Band</th></tr></thead>`+
+        `<tbody>${body.map(r=>`<tr><td>${esc(r[0])}<div class="muted">${esc(r[2])}${r[3]?` · with ${esc(r[3])}`:""}</div></td><td>${esc(r[1])}</td><td class="num">${esc(r[4]||"—")}</td><td class="num">${esc(r[5])}</td><td class="num">${esc(r[6])}</td><td>${esc(r[9]||"—")}</td></tr>`).join("")}</tbody></table>`;
+      return {name: "vital-city-author_"+name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""),
+              text: md, html,
+              csv: [head, ...body].map(r=>r.map(csvCellRpt).join(",")).join("\n")};
+    });
   }
 
   function suggest(q){
@@ -4635,6 +4711,44 @@ function rptDownload(name,text,mime){
   setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },500);
 }
 function rptFlash(btn,msg){ const o=btn.textContent; btn.textContent=msg; setTimeout(()=>{btn.textContent=o;},1400); }
+// Shared export bar for the piece / author reports, so they get the same
+// copy / CSV / print affordances as the date-range report. `build` returns
+// {name, text, csv} — text is markdown (also used for the printable page).
+function lookupExportBar(id){
+  return `<div class="rptexport noprint" id="${id}" style="display:flex;margin-top:14px">
+    <button class="btn-rpt" data-x="print">⎙ Print / PDF</button>
+    <button class="btn-rpt" data-x="csv">⬇ Download .csv</button>
+    <button class="btn-rpt" data-x="md">⬇ Download .md</button>
+    <button class="btn-rpt" data-x="copy">⧉ Copy as text</button>
+  </div>`;
+}
+function bindLookupExport(barId, build){
+  const bar = document.getElementById(barId); if(!bar || bar._bound) return;
+  bar._bound = true;
+  bar.addEventListener("click", e => {
+    const b = e.target.closest("button[data-x]"); if(!b) return;
+    const m = build(); if(!m) return;
+    if(b.dataset.x === "copy"){
+      navigator.clipboard.writeText(m.text).then(()=>rptFlash(b,"Copied!"),
+        ()=>prompt("Copy this report:", m.text));
+    } else if(b.dataset.x === "md"){
+      rptDownload(m.name + ".md", m.text, "text/markdown");
+    } else if(b.dataset.x === "csv"){
+      rptDownload(m.name + ".csv", m.csv, "text/csv");
+    } else if(b.dataset.x === "print"){
+      const w = window.open('', '_blank');
+      if(!w){ alert('Allow pop-ups to print — or use Download .md / .csv instead.'); return; }
+      w.document.write(`<!doctype html><meta charset="utf-8"><title>${esc(m.name)}</title>`+
+        `<style>body{font:13px/1.55 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;max-width:760px;margin:32px auto;padding:0 20px;color:#111}`+
+        `h1{font-size:20px;margin:0 0 2px}h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#666;margin:20px 0 6px}`+
+        `table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}th,td{text-align:left;padding:4px 6px;border-bottom:1px solid #e5e5e5}`+
+        `td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}.muted{color:#666}</style>`+ m.html);
+      w.document.close(); w.focus();
+      setTimeout(()=>{ try{ w.print(); }catch(e){} }, 400);
+    }
+  });
+}
+function csvCellRpt(v){ const s=String(v==null?"":v); return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }
 function fmtDur(sec){ sec=Math.round(sec||0); const m=Math.floor(sec/60), s=sec%60; return m+'m '+(s<10?'0':'')+s+'s'; }
 function rptQuick(q){
   const to=($("#rptTo").max)||daysAgo(0); let from;
