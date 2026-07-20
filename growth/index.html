@@ -397,6 +397,18 @@
   }
 
   /* ---- Custom date-range report tool ---- */
+  /* Look-up suggestions. Buttons do NOT inherit colour, so without an explicit
+     rule they render as the browser's default black — invisible on the dark
+     card in dark mode. Set both ends from the theme variables. */
+  .plHit,.alHit{color:var(--vc-black)}
+  .plHit:hover,.alHit:hover{border-color:var(--vc-cerulean)}
+  .plHit .meta,.alHit .meta{color:var(--vc-charcoal)}
+  /* Bar tracks: light grey reads as a glaring stripe on dark, so use the
+     theme's own recessed surface. */
+  .bartrack{background:var(--vc-paper2);border:1px solid var(--vc-cloud)}
+  /* Amber "gap / not on list" flags need a lighter tone on dark to stay legible. */
+  .warnflag{color:#9a6a1a}
+  html.dark .warnflag{color:#e0a24a}
   .rpttabs{display:flex;gap:2px;border-bottom:1px solid var(--vc-cloud);margin:2px 0 12px}
   .rpttab{font:inherit;font-size:12px;font-weight:700;letter-spacing:.02em;padding:7px 14px;border:0;border-bottom:2px solid transparent;background:none;color:var(--vc-charcoal);cursor:pointer}
   .rpttab:hover{color:var(--vc-black)}
@@ -2411,7 +2423,7 @@ function renderPieceLookup(data){
     const hits = pieces.filter(p => norm(p.title).includes(n)).slice(0, 8);
     if(!hits.length){ sug.innerHTML = `<div style="font-size:12px;color:var(--vc-charcoal);padding:4px 0">No published piece matches that.</div>`; return; }
     sug.innerHTML = hits.map((p,i)=>`<button class="plHit" data-i="${pieces.indexOf(p)}" style="display:block;width:100%;text-align:left;background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:4px;padding:6px 10px;margin-bottom:4px;cursor:pointer;font-family:inherit;font-size:12.5px">
-        <b>${esc(p.title)}</b> <span style="color:var(--vc-charcoal)">· ${esc(p.pub||"")} · ${fmtN(p.views||0)} lifetime views</span></button>`).join("");
+        <b>${esc(p.title)}</b> <span class="meta">· ${esc(p.pub||"")} · ${fmtN(p.views||0)} lifetime views</span></button>`).join("");
     sug.querySelectorAll(".plHit").forEach(btn=>btn.addEventListener("click",()=>{
       const p = pieces[+btn.dataset.i]; inp.value = p.title; report(p);
     }));
@@ -2504,7 +2516,7 @@ function renderAuthorLookup(data){
     const distBars = withOpen.length ? ORDER.filter(([l])=>dist[l]).map(([l,c])=>`
       <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:11.5px">
         <span style="flex:0 0 128px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${c};margin-right:6px"></span>${l}</span>
-        <span style="flex:1;background:#eee;height:11px;border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:${Math.max(3,dist[l]/withOpen.length*100)}%;background:${c}"></span></span>
+        <span class="bartrack" style="flex:1;height:11px;border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:${Math.max(3,dist[l]/withOpen.length*100)}%;background:${c}"></span></span>
         <span style="flex:0 0 54px;text-align:right;font-weight:700;color:var(--vc-charcoal)">${dist[l]} (${Math.round(dist[l]/withOpen.length*100)}%)</span></div>`).join("") : "";
     const types = {}; ps.forEach(p=>types[p.type]=(types[p.type]||0)+1);
     const typeStr = Object.entries(types).sort((a,b)=>b[1]-a[1]).map(([t,n])=>`${esc(t)} ×${n}`).join(", ");
@@ -2548,7 +2560,7 @@ function renderAuthorLookup(data){
     const hits = authors.filter(a => norm(a).includes(n)).slice(0,8);
     if(!hits.length){ sug.innerHTML = `<div style="font-size:12px;color:var(--vc-charcoal);padding:4px 0">No byline matches that.</div>`; return; }
     sug.innerHTML = hits.map(a=>`<button class="alHit" data-a="${esc(a)}" style="display:block;width:100%;text-align:left;background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:4px;padding:6px 10px;margin-bottom:4px;cursor:pointer;font-family:inherit;font-size:12.5px">
-        <b>${esc(a)}</b> <span style="color:var(--vc-charcoal)">· ${fmtN(byAuthor[a].length)} piece${byAuthor[a].length===1?"":"s"}</span></button>`).join("");
+        <b>${esc(a)}</b> <span class="meta">· ${fmtN(byAuthor[a].length)} piece${byAuthor[a].length===1?"":"s"}</span></button>`).join("");
     sug.querySelectorAll(".alHit").forEach(btn=>btn.addEventListener("click",()=>{ inp.value=btn.dataset.a; report(btn.dataset.a); }));
   }
   inp.addEventListener("input", ()=>{ rep.innerHTML=""; suggest(inp.value); });
@@ -2574,11 +2586,11 @@ function renderXFollowers(data){
   const bmax = Math.max(1, ...(xf.bands||[]).map(b=>b[1]));
   const bandBars = (xf.bands||[]).map(([b,v])=>`<div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:11.5px">
       <span style="flex:0 0 92px;color:var(--vc-black)">${esc(b)} followers</span>
-      <span style="flex:1;background:#eee;height:12px;border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:${Math.max(2,v/bmax*100)}%;background:${bandColor[b]||'#999'}"></span></span>
+      <span class="bartrack" style="flex:1;height:12px;border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:${Math.max(2,v/bmax*100)}%;background:${bandColor[b]||'#999'}"></span></span>
       <span style="flex:0 0 40px;text-align:right;font-weight:700;color:var(--vc-charcoal)">${fmtN(v)}</span></div>`).join("");
   const tagFor = f => f.sub ? `<span style="color:var(--vc-green);font-weight:700" title="Already an active newsletter subscriber">★ subscriber</span>`
       : f.in_db ? `<span style="color:var(--vc-cerulean);font-weight:700" title="In the contact database (not a current subscriber)">in contacts</span>`
-      : `<span style="color:#9a6a1a;font-weight:700" title="Not in the contact DB — reaching us only on X so far">not on list</span>`;
+      : `<span class="warnflag" style="font-weight:700" title="Not in the contact DB — reaching us only on X so far">not on list</span>`;
   const rowFor = f => `<tr>
       <td><b>${esc(f.name||f.handle)}</b> <a href="https://x.com/${esc(f.handle)}" target="_blank" rel="noopener" style="color:var(--vc-charcoal)">@${esc(f.handle)}</a>${f.bio?`<div style="font-size:10.5px;color:var(--vc-charcoal);line-height:1.35;margin-top:1px">${esc(f.bio)}</div>`:""}</td>
       <td class="num">${fmtN(f.followers)}</td>
@@ -3525,7 +3537,7 @@ function renderTopSearches(data){
     <td class="num">${r.position}</td>
     <td>${r.piece
         ? `<a href="${esc(r.piece.url)}" target="_blank" rel="noopener">${esc(r.piece.title)}</a>`
-        : `<span style="color:#9a6a1a" title="No clearly-matching Vital City piece — a possible story idea.">not yet covered</span>`}</td>
+        : `<span class="warnflag" title="No clearly-matching Vital City piece — a possible story idea.">not yet covered</span>`}</td>
   </tr>`;
   host.innerHTML = `
     <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:10px">The searches New Yorkers actually run about city politics and policy in ${yr}, ranked by how often each one happened &mdash; <b>whether or not anyone clicked through to Vital City</b>. A quick read on where public attention is going, and which of those questions Vital City has (or hasn&rsquo;t) answered.</div>
@@ -3583,7 +3595,7 @@ function renderSearchConsole(data){
       ${opps.map(x=>`<tr>
         <td>${esc(x.query)}${x.piece
             ? `<div style="font-size:10.5px;margin-top:2px;line-height:1.35"><span style="color:var(--vc-charcoal)">&#8627; ranks for </span><a href="${esc(x.piece.url)}" target="_blank" rel="noopener">${esc(x.piece.title)}</a></div>`
-            : `<div style="font-size:10.5px;margin-top:2px;line-height:1.35;color:#9a6a1a" title="Our catalogue matcher didn't find a piece clearly about this query. Could be a genuine content gap worth a piece — or just a phrasing the matcher missed. Worth an eye.">&#8627; no clear match &mdash; possible content gap</div>`}</td>
+            : `<div style="font-size:10.5px;margin-top:2px;line-height:1.35;" class="warnflag" title="Our catalogue matcher didn't find a piece clearly about this query. Could be a genuine content gap worth a piece — or just a phrasing the matcher missed. Worth an eye.">&#8627; no clear match &mdash; possible content gap</div>`}</td>
         <td class="num">${fmtN(x.impressions)}</td>
         <td class="num">${x.position}</td>
         <td class="num">${fmtN(x.clicks)}</td>
@@ -3725,7 +3737,7 @@ function renderAudienceQuality(data){
       const v=scount[l], w=Math.max(3, v/smax*100);
       return `<div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:11.5px">
         <span style="flex:0 0 168px;color:var(--vc-black)">${l}</span>
-        <span style="flex:1;background:#eee;height:12px;border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:${w}%;background:${colorFor(l)}"></span></span>
+        <span class="bartrack" style="flex:1;height:12px;border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:${w}%;background:${colorFor(l)}"></span></span>
         <span style="flex:0 0 26px;text-align:right;font-weight:700;color:var(--vc-charcoal)">${v}</span></div>`;
     }).join("");
 
