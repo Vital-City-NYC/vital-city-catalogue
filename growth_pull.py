@@ -1260,7 +1260,63 @@ def _ga4_story_weekly(prop, token, days=300, top=120):
     return {"pages": plist, "rows": rows}
 
 
-def _ga4_piece_benchmarks(prop, token, days=400, first_days=30):
+def _ga4_daily_by_slug(prop, token, start_date, end_date="today"):
+    """Per-slug, per-day views + engaged seconds over an arbitrary range.
+
+    Pulled in YEARLY chunks with offset paging: the pagePath x date grain blows
+    past the API's row cap over multi-year ranges, and a silent truncation would
+    quietly zero out older pieces' opening numbers. Both URL shapes (the old
+    Prismic /articles/<slug> and the Ghost /<slug>/) collapse to the bare slug."""
+    def slug_of(p):
+        s = (p or "").split("?")[0].strip("/")
+        s = re.sub(r"^articles/", "", s)
+        return s.strip("/").lower()
+    start = datetime.strptime(start_date, "%Y-%m-%d").date()
+    end = datetime.now(timezone.utc).date() if end_date == "today" else datetime.strptime(end_date, "%Y-%m-%d").date()
+    daily, total_rows = {}, 0
+    yr = start.year
+    while yr <= end.year:
+        lo = max(start, datetime(yr, 1, 1).date()).isoformat()
+        hi = min(end, datetime(yr, 12, 31).date()).isoformat()
+        offset = 0
+        while True:
+            body = {"dateRanges": [{"startDate": lo, "endDate": hi}],
+                    "dimensions": [{"name": "pagePath"}, {"name": "date"}],
+                    "metrics": [{"name": "screenPageViews"}, {"name": "userEngagementDuration"}],
+                    "limit": 100000, "offset": offset}
+            rep = None
+            for attempt in range(3):
+                req = urllib.request.Request(
+                    f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+                    data=json.dumps(body).encode(),
+                    headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+                try:
+                    with urllib.request.urlopen(req, timeout=120) as r:
+                        rep = json.loads(r.read()); break
+                except Exception:
+                    if attempt == 2: raise
+                    time.sleep(2 * (attempt + 1))
+            rows = rep.get("rows") or []
+            for row in rows:
+                sl = slug_of(row["dimensionValues"][0]["value"] or "")
+                if not sl or "/" in sl or sl in ("about", "the-journal"):
+                    continue
+                dt = row["dimensionValues"][1]["value"]
+                e = daily.setdefault(sl, {})
+                cur = e.get(dt) or [0, 0.0]
+                cur[0] += int(row["metricValues"][0]["value"] or 0)
+                cur[1] += float(row["metricValues"][1]["value"] or 0)
+                e[dt] = cur
+            total_rows += len(rows)
+            if len(rows) < body["limit"]:
+                break
+            offset += body["limit"]
+        yr += 1
+    log(f"  ga4 daily-by-slug: {len(daily)} slugs from {total_rows:,} rows ({start_date}..)")
+    return daily
+
+
+def _ga4_piece_benchmarks(prop, token, days=400, first_days=30, index_since="2023-01-01"):
     """Benchmark bands for judging ONE piece: the full distribution of
     first-30-days-after-publication page views across every piece published
     inside the window.
@@ -1270,45 +1326,15 @@ def _ga4_piece_benchmarks(prop, token, days=400, first_days=30):
     piece is measured over its own opening 30 days instead, which is the only
     apples-to-apples cut. Deliberately does NOT truncate to a top-N (unlike the
     story/engagement pulls, which are capped at 120/60 and would make the
-    'average' the average of our best work)."""
-    body = {
-        "dateRanges": [{"startDate": f"{days}daysAgo", "endDate": "today"}],
-        "dimensions": [{"name": "pagePath"}, {"name": "date"}],
-        "metrics": [{"name": "screenPageViews"}, {"name": "userEngagementDuration"}],
-        "limit": 200000,
-    }
-    rep = None
-    for attempt in range(3):
-        req = urllib.request.Request(
-            f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
-            data=json.dumps(body).encode(),
-            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
-        try:
-            with urllib.request.urlopen(req, timeout=90) as r:
-                rep = json.loads(r.read()); break
-        except Exception:
-            if attempt == 2: raise
-            time.sleep(2 * (attempt + 1))
-    # Per-slug daily views/seconds. GA4 carries BOTH url shapes for the same
-    # piece (old Prismic /articles/<slug> and Ghost /<slug>/) plus trailing
-    # slash variants, so everything is normalised to the bare slug and summed.
-    def slug_of(p):
-        s = (p or "").split("?")[0].strip("/")
-        s = re.sub(r"^articles/", "", s)
-        return s.strip("/").lower()
-    daily = {}
-    for row in (rep.get("rows") or []):
-        path = row["dimensionValues"][0]["value"] or ""
-        sl = slug_of(path)
-        if not sl or "/" in sl or sl in ("about", "the-journal"):
-            continue
-        dt = row["dimensionValues"][1]["value"]
-        v = int(row["metricValues"][0]["value"] or 0)
-        s = float(row["metricValues"][1]["value"] or 0)
-        e = daily.setdefault(sl, {})
-        cur = e.get(dt) or [0, 0.0]
-        cur[0] += v; cur[1] += s
-        e[dt] = cur
+    'average' the average of our best work).
+
+    Two windows on purpose. The BANDS are computed on the recent `days` window
+    so a piece is judged against the audience we have now. The per-piece rows
+    reach back to `index_since` (as far as GA4 goes) so the look-up tool can
+    show an opening number for older pieces too — judged against their OWN
+    year's bands, since the site drew ~8x fewer visitors in 2023 and scoring a
+    2023 piece against 2026 medians would be meaningless."""
+    daily = _ga4_daily_by_slug(prop, token, index_since)
     # Catalogue: slug -> (published_date, type, title)
     cat = {}
     try:
@@ -1324,9 +1350,12 @@ def _ga4_piece_benchmarks(prop, token, days=400, first_days=30):
     # Eligible: published inside the GA4 window AND old enough that its full
     # first_days have elapsed (otherwise its opening window is still filling).
     lo = win_start.isoformat(); hi = (today - timedelta(days=first_days)).isoformat()
-    pieces = []
+    # Score every piece back to index_since (the look-up tool wants an opening
+    # number for old pieces too); `bands` below still uses only the recent
+    # window so today's pieces are judged against today's audience.
+    all_pieces = []
     for sl, (pub, typ, title) in cat.items():
-        if not (lo <= pub <= hi):
+        if not (index_since <= pub <= hi):
             continue
         try:
             p0 = datetime.strptime(pub, "%Y-%m-%d").date()
@@ -1342,8 +1371,10 @@ def _ga4_piece_benchmarks(prop, token, days=400, first_days=30):
                 continue
             if p0 <= dobj < end:
                 views += v; secs += s
-        pieces.append({"slug": sl, "title": title, "type": typ, "pub": pub,
-                       "views": views, "secs": secs})
+        all_pieces.append({"slug": sl, "title": title, "type": typ, "pub": pub,
+                           "views": views, "secs": secs})
+    # Bands are built from the recent window only (comparable-era judging).
+    pieces = [p for p in all_pieces if lo <= p["pub"] <= hi]
     if len(pieces) < 12:
         return {"available": False, "reason": f"only {len(pieces)} pieces old enough in the window"}
     def pct(vals, q):
@@ -1373,16 +1404,29 @@ def _ga4_piece_benchmarks(prop, token, days=400, first_days=30):
         if len(sub) >= 8:
             by_type[t] = {"n": len(sub), "p50": pct(sub, .50), "p90": pct(sub, .90)}
     top = sorted(pieces, key=lambda p: -p["views"])[:8]
-    log(f"  ga4 benchmarks: {len(pieces)} pieces scored on first {first_days}d "
+    log(f"  ga4 benchmarks: {len(all_pieces)} pieces scored back to {index_since}; "
+        f"bands from {len(pieces)} in the recent window; "
+        f"{len(pieces)} pieces scored on first {first_days}d "
         f"(median {bands['p50']} views, p90 {bands['p90']})")
     return {"available": True, "n_pieces": len(pieces), "first_days": first_days,
             "window_days": days, "window_start": lo, "window_end": hi,
             "bands": bands, "median_secs_per_view": med_spv,
             "hours_bands": hours_bands, "depth_bands": depth_bands,
             "n_depth": len(spv),
-            # Per-piece first-30-day rows, consumed by _ga4_piece_index and
-            # stripped before publishing (underscore key — see pull_ga4).
-            "_pieces": pieces,
+            # Per-piece first-30-day rows for EVERY piece back to index_since,
+            # consumed by _ga4_piece_index and stripped before publishing.
+            "_pieces": all_pieces,
+            # Era-fair bands: judge a 2023 piece against 2023, not against a
+            # site that now draws several times the traffic. Only years with
+            # enough pieces to be meaningful.
+            "year_bands": {
+                y: {"n": len(sub), **{q: pct([p["views"] for p in sub], f) for q, f in QS}}
+                for y, sub in
+                {y: [p for p in all_pieces if p["pub"][:4] == y]
+                 for y in sorted({p["pub"][:4] for p in all_pieces})}.items()
+                if len(sub) >= 20
+            },
+            "index_since": index_since,
             "by_type": by_type,
             "top": [{"title": p["title"], "views": p["views"], "pub": p["pub"]} for p in top],
             "as_of": today.isoformat()}

@@ -2363,6 +2363,14 @@ function renderPieceLookup(data){
     return Math.round(below / arr.length * 100);
   };
   const allViews30 = pieces.filter(p=>p.views30!=null).map(p=>p.views30).sort((a,b)=>a-b);
+  // Era-fair judging: score a piece against its own publication year where we
+  // have enough pieces from that year, since the audience has grown several
+  // times over. Falls back to the house (recent-window) bands.
+  const yb = bm.year_bands || {};
+  const bandsFor = p => {
+    const y = (p.pub || "").slice(0,4);
+    return (yb[y] && yb[y].n >= 20) ? {bands: yb[y], era: y, n: yb[y].n} : {bands: b, era: null};
+  };
   const badge = t => t ? `<span style="display:inline-block;background:${t[1]};color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:3px">${t[0]}</span> <span style="font-size:11px;color:var(--vc-charcoal)">${t[2]}</span>` : `<span style="font-size:11px;color:var(--vc-charcoal)">—</span>`;
   const hrs = s => s ? (s/3600 >= 10 ? Math.round(s/3600) : (s/3600).toFixed(1)) + "h" : "—";
 
@@ -2378,7 +2386,8 @@ function renderPieceLookup(data){
 
   function report(p){
     sug.innerHTML = "";
-    const t30 = tierOf(p.views30, b);
+    const era = bandsFor(p);
+    const t30 = tierOf(p.views30, era.bands);
     const h30 = p.secs30!=null ? tierOf(p.secs30/3600, hb) : null;
     const spv = p.views ? Math.round(p.secs / p.views) : 0;
     const dTier = tierOf(spv, db);
@@ -2400,7 +2409,7 @@ function renderPieceLookup(data){
         </div>
 
         <table class="tbl" style="width:100%;margin-top:14px"><tbody>
-          <tr><td style="width:150px">Reach band</td><td>${badge(t30)}${rank!=null?` <span style="font-size:11px;color:var(--vc-charcoal)">· beat ${rank}% of pieces</span>`:""}</td></tr>
+          <tr><td style="width:150px">Reach band</td><td>${badge(t30)}${rank!=null?` <span style="font-size:11px;color:var(--vc-charcoal)">· beat ${rank}% of pieces</span>`:""}${era.era?` <span style="font-size:11px;color:var(--vc-charcoal)" title="Judged against pieces published in ${era.era} (n=${era.n}), not today's bands — the site drew far less traffic then, so scoring it against the current median would be meaningless.">· vs ${era.era} peers</span>`:""}</td></tr>
           <tr><td>Attention band</td><td>${badge(h30)}</td></tr>
           <tr><td>Depth band</td><td>${badge(dTier)}</td></tr>
           ${fmt?`<tr><td>vs its format</td><td style="font-size:12px">${vsFmt!=null?`<b>${vsFmt}%</b> of the median <b>${esc(p.type)}</b> (${fmtN(fmt.p50)} views, n=${fmtN(fmt.n)})`:`median ${esc(p.type)} = ${fmtN(fmt.p50)} views`}</td></tr>`:""}
@@ -2467,6 +2476,10 @@ function renderAuthorLookup(data){
     return;
   }
   const b = bm.bands || {}, hb = bm.hours_bands || {};
+  // Era-fair judging, same rule as the piece tool: score each piece against
+  // its own publication year where that year has enough pieces.
+  const yb = bm.year_bands || {};
+  const bandsFor = p => { const y=(p.pub||'').slice(0,4); return (yb[y]&&yb[y].n>=20)?yb[y]:b; };
   // Group by EVERY author on the piece — a co-authored piece appears under
   // each contributor, so totals across authors intentionally exceed the
   // catalogue count (flagged in the card's note).
@@ -2511,7 +2524,7 @@ function renderAuthorLookup(data){
     const medTier = tierOf(medOpen, b);
     // How the body of work spreads across the reach bands
     const dist = {};
-    withOpen.forEach(p=>{ const t=tierOf(p.views30,b); if(t) dist[t[0]]=(dist[t[0]]||0)+1; });
+    withOpen.forEach(p=>{ const t=tierOf(p.views30,bandsFor(p)); if(t) dist[t[0]]=(dist[t[0]]||0)+1; });
     const ORDER=[["Exceptional","#e7466d"],["Great","#217ebe"],["Strong","#57aa4a"],["Typical","#707175"],["Under-performing","#c8102e"]];
     const distBars = withOpen.length ? ORDER.filter(([l])=>dist[l]).map(([l,c])=>`
       <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:11.5px">
@@ -2522,7 +2535,7 @@ function renderAuthorLookup(data){
     const typeStr = Object.entries(types).sort((a,b)=>b[1]-a[1]).map(([t,n])=>`${esc(t)} ×${n}`).join(", ");
     const kpi=(l,v,s,t)=>`<div class="perfcell" title="${esc(t||'')}"><div class="pl">${l}</div><div class="pn">${v}</div><div class="pd flat">${s}</div></div>`;
     const rows = ps.map(p=>{
-      const t = p.views30!=null ? tierOf(p.views30,b) : null;
+      const t = p.views30!=null ? tierOf(p.views30,bandsFor(p)) : null;
       const co = bylines(p).filter(a => a !== name);
       return `<tr>
         <td>${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:var(--vc-black)">${esc(p.title)}</a>`:esc(p.title)}
