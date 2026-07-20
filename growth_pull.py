@@ -1550,8 +1550,24 @@ def _ga4_piece_index(prop, token, bench=None):
                 rec["secs30"] = round(f3["secs"])
         out.append(rec)
     out.sort(key=lambda r: -(r.get("views") or 0))
-    log(f"  ga4 piece index: {len(out)} pieces with GA4 data ({sum(1 for r in out if 'views30' in r)} with first-30d)")
+    # Total-impact bands: percentiles of LIFETIME reader-hours (views x depth
+    # over the whole life) across every piece with a real read. This is the
+    # headline band the look-up tools show — total time readers spent with a
+    # piece, judged against the whole catalogue. One scale, so a bigger number
+    # always ranks higher; no era adjustment (an old evergreen genuinely has
+    # more lifetime impact, and that's the point of the metric).
+    hrs = sorted((r["secs"] / 3600.0) for r in out if (r.get("secs") or 0) > 0)
+    impact_bands = None
+    if len(hrs) >= 12:
+        def pctf(vals, q):
+            i = (len(vals) - 1) * q; lo = int(i); hi = min(lo + 1, len(vals) - 1)
+            return round(vals[lo] + (vals[hi] - vals[lo]) * (i - lo), 1)
+        impact_bands = {q: pctf(hrs, f) for q, f in
+                        (("p25", .25), ("p50", .50), ("p75", .75), ("p90", .90), ("p95", .95))}
+    log(f"  ga4 piece index: {len(out)} pieces with GA4 data ({sum(1 for r in out if 'views30' in r)} with first-30d)"
+        + (f"; impact bands (reader-hrs) p50={impact_bands['p50']} p90={impact_bands['p90']}" if impact_bands else ""))
     return {"available": True, "n": len(out), "pieces": out,
+            "impact_bands": impact_bands,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d")}
 
 

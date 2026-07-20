@@ -2363,6 +2363,10 @@ function renderPieceLookup(data){
     return Math.round(below / arr.length * 100);
   };
   const allViews30 = pieces.filter(p=>p.views30!=null).map(p=>p.views30).sort((a,b)=>a-b);
+  // Total-impact band = lifetime reader-hours vs the whole catalogue.
+  const impactBands = idx.impact_bands;
+  const impactTier = p => tierOf((p.secs||0)/3600, impactBands);
+  const allImpactHrs = pieces.filter(p=>(p.secs||0)>0).map(p=>p.secs/3600).sort((a,b)=>a-b);
   // Era-fair judging: score a piece against its own publication year where we
   // have enough pieces from that year, since the audience has grown several
   // times over. Falls back to the house (recent-window) bands.
@@ -2386,6 +2390,8 @@ function renderPieceLookup(data){
 
   function report(p){
     sug.innerHTML = "";
+    const iTier = impactTier(p);
+    const iRank = pctRank((p.secs||0)/3600, allImpactHrs);
     const era = bandsFor(p);
     const t30 = tierOf(p.views30, era.bands);
     const h30 = p.secs30!=null ? tierOf(p.secs30/3600, hb) : null;
@@ -2409,10 +2415,9 @@ function renderPieceLookup(data){
         </div>
 
         <table class="tbl" style="width:100%;margin-top:14px"><tbody>
-          <tr><td style="width:150px">Reach band</td><td>${badge(t30)}${rank!=null?` <span style="font-size:11px;color:var(--vc-charcoal)">· beat ${rank}% of pieces</span>`:""}${era.era?` <span style="font-size:11px;color:var(--vc-charcoal)" title="Judged against pieces published in ${era.era} (n=${era.n}), not today's bands — the site drew far less traffic then, so scoring it against the current median would be meaningless.">· vs ${era.era} peers</span>`:""}</td></tr>
-          ${p.date_suspect?`<tr><td>Opening window</td><td style="font-size:12px"><span class="warnflag" style="font-weight:700">Not scoreable</span> <span style="color:var(--vc-charcoal)">&mdash; GA4 recorded no traffic in the 30 days after its stated publication date (${esc(p.pub||"")})${p.first_seen?`, but first saw readers on ${esc(p.first_seen)}`:""}. The date was almost certainly mis-assigned in the CMS migration, so this piece is left unbanded rather than judged on a false zero.</span></td></tr>`:""}
-          <tr><td>Attention band</td><td>${badge(h30)}</td></tr>
-          <tr><td>Depth band</td><td>${badge(dTier)}</td></tr>
+          <tr><td style="width:150px"><b>Impact band</b></td><td>${badge(iTier)}${iRank!=null?` <span style="font-size:11px;color:var(--vc-charcoal)">· more total reader-time than ${iRank}% of pieces</span>`:""} <span style="font-size:11px;color:var(--vc-charcoal)">· ${hrs(p.secs)} lifetime reader-hours</span></td></tr>
+          <tr><td>Depth band</td><td>${badge(dTier)} <span style="font-size:11px;color:var(--vc-charcoal)">· how hard it held each reader (${spv?spv+"s":"—"}/view)</span></td></tr>
+          <tr><td>Launch reach</td><td style="font-size:12px">${p.views30!=null?`<b>${fmtN(p.views30)}</b> views in its first 30 days${rank!=null?` <span style="color:var(--vc-charcoal)">· beat ${rank}% of same-era pieces</span>`:""}`:(p.date_suspect?`<span class="warnflag" style="font-weight:700">date looks wrong</span> <span style="color:var(--vc-charcoal)">&mdash; GA4 saw no traffic in the 30 days after its stated date (${esc(p.pub||"")})${p.first_seen?`, first readers ${esc(p.first_seen)}`:""}; likely a migration mis-assignment.</span>`:`<span style="color:var(--vc-charcoal)">no first-30-day figure (published before GA4 coverage or in the last 30 days)</span>`)}</td></tr>
           ${fmt?`<tr><td>vs its format</td><td style="font-size:12px">${vsFmt!=null?`<b>${vsFmt}%</b> of the median <b>${esc(p.type)}</b> (${fmtN(fmt.p50)} views, n=${fmtN(fmt.n)})`:`median ${esc(p.type)} = ${fmtN(fmt.p50)} views`}</td></tr>`:""}
           ${p.nl_clicks?`<tr><td>Newsletter clicks</td><td style="font-size:12px"><b>${fmtN(p.nl_clicks)}</b> clicks${p.nl_unique?` · ${fmtN(p.nl_unique)} unique`:""}${p.nl_sends?` · linked in ${fmtN(p.nl_sends)} send${p.nl_sends===1?"":"s"}`:""} <span style="color:var(--vc-charcoal)">(last ${fmtN(idx.link_click_sends||0)} sends scanned)</span></td></tr>`:""}
           ${p.signups?`<tr><td>Newsletter signups</td><td style="font-size:12px"><b>${fmtN(p.signups)}</b> attributed as landing page <span style="color:var(--vc-charcoal)">(only a ~${fmtN(idx.signup_window_days||0)}-day attribution window &mdash; absence here is not evidence of zero)</span></td></tr>`:""}
@@ -2423,7 +2428,7 @@ function renderPieceLookup(data){
         ${qs.map(q=>`<tr><td>${esc(q.q)}</td><td class="num">${fmtN(q.impr||0)}</td><td class="num">${q.pos!=null?q.pos:"—"}</td><td class="num">${fmtN(q.clicks||0)}</td></tr>`).join("")}
         </tbody></table>`:""}
 
-        <div class="flagnote" style="margin-top:12px"><b>How to read this.</b> Bands compare the piece to everything else we published, on its own first 30 days. Pieces published before GA4 coverage, in the last 30 days, or carrying a date the migration mis-assigned show no first-30-day figure &mdash; their lifetime numbers still apply. Depth uses the whole life, so an old evergreen piece is judged on all its readers, not just launch week. Search and signup rows appear only where we have that data.</div>
+        <div class="flagnote" style="margin-top:12px"><b>How to read this.</b> The <b>impact band</b> is the headline: total reader-hours (views &times; time on page) over the piece's whole life, ranked against the entire catalogue &mdash; so a bigger number always ranks higher and evergreens that keep drawing readers rise. <b>Depth</b> is a separate axis: seconds per view, how hard it held each reader. <b>Launch reach</b> is the first-30-day view count, judged against pieces from the same era (2023 drew far fewer visitors than today), shown for context but not driving the band. Search and signup rows appear only where we have that data.</div>
         ${lookupExportBar("plExport")}
       </div>`;
     // Export: same copy / CSV / md / print affordances as the range report.
@@ -2433,8 +2438,9 @@ function renderPieceLookup(data){
         ["Published", p.pub||"", p.type||""],
         ["Byline", ((p.authors&&p.authors.length)?p.authors:(p.author?[p.author]:[])).join("; "), ""],
         ["Views · first 30d", p.views30!=null?p.views30:"", p.views30!=null?`house median ${b.p50}`:"no first-30d figure"],
-        ["Reach band", t30?t30[0]:"", era.era?`judged vs ${era.era} peers (n=${era.n})`:"judged vs house bands"],
-        ["Percentile", rank!=null?rank+"% of pieces beaten":"", ""],
+        ["Impact band", iTier?iTier[0]:"", `lifetime reader-hours vs the catalogue`],
+        ["Impact percentile", iRank!=null?iRank+"% of pieces beaten (total reader-time)":"", ""],
+        ["Launch reach (first 30d views)", p.views30!=null?p.views30:"", p.views30!=null?`beat ${rank}% of same-era pieces`:"no first-30d figure"],
         ["Reader-hours · first 30d", p.secs30!=null?(p.secs30/3600).toFixed(1):"", h30?h30[0]:""],
         ["Depth (secs/view)", spv||"", dTier?dTier[0]:""],
         ["Lifetime views", p.views||0, `${p.users||0} users`],
@@ -2529,9 +2535,14 @@ function renderAuthorLookup(data){
     return ["Under-performing","#c8102e"];
   };
   const hrs = s => s ? (s/3600 >= 10 ? Math.round(s/3600) : (s/3600).toFixed(1)) + "h" : "—";
+  // The band = total impact: lifetime reader-hours (views x depth over the
+  // whole life) judged against the whole catalogue. One scale, so a bigger
+  // number always ranks higher — no era inversion.
+  const impactBands = idx.impact_bands;
+  const impactTier = p => tierOf((p.secs||0)/3600, impactBands);
 
   host.innerHTML = `
-    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:10px">Every byline with analytics. Start typing a name for their full body of work, scored against the same house bands.</div>
+    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:10px">Every byline with analytics. Start typing a name for their full body of work, <b>ranked by total impact</b> &mdash; lifetime reader-hours &mdash; against the whole catalogue.</div>
     <input id="alInput" type="search" autocomplete="off" placeholder="e.g. Glazer, Francis, Chakrabarti&hellip;"
       style="width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--vc-cloud);border-radius:6px;font-family:inherit;font-size:14px;background:var(--vc-white);color:var(--vc-black)">
     <div id="alSuggest" style="margin-top:6px"></div>
@@ -2542,7 +2553,7 @@ function renderAuthorLookup(data){
 
   function report(name){
     sug.innerHTML = "";
-    const ps = [...byAuthor[name]].sort((a,b)=>(b.views||0)-(a.views||0));
+    const ps = [...byAuthor[name]].sort((a,b)=>(b.secs||0)-(a.secs||0));   // best-first = highest total impact
     const withOpen = ps.filter(p=>p.views30!=null);
     const medOpen = med(withOpen.map(p=>p.views30));
     const totalViews = ps.reduce((s,p)=>s+(p.views||0),0);
@@ -2552,14 +2563,11 @@ function renderAuthorLookup(data){
     const searchImpr = ps.reduce((s,p)=>s+(p.search_impr||0),0);
     const depth = totalViews ? Math.round(totalSecs/totalViews) : 0;
     const nCo = ps.filter(p => bylines(p).length > 1).length;
-    // How the body of work spreads across the reach bands (era-fair per piece)
+    // Band spread over TOTAL IMPACT (lifetime reader-hours), one scale.
+    const withImpact = ps.filter(p => (p.secs||0) > 0);
     const dist = {};
     const perTier = [];
-    withOpen.forEach(p=>{ const t=tierOf(p.views30,bandsFor(p)); if(t){ dist[t[0]]=(dist[t[0]]||0)+1; perTier.push(t); } });
-    // "Typical piece lands" = the MEDIAN of the per-piece era-fair bands, not
-    // today's bands applied to a median opening. An author publishing since
-    // 2023 would otherwise be graded against an audience that didn't exist
-    // then, contradicting the per-piece rows right below it.
+    withImpact.forEach(p=>{ const t=impactTier(p); if(t){ dist[t[0]]=(dist[t[0]]||0)+1; perTier.push(t); } });
     const TIER_RANK = ["Under-performing","Typical","Strong","Great","Exceptional"];
     let medTier = null;
     if(perTier.length){
@@ -2567,16 +2575,16 @@ function renderAuthorLookup(data){
       medTier = sorted[Math.floor((sorted.length-1)/2)];
     }
     const ORDER=[["Exceptional","#e7466d"],["Great","#217ebe"],["Strong","#57aa4a"],["Typical","#707175"],["Under-performing","#c8102e"]];
-    const distBars = withOpen.length ? ORDER.filter(([l])=>dist[l]).map(([l,c])=>`
+    const distBars = withImpact.length ? ORDER.filter(([l])=>dist[l]).map(([l,c])=>`
       <div style="display:flex;align-items:center;gap:8px;margin:3px 0;font-size:11.5px">
         <span style="flex:0 0 128px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${c};margin-right:6px"></span>${l}</span>
-        <span class="bartrack" style="flex:1;height:11px;border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:${Math.max(3,dist[l]/withOpen.length*100)}%;background:${c}"></span></span>
-        <span style="flex:0 0 54px;text-align:right;font-weight:700;color:var(--vc-charcoal)">${dist[l]} (${Math.round(dist[l]/withOpen.length*100)}%)</span></div>`).join("") : "";
+        <span class="bartrack" style="flex:1;height:11px;border-radius:2px;overflow:hidden"><span style="display:block;height:100%;width:${Math.max(3,dist[l]/withImpact.length*100)}%;background:${c}"></span></span>
+        <span style="flex:0 0 54px;text-align:right;font-weight:700;color:var(--vc-charcoal)">${dist[l]} (${Math.round(dist[l]/withImpact.length*100)}%)</span></div>`).join("") : "";
     const types = {}; ps.forEach(p=>types[p.type]=(types[p.type]||0)+1);
     const typeStr = Object.entries(types).sort((a,b)=>b[1]-a[1]).map(([t,n])=>`${esc(t)} ×${n}`).join(", ");
     const kpi=(l,v,s,t)=>`<div class="perfcell" title="${esc(t||'')}"><div class="pl">${l}</div><div class="pn">${v}</div><div class="pd flat">${s}</div></div>`;
     const rows = ps.map(p=>{
-      const t = p.views30!=null ? tierOf(p.views30,bandsFor(p)) : null;
+      const t = impactTier(p);
       const co = bylines(p).filter(a => a !== name);
       return `<tr>
         <td>${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:var(--vc-black)">${esc(p.title)}</a>`:esc(p.title)}
@@ -2597,22 +2605,22 @@ function renderAuthorLookup(data){
           ${kpi("Newsletter clicks", nlClicks?fmtN(nlClicks):"—", nlClicks?`across their pieces`:"none in scanned sends","Clicks their articles drew from newsletter sends (per-link Mailchimp data).")}
         </div>
         <table class="tbl" style="width:100%;margin-top:12px"><tbody>
-          <tr><td style="width:170px">Typical piece lands</td><td>${medTier?`<span style="display:inline-block;background:${medTier[1]};color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:3px">${medTier[0]}</span> <span style="font-size:11.5px;color:var(--vc-charcoal)" title="The median band across their scoreable pieces, with each piece judged against its own publication year — so a long-tenured author isn't graded against an audience that didn't exist when they wrote.">median band across their pieces, each judged against its own year</span>`:`<span style="font-size:11.5px;color:var(--vc-charcoal)">—</span>`}</td></tr>
+          <tr><td style="width:170px">Typical piece lands</td><td>${medTier?`<span style="display:inline-block;background:${medTier[1]};color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:3px">${medTier[0]}</span> <span style="font-size:11.5px;color:var(--vc-charcoal)" title="The median band across the author's pieces, where each piece is banded by its lifetime reader-hours against the whole catalogue.">median band across their pieces (total reader-hours vs the catalogue)</span>`:`<span style="font-size:11.5px;color:var(--vc-charcoal)">—</span>`}</td></tr>
           ${searchImpr?`<tr><td>Search impressions</td><td style="font-size:12px"><b>${fmtN(searchImpr)}</b> across their pieces</td></tr>`:""}
           ${sigs?`<tr><td>Signups attributed</td><td style="font-size:12px"><b>${fmtN(sigs)}</b> <span style="color:var(--vc-charcoal)">(short attribution window &mdash; a floor, not a total)</span></td></tr>`:""}
         </tbody></table>
-        ${distBars?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">How their ${fmtN(withOpen.length)} scoreable pieces spread across the bands</div>${distBars}`:""}
+        ${distBars?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">How their ${fmtN(withImpact.length)} pieces spread across the impact bands</div>${distBars}`:""}
         <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Every piece, best first</div>
         <table class="tbl" style="width:100%"><thead><tr><th>Piece</th><th class="num">First 30d</th><th class="num">Lifetime</th><th class="num">Reader-hrs</th><th>Band</th></tr></thead><tbody>${rows}</tbody></table>
-        <div class="flagnote" style="margin-top:12px"><b>Read the median, not the total.</b> Lifetime views favour whoever has been publishing longest, and one viral piece can carry an author's average &mdash; the median opening is the fairer comparison. Pieces published before GA4 coverage, in the last 30 days, or with a migration-mangled date have no first-30-day figure and are excluded from the median and the band spread (but still counted in lifetime totals). <b>Co-authored pieces count for every contributor</b>, so a shared piece appears in full under each byline &mdash; author totals across the masthead will therefore add up to more than the catalogue's piece count, and a co-authored hit lifts everyone who worked on it.</div>
+        <div class="flagnote" style="margin-top:12px"><b>The band is total impact</b> &mdash; lifetime reader-hours (views &times; how long people stayed), judged against the whole catalogue, so a bigger number always ranks higher. This rewards evergreens that keep drawing readers and ranks a viral-then-forgotten piece lower. <b>First 30d</b> is shown for context (a piece's launch reach) but doesn't set the band; it's blank for pieces published before GA4 coverage, in the last 30 days, or with a migration-mangled date. A very recent piece will read low on impact simply because it hasn't had time to accumulate. <b>Co-authored pieces count for every contributor</b>, so a shared piece appears in full under each byline &mdash; author totals across the masthead will therefore add up to more than the catalogue's piece count, and a co-authored hit lifts everyone who worked on it.</div>
         ${lookupExportBar("alExport")}
       </div>`;
     // Export: the CSV is the whole body of work, one row per piece — the most
     // useful shape for a masthead review or a contributor conversation.
     bindLookupExport("alExport", () => {
       const head = ["Piece","Published","Type","Co-authors","First 30d views","Lifetime views","Reader-hours","Depth (s/view)","Newsletter clicks","Band","URL"];
-      const body = ps.slice().sort((x,y)=>(y.views30??-1)-(x.views30??-1)||(y.views||0)-(x.views||0)).map(p=>{
-        const t = p.views30!=null ? tierOf(p.views30, bandsFor(p)) : null;
+      const body = ps.slice().sort((x,y)=>(y.secs||0)-(x.secs||0)).map(p=>{
+        const t = impactTier(p);
         return [p.title, p.pub||"", p.type||"", bylines(p).filter(a=>a!==name).join("; "),
                 p.views30!=null?p.views30:"", p.views||0, ((p.secs||0)/3600).toFixed(1),
                 p.views?Math.round(p.secs/p.views):"", p.nl_clicks||0, t?t[0]:"", p.url||""];
