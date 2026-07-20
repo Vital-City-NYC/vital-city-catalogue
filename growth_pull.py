@@ -1268,9 +1268,13 @@ def _ga4_daily_by_slug(prop, token, start_date, end_date="today"):
     quietly zero out older pieces' opening numbers. Both URL shapes (the old
     Prismic /articles/<slug> and the Ghost /<slug>/) collapse to the bare slug."""
     def slug_of(p):
-        s = (p or "").split("?")[0].strip("/")
-        s = re.sub(r"^articles/", "", s)
-        return s.strip("/").lower()
+        # Last path segment = the piece slug, regardless of section prefix.
+        # Ghost uses flat /<slug>; the old Prismic CMS used /articles/<slug> and
+        # /vital_signs/<slug>, and GA4 still holds that pre-migration traffic.
+        # Matching only the flat/articles shape silently dropped every
+        # section-prefixed URL (e.g. the 15k-view gun-violence data page).
+        s = (p or "").split("?")[0].split("#")[0].strip("/").lower()
+        return s.split("/")[-1] if s else ""
     start = datetime.strptime(start_date, "%Y-%m-%d").date()
     end = datetime.now(timezone.utc).date() if end_date == "today" else datetime.strptime(end_date, "%Y-%m-%d").date()
     daily, total_rows = {}, 0
@@ -1475,18 +1479,35 @@ def _ga4_piece_index(prop, token, bench=None):
             if attempt == 2: raise
             time.sleep(2 * (attempt + 1))
     def slug_of(p):
-        s = (p or "").split("?")[0].strip("/")
-        s = re.sub(r"^articles/", "", s)
-        return s.strip("/").lower()
-    life = {}
+        # Last path segment = the piece slug, regardless of section prefix.
+        # Ghost uses flat /<slug>; the old Prismic CMS used /articles/<slug> and
+        # /vital_signs/<slug>, and GA4 still holds that pre-migration traffic.
+        # Matching only the flat/articles shape silently dropped every
+        # section-prefixed URL (e.g. the 15k-view gun-violence data page).
+        s = (p or "").split("?")[0].split("#")[0].strip("/").lower()
+        return s.split("/")[-1] if s else ""
+    # Merge every URL a piece has ever lived at (Ghost flat + old Prismic
+    # section prefixes + trailing-slash variants) onto its one slug, so lifetime
+    # views/uniques are the true total, not one URL era's slice. `screenPageViews`
+    # sums correctly across paths; totalUsers summed across a piece's variants
+    # can slightly over-count a person who read it under two URLs — accepted as
+    # far better than dropping the older URL's readers entirely (the undercount
+    # we're fixing). No pagePath here carries a query string (GA4's `pagePath`
+    # already excludes it), so there's no row explosion to truncate.
+    life, recovered = {}, 0
     for row in (rep.get("rows") or []):
-        sl = slug_of(row["dimensionValues"][0]["value"] or "")
-        if not sl or "/" in sl:
+        raw = row["dimensionValues"][0]["value"] or ""
+        sl = slug_of(raw)
+        if not sl:
             continue
+        if raw.strip("/").count("/") >= 1:           # was dropped before this fix
+            recovered += int(row["metricValues"][0]["value"] or 0)
         e = life.setdefault(sl, [0, 0.0, 0])
         e[0] += int(row["metricValues"][0]["value"] or 0)
         e[1] += float(row["metricValues"][1]["value"] or 0)
         e[2] += int(row["metricValues"][2]["value"] or 0)
+    if recovered:
+        log(f"  ga4 piece index: recovered {recovered:,} lifetime views from section-prefixed/old URLs")
     # first-30-day numbers computed by the benchmark pull (same GA4 window)
     first30 = {p["slug"]: p for p in ((bench or {}).get("_pieces") or [])}
     out = []
