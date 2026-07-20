@@ -1448,6 +1448,10 @@ def _ga4_piece_index(prop, token, bench=None):
                "pub": (c.get("published_date") or "")[:10],
                "type": c.get("type") or "unknown",
                "author": c.get("primary_author") or "",
+               # Full byline: the author look-up credits every co-author, not
+               # just the first name on the piece.
+               "authors": [a for a in (c.get("authors") or []) if a] or
+                          ([c["primary_author"]] if c.get("primary_author") else []),
                "topics": (c.get("topics") or [])[:4],
                "words": c.get("word_count") or 0,
                "url": c.get("url") or "",

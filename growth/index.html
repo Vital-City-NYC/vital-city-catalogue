@@ -2378,7 +2378,7 @@ function renderPieceLookup(data){
     rep.innerHTML = `
       <div style="border:1px solid var(--vc-cloud);background:var(--vc-white);padding:14px 16px">
         <div style="font-size:16px;font-weight:700;line-height:1.3">${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:var(--vc-black)">${esc(p.title)}</a>`:esc(p.title)}</div>
-        <div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:3px">${esc(p.pub||"")} · ${esc(p.type||"")}${p.author?` · ${esc(p.author)}`:""}${p.words?` · ${fmtN(p.words)} words`:""}${(p.topics||[]).length?` · ${(p.topics||[]).map(esc).join(", ")}`:""}</div>
+        <div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:3px">${esc(p.pub||"")} · ${esc(p.type||"")}${(()=>{const a=(p.authors&&p.authors.length)?p.authors:(p.author?[p.author]:[]);return a.length?` · ${a.map(esc).join(", ")}`:"";})()}${p.words?` · ${fmtN(p.words)} words`:""}${(p.topics||[]).length?` · ${(p.topics||[]).map(esc).join(", ")}`:""}</div>
 
         <div class="perfgrid" style="margin-top:12px">
           ${kpi("Views · first 30d", p.views30!=null?fmtN(p.views30):"—", p.views30!=null?`vs ${fmtN(b.p50)} median`:"published before GA4 coverage","Page views in the piece's own first 30 days — the apples-to-apples reach number the bands are built on.")}
@@ -2443,16 +2443,23 @@ function renderAuthorLookup(data){
   const idx = (data.ga4 || {}).piece_index || {};
   const bm  = (data.ga4 || {}).piece_benchmarks || {};
   const hint = $("#alHint");
-  const pieces = (idx.pieces || []).filter(p => (p.author || "").trim());
+  // Credit every byline on a piece, not just the first name.
+  const bylines = p => {
+    const a = (p.authors && p.authors.length) ? p.authors : (p.author ? [p.author] : []);
+    return a.map(x => (x || "").trim()).filter(Boolean);
+  };
+  const pieces = (idx.pieces || []).filter(p => bylines(p).length);
   if(!idx.available || !pieces.length){
     if(hint) hint.textContent = "author look-up";
     host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">The per-piece index populates on the next build${idx.reason?` &mdash; ${esc(idx.reason)}`:""}.</div>`;
     return;
   }
   const b = bm.bands || {}, hb = bm.hours_bands || {};
-  // Group by author
+  // Group by EVERY author on the piece — a co-authored piece appears under
+  // each contributor, so totals across authors intentionally exceed the
+  // catalogue count (flagged in the card's note).
   const byAuthor = {};
-  pieces.forEach(p => (byAuthor[p.author] = byAuthor[p.author] || []).push(p));
+  pieces.forEach(p => bylines(p).forEach(a => (byAuthor[a] = byAuthor[a] || []).push(p)));
   const authors = Object.keys(byAuthor).sort();
   if(hint) hint.textContent = `${fmtN(authors.length)} bylines with analytics · type a name`;
   const med = arr => { if(!arr.length) return 0; const s=[...arr].sort((a,b)=>a-b); const m=s.length>>1;
@@ -2488,6 +2495,7 @@ function renderAuthorLookup(data){
     const sigs       = ps.reduce((s,p)=>s+(p.signups||0),0);
     const searchImpr = ps.reduce((s,p)=>s+(p.search_impr||0),0);
     const depth = totalViews ? Math.round(totalSecs/totalViews) : 0;
+    const nCo = ps.filter(p => bylines(p).length > 1).length;
     const medTier = tierOf(medOpen, b);
     // How the body of work spreads across the reach bands
     const dist = {};
@@ -2503,9 +2511,10 @@ function renderAuthorLookup(data){
     const kpi=(l,v,s,t)=>`<div class="perfcell" title="${esc(t||'')}"><div class="pl">${l}</div><div class="pn">${v}</div><div class="pd flat">${s}</div></div>`;
     const rows = ps.map(p=>{
       const t = p.views30!=null ? tierOf(p.views30,b) : null;
+      const co = bylines(p).filter(a => a !== name);
       return `<tr>
         <td>${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:var(--vc-black)">${esc(p.title)}</a>`:esc(p.title)}
-          <div style="font-size:10.5px;color:var(--vc-charcoal)">${esc(p.pub||"")} · ${esc(p.type||"")}</div></td>
+          <div style="font-size:10.5px;color:var(--vc-charcoal)">${esc(p.pub||"")} · ${esc(p.type||"")}${co.length?` · with ${co.map(esc).join(", ")}`:""}</div></td>
         <td class="num">${p.views30!=null?fmtN(p.views30):"—"}</td>
         <td class="num">${fmtN(p.views||0)}</td>
         <td class="num">${hrs(p.secs)}</td>
@@ -2514,7 +2523,7 @@ function renderAuthorLookup(data){
     rep.innerHTML = `
       <div style="border:1px solid var(--vc-cloud);background:var(--vc-white);padding:14px 16px">
         <div style="font-size:17px;font-weight:700">${esc(name)}</div>
-        <div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:3px">${fmtN(ps.length)} piece${ps.length===1?"":"s"} with analytics · ${esc(typeStr)}</div>
+        <div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:3px">${fmtN(ps.length)} piece${ps.length===1?"":"s"} with analytics${nCo?` · ${fmtN(nCo)} co-authored`:""} · ${esc(typeStr)}</div>
         <div class="perfgrid" style="margin-top:12px">
           ${kpi("Median opening", withOpen.length?fmtN(medOpen):"—", withOpen.length?`vs ${fmtN(b.p50)} house median`:"no first-30d data","Median first-30-day views across this author's pieces — the fairest single number for a body of work, since it isn't skewed by one hit.")}
           ${kpi("Lifetime views", fmtN(totalViews), `${fmtN(ps.length)} pieces`,"Total GA4 page views across everything they've written.")}
@@ -2529,7 +2538,7 @@ function renderAuthorLookup(data){
         ${distBars?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">How their ${fmtN(withOpen.length)} scoreable pieces spread across the bands</div>${distBars}`:""}
         <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Every piece, best first</div>
         <table class="tbl" style="width:100%"><thead><tr><th>Piece</th><th class="num">First 30d</th><th class="num">Lifetime</th><th class="num">Reader-hrs</th><th>Band</th></tr></thead><tbody>${rows}</tbody></table>
-        <div class="flagnote" style="margin-top:12px"><b>Read the median, not the total.</b> Lifetime views favour whoever has been publishing longest, and one viral piece can carry an author's average &mdash; the median opening is the fairer comparison. Pieces published before GA4 coverage or in the last 30 days have no first-30-day figure and are excluded from the median and the band spread (but still counted in lifetime totals). Bylines come from the catalogue's primary author, so co-authored pieces are credited to the first name only.</div>
+        <div class="flagnote" style="margin-top:12px"><b>Read the median, not the total.</b> Lifetime views favour whoever has been publishing longest, and one viral piece can carry an author's average &mdash; the median opening is the fairer comparison. Pieces published before GA4 coverage or in the last 30 days have no first-30-day figure and are excluded from the median and the band spread (but still counted in lifetime totals). <b>Co-authored pieces count for every contributor</b>, so a shared piece appears in full under each byline &mdash; author totals across the masthead will therefore add up to more than the catalogue's piece count, and a co-authored hit lifts everyone who worked on it.</div>
       </div>`;
   }
 
