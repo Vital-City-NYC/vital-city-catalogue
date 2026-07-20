@@ -1221,6 +1221,119 @@ def _ga4_story_weekly(prop, token, days=300, top=120):
     return {"pages": plist, "rows": rows}
 
 
+def _ga4_piece_benchmarks(prop, token, days=400, first_days=30):
+    """Benchmark bands for judging ONE piece: the full distribution of
+    first-30-days-after-publication page views across every piece published
+    inside the window.
+
+    Why first-30-days and not lifetime: a 2023 explainer has had years to
+    accumulate views, so comparing lifetime totals punishes anything new. Each
+    piece is measured over its own opening 30 days instead, which is the only
+    apples-to-apples cut. Deliberately does NOT truncate to a top-N (unlike the
+    story/engagement pulls, which are capped at 120/60 and would make the
+    'average' the average of our best work)."""
+    body = {
+        "dateRanges": [{"startDate": f"{days}daysAgo", "endDate": "today"}],
+        "dimensions": [{"name": "pagePath"}, {"name": "date"}],
+        "metrics": [{"name": "screenPageViews"}, {"name": "userEngagementDuration"}],
+        "limit": 200000,
+    }
+    rep = None
+    for attempt in range(3):
+        req = urllib.request.Request(
+            f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+            data=json.dumps(body).encode(),
+            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=90) as r:
+                rep = json.loads(r.read()); break
+        except Exception:
+            if attempt == 2: raise
+            time.sleep(2 * (attempt + 1))
+    # Per-slug daily views/seconds. GA4 carries BOTH url shapes for the same
+    # piece (old Prismic /articles/<slug> and Ghost /<slug>/) plus trailing
+    # slash variants, so everything is normalised to the bare slug and summed.
+    def slug_of(p):
+        s = (p or "").split("?")[0].strip("/")
+        s = re.sub(r"^articles/", "", s)
+        return s.strip("/").lower()
+    daily = {}
+    for row in (rep.get("rows") or []):
+        path = row["dimensionValues"][0]["value"] or ""
+        sl = slug_of(path)
+        if not sl or "/" in sl or sl in ("about", "the-journal"):
+            continue
+        dt = row["dimensionValues"][1]["value"]
+        v = int(row["metricValues"][0]["value"] or 0)
+        s = float(row["metricValues"][1]["value"] or 0)
+        e = daily.setdefault(sl, {})
+        cur = e.get(dt) or [0, 0.0]
+        cur[0] += v; cur[1] += s
+        e[dt] = cur
+    # Catalogue: slug -> (published_date, type, title)
+    cat = {}
+    try:
+        for c in json.loads((ROOT / "data" / "catalogue.json").read_text()):
+            sl = (c.get("slug") or "").lower()
+            if sl and c.get("published_date"):
+                cat[sl] = (c["published_date"][:10], c.get("type") or "unknown", c.get("title") or sl)
+    except Exception as e:
+        log(f"  ga4 benchmarks: catalogue unavailable ({e})")
+        return {"available": False, "reason": f"catalogue unavailable: {e}"}
+    today = datetime.now(timezone.utc).date()
+    win_start = today - timedelta(days=days)
+    # Eligible: published inside the GA4 window AND old enough that its full
+    # first_days have elapsed (otherwise its opening window is still filling).
+    lo = win_start.isoformat(); hi = (today - timedelta(days=first_days)).isoformat()
+    pieces = []
+    for sl, (pub, typ, title) in cat.items():
+        if not (lo <= pub <= hi):
+            continue
+        try:
+            p0 = datetime.strptime(pub, "%Y-%m-%d").date()
+        except Exception:
+            continue
+        end = p0 + timedelta(days=first_days)
+        dd = daily.get(sl) or {}
+        views = 0; secs = 0.0
+        for dt, (v, s) in dd.items():
+            try:
+                dobj = datetime.strptime(dt, "%Y%m%d").date()
+            except Exception:
+                continue
+            if p0 <= dobj < end:
+                views += v; secs += s
+        pieces.append({"slug": sl, "title": title, "type": typ, "pub": pub,
+                       "views": views, "secs": secs})
+    if len(pieces) < 12:
+        return {"available": False, "reason": f"only {len(pieces)} pieces old enough in the window"}
+    def pct(vals, q):
+        if not vals: return 0
+        v = sorted(vals); i = (len(v) - 1) * q
+        lo_i, hi_i = int(i), min(int(i) + 1, len(v) - 1)
+        return round(v[lo_i] + (v[hi_i] - v[lo_i]) * (i - lo_i))
+    vv = [p["views"] for p in pieces]
+    bands = {q: pct(vv, f) for q, f in
+             (("p10", .10), ("p25", .25), ("p50", .50), ("p75", .75), ("p90", .90), ("p95", .95))}
+    # Median seconds-per-view (read depth) across pieces that got real traffic.
+    spv = sorted((p["secs"] / p["views"]) for p in pieces if p["views"] >= 30)
+    med_spv = round(spv[len(spv) // 2]) if spv else 0
+    by_type = {}
+    for t in set(p["type"] for p in pieces):
+        sub = [p["views"] for p in pieces if p["type"] == t]
+        if len(sub) >= 8:
+            by_type[t] = {"n": len(sub), "p50": pct(sub, .50), "p90": pct(sub, .90)}
+    top = sorted(pieces, key=lambda p: -p["views"])[:8]
+    log(f"  ga4 benchmarks: {len(pieces)} pieces scored on first {first_days}d "
+        f"(median {bands['p50']} views, p90 {bands['p90']})")
+    return {"available": True, "n_pieces": len(pieces), "first_days": first_days,
+            "window_days": days, "window_start": lo, "window_end": hi,
+            "bands": bands, "median_secs_per_view": med_spv,
+            "by_type": by_type,
+            "top": [{"title": p["title"], "views": p["views"], "pub": p["pub"]} for p in top],
+            "as_of": today.isoformat()}
+
+
 def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=None, end_date="today"):
     """Per-article engagement time — a read-depth proxy GA4 measures (the
     seconds a reader's tab is actually focused on the page) and Ghost can't.
@@ -1499,6 +1612,11 @@ def pull_ga4():
             story_weekly = _ga4_story_weekly(prop, token)
         except Exception as e:
             log(f"  ga4 story weekly failed: {e}"); story_weekly = {"pages": [], "rows": []}
+        try:
+            piece_benchmarks = _ga4_piece_benchmarks(prop, token)
+        except Exception as e:
+            log(f"  ga4 piece benchmarks failed: {e}")
+            piece_benchmarks = {"available": False, "reason": str(e)}
         log(f"  ga4: {u30:,} users (30d); {u365:,} users (1y); {len(engagement)} eng; {len(since_pages)} since-Jan; {len(by_year.get('years',[]))} yrs")
         return {
             "available": True, "property_id": prop,
@@ -1512,6 +1630,7 @@ def pull_ga4():
             "by_year": by_year, "returning": returning,
             "traffic_weekly": traffic_weekly,
             "story_weekly": story_weekly,
+            "piece_benchmarks": piece_benchmarks,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:

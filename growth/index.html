@@ -653,6 +653,11 @@
         <div class="sechead-sub">What we publish and send, and how each piece performs — the machine that drives the two sections above.</div>
       </div>
 
+      <div class="card" id="benchmarks">
+        <h2>How to judge a piece <span class="hint" id="bmHint">benchmark bands · first 30 days after publication</span></h2>
+        <div id="benchmarksBody"></div>
+      </div>
+
       <div class="card" id="perf">
         <h2>Newsletter performance <span class="hint">recipient-weighted averages · YoY = same window last year</span></h2>
         <div class="perfgrid" id="perfKpis"></div>
@@ -1017,6 +1022,7 @@ function boot(data){
   renderYTD(mc, mc.signup_windows || {});
   renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || [], data.linkedin || {}, data.bluesky || {});
   renderXFollowers(data);
+  renderPieceBenchmarks(data);
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderFundUnsub(mc);
@@ -2206,6 +2212,57 @@ function timeAgo(iso){
   if(m<24*60) return Math.floor(m/60)+"h";
   if(m<14*24*60) return Math.floor(m/(24*60))+"d";
   return Math.floor(m/(24*60))+"d";
+}
+
+// Benchmark bands for judging a single piece. Uses the FULL distribution of
+// first-30-days-after-publication views (not the top-N story/engagement pulls,
+// which would make "average" mean "average of our best work").
+function renderPieceBenchmarks(data){
+  const host = $("#benchmarksBody"); if(!host) return;
+  const bm = (data.ga4 || {}).piece_benchmarks || {};
+  const hint = $("#bmHint");
+  if(!bm.available){
+    if(hint) hint.textContent = "benchmark bands";
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">Benchmark bands populate on the next build${bm.reason?` &mdash; ${esc(bm.reason)}`:""}.</div>`;
+    return;
+  }
+  const b = bm.bands || {};
+  if(hint) hint.textContent = `benchmark bands · first ${bm.first_days} days · ${fmtN(bm.n_pieces)} pieces`;
+  const tiers = [
+    ["Under-performing", `under ${fmtN(b.p25)}`, "#c8102e", "bottom quarter of everything we publish"],
+    ["Typical",          `${fmtN(b.p25)}–${fmtN(b.p75)}`, "#707175", `the middle half · median piece = <b>${fmtN(b.p50)}</b>`],
+    ["Strong",           `${fmtN(b.p75)}–${fmtN(b.p90)}`, "#57aa4a", "top quarter"],
+    ["Great",            `${fmtN(b.p90)}–${fmtN(b.p95)}`, "#217ebe", "top 10%"],
+    ["Exceptional",      `${fmtN(b.p95)}+`, "#e7466d", "top 5% — about one piece in twenty"],
+  ];
+  const tierRows = tiers.map(([lbl,rng,c,note])=>`<tr>
+      <td style="white-space:nowrap"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${c};margin-right:7px"></span><b>${lbl}</b></td>
+      <td class="num" style="white-space:nowrap;font-weight:700">${rng}</td>
+      <td style="font-size:11.5px;color:var(--vc-charcoal)">${note}</td></tr>`).join("");
+  const TYPE_ORDER = ["opinion/commentary","data analysis","q&a","map/tool"];
+  const bt = bm.by_type || {};
+  const typeRows = TYPE_ORDER.filter(t=>bt[t]).map(t=>`<tr>
+      <td>${esc(t)}</td><td class="num">${fmtN(bt[t].n)}</td>
+      <td class="num" style="font-weight:700">${fmtN(bt[t].p50)}</td>
+      <td class="num">${fmtN(bt[t].p90)}</td></tr>`).join("");
+  const mins = bm.median_secs_per_view ? (bm.median_secs_per_view/60) : 0;
+
+  host.innerHTML = `
+    <div class="perfgrid">
+      <div class="perfcell" title="The median piece's page views in its first 30 days. Half of everything we publish lands below this."><div class="pl">Median piece</div><div class="pn">${fmtN(b.p50)}</div><div class="pd flat">views in first ${bm.first_days} days</div></div>
+      <div class="perfcell" title="Top-decile threshold: clear this and the piece is in the best 10% of what we publish."><div class="pl">&ldquo;Great&rdquo; starts at</div><div class="pn">${fmtN(b.p90)}</div><div class="pd flat">top 10%</div></div>
+      <div class="perfcell" title="Top-5% threshold — roughly one piece in twenty."><div class="pl">&ldquo;Exceptional&rdquo;</div><div class="pn">${fmtN(b.p95)}+</div><div class="pd flat">top 5%</div></div>
+      <div class="perfcell" title="Median engaged seconds per view across pieces with real traffic — a read-depth benchmark, not a reach one."><div class="pl">Typical read depth</div><div class="pn">${bm.median_secs_per_view?fmtN(bm.median_secs_per_view)+"s":"—"}</div><div class="pd flat">${mins?`about ${mins.toFixed(1)} min per view`:"engaged time per view"}</div></div>
+    </div>
+
+    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin:14px 0 10px">Every piece is scored on <b>page views in its own first ${bm.first_days} days</b>, so a new piece and a two-year-old one are judged the same way. Bands come from the <b>${fmtN(bm.n_pieces)} pieces</b> published between ${esc(bm.window_start)} and ${esc(bm.window_end)}.</div>
+
+    <table class="tbl" style="width:100%"><thead><tr><th>Band</th><th class="num">First-${bm.first_days}-day views</th><th>What it means</th></tr></thead><tbody>${tierRows}</tbody></table>
+
+    ${typeRows?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:18px 0 6px">Bands differ by format — judge like against like</div>
+    <table class="tbl" style="width:100%"><thead><tr><th>Format</th><th class="num">Pieces</th><th class="num">Median</th><th class="num">Top 10% starts</th></tr></thead><tbody>${typeRows}</tbody></table>`:""}
+
+    <div class="flagnote" style="margin-top:12px"><b>Read these as rules of thumb, not targets.</b> Views are GA4 page views, which count devices rather than people (one reader on phone and laptop counts twice), and the first-${bm.first_days}-day window deliberately ignores the long tail &mdash; evergreen explainers keep earning readers for years, so a modest opening is not the same as a weak piece. Pieces published in the last ${bm.first_days} days are excluded because their window hasn't closed yet. Search-driven pieces also ramp slowly as Google indexes them.</div>`;
 }
 
 // Who follows Vital City on X — a point-in-time follower snapshot, cross-matched
