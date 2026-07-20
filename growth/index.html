@@ -2402,7 +2402,7 @@ function renderPieceLookup(data){
         <div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:3px">${esc(p.pub||"")} · ${esc(p.type||"")}${(()=>{const a=(p.authors&&p.authors.length)?p.authors:(p.author?[p.author]:[]);return a.length?` · ${a.map(esc).join(", ")}`:"";})()}${p.words?` · ${fmtN(p.words)} words`:""}${(p.topics||[]).length?` · ${(p.topics||[]).map(esc).join(", ")}`:""}</div>
 
         <div class="perfgrid" style="margin-top:12px">
-          ${kpi("Views · first 30d", p.views30!=null?fmtN(p.views30):"—", p.views30!=null?`vs ${fmtN(b.p50)} median`:"published before GA4 coverage","Page views in the piece's own first 30 days — the apples-to-apples reach number the bands are built on.")}
+          ${kpi("Views · first 30d", p.views30!=null?fmtN(p.views30):"—", p.views30!=null?`vs ${fmtN(b.p50)} median`:(p.date_suspect?"publication date looks wrong — can't score the opening":"published before GA4 coverage"),"Page views in the piece's own first 30 days — the apples-to-apples reach number the bands are built on.")}
           ${kpi("Reader-hours · first 30d", p.secs30!=null?hrs(p.secs30):"—", p.secs30!=null?`vs ${hb.p50!=null?hb.p50+"h":"—"} median`:"—","Views x time actually spent in the first 30 days.")}
           ${kpi("Depth", spv?fmtN(spv)+"s":"—", `vs ${fmtN(db.p50||bm.median_secs_per_view||0)}s median`,"Engaged seconds per view across the piece's whole life — how hard it held the people who came.")}
           ${kpi("Lifetime views", fmtN(p.views||0), `${fmtN(p.users||0)} users · ${hrs(p.secs)} total`,"Everything GA4 has ever recorded for this piece, across both old and new URL shapes.")}
@@ -2410,6 +2410,7 @@ function renderPieceLookup(data){
 
         <table class="tbl" style="width:100%;margin-top:14px"><tbody>
           <tr><td style="width:150px">Reach band</td><td>${badge(t30)}${rank!=null?` <span style="font-size:11px;color:var(--vc-charcoal)">· beat ${rank}% of pieces</span>`:""}${era.era?` <span style="font-size:11px;color:var(--vc-charcoal)" title="Judged against pieces published in ${era.era} (n=${era.n}), not today's bands — the site drew far less traffic then, so scoring it against the current median would be meaningless.">· vs ${era.era} peers</span>`:""}</td></tr>
+          ${p.date_suspect?`<tr><td>Opening window</td><td style="font-size:12px"><span class="warnflag" style="font-weight:700">Not scoreable</span> <span style="color:var(--vc-charcoal)">&mdash; GA4 recorded no traffic in the 30 days after its stated publication date (${esc(p.pub||"")})${p.first_seen?`, but first saw readers on ${esc(p.first_seen)}`:""}. The date was almost certainly mis-assigned in the CMS migration, so this piece is left unbanded rather than judged on a false zero.</span></td></tr>`:""}
           <tr><td>Attention band</td><td>${badge(h30)}</td></tr>
           <tr><td>Depth band</td><td>${badge(dTier)}</td></tr>
           ${fmt?`<tr><td>vs its format</td><td style="font-size:12px">${vsFmt!=null?`<b>${vsFmt}%</b> of the median <b>${esc(p.type)}</b> (${fmtN(fmt.p50)} views, n=${fmtN(fmt.n)})`:`median ${esc(p.type)} = ${fmtN(fmt.p50)} views`}</td></tr>`:""}
@@ -2422,7 +2423,7 @@ function renderPieceLookup(data){
         ${qs.map(q=>`<tr><td>${esc(q.q)}</td><td class="num">${fmtN(q.impr||0)}</td><td class="num">${q.pos!=null?q.pos:"—"}</td><td class="num">${fmtN(q.clicks||0)}</td></tr>`).join("")}
         </tbody></table>`:""}
 
-        <div class="flagnote" style="margin-top:12px"><b>How to read this.</b> Bands compare the piece to everything else we published, on its own first 30 days. Pieces published before GA4 coverage (or in the last 30 days) show no first-30-day figure &mdash; their lifetime numbers still apply. Depth uses the whole life, so an old evergreen piece is judged on all its readers, not just launch week. Search and signup rows appear only where we have that data.</div>
+        <div class="flagnote" style="margin-top:12px"><b>How to read this.</b> Bands compare the piece to everything else we published, on its own first 30 days. Pieces published before GA4 coverage, in the last 30 days, or carrying a date the migration mis-assigned show no first-30-day figure &mdash; their lifetime numbers still apply. Depth uses the whole life, so an old evergreen piece is judged on all its readers, not just launch week. Search and signup rows appear only where we have that data.</div>
         ${lookupExportBar("plExport")}
       </div>`;
     // Export: same copy / CSV / md / print affordances as the range report.
@@ -2603,7 +2604,7 @@ function renderAuthorLookup(data){
         ${distBars?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">How their ${fmtN(withOpen.length)} scoreable pieces spread across the bands</div>${distBars}`:""}
         <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Every piece, best first</div>
         <table class="tbl" style="width:100%"><thead><tr><th>Piece</th><th class="num">First 30d</th><th class="num">Lifetime</th><th class="num">Reader-hrs</th><th>Band</th></tr></thead><tbody>${rows}</tbody></table>
-        <div class="flagnote" style="margin-top:12px"><b>Read the median, not the total.</b> Lifetime views favour whoever has been publishing longest, and one viral piece can carry an author's average &mdash; the median opening is the fairer comparison. Pieces published before GA4 coverage or in the last 30 days have no first-30-day figure and are excluded from the median and the band spread (but still counted in lifetime totals). <b>Co-authored pieces count for every contributor</b>, so a shared piece appears in full under each byline &mdash; author totals across the masthead will therefore add up to more than the catalogue's piece count, and a co-authored hit lifts everyone who worked on it.</div>
+        <div class="flagnote" style="margin-top:12px"><b>Read the median, not the total.</b> Lifetime views favour whoever has been publishing longest, and one viral piece can carry an author's average &mdash; the median opening is the fairer comparison. Pieces published before GA4 coverage, in the last 30 days, or with a migration-mangled date have no first-30-day figure and are excluded from the median and the band spread (but still counted in lifetime totals). <b>Co-authored pieces count for every contributor</b>, so a shared piece appears in full under each byline &mdash; author totals across the masthead will therefore add up to more than the catalogue's piece count, and a co-authored hit lifts everyone who worked on it.</div>
         ${lookupExportBar("alExport")}
       </div>`;
     // Export: the CSV is the whole body of work, one row per piece — the most

@@ -1364,17 +1364,32 @@ def _ga4_piece_benchmarks(prop, token, days=400, first_days=30, index_since="202
         end = p0 + timedelta(days=first_days)
         dd = daily.get(sl) or {}
         views = 0; secs = 0.0
+        lifetime = 0; first_seen = None
         for dt, (v, s) in dd.items():
             try:
                 dobj = datetime.strptime(dt, "%Y%m%d").date()
             except Exception:
                 continue
+            lifetime += v
+            if v > 0 and (first_seen is None or dobj < first_seen):
+                first_seen = dobj
             if p0 <= dobj < end:
                 views += v; secs += s
+        # A piece that GA4 clearly recorded traffic for, but which shows ZERO
+        # views in its own stated opening window, has an unreliable published
+        # date — several dates were mis-assigned in the Prismic->Ghost
+        # migration. Scoring that as "under-performing" would be flatly wrong
+        # (one such piece has 76k lifetime views), and feeding a spurious 0
+        # into the bands would drag the distribution down. Mark it unknown.
+        suspect = (views == 0 and lifetime > 0)
         all_pieces.append({"slug": sl, "title": title, "type": typ, "pub": pub,
-                           "views": views, "secs": secs})
-    # Bands are built from the recent window only (comparable-era judging).
-    pieces = [p for p in all_pieces if lo <= p["pub"] <= hi]
+                           "views": None if suspect else views,
+                           "secs": None if suspect else secs,
+                           "suspect_date": suspect,
+                           "first_seen": first_seen.isoformat() if first_seen else None})
+    # Bands are built from the recent window only (comparable-era judging), and
+    # never from pieces whose opening window we can't trust.
+    pieces = [p for p in all_pieces if lo <= p["pub"] <= hi and not p["suspect_date"]]
     if len(pieces) < 12:
         return {"available": False, "reason": f"only {len(pieces)} pieces old enough in the window"}
     def pct(vals, q):
@@ -1422,7 +1437,7 @@ def _ga4_piece_benchmarks(prop, token, days=400, first_days=30, index_since="202
             "year_bands": {
                 y: {"n": len(sub), **{q: pct([p["views"] for p in sub], f) for q, f in QS}}
                 for y, sub in
-                {y: [p for p in all_pieces if p["pub"][:4] == y]
+                {y: [p for p in all_pieces if p["pub"][:4] == y and not p["suspect_date"]]
                  for y in sorted({p["pub"][:4] for p in all_pieces})}.items()
                 if len(sub) >= 20
             },
@@ -1503,8 +1518,15 @@ def _ga4_piece_index(prop, token, bench=None):
                "secs": round((lv or [0, 0, 0])[1]),
                "users": (lv or [0, 0, 0])[2]}
         if f3:
-            rec["views30"] = f3["views"]
-            rec["secs30"] = round(f3["secs"])
+            # A suspect date means we can't trust the opening window at all, so
+            # leave views30 absent rather than publishing a misleading zero the
+            # UI would then band as "under-performing".
+            if f3.get("suspect_date"):
+                rec["date_suspect"] = True
+                if f3.get("first_seen"): rec["first_seen"] = f3["first_seen"]
+            else:
+                rec["views30"] = f3["views"]
+                rec["secs30"] = round(f3["secs"])
         out.append(rec)
     out.sort(key=lambda r: -(r.get("views") or 0))
     log(f"  ga4 piece index: {len(out)} pieces with GA4 data ({sum(1 for r in out if 'views30' in r)} with first-30d)")
