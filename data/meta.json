@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-21T11:41:20.280027+00:00",
+  "generated_at": "2026-07-21T23:23:35.437049+00:00",
   "site": "https://www.vitalcitynyc.org",
   "total_posts": 870,
-  "total_authors": 480,
+  "total_authors": 479,
   "total_issues": 29,
   "total_topics": 211,
   "date_range": [
@@ -10,6 +10,13 @@
     "2026-07-15"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "What You Can Do About Trump",
+      "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
+      "published_date": "2025-04-29",
+      "primary_author": "A Survey"
+    }
+  ]
 }

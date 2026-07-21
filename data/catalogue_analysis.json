@@ -1,9 +1,9 @@
 {
   "meta": {
-    "generated_at": "2026-07-21T11:41:20.280027+00:00",
+    "generated_at": "2026-07-21T23:23:35.437049+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 870,
-    "total_authors": 480,
+    "total_authors": 479,
     "total_issues": 29,
     "total_topics": 211,
     "date_range": [
@@ -11,15 +11,22 @@
       "2026-07-15"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 1,
+    "new_articles": [
+      {
+        "title": "What You Can Do About Trump",
+        "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
+        "published_date": "2025-04-29",
+        "primary_author": "A Survey"
+      }
+    ]
   },
   "total_pieces": 870,
   "by_year": {
     "2021": 1,
     "2022": 46,
-    "2023": 154,
-    "2024": 224,
+    "2023": 153,
+    "2024": 225,
     "2025": 287,
     "2026": 158
   },
@@ -36,7 +43,7 @@
     "2022-12": 3,
     "2023-01": 5,
     "2023-02": 8,
-    "2023-03": 39,
+    "2023-03": 38,
     "2023-04": 4,
     "2023-05": 8,
     "2023-06": 21,
@@ -57,7 +64,7 @@
     "2024-09": 13,
     "2024-10": 55,
     "2024-11": 11,
-    "2024-12": 8,
+    "2024-12": 9,
     "2025-01": 27,
     "2025-02": 24,
     "2025-03": 29,
@@ -123,7 +130,7 @@
     ],
     [
       "City Planning",
-      109
+      108
     ],
     [
       "Justice",
@@ -143,7 +150,7 @@
     ],
     [
       "Politics",
-      54
+      55
     ],
     [
       "Police Reform",
@@ -210,7 +217,7 @@
   "by_credential_pieces": [
     [
       "Academic",
-      216
+      215
     ],
     [
       "Nonprofit / advocacy",
@@ -250,7 +257,7 @@
     ],
     [
       "Survey / reader poll",
-      13
+      14
     ],
     [
       "Unknown / no bio",
@@ -260,7 +267,7 @@
   "by_credential_authors": [
     [
       "Academic",
-      153
+      152
     ],
     [
       "Other / unclassified",
@@ -349,13 +356,13 @@
       "2022": 6,
       "2023": 17,
       "2024": 32,
-      "2025": 39,
+      "2025": 38,
       "2026": 15
     },
     "Justice": {
       "2022": 4,
-      "2023": 27,
-      "2024": 26,
+      "2023": 26,
+      "2024": 27,
       "2025": 13,
       "2026": 8
     },
@@ -375,9 +382,9 @@
   },
   "wc_stats": {
     "n": 861,
-    "median": 1618,
-    "mean": 1901,
-    "p90": 2823,
+    "median": 1619,
+    "mean": 1904,
+    "p90": 2837,
     "max": 30332
   },
   "wc_buckets": [
@@ -391,7 +398,7 @@
     ],
     [
       "1,000-1,999",
-      506
+      505
     ],
     [
       "2,000-2,999",
@@ -399,7 +406,7 @@
     ],
     [
       "3,000-4,999",
-      50
+      51
     ],
     [
       "5,000+",
@@ -441,6 +448,11 @@
       "credential": "Journalist / media"
     },
     {
+      "name": "A Survey",
+      "posts": 15,
+      "credential": "Survey / reader poll"
+    },
+    {
       "name": "Vishaan Chakrabarti",
       "posts": 14,
       "credential": "Architecture / design / planning"
@@ -449,11 +461,6 @@
       "name": "Harry Siegel",
       "posts": 14,
       "credential": "Journalist / media"
-    },
-    {
-      "name": "A Survey",
-      "posts": 14,
-      "credential": "Survey / reader poll"
     },
     {
       "name": "Errol Louis",
