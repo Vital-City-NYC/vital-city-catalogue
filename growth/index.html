@@ -88,6 +88,22 @@
   .secnav a{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;
             color:var(--vc-cerulean);text-decoration:none;white-space:nowrap}
   .secnav a:hover{text-decoration:underline}
+  .secnav a.on{color:var(--vc-black);text-decoration:underline;text-underline-offset:3px}
+  /* Anchor targets must clear the sticky bar, or the heading you jumped to
+     sits hidden underneath it. --navh is measured from the real bar at runtime,
+     because the links wrap to several rows on narrow screens (a fixed offset
+     was wrong by ~180px there). */
+  :root{--navh:44px}
+  .card, #sec-glance, .sechead{scroll-margin-top:calc(var(--navh) + 10px)}
+  /* Keep the bar to ONE row: 9 links wrapping made it ~230px tall, which ate a
+     third of the screen and pushed jump targets underneath it. Scrolls
+     sideways when the window is too narrow. (Deliberately not a vh-based
+     max-height — vh resolves to 0 in some embed/preview contexts and silently
+     clipped the bar to a sliver.) */
+  .secnav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
+  .secnav::-webkit-scrollbar{height:4px}
+  .secnav::-webkit-scrollbar-thumb{background:var(--vc-cloud);border-radius:2px}
+  @media print{ .secnav{display:none} }
   .sechead{margin:30px 0 14px;scroll-margin-top:46px;cursor:pointer;user-select:none}
   .sechead-title{font-size:15px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--vc-black);
                  border-bottom:3px solid var(--vc-chartreuse);padding-bottom:6px}
@@ -488,6 +504,21 @@
 
   <div class="layout">
     <main>
+      <!-- Top-level wayfinding. Sticky, so it stays reachable the whole way
+           down; covers the standalone top cards as well as the five sections,
+           which the old mid-page version skipped entirely. -->
+      <nav class="secnav" id="jumpNav" aria-label="Dashboard sections">
+        <span class="secnav-lbl">Jump to:</span>
+        <a href="#sec-glance">At a glance</a>
+        <a href="#rangeReport">Custom reports</a>
+        <a href="#bigPicture">The long view</a>
+        <a href="#audienceQuality">Who's reading</a>
+        <a href="#sec-growth">Growing the list</a>
+        <a href="#sec-donors">Donors &amp; influence</a>
+        <a href="#sec-content">The content engine</a>
+        <a href="#sec-health">List health</a>
+        <a href="#sec-reach">Reach &amp; traffic</a>
+      </nav>
       <div class="readnote">
         <div class="readnote-h">How to read this</div>
         <ul>
@@ -497,7 +528,7 @@
           <li><b>Who reads matters more than how many.</b> Vital City exists to move policy, so a few hundred mayors, commissioners, council staffers, funders and reporters reading closely can count for more than tens of thousands of casual visitors.</li>
         </ul>
       </div>
-      <div class="sechead-title" style="margin:24px 0 12px">At a glance</div>
+      <div class="sechead-title" id="sec-glance" style="margin:24px 0 12px">At a glance</div>
       <div class="kpis" id="kpis"></div>
 
       <div class="card" id="weekPulse" style="display:none">
@@ -582,15 +613,6 @@
           <div class="flagnote" style="margin-top:12px">Static context, not live data — last reviewed June 2026. Refresh when the new annual reports land: <a href="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025" target="_blank" style="color:var(--vc-cerulean)">Reuters Institute Digital News Report</a> · <a href="https://mrbenchmarks.com/" target="_blank" style="color:var(--vc-cerulean)">M+R Benchmarks</a>.</div>
         </div>
       </div>
-
-      <nav class="secnav" aria-label="Dashboard sections">
-        <span class="secnav-lbl">Jump to:</span>
-        <a href="#sec-growth">Growing the list</a>
-        <a href="#sec-donors">Donors &amp; influence</a>
-        <a href="#sec-content">The content engine</a>
-        <a href="#sec-health">List health</a>
-        <a href="#sec-reach">Reach &amp; traffic</a>
-      </nav>
 
       <div class="sechead" id="sec-growth">
         <div class="sechead-title">Growing the list</div>
@@ -1063,6 +1085,7 @@ function boot(data){
   renderPieceLookup(data);
   renderAuthorLookup(data);
   setupReportTabs();
+  setupJumpNav();
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
   renderFundUnsub(mc);
@@ -2475,6 +2498,48 @@ function renderPieceLookup(data){
     }));
   }
   inp.addEventListener("input", ()=>{ rep.innerHTML=""; suggest(inp.value); });
+}
+
+// Jump-to bar: highlight whichever section you're currently looking at, so the
+// sticky bar doubles as a "you are here". Scroll-position based (not
+// IntersectionObserver) because collapsed cards can zero-height and would
+// otherwise never trigger an intersection.
+function setupJumpNav(){
+  const nav = document.getElementById("jumpNav");
+  if(!nav || nav._bound) return;
+  nav._bound = true;
+  const links = [...nav.querySelectorAll("a")];
+  // Sort by DOCUMENT position, not link order — the two must not be assumed
+  // equal (they weren't: "The long view" sits above "Growing the list" in the
+  // DOM), or "last target above the fold" marks the wrong link.
+  const targets = links.map(a => ({a, el: document.getElementById(a.getAttribute("href").slice(1))}))
+    .filter(t => t.el)
+    .sort((x, y) => (x.el.compareDocumentPosition(y.el) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1);
+  // Publish the bar's real height so anchor targets can clear it (it wraps to
+  // several rows when the window is narrow).
+  const sizeNav = () => document.documentElement.style.setProperty("--navh", nav.offsetHeight + "px");
+  let tick = false;
+  const mark = () => {
+    tick = false;
+    const y = window.scrollY + nav.offsetHeight + 16;
+    let cur = null;
+    for(const t of targets){
+      if(t.el.getBoundingClientRect().top + window.scrollY <= y) cur = t;
+    }
+    links.forEach(a => a.classList.toggle("on", !!cur && a === cur.a));
+  };
+  sizeNav();
+  window.addEventListener("resize", () => { sizeNav(); mark(); }, {passive:true});
+  window.addEventListener("scroll", () => { if(!tick){ tick = true; requestAnimationFrame(mark); } }, {passive:true});
+  // Expand a collapsed section when you jump to it, else the click lands on a
+  // closed card and looks broken.
+  nav.addEventListener("click", e => {
+    const a = e.target.closest("a"); if(!a) return;
+    const el = document.getElementById(a.getAttribute("href").slice(1));
+    if(el && el.classList.contains("ccol")) el.classList.remove("ccol");
+    setTimeout(mark, 60);
+  });
+  mark();
 }
 
 // Custom reports card: three ways in (date range / piece / author). Bound once;
