@@ -565,6 +565,40 @@
     "website": null
   },
   {
+    "name": "Cara Eckholm",
+    "post_count": 6,
+    "slugs": [
+      "an-antidote-to-doge-strengthening-urban-policy-entrepreneurs",
+      "building-better-piece-by-piece",
+      "guadalajara-visor-urbano-permitting",
+      "london-low-traffic-neighborhoods-safety-urban-planning",
+      "nantes-tourism-culture-sophie-levy-interview",
+      "nj-government-ai-innovation-authority"
+    ],
+    "slug": "eckholm-cara",
+    "bio": "is the host of Borrow & Steal, a new interview series from Vital City. She is a fellow at Renaissance Philanthropy and runs AKA Urban, a planning firm. ",
+    "url": "https://www.vitalcitynyc.org/author/eckholm-cara/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Michael Jacobson",
+    "post_count": 6,
+    "slugs": [
+      "are-nycs-jails-ungovernable-2",
+      "david-garland-law-and-order-leviathan-review-criminal-justice-critique",
+      "how-long-people-stay-is-the-problem",
+      "its-not-impossible-how-nyc-can-transform-jail-conditions",
+      "special-report-on-rikers",
+      "what-jail-population-projections-tell-you-about-a-governments-aspirations"
+    ],
+    "slug": "jacobson-michael",
+    "bio": "is the director of the CUNY Institute for State and Local Governance and a professor of sociology at the Graduate Center of the City University of New York.",
+    "url": "https://www.vitalcitynyc.org/author/jacobson-michael/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Vincent Schiraldi",
     "post_count": 6,
     "slugs": [
@@ -611,22 +645,6 @@
     "slug": "gupta-arpit",
     "bio": "is an associate professor at NYU Stern and a senior fellow at the Manhattan Institute.",
     "url": "https://www.vitalcitynyc.org/author/gupta-arpit/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Cara Eckholm",
-    "post_count": 5,
-    "slugs": [
-      "an-antidote-to-doge-strengthening-urban-policy-entrepreneurs",
-      "building-better-piece-by-piece",
-      "guadalajara-visor-urbano-permitting",
-      "london-low-traffic-neighborhoods-safety-urban-planning",
-      "nantes-tourism-culture-sophie-levy-interview"
-    ],
-    "slug": "eckholm-cara",
-    "bio": "is the host of Borrow & Steal, a new interview series from Vital City. She is a fellow at Renaissance Philanthropy and runs AKA Urban, a planning firm. ",
-    "url": "https://www.vitalcitynyc.org/author/eckholm-cara/",
     "twitter": null,
     "website": null
   },
@@ -691,22 +709,6 @@
     "slug": "norman-sara",
     "bio": "is the principal in the Law Offices of Sara Norman, located in San Francisco, California. Previously, she served as deputy director of the Prison Law Office, where she managed a nonprofit devoted to class-action system reform litigation.",
     "url": "https://www.vitalcitynyc.org/author/norman-sara/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Michael Jacobson",
-    "post_count": 5,
-    "slugs": [
-      "are-nycs-jails-ungovernable-2",
-      "how-long-people-stay-is-the-problem",
-      "its-not-impossible-how-nyc-can-transform-jail-conditions",
-      "special-report-on-rikers",
-      "what-jail-population-projections-tell-you-about-a-governments-aspirations"
-    ],
-    "slug": "jacobson-michael",
-    "bio": "is the director of the CUNY Institute for State and Local Governance and a professor of sociology at the Graduate Center of the City University of New York.",
-    "url": "https://www.vitalcitynyc.org/author/jacobson-michael/",
     "twitter": null,
     "website": null
   },
@@ -1302,6 +1304,19 @@
     "website": null
   },
   {
+    "name": "Amy Chester",
+    "post_count": 2,
+    "slugs": [
+      "floodproofing-new-york-city",
+      "nyc-floodproofing-cloudburst-rain-policy"
+    ],
+    "slug": "chester-amy",
+    "bio": "is the managing director of Rebuild by Design. She worked for Mayor Michael Bloomberg as chief of staff to the deputy mayor for legislative affairs and as a senior policy advisor.",
+    "url": "https://www.vitalcitynyc.org/author/chester-amy/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Sarah Feinberg",
     "post_count": 2,
     "slugs": [
@@ -1861,18 +1876,6 @@
     "website": null
   },
   {
-    "name": "Adam Cohen",
-    "post_count": 2,
-    "slugs": [
-      "trumps-bizarro-new-deal"
-    ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Reuven Blau",
     "post_count": 2,
     "slugs": [
@@ -2324,6 +2327,30 @@
     "slug": "meares-tracey-l",
     "bio": "is the Walton Hale Hamilton Professor and founding director of the Justice Collaboratory at Yale Law School. She was previously a professor at the University of Chicago Law School.",
     "url": "https://www.vitalcitynyc.org/author/meares-tracey-l/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Tyler Taba",
+    "post_count": 1,
+    "slugs": [
+      "nyc-floodproofing-cloudburst-rain-policy"
+    ],
+    "slug": "taba-tyler",
+    "bio": "is the director of policy and government affairs at the Waterfront Alliance.",
+    "url": "https://www.vitalcitynyc.org/author/taba-tyler/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Jocelyn Strauber",
+    "post_count": 1,
+    "slugs": [
+      "coge-mamdani-department-of-investigations"
+    ],
+    "slug": "strauber-jocelyn",
+    "bio": "served as Commissioner of the New York City Department of Investigation from March 2022 through mid-January 2026.",
+    "url": "https://www.vitalcitynyc.org/author/strauber-jocelyn/",
     "twitter": null,
     "website": null
   },
@@ -3600,18 +3627,6 @@
     "website": null
   },
   {
-    "name": "Kate Daugherty",
-    "post_count": 1,
-    "slugs": [
-      "what-we-know-and-dont-know-about-guns"
-    ],
-    "slug": "daugherty-kate",
-    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
-    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Greg Lickenbrock",
     "post_count": 1,
     "slugs": [
@@ -3624,26 +3639,62 @@
     "website": null
   },
   {
-    "name": "Daniel Semenza",
+    "name": "Brian DeLay",
     "post_count": 1,
     "slugs": [
-      "the-80-20-rule-of-gun-supply"
+      "gun-culture-then-and-now"
     ],
-    "slug": "semenza-daniel",
-    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
+    "slug": "delay-brian",
+    "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of “The Myth of Continuity in American Gun Culture,” and the 2025–2026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
+    "url": "https://www.vitalcitynyc.org/author/delay-brian/",
     "twitter": null,
     "website": null
   },
   {
-    "name": "Charles Buckhanan",
+    "name": "Rosanna Smart",
     "post_count": 1,
     "slugs": [
-      "my-seven-guns-a-personal-inventory"
+      "the-case-against-futility-in-gun-regulation"
     ],
-    "slug": "buckhanan-charles",
-    "bio": "is a street outreach worker on Chicago’s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
-    "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
+    "slug": "smart-rosanna",
+    "bio": "is a senior economist at RAND and codirector of the RAND Drug Policy Research Center and RAND Gun Policy in America initiative. She was selected as the 2025 Mark Kleiman Memorial Lecturer.",
+    "url": "https://www.vitalcitynyc.org/author/smart-rosanna/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Chris Marvin",
+    "post_count": 1,
+    "slugs": [
+      "licensed-to-kill-concealed-carry-training-course"
+    ],
+    "slug": "marvin-chris",
+    "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
+    "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Theodore Roosevelt IV",
+    "post_count": 1,
+    "slugs": [
+      "guns-my-family-and-me"
+    ],
+    "slug": "roosevelt-theodore-iv",
+    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
+    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Samantha J. Simon",
+    "post_count": 1,
+    "slugs": [
+      "the-good-gun-owner"
+    ],
+    "slug": "simon-samantha-j",
+    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
     "twitter": null,
     "website": null
   },
@@ -3672,14 +3723,14 @@
     "website": null
   },
   {
-    "name": "Samantha J. Simon",
+    "name": "Charles Buckhanan",
     "post_count": 1,
     "slugs": [
-      "the-good-gun-owner"
+      "my-seven-guns-a-personal-inventory"
     ],
-    "slug": "simon-samantha-j",
-    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+    "slug": "buckhanan-charles",
+    "bio": "is a street outreach worker on Chicago’s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
+    "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
     "twitter": null,
     "website": null
   },
@@ -3696,50 +3747,26 @@
     "website": null
   },
   {
-    "name": "Theodore Roosevelt IV",
+    "name": "Daniel Semenza",
     "post_count": 1,
     "slugs": [
-      "guns-my-family-and-me"
+      "the-80-20-rule-of-gun-supply"
     ],
-    "slug": "roosevelt-theodore-iv",
-    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
+    "slug": "semenza-daniel",
+    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
     "twitter": null,
     "website": null
   },
   {
-    "name": "Chris Marvin",
+    "name": "Kate Daugherty",
     "post_count": 1,
     "slugs": [
-      "licensed-to-kill-concealed-carry-training-course"
+      "what-we-know-and-dont-know-about-guns"
     ],
-    "slug": "marvin-chris",
-    "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
-    "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Rosanna Smart",
-    "post_count": 1,
-    "slugs": [
-      "the-case-against-futility-in-gun-regulation"
-    ],
-    "slug": "smart-rosanna",
-    "bio": "is a senior economist at RAND and codirector of the RAND Drug Policy Research Center and RAND Gun Policy in America initiative. She was selected as the 2025 Mark Kleiman Memorial Lecturer.",
-    "url": "https://www.vitalcitynyc.org/author/smart-rosanna/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Brian DeLay",
-    "post_count": 1,
-    "slugs": [
-      "gun-culture-then-and-now"
-    ],
-    "slug": "delay-brian",
-    "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of “The Myth of Continuity in American Gun Culture,” and the 2025–2026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
-    "url": "https://www.vitalcitynyc.org/author/delay-brian/",
+    "slug": "daugherty-kate",
+    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
     "twitter": null,
     "website": null
   },
@@ -4088,6 +4115,30 @@
     "slug": "schragger-richard",
     "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
     "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Meryl Chertoff",
+    "post_count": 1,
+    "slugs": [
+      "trumps-executive-orders-have-cities-in-the-crosshairs"
+    ],
+    "slug": "chertoff-meryl",
+    "bio": "is adjunct professor of law at Georgetown University Law Center.",
+    "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Adam Cohen",
+    "post_count": 1,
+    "slugs": [
+      "trumps-bizarro-new-deal"
+    ],
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },
@@ -5828,18 +5879,6 @@
     "slug": "graham-wade",
     "bio": "ia author of \"Dream Cities: Seven Urban Ideas That Shape the World,\" and a historian and landscape designer in Los Angeles.",
     "url": "https://www.vitalcitynyc.org/author/graham-wade/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Amy Chester",
-    "post_count": 1,
-    "slugs": [
-      "floodproofing-new-york-city"
-    ],
-    "slug": "chester-amy",
-    "bio": "is the managing director of Rebuild by Design. She worked for Mayor Michael Bloomberg as chief of staff to the deputy mayor for legislative affairs and as a senior policy advisor.",
-    "url": "https://www.vitalcitynyc.org/author/chester-amy/",
     "twitter": null,
     "website": null
   },
