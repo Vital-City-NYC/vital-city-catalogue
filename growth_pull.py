@@ -1451,6 +1451,88 @@ def _ga4_piece_benchmarks(prop, token, days=400, first_days=30, index_since="202
             "as_of": today.isoformat()}
 
 
+def _ga4_events(prop, token, days=365):
+    """GA4 custom events — the only pull here that uses the eventName dimension
+    (everything else is pagePath/date/user based, which is why a custom event
+    like the 'make Vital City a preferred source' click was invisible).
+
+    Auto-detects the preferred-source event by name rather than hardcoding it,
+    so a rename in GA4 doesn't silently zero the panel, and returns the full
+    event list so an unmatched name is diagnosable from the published data."""
+    def run(body):
+        for attempt in range(3):
+            req = urllib.request.Request(
+                f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+                data=json.dumps(body).encode(),
+                headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+            try:
+                with urllib.request.urlopen(req, timeout=60) as r:
+                    return json.loads(r.read())
+            except Exception:
+                if attempt == 2: raise
+                time.sleep(2 * (attempt + 1))
+    rep = run({"dateRanges": [{"startDate": f"{days}daysAgo", "endDate": "today"}],
+               "dimensions": [{"name": "eventName"}],
+               "metrics": [{"name": "eventCount"}, {"name": "totalUsers"}],
+               "limit": 500})
+    events = [{"name": r["dimensionValues"][0]["value"],
+               "count": int(r["metricValues"][0]["value"] or 0),
+               "users": int(r["metricValues"][1]["value"] or 0)}
+              for r in (rep.get("rows") or [])]
+    events.sort(key=lambda e: -e["count"])
+    names = [e["name"] for e in events]
+    log(f"  ga4 events: {len(events)} event names — {', '.join(names[:12])}{'…' if len(names) > 12 else ''}")
+
+    pref_names = [e["name"] for e in events if re.search(r"prefer", e["name"], re.I)]
+    preferred = None
+    if pref_names:
+        tot = sum(e["count"] for e in events if e["name"] in pref_names)
+        usr = max((e["users"] for e in events if e["name"] in pref_names), default=0)
+        # Daily series so the panel can show adoption over time, plus a 30-day cut.
+        daily = []
+        try:
+            drep = run({"dateRanges": [{"startDate": f"{days}daysAgo", "endDate": "today"}],
+                        "dimensions": [{"name": "date"}],
+                        "metrics": [{"name": "eventCount"}],
+                        "dimensionFilter": {"filter": {"fieldName": "eventName",
+                                                       "inListFilter": {"values": pref_names}}},
+                        "limit": 1000})
+            for r in (drep.get("rows") or []):
+                dt = r["dimensionValues"][0]["value"]
+                daily.append({"d": f"{dt[:4]}-{dt[4:6]}-{dt[6:]}",
+                              "n": int(r["metricValues"][0]["value"] or 0)})
+            daily.sort(key=lambda x: x["d"])
+        except Exception as e:
+            log(f"  ga4 events: preferred-source daily series failed ({e})")
+        # Which placement is working: the ask sits in several spots on the site,
+        # so break the clicks out by the page they happened on.
+        by_page = []
+        try:
+            prep = run({"dateRanges": [{"startDate": f"{days}daysAgo", "endDate": "today"}],
+                        "dimensions": [{"name": "pagePath"}],
+                        "metrics": [{"name": "eventCount"}],
+                        "dimensionFilter": {"filter": {"fieldName": "eventName",
+                                                       "inListFilter": {"values": pref_names}}},
+                        "limit": 200})
+            for r in (prep.get("rows") or []):
+                by_page.append({"path": r["dimensionValues"][0]["value"],
+                                "n": int(r["metricValues"][0]["value"] or 0)})
+            by_page.sort(key=lambda x: -x["n"])
+        except Exception as e:
+            log(f"  ga4 events: preferred-source by-page breakdown failed ({e})")
+        cutoff = (datetime.now(timezone.utc).date() - timedelta(days=30)).isoformat()
+        preferred = {"events": pref_names, "clicks": tot, "users": usr,
+                     "clicks_30d": sum(x["n"] for x in daily if x["d"] >= cutoff),
+                     "first_seen": daily[0]["d"] if daily else None,
+                     "daily": daily, "by_page": by_page[:20], "window_days": days}
+        log(f"  ga4 events: preferred-source '{'/'.join(pref_names)}' — {tot} clicks, {usr} users"
+            + (f", first seen {daily[0]['d']}" if daily else ""))
+    else:
+        log("  ga4 events: no event name matching /prefer/ — preferred-source panel will show as not-yet-detected")
+    return {"available": True, "window_days": days, "events_top": events[:30],
+            "preferred_source": preferred}
+
+
 def _ga4_piece_index(prop, token, bench=None):
     """Per-piece performance index for the look-up tool: EVERY catalogue piece
     GA4 has data for, with lifetime views/engaged-time and (where the piece is
@@ -1862,6 +1944,11 @@ def pull_ga4():
         # Drop the working per-piece rows now that the index has consumed them
         # (they'd otherwise bloat the published payload with a duplicate copy).
         piece_benchmarks.pop("_pieces", None)
+        try:
+            ga4_events = _ga4_events(prop, token)
+        except Exception as e:
+            log(f"  ga4 events failed: {e}")
+            ga4_events = {"available": False, "reason": str(e)}
         log(f"  ga4: {u30:,} users (30d); {u365:,} users (1y); {len(engagement)} eng; {len(since_pages)} since-Jan; {len(by_year.get('years',[]))} yrs")
         return {
             "available": True, "property_id": prop,
@@ -1877,6 +1964,7 @@ def pull_ga4():
             "story_weekly": story_weekly,
             "piece_benchmarks": piece_benchmarks,
             "piece_index": piece_index,
+            "events": ga4_events,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:

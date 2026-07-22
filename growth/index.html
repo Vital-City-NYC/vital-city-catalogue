@@ -777,6 +777,11 @@
         <div id="trafficBody"></div>
       </div>
 
+      <div class="card" id="preferredSource">
+        <h2>&ldquo;Make Vital City a preferred source&rdquo; <span class="hint" id="psHint">how many readers are taking the ask &middot; Google Analytics event</span></h2>
+        <div id="preferredSourceBody"></div>
+      </div>
+
       <div class="card" id="searchConsole">
         <h2>How people find us on Google <span class="hint">search queries, clicks, impressions · Search Console</span></h2>
         <div id="searchConsoleBody"></div>
@@ -1081,6 +1086,7 @@ function boot(data){
   renderYTD(mc, mc.signup_windows || {});
   renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || [], data.linkedin || {}, data.bluesky || {});
   renderXFollowers(data);
+  renderPreferredSource(data);
   renderPieceBenchmarks(data);
   renderPieceLookup(data);
   renderAuthorLookup(data);
@@ -2727,6 +2733,50 @@ function renderAuthorLookup(data){
     sug.querySelectorAll(".alHit").forEach(btn=>btn.addEventListener("click",()=>{ inp.value=btn.dataset.a; report(btn.dataset.a); }));
   }
   inp.addEventListener("input", ()=>{ rep.innerHTML=""; suggest(inp.value); });
+}
+
+// "Make Vital City a preferred source" — the GA4 click event behind the ask we
+// run in several spots on the site. Small numbers by nature, so the panel says
+// plainly what it can and can't tell you rather than dressing 4 clicks up.
+function renderPreferredSource(data){
+  const host = $("#preferredSourceBody"); if(!host) return;
+  const ev = (data.ga4 || {}).events || {};
+  const ps = ev.preferred_source;
+  const hint = $("#psHint");
+  if(!ev.available){
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">Event data populates on the next build${ev.reason?` &mdash; ${esc(ev.reason)}`:""}.</div>`;
+    return;
+  }
+  if(!ps){
+    // Name-based detection missed — show what GA4 *does* have so it's fixable.
+    const names = (ev.events_top||[]).slice(0,12).map(e=>`${esc(e.name)} (${fmtN(e.count)})`).join(", ");
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">
+      No Google Analytics event with &ldquo;prefer&rdquo; in its name has fired yet, so there's nothing to count.
+      ${names?`<br><br><b>Events GA4 is recording:</b> ${names}. If the preferred-source click is one of these under another name, tell me which and I'll point the panel at it.`:""}</div>`;
+    return;
+  }
+  if(hint) hint.textContent = `${fmtN(ps.clicks)} clicks · Google Analytics event`;
+  const perPerson = ps.users ? (ps.clicks/ps.users) : 0;
+  // Daily bars — sparse by nature, so show the last ~60 days with data.
+  const dd = (ps.daily||[]).slice(-60);
+  const dmax = Math.max(1, ...dd.map(x=>x.n));
+  const bars = dd.length ? `<svg viewBox="0 0 560 60" style="width:100%;height:auto;overflow:visible" role="img">${
+    dd.map((x,i)=>{const w=560/dd.length, h=(x.n/dmax)*40;
+      return `<rect x="${(i*w).toFixed(1)}" y="${(46-h).toFixed(1)}" width="${Math.max(1.5,w*0.7).toFixed(1)}" height="${h.toFixed(1)}" fill="#57aa4a"><title>${esc(x.d)}: ${x.n} click${x.n===1?"":"s"}</title></rect>`;}).join("")
+    }<text x="0" y="58" font-size="9" fill="#999">${esc(dd[0].d)}</text><text x="560" y="58" text-anchor="end" font-size="9" fill="#999">${esc(dd[dd.length-1].d)}</text></svg>` : "";
+  const pageRows = (ps.by_page||[]).map(r=>`<tr><td>${esc(r.path)}</td><td class="num">${fmtN(r.n)}</td></tr>`).join("");
+
+  host.innerHTML = `
+    <div class="perfgrid">
+      <div class="perfcell" title="Times the preferred-source link was clicked (GA4 event ${esc((ps.events||[]).join(', '))})."><div class="pl">Clicks</div><div class="pn">${fmtN(ps.clicks)}</div><div class="pd flat">${ps.first_seen?`since ${esc(ps.first_seen)}`:`last ${fmtN(ps.window_days)} days`}</div></div>
+      <div class="perfcell" title="Distinct people who clicked. A click is not a confirmed add — see the note below."><div class="pl">People</div><div class="pn">${fmtN(ps.users)}</div><div class="pd flat">${perPerson?`${perPerson.toFixed(1)} clicks each`:"&mdash;"}</div></div>
+      <div class="perfcell" title="Clicks in the last 30 days."><div class="pl">Last 30 days</div><div class="pn">${fmtN(ps.clicks_30d)}</div><div class="pd flat">of ${fmtN(ps.clicks)} all-time</div></div>
+    </div>
+    ${bars?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 4px">Clicks by day</div>${bars}`:""}
+    ${pageRows?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Which placement is working</div>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:6px">The ask runs in several spots &mdash; this is the page each click happened on.</div>
+      <table class="tbl" style="width:100%"><thead><tr><th>Page the click came from</th><th class="num">Clicks</th></tr></thead><tbody>${pageRows}</tbody></table>`:""}
+    <div class="flagnote" style="margin-top:12px"><b>A click is not a confirmed preferred source.</b> Google Analytics can only see that someone clicked our link; whether they completed the add inside Google is not something Google reports back, so treat this as <b>intent, not confirmed adds</b> &mdash; the true number of people who followed through is unknown and is at most this figure. Volumes are small and early, so read the direction, not the decimal. Source: GA4 event <code>${esc((ps.events||[]).join(", "))}</code>, last ${fmtN(ps.window_days)} days.</div>`;
 }
 
 // Who follows Vital City on X — a point-in-time follower snapshot, cross-matched
