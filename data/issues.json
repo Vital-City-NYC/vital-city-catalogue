@@ -450,6 +450,36 @@
     ]
   },
   {
+    "name": "just-fix-it",
+    "post_count": 4,
+    "first_published": "2025-12-18",
+    "last_published": "2026-07-23",
+    "number": null,
+    "display_name": "Just Fix It",
+    "top_topics": [
+      [
+        "Just Fix It",
+        4
+      ],
+      [
+        "City Government",
+        3
+      ],
+      [
+        "Government Operations",
+        1
+      ],
+      [
+        "Housing",
+        1
+      ],
+      [
+        "State Government",
+        1
+      ]
+    ]
+  },
+  {
     "name": "rubber-meets-road",
     "post_count": 8,
     "first_published": "2026-05-20",
@@ -471,36 +501,6 @@
       ],
       [
         "Quality of Life",
-        1
-      ]
-    ]
-  },
-  {
-    "name": "just-fix-it",
-    "post_count": 3,
-    "first_published": "2025-12-18",
-    "last_published": "2026-05-07",
-    "number": null,
-    "display_name": "Just Fix It",
-    "top_topics": [
-      [
-        "Just Fix It",
-        3
-      ],
-      [
-        "City Government",
-        2
-      ],
-      [
-        "Housing",
-        1
-      ],
-      [
-        "State Government",
-        1
-      ],
-      [
-        "policy",
         1
       ]
     ]
@@ -634,11 +634,11 @@
     "display_name": "Trump 100 Days And Beyond",
     "top_topics": [
       [
-        "Government Operations",
+        "Repercussions",
         4
       ],
       [
-        "Repercussions",
+        "Government Operations",
         4
       ],
       [
@@ -650,7 +650,7 @@
         2
       ],
       [
-        "City Government",
+        "History",
         1
       ]
     ]

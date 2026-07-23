@@ -1,27 +1,34 @@
 {
   "meta": {
-    "generated_at": "2026-07-23T11:43:37.806947+00:00",
+    "generated_at": "2026-07-23T23:24:02.242909+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 874,
+    "total_posts": 875,
     "total_authors": 482,
     "total_issues": 29,
     "total_topics": 211,
     "date_range": [
       "2021-09-15",
-      "2026-07-22"
+      "2026-07-23"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 1,
+    "new_articles": [
+      {
+        "title": "What Mamdani's Efficiency Commission Got Right \u2014 and Where it Fell Short",
+        "url": "https://www.vitalcitynyc.org/nyc-mamdani-coge-government-efficiency-ballot-reform-recommendations/",
+        "published_date": "2026-07-23",
+        "primary_author": "Vital City"
+      }
+    ]
   },
-  "total_pieces": 874,
+  "total_pieces": 875,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 162
+    "2026": 163
   },
   "by_month": {
     "2021-09": 1,
@@ -76,7 +83,7 @@
     "2026-04": 23,
     "2026-05": 22,
     "2026-06": 44,
-    "2026-07": 15
+    "2026-07": 16
   },
   "by_type": [
     [
@@ -93,7 +100,7 @@
     ],
     [
       "map/tool",
-      17
+      18
     ],
     [
       "book review",
@@ -115,11 +122,11 @@
     ],
     [
       "City Government",
-      125
+      126
     ],
     [
       "Government Operations",
-      122
+      123
     ],
     [
       "City Planning",
@@ -222,7 +229,7 @@
     ],
     [
       "Vital City (institutional)",
-      93
+      94
     ],
     [
       "Other / unclassified",
@@ -336,14 +343,14 @@
       "2023": 4,
       "2024": 20,
       "2025": 54,
-      "2026": 47
+      "2026": 48
     },
     "Government Operations": {
       "2022": 1,
       "2023": 16,
       "2024": 38,
       "2025": 57,
-      "2026": 10
+      "2026": 11
     },
     "City Planning": {
       "2022": 6,
@@ -374,9 +381,9 @@
     }
   },
   "wc_stats": {
-    "n": 865,
+    "n": 866,
     "median": 1618,
-    "mean": 1904,
+    "mean": 1903,
     "p90": 2838,
     "max": 30332
   },
@@ -391,7 +398,7 @@
     ],
     [
       "1,000-1,999",
-      508
+      509
     ],
     [
       "2,000-2,999",
@@ -407,7 +414,7 @@
     ]
   ],
   "by_nauthors": {
-    "1": 740,
+    "1": 741,
     "2": 106,
     "3": 25,
     "4": 1,
@@ -417,7 +424,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 93,
+      "posts": 94,
       "credential": "Vital City (institutional)"
     },
     {

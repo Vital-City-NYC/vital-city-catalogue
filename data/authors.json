@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 93,
+    "post_count": 94,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -49,6 +49,7 @@
       "new-york-citys-subways-moving-millions",
       "nyc-economy-data-story",
       "nyc-housing-permits-fast-track-construction-mamdani",
+      "nyc-mamdani-coge-government-efficiency-ballot-reform-recommendations",
       "nypd-crime-strategy-questions-michael-lipetri",
       "our-advice-to-the-new-york-times-about-a-vexing-editorial-decision",
       "predictability-begets-productivity",
@@ -3627,14 +3628,14 @@
     "website": null
   },
   {
-    "name": "Greg Lickenbrock",
+    "name": "Nina Vinik",
     "post_count": 1,
     "slugs": [
-      "the-money-behind-mass-shootings"
+      "breaking-through-with-the-next-generation-on-firearms"
     ],
-    "slug": "lickenbrock-greg",
-    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
+    "slug": "vinik-nina",
+    "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
+    "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
     "twitter": null,
     "website": null
   },
@@ -3671,18 +3672,6 @@
     "slug": "marvin-chris",
     "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
     "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Theodore Roosevelt IV",
-    "post_count": 1,
-    "slugs": [
-      "guns-my-family-and-me"
-    ],
-    "slug": "roosevelt-theodore-iv",
-    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
     "twitter": null,
     "website": null
   },
@@ -3735,14 +3724,14 @@
     "website": null
   },
   {
-    "name": "Nina Vinik",
+    "name": "Greg Lickenbrock",
     "post_count": 1,
     "slugs": [
-      "breaking-through-with-the-next-generation-on-firearms"
+      "the-money-behind-mass-shootings"
     ],
-    "slug": "vinik-nina",
-    "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
-    "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
+    "slug": "lickenbrock-greg",
+    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
     "twitter": null,
     "website": null
   },
@@ -3767,6 +3756,18 @@
     "slug": "daugherty-kate",
     "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
     "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Theodore Roosevelt IV",
+    "post_count": 1,
+    "slugs": [
+      "guns-my-family-and-me"
+    ],
+    "slug": "roosevelt-theodore-iv",
+    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
+    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
     "twitter": null,
     "website": null
   },
@@ -4107,6 +4108,18 @@
     "website": null
   },
   {
+    "name": "Adam Cohen",
+    "post_count": 1,
+    "slugs": [
+      "trumps-bizarro-new-deal"
+    ],
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Richard Schragger",
     "post_count": 1,
     "slugs": [
@@ -4127,18 +4140,6 @@
     "slug": "chertoff-meryl",
     "bio": "is adjunct professor of law at Georgetown University Law Center.",
     "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Adam Cohen",
-    "post_count": 1,
-    "slugs": [
-      "trumps-bizarro-new-deal"
-    ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },

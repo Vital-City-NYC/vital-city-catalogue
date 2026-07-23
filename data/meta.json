@@ -1,15 +1,22 @@
 {
-  "generated_at": "2026-07-23T11:43:37.806947+00:00",
+  "generated_at": "2026-07-23T23:24:02.242909+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 874,
+  "total_posts": 875,
   "total_authors": 482,
   "total_issues": 29,
   "total_topics": 211,
   "date_range": [
     "2021-09-15",
-    "2026-07-22"
+    "2026-07-23"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "What Mamdani's Efficiency Commission Got Right — and Where it Fell Short",
+      "url": "https://www.vitalcitynyc.org/nyc-mamdani-coge-government-efficiency-ballot-reform-recommendations/",
+      "published_date": "2026-07-23",
+      "primary_author": "Vital City"
+    }
+  ]
 }
