@@ -573,8 +573,15 @@ def pull_mailchimp():
             log(f"  lifecycle openers ({days_back}d) failed: {e}"); return (set(), {})
         regulars = [c for c in cs if c.get("type") == "regular"]
         variate  = [c for c in cs if c.get("type") == "variate"]
+        # Count openers from BOTH regular and A/B (variate) sends. Excluding
+        # variate zeroed out active-subscriber counts whenever a window happened
+        # to contain only A/B sends — which is exactly what broke the 30-day
+        # tile (all four recent newsletters were A/B tests). The open-details
+        # report works on the variate parent campaign's id and returns the union
+        # of openers across its variants, deduped by email here anyway.
+        usable = regulars + variate
         openers = set()
-        for c in regulars:
+        for c in usable:
             cid = c["id"]; offset = 0
             while True:
                 try:
@@ -588,7 +595,8 @@ def pull_mailchimp():
                 total = int(page.get("total_items") or 0)
                 offset += 1000
                 if offset >= total: break
-        return (openers, {"regulars_counted": len(regulars), "variate_excluded": len(variate)})
+        return (openers, {"regulars_counted": len(regulars), "variate_counted": len(variate),
+                          "campaigns_in_window": len(cs)})
 
     log("  computing MAU (30d) openers set…")
     mau_set, mau_meta = _union_openers_with_set(30)
