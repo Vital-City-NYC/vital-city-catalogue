@@ -581,22 +581,67 @@ def pull_mailchimp():
         # of openers across its variants, deduped by email here anyway.
         usable = regulars + variate
         openers = set()
-        for c in usable:
-            cid = c["id"]; offset = 0
+        problems = []
+
+        def _open_details(cid):
+            """Openers via /open-details. Returns None if the endpoint errors
+            (so the caller can fall back), else a set (possibly empty)."""
+            got, offset = set(), 0
             while True:
                 try:
                     page = mc_get(
                         f"/reports/{cid}/open-details?count=1000&offset={offset}"
                         f"&fields=members.email_address,total_items", key, dc)
-                except Exception as e: break
+                except Exception as e:
+                    # NEVER swallow this silently — a hidden failure here is what
+                    # made the 30-day active count read 0 while looking healthy.
+                    problems.append(f"open-details {cid}: {e}")
+                    return None
                 for m in page.get("members", []):
                     em = (m.get("email_address") or "").lower().strip()
-                    if em: openers.add(em)
+                    if em: got.add(em)
                 total = int(page.get("total_items") or 0)
                 offset += 1000
                 if offset >= total: break
+            return got
+
+        def _email_activity(cid):
+            """Fallback for A/B (variate) campaigns, whose per-member opens the
+            open-details report doesn't serve off the parent id. email-activity
+            returns each member's action list; we keep anyone with an 'open'."""
+            got, offset = set(), 0
+            while True:
+                try:
+                    page = mc_get(
+                        f"/reports/{cid}/email-activity?count=1000&offset={offset}"
+                        f"&fields=emails.email_address,emails.activity.action,total_items",
+                        key, dc)
+                except Exception as e:
+                    problems.append(f"email-activity {cid}: {e}")
+                    return got
+                for m in page.get("emails", []):
+                    if any((a.get("action") or "") == "open" for a in (m.get("activity") or [])):
+                        em = (m.get("email_address") or "").lower().strip()
+                        if em: got.add(em)
+                total = int(page.get("total_items") or 0)
+                offset += 1000
+                if offset >= total: break
+            return got
+
+        for c in usable:
+            cid, ctype = c["id"], c.get("type")
+            got = _open_details(cid)
+            if got is None or (not got and ctype == "variate"):
+                # errored, or the parent id yielded nothing for an A/B send
+                got = _email_activity(cid)
+                if got: problems.append(f"{cid} ({ctype}): recovered {len(got)} via email-activity")
+            if not got:
+                problems.append(f"{cid} ({ctype}, sent {c.get('send_time','?')[:10]}): 0 openers")
+            openers |= got
+        for p in problems[:12]:
+            log(f"    opener-pull: {p}")
         return (openers, {"regulars_counted": len(regulars), "variate_counted": len(variate),
-                          "campaigns_in_window": len(cs)})
+                          "campaigns_in_window": len(cs), "issues": len(problems)})
 
     log("  computing MAU (30d) openers set…")
     mau_set, mau_meta = _union_openers_with_set(30)
