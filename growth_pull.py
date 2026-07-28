@@ -609,6 +609,35 @@ def pull_mailchimp():
                 if offset >= total: break
             return got
 
+        def _sent_to(cid, diag=False):
+            """Openers via /reports/{id}/sent-to, which lists every recipient
+            with an `open_count`. This is what works for A/B (variate) sends:
+            open-details returns total_items=0 for a variate parent, and
+            email-activity returns the 8,500 recipient rows with their activity
+            arrays empty — but sent-to carries open_count per member."""
+            got, offset = set(), 0
+            while True:
+                try:
+                    page = mc_get(
+                        f"/reports/{cid}/sent-to?count=1000&offset={offset}"
+                        f"&fields=sent_to.email_address,sent_to.open_count,total_items", key, dc)
+                except Exception as e:
+                    problems.append(f"sent-to {cid}: {e}")
+                    return got
+                rows = page.get("sent_to", [])
+                if diag and offset == 0:
+                    problems.append(f"DIAG sent-to {cid}: total_items={page.get('total_items')} "
+                                    f"rows={len(rows)} row_keys={sorted(rows[0].keys()) if rows else 'NONE'} "
+                                    f"opened_in_first_page={sum(1 for m in rows if (m.get('open_count') or 0) > 0)}")
+                for m in rows:
+                    if (m.get("open_count") or 0) > 0:
+                        em = (m.get("email_address") or "").lower().strip()
+                        if em: got.add(em)
+                total = int(page.get("total_items") or 0)
+                offset += 1000
+                if offset >= total: break
+            return got
+
         def _email_activity(cid, diag=False):
             """Fallback for A/B (variate) campaigns. NOTE: do not use a nested
             `fields=emails.activity.action` selector — Mailchimp returns the
@@ -646,11 +675,18 @@ def pull_mailchimp():
             cid, ctype = c["id"], c.get("type")
             want_diag = (ctype == "variate" and not diag_done)
             got = _open_details(cid, diag=want_diag)
-            if got is None or (not got and ctype == "variate"):
-                # errored, or the parent id yielded nothing for an A/B send
-                got = _email_activity(cid, diag=want_diag)
+            if got is None or not got:
+                # open-details errored, or returned nothing (always the case for
+                # an A/B parent). sent-to carries per-member open_count and is
+                # the one that actually works there; email-activity is a last
+                # resort only.
+                got = _sent_to(cid, diag=want_diag)
+                if got:
+                    problems.append(f"{cid} ({ctype}): recovered {len(got)} via sent-to")
+                else:
+                    got = _email_activity(cid, diag=want_diag)
+                    if got: problems.append(f"{cid} ({ctype}): recovered {len(got)} via email-activity")
                 if want_diag: diag_done = True
-                if got: problems.append(f"{cid} ({ctype}): recovered {len(got)} via email-activity")
             if not got:
                 problems.append(f"{cid} ({ctype}, sent {c.get('send_time','?')[:10]}): 0 openers")
             openers |= got
