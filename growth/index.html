@@ -962,6 +962,21 @@ function boot(data){
      tip:"New subscribers in the last 30 days vs the 30 days before.\n\nWhy it matters: This is the live pulse of list growth. Sustained month-over-month gains are the clearest sign the top of the funnel is working; a sustained decline is the earliest warning that acquisition needs attention.\n\nSource: merged Ghost+Mailchimp dataset (signups land in Ghost first, reconciled to Mailchimp weekly)."},
     (function(){
       const m=mc.mau||{}, n=m.active_users;
+      // Mailchimp doesn't report per-member opens for A/B (variate) sends — it
+      // returns the recipients with every open_count at 0. When the whole window
+      // is A/B sends the deduped union comes back empty, and printing "0" reads
+      // as "nobody opened" rather than "we can't see who". Fall back to an
+      // explicit floor from the aggregate open rate, which IS reported: the
+      // biggest single send's unique openers is a guaranteed lower bound on the
+      // 30-day union.
+      const recentSends=(mc.campaigns||[]).filter(c=>c.sent && c.sent>=daysAgo(29) && (c.sent_to||0)>0);
+      const floor=recentSends.length?Math.max(...recentSends.map(c=>Math.round((c.open_pct||0)/100*c.sent_to))):0;
+      if(!n && floor){
+        const fpct=total?(floor/total*100).toFixed(0)+"%":"—";
+        return {lbl:"Active subscribers · 30d", num:"≥"+fmtN(floor), delta:`at least ${fpct} opened · exact count unavailable`,
+                cls:"flat", flag:"floor, not exact",
+                tip:`A LOWER BOUND, not the real figure.\n\nMailchimp does not report per-member opens for A/B (split-test) campaigns — it returns every recipient with an open count of 0 — and all ${recentSends.length} newsletters in the last 30 days were A/B tests. So the usual method (dedupe everyone who opened any send in the window) returns nothing.\n\nThis number is instead the largest single send's unique openers (${fmtN(floor)} of ${fmtN(Math.max(...recentSends.map(c=>c.sent_to||0)))} delivered), which the 30-day union cannot be lower than. The true figure is between ${fmtN(floor)} and ${fmtN(recentSends.reduce((s,c)=>s+Math.round((c.open_pct||0)/100*c.sent_to),0))} (if no reader overlapped between sends), and realistically well under that ceiling.\n\nThe 1-year number below uses the same union method over a window that still contains non-A/B sends, so it is exact.`};
+      }
       const pct = (n && total) ? (n/total*100).toFixed(0)+"%" : "—";
       return {lbl:"Active subscribers · 30d", num: n!=null ? fmtN(n) : "—",
               delta: n!=null ? `${pct} opened ≥1 email in last 30 days` : "data pending",

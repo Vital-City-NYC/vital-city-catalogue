@@ -203,6 +203,9 @@
 
   .resultrow{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:10px 30px;position:sticky;top:var(--ctrlH,52px);z-index:18;background:var(--vc-paper);border-bottom:1px solid var(--vc-cloud)}
   .filtersentence{font-size:11.5px;color:var(--vc-black);margin-top:3px;font-weight:400;text-transform:none;letter-spacing:0;max-width:60ch}
+  .warnbox{font-size:11.5px;line-height:1.5;color:#7a4a12;background:#fbeede;border-left:3px solid var(--vc-orange);
+           border-radius:0 3px 3px 0;padding:8px 11px;max-width:70ch;font-weight:400;text-transform:none;letter-spacing:0}
+  html.dark .warnbox{color:#e8c99a;background:#2a2418;border-left-color:#c07a2a}
   .filtersentence b{font-weight:700}
   .savedviews{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 30px 0}
   .savedviews .svlabel{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin-right:2px}
@@ -1432,6 +1435,25 @@ function measureSticky(){
 }
 
 // Plain-English summary of the active filters (shown under the result count).
+// The "active 30d" flag comes from Mailchimp's per-member open data. For A/B
+// (variate) sends Mailchimp returns the recipients but no per-member opens, so
+// if every recent newsletter was an A/B test NOBODY carries the flag and this
+// filter silently returns zero results — which reads as "we have no active
+// readers" rather than "this data is missing". Say so instead.
+function engagementDataWarning(){
+  const ef = $("#fEngagement") ? $("#fEngagement").value : "any";
+  if(ef !== "mau") return "";
+  const anyMau = PEOPLE.some(p => p.mau);
+  if(anyMau) return "";
+  const anyAau = PEOPLE.some(p => p.aau);
+  return `<div class="warnbox" style="margin-top:8px">
+    <b>The &ldquo;active 30 days&rdquo; data is unavailable right now, so this filter matches nobody.</b>
+    Mailchimp doesn't report per-member opens for A/B (split-test) sends, and every newsletter in the
+    last 30 days was an A/B test &mdash; so we can't tell <i>who</i> opened, only that about 43% did.
+    ${anyAau?`Use <b>Active &middot; last year</b> instead for a working engagement filter.`:""}
+    This is a known data gap, not an empty audience.</div>`;
+}
+
 function describeFilters(){
   const inc=[], exc=[]; const lab={mem:"Subscribers",don:"Donors",auth:"Authors",press:"Press"};
   const parts=[];
@@ -1673,7 +1695,7 @@ function render(){
   const sm=$("#sortMenu"); if(sm){const cur=sortKey+":"+sortDir; sm.value=[...sm.options].some(o=>o.value===cur)?cur:"";}
   lastSorted=sortRows(filtered());
   shownCount=Math.min(PAGE,lastSorted.length);
-  $("#filterSentence").innerHTML=describeFilters();
+  $("#filterSentence").innerHTML=describeFilters()+engagementDataWarning();
   syncMenuChrome(lastSorted.length);
   updateHash();
   paintRows();
