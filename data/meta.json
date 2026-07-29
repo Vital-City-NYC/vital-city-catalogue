@@ -1,15 +1,34 @@
 {
-  "generated_at": "2026-07-29T11:50:13.676713+00:00",
+  "generated_at": "2026-07-29T23:25:23.826015+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 875,
-  "total_authors": 482,
+  "total_posts": 878,
+  "total_authors": 486,
   "total_issues": 29,
-  "total_topics": 212,
+  "total_topics": 213,
   "date_range": [
     "2021-09-15",
-    "2026-07-23"
+    "2026-07-29"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 3,
+  "new_articles": [
+    {
+      "title": "When Rent Regulation Makes Sense",
+      "url": "https://www.vitalcitynyc.org/rent-regulation-upsides-nyc-mamdani/",
+      "published_date": "2026-07-29",
+      "primary_author": "Frank Braconi"
+    },
+    {
+      "title": "For Inspiration on Mayor Mamdani’s Vision for Community Safety, Look to Newark",
+      "url": "https://www.vitalcitynyc.org/newark-community-safety-lessons-for-nyc-mamdani/",
+      "published_date": "2026-07-29",
+      "primary_author": "Dan Hafetz"
+    },
+    {
+      "title": "Modern Community Safety Includes More than Police",
+      "url": "https://www.vitalcitynyc.org/community-safety-police-reform-nyc-mamdani/",
+      "published_date": "2026-07-29",
+      "primary_author": "Tahir Duckett"
+    }
+  ]
 }

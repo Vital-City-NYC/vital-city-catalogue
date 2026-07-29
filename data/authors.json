@@ -969,6 +969,20 @@
     "website": null
   },
   {
+    "name": "Christy Lopez",
+    "post_count": 3,
+    "slugs": [
+      "are-nycs-jails-ungovernable-2",
+      "community-safety-police-reform-nyc-mamdani",
+      "the-dangers-of-special-policing-units"
+    ],
+    "slug": "lopez-christy",
+    "bio": "is a professor at Georgetown Law and faculty co-director of the Center for Innovations for Community Safety. She was a deputy chief in the U.S. Department of Justice Civil Rights Division from 2010-2017.",
+    "url": "https://www.vitalcitynyc.org/author/lopez-christy/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Robert Gordon",
     "post_count": 3,
     "slugs": [
@@ -2254,19 +2268,6 @@
     "website": null
   },
   {
-    "name": "Christy Lopez",
-    "post_count": 2,
-    "slugs": [
-      "are-nycs-jails-ungovernable-2",
-      "the-dangers-of-special-policing-units"
-    ],
-    "slug": "lopez-christy",
-    "bio": "is a professor at Georgetown Law and faculty co-director of the Center for Innovations for Community Safety. She was a deputy chief in the U.S. Department of Justice Civil Rights Division from 2010-2017.",
-    "url": "https://www.vitalcitynyc.org/author/lopez-christy/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "David Thacher",
     "post_count": 2,
     "slugs": [
@@ -2328,6 +2329,54 @@
     "slug": "meares-tracey-l",
     "bio": "is the Walton Hale Hamilton Professor and founding director of the Justice Collaboratory at Yale Law School. She was previously a professor at the University of Chicago Law School.",
     "url": "https://www.vitalcitynyc.org/author/meares-tracey-l/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Frank Braconi",
+    "post_count": 1,
+    "slugs": [
+      "rent-regulation-upsides-nyc-mamdani"
+    ],
+    "slug": "braconi-frank",
+    "bio": "was executive director of the Citizens Housing and Planning Council (1994-2006) and chief economist for the New York City Comptroller (2006-2016). He is currently an adjunct professor at NYU’s Shack Institute of Real Estate.",
+    "url": "https://www.vitalcitynyc.org/author/braconi-frank/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Dan Hafetz",
+    "post_count": 1,
+    "slugs": [
+      "newark-community-safety-lessons-for-nyc-mamdani"
+    ],
+    "slug": "hafetz-dan",
+    "bio": "is a former assistant attorney general to the New Jersey Attorney General and a veteran of New York City government. He founded and leads a public policy consulting firm based in New Jersey.",
+    "url": "https://www.vitalcitynyc.org/author/hafetz-dan/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Tahir Duckett",
+    "post_count": 1,
+    "slugs": [
+      "community-safety-police-reform-nyc-mamdani"
+    ],
+    "slug": "duckett-tahir",
+    "bio": "is the executive director of the Center for Innovations in Community Safety at Georgetown Law.",
+    "url": "https://www.vitalcitynyc.org/author/duckett-tahir/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Mariela Ruiz-Angel",
+    "post_count": 1,
+    "slugs": [
+      "community-safety-police-reform-nyc-mamdani"
+    ],
+    "slug": "ruiz-angel-mariela",
+    "bio": "is director of alternative response initiatives at the Center for Innovations in Community Safety at Georgetown Law.",
+    "url": "https://www.vitalcitynyc.org/author/ruiz-angel-mariela/",
     "twitter": null,
     "website": null
   },
@@ -3628,18 +3677,6 @@
     "website": null
   },
   {
-    "name": "Nina Vinik",
-    "post_count": 1,
-    "slugs": [
-      "breaking-through-with-the-next-generation-on-firearms"
-    ],
-    "slug": "vinik-nina",
-    "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
-    "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Brian DeLay",
     "post_count": 1,
     "slugs": [
@@ -3672,6 +3709,30 @@
     "slug": "marvin-chris",
     "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
     "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Theodore Roosevelt IV",
+    "post_count": 1,
+    "slugs": [
+      "guns-my-family-and-me"
+    ],
+    "slug": "roosevelt-theodore-iv",
+    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
+    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Nina Vinik",
+    "post_count": 1,
+    "slugs": [
+      "breaking-through-with-the-next-generation-on-firearms"
+    ],
+    "slug": "vinik-nina",
+    "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
+    "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
     "twitter": null,
     "website": null
   },
@@ -3724,18 +3785,6 @@
     "website": null
   },
   {
-    "name": "Greg Lickenbrock",
-    "post_count": 1,
-    "slugs": [
-      "the-money-behind-mass-shootings"
-    ],
-    "slug": "lickenbrock-greg",
-    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Daniel Semenza",
     "post_count": 1,
     "slugs": [
@@ -3748,6 +3797,18 @@
     "website": null
   },
   {
+    "name": "Greg Lickenbrock",
+    "post_count": 1,
+    "slugs": [
+      "the-money-behind-mass-shootings"
+    ],
+    "slug": "lickenbrock-greg",
+    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Kate Daugherty",
     "post_count": 1,
     "slugs": [
@@ -3756,18 +3817,6 @@
     "slug": "daugherty-kate",
     "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
     "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Theodore Roosevelt IV",
-    "post_count": 1,
-    "slugs": [
-      "guns-my-family-and-me"
-    ],
-    "slug": "roosevelt-theodore-iv",
-    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
     "twitter": null,
     "website": null
   },
@@ -4108,18 +4157,6 @@
     "website": null
   },
   {
-    "name": "Adam Cohen",
-    "post_count": 1,
-    "slugs": [
-      "trumps-bizarro-new-deal"
-    ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Richard Schragger",
     "post_count": 1,
     "slugs": [
@@ -4140,6 +4177,18 @@
     "slug": "chertoff-meryl",
     "bio": "is adjunct professor of law at Georgetown University Law Center.",
     "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Adam Cohen",
+    "post_count": 1,
+    "slugs": [
+      "trumps-bizarro-new-deal"
+    ],
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },

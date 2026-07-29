@@ -1,27 +1,46 @@
 {
   "meta": {
-    "generated_at": "2026-07-29T11:50:13.676713+00:00",
+    "generated_at": "2026-07-29T23:25:23.826015+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 875,
-    "total_authors": 482,
+    "total_posts": 878,
+    "total_authors": 486,
     "total_issues": 29,
-    "total_topics": 212,
+    "total_topics": 213,
     "date_range": [
       "2021-09-15",
-      "2026-07-23"
+      "2026-07-29"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 3,
+    "new_articles": [
+      {
+        "title": "When Rent Regulation Makes Sense",
+        "url": "https://www.vitalcitynyc.org/rent-regulation-upsides-nyc-mamdani/",
+        "published_date": "2026-07-29",
+        "primary_author": "Frank Braconi"
+      },
+      {
+        "title": "For Inspiration on Mayor Mamdani\u2019s Vision for Community Safety, Look to Newark",
+        "url": "https://www.vitalcitynyc.org/newark-community-safety-lessons-for-nyc-mamdani/",
+        "published_date": "2026-07-29",
+        "primary_author": "Dan Hafetz"
+      },
+      {
+        "title": "Modern Community Safety Includes More than Police",
+        "url": "https://www.vitalcitynyc.org/community-safety-police-reform-nyc-mamdani/",
+        "published_date": "2026-07-29",
+        "primary_author": "Tahir Duckett"
+      }
+    ]
   },
-  "total_pieces": 875,
+  "total_pieces": 878,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 163
+    "2026": 166
   },
   "by_month": {
     "2021-09": 1,
@@ -76,12 +95,12 @@
     "2026-04": 23,
     "2026-05": 22,
     "2026-06": 44,
-    "2026-07": 16
+    "2026-07": 19
   },
   "by_type": [
     [
       "opinion/commentary",
-      740
+      743
     ],
     [
       "q&a",
@@ -115,7 +134,7 @@
     ],
     [
       "City Government",
-      126
+      129
     ],
     [
       "Government Operations",
@@ -130,11 +149,11 @@
       79
     ],
     [
-      "culture",
-      74
+      "Housing",
+      75
     ],
     [
-      "Housing",
+      "culture",
       74
     ],
     [
@@ -142,12 +161,12 @@
       66
     ],
     [
-      "Politics",
-      55
+      "Police Reform",
+      56
     ],
     [
-      "Police Reform",
-      54
+      "Politics",
+      55
     ],
     [
       "Economics",
@@ -206,7 +225,7 @@
       23
     ]
   ],
-  "n_topics_total": 212,
+  "n_topics_total": 213,
   "by_credential_pieces": [
     [
       "Academic",
@@ -214,7 +233,7 @@
     ],
     [
       "Nonprofit / advocacy",
-      101
+      103
     ],
     [
       "Journalist / media",
@@ -246,7 +265,7 @@
     ],
     [
       "Legal practitioner",
-      27
+      28
     ],
     [
       "Survey / reader poll",
@@ -264,11 +283,11 @@
     ],
     [
       "Other / unclassified",
-      102
+      103
     ],
     [
       "Nonprofit / advocacy",
-      71
+      73
     ],
     [
       "Journalist / media",
@@ -288,7 +307,7 @@
     ],
     [
       "Legal practitioner",
-      16
+      17
     ],
     [
       "Architecture / design / planning",
@@ -314,8 +333,8 @@
     "Government Operations",
     "City Planning",
     "Justice",
-    "culture",
-    "Housing"
+    "Housing",
+    "culture"
   ],
   "topic_by_year": {
     "Crime": {
@@ -336,7 +355,7 @@
       "2023": 4,
       "2024": 20,
       "2025": 54,
-      "2026": 48
+      "2026": 51
     },
     "Government Operations": {
       "2022": 1,
@@ -359,25 +378,25 @@
       "2025": 13,
       "2026": 9
     },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 37,
+      "2026": 22
+    },
     "culture": {
       "2022": 4,
       "2023": 19,
       "2024": 26,
       "2025": 18,
       "2026": 7
-    },
-    "Housing": {
-      "2023": 5,
-      "2024": 11,
-      "2025": 37,
-      "2026": 21
     }
   },
   "wc_stats": {
-    "n": 866,
-    "median": 1618,
-    "mean": 1903,
-    "p90": 2838,
+    "n": 869,
+    "median": 1619,
+    "mean": 1905,
+    "p90": 2841,
     "max": 30332
   },
   "wc_buckets": [
@@ -391,15 +410,15 @@
     ],
     [
       "1,000-1,999",
-      509
+      510
     ],
     [
       "2,000-2,999",
-      182
+      183
     ],
     [
       "3,000-4,999",
-      52
+      53
     ],
     [
       "5,000+",
@@ -407,9 +426,9 @@
     ]
   ],
   "by_nauthors": {
-    "1": 741,
+    "1": 743,
     "2": 106,
-    "3": 25,
+    "3": 26,
     "4": 1,
     "8": 1,
     "10": 1
