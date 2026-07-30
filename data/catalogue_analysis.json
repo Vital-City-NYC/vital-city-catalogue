@@ -1,27 +1,40 @@
 {
   "meta": {
-    "generated_at": "2026-07-30T11:43:37.896196+00:00",
+    "generated_at": "2026-07-30T23:27:03.161372+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 878,
-    "total_authors": 486,
+    "total_posts": 880,
+    "total_authors": 487,
     "total_issues": 29,
     "total_topics": 213,
     "date_range": [
       "2021-09-15",
-      "2026-07-29"
+      "2026-07-30"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 2,
+    "new_articles": [
+      {
+        "title": "The Big Hole in Mamdani\u2019s Housing Plan",
+        "url": "https://www.vitalcitynyc.org/mamdani-housing-production-plan-financing-challenges/",
+        "published_date": "2026-07-30",
+        "primary_author": "Paul Francis"
+      },
+      {
+        "title": "The Road to Producing More Housing Passes Through Meaningful Local Zoning Reforms",
+        "url": "https://www.vitalcitynyc.org/increasing-housing-production-zoning-reform-nyc/",
+        "published_date": "2026-07-30",
+        "primary_author": "Sara C. Bronin"
+      }
+    ]
   },
-  "total_pieces": 878,
+  "total_pieces": 880,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 166
+    "2026": 168
   },
   "by_month": {
     "2021-09": 1,
@@ -76,12 +89,12 @@
     "2026-04": 23,
     "2026-05": 22,
     "2026-06": 44,
-    "2026-07": 19
+    "2026-07": 21
   },
   "by_type": [
     [
       "opinion/commentary",
-      743
+      745
     ],
     [
       "q&a",
@@ -115,7 +128,7 @@
     ],
     [
       "City Government",
-      129
+      131
     ],
     [
       "Government Operations",
@@ -123,7 +136,7 @@
     ],
     [
       "City Planning",
-      109
+      110
     ],
     [
       "Justice",
@@ -131,7 +144,7 @@
     ],
     [
       "Housing",
-      75
+      77
     ],
     [
       "culture",
@@ -186,16 +199,16 @@
       28
     ],
     [
+      "Budget",
+      26
+    ],
+    [
       "Quality of Life",
       26
     ],
     [
       "Setting the Stage",
       26
-    ],
-    [
-      "Budget",
-      25
     ],
     [
       "interview",
@@ -214,7 +227,7 @@
     ],
     [
       "Nonprofit / advocacy",
-      103
+      105
     ],
     [
       "Journalist / media",
@@ -268,7 +281,7 @@
     ],
     [
       "Nonprofit / advocacy",
-      73
+      74
     ],
     [
       "Journalist / media",
@@ -336,7 +349,7 @@
       "2023": 4,
       "2024": 20,
       "2025": 54,
-      "2026": 51
+      "2026": 53
     },
     "Government Operations": {
       "2022": 1,
@@ -350,7 +363,7 @@
       "2023": 17,
       "2024": 32,
       "2025": 39,
-      "2026": 15
+      "2026": 16
     },
     "Justice": {
       "2022": 4,
@@ -363,7 +376,7 @@
       "2023": 5,
       "2024": 11,
       "2025": 37,
-      "2026": 22
+      "2026": 24
     },
     "culture": {
       "2022": 4,
@@ -374,9 +387,9 @@
     }
   },
   "wc_stats": {
-    "n": 869,
+    "n": 871,
     "median": 1619,
-    "mean": 1905,
+    "mean": 1906,
     "p90": 2841,
     "max": 30332
   },
@@ -391,7 +404,7 @@
     ],
     [
       "1,000-1,999",
-      510
+      511
     ],
     [
       "2,000-2,999",
@@ -399,7 +412,7 @@
     ],
     [
       "3,000-4,999",
-      53
+      54
     ],
     [
       "5,000+",
@@ -407,7 +420,7 @@
     ]
   ],
   "by_nauthors": {
-    "1": 743,
+    "1": 745,
     "2": 106,
     "3": 26,
     "4": 1,

@@ -1,15 +1,28 @@
 {
-  "generated_at": "2026-07-30T11:43:37.896196+00:00",
+  "generated_at": "2026-07-30T23:27:03.161372+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 878,
-  "total_authors": 486,
+  "total_posts": 880,
+  "total_authors": 487,
   "total_issues": 29,
   "total_topics": 213,
   "date_range": [
     "2021-09-15",
-    "2026-07-29"
+    "2026-07-30"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 2,
+  "new_articles": [
+    {
+      "title": "The Big Hole in Mamdani’s Housing Plan",
+      "url": "https://www.vitalcitynyc.org/mamdani-housing-production-plan-financing-challenges/",
+      "published_date": "2026-07-30",
+      "primary_author": "Paul Francis"
+    },
+    {
+      "title": "The Road to Producing More Housing Passes Through Meaningful Local Zoning Reforms",
+      "url": "https://www.vitalcitynyc.org/increasing-housing-production-zoning-reform-nyc/",
+      "published_date": "2026-07-30",
+      "primary_author": "Sara C. Bronin"
+    }
+  ]
 }
