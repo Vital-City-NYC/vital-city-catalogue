@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 94,
+    "post_count": 93,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -88,7 +88,6 @@
       "vital-signs-state-of-the-city-on-crime-2024",
       "what-brought-new-york-city-back-from-the-brink",
       "what-does-it-take-to-govern-the-jails",
-      "what-hangs-in-the-balance-sheets",
       "what-the-data-show-people-in-crisis-on-the-streets-and-subways",
       "what-the-numbers-tell-us-about-gun-crimes",
       "what-to-do-about-people-in-crisis-on-streets-and-subways",
@@ -163,6 +162,50 @@
     "website": null
   },
   {
+    "name": "Jamie Rubin",
+    "post_count": 34,
+    "slugs": [
+      "a-housing-agenda-for-the-next-mayor",
+      "adam-lubinsky-interview",
+      "after-hours-with-jamie-rubin-and-majora-carter",
+      "after-hours-with-jamie-rubin-reflections-on-disaster-relief",
+      "after-hours-with-jamie-rubin-what-do-we-owe-nonprofits-anyway",
+      "alex-armlovich-interview-rent-freeze",
+      "annemarie-gray-interview",
+      "brick-by-brick-rule-by-rule",
+      "ed-glaeser-and-david-schleicher-dissect-nycs-mayoral-candidates",
+      "fred-naiden-interview-lirr-strike-labor",
+      "getting-government-under-comptrol",
+      "gloria-gong-interview",
+      "guiding-new-york-city-in-a-storm-an-interview-with-deputy-mayors",
+      "how-housing-supply-and-design-intersect",
+      "how-mamdani-can-win-and-govern",
+      "how-will-congestion-pricing-actually-work",
+      "how-zohran-mamdani-could-succeed-as-mayor",
+      "is-modular-part-of-new-yorks-housing-solution",
+      "joe-mcreynolds-interview-tokyo-zoning",
+      "just-fix-it-after-hours",
+      "lifeguard-hiring-problem-nyc",
+      "louisa-chafee-nyc-budget-interview",
+      "maya-kornberg-interview",
+      "meera-joshi-interview",
+      "molly-park-dss-exit-interview",
+      "remembering-michael-ray-richardson",
+      "renita-francois-interview-neighborhood-safety",
+      "ross-barkan-on-whos-not-running-and-why",
+      "the-myth-of-millionaire-flight",
+      "vital-city-after-hours-a-conversation-with-ed-glaeser",
+      "what-happens-if-adams-resigns",
+      "whats-the-deal-with-seqra",
+      "when-pro-bono-is-a-con"
+    ],
+    "slug": "rubin-jamie",
+    "bio": "is the chief investment officer of Aligned Climate Capital and chairman of the board of the New York City Housing Authority (NYCHA).",
+    "url": "https://www.vitalcitynyc.org/author/rubin-jamie/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Greg Berman",
     "post_count": 34,
     "slugs": [
@@ -204,50 +247,6 @@
     "slug": "berman-greg",
     "bio": "is the author of \"The Nonprofit Crisis: Leadership Through the Culture Wars\" (Oxford) and the co-editor of Vital City.",
     "url": "https://www.vitalcitynyc.org/author/berman-greg/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Jamie Rubin",
-    "post_count": 33,
-    "slugs": [
-      "a-housing-agenda-for-the-next-mayor",
-      "adam-lubinsky-interview",
-      "after-hours-with-jamie-rubin-and-majora-carter",
-      "after-hours-with-jamie-rubin-reflections-on-disaster-relief",
-      "after-hours-with-jamie-rubin-what-do-we-owe-nonprofits-anyway",
-      "alex-armlovich-interview-rent-freeze",
-      "annemarie-gray-interview",
-      "brick-by-brick-rule-by-rule",
-      "ed-glaeser-and-david-schleicher-dissect-nycs-mayoral-candidates",
-      "fred-naiden-interview-lirr-strike-labor",
-      "getting-government-under-comptrol",
-      "gloria-gong-interview",
-      "guiding-new-york-city-in-a-storm-an-interview-with-deputy-mayors",
-      "how-housing-supply-and-design-intersect",
-      "how-mamdani-can-win-and-govern",
-      "how-will-congestion-pricing-actually-work",
-      "how-zohran-mamdani-could-succeed-as-mayor",
-      "is-modular-part-of-new-yorks-housing-solution",
-      "joe-mcreynolds-interview-tokyo-zoning",
-      "just-fix-it-after-hours",
-      "lifeguard-hiring-problem-nyc",
-      "louisa-chafee-nyc-budget-interview",
-      "maya-kornberg-interview",
-      "meera-joshi-interview",
-      "molly-park-dss-exit-interview",
-      "remembering-michael-ray-richardson",
-      "renita-francois-interview-neighborhood-safety",
-      "ross-barkan-on-whos-not-running-and-why",
-      "the-myth-of-millionaire-flight",
-      "vital-city-after-hours-a-conversation-with-ed-glaeser",
-      "what-happens-if-adams-resigns",
-      "whats-the-deal-with-seqra",
-      "when-pro-bono-is-a-con"
-    ],
-    "slug": "rubin-jamie",
-    "bio": "is the chief investment officer of Aligned Climate Capital and chairman of the board of the New York City Housing Authority (NYCHA).",
-    "url": "https://www.vitalcitynyc.org/author/rubin-jamie/",
     "twitter": null,
     "website": null
   },
@@ -984,6 +983,20 @@
     "website": null
   },
   {
+    "name": "Martha Stark",
+    "post_count": 3,
+    "slugs": [
+      "mamdani-pied-a-terre-surcharge-tax-rollout-mistake-nyc",
+      "nyc-pied-a-terre-surchage-property-tax",
+      "the-property-tax-cannot-stand"
+    ],
+    "slug": "stark-martha",
+    "bio": "is a clinical professor at NYU's Robert F. Wagner Graduate School of Public Service and a former commissioner of the New York City Department of Finance.",
+    "url": "https://www.vitalcitynyc.org/author/stark-martha/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Christy Lopez",
     "post_count": 3,
     "slugs": [
@@ -1398,19 +1411,6 @@
     "website": null
   },
   {
-    "name": "Martha Stark",
-    "post_count": 2,
-    "slugs": [
-      "nyc-pied-a-terre-surchage-property-tax",
-      "the-property-tax-cannot-stand"
-    ],
-    "slug": "stark-martha",
-    "bio": "is a clinical professor at NYU's Robert F. Wagner Graduate School of Public Service.",
-    "url": "https://www.vitalcitynyc.org/author/stark-martha/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Molly Wasow Park",
     "post_count": 2,
     "slugs": [
@@ -1424,15 +1424,14 @@
     "website": null
   },
   {
-    "name": "Daniel DiSalvo",
+    "name": "Scott Winship",
     "post_count": 2,
     "slugs": [
-      "have-public-sector-unions-taken-the-place-of-tammany-hall",
-      "mamdani-nyc-unions-efficiency-reform"
+      "nyc-families-positive-income-trends"
     ],
-    "slug": "disalvo-daniel",
-    "bio": "is professor and associate dean of the School of Civic Life and leadership at the University of North Carolina at Chapel Hill and a senior fellow at the Manhattan Institute.",
-    "url": "https://www.vitalcitynyc.org/author/disalvo-daniel/",
+    "slug": "winship-scott",
+    "bio": "is a senior fellow and the director of the Center on Opportunity and Social Mobility at the American Enterprise Institute, where he researches social mobility and the causes and effects of poverty.",
+    "url": "https://www.vitalcitynyc.org/author/winship-scott/",
     "twitter": null,
     "website": null
   },
@@ -2718,18 +2717,6 @@
     "website": null
   },
   {
-    "name": "Scott Winship",
-    "post_count": 1,
-    "slugs": [
-      "nyc-families-positive-income-trends"
-    ],
-    "slug": "winship-scott",
-    "bio": "is a senior fellow and the director of the Center on Opportunity and Social Mobility at the American Enterprise Institute, where he researches social mobility and the causes and effects of poverty.",
-    "url": "https://www.vitalcitynyc.org/author/winship-scott/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Cristobal Young",
     "post_count": 1,
     "slugs": [
@@ -3690,14 +3677,14 @@
     "website": null
   },
   {
-    "name": "Theodore Roosevelt IV",
+    "name": "Kate Daugherty",
     "post_count": 1,
     "slugs": [
-      "guns-my-family-and-me"
+      "what-we-know-and-dont-know-about-guns"
     ],
-    "slug": "roosevelt-theodore-iv",
-    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
+    "slug": "daugherty-kate",
+    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
     "twitter": null,
     "website": null
   },
@@ -3738,6 +3725,18 @@
     "website": null
   },
   {
+    "name": "Theodore Roosevelt IV",
+    "post_count": 1,
+    "slugs": [
+      "guns-my-family-and-me"
+    ],
+    "slug": "roosevelt-theodore-iv",
+    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
+    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Nina Vinik",
     "post_count": 1,
     "slugs": [
@@ -3746,6 +3745,18 @@
     "slug": "vinik-nina",
     "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
     "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Samantha J. Simon",
+    "post_count": 1,
+    "slugs": [
+      "the-good-gun-owner"
+    ],
+    "slug": "simon-samantha-j",
+    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
     "twitter": null,
     "website": null
   },
@@ -3774,6 +3785,18 @@
     "website": null
   },
   {
+    "name": "Daniel Semenza",
+    "post_count": 1,
+    "slugs": [
+      "the-80-20-rule-of-gun-supply"
+    ],
+    "slug": "semenza-daniel",
+    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Greg Lickenbrock",
     "post_count": 1,
     "slugs": [
@@ -3786,30 +3809,6 @@
     "website": null
   },
   {
-    "name": "Kate Daugherty",
-    "post_count": 1,
-    "slugs": [
-      "what-we-know-and-dont-know-about-guns"
-    ],
-    "slug": "daugherty-kate",
-    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
-    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Samantha J. Simon",
-    "post_count": 1,
-    "slugs": [
-      "the-good-gun-owner"
-    ],
-    "slug": "simon-samantha-j",
-    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Charles Buckhanan",
     "post_count": 1,
     "slugs": [
@@ -3818,18 +3817,6 @@
     "slug": "buckhanan-charles",
     "bio": "is a street outreach worker on Chicago’s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
     "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Daniel Semenza",
-    "post_count": 1,
-    "slugs": [
-      "the-80-20-rule-of-gun-supply"
-    ],
-    "slug": "semenza-daniel",
-    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
     "twitter": null,
     "website": null
   },
@@ -4170,18 +4157,6 @@
     "website": null
   },
   {
-    "name": "Adam Cohen",
-    "post_count": 1,
-    "slugs": [
-      "trumps-bizarro-new-deal"
-    ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Richard Schragger",
     "post_count": 1,
     "slugs": [
@@ -4190,6 +4165,18 @@
     "slug": "schragger-richard",
     "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
     "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Adam Cohen",
+    "post_count": 1,
+    "slugs": [
+      "trumps-bizarro-new-deal"
+    ],
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },
@@ -4490,6 +4477,18 @@
     "slug": "dunkelman-marc",
     "bio": "is a visiting fellow in international and public affairs at Brown University’s Taubman Center for Public Policy and American Institutions. He is the author of \"Why Nothing Works: Who Killed Progress — And How to Bring It Back.\"",
     "url": "https://www.vitalcitynyc.org/author/dunkelman-marc/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Daniel DiSalvo",
+    "post_count": 1,
+    "slugs": [
+      "have-public-sector-unions-taken-the-place-of-tammany-hall"
+    ],
+    "slug": "disalvo-daniel",
+    "bio": "is professor and associate dean of the School of Civic Life and leadership at the University of North Carolina at Chapel Hill and a senior fellow at the Manhattan Institute.",
+    "url": "https://www.vitalcitynyc.org/author/disalvo-daniel/",
     "twitter": null,
     "website": null
   },

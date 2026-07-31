@@ -1,27 +1,34 @@
 {
   "meta": {
-    "generated_at": "2026-07-31T11:47:22.030233+00:00",
+    "generated_at": "2026-07-31T23:25:14.651862+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 880,
+    "total_posts": 881,
     "total_authors": 487,
     "total_issues": 29,
     "total_topics": 213,
     "date_range": [
       "2021-09-15",
-      "2026-07-30"
+      "2026-07-31"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 1,
+    "new_articles": [
+      {
+        "title": "A Smarter Way To Roll Out the Pied-\u00e0-Terre Surcharge",
+        "url": "https://www.vitalcitynyc.org/mamdani-pied-a-terre-surcharge-tax-rollout-mistake-nyc/",
+        "published_date": "2026-07-31",
+        "primary_author": "Martha Stark"
+      }
+    ]
   },
-  "total_pieces": 880,
+  "total_pieces": 881,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 168
+    "2026": 169
   },
   "by_month": {
     "2021-09": 1,
@@ -76,12 +83,12 @@
     "2026-04": 23,
     "2026-05": 22,
     "2026-06": 44,
-    "2026-07": 21
+    "2026-07": 22
   },
   "by_type": [
     [
       "opinion/commentary",
-      745
+      746
     ],
     [
       "q&a",
@@ -115,23 +122,23 @@
     ],
     [
       "City Government",
-      131
+      132
     ],
     [
       "Government Operations",
-      123
+      122
     ],
     [
       "City Planning",
       110
     ],
     [
-      "Justice",
+      "Housing",
       79
     ],
     [
-      "Housing",
-      77
+      "Justice",
+      79
     ],
     [
       "culture",
@@ -187,11 +194,11 @@
     ],
     [
       "Budget",
-      26
+      27
     ],
     [
       "Quality of Life",
-      26
+      27
     ],
     [
       "Setting the Stage",
@@ -222,7 +229,7 @@
     ],
     [
       "Vital City (institutional)",
-      94
+      93
     ],
     [
       "Other / unclassified",
@@ -234,11 +241,11 @@
     ],
     [
       "Business / private sector",
-      57
+      58
     ],
     [
       "Think tank / research institute",
-      51
+      52
     ],
     [
       "Architecture / design / planning",
@@ -313,8 +320,8 @@
     "City Government",
     "Government Operations",
     "City Planning",
-    "Justice",
     "Housing",
+    "Justice",
     "culture"
   ],
   "topic_by_year": {
@@ -335,14 +342,14 @@
     "City Government": {
       "2023": 4,
       "2024": 20,
-      "2025": 54,
+      "2025": 55,
       "2026": 53
     },
     "Government Operations": {
       "2022": 1,
       "2023": 16,
       "2024": 38,
-      "2025": 57,
+      "2025": 56,
       "2026": 11
     },
     "City Planning": {
@@ -352,18 +359,18 @@
       "2025": 39,
       "2026": 16
     },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 38,
+      "2026": 25
+    },
     "Justice": {
       "2022": 4,
       "2023": 26,
       "2024": 27,
       "2025": 13,
       "2026": 9
-    },
-    "Housing": {
-      "2023": 5,
-      "2024": 11,
-      "2025": 37,
-      "2026": 24
     },
     "culture": {
       "2022": 4,
@@ -374,10 +381,10 @@
     }
   },
   "wc_stats": {
-    "n": 871,
+    "n": 872,
     "median": 1619,
-    "mean": 1906,
-    "p90": 2841,
+    "mean": 1905,
+    "p90": 2838,
     "max": 30332
   },
   "wc_buckets": [
@@ -395,11 +402,11 @@
     ],
     [
       "2,000-2,999",
-      183
+      185
     ],
     [
       "3,000-4,999",
-      54
+      53
     ],
     [
       "5,000+",
@@ -407,7 +414,7 @@
     ]
   ],
   "by_nauthors": {
-    "1": 745,
+    "1": 746,
     "2": 106,
     "3": 26,
     "4": 1,
@@ -417,7 +424,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 94,
+      "posts": 93,
       "credential": "Vital City (institutional)"
     },
     {
@@ -426,14 +433,14 @@
       "credential": "Government / public official"
     },
     {
+      "name": "Jamie Rubin",
+      "posts": 34,
+      "credential": "Business / private sector"
+    },
+    {
       "name": "Greg Berman",
       "posts": 34,
       "credential": "Nonprofit / advocacy"
-    },
-    {
-      "name": "Jamie Rubin",
-      "posts": 33,
-      "credential": "Business / private sector"
     },
     {
       "name": "Josh Greenman",
