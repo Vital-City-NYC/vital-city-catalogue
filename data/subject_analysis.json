@@ -877,6 +877,449 @@
       "pieces": 14
     }
   ],
+  "byline_concentration": [
+    {
+      "beat": "Media & journalism",
+      "pieces": 17,
+      "distinct_bylines": 11,
+      "top5_share": 64.7,
+      "vital_city_share": 17.6,
+      "top3": [
+        {
+          "name": "Vital City",
+          "pieces": 3
+        },
+        {
+          "name": "Jamie Rubin",
+          "pieces": 2
+        },
+        {
+          "name": "Greg Berman",
+          "pieces": 2
+        }
+      ]
+    },
+    {
+      "beat": "Jails & incarceration",
+      "pieces": 67,
+      "distinct_bylines": 30,
+      "top5_share": 58.2,
+      "vital_city_share": 20.9,
+      "top3": [
+        {
+          "name": "Elizabeth Glazer",
+          "pieces": 14
+        },
+        {
+          "name": "Vital City",
+          "pieces": 14
+        },
+        {
+          "name": "Vincent Schiraldi",
+          "pieces": 5
+        }
+      ]
+    },
+    {
+      "beat": "Homelessness & social services",
+      "pieces": 18,
+      "distinct_bylines": 14,
+      "top5_share": 50.0,
+      "vital_city_share": 27.8,
+      "top3": [
+        {
+          "name": "Vital City",
+          "pieces": 5
+        },
+        {
+          "name": "Sherry Glied",
+          "pieces": 1
+        },
+        {
+          "name": "Amie Pospisil",
+          "pieces": 1
+        }
+      ]
+    },
+    {
+      "beat": "Policing",
+      "pieces": 69,
+      "distinct_bylines": 33,
+      "top5_share": 47.8,
+      "vital_city_share": 20.3,
+      "top3": [
+        {
+          "name": "Vital City",
+          "pieces": 14
+        },
+        {
+          "name": "Brandon del Pozo",
+          "pieces": 7
+        },
+        {
+          "name": "Elizabeth Glazer",
+          "pieces": 7
+        }
+      ]
+    },
+    {
+      "beat": "Politics & elections",
+      "pieces": 64,
+      "distinct_bylines": 42,
+      "top5_share": 40.6,
+      "vital_city_share": 6.2,
+      "top3": [
+        {
+          "name": "Harry Siegel",
+          "pieces": 7
+        },
+        {
+          "name": "Bradley Tusk",
+          "pieces": 6
+        },
+        {
+          "name": "Josh Greenman",
+          "pieces": 6
+        }
+      ]
+    },
+    {
+      "beat": "Civil society & philanthropy",
+      "pieces": 17,
+      "distinct_bylines": 16,
+      "top5_share": 35.3,
+      "vital_city_share": 0.0,
+      "top3": [
+        {
+          "name": "Elizabeth Glazer",
+          "pieces": 2
+        },
+        {
+          "name": "Greg Berman",
+          "pieces": 1
+        },
+        {
+          "name": "Brian DeLay",
+          "pieces": 1
+        }
+      ]
+    },
+    {
+      "beat": "Climate, environment & sanitation",
+      "pieces": 21,
+      "distinct_bylines": 19,
+      "top5_share": 33.3,
+      "vital_city_share": 4.8,
+      "top3": [
+        {
+          "name": "Amy Chester",
+          "pieces": 2
+        },
+        {
+          "name": "Charles Komanoff",
+          "pieces": 2
+        },
+        {
+          "name": "Jamie Rubin",
+          "pieces": 1
+        }
+      ]
+    },
+    {
+      "beat": "State, federal & beyond NYC",
+      "pieces": 34,
+      "distinct_bylines": 28,
+      "top5_share": 32.4,
+      "vital_city_share": 8.8,
+      "top3": [
+        {
+          "name": "Cara Eckholm",
+          "pieces": 4
+        },
+        {
+          "name": "Vital City",
+          "pieces": 3
+        },
+        {
+          "name": "Paul Francis",
+          "pieces": 2
+        }
+      ]
+    },
+    {
+      "beat": "Courts & prosecution",
+      "pieces": 112,
+      "distinct_bylines": 70,
+      "top5_share": 32.1,
+      "vital_city_share": 15.2,
+      "top3": [
+        {
+          "name": "Vital City",
+          "pieces": 17
+        },
+        {
+          "name": "Elizabeth Glazer",
+          "pieces": 7
+        },
+        {
+          "name": "Greg Berman",
+          "pieces": 6
+        }
+      ]
+    },
+    {
+      "beat": "Technology",
+      "pieces": 32,
+      "distinct_bylines": 27,
+      "top5_share": 31.2,
+      "vital_city_share": 9.4,
+      "top3": [
+        {
+          "name": "Cara Eckholm",
+          "pieces": 3
+        },
+        {
+          "name": "Vital City",
+          "pieces": 3
+        },
+        {
+          "name": "Barry Friedman",
+          "pieces": 2
+        }
+      ]
+    },
+    {
+      "beat": "Crime & violence",
+      "pieces": 236,
+      "distinct_bylines": 115,
+      "top5_share": 30.9,
+      "vital_city_share": 14.0,
+      "top3": [
+        {
+          "name": "Vital City",
+          "pieces": 33
+        },
+        {
+          "name": "Elizabeth Glazer",
+          "pieces": 17
+        },
+        {
+          "name": "Aaron Chalfin",
+          "pieces": 9
+        }
+      ]
+    },
+    {
+      "beat": "Education & youth",
+      "pieces": 35,
+      "distinct_bylines": 30,
+      "top5_share": 28.6,
+      "vital_city_share": 5.7,
+      "top3": [
+        {
+          "name": "Joseph P. Viteritti",
+          "pieces": 2
+        },
+        {
+          "name": "David Bloomfield",
+          "pieces": 2
+        },
+        {
+          "name": "Elliot Haspel",
+          "pieces": 2
+        }
+      ]
+    },
+    {
+      "beat": "Race, gender & inequality",
+      "pieces": 28,
+      "distinct_bylines": 25,
+      "top5_share": 28.6,
+      "vital_city_share": 10.7,
+      "top3": [
+        {
+          "name": "Vital City",
+          "pieces": 3
+        },
+        {
+          "name": "Errol Louis",
+          "pieces": 2
+        },
+        {
+          "name": "Eli Dvorkin",
+          "pieces": 1
+        }
+      ]
+    },
+    {
+      "beat": "Culture & city life",
+      "pieces": 92,
+      "distinct_bylines": 60,
+      "top5_share": 28.3,
+      "vital_city_share": 3.3,
+      "top3": [
+        {
+          "name": "Greg Berman",
+          "pieces": 8
+        },
+        {
+          "name": "Vishaan Chakrabarti",
+          "pieces": 7
+        },
+        {
+          "name": "A Survey",
+          "pieces": 4
+        }
+      ]
+    },
+    {
+      "beat": "Health, mental health & drugs",
+      "pieces": 62,
+      "distinct_bylines": 49,
+      "top5_share": 27.4,
+      "vital_city_share": 14.5,
+      "top3": [
+        {
+          "name": "Vital City",
+          "pieces": 9
+        },
+        {
+          "name": "Beau Kilmer",
+          "pieces": 2
+        },
+        {
+          "name": "Errol Louis",
+          "pieces": 2
+        }
+      ]
+    },
+    {
+      "beat": "City government & governance",
+      "pieces": 249,
+      "distinct_bylines": 153,
+      "top5_share": 25.7,
+      "vital_city_share": 8.8,
+      "top3": [
+        {
+          "name": "Vital City",
+          "pieces": 22
+        },
+        {
+          "name": "Jamie Rubin",
+          "pieces": 17
+        },
+        {
+          "name": "Elizabeth Glazer",
+          "pieces": 12
+        }
+      ]
+    },
+    {
+      "beat": "Housing",
+      "pieces": 80,
+      "distinct_bylines": 58,
+      "top5_share": 25.0,
+      "vital_city_share": 5.0,
+      "top3": [
+        {
+          "name": "Jamie Rubin",
+          "pieces": 7
+        },
+        {
+          "name": "Vital City",
+          "pieces": 4
+        },
+        {
+          "name": "Martha Stark",
+          "pieces": 3
+        }
+      ]
+    },
+    {
+      "beat": "Money, budgets & the economy",
+      "pieces": 81,
+      "distinct_bylines": 61,
+      "top5_share": 24.7,
+      "vital_city_share": 3.7,
+      "top3": [
+        {
+          "name": "Jamie Rubin",
+          "pieces": 8
+        },
+        {
+          "name": "Paul Francis",
+          "pieces": 4
+        },
+        {
+          "name": "Vital City",
+          "pieces": 3
+        }
+      ]
+    },
+    {
+      "beat": "Transportation",
+      "pieces": 75,
+      "distinct_bylines": 54,
+      "top5_share": 22.7,
+      "vital_city_share": 5.3,
+      "top3": [
+        {
+          "name": "Nicole Gelinas",
+          "pieces": 5
+        },
+        {
+          "name": "Vital City",
+          "pieces": 4
+        },
+        {
+          "name": "Eric Goldwyn",
+          "pieces": 3
+        }
+      ]
+    },
+    {
+      "beat": "Land use & the built city",
+      "pieces": 154,
+      "distinct_bylines": 109,
+      "top5_share": 17.5,
+      "vital_city_share": 1.9,
+      "top3": [
+        {
+          "name": "Jamie Rubin",
+          "pieces": 8
+        },
+        {
+          "name": "Vishaan Chakrabarti",
+          "pieces": 7
+        },
+        {
+          "name": "Cara Eckholm",
+          "pieces": 4
+        }
+      ]
+    },
+    {
+      "beat": "History & the long view",
+      "pieces": 144,
+      "distinct_bylines": 108,
+      "top5_share": 17.4,
+      "vital_city_share": 4.9,
+      "top3": [
+        {
+          "name": "Vital City",
+          "pieces": 7
+        },
+        {
+          "name": "Vishaan Chakrabarti",
+          "pieces": 5
+        },
+        {
+          "name": "Nicole Gelinas",
+          "pieces": 5
+        }
+      ]
+    }
+  ],
   "history_lens_reach": [
     {
       "beat": "Culture & city life",

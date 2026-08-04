@@ -78,7 +78,7 @@
 <nav class="secnav">
   <a href="#time">Over time</a><a href="#format">Format</a><a href="#subject">Subject</a>
   <a href="#vocab">Tag vocabulary</a><a href="#pivot">The pivot</a><a href="#traj">Beat trends</a>
-  <a href="#treatment">Data treatment</a><a href="#pairs">What pairs up</a>
+  <a href="#treatment">Data treatment</a><a href="#pairs">What pairs up</a><a href="#bench">Who writes what</a>
   <a href="#credentials">Who writes</a><a href="#length">Length</a>
   <a href="#collab">Collaboration</a><a href="#method">How we did this</a>
 </nav>
@@ -290,6 +290,16 @@ Promise.all([
       <div class="insight">"History" is the second most-applied tag in the whole catalogue (${S.beats.find(b=>b.beat.startsWith("History")).pieces} pieces), but it is not a subject area — it is a habit of mind applied across the others. ${S.history_lens_reach.find(h=>h.beat.startsWith("Culture")).share}% of culture pieces carry it, and so do ${S.history_lens_reach.find(h=>h.beat.startsWith("Land use")).share}% of land-use pieces and ${S.history_lens_reach.find(h=>h.beat.startsWith("Crime")).share}% of crime pieces. Folding it into culture, as a naive read of the tags would, overstates cultural coverage by about half: ${S.history_only_pieces} of its pieces carry no other cultural tag at all.</div>
       <div class="src">Kept as its own dimension for exactly this reason. See <code>analyze_subjects.py</code>.</div></div>
   </div>`;
+
+  // 3g. Bench width per beat
+  const bench=S.byline_concentration.filter(b=>b.pieces>=30);
+  const bj=bench.find(b=>b.beat.startsWith("Jails")), bl=bench.find(b=>b.beat.startsWith("Land use")),
+        bc=bench.find(b=>b.beat.startsWith("City government"));
+  html+=`<div class="card" id="bench"><h2>Specialist circles and open benches</h2>
+    <div class="hint">Share of each beat written by its five most frequent bylines. Beats with 30+ pieces. A high number is a small expert circle; a low one is a wide bench.</div>
+    ${hbar(bench.map(b=>({k:b.beat+" · "+b.distinct_bylines+" bylines",v:b.top5_share,c:BEATCO[b.beat]||"#217ebe"})),{labelW:290,valSuffix:"%"})}
+    <div class="insight">The founding subjects are written by a tight circle and the newer ones by a crowd. Jails is the most concentrated beat in the catalogue — five bylines write ${bj.top5_share}% of its ${bj.pieces} pieces (${bj.top3[0].name} and ${bj.top3[1].name} lead it), and only ${bj.distinct_bylines} people have ever written one. At the other end, the built city draws on ${bl.distinct_bylines} bylines for ${bl.pieces} pieces, with the top five accounting for just ${bl.top5_share}%, and City Hall on ${bc.distinct_bylines}. That is the expansion showing up in the contributor list: the beats Vital City grew into are staffed by many hands writing once or twice, while the beats it was founded on are held by a small group of returning experts.</div>
+    <div class="src">Primary byline only; "Vital City" counts as one byline. Source: <code>analyze_subjects.py</code>.</div></div>`;
 
   // 4. Credentials
   const credRows=D.by_credential_pieces.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999",pct:Math.round(c[1]/total*100)}));

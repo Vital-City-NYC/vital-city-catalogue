@@ -142,6 +142,7 @@ beat_n = collections.Counter()
 beat_words, beat_types, beat_years = {}, {}, {}
 cooc = collections.Counter()
 hist_overlap = collections.Counter()
+beat_bylines = {}
 untagged = []
 for r in CAT:
     bs = beats_of(r)
@@ -157,6 +158,7 @@ for r in CAT:
         beat_words.setdefault(b, []).append(r.get("word_count") or 0)
         beat_types.setdefault(b, collections.Counter())[r.get("type")] += 1
         beat_years.setdefault(b, collections.Counter())[year(r)] += 1
+        beat_bylines.setdefault(b, collections.Counter())[r.get("primary_author")] += 1
     for a in sorted(bs):
         for b in sorted(bs):
             if a < b: cooc[(a, b)] += 1
@@ -187,6 +189,16 @@ out = {
              "by_year": dict(sorted(beat_years[b].items()))}
             for b, n in beat_n.most_common()],
   "cooccurrence_top20": [{"a": a, "b": b, "pieces": n} for (a, b), n in cooc.most_common(20)],
+  # How wide each beat's contributor bench is. A beat where five bylines write
+  # most of it is a specialist circle; a beat spread across a hundred bylines is
+  # an open call. Both are editorial choices worth seeing side by side.
+  "byline_concentration": sorted(
+     [{"beat": b, "pieces": n, "distinct_bylines": len(beat_bylines[b]),
+       "top5_share": round(sum(c for _, c in beat_bylines[b].most_common(5)) / n * 100, 1),
+       "vital_city_share": round(beat_bylines[b].get("Vital City", 0) / n * 100, 1),
+       "top3": [{"name": k, "pieces": v} for k, v in beat_bylines[b].most_common(3)]}
+      for b, n in beat_n.items()],
+     key=lambda x: -x["top5_share"]),
   # How far the historical lens reaches: share of each beat's pieces also tagged History.
   "history_lens_reach": sorted(
      [{"beat": b, "pieces": n,
