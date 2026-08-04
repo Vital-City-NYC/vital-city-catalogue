@@ -133,10 +133,11 @@ def one_line_summary(p):
     return first or None
 
 
-QA_TAGS = {"podcast", "interview", "conversations", "in conversation with..."}
-QA_TITLE = re.compile(r"q&a|q & a|in conversation|a conversation with|\binterview\b|talks? (?:to|with)|speaks with|sits down with", re.I)
+PODCAST_TAGS = {"podcast"}
+QA_TAGS = {"interview", "conversations", "in conversation with..."}
+QA_TITLE = re.compile(r"q&a|q & a|in conversation|a conversation with|\binterview\b|talks? (?:to|with)|speaks with|sits down with|\bpanel\b|\bforum\b", re.I)
 REVIEW_TITLE = re.compile(r"a review of|book review|\breviewed\b", re.I)
-TOOL_TITLE = re.compile(r"interactive|explorer|\btracker\b|dashboard|calculator|simulator|mapping tool|interactive map|\bquiz\b", re.I)
+TOOL_TITLE = re.compile(r"interactive|explorer|\btracker\b|dashboard|calculator|simulator|mapping tool|interactive map|\bquiz\b|proof.of.concept", re.I)
 # Match actual JS library references (script src / cdn URLs), not prose words
 # like "Vegas" or "roadmap". These signal the piece is itself an interactive tool.
 MAP_LIB = re.compile(
@@ -144,39 +145,117 @@ MAP_LIB = re.compile(
     r"/d3@|d3\.min\.js|d3js\.org|cdn\.jsdelivr\.net/npm/d3|vega-lite|/vega@|vega\.min|"
     r"deck\.gl|cdn\.observableusercontent", re.I)
 DATA_TITLE = re.compile(r"by the numbers|in \d+ charts|, in charts|, charted|, mapped", re.I)
-OTHER_TITLE = re.compile(r"about this project|: about\b|editor.?s? note|\bmasthead\b|welcome to vital city|a note (?:from|on|to)", re.I)
+OTHER_TITLE = re.compile(r"about this project|: about\b|editor.?s? note|\bmasthead\b|welcome to vital city|a note (?:from|on|to)|call for submissions", re.I)
+# The three series the site files under its own Policy section (vitalcitynyc.org/policy).
+POLICY_SERIES = {"just-fix-it", "what-to-do-and-not-to-do", "rubber-meets-road"}
+POLICY_TITLE = re.compile(r"^just fix it\b|what to do \(and not to do\)", re.I)
+# Paragraphs that open with a speaker label ("Errol Louis:", "EL:", "Vital City:").
+SPEAKER_PARA = re.compile(
+    r"<p[^>]*>\s*(?:<[^>]+>\s*)*([A-Z][\w.'’-]+(?:\s+[A-Z][\w.'’-]+){0,3}):")
+
+# Hand-checked calls the rules cannot see. Keyed by slug; each records its reason.
+TYPE_OVERRIDES = {
+    # Closing remarks at the "Are NYC's Jails Ungovernable?" forum — event
+    # proceedings like its sibling panels, but a monologue, so no speaker labels.
+    "are-nycs-jails-ungovernable-closing-remarks": ("q&a", "curated:event-proceedings"),
+    "fixing-new-york-citys-jails-a-federal-receiver-closing-remarks":
+        ("q&a", "curated:event-proceedings"),
+    # Vital City's own intersection-design recommendation, published outside the
+    # three Policy series.
+    "a-safer-cheaper-quicker-way-of-daylighting-intersections":
+        ("policy", "curated:vc-recommendation"),
+}
+
+
+def is_transcript(html):
+    """True when the body is a multi-speaker conversation: many paragraphs
+    opening with a speaker label, from at least two speakers who each take
+    several turns. The thresholds are set high enough that a prose column
+    quoting a short exchange does not qualify — only pieces whose form is the
+    conversation itself."""
+    labels = SPEAKER_PARA.findall(html or "")
+    if len(labels) < 12:
+        return False
+    counts = {}
+    for l in labels:
+        counts[l] = counts.get(l, 0) + 1
+    return sum(1 for n in counts.values() if n >= 4) >= 2
 
 
 def classify_type(p, topics, issues):
     """Assign one content type, returning (type, basis). Rule-based and ordered
-    most-specific-first; the basis string records why, for transparency."""
+    most-specific-first; the basis string records why, for transparency.
+
+    The type vocabulary mirrors how vitalcitynyc.org itself sections content:
+    Commentary, Policy, Data, Podcast, plus Q&As, book reviews and tools.
+    """
+    slug = p.get("slug") or ""
+    if slug in TYPE_OVERRIDES:
+        return TYPE_OVERRIDES[slug]
+
     title = p.get("title") or ""
     tagnames = {t["name"].lower() for t in p.get("tags", [])}
     issue_slugs = {i.lower() for i in issues}
-    hl = (p.get("html") or "").lower()
+    html = p.get("html") or ""
+    hl = html.lower()
     chart_embeds = hl.count("flourish-embed") + hl.count("datawrapper-vis") + hl.count("flo.uri.sh/visualisation")
     has_map_lib = bool(MAP_LIB.search(hl))
     # Iframe to Vital City's own hosted apps = a custom interactive tool/map
     has_vc_app = bool(re.search(r"<iframe[^>]+(?:vitalcity-nyc|vital-city-nyc)\.github\.io", hl))
+    words = word_count(html)
+    transcript = is_transcript(html)
 
+    # 1. Site furniture and announcements, not editorial pieces.
+    if "press releases" in tagnames:
+        return "something else", "tag:press-release"
+    if "in memoriam" in tagnames:
+        return "something else", "tag:in-memoriam"
+    if OTHER_TITLE.search(title):
+        return "something else", "title:framing-page"
+    if "events" in tagnames and words < 700 and not transcript:
+        return "something else", "tag:event-notice"
+
+    # 2. Culture: book reviews.
     if "book review" in tagnames or REVIEW_TITLE.search(title):
         return "book review", "tag:book-review" if "book review" in tagnames else "title:review"
+
+    # 3. The podcast is its own section on the site.
+    if tagnames & PODCAST_TAGS:
+        return "podcast", "tag:podcast"
+
+    # 4. Conversations: interviews, panels, forum transcripts.
     if tagnames & QA_TAGS:
         return "q&a", "tag:" + next(iter(tagnames & QA_TAGS))
     if QA_TITLE.search(title):
         return "q&a", "title:conversation"
+    if transcript:
+        return "q&a", "html:multi-speaker-transcript"
+
+    # 5. Institutional data reports (the site's Data section).
+    if "data stories" in tagnames or "data-stories" in issue_slugs:
+        return "data analysis", "tag:data-stories"
+
+    # 6. Genuine interactive tools: the title names one, or the body is
+    #    essentially just the embed. An essay that merely embeds one of our
+    #    charts or maps to illustrate its argument is still an essay.
     if TOOL_TITLE.search(title):
         return "map/tool", "title:tool-or-map"
-    if has_vc_app:
-        return "map/tool", "html:vc-app-embed"
-    if has_map_lib:
-        return "map/tool", "html:map-or-viz-library"
-    if "data stories" in tagnames or "data-stories" in issue_slugs or DATA_TITLE.search(title):
-        return "data analysis", "tag:data-stories"
+    if words < 300 and (has_vc_app or has_map_lib):
+        return "map/tool", "html:embed-is-the-piece"
+
+    # 7. Chart-driven analysis.
+    if DATA_TITLE.search(title):
+        return "data analysis", "title:data-framing"
     if chart_embeds >= 3:
         return "data analysis", f"html:{chart_embeds}-chart-embeds"
-    if OTHER_TITLE.search(title):
-        return "something else", "title:framing-page"
+
+    # 8. Vital City's own policy recommendations (the site's Policy section).
+    if issue_slugs & POLICY_SERIES:
+        return "policy", "series:" + next(iter(issue_slugs & POLICY_SERIES))
+    if POLICY_TITLE.search(title):
+        return "policy", "title:policy-recommendation"
+
+    # 9. Everything else: analysis and opinion, mostly by outside contributors.
     return "opinion/commentary", "default"
 
 

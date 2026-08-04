@@ -1,26 +1,34 @@
 [
   {
     "type": "opinion/commentary",
-    "post_count": 746
+    "post_count": 712
   },
   {
     "type": "q&a",
-    "post_count": 63
+    "post_count": 58
   },
   {
     "type": "data analysis",
-    "post_count": 46
+    "post_count": 47
   },
   {
-    "type": "map/tool",
-    "post_count": 18
+    "type": "podcast",
+    "post_count": 28
+  },
+  {
+    "type": "something else",
+    "post_count": 14
+  },
+  {
+    "type": "policy",
+    "post_count": 12
   },
   {
     "type": "book review",
     "post_count": 6
   },
   {
-    "type": "something else",
-    "post_count": 2
+    "type": "map/tool",
+    "post_count": 4
   }
 ]

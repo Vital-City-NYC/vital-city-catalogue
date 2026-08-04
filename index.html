@@ -23,6 +23,9 @@
     --vc-orange: #ff7c53;
     --vc-magenta: #e7466d;
     --vc-cerulean: #217ebe;
+    --vc-indigo: #394882;
+    --vc-periwinkle: #9b9fbc;
+    --vc-rose: #cea9be;
     --vc-sans: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif;
     --vc-serif: "GascogneTS", "Source Serif 4", Georgia, serif;
   }
@@ -176,11 +179,14 @@
     color: var(--vc-charcoal); background: var(--vc-white); cursor: pointer; white-space: nowrap;
   }
   .tt:hover { border-color: var(--vc-black); color: var(--vc-black); }
+  /* Orange is reserved for the issue/series pills — type pills stay clear of it. */
   .tt.t-opinion { border-color: var(--vc-charcoal); color: var(--vc-charcoal); }
+  .tt.t-policy { border-color: var(--vc-indigo); color: var(--vc-indigo); }
   .tt.t-data { border-color: var(--vc-cerulean); color: var(--vc-cerulean); }
-  .tt.t-tool { border-color: var(--vc-orange); color: var(--vc-orange); }
-  .tt.t-qa { border-color: var(--vc-magenta); color: var(--vc-magenta); }
-  .tt.t-review { border-color: var(--vc-black); color: var(--vc-black); }
+  .tt.t-podcast { border-color: var(--vc-magenta); color: var(--vc-magenta); }
+  .tt.t-qa { border-color: var(--vc-black); color: var(--vc-black); }
+  .tt.t-review { border-color: var(--vc-rose); color: var(--vc-black); }
+  .tt.t-tool { border-color: var(--vc-periwinkle); color: var(--vc-charcoal); }
   .catpill {
     display: inline-block; font-size: 9.5px; font-weight: 700; text-transform: uppercase;
     letter-spacing: 0.05em; padding: 2px 7px; margin: 2px 4px 0 0;
@@ -272,8 +278,8 @@ function issueLabel(name) {
 }
 function typeClass(t) {
   return ({
-    "opinion/commentary": "t-opinion", "data analysis": "t-data", "map/tool": "t-tool",
-    "q&a": "t-qa", "book review": "t-review",
+    "opinion/commentary": "t-opinion", "policy": "t-policy", "data analysis": "t-data",
+    "podcast": "t-podcast", "q&a": "t-qa", "book review": "t-review", "map/tool": "t-tool",
   })[t] || "";
 }
 

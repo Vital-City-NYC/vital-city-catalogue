@@ -29,8 +29,8 @@ we read the same structured data Ghost uses internally.
   These are site furniture, not editorial articles. They can be added later if
   wanted by also querying the `/pages/` endpoint.
 
-As of the latest run this is **812 articles** spanning **2021-09-15 to
-2026-05-20**.
+As of the latest run this is **881 articles** spanning **2021-09-15 to
+2026-07-31**.
 
 ## Field definitions
 
@@ -82,31 +82,81 @@ are excluded everywhere:
 
 Each article is assigned exactly one **type**, plus a `type_basis` field that
 records *why* it got that type (so nothing is a black box and you can audit or
-reclassify any call). The classifier is rule-based and runs most-specific-first;
-the first rule that matches wins:
+reclassify any call).
+
+### The vocabulary mirrors the website
+
+The types are the sections vitalcitynyc.org itself uses to organize content, so
+the catalogue and the site agree about what a piece is:
+
+| Type | Corresponds to |
+|---|---|
+| **opinion/commentary** | the site's **Commentary**, and the essays that fill each issue of **The Journal** — analysis and argument, overwhelmingly by outside contributors |
+| **policy** | the site's **Policy** section — Vital City's own recommendations (the *Just Fix It*, *What To Do (and Not To Do)* and *Rubber Meets Road* series) |
+| **data analysis** | the site's **Data** section — data stories and the recurring State of Crime / State of the Jails reports |
+| **podcast** | the site's **Podcast** section |
+| **q&a** | interviews, panels and forum transcripts |
+| **book review** | surfaced in the site's **Culture** section |
+| **map/tool** | a piece that *is* an interactive tool or map |
+| **something else** | site furniture — press releases, editor's notes, event notices, obituaries |
+
+### The rules, in order
+
+Rule-based and most-specific-first; the first rule that matches wins.
 
 | Order | Type | Matched when… | `type_basis` |
 |---|---|---|---|
-| 1 | **book review** | tagged "Book Review", or title says "a review of" / "reviewed" | `tag:book-review` / `title:review` |
-| 2 | **q&a** | tagged Podcast, interview, Conversations, or "In Conversation With…"; or the title reads like an interview ("in conversation", "a conversation with", "talks to/with", "Q&A") | `tag:<name>` / `title:conversation` |
-| 3 | **map/tool** | title contains "interactive", "explorer", "tracker", "dashboard", "calculator", "quiz", "interactive map"; **or** the article embeds one of Vital City's own hosted apps (`vitalcity-nyc.github.io` iframe); **or** the HTML loads a mapping/viz library (Leaflet, Mapbox, MapLibre, D3, Vega-Lite, deck.gl) | `title:tool-or-map` / `html:vc-app-embed` / `html:map-or-viz-library` |
-| 4 | **data analysis** | tagged "Data Stories" / in the `#data-stories` series; title like "by the numbers" / "in N charts" / "mapped"; **or** the piece embeds **3 or more** charts (Flourish / Datawrapper) | `tag:data-stories` / `html:N-chart-embeds` |
-| 5 | **something else** | framing pages — title like "About This Project", "Editor's Note", "Masthead", "A Note From…" | `title:framing-page` |
-| 6 | **opinion/commentary** | everything else (the default — Vital City is fundamentally an essays/commentary journal) | `default` |
+| 1 | **something else** | tagged "Press Releases" or "In Memoriam"; title like "About This Project", "Editor's Note", "Masthead", "A Note From…", "Call for Submissions"; **or** tagged "Events" and under 700 words and not a transcript (an event notice, not an article) | `tag:press-release` / `tag:in-memoriam` / `title:framing-page` / `tag:event-notice` |
+| 2 | **book review** | tagged "Book Review", or title says "a review of" / "reviewed" | `tag:book-review` / `title:review` |
+| 3 | **podcast** | tagged "Podcast" | `tag:podcast` |
+| 4 | **q&a** | tagged interview, Conversations, or "In Conversation With…"; title reads like a conversation ("in conversation", "a conversation with", "talks to/with", "Q&A", "panel", "forum"); **or** the body *is* a multi-speaker transcript (see below) | `tag:<name>` / `title:conversation` / `html:multi-speaker-transcript` |
+| 5 | **data analysis** | tagged "Data Stories" or in the `#data-stories` series | `tag:data-stories` |
+| 6 | **map/tool** | title names an interactive artifact ("interactive", "explorer", "tracker", "dashboard", "calculator", "simulator", "quiz", "proof-of-concept"); **or** the body is essentially just the embed — under 300 words plus an embedded Vital City app or a JS map library | `title:tool-or-map` / `html:embed-is-the-piece` |
+| 7 | **data analysis** | title like "by the numbers" / "in N charts" / "mapped"; **or** the piece embeds **3 or more** charts (Flourish / Datawrapper) | `title:data-framing` / `html:N-chart-embeds` |
+| 8 | **policy** | in the `#just-fix-it`, `#what-to-do-and-not-to-do` or `#rubber-meets-road` series (the three series the site files under Policy); **or** the title is "Just Fix It: …" / "What To Do (and Not To Do) …" | `series:<name>` / `title:policy-recommendation` |
+| 9 | **opinion/commentary** | everything else (the default — Vital City is fundamentally a commentary journal) | `default` |
 
-As of the latest run: opinion/commentary 693, q&a 59, data analysis 44,
-map/tool 10, book review 5, something else 1.
+Plus a short, hand-checked override table (`TYPE_OVERRIDES` in `scrape.py`),
+keyed by slug, for the handful of calls no rule can see. Each override records
+its own reason in `type_basis` as `curated:<reason>`. There are currently three.
+
+As of the latest run: opinion/commentary 712, q&a 58, data analysis 47,
+podcast 28, something else 14, policy 12, book review 6, map/tool 4.
+
+### Transcript detection
+
+A piece counts as a multi-speaker transcript when **12 or more** of its
+paragraphs open with a speaker label ("Errol Louis:", "EL:", "Vital City:") and
+**at least two** speakers take **four or more** turns each. That separates
+pieces whose *form* is the conversation — interviews, the *Borrow and Steal*
+interview series, panel and forum proceedings — from prose columns that merely
+quote a short exchange. The thresholds were set by checking both sides: a
+950-word column quoting a nine-line debate exchange fails; a 1,500-word
+interview passes.
 
 **Deliberate design choices and their limits:**
+- **Embedding a chart or a map does not make a piece a tool.** An earlier
+  version typed any article containing a Vital City app iframe as `map/tool`,
+  which mislabeled ten commentary essays that embedded one of our maps to
+  illustrate an argument. A piece is a tool only if its title says so or the
+  embed is substantially the whole piece.
 - "tool" and bare "map" are **not** matched in titles because they are usually
-  metaphorical ("the unlikely *tool* that could transform hiring"). Real tools
-  are caught by "interactive", an embedded Vital City app, or a JS map library.
+  metaphorical ("the unlikely *tool* that could transform hiring").
 - Mapping/viz libraries are matched by their actual script/CDN references (e.g.
   `leaflet.js`, `api.mapbox.com`, `/d3@`, `vega-lite`), **not** loose words, so
   prose like "Las **Vega**s" or "road**map**" does not trigger a false positive.
 - The 3-chart threshold for "data analysis" keeps opinion essays that merely
   include a chart or two in "opinion/commentary"; only genuinely chart-driven
   pieces flip to "data analysis".
+- **Data beats policy, and data beats tool.** A chart-driven component of a
+  policy series (e.g. "Subway Safety: What the Data Show", inside *What To Do
+  (and Not To Do)*) is typed `data analysis`, because that is what the reader
+  gets. The same precedence keeps "The New York City Economy: A Data Story" —
+  an interactive app tagged Data Stories — with the other data stories.
+- **Policy tracks the series, not the byline.** Vital City commissions outside
+  authors to write components of its policy packages (e.g. Aaron Chalfin's "50
+  Years of Evidence" in *Rubber Meets Road*). Those are typed `policy` because
+  the site files them under Policy.
 - The classifier favors precision over recall on the smaller categories. A piece
   that is mis-typed can be inspected via `type_basis` and the rules adjusted in
   `scrape.py` (`classify_type`).
