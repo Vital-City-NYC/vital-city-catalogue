@@ -161,6 +161,42 @@ interview passes.
   that is mis-typed can be inspected via `type_basis` and the rules adjusted in
   `scrape.py` (`classify_type`).
 
+## Subject / beat classification
+
+The `topics` field cannot answer "what have we written about" on its own,
+because Ghost keeps three different kinds of label in it:
+
+- **subjects** — real topics ("Housing", "Gun Violence"), 135 of the 206 tags
+- **issue section rubrics** — table-of-contents headings that structure a single
+  issue's arc ("Setting the Stage", "What Can Be Done?", "Where Do We Go From
+  Here?"), 48 tags. They name no subject at all. Read raw, "Setting the Stage"
+  (26 pieces) outranks homelessness.
+- **format / meta labels** — "Podcast", "Data Stories", "interview", 23 tags,
+  duplicating what `type` already records.
+
+`analyze_subjects.py` sorts every tag into exactly one of the three buckets by
+hand and maps the subjects onto 21 **beats**, writing
+`data/subject_analysis.json`. It **exits non-zero if any tag is unsorted**, so a
+newly added tag can never be silently dropped — the daily workflow logs a
+warning and the beat charts go stale until the tag is placed.
+
+Two deliberate calls, both documented in the script:
+
+- **"History" is its own beat, not part of Culture.** It is the second
+  most-applied tag in the catalogue (144 pieces) but functions as a *lens*,
+  applied to housing, charter-reform and infrastructure pieces as readily as to
+  cultural ones; 104 of its pieces carry no other cultural tag. Folding it into
+  Culture would overstate cultural coverage by roughly half. Its overlap with
+  every other beat is reported separately.
+- **A piece counts toward every beat it touches**, so beat counts sum to more
+  than 881. About 62% of pieces carry two beats.
+
+Also normalized here: seven tags exist twice in Ghost, once with a trailing
+period ("History." and "History"); those are counted together. `Etc.`,
+`If I Had a Hammer...` and `In Conversation With...` keep their punctuation.
+
+The results are charted at `/catalogue-analysis/`.
+
 ## Rollups
 
 - `data/authors.json` — one entry per contributor: post count, the article

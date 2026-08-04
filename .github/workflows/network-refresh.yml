@@ -89,6 +89,11 @@ jobs:
       - name: Analyze catalogue for the breakdown charts
         run: |
           python3 analyze_catalogue.py || echo "WARNING: analyze_catalogue failed; analysis page will be stale"
+          # analyze_subjects.py exits non-zero if a NEW topic tag appears that is
+          # not yet sorted into subject / rubric / format. That is the intended
+          # alarm — the beat charts go stale rather than silently dropping a tag.
+          # Fix: add the tag to the right bucket in analyze_subjects.py.
+          python3 analyze_subjects.py || echo "WARNING: analyze_subjects failed (likely an unsorted new topic tag); beat charts will be stale"
 
       - name: Flag influential people (Wikipedia, incremental)
         run: |

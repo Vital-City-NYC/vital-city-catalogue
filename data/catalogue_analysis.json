@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-08-04T11:48:42.412587+00:00",
+    "generated_at": "2026-08-04T22:58:37.060393+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 881,
     "total_authors": 487,
@@ -81,27 +81,35 @@
   "by_type": [
     [
       "opinion/commentary",
-      746
+      712
     ],
     [
       "q&a",
-      63
+      58
     ],
     [
       "data analysis",
-      46
+      47
     ],
     [
-      "map/tool",
-      18
+      "podcast",
+      28
+    ],
+    [
+      "something else",
+      14
+    ],
+    [
+      "policy",
+      12
     ],
     [
       "book review",
       6
     ],
     [
-      "something else",
-      2
+      "map/tool",
+      4
     ]
   ],
   "by_topic_top25": [

@@ -1,0 +1,1198 @@
+{
+  "generated_from": "2026-08-04T22:58:37.060393+00:00",
+  "total_pieces": 881,
+  "n_topics_normalized": 206,
+  "topic_bucket_sizes": {
+    "subjects": 135,
+    "meta": 23,
+    "rubrics": 48
+  },
+  "topic_bucket_piece_volume": {
+    "subject_tag_applications": 1953,
+    "meta_tag_applications": 204,
+    "rubric_tag_applications": 291
+  },
+  "rubrics_listed": [
+    "Beyond False Simplicity",
+    "Connecting Dots",
+    "Currents",
+    "Decisions, Decisions, Decisions",
+    "Defining the Challenge",
+    "Dreams of the Future",
+    "Etc.",
+    "How Did It Get This Bad?",
+    "If I Had a Hammer...",
+    "Looking Back",
+    "Mugged by Reality",
+    "New Solutions",
+    "Persistent Problems Inside",
+    "Public Perception and Statistical Realities",
+    "Repercussions",
+    "Setting the Stage",
+    "Solutions for Today and Tomorrow",
+    "Solving Cases: The People",
+    "Solving Cases: The System",
+    "Some Policy Solutions",
+    "Sweating the Small Stuff",
+    "The Causes",
+    "The Great Debate",
+    "The Joy of Incrementalism",
+    "The Policy Record",
+    "The Upside — Yes, Really",
+    "The Way Forward",
+    "Toward Solutions",
+    "What Are We Afraid Of?",
+    "What Can Be Done?",
+    "What Could Go Wrong?",
+    "What Do We Know?",
+    "What Does It All Mean?",
+    "What Doesn’t Work",
+    "What Else Can Be Done",
+    "What It Looks Like Up Close",
+    "What Makes a Great City Work?",
+    "What Opportunities Await?",
+    "What the Future Holds",
+    "What to Do Now",
+    "What's The Plan?",
+    "What’s Driving Trends and What to Do About It",
+    "Where Do We Go From Here?",
+    "Where We Are",
+    "Where We Go From Here",
+    "Where We’re Headed",
+    "Where We’ve Been",
+    "Wrenches in the Gears"
+  ],
+  "meta_listed": [
+    "About This Project",
+    "Book Review",
+    "Context: Politics and Data",
+    "Conversations",
+    "Data Stories",
+    "Events",
+    "In Conversation With...",
+    "In Memoriam",
+    "Overview",
+    "Podcast",
+    "Press Releases",
+    "Reality Check",
+    "Reflections",
+    "Report",
+    "Social Science",
+    "Sociology",
+    "Statistics",
+    "The Long View",
+    "The Research That Changed My Thinking",
+    "data",
+    "interview",
+    "policy",
+    "terminology"
+  ],
+  "beats": [
+    {
+      "beat": "City government & governance",
+      "pieces": 249,
+      "share": 28.3,
+      "median_words": 1586,
+      "types": [
+        [
+          "opinion/commentary",
+          201
+        ],
+        [
+          "q&a",
+          17
+        ],
+        [
+          "podcast",
+          15
+        ],
+        [
+          "data analysis",
+          9
+        ],
+        [
+          "policy",
+          4
+        ],
+        [
+          "something else",
+          2
+        ],
+        [
+          "book review",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 1,
+        "2023": 18,
+        "2024": 58,
+        "2025": 109,
+        "2026": 63
+      }
+    },
+    {
+      "beat": "Crime & violence",
+      "pieces": 236,
+      "share": 26.8,
+      "median_words": 1630,
+      "types": [
+        [
+          "opinion/commentary",
+          185
+        ],
+        [
+          "data analysis",
+          28
+        ],
+        [
+          "q&a",
+          14
+        ],
+        [
+          "something else",
+          4
+        ],
+        [
+          "policy",
+          3
+        ],
+        [
+          "podcast",
+          2
+        ]
+      ],
+      "by_year": {
+        "2022": 27,
+        "2023": 53,
+        "2024": 65,
+        "2025": 66,
+        "2026": 25
+      }
+    },
+    {
+      "beat": "Land use & the built city",
+      "pieces": 154,
+      "share": 17.5,
+      "median_words": 1587,
+      "types": [
+        [
+          "opinion/commentary",
+          136
+        ],
+        [
+          "podcast",
+          7
+        ],
+        [
+          "q&a",
+          6
+        ],
+        [
+          "data analysis",
+          3
+        ],
+        [
+          "policy",
+          1
+        ],
+        [
+          "book review",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 8,
+        "2023": 29,
+        "2024": 35,
+        "2025": 54,
+        "2026": 28
+      }
+    },
+    {
+      "beat": "History & the long view",
+      "pieces": 144,
+      "share": 16.3,
+      "median_words": 1650,
+      "types": [
+        [
+          "opinion/commentary",
+          131
+        ],
+        [
+          "q&a",
+          5
+        ],
+        [
+          "data analysis",
+          4
+        ],
+        [
+          "book review",
+          3
+        ],
+        [
+          "podcast",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 12,
+        "2023": 28,
+        "2024": 39,
+        "2025": 54,
+        "2026": 11
+      }
+    },
+    {
+      "beat": "Courts & prosecution",
+      "pieces": 112,
+      "share": 12.7,
+      "median_words": 1595,
+      "types": [
+        [
+          "opinion/commentary",
+          88
+        ],
+        [
+          "data analysis",
+          11
+        ],
+        [
+          "q&a",
+          9
+        ],
+        [
+          "book review",
+          2
+        ],
+        [
+          "podcast",
+          1
+        ],
+        [
+          "something else",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 5,
+        "2023": 29,
+        "2024": 39,
+        "2025": 29,
+        "2026": 10
+      }
+    },
+    {
+      "beat": "Culture & city life",
+      "pieces": 92,
+      "share": 10.4,
+      "median_words": 1599,
+      "types": [
+        [
+          "opinion/commentary",
+          83
+        ],
+        [
+          "book review",
+          3
+        ],
+        [
+          "q&a",
+          3
+        ],
+        [
+          "podcast",
+          2
+        ],
+        [
+          "data analysis",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 5,
+        "2023": 24,
+        "2024": 26,
+        "2025": 26,
+        "2026": 11
+      }
+    },
+    {
+      "beat": "Money, budgets & the economy",
+      "pieces": 81,
+      "share": 9.2,
+      "median_words": 1611,
+      "types": [
+        [
+          "opinion/commentary",
+          69
+        ],
+        [
+          "podcast",
+          8
+        ],
+        [
+          "data analysis",
+          2
+        ],
+        [
+          "something else",
+          1
+        ],
+        [
+          "q&a",
+          1
+        ]
+      ],
+      "by_year": {
+        "2023": 7,
+        "2024": 15,
+        "2025": 21,
+        "2026": 38
+      }
+    },
+    {
+      "beat": "Housing",
+      "pieces": 80,
+      "share": 9.1,
+      "median_words": 1880,
+      "types": [
+        [
+          "opinion/commentary",
+          68
+        ],
+        [
+          "podcast",
+          5
+        ],
+        [
+          "q&a",
+          3
+        ],
+        [
+          "data analysis",
+          3
+        ],
+        [
+          "policy",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 1,
+        "2023": 5,
+        "2024": 11,
+        "2025": 38,
+        "2026": 25
+      }
+    },
+    {
+      "beat": "Transportation",
+      "pieces": 75,
+      "share": 8.5,
+      "median_words": 1611,
+      "types": [
+        [
+          "opinion/commentary",
+          65
+        ],
+        [
+          "q&a",
+          4
+        ],
+        [
+          "data analysis",
+          4
+        ],
+        [
+          "podcast",
+          1
+        ],
+        [
+          "policy",
+          1
+        ]
+      ],
+      "by_year": {
+        "2023": 4,
+        "2024": 30,
+        "2025": 20,
+        "2026": 21
+      }
+    },
+    {
+      "beat": "Policing",
+      "pieces": 69,
+      "share": 7.8,
+      "median_words": 1780,
+      "types": [
+        [
+          "opinion/commentary",
+          49
+        ],
+        [
+          "q&a",
+          9
+        ],
+        [
+          "map/tool",
+          4
+        ],
+        [
+          "data analysis",
+          3
+        ],
+        [
+          "policy",
+          3
+        ],
+        [
+          "book review",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 8,
+        "2023": 18,
+        "2024": 10,
+        "2025": 10,
+        "2026": 23
+      }
+    },
+    {
+      "beat": "Jails & incarceration",
+      "pieces": 67,
+      "share": 7.6,
+      "median_words": 1702,
+      "types": [
+        [
+          "opinion/commentary",
+          50
+        ],
+        [
+          "data analysis",
+          9
+        ],
+        [
+          "q&a",
+          6
+        ],
+        [
+          "book review",
+          1
+        ],
+        [
+          "something else",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 7,
+        "2023": 15,
+        "2024": 34,
+        "2025": 5,
+        "2026": 6
+      }
+    },
+    {
+      "beat": "Politics & elections",
+      "pieces": 64,
+      "share": 7.3,
+      "median_words": 1534,
+      "types": [
+        [
+          "opinion/commentary",
+          57
+        ],
+        [
+          "q&a",
+          3
+        ],
+        [
+          "podcast",
+          3
+        ],
+        [
+          "data analysis",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 1,
+        "2024": 11,
+        "2025": 44,
+        "2026": 8
+      }
+    },
+    {
+      "beat": "Health, mental health & drugs",
+      "pieces": 62,
+      "share": 7.0,
+      "median_words": 1675,
+      "types": [
+        [
+          "opinion/commentary",
+          51
+        ],
+        [
+          "q&a",
+          6
+        ],
+        [
+          "policy",
+          3
+        ],
+        [
+          "data analysis",
+          1
+        ],
+        [
+          "something else",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 2,
+        "2023": 30,
+        "2024": 14,
+        "2025": 13,
+        "2026": 3
+      }
+    },
+    {
+      "beat": "Education & youth",
+      "pieces": 35,
+      "share": 4.0,
+      "median_words": 1635,
+      "types": [
+        [
+          "opinion/commentary",
+          33
+        ],
+        [
+          "data analysis",
+          1
+        ],
+        [
+          "q&a",
+          1
+        ]
+      ],
+      "by_year": {
+        "2023": 5,
+        "2024": 8,
+        "2025": 14,
+        "2026": 8
+      }
+    },
+    {
+      "beat": "State, federal & beyond NYC",
+      "pieces": 34,
+      "share": 3.9,
+      "median_words": 1820,
+      "types": [
+        [
+          "opinion/commentary",
+          26
+        ],
+        [
+          "q&a",
+          5
+        ],
+        [
+          "podcast",
+          1
+        ],
+        [
+          "policy",
+          1
+        ],
+        [
+          "data analysis",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 1,
+        "2023": 3,
+        "2024": 4,
+        "2025": 7,
+        "2026": 19
+      }
+    },
+    {
+      "beat": "Technology",
+      "pieces": 32,
+      "share": 3.6,
+      "median_words": 1639,
+      "types": [
+        [
+          "opinion/commentary",
+          26
+        ],
+        [
+          "q&a",
+          6
+        ]
+      ],
+      "by_year": {
+        "2023": 3,
+        "2024": 8,
+        "2025": 9,
+        "2026": 12
+      }
+    },
+    {
+      "beat": "Race, gender & inequality",
+      "pieces": 28,
+      "share": 3.2,
+      "median_words": 1808,
+      "types": [
+        [
+          "opinion/commentary",
+          23
+        ],
+        [
+          "q&a",
+          3
+        ],
+        [
+          "book review",
+          1
+        ],
+        [
+          "podcast",
+          1
+        ]
+      ],
+      "by_year": {
+        "2023": 8,
+        "2024": 4,
+        "2025": 16
+      }
+    },
+    {
+      "beat": "Climate, environment & sanitation",
+      "pieces": 21,
+      "share": 2.4,
+      "median_words": 1805,
+      "types": [
+        [
+          "opinion/commentary",
+          19
+        ],
+        [
+          "podcast",
+          1
+        ],
+        [
+          "q&a",
+          1
+        ]
+      ],
+      "by_year": {
+        "2023": 5,
+        "2025": 7,
+        "2026": 9
+      }
+    },
+    {
+      "beat": "Homelessness & social services",
+      "pieces": 18,
+      "share": 2.0,
+      "median_words": 1842,
+      "types": [
+        [
+          "opinion/commentary",
+          13
+        ],
+        [
+          "policy",
+          3
+        ],
+        [
+          "data analysis",
+          2
+        ]
+      ],
+      "by_year": {
+        "2023": 2,
+        "2024": 1,
+        "2025": 8,
+        "2026": 7
+      }
+    },
+    {
+      "beat": "Media & journalism",
+      "pieces": 17,
+      "share": 1.9,
+      "median_words": 1577,
+      "types": [
+        [
+          "opinion/commentary",
+          12
+        ],
+        [
+          "podcast",
+          2
+        ],
+        [
+          "q&a",
+          2
+        ],
+        [
+          "book review",
+          1
+        ]
+      ],
+      "by_year": {
+        "2024": 4,
+        "2025": 12,
+        "2026": 1
+      }
+    },
+    {
+      "beat": "Civil society & philanthropy",
+      "pieces": 17,
+      "share": 1.9,
+      "median_words": 1572,
+      "types": [
+        [
+          "opinion/commentary",
+          16
+        ],
+        [
+          "q&a",
+          1
+        ]
+      ],
+      "by_year": {
+        "2022": 2,
+        "2023": 3,
+        "2024": 1,
+        "2025": 11
+      }
+    }
+  ],
+  "cooccurrence_top20": [
+    {
+      "a": "City government & governance",
+      "b": "Politics & elections",
+      "pieces": 40
+    },
+    {
+      "a": "Culture & city life",
+      "b": "History & the long view",
+      "pieces": 40
+    },
+    {
+      "a": "Crime & violence",
+      "b": "History & the long view",
+      "pieces": 37
+    },
+    {
+      "a": "Courts & prosecution",
+      "b": "Crime & violence",
+      "pieces": 37
+    },
+    {
+      "a": "Housing",
+      "b": "Land use & the built city",
+      "pieces": 36
+    },
+    {
+      "a": "Crime & violence",
+      "b": "Policing",
+      "pieces": 36
+    },
+    {
+      "a": "Land use & the built city",
+      "b": "Transportation",
+      "pieces": 27
+    },
+    {
+      "a": "History & the long view",
+      "b": "Land use & the built city",
+      "pieces": 27
+    },
+    {
+      "a": "City government & governance",
+      "b": "Money, budgets & the economy",
+      "pieces": 26
+    },
+    {
+      "a": "City government & governance",
+      "b": "Housing",
+      "pieces": 25
+    },
+    {
+      "a": "City government & governance",
+      "b": "Land use & the built city",
+      "pieces": 25
+    },
+    {
+      "a": "City government & governance",
+      "b": "Courts & prosecution",
+      "pieces": 23
+    },
+    {
+      "a": "Courts & prosecution",
+      "b": "Jails & incarceration",
+      "pieces": 22
+    },
+    {
+      "a": "City government & governance",
+      "b": "History & the long view",
+      "pieces": 20
+    },
+    {
+      "a": "City government & governance",
+      "b": "Education & youth",
+      "pieces": 18
+    },
+    {
+      "a": "City government & governance",
+      "b": "Crime & violence",
+      "pieces": 17
+    },
+    {
+      "a": "Crime & violence",
+      "b": "Land use & the built city",
+      "pieces": 17
+    },
+    {
+      "a": "Culture & city life",
+      "b": "Land use & the built city",
+      "pieces": 16
+    },
+    {
+      "a": "Crime & violence",
+      "b": "Culture & city life",
+      "pieces": 16
+    },
+    {
+      "a": "Housing",
+      "b": "Money, budgets & the economy",
+      "pieces": 14
+    }
+  ],
+  "history_lens_reach": [
+    {
+      "beat": "Culture & city life",
+      "pieces": 92,
+      "with_history": 40,
+      "share": 43.5
+    },
+    {
+      "beat": "Civil society & philanthropy",
+      "pieces": 17,
+      "with_history": 4,
+      "share": 23.5
+    },
+    {
+      "beat": "Race, gender & inequality",
+      "pieces": 28,
+      "with_history": 6,
+      "share": 21.4
+    },
+    {
+      "beat": "Land use & the built city",
+      "pieces": 154,
+      "with_history": 27,
+      "share": 17.5
+    },
+    {
+      "beat": "Crime & violence",
+      "pieces": 236,
+      "with_history": 37,
+      "share": 15.7
+    },
+    {
+      "beat": "Media & journalism",
+      "pieces": 17,
+      "with_history": 2,
+      "share": 11.8
+    },
+    {
+      "beat": "Health, mental health & drugs",
+      "pieces": 62,
+      "with_history": 7,
+      "share": 11.3
+    },
+    {
+      "beat": "Transportation",
+      "pieces": 75,
+      "with_history": 8,
+      "share": 10.7
+    },
+    {
+      "beat": "Housing",
+      "pieces": 80,
+      "with_history": 8,
+      "share": 10.0
+    },
+    {
+      "beat": "Courts & prosecution",
+      "pieces": 112,
+      "with_history": 11,
+      "share": 9.8
+    },
+    {
+      "beat": "Climate, environment & sanitation",
+      "pieces": 21,
+      "with_history": 2,
+      "share": 9.5
+    },
+    {
+      "beat": "City government & governance",
+      "pieces": 249,
+      "with_history": 20,
+      "share": 8.0
+    },
+    {
+      "beat": "Jails & incarceration",
+      "pieces": 67,
+      "with_history": 5,
+      "share": 7.5
+    },
+    {
+      "beat": "Education & youth",
+      "pieces": 35,
+      "with_history": 2,
+      "share": 5.7
+    },
+    {
+      "beat": "Homelessness & social services",
+      "pieces": 18,
+      "with_history": 1,
+      "share": 5.6
+    },
+    {
+      "beat": "Policing",
+      "pieces": 69,
+      "with_history": 3,
+      "share": 4.3
+    },
+    {
+      "beat": "Technology",
+      "pieces": 32,
+      "with_history": 1,
+      "share": 3.1
+    },
+    {
+      "beat": "Politics & elections",
+      "pieces": 64,
+      "with_history": 2,
+      "share": 3.1
+    },
+    {
+      "beat": "State, federal & beyond NYC",
+      "pieces": 34,
+      "with_history": 1,
+      "share": 2.9
+    },
+    {
+      "beat": "Money, budgets & the economy",
+      "pieces": 81,
+      "with_history": 2,
+      "share": 2.5
+    }
+  ],
+  "criminal_justice_cluster": {
+    "beats": [
+      "Crime & violence",
+      "Policing",
+      "Courts & prosecution",
+      "Jails & incarceration"
+    ],
+    "pieces": 379,
+    "share": 43.0,
+    "by_year": {
+      "2021": {
+        "cj": 0,
+        "total": 1,
+        "share": 0.0
+      },
+      "2022": {
+        "cj": 35,
+        "total": 46,
+        "share": 76.1
+      },
+      "2023": {
+        "cj": 81,
+        "total": 153,
+        "share": 52.9
+      },
+      "2024": {
+        "cj": 119,
+        "total": 225,
+        "share": 52.9
+      },
+      "2025": {
+        "cj": 96,
+        "total": 287,
+        "share": 33.4
+      },
+      "2026": {
+        "cj": 48,
+        "total": 169,
+        "share": 28.4
+      }
+    }
+  },
+  "beats_per_piece": {
+    "0": 17,
+    "1": 191,
+    "2": 544,
+    "3": 111,
+    "4": 15,
+    "5": 3
+  },
+  "history_only_pieces": 104,
+  "pieces_with_no_subject_tag": {
+    "count": 17,
+    "examples": [
+      {
+        "title": "Does When We're Born Make Us Who We Are? A New Way of Thinking About Crime and Success in America",
+        "date": "2026-04-08",
+        "topics": [
+          "Events"
+        ],
+        "type": "something else"
+      },
+      {
+        "title": "Karen B. Shaer 1959-2026",
+        "date": "2026-04-02",
+        "topics": [
+          "In Memoriam"
+        ],
+        "type": "something else"
+      },
+      {
+        "title": "What Molly Park Knows About Homelessness and City Government",
+        "date": "2026-03-11",
+        "topics": [
+          "Podcast"
+        ],
+        "type": "podcast"
+      },
+      {
+        "title": "Free Fares, for Better and Worse",
+        "date": "2024-10-02",
+        "topics": [
+          "Decisions, Decisions, Decisions"
+        ],
+        "type": "opinion/commentary"
+      },
+      {
+        "title": "Does Evidence Matter in Policy Making?",
+        "date": "2024-06-17",
+        "topics": [
+          "Events",
+          "data"
+        ],
+        "type": "something else"
+      },
+      {
+        "title": "The Hubris of Social Scientists",
+        "date": "2024-03-27",
+        "topics": [
+          "Beyond False Simplicity",
+          "Social Science"
+        ],
+        "type": "opinion/commentary"
+      },
+      {
+        "title": "The Precautionary Principle",
+        "date": "2024-03-27",
+        "topics": [
+          "The Joy of Incrementalism",
+          "Social Science"
+        ],
+        "type": "opinion/commentary"
+      },
+      {
+        "title": "The World is Hard to Change",
+        "date": "2024-03-27",
+        "topics": [
+          "Social Science",
+          "Setting the Stage"
+        ],
+        "type": "opinion/commentary"
+      },
+      {
+        "title": "Drugs in New York City: By the Numbers",
+        "date": "2023-12-13",
+        "topics": [
+          "Setting the Stage",
+          "data",
+          "Data Stories"
+        ],
+        "type": "data analysis"
+      },
+      {
+        "title": "In Summery",
+        "date": "2023-06-23",
+        "topics": [
+          "Data Stories"
+        ],
+        "type": "data analysis"
+      },
+      {
+        "title": "Vital City Issues Call for Submissions",
+        "date": "2023-06-06",
+        "topics": [
+          "Press Releases"
+        ],
+        "type": "something else"
+      },
+      {
+        "title": "Errol Louis, Harry Siegel and Vishaan Chakrabarti Join Vital City as Contributing Writers",
+        "date": "2023-05-03",
+        "topics": [
+          "Press Releases"
+        ],
+        "type": "something else"
+      },
+      {
+        "title": "'Collective Action Can Make a Difference': A Conversation with Robert Sampson",
+        "date": "2023-03-28",
+        "topics": [
+          "Conversations",
+          "Social Science"
+        ],
+        "type": "q&a"
+      },
+      {
+        "title": "Sunday in the Park with Everybody",
+        "date": "2023-02-11",
+        "topics": [],
+        "type": "opinion/commentary"
+      },
+      {
+        "title": "Longtime Daily News Opinion and Editorial Page Editor Josh Greenman Joins Vital City as Managing Editor",
+        "date": "2022-12-05",
+        "topics": [
+          "Press Releases"
+        ],
+        "type": "something else"
+      },
+      {
+        "title": "NYC Jails Data",
+        "date": "2022-10-25",
+        "topics": [],
+        "type": "opinion/commentary"
+      },
+      {
+        "title": "What to Do About Closing Rikers",
+        "date": "2021-09-15",
+        "topics": [
+          "Report",
+          "data"
+        ],
+        "type": "opinion/commentary"
+      }
+    ]
+  }
+}

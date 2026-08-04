@@ -77,7 +77,9 @@
 </header>
 <nav class="secnav">
   <a href="#time">Over time</a><a href="#format">Format</a><a href="#subject">Subject</a>
-  <a href="#credentials">Who writes</a><a href="#focus">Focus shifts</a><a href="#length">Length</a>
+  <a href="#vocab">Tag vocabulary</a><a href="#pivot">The pivot</a><a href="#traj">Beat trends</a>
+  <a href="#treatment">Data treatment</a><a href="#pairs">What pairs up</a>
+  <a href="#credentials">Who writes</a><a href="#length">Length</a>
   <a href="#collab">Collaboration</a><a href="#method">How we did this</a>
 </nav>
 <div class="wrap">
@@ -88,11 +90,12 @@
     <h2>How we did this</h2>
     <div class="hint">Full transparency on sources, definitions and limits — nothing here is a black box.</div>
     <h3>Data source</h3>
-    <p>Every published post on <a href="https://www.vitalcitynyc.org">vitalcitynyc.org</a>, pulled from the Ghost Content API and mirrored to <code>data/catalogue.json</code>; author bios and post counts from the Ghost authors endpoint (<code>data/authors.json</code>). This page reads the pre-aggregated <code>data/catalogue_analysis.json</code>, recomputed by <code>analyze_catalogue.py</code> on each catalogue refresh. Counts reflect the pull stamped at top right.</p>
+    <p>Every published post on <a href="https://www.vitalcitynyc.org">vitalcitynyc.org</a>, pulled from the Ghost Content API and mirrored to <code>data/catalogue.json</code>; author bios and post counts from the Ghost authors endpoint (<code>data/authors.json</code>). This page reads two pre-aggregated files: <code>data/catalogue_analysis.json</code> (from <code>analyze_catalogue.py</code>) and <code>data/subject_analysis.json</code> (from <code>analyze_subjects.py</code>), both recomputed on each catalogue refresh. Counts reflect the pull stamped at top right.</p>
     <h3>Key definitions</h3>
     <ul>
-      <li><b>Format</b> is Vital City's own content type (opinion/commentary, Q&amp;A, data analysis, map/tool, book review), inferred by the catalogue pipeline from each post's structure.</li>
-      <li><b>Subject</b> uses the topic tags attached to each post in Ghost. A post can carry several topics, so topic counts sum to more than the number of pieces.</li>
+      <li><b>Format</b> is the content type assigned by the catalogue pipeline (opinion/commentary, policy, data analysis, podcast, Q&amp;A, book review, map/tool, something else). The vocabulary mirrors the sections vitalcitynyc.org itself uses, and every call records the rule that produced it in a <code>type_basis</code> field. Full ordered rule set in <a href="../methodology.md">methodology.md</a>.</li>
+      <li><b>Beats</b> are built from Ghost's topic tags, but not directly. The single <code>topics</code> field holds three different kinds of label: real subjects, <b>issue section rubrics</b> (table-of-contents headings like "Setting the Stage" that name no topic), and format labels that duplicate the type field. All 206 normalized tags are sorted by hand into those three buckets in <code>analyze_subjects.py</code>; the 135 subjects are then mapped to 21 beats. The rubric and format lists are written into the output file so the sort can be audited. Seven tags that exist twice in Ghost — once with a trailing period — are normalized together.</li>
+      <li><b>A piece counts toward every beat it touches</b>, so beat counts sum to more than the number of pieces. Most pieces (about 6 in 10) carry two beats.</li>
       <li><b>Contributor background</b> is a single label per piece, applied to the piece's <b>primary author</b>. It is assigned by an automated reading of the author's bio: the first professional role named in the bio wins (bios are written "is a <i>[main role]</i> and&hellip;"), with a short hand-checked override list for the most prolific contributors. It is an approximate heuristic, not a hand-verified label for all 472 authors.</li>
     </ul>
     <h3>Limitations worth keeping in mind</h3>
@@ -100,10 +103,12 @@
       <li><b>2021 and 2026 are partial years.</b> Vital City launched in September 2021, and 2026 runs only through the pull date — so those bars are not comparable to full years. They are flagged in the chart.</li>
       <li><b>Contributor background is single-label and heuristic.</b> Many contributors hold several credentials at once — a former prosecutor who now teaches law, a reporter who runs a nonprofit. We assign the role the bio leads with. Roughly one in ten pieces lands in "Other / unclassified" (mostly one-time contributors whose bios don't state a clear role) or "Unknown / no bio."</li>
       <li>The "Vital City (institutional)" slice is pieces bylined to the journal itself (staff-written explainers, surveys, round-ups), not a person.</li>
-      <li>Topic tagging is applied by editors over time and is not perfectly consistent across five years.</li>
+      <li><b>Beats inherit the tagging.</b> Topic tags are applied by editors over five years and are not perfectly consistent; a piece that should carry a subject tag and doesn't will be missing from that beat. 17 pieces carry no subject tag at all (mostly press releases, event notices and a few pieces tagged only with a rubric) and are excluded from beat counts; they are listed in the output file.</li>
+      <li><b>The beat map is a judgment, and a contestable one.</b> Sorting "Corruption" under courts rather than city government, or "Infrastructure" under transportation rather than the built city, moves real numbers. The mapping is one readable dictionary in <code>analyze_subjects.py</code> — disagree with a call and you can change it and re-run.</li>
+      <li><b>Trends are shares, not counts.</b> Because output grew every year, a beat can fall as a share while holding steady in absolute terms — which is exactly what happened to criminal justice. Tagging density is stable across the period (2.1&ndash;2.4 subject tags per piece each year), so the shifts reflect coverage rather than changing tagging habits.</li>
     </ul>
     <h3>Reproducibility</h3>
-    <p>The aggregation is a single stdlib-only script, <code>analyze_catalogue.py</code>, which reads the two JSON inputs and writes the numbers charted here. The credential keyword rules and override list live in that file, commented.</p>
+    <p>Two stdlib-only scripts produce every number on this page: <code>analyze_catalogue.py</code> (volume, format, credentials, length) and <code>analyze_subjects.py</code> (beats, trends, co-occurrence). Both read the catalogue JSON and write their aggregates to disk. The credential keyword rules, the topic-to-beat map and the rubric and format lists all live in those files as readable dictionaries, commented. <code>analyze_subjects.py</code> fails loudly if a topic tag is not sorted into one of its three buckets, so a newly added tag cannot be silently dropped.</p>
     <div style="margin-top:14px">
       <button class="aibtn" onclick="document.getElementById('aipop').classList.toggle('open')">&#9888; A note on AI &amp; accuracy</button>
       <div class="aipop" id="aipop">
@@ -122,6 +127,21 @@ const CO = {  // credential -> color
   "Nonprofit / advocacy":"#57aa4a","Think tank / research institute":"#7a5ea6","Legal practitioner":"#2fa89b",
   "Business / private sector":"#d9a441","Architecture / design / planning":"#5b6b7a",
   "Vital City (institutional)":"#050507","Survey / reader poll":"#b9bcc2","Other / unclassified":"#c7cad0","Unknown / no bio":"#e2e4e8"
+};
+// Beat -> color. The four criminal-justice beats share magenta so the founding
+// subject reads as one block; everything else is grouped by domain family.
+const BEATCO = {
+  "Crime & violence":"#e7466d","Policing":"#e7466d","Courts & prosecution":"#e7466d",
+  "Jails & incarceration":"#e7466d",
+  "City government & governance":"#050507","Politics & elections":"#5b6b7a",
+  "State, federal & beyond NYC":"#9b9fbc",
+  "Land use & the built city":"#217ebe","Housing":"#217ebe","Transportation":"#217ebe",
+  "Money, budgets & the economy":"#57aa4a","Education & youth":"#57aa4a",
+  "Health, mental health & drugs":"#2fa89b","Homelessness & social services":"#2fa89b",
+  "Climate, environment & sanitation":"#7cbf4e","Technology":"#d9a441",
+  "History & the long view":"#7a5ea6","Culture & city life":"#cea9be",
+  "Race, gender & inequality":"#ff7c53","Media & journalism":"#c7cad0",
+  "Civil society & philanthropy":"#c7cad0",
 };
 const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const nf=n=>n.toLocaleString();
@@ -165,7 +185,10 @@ function spark(vals,{w=180,h=48,color="#217ebe",years}={}){
   return s+`</svg>`;
 }
 
-fetch("../data/catalogue_analysis.json?cb="+Date.now()).then(r=>r.json()).then(D=>{
+Promise.all([
+  fetch("../data/catalogue_analysis.json?cb="+Date.now()).then(r=>r.json()),
+  fetch("../data/subject_analysis.json?cb="+Date.now()).then(r=>r.json()),
+]).then(([D,S])=>{
   const total=D.total_pieces;
   document.getElementById("stamp").textContent="Data pull: "+(D.meta.generated_at||"").slice(0,10);
   // KPIs
@@ -193,18 +216,79 @@ fetch("../data/catalogue_analysis.json?cb="+Date.now()).then(r=>r.json()).then(D
 
   // 2 + 3 side by side
   const typeRows=D.by_type.map(t=>({k:t[0],v:t[1],c:"#050507",pct:Math.round(t[1]/total*100)}));
-  const topicRows=D.by_topic_top25.slice(0,15).map(t=>({k:t[0],v:t[1],c:"#217ebe"}));
   html+=`<div class="grid2">
     <div class="card" id="format"><h2>Format: an opinion journal, first</h2>
       <div class="hint">Share of all ${nf(total)} pieces by content type.</div>
       ${hbar(typeRows,{labelW:150,valSuffix:""})}
-      <div class="insight">More than 8 in 10 pieces are opinion or commentary. Data analysis and interactive maps/tools are a small but distinct minority — ${D.by_type.find(t=>t[0]==='data analysis')[1]+D.by_type.find(t=>t[0]==='map/tool')[1]} pieces combined.</div>
-      <div class="src">Format is Vital City's own content type, inferred from post structure.</div></div>
-    <div class="card" id="subject"><h2>Subject matter: crime, history, city hall</h2>
-      <div class="hint">Top 15 of ${D.n_topics_total} topic tags. Pieces carry multiple tags, so these exceed the piece count.</div>
-      ${hbar(topicRows,{labelW:150})}
-      <div class="insight">Public safety runs through the catalogue — Crime, Justice, Gun Violence and Police Reform together tag hundreds of pieces — alongside a deep bench of City Planning, Housing and Government Operations.</div>
-      <div class="src">Source: Ghost topic tags. A piece counts once per tag it carries.</div></div>
+      <div class="insight">About 8 in 10 pieces are opinion or commentary — analysis and argument, overwhelmingly by outside contributors. Everything else is a deliberate minority: ${D.by_type.find(t=>t[0]==='data analysis')[1]} data analyses, ${D.by_type.find(t=>t[0]==='q&a')[1]} Q&amp;As, ${D.by_type.find(t=>t[0]==='podcast')[1]} podcast episodes and ${D.by_type.find(t=>t[0]==='policy')[1]} pieces of Vital City's own policy.</div>
+      <div class="src">Types mirror the sections vitalcitynyc.org itself uses. Every call records its reason; see <a href="../methodology.md">methodology</a>.</div></div>
+    <div class="card" id="subject"><h2>What the pieces are about</h2>
+      <div class="hint">${nf(S.beats.length)} beats, built by sorting all ${nf(S.n_topics_normalized)} topic tags into subjects (see below). A piece counts toward every beat it touches, so these exceed ${nf(total)}.</div>
+      ${hbar(S.beats.map(b=>({k:b.beat,v:b.pieces,c:BEATCO[b.beat]||"#217ebe",pct:Math.round(b.share)})),{labelW:210})}
+      <div class="insight">City Hall and crime are the two poles of the catalogue, and they are the only beats above 20%. Below them sits a real second tier — the built city, courts, the economy, housing, transportation — and then a long tail where whole domains of city life are covered only a handful of times a year: climate at ${S.beats.find(b=>b.beat.startsWith("Climate")).share}%, homelessness at ${S.beats.find(b=>b.beat.startsWith("Homelessness")).share}%, education and youth at ${S.beats.find(b=>b.beat.startsWith("Education")).share}%.</div>
+      <div class="src">Source: Ghost topic tags, sorted by hand into subjects, format labels and issue rubrics; subjects mapped to beats in <code>analyze_subjects.py</code>.</div></div>
+  </div>`;
+
+  // 3b. Why the raw tag list can't answer the question
+  const tb=S.topic_bucket_sizes, tv=S.topic_bucket_piece_volume;
+  html+=`<div class="card" id="vocab"><h2>Why the tag list alone can't tell you what we cover</h2>
+    <div class="hint">Ghost holds one <code>topics</code> field, but three different kinds of label live in it.</div>
+    ${hbar([
+      {k:"Subjects (Housing, Gun Violence…)",v:tv.subject_tag_applications,c:"#217ebe"},
+      {k:"Issue section rubrics",v:tv.rubric_tag_applications,c:"#ff7c53"},
+      {k:"Format / meta labels",v:tv.meta_tag_applications,c:"#9b9fbc"}],
+      {labelW:230,valSuffix:" tag uses"})}
+    <div class="insight">Of ${nf(S.n_topics_normalized)} distinct tags, only ${tb.subjects} name a subject. ${tb.rubrics} are <b>issue section rubrics</b> — table-of-contents headings like "Setting the Stage," "What Can Be Done?" and "Where Do We Go From Here?" that structure a single issue's arc and describe no topic at all. Another ${tb.meta} are format labels ("Podcast," "Data Stories," "interview") that duplicate the type field. Read the raw tag counts and "Setting the Stage" outranks homelessness. Every tag is sorted into exactly one of the three buckets, and the rubric and format lists are published in the data file so the sort can be checked.</div>
+    <div class="src">A separate quirk, also fixed: seven tags exist twice in Ghost, once with a trailing period ("History." and "History"). Those are normalized together.</div></div>`;
+
+  // 3c. The pivot away from criminal justice
+  const cj=S.criminal_justice_cluster, cjy=Object.keys(cj.by_year).filter(y=>cj.by_year[y].total>=10);
+  html+=`<div class="card" id="pivot"><h2>The pivot away from criminal justice</h2>
+    <div class="hint">Share of each year's pieces touching crime, policing, courts or jails. Share, not count — the catalogue kept growing throughout.</div>
+    ${vbar(cjy.map(y=>({k:y,v:cj.by_year[y].share})),{color:"#e7466d",h:250,flag:[cjy[cjy.length-1]]})}
+    <div class="insight">This is the largest single change in what Vital City publishes. In ${cjy[0]}, ${cj.by_year[cjy[0]].share}% of pieces touched criminal justice; through July ${cjy[cjy.length-1]} it is ${cj.by_year[cjy[cjy.length-1]].share}%. The absolute count barely moved — ${cj.by_year[cjy[0]].cj} pieces then, ${cj.by_year["2025"].cj} in 2025 — so this is not a retreat from the subject. It is everything else growing around it: City Hall coverage went from ${S.beats.find(b=>b.beat.startsWith("City government")).by_year["2022"]||0} pieces in 2022 to ${S.beats.find(b=>b.beat.startsWith("City government")).by_year["2025"]} in 2025, and housing from ${S.beats.find(b=>b.beat==="Housing").by_year["2022"]||0} to ${S.beats.find(b=>b.beat==="Housing").by_year["2025"]}. A criminal-justice journal became a city-policy journal without publishing less about criminal justice.</div>
+    <div class="src">* Partial year. Tagging density is steady across the period (2.1–2.4 subject tags per piece every year), so the trend is a change in coverage, not in tagging habits.</div></div>`;
+
+  // 3d. Beat trajectories
+  const byrs=["2022","2023","2024","2025","2026"];
+  const yrTot={}; byrs.forEach(y=>yrTot[y]=cj.by_year[y].total);
+  const traj=S.beats.filter(b=>b.pieces>=30).map(b=>{
+    const vals=byrs.map(y=>Math.round((b.by_year[y]||0)/yrTot[y]*100));
+    return `<div class="sm"><div class="t">${esc(b.beat)}</div><div class="d">% of each year's pieces</div>${spark(vals,{color:BEATCO[b.beat]||"#217ebe",years:byrs})}</div>`;
+  }).join("");
+  html+=`<div class="card" id="traj"><h2>Which beats rose, which faded</h2>
+    <div class="hint">For every beat with 30 or more pieces, its share of each year's output. 2026 runs through July 31.</div>
+    <div class="sm-grid">${traj}</div>
+    <div class="insight">Three beats are clearly ascendant: City Hall and governance (from 2% to 37% of the year's pieces), the economy and budgets (0% to 23%), and housing (2% to 15%). Two have thinned sharply — jails and incarceration, which peaked at 15% in 2024 and is now under 4%, and health, mental health and drugs, which peaked at 20% in 2023 and is now under 2%. Politics spikes in election years and recedes. The built city is the steadiest thing here, holding 16–19% every single year.</div>
+    <div class="src">Source: subject tags ÷ pieces published that year.</div></div>`;
+
+  // 3e. Which beats get which treatment
+  const treat=S.beats.filter(b=>b.pieces>=30).map(b=>{
+    const t=Object.fromEntries(b.types), n=b.pieces;
+    const nonComm=n-(t["opinion/commentary"]||0);
+    return {beat:b.beat,n,data:t["data analysis"]||0,qa:t["q&a"]||0,pol:t["policy"]||0,pod:t["podcast"]||0,nonComm,
+            dshare:Math.round((t["data analysis"]||0)/n*100)};
+  }).sort((a,b)=>b.dshare-a.dshare);
+  html+=`<div class="card" id="treatment"><h2>Where the data treatment goes</h2>
+    <div class="hint">Share of each beat's pieces that are data analysis rather than commentary. Beats with 30+ pieces.</div>
+    ${hbar(treat.map(t=>({k:t.beat,v:t.dshare,c:t.dshare>=10?"#217ebe":"#c7cad0"})),{labelW:210,valSuffix:"%"})}
+    <div class="insight">Vital City's quantitative work is concentrated almost entirely in criminal justice. Jails (${treat.find(t=>t.beat.startsWith("Jails")).dshare}%), crime (${treat.find(t=>t.beat.startsWith("Crime")).dshare}%) and courts (${treat.find(t=>t.beat.startsWith("Courts")).dshare}%) are the only beats where at least one piece in ten is a data analysis. The beats that grew fastest are the ones getting the least of it: the economy and budgets is ${treat.find(t=>t.beat.startsWith("Money")).dshare}% data, housing ${treat.find(t=>t.beat==="Housing").dshare}%, technology ${treat.find(t=>t.beat==="Technology").dshare}%. The data operation still points where the journal started, not where it has moved.</div>
+    <div class="src">Type per piece from the catalogue classifier. A piece counts toward each of its beats.</div></div>`;
+
+  // 3f. What travels together + the history lens
+  const pairs=S.cooccurrence_top20.slice(0,12).map(c=>({k:c.a.replace(/ &.*/,"")+" + "+c.b.replace(/ &.*/,""),v:c.pieces,c:"#57aa4a"}));
+  const hl=S.history_lens_reach.filter(h=>h.pieces>=28).slice(0,8).map(h=>({k:h.beat,v:h.share,c:"#7a5ea6"}));
+  html+=`<div class="grid2">
+    <div class="card" id="pairs"><h2>What travels together</h2>
+      <div class="hint">Beat pairs appearing on the same piece, most frequent first.</div>
+      ${hbar(pairs,{labelW:210,valSuffix:" pieces"})}
+      <div class="insight">The pairings show where the journal actually thinks in systems: crime with courts and with policing, housing with land use, land use with transportation, City Hall with the budget. Almost no piece connects the economy to criminal justice, or climate to housing — adjacencies the city itself is full of.</div>
+      <div class="src">Only pieces carrying subject tags for both beats count.</div></div>
+    <div class="card" id="lens"><h2>History is a lens, not a beat</h2>
+      <div class="hint">Share of each beat's pieces also tagged History. Beats with 28+ pieces.</div>
+      ${hbar(hl,{labelW:210,valSuffix:"%"})}
+      <div class="insight">"History" is the second most-applied tag in the whole catalogue (${S.beats.find(b=>b.beat.startsWith("History")).pieces} pieces), but it is not a subject area — it is a habit of mind applied across the others. ${S.history_lens_reach.find(h=>h.beat.startsWith("Culture")).share}% of culture pieces carry it, and so do ${S.history_lens_reach.find(h=>h.beat.startsWith("Land use")).share}% of land-use pieces and ${S.history_lens_reach.find(h=>h.beat.startsWith("Crime")).share}% of crime pieces. Folding it into culture, as a naive read of the tags would, overstates cultural coverage by about half: ${S.history_only_pieces} of its pieces carry no other cultural tag at all.</div>
+      <div class="src">Kept as its own dimension for exactly this reason. See <code>analyze_subjects.py</code>.</div></div>
   </div>`;
 
   // 4. Credentials
