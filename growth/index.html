@@ -531,6 +531,11 @@
       <div class="sechead-title" id="sec-glance" style="margin:24px 0 12px">At a glance</div>
       <div class="kpis" id="kpis"></div>
 
+      <div class="card" id="askAI">
+        <h2>Ask your own questions of this data <span class="hint">download the full dataset and analyze it with Claude, ChatGPT or a spreadsheet</span></h2>
+        <div id="askAIBody"></div>
+      </div>
+
       <div class="card" id="weekPulse" style="display:none">
         <h2>Last 7 days <span class="hint" id="weekPulseHint"></span></h2>
         <div class="perfgrid" id="weekPulseGrid"></div>
@@ -894,6 +899,7 @@ async function unlock(fromStore){
     const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
     const data=await decryptBlob(pass,blob);
     savePass(pass);
+    window._vcData = data;      // used by the "analyze with AI" export below
     boot(data);
   }catch(e){
     console.error(e);
@@ -1102,6 +1108,7 @@ function boot(data){
   renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || [], data.linkedin || {}, data.bluesky || {});
   renderXFollowers(data);
   renderPreferredSource(data);
+  renderAskAI(data);
   renderPieceBenchmarks(data);
   renderPieceLookup(data);
   renderAuthorLookup(data);
@@ -2792,6 +2799,117 @@ function renderPreferredSource(data){
       <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:6px">The ask runs in several spots &mdash; this is the page each click happened on.</div>
       <table class="tbl" style="width:100%"><thead><tr><th>Page the click came from</th><th class="num">Clicks</th></tr></thead><tbody>${pageRows}</tbody></table>`:""}
     <div class="flagnote" style="margin-top:12px"><b>A click is not a confirmed preferred source.</b> Google Analytics can only see that someone clicked our link; whether they completed the add inside Google is not something Google reports back, so treat this as <b>intent, not confirmed adds</b> &mdash; the true number of people who followed through is unknown and is at most this figure. Volumes are small and early, so read the direction, not the decimal. Source: GA4 event <code>${esc((ps.events||[]).join(", "))}</code>, last ${fmtN(ps.window_days)} days.</div>`;
+}
+
+// "Ask your own questions" — hand the whole decrypted dataset to any AI tool.
+// The page has already decrypted it, so this is just a download; no key, no API,
+// no cost. The PRIMER matters as much as the data: handed the raw numbers with
+// no context, an AI will confidently report that signups collapsed ~66% in 2026,
+// when that comparison is against a 2025 baseline inflated by bot signups. Every
+// known trap is written into the primer so the analysis starts honest.
+function aiPrimer(d){
+  const mc = d.mailchimp || {}, sw = mc.signup_windows || {};
+  const gen = (d.generated_at || "").slice(0,10);
+  const mauBroken = !((mc.mau||{}).active_users);
+  return `You are analyzing the Vital City growth dataset (vitalcitynyc.org — a New York City
+urban-policy journal). The attached JSON is the complete feed behind their internal growth
+dashboard, generated ${gen}.
+
+WHAT'S IN IT (top-level keys)
+- ga4 ................ Google Analytics 4. by_year.years[] = visitors per year;
+                       traffic_weekly[] = weekly visits; top_pages_by_year[year][];
+                       piece_index.pieces[] = EVERY published piece with lifetime views,
+                       engaged seconds, first-30-day views (views30), newsletter clicks,
+                       attributed signups; piece_benchmarks = percentile bands.
+- mailchimp .......... total_subscribers; monthly_signups[] (new_signups = NET adds from
+                       Mailchimp; ghost_signups = GROSS organic; cum_subs = list size at
+                       month end); windows.ytd / .prior_ytd = send counts and open/click
+                       RATES (not totals); campaigns[]; daily_activity[].
+- search_console ..... windows["28"|"90"|"365"].totals = clicks, impressions, ctr, position.
+                       topic_searches = top New York City policy queries. Also page-2
+                       "opportunities" per window.
+- ghost_signup_attribution ... where signups came from (by_source, by_medium).
+- engagement_extras .. influence_weighted_reach = notable / government readers.
+- donorbox ........... giving. x_followers / linkedin / bluesky / instagram = social.
+- news_mentions ...... third-party press citations.
+
+READ THESE CAVEATS BEFORE CONCLUDING ANYTHING
+1. BOT SIGNUPS. May–September 2025 net additions were inflated by bot signups (~4,981 above
+   the ~184/month organic baseline), and ~575 were purged in May 2026. So ANY 2025-vs-2026
+   signup comparison is invalid — it compares real humans to humans plus bots. Do not report
+   a "decline" in signups on that basis. The list falling from its April 2026 peak is
+   deliberate hygiene, not shrinkage. Use mailchimp.signup_windows.ytd_ghost (real organic
+   signups) rather than net figures when judging genuine growth.
+2. GROSS vs NET. monthly_signups[].ghost_signups = real organic signups (reliable from about
+   April 2026 only). new_signups = net of churn AND includes bulk/imported additions.
+3. ${mauBroken ? "ACTIVE-SUBSCRIBER COUNT IS UNAVAILABLE. mailchimp.mau.active_users reads 0 — this is a\n   data gap, NOT zero readers. Mailchimp does not report per-member opens for A/B split-test\n   sends, and recent newsletters were all A/B tests. Use total clicks or the 1-year figure\n   (mailchimp.aau) instead; never report 0 active subscribers."
+   : "mailchimp.mau.active_users is the deduped 30-day active-reader count."}
+4. OPEN RATES ARE NOT COMPARABLE ACROSS YEARS. Apple Mail privacy protection auto-opens mail,
+   inflating older rates; bots on the list depressed 2026 rates before the cleanup. Click rate
+   and TOTAL opens/clicks (rate x recipients) are the honest measures.
+5. GA4 COUNTS BROWSERS, NOT PEOPLE. One person on a phone and laptop counts twice. Visitor
+   figures are directional. Yearly uniques cannot be summed into an all-time headcount.
+6. SOME PUBLISH DATES ARE WRONG. Pieces with date_suspect:true had their date mis-assigned in
+   a CMS migration; their views30 is absent and they must not be judged on it.
+7. PARTIAL PERIODS. The current year, month and week are incomplete — annualize explicitly or
+   compare like-for-like windows, and say which you did.
+8. ATTRIBUTION IS PARTIAL. About 54% of signups carry no source, and the attribution window is
+   ~180 days. Absence of attribution is not evidence of zero.
+9. Search Console impressions are NOT total Google search volume — only times a Vital City page
+   appeared. Per-piece search query data exists for only ~24 pieces.
+
+HOUSE RULES FOR YOUR ANALYSIS
+- State a confidence level for every significant claim, and name the source field.
+- Distinguish what the data shows from what you are inferring. Correlation in timing is not
+  proof of cause — say so when you lean on it.
+- Prefer medians to averages where one hit can distort.
+- Write "New York City" in full. No Oxford comma. Sentence case for headings.
+- Flag anything that looks like a data artifact rather than a real trend.
+
+A GOOD FIRST QUESTION MIGHT BE
+"How is reader acquisition and audience growth going this year, and what is driving it?"
+Others: which pieces drove the most subscriptions; where search rank is improving and what to
+publish next; which readers are drifting away; how giving tracks against engagement.`;
+}
+
+function renderAskAI(data){
+  const host = $("#askAIBody"); if(!host) return;
+  host.innerHTML = `
+    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:12px">
+      Everything on this page comes from one dataset. You can download it and ask an AI tool
+      (Claude, ChatGPT, Gemini) or a spreadsheet <b>whatever you want</b> &mdash; you are not limited to
+      the charts we happened to build. Download both files, upload them together, and ask your question.
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="btn-rpt primary" id="aiData">&#11015; Download the data (JSON)</button>
+      <button class="btn-rpt" id="aiPrimer">&#11015; Download the guide</button>
+      <button class="btn-rpt" id="aiCopy">&#10697; Copy the guide</button>
+    </div>
+    <div style="font-size:11.5px;color:var(--vc-charcoal);line-height:1.55">
+      <b>How to use it:</b> open Claude or ChatGPT, attach both files, and ask your question in plain
+      English. The guide tells the AI what each field means <b>and where the data can mislead</b> &mdash;
+      without it, an AI will confidently report a signup collapse that is really just last year's bot
+      signups being removed. Keep them together.
+    </div>
+    <div class="flagnote" style="margin-top:12px"><b>This file contains confidential subscriber,
+      donor and contact data.</b> Anything you upload goes to that AI provider. Use an account your
+      organization approves, do not paste it into a public or shared chat, and do not redistribute
+      the file. If you only need aggregate trends, the guide alone plus the charts on this page may
+      be enough.</div>`;
+  const dl = (name, text, mime) => {
+    const b = new Blob([text], {type: mime + ";charset=utf-8"}), u = URL.createObjectURL(b);
+    const a = document.createElement("a"); a.href = u; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(u); a.remove(); }, 500);
+  };
+  const stamp = (window._vcData && (window._vcData.generated_at||"").slice(0,10)) || "latest";
+  $("#aiData").addEventListener("click", () =>
+    dl(`vital-city-growth-data_${stamp}.json`, JSON.stringify(window._vcData, null, 1), "application/json"));
+  $("#aiPrimer").addEventListener("click", () =>
+    dl(`vital-city-data-guide_${stamp}.txt`, aiPrimer(window._vcData || {}), "text/plain"));
+  $("#aiCopy").addEventListener("click", e =>
+    navigator.clipboard.writeText(aiPrimer(window._vcData || {}))
+      .then(() => rptFlash(e.target, "Copied!"), () => alert("Copy failed — use Download instead.")));
 }
 
 // Who follows Vital City on X — a point-in-time follower snapshot, cross-matched
