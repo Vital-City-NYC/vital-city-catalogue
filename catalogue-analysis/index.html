@@ -80,7 +80,7 @@
 </header>
 <nav class="secnav">
   <a href="#shape">The shape</a><a href="#subject">Subject</a><a href="#shift">How it moved</a>
-  <a href="#pivot">The pivot</a><a href="#arc">The job</a><a href="#curation">Franchises</a>
+  <a href="#arc">The job</a>
   <a href="#length">Length</a><a href="#mayors">Headlines</a><a href="#signal">Opinion vs analysis</a><a href="#treatment">Data treatment</a>
   <a href="#credentials">Who writes</a><a href="#bench">Who writes what</a>
   <a href="#method">How we did this</a>
@@ -163,22 +163,6 @@ function hbar(rows, {w=520,color=null,unit="",labelW=170,valSuffix=""}={}){
     s+=`<text class="bar-lbl" x="${labelW-8}" y="${y+rh/2+4}" text-anchor="end">${esc(r.k)}</text>`;
     s+=`<rect x="${labelW}" y="${y+3}" width="${len}" height="${rh-9}" rx="2" fill="${c}"><title>${esc(r.k)}: ${nf(r.v)}${valSuffix}</title></rect>`;
     s+=`<text class="bar-val" x="${labelW+len+6}" y="${y+rh/2+4}">${nf(r.v)}${valSuffix}${r.pct!=null?' · '+r.pct+'%':''}</text>`;
-  });
-  return s+`</svg>`;
-}
-// vertical bar chart
-function vbar(rows,{w=520,h=230,color="#217ebe",flag=[]}={}){
-  const padB=34,padT=14,padL=34, iw=w-padL-10, ih=h-padB-padT;
-  const max=Math.max(...rows.map(r=>r.v))||1, bw=iw/rows.length*0.62, gap=iw/rows.length;
-  let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
-  for(let g=0;g<=4;g++){const gv=Math.round(max*g/4),gy=padT+ih-ih*g/4;
-    s+=`<line class="gridline" x1="${padL}" x2="${w-10}" y1="${gy}" y2="${gy}"/><text class="ax" x="${padL-5}" y="${gy+3}" text-anchor="end">${gv}</text>`;}
-  rows.forEach((r,i)=>{
-    const x=padL+i*gap+(gap-bw)/2, bh=r.v/max*ih, y=padT+ih-bh;
-    const isFlag=flag.includes(r.k);
-    s+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="2" fill="${color}" opacity="${isFlag?0.42:1}"><title>${esc(r.k)}: ${nf(r.v)}${isFlag?' (partial year)':''}</title></rect>`;
-    s+=`<text class="bar-val" x="${x+bw/2}" y="${y-4}" text-anchor="middle">${nf(r.v)}</text>`;
-    s+=`<text class="ax" x="${x+bw/2}" y="${h-padB+16}" text-anchor="middle">${esc(r.k)}${isFlag?' *':''}</text>`;
   });
   return s+`</svg>`;
 }
@@ -277,8 +261,8 @@ Promise.all([
     <div class="band">
       <div class="bi"><div class="bn">${opinionShare}%</div><div class="bl">is argument</div>
         <div class="bd">${nf(ty("opinion/commentary"))} opinion and commentary pieces plus ${ty("policy")} of Vital City's own policy. The deliberate minority: ${ty("data analysis")} data analyses, ${ty("q&a")} Q&amp;As, ${ty("podcast")} podcast episodes, ${ty("book review")} book reviews, ${ty("map/tool")} interactive tools.</div></div>
-      <div class="bi"><div class="bn">${cur.share}%</div><div class="bl">commissioned into an issue</div>
-        <div class="bd">${nf(cur.in_curated_issue)} of ${nf(total)} pieces belong to one of ${cur.n_issues_and_series} numbered issues or named series rather than standing alone.</div></div>
+      <div class="bi"><div class="bn">${cur.share}%</div><div class="bl">published in an issue</div>
+        <div class="bd">${nf(cur.in_curated_issue)} of ${nf(total)} pieces belong to one of ${cur.n_issues_and_series} issues &mdash; some numbered, some named for their theme &mdash; rather than running on their own. Issues arrive in bursts, often the whole issue on one day.</div></div>
       <div class="bi"><div class="bn">${Math.round(D.by_nauthors["1"]/total*100)}%</div><div class="bl">single byline</div>
         <div class="bd">Co-authoring is the exception, reserved for collaborative research and cross-disciplinary pieces. One group survey carries ten names.</div></div>
       <div class="bi"><div class="bn">${Math.round(D.by_year["2025"]/52*10)/10}</div><div class="bl">pieces a week</div>
@@ -294,38 +278,23 @@ Promise.all([
     <div class="src">Source: Ghost topic tags, sorted in <code>analyze_subjects.py</code>. "History" is kept as its own beat rather than folded into culture &mdash; it is applied as a lens across every other beat, and ${S.history_only_pieces} of its ${S.beats.find(b=>b.beat.startsWith("History")).pieces} pieces carry no other cultural tag.</div></div>`;
 
   // 2. The whole trajectory story in one chart (was 22 sparklines).
-  const bs=S.beat_shift, bsb=bs.beats;
+  const bs=S.beat_shift, bsb=bs.beats, cjb=S.criminal_justice_cluster;
   html+=`<div class="card" id="shift"><h2>How the subject mix moved</h2>
     <div class="hint">Each beat's share of pieces in Vital City's first three years (hollow dot, ${bs.early_years[0]}&ndash;${bs.early_years[bs.early_years.length-1]}, ${nf(bs.early_pieces)} pieces) and in the most recent two (filled dot, ${bs.late_years.join("&ndash;")}, ${nf(bs.late_pieces)} pieces). Beats with 30+ pieces. Shares, not counts &mdash; output more than doubled between the windows.</div>
     ${dumbbell(bsb.map(b=>({k:b.beat,a:b.early,b:b.late})))}
     <div class="legend"><span><i class="sw" style="background:#217ebe"></i>Grew as a share</span><span><i class="sw" style="background:#e7466d"></i>Shrank as a share</span></div>
-    <div class="insight">Vital City published its way from one subject into another. City government went from ${bsb.find(b=>b.beat.startsWith("City government")).early}% of pieces to ${bsb.find(b=>b.beat.startsWith("City government")).late}% &mdash; now the largest beat in the journal &mdash; with politics, housing, the economy and transportation all climbing behind it. Crime halved as a share, from ${bsb.find(b=>b.beat.startsWith("Crime")).early}% to ${bsb.find(b=>b.beat.startsWith("Crime")).late}%, and the sharpest falls are health and mental health (${bsb.find(b=>b.beat.startsWith("Health")).early}% to ${bsb.find(b=>b.beat.startsWith("Health")).late}%) and jails (${bsb.find(b=>b.beat.startsWith("Jails")).early}% to ${bsb.find(b=>b.beat.startsWith("Jails")).late}%). One beat barely moved at all: the built city, ${bsb.find(b=>b.beat.startsWith("Land use")).early}% then, ${bsb.find(b=>b.beat.startsWith("Land use")).late}% now &mdash; the journal's most constant preoccupation.</div>
-    <div class="src">Two-year windows on each end so a single heavy issue doesn't read as a trend. 2026 runs through the pull date. Source: subject tags &divide; pieces published in the window.</div></div>`;
-
-  // 3. The single largest change, shown year by year.
-  const cj=S.criminal_justice_cluster, cjy=Object.keys(cj.by_year).filter(y=>cj.by_year[y].total>=10);
-  html+=`<div class="card" id="pivot"><h2>The pivot away from criminal justice</h2>
-    <div class="hint">Share of each year's pieces touching crime, policing, courts or jails &mdash; the four beats Vital City was founded on.</div>
-    ${vbar(cjy.map(y=>({k:y,v:cj.by_year[y].share})),{color:"#e7466d",h:250,flag:[cjy[cjy.length-1]]})}
-    <div class="insight">In ${cjy[0]}, ${cj.by_year[cjy[0]].share}% of pieces touched criminal justice; through ${cjy[cjy.length-1]} it is ${cj.by_year[cjy[cjy.length-1]].share}%. But the absolute count barely moved &mdash; ${cj.by_year[cjy[0]].cj} pieces then, ${cj.by_year["2025"].cj} in 2025 &mdash; so this is not a retreat from the subject. It is everything else growing around it. A criminal-justice journal became a city-policy journal without publishing less about criminal justice.</div>
-    <div class="src">* Partial year. Tagging density is steady throughout (2.1&ndash;2.4 subject tags per piece every year), so this is a change in coverage, not in tagging habits.</div></div>`;
+    <div class="insight">Vital City published its way from one subject into another. City government went from ${bsb.find(b=>b.beat.startsWith("City government")).early}% of pieces to ${bsb.find(b=>b.beat.startsWith("City government")).late}% &mdash; now the largest beat in the journal &mdash; with politics, housing, the economy and transportation all climbing behind it. Crime halved as a share, from ${bsb.find(b=>b.beat.startsWith("Crime")).early}% to ${bsb.find(b=>b.beat.startsWith("Crime")).late}%, and the sharpest falls are health and mental health (${bsb.find(b=>b.beat.startsWith("Health")).early}% to ${bsb.find(b=>b.beat.startsWith("Health")).late}%) and jails (${bsb.find(b=>b.beat.startsWith("Jails")).early}% to ${bsb.find(b=>b.beat.startsWith("Jails")).late}%). One beat barely moved at all: the built city, ${bsb.find(b=>b.beat.startsWith("Land use")).early}% then, ${bsb.find(b=>b.beat.startsWith("Land use")).late}% now &mdash; the journal's most constant preoccupation. <b>None of this is a retreat from criminal justice.</b> Every share here is a share of a catalogue that more than doubled, and in absolute terms the criminal-justice count rose: ${cjb.by_year["2022"].cj} pieces touched crime, policing, courts or jails in 2022 and ${cjb.by_year["2025"].cj} did in 2025. A criminal-justice journal became a city-policy journal without publishing less about criminal justice.</div>
+    <div class="src">Two-year windows on each end so a single heavy issue doesn't read as a trend. 2026 runs through the pull date. Shares, not counts: a beat can fall here while holding steady or growing in absolute terms. Tagging density is stable across the period (2.1&ndash;2.4 subject tags per piece every year), so these shifts reflect coverage rather than changing tagging habits. Source: subject tags &divide; pieces published in the window.</div></div>`;
 
   // 4 + 5. Two new angles: the job a piece does, and how it was commissioned.
   const st=S.stance, sb=st.buckets.filter(b=>b.stance!=="Unsorted");
   const SCO={"Prescribing a fix":"#57aa4a","Framing the terms":"#217ebe","Diagnosing what's broken":"#e7466d",
              "Looking ahead":"#d9a441","Looking back":"#7a5ea6","Staging a debate":"#5b6b7a"};
-  html+=`<div class="grid2">
-    <div class="card" id="arc"><h2>The job each piece does</h2>
+  html+=`<div class="card" id="arc"><h2>The job each piece does</h2>
       <div class="hint">Vital City's curated issues are built as arguments, and the section heading a piece sits under names its role. Sorting those ${S.topic_bucket_sizes.rubrics} headings by the job they describe &mdash; not the topic &mdash; gives the only read available on rhetorical posture. Covers the ${st.pieces_with_rubric} pieces (${st.coverage_share}%) that carry one.</div>
       ${hbar(sb.map(b=>({k:b.stance,v:b.pieces,c:SCO[b.stance]||"#217ebe",pct:Math.round(b.share_of_rubriced)})),{labelW:190})}
       <div class="insight">The journal is built to arrive at a recommendation. ${Math.round(sb[0].share_of_rubriced)}% of curated pieces sit in a "what to do" slot &mdash; "Some Policy Solutions," "The Way Forward," "If I Had a Hammer..." &mdash; against ${Math.round(sb.find(b=>b.stance.startsWith("Diagnosing")).share_of_rubriced)}% that diagnose what is broken and ${Math.round(sb.find(b=>b.stance.startsWith("Framing")).share_of_rubriced)}% that frame the terms. Prescription outnumbers complaint two to one. Only ${sb.find(b=>b.stance==="Looking back").pieces} pieces sit in a retrospective slot, and just ${sb.find(b=>b.stance==="Staging a debate").pieces} are staged as a debate between opposing views.</div>
-      <div class="src">Rubric-to-job map in <code>analyze_subjects.py</code>, published in the data file. Standalone pieces carry no rubric and are out of scope here, so this describes the curated third of the catalogue.</div></div>
-    <div class="card" id="curation"><h2>The recurring franchises</h2>
-      <div class="hint">Named series by piece count &mdash; the packages Vital City returns to. Numbered issues are excluded; these are the standing franchises only.</div>
-      <table class="tbl">${cur.named_series_top.slice(0,10).map(s=>`<tr><td>${esc(SNAME(s.series))}</td><td class="n">${s.pieces}</td></tr>`).join("")}</table>
-      <div class="insight">${cur.share}% of everything Vital City has published was commissioned into a package &mdash; ${cur.n_issues_and_series} issues and named series in five years. That is the strongest structural fact about the catalogue: it is not a stream of unrelated op-eds but a sequence of assembled arguments, each with a stage-setter, a diagnosis and a prescription. The franchises also show where the journal builds annual furniture &mdash; the year-end crime reviews and the jails series recur on a schedule, while "Rubber Meets Road" and "Borrow and Steal" are the standing formats for implementation and for learning from other cities.</div>
-      <div class="src">Source: Ghost internal (#-prefixed) tags, which carry both numbered issues and named series.</div></div>
-  </div>`;
+      <div class="src">Rubric-to-job map in <code>analyze_subjects.py</code>, published in the data file. Standalone pieces carry no rubric and are out of scope here, so this describes the curated third of the catalogue.</div></div>`;
 
   // 5b. Word-count distribution, and who the journal argues with by name.
   const W=D.wc_stats, hrows=D.wc_hist.rows.map(r=>({k:r.label,v:r.n,
