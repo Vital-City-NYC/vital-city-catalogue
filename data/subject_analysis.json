@@ -1492,6 +1492,987 @@
     "4": 15,
     "5": 3
   },
+  "stance": {
+    "pieces_with_rubric": 290,
+    "coverage_share": 32.9,
+    "buckets": [
+      {
+        "stance": "Prescribing a fix",
+        "pieces": 117,
+        "share_of_rubriced": 40.3
+      },
+      {
+        "stance": "Framing the terms",
+        "pieces": 69,
+        "share_of_rubriced": 23.8
+      },
+      {
+        "stance": "Diagnosing what's broken",
+        "pieces": 56,
+        "share_of_rubriced": 19.3
+      },
+      {
+        "stance": "Looking ahead",
+        "pieces": 21,
+        "share_of_rubriced": 7.2
+      },
+      {
+        "stance": "Looking back",
+        "pieces": 11,
+        "share_of_rubriced": 3.8
+      },
+      {
+        "stance": "Staging a debate",
+        "pieces": 9,
+        "share_of_rubriced": 3.1
+      },
+      {
+        "stance": "Unsorted",
+        "pieces": 7,
+        "share_of_rubriced": 2.4
+      }
+    ],
+    "rubrics_by_stance": {
+      "Framing the terms": [
+        "Beyond False Simplicity",
+        "Connecting Dots",
+        "Currents",
+        "Defining the Challenge",
+        "Public Perception and Statistical Realities",
+        "Setting the Stage",
+        "What Do We Know?",
+        "What Does It All Mean?",
+        "What It Looks Like Up Close",
+        "What Makes a Great City Work?"
+      ],
+      "Diagnosing what's broken": [
+        "How Did It Get This Bad?",
+        "Mugged by Reality",
+        "Persistent Problems Inside",
+        "Repercussions",
+        "Solving Cases: The People",
+        "Solving Cases: The System",
+        "The Causes",
+        "The Policy Record",
+        "What Are We Afraid Of?",
+        "What Doesn’t Work",
+        "Where We Are",
+        "Wrenches in the Gears"
+      ],
+      "Prescribing a fix": [
+        "Decisions, Decisions, Decisions",
+        "If I Had a Hammer...",
+        "New Solutions",
+        "Solutions for Today and Tomorrow",
+        "Some Policy Solutions",
+        "Sweating the Small Stuff",
+        "The Joy of Incrementalism",
+        "The Way Forward",
+        "Toward Solutions",
+        "What Can Be Done?",
+        "What Else Can Be Done",
+        "What to Do Now",
+        "What's The Plan?",
+        "What’s Driving Trends and What to Do About It",
+        "Where Do We Go From Here?",
+        "Where We Go From Here"
+      ],
+      "Looking ahead": [
+        "Dreams of the Future",
+        "The Upside — Yes, Really",
+        "What Could Go Wrong?",
+        "What Opportunities Await?",
+        "What the Future Holds",
+        "Where We’re Headed"
+      ],
+      "Looking back": [
+        "Looking Back",
+        "Where We’ve Been"
+      ],
+      "Staging a debate": [
+        "The Great Debate"
+      ],
+      "Unsorted": [
+        "Etc."
+      ]
+    }
+  },
+  "curation": {
+    "in_curated_issue": 480,
+    "share": 54.5,
+    "standalone": 401,
+    "n_issues_and_series": 29,
+    "named_series_top": [
+      {
+        "series": "data-stories",
+        "pieces": 23
+      },
+      {
+        "series": "whither-new-york",
+        "pieces": 20
+      },
+      {
+        "series": "what-makes-cities-tick",
+        "pieces": 20
+      },
+      {
+        "series": "how-many-people-should-new-york-citys-jails-hold",
+        "pieces": 19
+      },
+      {
+        "series": "inside-rikers-jails-can-be-safer-and-more-humane",
+        "pieces": 16
+      },
+      {
+        "series": "crime-looking-back-at-2024-and-ahead-to-2025",
+        "pieces": 15
+      },
+      {
+        "series": "crime-looking-back-at-2025-and-ahead-to-2026",
+        "pieces": 14
+      },
+      {
+        "series": "the-case-against-eric-adams-corruption-issue",
+        "pieces": 11
+      },
+      {
+        "series": "congestion-pricing",
+        "pieces": 10
+      },
+      {
+        "series": "crime-in-2023-and-2024",
+        "pieces": 10
+      },
+      {
+        "series": "rubber-meets-road",
+        "pieces": 8
+      },
+      {
+        "series": "what-to-do-and-not-to-do",
+        "pieces": 6
+      }
+    ]
+  },
+  "beat_shift": {
+    "early_years": [
+      "2021",
+      "2022",
+      "2023"
+    ],
+    "late_years": [
+      "2025",
+      "2026"
+    ],
+    "early_pieces": 200,
+    "late_pieces": 456,
+    "beats": [
+      {
+        "beat": "City government & governance",
+        "pieces": 249,
+        "early": 9.5,
+        "late": 37.7,
+        "change": 28.2
+      },
+      {
+        "beat": "Politics & elections",
+        "pieces": 64,
+        "early": 0.5,
+        "late": 11.4,
+        "change": 10.9
+      },
+      {
+        "beat": "Housing",
+        "pieces": 80,
+        "early": 3.0,
+        "late": 13.8,
+        "change": 10.8
+      },
+      {
+        "beat": "Money, budgets & the economy",
+        "pieces": 81,
+        "early": 3.5,
+        "late": 12.9,
+        "change": 9.4
+      },
+      {
+        "beat": "Transportation",
+        "pieces": 75,
+        "early": 2.0,
+        "late": 9.0,
+        "change": 7.0
+      },
+      {
+        "beat": "State, federal & beyond NYC",
+        "pieces": 34,
+        "early": 2.0,
+        "late": 5.7,
+        "change": 3.7
+      },
+      {
+        "beat": "Technology",
+        "pieces": 32,
+        "early": 1.5,
+        "late": 4.6,
+        "change": 3.1
+      },
+      {
+        "beat": "Education & youth",
+        "pieces": 35,
+        "early": 2.5,
+        "late": 4.8,
+        "change": 2.3
+      },
+      {
+        "beat": "Land use & the built city",
+        "pieces": 154,
+        "early": 18.5,
+        "late": 18.0,
+        "change": -0.5
+      },
+      {
+        "beat": "History & the long view",
+        "pieces": 144,
+        "early": 20.0,
+        "late": 14.3,
+        "change": -5.7
+      },
+      {
+        "beat": "Policing",
+        "pieces": 69,
+        "early": 13.0,
+        "late": 7.2,
+        "change": -5.8
+      },
+      {
+        "beat": "Culture & city life",
+        "pieces": 92,
+        "early": 14.5,
+        "late": 8.1,
+        "change": -6.4
+      },
+      {
+        "beat": "Courts & prosecution",
+        "pieces": 112,
+        "early": 17.0,
+        "late": 8.6,
+        "change": -8.4
+      },
+      {
+        "beat": "Jails & incarceration",
+        "pieces": 67,
+        "early": 11.0,
+        "late": 2.4,
+        "change": -8.6
+      },
+      {
+        "beat": "Health, mental health & drugs",
+        "pieces": 62,
+        "early": 16.0,
+        "late": 3.5,
+        "change": -12.5
+      },
+      {
+        "beat": "Crime & violence",
+        "pieces": 236,
+        "early": 40.0,
+        "late": 20.0,
+        "change": -20.0
+      }
+    ]
+  },
+  "named_in_headline": [
+    {
+      "name": "Mamdani",
+      "headlines": 52,
+      "share": 5.9,
+      "by_year": {
+        "2025": 29,
+        "2026": 23
+      },
+      "first": "2025-06-16",
+      "titles": [
+        {
+          "date": "2026-07-30",
+          "title": "The Big Hole in Mamdani’s Housing Plan"
+        },
+        {
+          "date": "2026-07-29",
+          "title": "For Inspiration on Mayor Mamdani’s Vision for Community Safety, Look to Newark"
+        },
+        {
+          "date": "2026-07-23",
+          "title": "What Mamdani's Efficiency Commission Got Right — and Where it Fell Short"
+        },
+        {
+          "date": "2026-07-22",
+          "title": "Flooding in New York is a Policy Choice. Mayor Mamdani Should Reject It."
+        },
+        {
+          "date": "2026-07-06",
+          "title": "Expert Advice for Mamdani’s Commission on Government Efficiency"
+        },
+        {
+          "date": "2026-07-02",
+          "title": "What Has Mamdani Done So Far?"
+        },
+        {
+          "date": "2026-07-01",
+          "title": "Assessing Mamdani Six Months In"
+        },
+        {
+          "date": "2026-06-26",
+          "title": "After the Mamdani Rent Freeze"
+        },
+        {
+          "date": "2026-06-25",
+          "title": "Darializa Avila Chevalier, Claire Valdez, Brad Lander, Zohran Mamdani and New York"
+        },
+        {
+          "date": "2026-06-10",
+          "title": "New York Under Mamdani: At the Crossroads, Again"
+        },
+        {
+          "date": "2026-05-19",
+          "title": "How Zohran Mamdani Can Help Shrink the Child Welfare System in New York City"
+        },
+        {
+          "date": "2026-05-13",
+          "title": "Mamdani’s Supermarket Mistake"
+        },
+        {
+          "date": "2026-04-24",
+          "title": "How the Public Can Help Mamdani Guide New York City Schools"
+        },
+        {
+          "date": "2026-04-14",
+          "title": "Mamdani’s First 100 Days: A Scorecard"
+        },
+        {
+          "date": "2026-04-07",
+          "title": "A Road Safety Blueprint for the Mamdani Administration"
+        },
+        {
+          "date": "2026-03-18",
+          "title": "Can Mayor Mamdani Freeze the Rent? It’s Complicated"
+        },
+        {
+          "date": "2026-02-19",
+          "title": "Does Mayor Mamdani Have a Public Safety Strategy?"
+        },
+        {
+          "date": "2026-02-10",
+          "title": "Mayor Mamdani, Here’s What Mass Engagement Looks Like in Practice"
+        },
+        {
+          "date": "2026-02-03",
+          "title": "Evaluating Mamdani’s Diagnosis of New York City’s Budget Deficit"
+        },
+        {
+          "date": "2026-01-14",
+          "title": "Mamdani as Mr. Fix-It"
+        },
+        {
+          "date": "2026-01-14",
+          "title": "Mayor Mamdani, Here’s the Real Reason New Yorkers’ Groceries Cost So Much"
+        },
+        {
+          "date": "2026-01-07",
+          "title": "Mamdani’s Affordability Dilemma: The Challenge of Making New York City Housing Less Expensive"
+        },
+        {
+          "date": "2026-01-06",
+          "title": "Mamdani, Like Mayors Before Him, Can Have a Foreign Policy"
+        },
+        {
+          "date": "2025-12-18",
+          "title": "Just Fix It: 11 Governance Improvements The Mamdani Administration Can Tackle in the First 100 Days"
+        },
+        {
+          "date": "2025-12-10",
+          "title": "What Mamdani Can Learn from a de Blasio Administration Safety Innovation"
+        },
+        {
+          "date": "2025-12-09",
+          "title": "How Mamdani Can Deliver Free Buses — and Subways, Too"
+        },
+        {
+          "date": "2025-12-04",
+          "title": "Taking Mamdani’s Revolution to the Streets"
+        },
+        {
+          "date": "2025-11-24",
+          "title": "What Mamdani Gets Wrong About Severe Mental Illness & Crisis Response"
+        },
+        {
+          "date": "2025-11-24",
+          "title": "New Mexico: Surprising Proving Ground for Two Big Mamdani Ideas?"
+        },
+        {
+          "date": "2025-11-19",
+          "title": "Filling in the Blanks on Mamdani’s Education Agenda"
+        },
+        {
+          "date": "2025-11-07",
+          "title": "Mamdani’s Victory, and Memories of Dinkins’"
+        },
+        {
+          "date": "2025-11-06",
+          "title": "Which Way Mamdani?"
+        },
+        {
+          "date": "2025-11-06",
+          "title": "Why Mayor-Elect Mamdani Should Embrace Mayoral Control of Our Schools"
+        },
+        {
+          "date": "2025-11-06",
+          "title": "Mamdani’s Charter School Dilemma"
+        },
+        {
+          "date": "2025-10-29",
+          "title": "Bringing the Fun Back to Fun City: Mamdani, Mailer and Breslin"
+        },
+        {
+          "date": "2025-10-24",
+          "title": "How Zohran Mamdani Can Get Out of the ‘Gifted & Talented’ Trap"
+        },
+        {
+          "date": "2025-10-17",
+          "title": "The One Debate Answer that Spoke Volumes about Zohran Mamdani"
+        },
+        {
+          "date": "2025-10-17",
+          "title": "Zohran Mamdani’s Year One: A Time for Testing"
+        },
+        {
+          "date": "2025-10-17",
+          "title": "Zohran Mamdani’s Real-World Constraints"
+        },
+        {
+          "date": "2025-10-17",
+          "title": "John Lindsay, Zohran Mamdani and How Ambitions Collide with Reality"
+        },
+        {
+          "date": "2025-10-17",
+          "title": "Even Mamdani’s New York Needs Millionaires"
+        },
+        {
+          "date": "2025-09-12",
+          "title": "Zohran Mamdani Talks Public Safety"
+        },
+        {
+          "date": "2025-09-03",
+          "title": "Mamdani’s Facilitators, Frenemies or Foes"
+        },
+        {
+          "date": "2025-08-14",
+          "title": "Zohran Mamdani’s Uphill Battle on Public Grocery Stores"
+        },
+        {
+          "date": "2025-08-01",
+          "title": "A Budget Crash Course for Zohran Mamdani"
+        },
+        {
+          "date": "2025-08-01",
+          "title": "Zohran Mamdani Needs a Staffing Plan"
+        },
+        {
+          "date": "2025-08-01",
+          "title": "How Zohran Mamdani Could Succeed as Mayor"
+        },
+        {
+          "date": "2025-08-01",
+          "title": "Zohran Mamdani in the Balance"
+        },
+        {
+          "date": "2025-07-31",
+          "title": "A Tale of Two New Yorkers: Didarul Islam and Zohran Mamdani"
+        },
+        {
+          "date": "2025-07-02",
+          "title": "How Mamdani Can Win, and Govern"
+        },
+        {
+          "date": "2025-07-01",
+          "title": "Mamdani: Candidate Today, Leader Tomorrow"
+        },
+        {
+          "date": "2025-06-16",
+          "title": "Zohran Mamdani and Andrew Cuomo Aren’t as Different as You Might Think"
+        }
+      ]
+    },
+    {
+      "name": "Adams",
+      "headlines": 18,
+      "share": 2.0,
+      "by_year": {
+        "2023": 1,
+        "2024": 7,
+        "2025": 10
+      },
+      "first": "2023-09-27",
+      "titles": [
+        {
+          "date": "2025-10-03",
+          "title": "Percy Sutton, Eric Adams and the State of Black Political Power in New York"
+        },
+        {
+          "date": "2025-10-01",
+          "title": "Is Eric Adams Our Last Tabloid Mayor?"
+        },
+        {
+          "date": "2025-09-18",
+          "title": "What Happens If Adams Resigns"
+        },
+        {
+          "date": "2025-07-29",
+          "title": "Adams’ Abdication Has New York City at Trump’s Mercy"
+        },
+        {
+          "date": "2025-07-16",
+          "title": "Does Eric Adams Have a Chance?"
+        },
+        {
+          "date": "2025-04-04",
+          "title": "Is There Any Path to Victory for Eric Adams as an Independent?"
+        },
+        {
+          "date": "2025-03-12",
+          "title": "Mayor Adams, Don’t Sell Out New York City’s Economy"
+        },
+        {
+          "date": "2025-02-25",
+          "title": "City Hall on the Brink: How the feds’ order to dismiss its own prosecution of Eric Adams has destabilized the government"
+        },
+        {
+          "date": "2025-02-24",
+          "title": "Eric Adams’ Trials Are a Trial for All New Yorkers"
+        },
+        {
+          "date": "2025-02-20",
+          "title": "Eric Adams on the Edge"
+        },
+        {
+          "date": "2024-12-17",
+          "title": "Can Adams Really Win a Second Term?"
+        },
+        {
+          "date": "2024-10-15",
+          "title": "The Case Against Eric Adams and Company: A Virtual Panel"
+        },
+        {
+          "date": "2024-10-10",
+          "title": "Can Eric Adams Govern Without a Government?"
+        },
+        {
+          "date": "2024-09-19",
+          "title": "Eric Adams’ Scandals, In Historical Context"
+        },
+        {
+          "date": "2024-09-19",
+          "title": "What's Missing in the Case Against Eric Adams"
+        },
+        {
+          "date": "2024-09-19",
+          "title": "The Eric Adams Indictment: A Tragedy in Two Dimensions"
+        },
+        {
+          "date": "2024-09-19",
+          "title": "How Eric Adams Could Pull Through: A 10-Step Survival Plan"
+        },
+        {
+          "date": "2023-09-27",
+          "title": "New York City vs. Guns: A Conversation With Eric Adams"
+        }
+      ]
+    },
+    {
+      "name": "Trump",
+      "headlines": 15,
+      "share": 1.7,
+      "by_year": {
+        "2024": 2,
+        "2025": 12,
+        "2026": 1
+      },
+      "first": "2024-11-07",
+      "titles": [
+        {
+          "date": "2026-01-22",
+          "title": "Trump’s Unconstitutional Coercion"
+        },
+        {
+          "date": "2025-11-18",
+          "title": "Trump vs. Civil Society"
+        },
+        {
+          "date": "2025-10-17",
+          "title": "Can Cities Withstand Trump’s Assault?"
+        },
+        {
+          "date": "2025-07-29",
+          "title": "Adams’ Abdication Has New York City at Trump’s Mercy"
+        },
+        {
+          "date": "2025-06-11",
+          "title": "How Trump Twists the Uses of the National Guard"
+        },
+        {
+          "date": "2025-04-29",
+          "title": "What You Can Do About Trump"
+        },
+        {
+          "date": "2025-04-29",
+          "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days"
+        },
+        {
+          "date": "2025-04-29",
+          "title": "Trump’s Executive Orders Have Cities in the Crosshairs"
+        },
+        {
+          "date": "2025-04-29",
+          "title": "Donald Trump vs. the Rule of Law, and New York City"
+        },
+        {
+          "date": "2025-04-03",
+          "title": "What Does Trump’s Move to Dismantle the Department of Education Mean for NYC?"
+        },
+        {
+          "date": "2025-03-20",
+          "title": "New York City Isn’t Ready for the Trump Stress Test"
+        },
+        {
+          "date": "2025-02-27",
+          "title": "Why Trump’s Attempt to Kill Congestion Pricing Must Fail"
+        },
+        {
+          "date": "2025-01-10",
+          "title": "Who Trump’s Mass Deportations Would Hurt, and How"
+        },
+        {
+          "date": "2024-12-12",
+          "title": "Trump’s Mass Deportation Threat: Reality or Fantasy?"
+        },
+        {
+          "date": "2024-11-07",
+          "title": "Resisting the Urge to Just #Resist Trump"
+        }
+      ]
+    },
+    {
+      "name": "Hochul",
+      "headlines": 4,
+      "share": 0.5,
+      "by_year": {
+        "2024": 2,
+        "2026": 2
+      },
+      "first": "2024-05-09",
+      "titles": [
+        {
+          "date": "2026-05-19",
+          "title": "Hochul's School-Choice Choice"
+        },
+        {
+          "date": "2026-02-04",
+          "title": "Hochul’s Going Nuclear. Environmentalists Should Cheer Her On."
+        },
+        {
+          "date": "2024-06-13",
+          "title": "Was Kathy Hochul’s Congestion Move Good or Bad Politics?"
+        },
+        {
+          "date": "2024-05-09",
+          "title": "Bring Vision to Hochul’s Mental Health Plans"
+        }
+      ]
+    },
+    {
+      "name": "de Blasio",
+      "headlines": 2,
+      "share": 0.2,
+      "by_year": {
+        "2025": 2
+      },
+      "first": "2025-10-17",
+      "titles": [
+        {
+          "date": "2025-12-10",
+          "title": "What Mamdani Can Learn from a de Blasio Administration Safety Innovation"
+        },
+        {
+          "date": "2025-10-17",
+          "title": "Bill de Blasio, Role Model?"
+        }
+      ]
+    },
+    {
+      "name": "Bloomberg",
+      "headlines": 0,
+      "share": 0.0,
+      "by_year": {},
+      "first": null,
+      "titles": []
+    }
+  ],
+  "headline_words": [
+    {
+      "word": "mamdani",
+      "headlines": 52,
+      "share": 5.9
+    },
+    {
+      "word": "crime",
+      "headlines": 44,
+      "share": 5.0
+    },
+    {
+      "word": "jail",
+      "headlines": 33,
+      "share": 3.7
+    },
+    {
+      "word": "mayor",
+      "headlines": 32,
+      "share": 3.6
+    },
+    {
+      "word": "conversation",
+      "headlines": 27,
+      "share": 3.1
+    },
+    {
+      "word": "public",
+      "headlines": 24,
+      "share": 2.7
+    },
+    {
+      "word": "housing",
+      "headlines": 23,
+      "share": 2.6
+    },
+    {
+      "word": "safety",
+      "headlines": 18,
+      "share": 2.0
+    },
+    {
+      "word": "government",
+      "headlines": 18,
+      "share": 2.0
+    },
+    {
+      "word": "violence",
+      "headlines": 18,
+      "share": 2.0
+    },
+    {
+      "word": "adams",
+      "headlines": 18,
+      "share": 2.0
+    },
+    {
+      "word": "police",
+      "headlines": 16,
+      "share": 1.8
+    },
+    {
+      "word": "better",
+      "headlines": 16,
+      "share": 1.8
+    },
+    {
+      "word": "zohran",
+      "headlines": 15,
+      "share": 1.7
+    },
+    {
+      "word": "rikers",
+      "headlines": 15,
+      "share": 1.7
+    },
+    {
+      "word": "state",
+      "headlines": 15,
+      "share": 1.7
+    },
+    {
+      "word": "trump",
+      "headlines": 15,
+      "share": 1.7
+    },
+    {
+      "word": "congestion",
+      "headlines": 15,
+      "share": 1.7
+    },
+    {
+      "word": "eric",
+      "headlines": 15,
+      "share": 1.7
+    },
+    {
+      "word": "policy",
+      "headlines": 14,
+      "share": 1.6
+    },
+    {
+      "word": "gun",
+      "headlines": 14,
+      "share": 1.6
+    },
+    {
+      "word": "pricing",
+      "headlines": 13,
+      "share": 1.5
+    },
+    {
+      "word": "nyc",
+      "headlines": 12,
+      "share": 1.4
+    },
+    {
+      "word": "urban",
+      "headlines": 12,
+      "share": 1.4
+    },
+    {
+      "word": "note",
+      "headlines": 11,
+      "share": 1.2
+    },
+    {
+      "word": "square",
+      "headlines": 11,
+      "share": 1.2
+    },
+    {
+      "word": "justice",
+      "headlines": 10,
+      "share": 1.1
+    },
+    {
+      "word": "people",
+      "headlines": 10,
+      "share": 1.1
+    },
+    {
+      "word": "real",
+      "headlines": 10,
+      "share": 1.1
+    },
+    {
+      "word": "politics",
+      "headlines": 10,
+      "share": 1.1
+    },
+    {
+      "word": "editors",
+      "headlines": 10,
+      "share": 1.1
+    },
+    {
+      "word": "way",
+      "headlines": 9,
+      "share": 1.0
+    },
+    {
+      "word": "big",
+      "headlines": 9,
+      "share": 1.0
+    },
+    {
+      "word": "system",
+      "headlines": 9,
+      "share": 1.0
+    },
+    {
+      "word": "time",
+      "headlines": 9,
+      "share": 1.0
+    },
+    {
+      "word": "data",
+      "headlines": 9,
+      "share": 1.0
+    },
+    {
+      "word": "reality",
+      "headlines": 9,
+      "share": 1.0
+    },
+    {
+      "word": "streets",
+      "headlines": 9,
+      "share": 1.0
+    },
+    {
+      "word": "need",
+      "headlines": 9,
+      "share": 1.0
+    },
+    {
+      "word": "good",
+      "headlines": 9,
+      "share": 1.0
+    }
+  ],
+  "headline_signal_test": {
+    "argument_pieces": 771,
+    "excluded_non_argument": 110,
+    "base_rate_data_analysis": 6.1,
+    "base_rate_opinion": 93.9,
+    "rows": [
+      {
+        "signal": "analysis signal",
+        "headlines": 45,
+        "share_of_argument": 5.8,
+        "pct_data_analysis": 48.9,
+        "lift_vs_base": 8.0
+      },
+      {
+        "signal": "opinion signal",
+        "headlines": 69,
+        "share_of_argument": 8.9,
+        "pct_data_analysis": 1.4,
+        "lift_vs_base": 0.2
+      },
+      {
+        "signal": "both",
+        "headlines": 3,
+        "share_of_argument": 0.4,
+        "pct_data_analysis": 33.3,
+        "lift_vs_base": 5.5
+      },
+      {
+        "signal": "no signal",
+        "headlines": 654,
+        "share_of_argument": 84.8,
+        "pct_data_analysis": 3.5,
+        "lift_vs_base": 0.6
+      }
+    ],
+    "opinion_signal_patterns": {
+      "modal prescription": "\\bshould\\b|\\bmust\\b|\\bneeds? to\\b|\\bought to\\b|\\blet'?s\\b|\\bit'?s time\\b",
+      "negative imperative": "\\bdon'?t\\b|\\bstop\\b|\\bno more\\b|\\bwon'?t\\b|\\bdoesn'?t work\\b",
+      "evaluative judgment": "\\bmistake\\b|\\bmyth\\b|\\bwrong\\b|\\bhubris\\b|\\bfolly\\b|\\babdication\\b|\\bfailure\\b|\\bmess\\b|\\bhole in\\b",
+      "declared stance": "\\bwe need\\b|\\bwhy i\\b|\\bin defense of\\b|\\bthe case (?:for|against)\\b",
+      "direct address": "^[^,]{3,28},\\s+here'?s\\b|^(?:mayor|dear)\\b.*,",
+      "prescriptive frame": "\\bbetter\\b|\\bsmarter\\b|\\bhow to\\b|\\bblueprint\\b|\\bplaybook\\b|\\bfix\\b"
+    },
+    "analysis_signal_patterns": {
+      "data framing": "\\bby the numbers\\b|\\bwhat the (?:data|numbers)\\b|\\breality check\\b|\\bin \\d+ charts?\\b|, charted|, mapped|\\bthe data\\b",
+      "empirical question": "\\bhow (?:rare|safe|common|many|much|often|big)\\b|\\bhow did\\b|\\bwhat we know\\b",
+      "explanatory": "\\ba primer\\b|\\bexplained\\b|\\bunderstanding\\b|\\bwhat to know\\b|\\bin context\\b|\\ban? overview\\b",
+      "assessment": "\\bthe (?:big picture|state of)\\b|\\bmidyear\\b|\\byear-end\\b|\\btrends?\\b|\\bassessing\\b|\\bevaluating\\b",
+      "testing question": "\\b(?:did|does|is there|are)\\b.*\\?"
+    }
+  },
+  "bench": {
+    "primary_bylines": 406,
+    "wrote_once": 282,
+    "wrote_once_share": 69.5
+  },
   "history_only_pieces": 104,
   "pieces_with_no_subject_tag": {
     "count": 17,

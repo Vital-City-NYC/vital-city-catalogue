@@ -104,6 +104,33 @@ for w in wc:
          else "2,000-2,999" if w < 3000 else "3,000-4,999" if w < 5000 else "5,000+")
     wc_buckets[b] += 1
 
+# Fine 250-word bins for the actual shape of the distribution. The coarse
+# buckets above put 59% of pieces in a single bar, which hides a tight peak
+# and a long right tail. Everything at 3,500+ is collected in one final bin
+# because the tail runs to 30,000 and would otherwise flatten the chart.
+BIN, TAIL = 250, 3500
+wc_hist = collections.Counter(min(w // BIN * BIN, TAIL) for w in wc)
+wc_hist_rows = [{"floor": k, "label": (f"{TAIL:,}+" if k == TAIL else f"{k:,}"),
+                 "n": wc_hist[k]} for k in sorted(wc_hist)]
+def pct(p):
+    return int(statistics.quantiles(wc, n=100)[p - 1])
+
+# Length by year: has the house form drifted? Reported as an interquartile
+# range with the median, not a mean — the tail would swamp a mean.
+wc_year = {}
+for a in CAT:
+    w = a.get("word_count")
+    if w:
+        wc_year.setdefault(year(a.get("published_date")), []).append(w)
+wc_by_year = []
+for y in sorted(wc_year):
+    v = sorted(wc_year[y])
+    if len(v) < 10:      # 2021 is a single piece; not a distribution
+        continue
+    q = statistics.quantiles(v, n=4)
+    wc_by_year.append({"year": y, "n": len(v), "p25": int(q[0]),
+                       "median": int(statistics.median(v)), "p75": int(q[2]), "max": max(v)})
+
 # 7. Collaboration
 by_nauthors = collections.Counter(len(a.get("authors") or []) for a in CAT)
 
@@ -128,8 +155,15 @@ out = {
   "top_topics_for_stack": TOP_TOPICS,
   "topic_by_year": {t: dict(sorted(c.items())) for t, c in topic_by_year.items()},
   "wc_stats": {"n": len(wc), "median": int(statistics.median(wc)),
-               "mean": round(statistics.mean(wc)), "p90": wc[int(.9*len(wc))-1], "max": max(wc)},
+               "mean": round(statistics.mean(wc)), "p90": wc[int(.9*len(wc))-1], "max": max(wc),
+               "p10": pct(10), "p25": pct(25), "p75": pct(75), "p95": pct(95),
+               "no_count": len(CAT) - len(wc),
+               "core_1000_2499": sum(1 for w in wc if 1000 <= w < 2500),
+               "under_500": sum(1 for w in wc if w < 500),
+               "over_5000": sum(1 for w in wc if w >= 5000)},
   "wc_buckets": [(k, wc_buckets[k]) for k in ["<500","500-999","1,000-1,999","2,000-2,999","3,000-4,999","5,000+"]],
+  "wc_hist": {"bin": BIN, "tail_floor": TAIL, "rows": wc_hist_rows},
+  "wc_by_year": wc_by_year,
   "by_nauthors": dict(sorted(by_nauthors.items())),
   "prolific": prolific,
   "n_issues": len(issues),

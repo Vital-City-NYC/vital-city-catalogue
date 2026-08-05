@@ -50,11 +50,14 @@
   .toggle{display:inline-flex;border:1px solid var(--vc-cloud);border-radius:4px;overflow:hidden;font-size:10.5px;font-weight:700}
   .toggle button{background:var(--vc-white);border:0;padding:4px 10px;cursor:pointer;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.05em;font-family:inherit}
   .toggle button.on{background:var(--vc-black);color:#fff}
-  .sm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-  @media(max-width:820px){.sm-grid{grid-template-columns:repeat(2,1fr)}}
-  .sm{border:1px solid var(--vc-cloud);padding:8px 9px 6px}
-  .sm .t{font-size:11px;font-weight:700;margin-bottom:2px}
-  .sm .d{font-size:10px;color:var(--vc-charcoal);margin-bottom:5px}
+  .band{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud)}
+  .bi{background:var(--vc-white);padding:13px 14px}
+  .bn{font-family:var(--vc-serif);font-weight:900;font-size:32px;line-height:1}
+  .bl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:4px 0 7px}
+  .bd{font-size:11.5px;line-height:1.5;color:#33343a}
+  .band.b3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:820px){.band,.band.b3{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.band,.band.b3{grid-template-columns:1fr}}
   table.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
   table.tbl td{padding:5px 6px;border-bottom:1px solid var(--vc-paper2)}
   table.tbl td.n{text-align:right;font-variant-numeric:tabular-nums;color:var(--vc-charcoal);font-weight:700}
@@ -73,14 +76,14 @@
 <header class="mast">
   <div class="wm">Vital City</div>
   <h1>The catalogue, analyzed</h1>
-  <div class="sub">Every piece Vital City has published on vitalcitynyc.org, broken down by <b>format, subject, contributor background, length and time</b>. Built from the same Ghost content pull that powers the searchable <a href="../">catalogue</a>.</div>
+  <div class="sub">Every piece Vital City has published on vitalcitynyc.org &mdash; <b>what it was about, what job it did, who wrote it and how long it ran</b>. Built from the same Ghost content pull that powers the searchable <a href="../">catalogue</a>.</div>
 </header>
 <nav class="secnav">
-  <a href="#time">Over time</a><a href="#format">Format</a><a href="#subject">Subject</a>
-  <a href="#vocab">Tag vocabulary</a><a href="#pivot">The pivot</a><a href="#traj">Beat trends</a>
-  <a href="#treatment">Data treatment</a><a href="#pairs">What pairs up</a><a href="#bench">Who writes what</a>
-  <a href="#credentials">Who writes</a><a href="#length">Length</a>
-  <a href="#collab">Collaboration</a><a href="#method">How we did this</a>
+  <a href="#shape">The shape</a><a href="#subject">Subject</a><a href="#shift">How it moved</a>
+  <a href="#pivot">The pivot</a><a href="#arc">The job</a><a href="#curation">Franchises</a>
+  <a href="#length">Length</a><a href="#mayors">Headlines</a><a href="#signal">Opinion vs analysis</a><a href="#treatment">Data treatment</a>
+  <a href="#credentials">Who writes</a><a href="#bench">Who writes what</a>
+  <a href="#method">How we did this</a>
 </nav>
 <div class="wrap">
   <div id="kpis" class="kpis"></div>
@@ -96,6 +99,10 @@
       <li><b>Format</b> is the content type assigned by the catalogue pipeline (opinion/commentary, policy, data analysis, podcast, Q&amp;A, book review, map/tool, something else). The vocabulary mirrors the sections vitalcitynyc.org itself uses, and every call records the rule that produced it in a <code>type_basis</code> field. Full ordered rule set in <a href="../methodology.md">methodology.md</a>.</li>
       <li><b>Beats</b> are built from Ghost's topic tags, but not directly. The single <code>topics</code> field holds three different kinds of label: real subjects, <b>issue section rubrics</b> (table-of-contents headings like "Setting the Stage" that name no topic), and format labels that duplicate the type field. All 206 normalized tags are sorted by hand into those three buckets in <code>analyze_subjects.py</code>; the 135 subjects are then mapped to 21 beats. The rubric and format lists are written into the output file so the sort can be audited. Seven tags that exist twice in Ghost — once with a trailing period — are normalized together.</li>
       <li><b>A piece counts toward every beat it touches</b>, so beat counts sum to more than the number of pieces. Most pieces (about 6 in 10) carry two beats.</li>
+      <li><b>Why the raw tag list can't answer "what do we cover."</b> This is worth stating plainly, because reading the tag counts straight off Ghost gives a badly wrong answer. Of the 206 normalized tags, only 135 name a subject. Forty-eight are issue section rubrics and 23 are format labels. Sorted by raw count, the rubric "Setting the Stage" outranks homelessness — it is applied 26 times because 26 pieces open an issue, which tells you nothing about what Vital City covers. Every tag is assigned to exactly one of the three buckets, and the rubric and format lists are written into <code>data/subject_analysis.json</code> so the sort can be checked line by line.</li>
+      <li><b>"History" is treated as a lens, not a beat.</b> It is the second most-applied tag in the catalogue, but it is not a subject area — it is a habit of mind applied across the others, carried by land-use, charter-reform and infrastructure pieces as often as cultural ones. Folding it into culture, as a naive read of the tags would, overstates cultural coverage by about half: most of its pieces carry no other cultural tag. Its overlap with every other beat is reported in the data file.</li>
+      <li><b>The job each piece does</b> comes from re-sorting those same 48 rubrics by the function they name — framing, diagnosis, prescription, prospect, retrospect, debate. It is the only field in the data that speaks to rhetorical posture rather than topic. Only pieces commissioned into a curated issue carry a rubric, so that chart describes the curated third of the catalogue and says nothing about standalone pieces.</li>
+      <li><b>Headline words and named figures</b> are literal string counts on the title field only, counted once per headline. A piece can be entirely about a mayor without naming him in the title, so those counts are floors. The stoplist (which excludes "New York," "New Yorkers" and "city" as uninformative) and the singular/plural merges are written out in <code>analyze_subjects.py</code>. Bare surnames were hand-checked against the full hit lists for namesake collisions; "Adams" and "Mamdani" are clean.</li>
       <li><b>Contributor background</b> is a single label per piece, applied to the piece's <b>primary author</b>. It is assigned by an automated reading of the author's bio: the first professional role named in the bio wins (bios are written "is a <i>[main role]</i> and&hellip;"), with a short hand-checked override list for the most prolific contributors. It is an approximate heuristic, not a hand-verified label for all 472 authors.</li>
     </ul>
     <h3>Limitations worth keeping in mind</h3>
@@ -175,13 +182,66 @@ function vbar(rows,{w=520,h=230,color="#217ebe",flag=[]}={}){
   });
   return s+`</svg>`;
 }
-// mini sparkline bars for small multiples (share %)
-function spark(vals,{w=180,h=48,color="#217ebe",years}={}){
-  const max=Math.max(...vals,1),bw=w/vals.length*0.66,gap=w/vals.length;
+// Dumbbell: one row per beat, hollow dot = early window, filled = recent.
+// Replaces a wall of per-beat sparklines with a single rankable picture.
+function dumbbell(rows,{w=560,labelW=215}={}){
+  const rh=25,padT=24,padB=8, h=rows.length*rh+padT+padB, bw=w-labelW-70;
+  const mx=Math.ceil(Math.max(...rows.flatMap(r=>[r.a,r.b]))/10)*10;
+  const X=v=>labelW+v/mx*bw;
   let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
-  vals.forEach((v,i)=>{const x=i*gap+(gap-bw)/2,bh=v/max*(h-16),y=h-14-bh;
-    s+=`<rect x="${x}" y="${y}" width="${bw}" height="${Math.max(1,bh)}" rx="1" fill="${color}"><title>${years[i]}: ${v}%</title></rect>`;
-    s+=`<text class="ax" x="${x+bw/2}" y="${h-3}" text-anchor="middle" style="font-size:8px">${years[i].slice(2)}</text>`;});
+  for(let g=0;g<=4;g++){const gv=mx*g/4;
+    s+=`<line class="gridline" x1="${X(gv)}" x2="${X(gv)}" y1="${padT-7}" y2="${h-padB}"/>`;
+    s+=`<text class="ax" x="${X(gv)}" y="${padT-11}" text-anchor="middle">${gv}%</text>`;}
+  rows.forEach((r,i)=>{
+    const y=padT+i*rh+rh/2, up=r.b>=r.a, c=up?"#217ebe":"#e7466d", d=(r.b-r.a).toFixed(1);
+    s+=`<text class="bar-lbl" x="${labelW-11}" y="${y+4}" text-anchor="end">${esc(r.k)}</text>`;
+    s+=`<line x1="${X(r.a)}" x2="${X(r.b)}" y1="${y}" y2="${y}" stroke="${c}" stroke-width="2.5" opacity=".4"/>`;
+    s+=`<circle cx="${X(r.a)}" cy="${y}" r="3.6" fill="var(--vc-white)" stroke="${c}" stroke-width="2"><title>${esc(r.k)} — early: ${r.a}%</title></circle>`;
+    s+=`<circle cx="${X(r.b)}" cy="${y}" r="5" fill="${c}"><title>${esc(r.k)} — recent: ${r.b}%</title></circle>`;
+    s+=`<text class="bar-val" x="${Math.max(X(r.a),X(r.b))+10}" y="${y+4}" fill="${c}">${up?"+":""}${d}</text>`;
+  });
+  return s+`</svg>`;
+}
+
+// Histogram: many narrow bins, labels every other bin, no per-bar values —
+// the shape is the point, not the individual counts.
+function hist(rows,{w=560,h=210,color="#57aa4a",markers=[]}={}){
+  const padB=32,padT=12,padL=32, iw=w-padL-10, ih=h-padB-padT;
+  const max=Math.max(...rows.map(r=>r.v))||1, gap=iw/rows.length, bw=gap*0.84;
+  let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
+  for(let g=0;g<=4;g++){const gv=Math.round(max*g/4),gy=padT+ih-ih*g/4;
+    s+=`<line class="gridline" x1="${padL}" x2="${w-10}" y1="${gy}" y2="${gy}"/>`;
+    s+=`<text class="ax" x="${padL-5}" y="${gy+3}" text-anchor="end">${gv}</text>`;}
+  rows.forEach((r,i)=>{
+    const x=padL+i*gap+(gap-bw)/2, bh=r.v/max*ih, y=padT+ih-bh;
+    s+=`<rect x="${x}" y="${y}" width="${bw}" height="${Math.max(1,bh)}" fill="${r.c||color}"><title>${esc(r.k)}: ${nf(r.v)} pieces</title></rect>`;
+    if(i%2===0) s+=`<text class="ax" x="${x+bw/2}" y="${h-padB+15}" text-anchor="middle">${esc(r.k)}</text>`;
+  });
+  markers.forEach(m=>{
+    const mx=padL+(m.at+0.5)*gap;
+    s+=`<line x1="${mx}" x2="${mx}" y1="${padT-4}" y2="${padT+ih}" stroke="var(--vc-black)" stroke-width="1.5" stroke-dasharray="3 2"/>`;
+    s+=`<text class="ax" x="${mx+4}" y="${padT+4}" style="font-weight:700;fill:var(--vc-black)">${esc(m.label)}</text>`;
+  });
+  return s+`</svg>`;
+}
+
+// Range bar: one row per year, bar spanning p25-p75, tick at the median.
+// Shows whether a distribution moved without pretending a mean is meaningful.
+function rangebar(rows,{w=560,labelW=58,max=null}={}){
+  const rh=27,padT=22,padB=6, h=rows.length*rh+padT+padB, bw=w-labelW-58;
+  const mx=max||Math.ceil(Math.max(...rows.map(r=>r.hi))/500)*500;
+  const X=v=>labelW+v/mx*bw;
+  let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
+  for(let g=0;g<=4;g++){const gv=Math.round(mx*g/4);
+    s+=`<line class="gridline" x1="${X(gv)}" x2="${X(gv)}" y1="${padT-7}" y2="${h-padB}"/>`;
+    s+=`<text class="ax" x="${X(gv)}" y="${padT-11}" text-anchor="middle">${nf(gv)}</text>`;}
+  rows.forEach((r,i)=>{
+    const y=padT+i*rh+rh/2;
+    s+=`<text class="bar-lbl" x="${labelW-10}" y="${y+4}" text-anchor="end">${esc(r.k)}</text>`;
+    s+=`<rect x="${X(r.lo)}" y="${y-7}" width="${Math.max(2,X(r.hi)-X(r.lo))}" height="14" rx="2" fill="#57aa4a" opacity=".26"><title>${esc(r.k)}: middle half ${nf(r.lo)}–${nf(r.hi)} words</title></rect>`;
+    s+=`<line x1="${X(r.mid)}" x2="${X(r.mid)}" y1="${y-9}" y2="${y+9}" stroke="#2f7d26" stroke-width="2.5"><title>${esc(r.k)} median: ${nf(r.mid)}</title></line>`;
+    s+=`<text class="bar-val" x="${X(r.hi)+9}" y="${y+4}">${nf(r.mid)}</text>`;
+  });
   return s+`</svg>`;
 }
 
@@ -196,156 +256,160 @@ Promise.all([
   const kpi=[
     ["Pieces published",nf(total),(dr[0].slice(0,4))+"–"+(dr[1].slice(0,4))],
     ["Contributors",nf(D.meta.total_authors),"distinct bylines"],
-    ["Topic tags",nf(D.n_topics_total),"across all pieces"],
-    ["Themed issues",nf(D.n_issues),"curated collections"],
+    ["Beats",nf(S.beats.length),"from "+nf(S.n_topics_normalized)+" topic tags"],
+    ["Issues & series",nf(D.n_issues),"curated collections"],
     ["Median length",nf(D.wc_stats.median),"words · "+Math.round(D.wc_stats.median/230)+" min read"],
-    ["Co-authored",Math.round((total-D.by_nauthors["1"])/total*100)+"%",nf(total-D.by_nauthors["1"])+" pieces"]
+    ["Wrote once",S.bench.wrote_once_share+"%",nf(S.bench.wrote_once)+" of "+nf(S.bench.primary_bylines)+" bylines"]
   ];
   document.getElementById("kpis").innerHTML=kpi.map(k=>`<div class="kpi"><div class="lbl">${k[0]}</div><div class="num">${k[1]}</div><div class="fine">${k[2]}</div></div>`).join("");
 
   const years=Object.keys(D.by_year);
   const partial=[dr[0].slice(0,4),dr[1].slice(0,4)];  // launch year + current year
+  const ty=n=>{const t=D.by_type.find(x=>x[0]===n);return t?t[1]:0;};
+  const cur=S.curation, SNAME=n=>n.replace(/-/g," ").replace(/\b\w/g,c=>c.toUpperCase());
   let html="";
 
-  // 1. Over time
-  html+=`<div class="card" id="time"><h2>Publishing has grown every full year</h2>
-    <div class="hint">Pieces published per calendar year. Faded bars are partial years — Vital City launched September 2021, and ${partial[1]} runs only through the pull date.</div>
-    ${vbar(years.map(y=>({k:y,v:D.by_year[y]})),{color:"#217ebe",flag:partial})}
-    <div class="insight">Output roughly doubled from 2022 to 2023 and again toward 2025, the first full year above ${nf(D.by_year["2025"])} pieces — a cadence of about ${Math.round(D.by_year["2025"]/52*10)/10} pieces a week.</div>
-    <div class="src">* Partial year. Source: Vital City catalogue (Ghost Content API), ${dr[0]} to ${dr[1]}.</div></div>`;
+  // 0. The facts that don't need a chart. Format mix, length, collaboration and
+  // growth were four separate bar charts; as plain numbers they read faster.
+  const opinionShare=Math.round((ty("opinion/commentary")+ty("policy"))/total*100);
+  html+=`<div class="card" id="shape"><h2>The shape of the catalogue</h2>
+    <div class="hint">Four things that are true of nearly every piece, stated rather than charted.</div>
+    <div class="band">
+      <div class="bi"><div class="bn">${opinionShare}%</div><div class="bl">is argument</div>
+        <div class="bd">${nf(ty("opinion/commentary"))} opinion and commentary pieces plus ${ty("policy")} of Vital City's own policy. The deliberate minority: ${ty("data analysis")} data analyses, ${ty("q&a")} Q&amp;As, ${ty("podcast")} podcast episodes, ${ty("book review")} book reviews, ${ty("map/tool")} interactive tools.</div></div>
+      <div class="bi"><div class="bn">${cur.share}%</div><div class="bl">commissioned into an issue</div>
+        <div class="bd">${nf(cur.in_curated_issue)} of ${nf(total)} pieces belong to one of ${cur.n_issues_and_series} numbered issues or named series rather than standing alone.</div></div>
+      <div class="bi"><div class="bn">${Math.round(D.by_nauthors["1"]/total*100)}%</div><div class="bl">single byline</div>
+        <div class="bd">Co-authoring is the exception, reserved for collaborative research and cross-disciplinary pieces. One group survey carries ten names.</div></div>
+      <div class="bi"><div class="bn">${Math.round(D.by_year["2025"]/52*10)/10}</div><div class="bl">pieces a week</div>
+        <div class="bd">The 2025 cadence, up from ${Math.round(D.by_year["2022"]/52*10)/10} in 2022. Output roughly doubled from 2022 to 2023 and again toward 2025 &mdash; ${nf(D.by_year["2025"])} pieces in the first full year above 250.</div></div>
+    </div>
+    <div class="src">Format vocabulary mirrors the sections vitalcitynyc.org uses; every call records its reason (see <a href="../methodology.md">methodology</a>). Word counts from Ghost, ${nf(D.wc_stats.n)} pieces with a count.</div></div>`;
 
-  // 2 + 3 side by side
-  const typeRows=D.by_type.map(t=>({k:t[0],v:t[1],c:"#050507",pct:Math.round(t[1]/total*100)}));
-  html+=`<div class="grid2">
-    <div class="card" id="format"><h2>Format: an opinion journal, first</h2>
-      <div class="hint">Share of all ${nf(total)} pieces by content type.</div>
-      ${hbar(typeRows,{labelW:150,valSuffix:""})}
-      <div class="insight">About 8 in 10 pieces are opinion or commentary — analysis and argument, overwhelmingly by outside contributors. Everything else is a deliberate minority: ${D.by_type.find(t=>t[0]==='data analysis')[1]} data analyses, ${D.by_type.find(t=>t[0]==='q&a')[1]} Q&amp;As, ${D.by_type.find(t=>t[0]==='podcast')[1]} podcast episodes and ${D.by_type.find(t=>t[0]==='policy')[1]} pieces of Vital City's own policy.</div>
-      <div class="src">Types mirror the sections vitalcitynyc.org itself uses. Every call records its reason; see <a href="../methodology.md">methodology</a>.</div></div>
-    <div class="card" id="subject"><h2>What the pieces are about</h2>
-      <div class="hint">${nf(S.beats.length)} beats, built by sorting all ${nf(S.n_topics_normalized)} topic tags into subjects (see below). A piece counts toward every beat it touches, so these exceed ${nf(total)}.</div>
-      ${hbar(S.beats.map(b=>({k:b.beat,v:b.pieces,c:BEATCO[b.beat]||"#217ebe",pct:Math.round(b.share)})),{labelW:210})}
-      <div class="insight">City Hall and crime are the two poles of the catalogue, and they are the only beats above 20%. Below them sits a real second tier — the built city, courts, the economy, housing, transportation — and then a long tail where whole domains of city life are covered only a handful of times a year: climate at ${S.beats.find(b=>b.beat.startsWith("Climate")).share}%, homelessness at ${S.beats.find(b=>b.beat.startsWith("Homelessness")).share}%, education and youth at ${S.beats.find(b=>b.beat.startsWith("Education")).share}%.</div>
-      <div class="src">Source: Ghost topic tags, sorted by hand into subjects, format labels and issue rubrics; subjects mapped to beats in <code>analyze_subjects.py</code>.</div></div>
-  </div>`;
+  // 1. The anchor chart: what the pieces are about.
+  html+=`<div class="card" id="subject"><h2>What the pieces are about</h2>
+    <div class="hint">${nf(S.beats.length)} beats, built by sorting all ${nf(S.n_topics_normalized)} topic tags into subjects, issue rubrics and format labels, then mapping the subjects onto beats (see <a href="#method">how we did this</a>). A piece counts toward every beat it touches, so these exceed ${nf(total)}.</div>
+    ${hbar(S.beats.map(b=>({k:b.beat,v:b.pieces,c:BEATCO[b.beat]||"#217ebe",pct:Math.round(b.share)})),{labelW:210})}
+    <div class="insight">City Hall and crime are the two poles of the catalogue, and the only beats above 20%. Below them sits a real second tier &mdash; the built city, courts, the economy, housing, transportation &mdash; and then a long tail where whole domains of city life are covered a handful of times a year: climate at ${S.beats.find(b=>b.beat.startsWith("Climate")).share}%, homelessness at ${S.beats.find(b=>b.beat.startsWith("Homelessness")).share}%, education and youth at ${S.beats.find(b=>b.beat.startsWith("Education")).share}%. The pairings tell the same story: crime travels with courts and policing, housing with land use, City Hall with the budget &mdash; but almost no piece connects the economy to criminal justice, or climate to housing, adjacencies the city itself is full of.</div>
+    <div class="src">Source: Ghost topic tags, sorted in <code>analyze_subjects.py</code>. "History" is kept as its own beat rather than folded into culture &mdash; it is applied as a lens across every other beat, and ${S.history_only_pieces} of its ${S.beats.find(b=>b.beat.startsWith("History")).pieces} pieces carry no other cultural tag.</div></div>`;
 
-  // 3b. Why the raw tag list can't answer the question
-  const tb=S.topic_bucket_sizes, tv=S.topic_bucket_piece_volume;
-  html+=`<div class="card" id="vocab"><h2>Why the tag list alone can't tell you what we cover</h2>
-    <div class="hint">Ghost holds one <code>topics</code> field, but three different kinds of label live in it.</div>
-    ${hbar([
-      {k:"Subjects (Housing, Gun Violence…)",v:tv.subject_tag_applications,c:"#217ebe"},
-      {k:"Issue section rubrics",v:tv.rubric_tag_applications,c:"#ff7c53"},
-      {k:"Format / meta labels",v:tv.meta_tag_applications,c:"#9b9fbc"}],
-      {labelW:230,valSuffix:" tag uses"})}
-    <div class="insight">Of ${nf(S.n_topics_normalized)} distinct tags, only ${tb.subjects} name a subject. ${tb.rubrics} are <b>issue section rubrics</b> — table-of-contents headings like "Setting the Stage," "What Can Be Done?" and "Where Do We Go From Here?" that structure a single issue's arc and describe no topic at all. Another ${tb.meta} are format labels ("Podcast," "Data Stories," "interview") that duplicate the type field. Read the raw tag counts and "Setting the Stage" outranks homelessness. Every tag is sorted into exactly one of the three buckets, and the rubric and format lists are published in the data file so the sort can be checked.</div>
-    <div class="src">A separate quirk, also fixed: seven tags exist twice in Ghost, once with a trailing period ("History." and "History"). Those are normalized together.</div></div>`;
+  // 2. The whole trajectory story in one chart (was 22 sparklines).
+  const bs=S.beat_shift, bsb=bs.beats;
+  html+=`<div class="card" id="shift"><h2>How the subject mix moved</h2>
+    <div class="hint">Each beat's share of pieces in Vital City's first three years (hollow dot, ${bs.early_years[0]}&ndash;${bs.early_years[bs.early_years.length-1]}, ${nf(bs.early_pieces)} pieces) and in the most recent two (filled dot, ${bs.late_years.join("&ndash;")}, ${nf(bs.late_pieces)} pieces). Beats with 30+ pieces. Shares, not counts &mdash; output more than doubled between the windows.</div>
+    ${dumbbell(bsb.map(b=>({k:b.beat,a:b.early,b:b.late})))}
+    <div class="legend"><span><i class="sw" style="background:#217ebe"></i>Grew as a share</span><span><i class="sw" style="background:#e7466d"></i>Shrank as a share</span></div>
+    <div class="insight">Vital City published its way from one subject into another. City government went from ${bsb.find(b=>b.beat.startsWith("City government")).early}% of pieces to ${bsb.find(b=>b.beat.startsWith("City government")).late}% &mdash; now the largest beat in the journal &mdash; with politics, housing, the economy and transportation all climbing behind it. Crime halved as a share, from ${bsb.find(b=>b.beat.startsWith("Crime")).early}% to ${bsb.find(b=>b.beat.startsWith("Crime")).late}%, and the sharpest falls are health and mental health (${bsb.find(b=>b.beat.startsWith("Health")).early}% to ${bsb.find(b=>b.beat.startsWith("Health")).late}%) and jails (${bsb.find(b=>b.beat.startsWith("Jails")).early}% to ${bsb.find(b=>b.beat.startsWith("Jails")).late}%). One beat barely moved at all: the built city, ${bsb.find(b=>b.beat.startsWith("Land use")).early}% then, ${bsb.find(b=>b.beat.startsWith("Land use")).late}% now &mdash; the journal's most constant preoccupation.</div>
+    <div class="src">Two-year windows on each end so a single heavy issue doesn't read as a trend. 2026 runs through the pull date. Source: subject tags &divide; pieces published in the window.</div></div>`;
 
-  // 3c. The pivot away from criminal justice
+  // 3. The single largest change, shown year by year.
   const cj=S.criminal_justice_cluster, cjy=Object.keys(cj.by_year).filter(y=>cj.by_year[y].total>=10);
   html+=`<div class="card" id="pivot"><h2>The pivot away from criminal justice</h2>
-    <div class="hint">Share of each year's pieces touching crime, policing, courts or jails. Share, not count — the catalogue kept growing throughout.</div>
+    <div class="hint">Share of each year's pieces touching crime, policing, courts or jails &mdash; the four beats Vital City was founded on.</div>
     ${vbar(cjy.map(y=>({k:y,v:cj.by_year[y].share})),{color:"#e7466d",h:250,flag:[cjy[cjy.length-1]]})}
-    <div class="insight">This is the largest single change in what Vital City publishes. In ${cjy[0]}, ${cj.by_year[cjy[0]].share}% of pieces touched criminal justice; through July ${cjy[cjy.length-1]} it is ${cj.by_year[cjy[cjy.length-1]].share}%. The absolute count barely moved — ${cj.by_year[cjy[0]].cj} pieces then, ${cj.by_year["2025"].cj} in 2025 — so this is not a retreat from the subject. It is everything else growing around it: City Hall coverage went from ${S.beats.find(b=>b.beat.startsWith("City government")).by_year["2022"]||0} pieces in 2022 to ${S.beats.find(b=>b.beat.startsWith("City government")).by_year["2025"]} in 2025, and housing from ${S.beats.find(b=>b.beat==="Housing").by_year["2022"]||0} to ${S.beats.find(b=>b.beat==="Housing").by_year["2025"]}. A criminal-justice journal became a city-policy journal without publishing less about criminal justice.</div>
-    <div class="src">* Partial year. Tagging density is steady across the period (2.1–2.4 subject tags per piece every year), so the trend is a change in coverage, not in tagging habits.</div></div>`;
+    <div class="insight">In ${cjy[0]}, ${cj.by_year[cjy[0]].share}% of pieces touched criminal justice; through ${cjy[cjy.length-1]} it is ${cj.by_year[cjy[cjy.length-1]].share}%. But the absolute count barely moved &mdash; ${cj.by_year[cjy[0]].cj} pieces then, ${cj.by_year["2025"].cj} in 2025 &mdash; so this is not a retreat from the subject. It is everything else growing around it. A criminal-justice journal became a city-policy journal without publishing less about criminal justice.</div>
+    <div class="src">* Partial year. Tagging density is steady throughout (2.1&ndash;2.4 subject tags per piece every year), so this is a change in coverage, not in tagging habits.</div></div>`;
 
-  // 3d. Beat trajectories
-  const byrs=["2022","2023","2024","2025","2026"];
-  const yrTot={}; byrs.forEach(y=>yrTot[y]=cj.by_year[y].total);
-  const traj=S.beats.filter(b=>b.pieces>=30).map(b=>{
-    const vals=byrs.map(y=>Math.round((b.by_year[y]||0)/yrTot[y]*100));
-    return `<div class="sm"><div class="t">${esc(b.beat)}</div><div class="d">% of each year's pieces</div>${spark(vals,{color:BEATCO[b.beat]||"#217ebe",years:byrs})}</div>`;
-  }).join("");
-  html+=`<div class="card" id="traj"><h2>Which beats rose, which faded</h2>
-    <div class="hint">For every beat with 30 or more pieces, its share of each year's output. 2026 runs through July 31.</div>
-    <div class="sm-grid">${traj}</div>
-    <div class="insight">Three beats are clearly ascendant: City Hall and governance (from 2% to 37% of the year's pieces), the economy and budgets (0% to 23%), and housing (2% to 15%). Two have thinned sharply — jails and incarceration, which peaked at 15% in 2024 and is now under 4%, and health, mental health and drugs, which peaked at 20% in 2023 and is now under 2%. Politics spikes in election years and recedes. The built city is the steadiest thing here, holding 16–19% every single year.</div>
-    <div class="src">Source: subject tags ÷ pieces published that year.</div></div>`;
-
-  // 3e. Which beats get which treatment
-  const treat=S.beats.filter(b=>b.pieces>=30).map(b=>{
-    const t=Object.fromEntries(b.types), n=b.pieces;
-    const nonComm=n-(t["opinion/commentary"]||0);
-    return {beat:b.beat,n,data:t["data analysis"]||0,qa:t["q&a"]||0,pol:t["policy"]||0,pod:t["podcast"]||0,nonComm,
-            dshare:Math.round((t["data analysis"]||0)/n*100)};
-  }).sort((a,b)=>b.dshare-a.dshare);
-  html+=`<div class="card" id="treatment"><h2>Where the data treatment goes</h2>
-    <div class="hint">Share of each beat's pieces that are data analysis rather than commentary. Beats with 30+ pieces.</div>
-    ${hbar(treat.map(t=>({k:t.beat,v:t.dshare,c:t.dshare>=10?"#217ebe":"#c7cad0"})),{labelW:210,valSuffix:"%"})}
-    <div class="insight">Vital City's quantitative work is concentrated almost entirely in criminal justice. Jails (${treat.find(t=>t.beat.startsWith("Jails")).dshare}%), crime (${treat.find(t=>t.beat.startsWith("Crime")).dshare}%) and courts (${treat.find(t=>t.beat.startsWith("Courts")).dshare}%) are the only beats where at least one piece in ten is a data analysis. The beats that grew fastest are the ones getting the least of it: the economy and budgets is ${treat.find(t=>t.beat.startsWith("Money")).dshare}% data, housing ${treat.find(t=>t.beat==="Housing").dshare}%, technology ${treat.find(t=>t.beat==="Technology").dshare}%. The data operation still points where the journal started, not where it has moved.</div>
-    <div class="src">Type per piece from the catalogue classifier. A piece counts toward each of its beats.</div></div>`;
-
-  // 3f. What travels together + the history lens
-  const pairs=S.cooccurrence_top20.slice(0,12).map(c=>({k:c.a.replace(/ &.*/,"")+" + "+c.b.replace(/ &.*/,""),v:c.pieces,c:"#57aa4a"}));
-  const hl=S.history_lens_reach.filter(h=>h.pieces>=28).slice(0,8).map(h=>({k:h.beat,v:h.share,c:"#7a5ea6"}));
+  // 4 + 5. Two new angles: the job a piece does, and how it was commissioned.
+  const st=S.stance, sb=st.buckets.filter(b=>b.stance!=="Unsorted");
+  const SCO={"Prescribing a fix":"#57aa4a","Framing the terms":"#217ebe","Diagnosing what's broken":"#e7466d",
+             "Looking ahead":"#d9a441","Looking back":"#7a5ea6","Staging a debate":"#5b6b7a"};
   html+=`<div class="grid2">
-    <div class="card" id="pairs"><h2>What travels together</h2>
-      <div class="hint">Beat pairs appearing on the same piece, most frequent first.</div>
-      ${hbar(pairs,{labelW:210,valSuffix:" pieces"})}
-      <div class="insight">The pairings show where the journal actually thinks in systems: crime with courts and with policing, housing with land use, land use with transportation, City Hall with the budget. Almost no piece connects the economy to criminal justice, or climate to housing — adjacencies the city itself is full of.</div>
-      <div class="src">Only pieces carrying subject tags for both beats count.</div></div>
-    <div class="card" id="lens"><h2>History is a lens, not a beat</h2>
-      <div class="hint">Share of each beat's pieces also tagged History. Beats with 28+ pieces.</div>
-      ${hbar(hl,{labelW:210,valSuffix:"%"})}
-      <div class="insight">"History" is the second most-applied tag in the whole catalogue (${S.beats.find(b=>b.beat.startsWith("History")).pieces} pieces), but it is not a subject area — it is a habit of mind applied across the others. ${S.history_lens_reach.find(h=>h.beat.startsWith("Culture")).share}% of culture pieces carry it, and so do ${S.history_lens_reach.find(h=>h.beat.startsWith("Land use")).share}% of land-use pieces and ${S.history_lens_reach.find(h=>h.beat.startsWith("Crime")).share}% of crime pieces. Folding it into culture, as a naive read of the tags would, overstates cultural coverage by about half: ${S.history_only_pieces} of its pieces carry no other cultural tag at all.</div>
-      <div class="src">Kept as its own dimension for exactly this reason. See <code>analyze_subjects.py</code>.</div></div>
+    <div class="card" id="arc"><h2>The job each piece does</h2>
+      <div class="hint">Vital City's curated issues are built as arguments, and the section heading a piece sits under names its role. Sorting those ${S.topic_bucket_sizes.rubrics} headings by the job they describe &mdash; not the topic &mdash; gives the only read available on rhetorical posture. Covers the ${st.pieces_with_rubric} pieces (${st.coverage_share}%) that carry one.</div>
+      ${hbar(sb.map(b=>({k:b.stance,v:b.pieces,c:SCO[b.stance]||"#217ebe",pct:Math.round(b.share_of_rubriced)})),{labelW:190})}
+      <div class="insight">The journal is built to arrive at a recommendation. ${Math.round(sb[0].share_of_rubriced)}% of curated pieces sit in a "what to do" slot &mdash; "Some Policy Solutions," "The Way Forward," "If I Had a Hammer..." &mdash; against ${Math.round(sb.find(b=>b.stance.startsWith("Diagnosing")).share_of_rubriced)}% that diagnose what is broken and ${Math.round(sb.find(b=>b.stance.startsWith("Framing")).share_of_rubriced)}% that frame the terms. Prescription outnumbers complaint two to one. Only ${sb.find(b=>b.stance==="Looking back").pieces} pieces sit in a retrospective slot, and just ${sb.find(b=>b.stance==="Staging a debate").pieces} are staged as a debate between opposing views.</div>
+      <div class="src">Rubric-to-job map in <code>analyze_subjects.py</code>, published in the data file. Standalone pieces carry no rubric and are out of scope here, so this describes the curated third of the catalogue.</div></div>
+    <div class="card" id="curation"><h2>The recurring franchises</h2>
+      <div class="hint">Named series by piece count &mdash; the packages Vital City returns to. Numbered issues are excluded; these are the standing franchises only.</div>
+      <table class="tbl">${cur.named_series_top.slice(0,10).map(s=>`<tr><td>${esc(SNAME(s.series))}</td><td class="n">${s.pieces}</td></tr>`).join("")}</table>
+      <div class="insight">${cur.share}% of everything Vital City has published was commissioned into a package &mdash; ${cur.n_issues_and_series} issues and named series in five years. That is the strongest structural fact about the catalogue: it is not a stream of unrelated op-eds but a sequence of assembled arguments, each with a stage-setter, a diagnosis and a prescription. The franchises also show where the journal builds annual furniture &mdash; the year-end crime reviews and the jails series recur on a schedule, while "Rubber Meets Road" and "Borrow and Steal" are the standing formats for implementation and for learning from other cities.</div>
+      <div class="src">Source: Ghost internal (#-prefixed) tags, which carry both numbered issues and named series.</div></div>
   </div>`;
 
-  // 3g. Bench width per beat
+  // 5b. Word-count distribution, and who the journal argues with by name.
+  const W=D.wc_stats, hrows=D.wc_hist.rows.map(r=>({k:r.label,v:r.n,
+      c:(r.floor>=1000&&r.floor<2500)?"#57aa4a":"#c9d8c4"}));
+  const medIdx=D.wc_hist.rows.findIndex(r=>r.floor===Math.min(Math.floor(W.median/D.wc_hist.bin)*D.wc_hist.bin,D.wc_hist.tail_floor));
+  html+=`<div class="card" id="length"><h2>Length: a tight peak and a long tail</h2>
+    <div class="hint">Every piece binned by word count in ${nf(D.wc_hist.bin)}-word steps. The final bar collects everything at ${nf(D.wc_hist.tail_floor)} words and above, because the tail runs to ${nf(W.max)}.</div>
+    ${hist(hrows,{markers:[{at:medIdx,label:"median "+nf(W.median)}]})}
+    <div class="insight">The house form is narrow and consistent: ${Math.round(W.core_1000_2499/W.n*100)}% of pieces (${nf(W.core_1000_2499)} of ${nf(W.n)}) run between 1,000 and 2,500 words, peaking hard at 1,500&ndash;1,750. Half the catalogue sits within ${nf(W.p25)}&ndash;${nf(W.p75)} words &mdash; a spread of only ${nf(W.p75-W.p25)} words across ${nf(W.n)} pieces by ${nf(D.meta.total_authors)} authors, which is an editorial standard being enforced, not a natural distribution. The tail is real but small: ${W.over_5000} pieces run past 5,000 words, and the ${nf(W.max)}-word outlier is the Rikers investigation. At the other end, ${W.under_500} pieces come in under 500 &mdash; mostly interactive tools and data stories where the charts carry the argument and the prose is a caption.</div>
+    <div class="src">Green bars mark the 1,000&ndash;2,500 core. Percentiles: p10 ${nf(W.p10)}, p25 ${nf(W.p25)}, median ${nf(W.median)}, p75 ${nf(W.p75)}, p90 ${nf(D.wc_stats.p90)}, p95 ${nf(W.p95)}. Mean ${nf(W.mean)} &mdash; pulled above the median by the tail. Source: Ghost word counts, prose only (embedded charts, images and captions are not counted), ${W.no_count} pieces have no count and are excluded.</div>
+    <h2 style="margin-top:22px">And it has not budged in five years</h2>
+    <div class="hint">Each year's middle half of pieces (the shaded 25th-to-75th-percentile band) with the median marked. 2021 is omitted &mdash; one piece is not a distribution.</div>
+    ${rangebar(D.wc_by_year.map(r=>({k:r.year,lo:r.p25,mid:r.median,hi:r.p75})))}
+    <div class="insight">This is the most stable thing in the entire catalogue. Across five years, ${nf(D.by_year["2022"])} pieces a year growing to ${nf(D.by_year["2025"])}, and a contributor list turning over constantly, the median never leaves a ${nf(Math.max(...D.wc_by_year.map(r=>r.median))-Math.min(...D.wc_by_year.map(r=>r.median)))}-word band: ${D.wc_by_year.map(r=>nf(r.median)).join(", ")}. The middle half barely moves either. When ${S.bench.wrote_once_share}% of bylines write exactly one piece and the length still lands in the same place every time, the length is coming from the editing, not the writers. The one visible drift is ${D.wc_by_year[D.wc_by_year.length-1].year}, where the upper quartile stretches to ${nf(D.wc_by_year[D.wc_by_year.length-1].p75)} &mdash; the longest-running year so far, though it is still partial.</div>
+    <div class="src">Source: same Ghost word counts, grouped by publication year. Years with fewer than 10 counted pieces are dropped.</div></div>`;
+
+  const NH=Object.fromEntries(S.named_in_headline.map(n=>[n.name,n]));
+  const mam=NH.Mamdani, ada=NH.Adams;
+  html+=`<div class="card" id="mayors"><h2>Who the journal argues with, by name</h2>
+    <div class="hint">Headlines naming each figure, out of ${nf(total)} pieces. A literal string count on the headline only &mdash; a piece can be about a mayor without naming him in the title, so these are floors, not totals.</div>
+    <div class="band b3">
+      <div class="bi"><div class="bn" style="color:#217ebe">${mam.headlines}</div><div class="bl">headlines name Mamdani</div>
+        <div class="bd">${mam.share}% of the catalogue, all of it since ${mam.first} &mdash; ${mam.by_year["2025"]} in 2025, ${mam.by_year["2026"]} in 2026 through the pull date.</div></div>
+      <div class="bi"><div class="bn" style="color:#e7466d">${ada.headlines}</div><div class="bl">headlines name Adams</div>
+        <div class="bd">${ada.share}% across his entire mayoralty &mdash; ${ada.by_year["2023"]} in 2023, ${ada.by_year["2024"]} in 2024, ${ada.by_year["2025"]} in 2025.</div></div>
+      <div class="bi"><div class="bn">${NH.Trump.headlines}</div><div class="bl">headlines name Trump</div>
+        <div class="bd">Concentrated in ${Object.entries(NH.Trump.by_year).sort((a,b)=>b[1]-a[1])[0][0]}. For comparison: Hochul ${NH.Hochul.headlines}, de Blasio ${NH["de Blasio"].headlines}, Bloomberg ${NH.Bloomberg.headlines}.</div></div>
+    </div>
+    <div class="insight">Mamdani has been named in nearly three times as many headlines in thirteen months as Adams was in four years &mdash; and the two sets read completely differently. The Mamdani headlines are overwhelmingly prospective and advisory: "How Mamdani Can Deliver Free Buses," "Mayor Mamdani, Here's What Mass Engagement Looks Like," "A Road Safety Blueprint for the Mamdani Administration." The Adams headlines cluster around scandal and survival &mdash; seven of the 18 land in the two months around his indictment, and the rest ask whether he can govern, win or last. The same journal was auditing one mayor and advising the other.</div>
+    <div class="src">Bare-surname match on the headline, hand-checked against the full hit list: every "Adams" is Eric Adams and every "Mamdani" is Zohran Mamdani, so there are no namesake false positives here. Full title lists are in <code>data/subject_analysis.json</code>.</div>
+    <h2 style="margin-top:22px">The words the headlines reach for</h2>
+    <div class="hint">Most frequent words across all ${nf(total)} headlines, counted once per headline. "New York," "New Yorkers" and "city" are excluded &mdash; they appear everywhere and distinguish nothing. Possessives are folded into the base word, so "Mamdani's" counts as Mamdani.</div>
+    ${hbar(S.headline_words.slice(0,22).map(w=>({k:w.word,v:w.headlines,
+        c:["mamdani","zohran","adams","eric","mayor","trump"].includes(w.word)?"#e7466d"
+          :["crime","jail","rikers","violence","police","safety","gun"].includes(w.word)?"#217ebe"
+          :["conversation"].includes(w.word)?"#c7cad0":"#57aa4a"})),{labelW:130,valSuffix:" headlines"})}
+    <div class="legend"><span><i class="sw" style="background:#e7466d"></i>People and office</span><span><i class="sw" style="background:#217ebe"></i>Crime and punishment</span><span><i class="sw" style="background:#57aa4a"></i>Everything else</span><span><i class="sw" style="background:#c7cad0"></i>Format artifact</span></div>
+    <div class="insight">Read as a list, the headline vocabulary is more about criminal justice than the subject tags suggest: crime, jail, Rikers, violence, police, safety and gun together outrank every other cluster, even though those beats have fallen by half as a share of what gets published. Headlines are the last place the old identity persists. The single most common word in five years of headlines is now a person's name &mdash; Mamdani, at ${S.headline_words.find(w=>w.word==="mamdani").headlines} &mdash; and "better" appears in ${S.headline_words.find(w=>w.word==="better").headlines}, which is the prescriptive posture showing up in the copy. "Conversation" at ${S.headline_words.find(w=>w.word==="conversation").headlines} is a format artifact, not a subject: it is the Q&amp;A series naming itself.</div>
+    <div class="src">Stoplist and the singular/plural merges are written out in <code>analyze_subjects.py</code>; the top 40 words are in the data file. Counting once per headline means a word repeated in one title is not double-counted.</div></div>`;
+
+  // 5d. Can a headline tell opinion from analysis? Tested, not asserted.
+  const HT=S.headline_signal_test, hs=l=>HT.rows.find(r=>r.signal===l);
+  html+=`<div class="card" id="signal"><h2>Can you tell opinion from analysis by the headline?</h2>
+    <div class="hint">Testable, so we tested it. Each headline was labelled by the signals it carries &mdash; prescriptive language ("should," "must," "a better way") versus analytical language ("by the numbers," "the state of," "how rare is") &mdash; and the label checked against the content type the pipeline assigned from the article itself, never from the title. Q&amp;As, podcasts, book reviews and tools are excluded: they are a third thing, neither opinion nor analysis. That leaves ${nf(HT.argument_pieces)} pieces.</div>
+    <div class="band b3">
+      <div class="bi"><div class="bn" style="color:#217ebe">${hs("analysis signal").lift_vs_base}&times;</div><div class="bl">analysis signals work</div>
+        <div class="bd">${hs("analysis signal").headlines} headlines carry analytical language, and ${hs("analysis signal").pct_data_analysis}% of them really are data analyses &mdash; against a base rate of ${HT.base_rate_data_analysis}%. Reliable signal.</div></div>
+      <div class="bi"><div class="bn" style="color:#e7466d">${hs("opinion signal").lift_vs_base}&times;</div><div class="bl">opinion signals don't</div>
+        <div class="bd">${hs("opinion signal").headlines} headlines carry prescriptive language and ${(100-hs("opinion signal").pct_data_analysis).toFixed(1)}% are opinion &mdash; but so are ${HT.base_rate_opinion}% of all pieces. The detector adds essentially nothing.</div></div>
+      <div class="bi"><div class="bn">${hs("no signal").share_of_argument}%</div><div class="bl">give no signal at all</div>
+        <div class="bd">${nf(hs("no signal").headlines)} headlines carry neither marker &mdash; "When Rent Regulation Makes Sense," "Modern Community Safety Includes More than Police." Declarative, and unreadable either way.</div></div>
+    </div>
+    <div class="insight">The answer is no for opinion and yes for analysis, and the asymmetry is the interesting part. You cannot detect strong opinion from a Vital City headline because opinion <i>is</i> the baseline: ${HT.base_rate_opinion}% of argument pieces are commentary, so a classifier that guessed "opinion" every time would score ${HT.base_rate_opinion}% and know nothing. The prescriptive-language detector fires on only ${hs("opinion signal").share_of_argument}% of headlines and lands almost exactly on that base rate &mdash; ${hs("opinion signal").lift_vs_base}&times; lift, which is no lift. Analysis is the opposite: it is rare enough (${HT.base_rate_data_analysis}%) that naming it in the headline is informative, and a headline with data framing is ${hs("analysis signal").lift_vs_base} times likelier to sit on a data piece. Practical read: the house voice is so consistently argumentative that argument is invisible in the copy, and the headlines that stand out are the ones announcing evidence.</div>
+    <div class="src">All signal patterns are published in <code>data/subject_analysis.json</code> and defined in <code>analyze_subjects.py</code>. Lift is the bucket's data-analysis rate divided by the base rate; 1.0&times; means the label tells you nothing you didn't already know. This is a keyword test on ${nf(HT.argument_pieces)} titles, not a language model reading the pieces &mdash; it measures what headline <i>wording</i> reveals, which is exactly the question asked. ${HT.excluded_non_argument} non-argument pieces excluded.</div></div>`;
+
+  // 6. Where the quantitative work goes.
+  const treat=S.beats.filter(b=>b.pieces>=30).map(b=>{
+    const t=Object.fromEntries(b.types);
+    return {beat:b.beat,dshare:Math.round((t["data analysis"]||0)/b.pieces*100)};
+  }).sort((a,b)=>b.dshare-a.dshare);
+  html+=`<div class="card" id="treatment"><h2>Where the data treatment goes</h2>
+    <div class="hint">Share of each beat's pieces that are data analysis rather than argument. Beats with 30+ pieces.</div>
+    ${hbar(treat.map(t=>({k:t.beat,v:t.dshare,c:t.dshare>=10?"#217ebe":"#c7cad0"})),{labelW:210,valSuffix:"%"})}
+    <div class="insight">The quantitative work is concentrated almost entirely in criminal justice. Jails (${treat.find(t=>t.beat.startsWith("Jails")).dshare}%), crime (${treat.find(t=>t.beat.startsWith("Crime")).dshare}%) and courts (${treat.find(t=>t.beat.startsWith("Courts")).dshare}%) are the only beats where at least one piece in ten is a data analysis. The beats that grew fastest get the least of it: the economy and budgets is ${treat.find(t=>t.beat.startsWith("Money")).dshare}% data, housing ${treat.find(t=>t.beat==="Housing").dshare}%, technology ${treat.find(t=>t.beat==="Technology").dshare}%, city government ${treat.find(t=>t.beat.startsWith("City government")).dshare}%. The data operation still points where the journal started, not where it has moved.</div>
+    <div class="src">Type per piece from the catalogue classifier. A piece counts toward each of its beats.</div></div>`;
+
+  // 7. Who writes, with the prolific list folded in as text rather than a second chart.
+  const credRows=D.by_credential_pieces.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999",pct:Math.round(c[1]/total*100)}));
+  const credAuthRows=D.by_credential_authors.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999"}));
+  html+=`<div class="card" id="credentials"><h2>Who writes for Vital City</h2>
+    <div class="hint">Primary author's professional background. <span class="toggle" id="credTog"><button data-m="pieces" class="on">By pieces</button><button data-m="authors">By distinct authors</button></span></div>
+    <div id="credChart">${hbar(credRows,{labelW:220})}</div>
+    <div class="insight">Academics are the largest single group of bylines &mdash; about a quarter of all pieces &mdash; but the mix is deliberately broad: former public officials, journalists, nonprofit and advocacy voices, think-tank researchers, lawyers and private-sector leaders all appear in numbers. It reads like a policy journal that pulls scholars and practitioners onto the same pages. The most prolific contributors, after the institutional "Vital City" byline: ${D.prolific.filter(p=>p.name!=="Vital City").slice(0,8).map(p=>`<b>${esc(p.name)}</b> (${p.posts})`).join(", ")}.</div>
+    <div class="src">Single label per piece, applied to the primary author by an automated bio reading (see <a href="#method">how we did this</a>). Approximate &mdash; many contributors hold several credentials at once.</div></div>`;
+
+  // 8. Bench width per beat.
   const bench=S.byline_concentration.filter(b=>b.pieces>=30);
   const bj=bench.find(b=>b.beat.startsWith("Jails")), bl=bench.find(b=>b.beat.startsWith("Land use")),
         bc=bench.find(b=>b.beat.startsWith("City government"));
   html+=`<div class="card" id="bench"><h2>Specialist circles and open benches</h2>
     <div class="hint">Share of each beat written by its five most frequent bylines. Beats with 30+ pieces. A high number is a small expert circle; a low one is a wide bench.</div>
     ${hbar(bench.map(b=>({k:b.beat+" · "+b.distinct_bylines+" bylines",v:b.top5_share,c:BEATCO[b.beat]||"#217ebe"})),{labelW:290,valSuffix:"%"})}
-    <div class="insight">The founding subjects are written by a tight circle and the newer ones by a crowd. Jails is the most concentrated beat in the catalogue — five bylines write ${bj.top5_share}% of its ${bj.pieces} pieces (${bj.top3[0].name} and ${bj.top3[1].name} lead it), and only ${bj.distinct_bylines} people have ever written one. At the other end, the built city draws on ${bl.distinct_bylines} bylines for ${bl.pieces} pieces, with the top five accounting for just ${bl.top5_share}%, and City Hall on ${bc.distinct_bylines}. That is the expansion showing up in the contributor list: the beats Vital City grew into are staffed by many hands writing once or twice, while the beats it was founded on are held by a small group of returning experts.</div>
+    <div class="insight">The founding subjects are written by a tight circle, the newer ones by a crowd. Jails is the most concentrated beat in the catalogue &mdash; five bylines write ${bj.top5_share}% of its ${bj.pieces} pieces (${bj.top3[0].name} and ${bj.top3[1].name} lead it), and only ${bj.distinct_bylines} people have ever written one. At the other end, the built city draws on ${bl.distinct_bylines} bylines for ${bl.pieces} pieces with the top five accounting for just ${bl.top5_share}%, and City Hall on ${bc.distinct_bylines}. Across the whole catalogue, ${S.bench.wrote_once} of ${S.bench.primary_bylines} bylines (${S.bench.wrote_once_share}%) have written exactly one piece: the beats Vital City grew into are staffed by many hands writing once, while the beats it was founded on are held by a small group of returning experts.</div>
     <div class="src">Primary byline only; "Vital City" counts as one byline. Source: <code>analyze_subjects.py</code>.</div></div>`;
-
-  // 4. Credentials
-  const credRows=D.by_credential_pieces.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999",pct:Math.round(c[1]/total*100)}));
-  const credAuthRows=D.by_credential_authors.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999"}));
-  html+=`<div class="card" id="credentials"><h2>Who writes for Vital City</h2>
-    <div class="hint">Primary author's professional background, by pieces. <span class="toggle" id="credTog"><button data-m="pieces" class="on">By pieces</button><button data-m="authors">By distinct authors</button></span></div>
-    <div id="credChart">${hbar(credRows,{labelW:220})}</div>
-    <div class="insight">Academics are the single largest group of bylines — about a quarter of all pieces — but the mix is deliberately broad: former public officials, journalists, nonprofit and advocacy voices, think-tank researchers, lawyers and private-sector leaders all appear in numbers. It reads like a policy journal that pulls practitioners and scholars into the same pages.</div>
-    <div class="src">Single label per piece, applied to the primary author via an automated bio reading (see <a href="#method">How we did this</a>). Approximate; many contributors hold several credentials at once.</div></div>`;
-
-  // 5. Focus over time (small multiples, share of year)
-  const smYears=years.filter(y=>D.by_year[y]>=10); // drop 2021
-  const sm=D.top_topics_for_stack.map(t=>{
-    const vals=smYears.map(y=>Math.round((D.topic_by_year[t][y]||0)/D.by_year[y]*100));
-    return `<div class="sm"><div class="t">${esc(t)}</div><div class="d">% of each year's pieces</div>${spark(vals,{color:"#217ebe",years:smYears})}</div>`;
-  }).join("");
-  html+=`<div class="card" id="focus"><h2>How the focus has shifted</h2>
-    <div class="hint">For the eight most-tagged topics, the share of each year's pieces carrying that tag (${smYears[0]}–${smYears[smYears.length-1]}). Share, not count, so the growing volume doesn't distort the trend.</div>
-    <div class="sm-grid">${sm}</div>
-    <div class="insight">History has climbed into a recurring feature of the mix, and City Planning holds steady, while Crime — still the most-tagged single subject overall — has eased as a share of a widening catalogue.</div>
-    <div class="src">Source: Ghost topic tags ÷ pieces published that year. 2021 omitted (one piece).</div></div>`;
-
-  // 6 + 7
-  const wcRows=D.wc_buckets.map(b=>({k:b[0],v:b[1],c:"#57aa4a"}));
-  const naMap={"1":"Solo","2":"Two authors","3":"Three","4":"Four","10":"Ten (survey)"};
-  const naRows=Object.keys(D.by_nauthors).map(k=>({k:naMap[k]||k+" authors",v:D.by_nauthors[k],c:"#7a5ea6"}));
-  html+=`<div class="grid2">
-    <div class="card" id="length"><h2>Length: the 1,000–2,000 word essay</h2>
-      <div class="hint">Word count per piece. Median ${nf(D.wc_stats.median)}, mean ${nf(D.wc_stats.mean)} (a long tail pulls the mean up); longest ${nf(D.wc_stats.max)}.</div>
-      ${hbar(wcRows,{labelW:110,valSuffix:""})}
-      <div class="insight">The house style is the tight policy essay: about ${Math.round(D.wc_buckets.find(b=>b[0]==='1,000-1,999')[1]/total*100)}% of pieces land between 1,000 and 2,000 words — a 5-to-9-minute read.</div>
-      <div class="src">Source: Ghost word_count (${nf(D.wc_stats.n)} pieces with a count).</div></div>
-    <div class="card" id="collab"><h2>Mostly single-author</h2>
-      <div class="hint">Number of bylines per piece.</div>
-      ${hbar(naRows,{labelW:110})}
-      <div class="insight">${Math.round(D.by_nauthors["1"]/total*100)}% of pieces carry a single byline; co-authoring is the exception, used for collaborative research and cross-disciplinary pieces.</div>
-      <div class="src">Source: Ghost author lists. The 10-author piece is a group survey.</div></div>
-  </div>`;
-
-  // 8. Prolific authors
-  const pr=D.prolific.slice(0,15);
-  html+=`<div class="card" id="prolific"><h2>The most prolific contributors</h2>
-    <div class="hint">Top 15 by piece count, colored by background. "Vital City" is the institutional byline.</div>
-    ${hbar(pr.map(p=>({k:p.name,v:p.posts,c:CO[p.credential]||"#999"})),{labelW:180})}
-    <div class="legend">${[...new Set(pr.map(p=>p.credential))].map(c=>`<span><i class="sw" style="background:${CO[c]||'#999'}"></i>${esc(c)}</span>`).join("")}</div>
-    <div class="src">Source: Ghost author post counts. Background assigned per the method note.</div></div>`;
 
   document.getElementById("app").innerHTML=html;
 
