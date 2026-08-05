@@ -1,15 +1,40 @@
 {
-  "generated_at": "2026-08-05T11:46:39.407529+00:00",
+  "generated_at": "2026-08-05T23:26:18.770315+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 881,
-  "total_authors": 487,
+  "total_posts": 883,
+  "total_authors": 488,
   "total_issues": 29,
   "total_topics": 213,
   "date_range": [
     "2021-09-15",
-    "2026-07-31"
+    "2026-08-05"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 4,
+  "new_articles": [
+    {
+      "title": "Bureaucracy Is Just People",
+      "url": "https://www.vitalcitynyc.org/nyc-nonprofit-contracting-reform/",
+      "published_date": "2026-08-05",
+      "primary_author": "Michael Sedillo"
+    },
+    {
+      "title": "How to Survive in New York City, According to Spider-Man",
+      "url": "https://www.vitalcitynyc.org/spiderman-brand-new-day-nyc-lessons-culture/",
+      "published_date": "2026-08-05",
+      "primary_author": "Greg Berman"
+    },
+    {
+      "title": "Public Sector Unions vs. Mamdani’s Ambitions",
+      "url": "https://www.vitalcitynyc.org/mamdani-nyc-unions-efficiency-reform/",
+      "published_date": "2026-06-10",
+      "primary_author": "Daniel DiSalvo"
+    },
+    {
+      "title": "What Hangs in the Balance Sheets",
+      "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
+      "published_date": "2025-09-17",
+      "primary_author": "Vital City"
+    }
+  ]
 }

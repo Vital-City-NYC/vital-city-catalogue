@@ -1,27 +1,52 @@
 {
   "meta": {
-    "generated_at": "2026-08-05T11:46:39.407529+00:00",
+    "generated_at": "2026-08-05T23:26:18.770315+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 881,
-    "total_authors": 487,
+    "total_posts": 883,
+    "total_authors": 488,
     "total_issues": 29,
     "total_topics": 213,
     "date_range": [
       "2021-09-15",
-      "2026-07-31"
+      "2026-08-05"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 4,
+    "new_articles": [
+      {
+        "title": "Bureaucracy Is Just People",
+        "url": "https://www.vitalcitynyc.org/nyc-nonprofit-contracting-reform/",
+        "published_date": "2026-08-05",
+        "primary_author": "Michael Sedillo"
+      },
+      {
+        "title": "How to Survive in New York City, According to Spider-Man",
+        "url": "https://www.vitalcitynyc.org/spiderman-brand-new-day-nyc-lessons-culture/",
+        "published_date": "2026-08-05",
+        "primary_author": "Greg Berman"
+      },
+      {
+        "title": "Public Sector Unions vs. Mamdani\u2019s Ambitions",
+        "url": "https://www.vitalcitynyc.org/mamdani-nyc-unions-efficiency-reform/",
+        "published_date": "2026-06-10",
+        "primary_author": "Daniel DiSalvo"
+      },
+      {
+        "title": "What Hangs in the Balance Sheets",
+        "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
+        "published_date": "2025-09-17",
+        "primary_author": "Vital City"
+      }
+    ]
   },
-  "total_pieces": 881,
+  "total_pieces": 883,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 169
+    "2026": 171
   },
   "by_month": {
     "2021-09": 1,
@@ -76,12 +101,13 @@
     "2026-04": 23,
     "2026-05": 22,
     "2026-06": 44,
-    "2026-07": 22
+    "2026-07": 22,
+    "2026-08": 2
   },
   "by_type": [
     [
       "opinion/commentary",
-      712
+      713
     ],
     [
       "q&a",
@@ -89,7 +115,7 @@
     ],
     [
       "data analysis",
-      47
+      48
     ],
     [
       "podcast",
@@ -123,27 +149,27 @@
     ],
     [
       "City Government",
-      132
+      133
     ],
     [
       "Government Operations",
-      122
+      124
     ],
     [
       "City Planning",
       110
     ],
     [
-      "Housing",
-      79
-    ],
-    [
       "Justice",
       79
     ],
     [
+      "Housing",
+      78
+    ],
+    [
       "culture",
-      74
+      75
     ],
     [
       "Gun Violence",
@@ -199,7 +225,7 @@
     ],
     [
       "Quality of Life",
-      27
+      26
     ],
     [
       "Setting the Stage",
@@ -218,11 +244,11 @@
   "by_credential_pieces": [
     [
       "Academic",
-      217
+      218
     ],
     [
       "Nonprofit / advocacy",
-      105
+      107
     ],
     [
       "Journalist / media",
@@ -230,11 +256,11 @@
     ],
     [
       "Vital City (institutional)",
-      93
+      94
     ],
     [
       "Other / unclassified",
-      90
+      91
     ],
     [
       "Government / public official",
@@ -242,11 +268,11 @@
     ],
     [
       "Business / private sector",
-      58
+      57
     ],
     [
       "Think tank / research institute",
-      52
+      50
     ],
     [
       "Architecture / design / planning",
@@ -276,7 +302,7 @@
     ],
     [
       "Nonprofit / advocacy",
-      74
+      75
     ],
     [
       "Journalist / media",
@@ -321,8 +347,8 @@
     "City Government",
     "Government Operations",
     "City Planning",
-    "Housing",
     "Justice",
+    "Housing",
     "culture"
   ],
   "topic_by_year": {
@@ -343,15 +369,15 @@
     "City Government": {
       "2023": 4,
       "2024": 20,
-      "2025": 55,
-      "2026": 53
+      "2025": 54,
+      "2026": 55
     },
     "Government Operations": {
       "2022": 1,
       "2023": 16,
       "2024": 38,
-      "2025": 56,
-      "2026": 11
+      "2025": 57,
+      "2026": 12
     },
     "City Planning": {
       "2022": 6,
@@ -360,12 +386,6 @@
       "2025": 39,
       "2026": 16
     },
-    "Housing": {
-      "2023": 5,
-      "2024": 11,
-      "2025": 38,
-      "2026": 25
-    },
     "Justice": {
       "2022": 4,
       "2023": 26,
@@ -373,26 +393,32 @@
       "2025": 13,
       "2026": 9
     },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 37,
+      "2026": 25
+    },
     "culture": {
       "2022": 4,
       "2023": 19,
       "2024": 26,
       "2025": 18,
-      "2026": 7
+      "2026": 8
     }
   },
   "wc_stats": {
-    "n": 872,
-    "median": 1619,
-    "mean": 1905,
-    "p90": 2838,
+    "n": 874,
+    "median": 1618,
+    "mean": 1904,
+    "p90": 2841,
     "max": 30332,
-    "p10": 920,
-    "p25": 1273,
+    "p10": 922,
+    "p25": 1272,
     "p75": 2137,
-    "p95": 3864,
+    "p95": 3860,
     "no_count": 9,
-    "core_1000_2499": 640,
+    "core_1000_2499": 641,
     "under_500": 38,
     "over_5000": 24
   },
@@ -407,15 +433,15 @@
     ],
     [
       "1,000-1,999",
-      511
+      513
     ],
     [
       "2,000-2,999",
-      185
+      184
     ],
     [
       "3,000-4,999",
-      53
+      54
     ],
     [
       "5,000+",
@@ -449,7 +475,7 @@
       {
         "floor": 1000,
         "label": "1,000",
-        "n": 106
+        "n": 107
       },
       {
         "floor": 1250,
@@ -459,7 +485,7 @@
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 160
+        "n": 161
       },
       {
         "floor": 1750,
@@ -469,12 +495,12 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 67
+        "n": 68
       },
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 62
+        "n": 60
       },
       {
         "floor": 2500,
@@ -494,7 +520,7 @@
       {
         "floor": 3250,
         "label": "3,250",
-        "n": 10
+        "n": 11
       },
       {
         "floor": 3500,
@@ -538,15 +564,15 @@
     },
     {
       "year": "2026",
-      "n": 165,
-      "p25": 1272,
-      "median": 1709,
-      "p75": 2427,
+      "n": 167,
+      "p25": 1271,
+      "median": 1690,
+      "p75": 2410,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 746,
+    "1": 748,
     "2": 106,
     "3": 26,
     "4": 1,
@@ -556,7 +582,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 93,
+      "posts": 94,
       "credential": "Vital City (institutional)"
     },
     {
@@ -565,14 +591,14 @@
       "credential": "Government / public official"
     },
     {
-      "name": "Jamie Rubin",
-      "posts": 34,
-      "credential": "Business / private sector"
+      "name": "Greg Berman",
+      "posts": 35,
+      "credential": "Nonprofit / advocacy"
     },
     {
-      "name": "Greg Berman",
-      "posts": 34,
-      "credential": "Nonprofit / advocacy"
+      "name": "Jamie Rubin",
+      "posts": 33,
+      "credential": "Business / private sector"
     },
     {
       "name": "Josh Greenman",
@@ -615,11 +641,6 @@
       "credential": "Academic"
     },
     {
-      "name": "Nicole Gelinas",
-      "posts": 10,
-      "credential": "Think tank / research institute"
-    },
-    {
       "name": "David Schleicher",
       "posts": 9,
       "credential": "Academic"
@@ -628,6 +649,11 @@
       "name": "John Hall",
       "posts": 9,
       "credential": "Government / public official"
+    },
+    {
+      "name": "Nicole Gelinas",
+      "posts": 9,
+      "credential": "Think tank / research institute"
     },
     {
       "name": "Bradley Tusk",

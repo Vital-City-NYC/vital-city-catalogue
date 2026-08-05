@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 93,
+    "post_count": 94,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -88,6 +88,7 @@
       "vital-signs-state-of-the-city-on-crime-2024",
       "what-brought-new-york-city-back-from-the-brink",
       "what-does-it-take-to-govern-the-jails",
+      "what-hangs-in-the-balance-sheets",
       "what-the-data-show-people-in-crisis-on-the-streets-and-subways",
       "what-the-numbers-tell-us-about-gun-crimes",
       "what-to-do-about-people-in-crisis-on-streets-and-subways",
@@ -162,8 +163,54 @@
     "website": null
   },
   {
+    "name": "Greg Berman",
+    "post_count": 35,
+    "slugs": [
+      "brick-by-brick-rule-by-rule",
+      "could-our-jails-be-a-civic-asset",
+      "dante-ross-and-the-golden-age-of-hip-hop",
+      "david-weisburd-hot-spot-policing",
+      "editors-note-issue-3",
+      "editors-note-issue-4",
+      "editors-note-issue-5",
+      "editors-note-issue-6",
+      "editors-note-issue-7",
+      "editors-note-issue-8",
+      "editors-note-megalopolis-subway-where-romance-and-reality-meet",
+      "editors-note-what-role-should-nonprofits-play-in-cities",
+      "half-a-century-of-criminal-justice-reform",
+      "holding-the-center-vital-city-at-three",
+      "how-should-nonprofits-and-foundations-respond-to-trump",
+      "improving-conditions-on-rikers-island",
+      "is-new-york-broken",
+      "jennifer-doleac-book-review",
+      "long-crisis-review",
+      "no-program-is-a-panacea-the-fate-of-focused-deterrence",
+      "salvaging-broken-windows",
+      "spiderman-brand-new-day-nyc-lessons-culture",
+      "the-problem-with-the-criminal-legal-system",
+      "vital-city-issue-1",
+      "welcome-to-vital-city",
+      "what-is-disorder",
+      "what-we-are-reading",
+      "what-we-are-reading-issue-4",
+      "what-we-are-reading-issue-5",
+      "what-we-are-reading-issue-6",
+      "what-we-are-reading-issue-8",
+      "what-were-reading",
+      "what-were-reading-fall-2024",
+      "where-vital-city-is-headed",
+      "why-abundance-matters"
+    ],
+    "slug": "berman-greg",
+    "bio": "is the author of \"The Nonprofit Crisis: Leadership Through the Culture Wars\" (Oxford) and the co-editor of Vital City.",
+    "url": "https://www.vitalcitynyc.org/author/berman-greg/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Jamie Rubin",
-    "post_count": 34,
+    "post_count": 33,
     "slugs": [
       "a-housing-agenda-for-the-next-mayor",
       "adam-lubinsky-interview",
@@ -202,51 +249,6 @@
     "slug": "rubin-jamie",
     "bio": "is the chief investment officer of Aligned Climate Capital and chairman of the board of the New York City Housing Authority (NYCHA).",
     "url": "https://www.vitalcitynyc.org/author/rubin-jamie/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Greg Berman",
-    "post_count": 34,
-    "slugs": [
-      "brick-by-brick-rule-by-rule",
-      "could-our-jails-be-a-civic-asset",
-      "dante-ross-and-the-golden-age-of-hip-hop",
-      "david-weisburd-hot-spot-policing",
-      "editors-note-issue-3",
-      "editors-note-issue-4",
-      "editors-note-issue-5",
-      "editors-note-issue-6",
-      "editors-note-issue-7",
-      "editors-note-issue-8",
-      "editors-note-megalopolis-subway-where-romance-and-reality-meet",
-      "editors-note-what-role-should-nonprofits-play-in-cities",
-      "half-a-century-of-criminal-justice-reform",
-      "holding-the-center-vital-city-at-three",
-      "how-should-nonprofits-and-foundations-respond-to-trump",
-      "improving-conditions-on-rikers-island",
-      "is-new-york-broken",
-      "jennifer-doleac-book-review",
-      "long-crisis-review",
-      "no-program-is-a-panacea-the-fate-of-focused-deterrence",
-      "salvaging-broken-windows",
-      "the-problem-with-the-criminal-legal-system",
-      "vital-city-issue-1",
-      "welcome-to-vital-city",
-      "what-is-disorder",
-      "what-we-are-reading",
-      "what-we-are-reading-issue-4",
-      "what-we-are-reading-issue-5",
-      "what-we-are-reading-issue-6",
-      "what-we-are-reading-issue-8",
-      "what-were-reading",
-      "what-were-reading-fall-2024",
-      "where-vital-city-is-headed",
-      "why-abundance-matters"
-    ],
-    "slug": "berman-greg",
-    "bio": "is the author of \"The Nonprofit Crisis: Leadership Through the Culture Wars\" (Oxford) and the co-editor of Vital City.",
-    "url": "https://www.vitalcitynyc.org/author/berman-greg/",
     "twitter": null,
     "website": null
   },
@@ -449,27 +451,6 @@
     "website": null
   },
   {
-    "name": "Nicole Gelinas",
-    "post_count": 10,
-    "slugs": [
-      "movement-new-yorks-long-war-to-take-back-its-streets-from-the-car-excerpt",
-      "mta-new-app-subway-omny",
-      "new-york-stilled-life-feral-city-review",
-      "our-transit-tomorrow",
-      "saved-by-the-camera",
-      "serve-the-walkers",
-      "tables-and-chairs",
-      "the-four-forces-that-have-shaped-the-subway-system",
-      "times-square-good-times-square-bad",
-      "wall-street-future-nyc"
-    ],
-    "slug": "gelinas-nicole",
-    "bio": "is a Manhattan Institute senior fellow and author of the book \"Movement: New York’s Long War to Take Back Its Streets From the Car.\"",
-    "url": "https://www.vitalcitynyc.org/author/gelinas-nicole/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "David Schleicher",
     "post_count": 9,
     "slugs": [
@@ -506,6 +487,26 @@
     "slug": "hall-john",
     "bio": "is a retired police professional and a National Institute of Justice Law Enforcement Advancing Data and Science (LEADS) Scholar.",
     "url": "https://www.vitalcitynyc.org/author/hall-john/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Nicole Gelinas",
+    "post_count": 9,
+    "slugs": [
+      "movement-new-yorks-long-war-to-take-back-its-streets-from-the-car-excerpt",
+      "mta-new-app-subway-omny",
+      "new-york-stilled-life-feral-city-review",
+      "our-transit-tomorrow",
+      "saved-by-the-camera",
+      "serve-the-walkers",
+      "tables-and-chairs",
+      "the-four-forces-that-have-shaped-the-subway-system",
+      "times-square-good-times-square-bad"
+    ],
+    "slug": "gelinas-nicole",
+    "bio": "is a Manhattan Institute senior fellow and author of the book \"Movement: New York’s Long War to Take Back Its Streets From the Car.\"",
+    "url": "https://www.vitalcitynyc.org/author/gelinas-nicole/",
     "twitter": null,
     "website": null
   },
@@ -1424,14 +1425,27 @@
     "website": null
   },
   {
-    "name": "Scott Winship",
+    "name": "Tal Roded",
     "post_count": 2,
     "slugs": [
-      "nyc-families-positive-income-trends"
+      "nyc-job-quality-problem"
     ],
-    "slug": "winship-scott",
-    "bio": "is a senior fellow and the director of the Center on Opportunity and Social Mobility at the American Enterprise Institute, where he researches social mobility and the causes and effects of poverty.",
-    "url": "https://www.vitalcitynyc.org/author/winship-scott/",
+    "slug": "roded-tal",
+    "bio": "is a data scientist and author of the public policy-focused substack NYCuriosity. He currently serves on Manhattan Community Board 3.",
+    "url": "https://www.vitalcitynyc.org/author/roded-tal/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Daniel DiSalvo",
+    "post_count": 2,
+    "slugs": [
+      "have-public-sector-unions-taken-the-place-of-tammany-hall",
+      "mamdani-nyc-unions-efficiency-reform"
+    ],
+    "slug": "disalvo-daniel",
+    "bio": "is professor and associate dean of the School of Civic Life and leadership at the University of North Carolina at Chapel Hill and a senior fellow at the Manhattan Institute.",
+    "url": "https://www.vitalcitynyc.org/author/disalvo-daniel/",
     "twitter": null,
     "website": null
   },
@@ -2333,6 +2347,18 @@
     "website": null
   },
   {
+    "name": "Michael Sedillo",
+    "post_count": 1,
+    "slugs": [
+      "nyc-nonprofit-contracting-reform"
+    ],
+    "slug": "michael",
+    "bio": "is the former executive director of the New York City Mayor's Office of Nonprofit Services.",
+    "url": "https://www.vitalcitynyc.org/author/michael/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Sara C. Bronin",
     "post_count": 1,
     "slugs": [
@@ -2705,14 +2731,14 @@
     "website": null
   },
   {
-    "name": "Tal Roded",
+    "name": "Scott Winship",
     "post_count": 1,
     "slugs": [
-      "nyc-job-quality-problem"
+      "nyc-families-positive-income-trends"
     ],
-    "slug": "roded-tal",
-    "bio": "is a data scientist and author of the public policy-focused substack NYCuriosity. He currently serves on Manhattan Community Board 3.",
-    "url": "https://www.vitalcitynyc.org/author/roded-tal/",
+    "slug": "winship-scott",
+    "bio": "is a senior fellow and the director of the Center on Opportunity and Social Mobility at the American Enterprise Institute, where he researches social mobility and the causes and effects of poverty.",
+    "url": "https://www.vitalcitynyc.org/author/winship-scott/",
     "twitter": null,
     "website": null
   },
@@ -3677,18 +3703,6 @@
     "website": null
   },
   {
-    "name": "Kate Daugherty",
-    "post_count": 1,
-    "slugs": [
-      "what-we-know-and-dont-know-about-guns"
-    ],
-    "slug": "daugherty-kate",
-    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
-    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Brian DeLay",
     "post_count": 1,
     "slugs": [
@@ -3761,6 +3775,18 @@
     "website": null
   },
   {
+    "name": "Charles Buckhanan",
+    "post_count": 1,
+    "slugs": [
+      "my-seven-guns-a-personal-inventory"
+    ],
+    "slug": "buckhanan-charles",
+    "bio": "is a street outreach worker on Chicago’s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
+    "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Stephen Hargarten",
     "post_count": 1,
     "slugs": [
@@ -3785,18 +3811,6 @@
     "website": null
   },
   {
-    "name": "Daniel Semenza",
-    "post_count": 1,
-    "slugs": [
-      "the-80-20-rule-of-gun-supply"
-    ],
-    "slug": "semenza-daniel",
-    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Greg Lickenbrock",
     "post_count": 1,
     "slugs": [
@@ -3809,14 +3823,26 @@
     "website": null
   },
   {
-    "name": "Charles Buckhanan",
+    "name": "Daniel Semenza",
     "post_count": 1,
     "slugs": [
-      "my-seven-guns-a-personal-inventory"
+      "the-80-20-rule-of-gun-supply"
     ],
-    "slug": "buckhanan-charles",
-    "bio": "is a street outreach worker on Chicago’s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
-    "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
+    "slug": "semenza-daniel",
+    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Kate Daugherty",
+    "post_count": 1,
+    "slugs": [
+      "what-we-know-and-dont-know-about-guns"
+    ],
+    "slug": "daugherty-kate",
+    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
     "twitter": null,
     "website": null
   },
@@ -4169,18 +4195,6 @@
     "website": null
   },
   {
-    "name": "Adam Cohen",
-    "post_count": 1,
-    "slugs": [
-      "trumps-bizarro-new-deal"
-    ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Meryl Chertoff",
     "post_count": 1,
     "slugs": [
@@ -4189,6 +4203,18 @@
     "slug": "chertoff-meryl",
     "bio": "is adjunct professor of law at Georgetown University Law Center.",
     "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Adam Cohen",
+    "post_count": 1,
+    "slugs": [
+      "trumps-bizarro-new-deal"
+    ],
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },
@@ -4477,18 +4503,6 @@
     "slug": "dunkelman-marc",
     "bio": "is a visiting fellow in international and public affairs at Brown University’s Taubman Center for Public Policy and American Institutions. He is the author of \"Why Nothing Works: Who Killed Progress — And How to Bring It Back.\"",
     "url": "https://www.vitalcitynyc.org/author/dunkelman-marc/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Daniel DiSalvo",
-    "post_count": 1,
-    "slugs": [
-      "have-public-sector-unions-taken-the-place-of-tammany-hall"
-    ],
-    "slug": "disalvo-daniel",
-    "bio": "is professor and associate dean of the School of Civic Life and leadership at the University of North Carolina at Chapel Hill and a senior fellow at the Manhattan Institute.",
-    "url": "https://www.vitalcitynyc.org/author/disalvo-daniel/",
     "twitter": null,
     "website": null
   },

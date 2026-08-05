@@ -1,6 +1,6 @@
 {
-  "generated_from": "2026-08-05T11:46:39.407529+00:00",
-  "total_pieces": 881,
+  "generated_from": "2026-08-05T23:26:18.770315+00:00",
+  "total_pieces": 883,
   "n_topics_normalized": 206,
   "topic_bucket_sizes": {
     "subjects": 135,
@@ -8,9 +8,9 @@
     "rubrics": 48
   },
   "topic_bucket_piece_volume": {
-    "subject_tag_applications": 1953,
+    "subject_tag_applications": 1957,
     "meta_tag_applications": 204,
-    "rubric_tag_applications": 291
+    "rubric_tag_applications": 292
   },
   "rubrics_listed": [
     "Beyond False Simplicity",
@@ -90,13 +90,13 @@
   "beats": [
     {
       "beat": "City government & governance",
-      "pieces": 249,
-      "share": 28.3,
-      "median_words": 1586,
+      "pieces": 251,
+      "share": 28.4,
+      "median_words": 1591,
       "types": [
         [
           "opinion/commentary",
-          201
+          203
         ],
         [
           "q&a",
@@ -128,18 +128,18 @@
         "2023": 18,
         "2024": 58,
         "2025": 109,
-        "2026": 63
+        "2026": 65
       }
     },
     {
       "beat": "Crime & violence",
-      "pieces": 236,
-      "share": 26.8,
-      "median_words": 1630,
+      "pieces": 235,
+      "share": 26.6,
+      "median_words": 1625,
       "types": [
         [
           "opinion/commentary",
-          185
+          184
         ],
         [
           "data analysis",
@@ -167,13 +167,13 @@
         "2023": 53,
         "2024": 65,
         "2025": 66,
-        "2026": 25
+        "2026": 24
       }
     },
     {
       "beat": "Land use & the built city",
       "pieces": 154,
-      "share": 17.5,
+      "share": 17.4,
       "median_words": 1587,
       "types": [
         [
@@ -285,13 +285,13 @@
     },
     {
       "beat": "Culture & city life",
-      "pieces": 92,
-      "share": 10.4,
+      "pieces": 93,
+      "share": 10.5,
       "median_words": 1599,
       "types": [
         [
           "opinion/commentary",
-          83
+          84
         ],
         [
           "book review",
@@ -315,14 +315,14 @@
         "2023": 24,
         "2024": 26,
         "2025": 26,
-        "2026": 11
+        "2026": 12
       }
     },
     {
       "beat": "Money, budgets & the economy",
-      "pieces": 81,
-      "share": 9.2,
-      "median_words": 1611,
+      "pieces": 82,
+      "share": 9.3,
+      "median_words": 1608,
       "types": [
         [
           "opinion/commentary",
@@ -334,7 +334,7 @@
         ],
         [
           "data analysis",
-          2
+          3
         ],
         [
           "something else",
@@ -348,19 +348,19 @@
       "by_year": {
         "2023": 7,
         "2024": 15,
-        "2025": 21,
+        "2025": 22,
         "2026": 38
       }
     },
     {
       "beat": "Housing",
-      "pieces": 80,
-      "share": 9.1,
-      "median_words": 1880,
+      "pieces": 79,
+      "share": 8.9,
+      "median_words": 1857,
       "types": [
         [
           "opinion/commentary",
-          68
+          67
         ],
         [
           "podcast",
@@ -383,7 +383,7 @@
         "2022": 1,
         "2023": 5,
         "2024": 11,
-        "2025": 38,
+        "2025": 37,
         "2026": 25
       }
     },
@@ -498,7 +498,7 @@
     {
       "beat": "Politics & elections",
       "pieces": 64,
-      "share": 7.3,
+      "share": 7.2,
       "median_words": 1534,
       "types": [
         [
@@ -807,6 +807,11 @@
       "pieces": 36
     },
     {
+      "a": "City government & governance",
+      "b": "Money, budgets & the economy",
+      "pieces": 28
+    },
+    {
       "a": "Land use & the built city",
       "b": "Transportation",
       "pieces": 27
@@ -818,18 +823,13 @@
     },
     {
       "a": "City government & governance",
-      "b": "Money, budgets & the economy",
-      "pieces": 26
+      "b": "Land use & the built city",
+      "pieces": 25
     },
     {
       "a": "City government & governance",
       "b": "Housing",
-      "pieces": 25
-    },
-    {
-      "a": "City government & governance",
-      "b": "Land use & the built city",
-      "pieces": 25
+      "pieces": 24
     },
     {
       "a": "City government & governance",
@@ -1090,9 +1090,9 @@
     },
     {
       "beat": "Crime & violence",
-      "pieces": 236,
+      "pieces": 235,
       "distinct_bylines": 115,
-      "top5_share": 30.9,
+      "top5_share": 31.1,
       "vital_city_share": 14.0,
       "top3": [
         {
@@ -1106,6 +1106,27 @@
         {
           "name": "Aaron Chalfin",
           "pieces": 9
+        }
+      ]
+    },
+    {
+      "beat": "Culture & city life",
+      "pieces": 93,
+      "distinct_bylines": 60,
+      "top5_share": 29.0,
+      "vital_city_share": 3.2,
+      "top3": [
+        {
+          "name": "Greg Berman",
+          "pieces": 9
+        },
+        {
+          "name": "Vishaan Chakrabarti",
+          "pieces": 7
+        },
+        {
+          "name": "A Survey",
+          "pieces": 4
         }
       ]
     },
@@ -1152,27 +1173,6 @@
       ]
     },
     {
-      "beat": "Culture & city life",
-      "pieces": 92,
-      "distinct_bylines": 60,
-      "top5_share": 28.3,
-      "vital_city_share": 3.3,
-      "top3": [
-        {
-          "name": "Greg Berman",
-          "pieces": 8
-        },
-        {
-          "name": "Vishaan Chakrabarti",
-          "pieces": 7
-        },
-        {
-          "name": "A Survey",
-          "pieces": 4
-        }
-      ]
-    },
-    {
       "beat": "Health, mental health & drugs",
       "pieces": 62,
       "distinct_bylines": 49,
@@ -1194,53 +1194,11 @@
       ]
     },
     {
-      "beat": "City government & governance",
-      "pieces": 249,
-      "distinct_bylines": 153,
-      "top5_share": 25.7,
-      "vital_city_share": 8.8,
-      "top3": [
-        {
-          "name": "Vital City",
-          "pieces": 22
-        },
-        {
-          "name": "Jamie Rubin",
-          "pieces": 17
-        },
-        {
-          "name": "Elizabeth Glazer",
-          "pieces": 12
-        }
-      ]
-    },
-    {
-      "beat": "Housing",
-      "pieces": 80,
-      "distinct_bylines": 58,
-      "top5_share": 25.0,
-      "vital_city_share": 5.0,
-      "top3": [
-        {
-          "name": "Jamie Rubin",
-          "pieces": 7
-        },
-        {
-          "name": "Vital City",
-          "pieces": 4
-        },
-        {
-          "name": "Martha Stark",
-          "pieces": 3
-        }
-      ]
-    },
-    {
       "beat": "Money, budgets & the economy",
-      "pieces": 81,
+      "pieces": 82,
       "distinct_bylines": 61,
-      "top5_share": 24.7,
-      "vital_city_share": 3.7,
+      "top5_share": 25.6,
+      "vital_city_share": 4.9,
       "top3": [
         {
           "name": "Jamie Rubin",
@@ -1252,6 +1210,48 @@
         },
         {
           "name": "Vital City",
+          "pieces": 4
+        }
+      ]
+    },
+    {
+      "beat": "City government & governance",
+      "pieces": 251,
+      "distinct_bylines": 154,
+      "top5_share": 25.5,
+      "vital_city_share": 9.2,
+      "top3": [
+        {
+          "name": "Vital City",
+          "pieces": 23
+        },
+        {
+          "name": "Jamie Rubin",
+          "pieces": 16
+        },
+        {
+          "name": "Elizabeth Glazer",
+          "pieces": 12
+        }
+      ]
+    },
+    {
+      "beat": "Housing",
+      "pieces": 79,
+      "distinct_bylines": 58,
+      "top5_share": 24.1,
+      "vital_city_share": 5.1,
+      "top3": [
+        {
+          "name": "Jamie Rubin",
+          "pieces": 6
+        },
+        {
+          "name": "Vital City",
+          "pieces": 4
+        },
+        {
+          "name": "Martha Stark",
           "pieces": 3
         }
       ]
@@ -1323,9 +1323,9 @@
   "history_lens_reach": [
     {
       "beat": "Culture & city life",
-      "pieces": 92,
+      "pieces": 93,
       "with_history": 40,
-      "share": 43.5
+      "share": 43.0
     },
     {
       "beat": "Civil society & philanthropy",
@@ -1347,7 +1347,7 @@
     },
     {
       "beat": "Crime & violence",
-      "pieces": 236,
+      "pieces": 235,
       "with_history": 37,
       "share": 15.7
     },
@@ -1371,9 +1371,9 @@
     },
     {
       "beat": "Housing",
-      "pieces": 80,
+      "pieces": 79,
       "with_history": 8,
-      "share": 10.0
+      "share": 10.1
     },
     {
       "beat": "Courts & prosecution",
@@ -1389,7 +1389,7 @@
     },
     {
       "beat": "City government & governance",
-      "pieces": 249,
+      "pieces": 251,
       "with_history": 20,
       "share": 8.0
     },
@@ -1437,9 +1437,9 @@
     },
     {
       "beat": "Money, budgets & the economy",
-      "pieces": 81,
+      "pieces": 82,
       "with_history": 2,
-      "share": 2.5
+      "share": 2.4
     }
   ],
   "criminal_justice_cluster": {
@@ -1449,8 +1449,8 @@
       "Courts & prosecution",
       "Jails & incarceration"
     ],
-    "pieces": 379,
-    "share": 43.0,
+    "pieces": 378,
+    "share": 42.8,
     "by_year": {
       "2021": {
         "cj": 0,
@@ -1478,38 +1478,38 @@
         "share": 33.4
       },
       "2026": {
-        "cj": 48,
-        "total": 169,
-        "share": 28.4
+        "cj": 47,
+        "total": 171,
+        "share": 27.5
       }
     }
   },
   "beats_per_piece": {
     "0": 17,
-    "1": 191,
+    "1": 193,
     "2": 544,
     "3": 111,
     "4": 15,
     "5": 3
   },
   "stance": {
-    "pieces_with_rubric": 290,
-    "coverage_share": 32.9,
+    "pieces_with_rubric": 291,
+    "coverage_share": 33.0,
     "buckets": [
       {
         "stance": "Prescribing a fix",
-        "pieces": 117,
-        "share_of_rubriced": 40.3
+        "pieces": 116,
+        "share_of_rubriced": 39.9
       },
       {
         "stance": "Framing the terms",
         "pieces": 69,
-        "share_of_rubriced": 23.8
+        "share_of_rubriced": 23.7
       },
       {
         "stance": "Diagnosing what's broken",
-        "pieces": 56,
-        "share_of_rubriced": 19.3
+        "pieces": 58,
+        "share_of_rubriced": 19.9
       },
       {
         "stance": "Looking ahead",
@@ -1599,8 +1599,8 @@
   },
   "curation": {
     "in_curated_issue": 480,
-    "share": 54.5,
-    "standalone": 401,
+    "share": 54.4,
+    "standalone": 403,
     "n_issues_and_series": 29,
     "named_series_top": [
       {
@@ -1664,14 +1664,14 @@
       "2026"
     ],
     "early_pieces": 200,
-    "late_pieces": 456,
+    "late_pieces": 458,
     "beats": [
       {
         "beat": "City government & governance",
-        "pieces": 249,
+        "pieces": 251,
         "early": 9.5,
-        "late": 37.7,
-        "change": 28.2
+        "late": 38.0,
+        "change": 28.5
       },
       {
         "beat": "Politics & elections",
@@ -1682,17 +1682,17 @@
       },
       {
         "beat": "Housing",
-        "pieces": 80,
+        "pieces": 79,
         "early": 3.0,
-        "late": 13.8,
-        "change": 10.8
+        "late": 13.5,
+        "change": 10.5
       },
       {
         "beat": "Money, budgets & the economy",
-        "pieces": 81,
+        "pieces": 82,
         "early": 3.5,
-        "late": 12.9,
-        "change": 9.4
+        "late": 13.1,
+        "change": 9.6
       },
       {
         "beat": "Transportation",
@@ -1726,15 +1726,8 @@
         "beat": "Land use & the built city",
         "pieces": 154,
         "early": 18.5,
-        "late": 18.0,
-        "change": -0.5
-      },
-      {
-        "beat": "History & the long view",
-        "pieces": 144,
-        "early": 20.0,
-        "late": 14.3,
-        "change": -5.7
+        "late": 17.9,
+        "change": -0.6
       },
       {
         "beat": "Policing",
@@ -1744,18 +1737,25 @@
         "change": -5.8
       },
       {
+        "beat": "History & the long view",
+        "pieces": 144,
+        "early": 20.0,
+        "late": 14.2,
+        "change": -5.8
+      },
+      {
         "beat": "Culture & city life",
-        "pieces": 92,
+        "pieces": 93,
         "early": 14.5,
-        "late": 8.1,
-        "change": -6.4
+        "late": 8.3,
+        "change": -6.2
       },
       {
         "beat": "Courts & prosecution",
         "pieces": 112,
         "early": 17.0,
-        "late": 8.6,
-        "change": -8.4
+        "late": 8.5,
+        "change": -8.5
       },
       {
         "beat": "Jails & incarceration",
@@ -1773,21 +1773,21 @@
       },
       {
         "beat": "Crime & violence",
-        "pieces": 236,
+        "pieces": 235,
         "early": 40.0,
-        "late": 20.0,
-        "change": -20.0
+        "late": 19.7,
+        "change": -20.3
       }
     ]
   },
   "named_in_headline": [
     {
       "name": "Mamdani",
-      "headlines": 52,
-      "share": 5.9,
+      "headlines": 53,
+      "share": 6.0,
       "by_year": {
         "2025": 29,
-        "2026": 23
+        "2026": 24
       },
       "first": "2025-06-16",
       "titles": [
@@ -1826,6 +1826,10 @@
         {
           "date": "2026-06-25",
           "title": "Darializa Avila Chevalier, Claire Valdez, Brad Lander, Zohran Mamdani and New York"
+        },
+        {
+          "date": "2026-06-10",
+          "title": "Public Sector Unions vs. Mamdani’s Ambitions"
         },
         {
           "date": "2026-06-10",
@@ -2123,7 +2127,7 @@
         },
         {
           "date": "2025-04-29",
-          "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days"
+          "title": "Donald Trump vs. the Rule of Law, and New York City"
         },
         {
           "date": "2025-04-29",
@@ -2131,7 +2135,7 @@
         },
         {
           "date": "2025-04-29",
-          "title": "Donald Trump vs. the Rule of Law, and New York City"
+          "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days"
         },
         {
           "date": "2025-04-03",
@@ -2218,8 +2222,8 @@
   "headline_words": [
     {
       "word": "mamdani",
-      "headlines": 52,
-      "share": 5.9
+      "headlines": 53,
+      "share": 6.0
     },
     {
       "word": "crime",
@@ -2233,8 +2237,8 @@
     },
     {
       "word": "mayor",
-      "headlines": 32,
-      "share": 3.6
+      "headlines": 31,
+      "share": 3.5
     },
     {
       "word": "conversation",
@@ -2243,13 +2247,13 @@
     },
     {
       "word": "public",
-      "headlines": 24,
-      "share": 2.7
+      "headlines": 25,
+      "share": 2.8
     },
     {
       "word": "housing",
-      "headlines": 23,
-      "share": 2.6
+      "headlines": 22,
+      "share": 2.5
     },
     {
       "word": "safety",
@@ -2278,8 +2282,8 @@
     },
     {
       "word": "better",
-      "headlines": 16,
-      "share": 1.8
+      "headlines": 15,
+      "share": 1.7
     },
     {
       "word": "zohran",
@@ -2337,6 +2341,11 @@
       "share": 1.4
     },
     {
+      "word": "people",
+      "headlines": 11,
+      "share": 1.2
+    },
+    {
       "word": "note",
       "headlines": 11,
       "share": 1.2
@@ -2348,11 +2357,6 @@
     },
     {
       "word": "justice",
-      "headlines": 10,
-      "share": 1.1
-    },
-    {
-      "word": "people",
       "headlines": 10,
       "share": 1.1
     },
@@ -2418,17 +2422,17 @@
     }
   ],
   "headline_signal_test": {
-    "argument_pieces": 771,
+    "argument_pieces": 773,
     "excluded_non_argument": 110,
-    "base_rate_data_analysis": 6.1,
-    "base_rate_opinion": 93.9,
+    "base_rate_data_analysis": 6.2,
+    "base_rate_opinion": 93.8,
     "rows": [
       {
         "signal": "analysis signal",
         "headlines": 45,
         "share_of_argument": 5.8,
         "pct_data_analysis": 48.9,
-        "lift_vs_base": 8.0
+        "lift_vs_base": 7.9
       },
       {
         "signal": "opinion signal",
@@ -2442,13 +2446,13 @@
         "headlines": 3,
         "share_of_argument": 0.4,
         "pct_data_analysis": 33.3,
-        "lift_vs_base": 5.5
+        "lift_vs_base": 5.4
       },
       {
         "signal": "no signal",
-        "headlines": 654,
-        "share_of_argument": 84.8,
-        "pct_data_analysis": 3.5,
+        "headlines": 656,
+        "share_of_argument": 84.9,
+        "pct_data_analysis": 3.7,
         "lift_vs_base": 0.6
       }
     ],
@@ -2469,9 +2473,9 @@
     }
   },
   "bench": {
-    "primary_bylines": 406,
+    "primary_bylines": 407,
     "wrote_once": 282,
-    "wrote_once_share": 69.5
+    "wrote_once_share": 69.3
   },
   "history_only_pieces": 104,
   "pieces_with_no_subject_tag": {
