@@ -40,9 +40,13 @@
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
   @media(max-width:820px){.kpis{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}.wrap{padding:18px 16px 50px}}
   svg{display:block;width:100%;height:auto;overflow:visible}
-  .bar-lbl{font-size:11.5px;fill:var(--vc-black)}
-  .bar-val{font-size:11px;fill:var(--vc-charcoal);font-weight:700}
-  .ax{font-size:10px;fill:var(--vc-charcoal)}
+  /* Chart type. The viewBox is set to the chart's real pixel width (see CH in
+     the script), so these are the sizes that actually render. Keep them in step
+     with CH.lbl / CH.val / CH.ax, and in the same scale as .hint (12px) and
+     .src (10.5px) so charts read as part of the page, not louder than it. */
+  .bar-lbl{font-size:12px;fill:var(--vc-black)}
+  .bar-val{font-size:11px;fill:var(--vc-charcoal);font-weight:700;font-variant-numeric:tabular-nums}
+  .ax{font-size:10px;fill:var(--vc-charcoal);font-variant-numeric:tabular-nums}
   .gridline{stroke:var(--vc-cloud);stroke-width:1}
   .legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:12px;font-size:11px;color:var(--vc-black)}
   .legend span{display:inline-flex;align-items:center;gap:6px}
@@ -81,7 +85,7 @@
 <nav class="secnav">
   <a href="#shape">The shape</a><a href="#subject">Subject</a><a href="#shift">How it moved</a>
   <a href="#arc">The job</a>
-  <a href="#length">Length</a><a href="#mayors">Headlines</a><a href="#signal">Opinion vs analysis</a><a href="#treatment">Data treatment</a>
+  <a href="#length">Length</a><a href="#mayors">Headlines</a><a href="#treatment">Data treatment</a>
   <a href="#credentials">Who writes</a><a href="#bench">Who writes what</a>
   <a href="#method">How we did this</a>
 </nav>
@@ -153,32 +157,93 @@ const BEATCO = {
 const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const nf=n=>n.toLocaleString();
 
-// horizontal bar chart -> svg string
-function hbar(rows, {w=520,color=null,unit="",labelW=170,valSuffix=""}={}){
-  const rh=26, pad=6, h=rows.length*rh+pad*2, max=Math.max(...rows.map(r=>r.v))||1;
-  const bw=w-labelW-54;
+// ---------------------------------------------------------------------------
+// Chart geometry. One shared set of constants so every chart on the page has
+// the same type sizes, row rhythm and gutters.
+//
+// The important rule: the viewBox width is set to the chart's ACTUAL pixel
+// width, so one SVG unit is one CSS pixel and the font sizes in the stylesheet
+// are the sizes that render. Previously each chart declared its own viewBox
+// width (520 or 560) and was stretched to ~960px, which silently scaled label
+// text to 21px in one chart family and 17px in the other — larger than the
+// card headings, and inconsistent between charts. Charts re-render on resize
+// to keep that 1:1 mapping at every width.
+// ---------------------------------------------------------------------------
+const CH = {
+  row: 26,        // row height for every horizontal chart
+  bar: 15,        // bar thickness within a row
+  axisTop: 22,    // headroom for a top axis
+  padY: 6,        // vertical breathing room
+  gutter: 12,     // gap between a label and the plot area
+  lbl: 12, val: 11, ax: 10,   // must match .bar-lbl / .bar-val / .ax in CSS
+};
+// Chart width = the inner content width of a card. On the very first build no
+// card exists yet, so measure #app and subtract the card's own padding (20px a
+// side) and border (1px a side) to get the same number.
+const CARD_INSET = 42;
+function chartW(){
+  const card = document.querySelector("#app .card");
+  if(card) return Math.max(280, Math.round(card.clientWidth - 40));  // clientWidth includes padding, excludes border
+  const app = document.getElementById("app");
+  return Math.max(280, Math.round((app ? app.clientWidth : 942) - CARD_INSET));
+}
+// Approximate rendered width of a string. 0.62em per glyph is a deliberate
+// over-estimate of Halyard's average: digits and caps run wider than lowercase
+// (measured, "2022" at 12px is 29.3px = 0.61em), and under-reserving makes
+// right-aligned labels bleed off the left edge of the chart.
+const EM = 0.62, SLACK = 4;
+function tw(text, size=CH.lbl){ return Math.ceil(String(text).length * size * EM); }
+// Truncate to the space available. The full text always stays in the <title>
+// tooltip, so nothing is lost — it is only elided on screen.
+function fit(text, px, size=CH.lbl){
+  const max = Math.max(3, Math.floor(px / (size*EM)));
+  return text.length <= max ? text : text.slice(0, max - 1).trimEnd() + "…";
+}
+// Gutters are measured from the actual content rather than hand-set per chart:
+// that is how the label widths drifted out of step in the first place. Capped
+// at a share of the chart so long names cannot eat the plot area when narrow.
+function labelSpace(rows, w, keyfn, size=CH.lbl){
+  const need = Math.max(...rows.map(r => tw(keyfn(r), size))) + CH.gutter + SLACK;
+  return Math.round(Math.min(need, w * 0.44));
+}
+function valueSpace(rows, w, valfn){
+  const need = Math.max(...rows.map(r => tw(valfn(r), CH.val))) + CH.gutter + SLACK;
+  return Math.round(Math.min(need, w * 0.24));
+}
+
+// Horizontal bars, one row per category.
+function hbar(rows, {w=null,color=null,valSuffix=""}={}){
+  w = w||chartW();
+  const LW = labelSpace(rows, w, r=>r.k);
+  const valW = valueSpace(rows, w, r=>nf(r.v)+valSuffix+(r.pct!=null?' · '+r.pct+'%':''));
+  const h = rows.length*CH.row + CH.padY*2, max = Math.max(...rows.map(r=>r.v))||1;
+  const bw = w - LW - valW;
   let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
   rows.forEach((r,i)=>{
-    const y=pad+i*rh, len=Math.max(2,r.v/max*bw), c=r.c||color||"#217ebe";
-    s+=`<text class="bar-lbl" x="${labelW-8}" y="${y+rh/2+4}" text-anchor="end">${esc(r.k)}</text>`;
-    s+=`<rect x="${labelW}" y="${y+3}" width="${len}" height="${rh-9}" rx="2" fill="${c}"><title>${esc(r.k)}: ${nf(r.v)}${valSuffix}</title></rect>`;
-    s+=`<text class="bar-val" x="${labelW+len+6}" y="${y+rh/2+4}">${nf(r.v)}${valSuffix}${r.pct!=null?' · '+r.pct+'%':''}</text>`;
+    const y=CH.padY+i*CH.row, len=Math.max(2,r.v/max*bw), c=r.c||color||"#217ebe";
+    s+=`<text class="bar-lbl" x="${LW-CH.gutter}" y="${y+CH.row/2+4}" text-anchor="end">${esc(fit(r.k,LW-CH.gutter))}</text>`;
+    s+=`<rect x="${LW}" y="${y+(CH.row-CH.bar)/2}" width="${len}" height="${CH.bar}" rx="2" fill="${c}"><title>${esc(r.k)}: ${nf(r.v)}${valSuffix}</title></rect>`;
+    s+=`<text class="bar-val" x="${LW+len+7}" y="${y+CH.row/2+4}">${nf(r.v)}${valSuffix}${r.pct!=null?' · '+r.pct+'%':''}</text>`;
   });
   return s+`</svg>`;
 }
-// Dumbbell: one row per beat, hollow dot = early window, filled = recent.
-// Replaces a wall of per-beat sparklines with a single rankable picture.
-function dumbbell(rows,{w=560,labelW=215}={}){
-  const rh=25,padT=24,padB=8, h=rows.length*rh+padT+padB, bw=w-labelW-70;
-  const mx=Math.ceil(Math.max(...rows.flatMap(r=>[r.a,r.b]))/10)*10;
-  const X=v=>labelW+v/mx*bw;
+
+// Dumbbell: hollow dot = early window, filled = recent. One rankable picture
+// instead of a wall of per-beat sparklines.
+function dumbbell(rows,{w=null}={}){
+  w = w||chartW();
+  const LW = labelSpace(rows, w, r=>r.k);
+  const valW = valueSpace(rows, w, r=>(r.b-r.a).toFixed(1)) + 6;
+  const h = rows.length*CH.row + CH.axisTop + CH.padY, bw = w - LW - valW;
+  const mx = Math.ceil(Math.max(...rows.flatMap(r=>[r.a,r.b]))/10)*10;
+  const X = v => LW + v/mx*bw;
   let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
   for(let g=0;g<=4;g++){const gv=mx*g/4;
-    s+=`<line class="gridline" x1="${X(gv)}" x2="${X(gv)}" y1="${padT-7}" y2="${h-padB}"/>`;
-    s+=`<text class="ax" x="${X(gv)}" y="${padT-11}" text-anchor="middle">${gv}%</text>`;}
+    s+=`<line class="gridline" x1="${X(gv)}" x2="${X(gv)}" y1="${CH.axisTop-7}" y2="${h-CH.padY}"/>`;
+    s+=`<text class="ax" x="${X(gv)}" y="${CH.axisTop-10}" text-anchor="middle">${gv}%</text>`;}
   rows.forEach((r,i)=>{
-    const y=padT+i*rh+rh/2, up=r.b>=r.a, c=up?"#217ebe":"#e7466d", d=(r.b-r.a).toFixed(1);
-    s+=`<text class="bar-lbl" x="${labelW-11}" y="${y+4}" text-anchor="end">${esc(r.k)}</text>`;
+    const y=CH.axisTop+i*CH.row+CH.row/2, up=r.b>=r.a, c=up?"#217ebe":"#e7466d", d=(r.b-r.a).toFixed(1);
+    s+=`<text class="bar-lbl" x="${LW-CH.gutter}" y="${y+4}" text-anchor="end">${esc(fit(r.k,LW-CH.gutter))}</text>`;
     s+=`<line x1="${X(r.a)}" x2="${X(r.b)}" y1="${y}" y2="${y}" stroke="${c}" stroke-width="2.5" opacity=".4"/>`;
     s+=`<circle cx="${X(r.a)}" cy="${y}" r="3.6" fill="var(--vc-white)" stroke="${c}" stroke-width="2"><title>${esc(r.k)} — early: ${r.a}%</title></circle>`;
     s+=`<circle cx="${X(r.b)}" cy="${y}" r="5" fill="${c}"><title>${esc(r.k)} — recent: ${r.b}%</title></circle>`;
@@ -187,52 +252,55 @@ function dumbbell(rows,{w=560,labelW=215}={}){
   return s+`</svg>`;
 }
 
-// Histogram: many narrow bins, labels every other bin, no per-bar values —
-// the shape is the point, not the individual counts.
-function hist(rows,{w=560,h=210,color="#57aa4a",markers=[]}={}){
-  const padB=32,padT=12,padL=32, iw=w-padL-10, ih=h-padB-padT;
+// Histogram: narrow bins, sparse labels, no per-bar values — the shape is the
+// point. Label density adapts so ticks never collide.
+function hist(rows,{w=null,h=200,color="#57aa4a",markers=[]}={}){
+  w = w||chartW();
+  const padL=38, padR=10, padT=CH.padY+6, padB=30;
+  const iw=w-padL-padR, ih=h-padB-padT;
   const max=Math.max(...rows.map(r=>r.v))||1, gap=iw/rows.length, bw=gap*0.84;
+  const every=Math.max(1,Math.ceil(rows.length*(CH.ax*3.6)/iw));
   let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
   for(let g=0;g<=4;g++){const gv=Math.round(max*g/4),gy=padT+ih-ih*g/4;
-    s+=`<line class="gridline" x1="${padL}" x2="${w-10}" y1="${gy}" y2="${gy}"/>`;
-    s+=`<text class="ax" x="${padL-5}" y="${gy+3}" text-anchor="end">${gv}</text>`;}
+    s+=`<line class="gridline" x1="${padL}" x2="${w-padR}" y1="${gy}" y2="${gy}"/>`;
+    s+=`<text class="ax" x="${padL-6}" y="${gy+3}" text-anchor="end">${gv}</text>`;}
   rows.forEach((r,i)=>{
     const x=padL+i*gap+(gap-bw)/2, bh=r.v/max*ih, y=padT+ih-bh;
     s+=`<rect x="${x}" y="${y}" width="${bw}" height="${Math.max(1,bh)}" fill="${r.c||color}"><title>${esc(r.k)}: ${nf(r.v)} pieces</title></rect>`;
-    if(i%2===0) s+=`<text class="ax" x="${x+bw/2}" y="${h-padB+15}" text-anchor="middle">${esc(r.k)}</text>`;
+    if(i%every===0) s+=`<text class="ax" x="${x+bw/2}" y="${h-padB+14}" text-anchor="middle">${esc(r.k)}</text>`;
   });
   markers.forEach(m=>{
     const mx=padL+(m.at+0.5)*gap;
     s+=`<line x1="${mx}" x2="${mx}" y1="${padT-4}" y2="${padT+ih}" stroke="var(--vc-black)" stroke-width="1.5" stroke-dasharray="3 2"/>`;
-    s+=`<text class="ax" x="${mx+4}" y="${padT+4}" style="font-weight:700;fill:var(--vc-black)">${esc(m.label)}</text>`;
+    s+=`<text class="ax" x="${mx+5}" y="${padT+3}" style="font-weight:700;fill:var(--vc-black)">${esc(m.label)}</text>`;
   });
   return s+`</svg>`;
 }
 
-// Range bar: one row per year, bar spanning p25-p75, tick at the median.
-// Shows whether a distribution moved without pretending a mean is meaningful.
-function rangebar(rows,{w=560,labelW=58,max=null}={}){
-  const rh=27,padT=22,padB=6, h=rows.length*rh+padT+padB, bw=w-labelW-58;
-  const mx=max||Math.ceil(Math.max(...rows.map(r=>r.hi))/500)*500;
-  const X=v=>labelW+v/mx*bw;
+// Range bar: bar spans p25-p75, tick at the median. Shows whether a
+// distribution moved without pretending a mean is meaningful.
+function rangebar(rows,{w=null,max=null}={}){
+  w = w||chartW();
+  const LW = labelSpace(rows, w, r=>r.k);
+  const valW = valueSpace(rows, w, r=>nf(r.mid));
+  const h = rows.length*CH.row + CH.axisTop + CH.padY, bw = w - LW - valW;
+  const mx = max||Math.ceil(Math.max(...rows.map(r=>r.hi))/500)*500;
+  const X = v => LW + v/mx*bw;
   let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
   for(let g=0;g<=4;g++){const gv=Math.round(mx*g/4);
-    s+=`<line class="gridline" x1="${X(gv)}" x2="${X(gv)}" y1="${padT-7}" y2="${h-padB}"/>`;
-    s+=`<text class="ax" x="${X(gv)}" y="${padT-11}" text-anchor="middle">${nf(gv)}</text>`;}
+    s+=`<line class="gridline" x1="${X(gv)}" x2="${X(gv)}" y1="${CH.axisTop-7}" y2="${h-CH.padY}"/>`;
+    s+=`<text class="ax" x="${X(gv)}" y="${CH.axisTop-10}" text-anchor="middle">${nf(gv)}</text>`;}
   rows.forEach((r,i)=>{
-    const y=padT+i*rh+rh/2;
-    s+=`<text class="bar-lbl" x="${labelW-10}" y="${y+4}" text-anchor="end">${esc(r.k)}</text>`;
-    s+=`<rect x="${X(r.lo)}" y="${y-7}" width="${Math.max(2,X(r.hi)-X(r.lo))}" height="14" rx="2" fill="#57aa4a" opacity=".26"><title>${esc(r.k)}: middle half ${nf(r.lo)}–${nf(r.hi)} words</title></rect>`;
-    s+=`<line x1="${X(r.mid)}" x2="${X(r.mid)}" y1="${y-9}" y2="${y+9}" stroke="#2f7d26" stroke-width="2.5"><title>${esc(r.k)} median: ${nf(r.mid)}</title></line>`;
-    s+=`<text class="bar-val" x="${X(r.hi)+9}" y="${y+4}">${nf(r.mid)}</text>`;
+    const y=CH.axisTop+i*CH.row+CH.row/2;
+    s+=`<text class="bar-lbl" x="${LW-CH.gutter}" y="${y+4}" text-anchor="end">${esc(fit(r.k,LW-CH.gutter))}</text>`;
+    s+=`<rect x="${X(r.lo)}" y="${y-CH.bar/2}" width="${Math.max(2,X(r.hi)-X(r.lo))}" height="${CH.bar}" rx="2" fill="#57aa4a" opacity=".26"><title>${esc(r.k)}: middle half ${nf(r.lo)}–${nf(r.hi)} words</title></rect>`;
+    s+=`<line x1="${X(r.mid)}" x2="${X(r.mid)}" y1="${y-CH.bar/2-2}" y2="${y+CH.bar/2+2}" stroke="#2f7d26" stroke-width="2.5"><title>${esc(r.k)} median: ${nf(r.mid)}</title></line>`;
+    s+=`<text class="bar-val" x="${X(r.hi)+8}" y="${y+4}">${nf(r.mid)}</text>`;
   });
   return s+`</svg>`;
 }
 
-Promise.all([
-  fetch("../data/catalogue_analysis.json?cb="+Date.now()).then(r=>r.json()),
-  fetch("../data/subject_analysis.json?cb="+Date.now()).then(r=>r.json()),
-]).then(([D,S])=>{
+function build(D,S){
   const total=D.total_pieces;
   document.getElementById("stamp").textContent="Data pull: "+(D.meta.generated_at||"").slice(0,10);
   // KPIs
@@ -273,7 +341,7 @@ Promise.all([
   // 1. The anchor chart: what the pieces are about.
   html+=`<div class="card" id="subject"><h2>What the pieces are about</h2>
     <div class="hint">${nf(S.beats.length)} beats, built by sorting all ${nf(S.n_topics_normalized)} topic tags into subjects, issue rubrics and format labels, then mapping the subjects onto beats (see <a href="#method">how we did this</a>). A piece counts toward every beat it touches, so these exceed ${nf(total)}.</div>
-    ${hbar(S.beats.map(b=>({k:b.beat,v:b.pieces,c:BEATCO[b.beat]||"#217ebe",pct:Math.round(b.share)})),{labelW:210})}
+    ${hbar(S.beats.map(b=>({k:b.beat,v:b.pieces,c:BEATCO[b.beat]||"#217ebe",pct:Math.round(b.share)})))}
     <div class="insight">City Hall and crime are the two poles of the catalogue, and the only beats above 20%. Below them sits a real second tier &mdash; the built city, courts, the economy, housing, transportation &mdash; and then a long tail where whole domains of city life are covered a handful of times a year: climate at ${S.beats.find(b=>b.beat.startsWith("Climate")).share}%, homelessness at ${S.beats.find(b=>b.beat.startsWith("Homelessness")).share}%, education and youth at ${S.beats.find(b=>b.beat.startsWith("Education")).share}%. The pairings tell the same story: crime travels with courts and policing, housing with land use, City Hall with the budget &mdash; but almost no piece connects the economy to criminal justice, or climate to housing, adjacencies the city itself is full of.</div>
     <div class="src">Source: Ghost topic tags, sorted in <code>analyze_subjects.py</code>. "History" is kept as its own beat rather than folded into culture &mdash; it is applied as a lens across every other beat, and ${S.history_only_pieces} of its ${S.beats.find(b=>b.beat.startsWith("History")).pieces} pieces carry no other cultural tag.</div></div>`;
 
@@ -292,7 +360,7 @@ Promise.all([
              "Looking ahead":"#d9a441","Looking back":"#7a5ea6","Staging a debate":"#5b6b7a"};
   html+=`<div class="card" id="arc"><h2>The job each piece does</h2>
       <div class="hint">Vital City's curated issues are built as arguments, and the section heading a piece sits under names its role. Sorting those ${S.topic_bucket_sizes.rubrics} headings by the job they describe &mdash; not the topic &mdash; gives the only read available on rhetorical posture. Covers the ${st.pieces_with_rubric} pieces (${st.coverage_share}%) that carry one.</div>
-      ${hbar(sb.map(b=>({k:b.stance,v:b.pieces,c:SCO[b.stance]||"#217ebe",pct:Math.round(b.share_of_rubriced)})),{labelW:190})}
+      ${hbar(sb.map(b=>({k:b.stance,v:b.pieces,c:SCO[b.stance]||"#217ebe",pct:Math.round(b.share_of_rubriced)})))}
       <div class="insight">The journal is built to arrive at a recommendation. ${Math.round(sb[0].share_of_rubriced)}% of curated pieces sit in a "what to do" slot &mdash; "Some Policy Solutions," "The Way Forward," "If I Had a Hammer..." &mdash; against ${Math.round(sb.find(b=>b.stance.startsWith("Diagnosing")).share_of_rubriced)}% that diagnose what is broken and ${Math.round(sb.find(b=>b.stance.startsWith("Framing")).share_of_rubriced)}% that frame the terms. Prescription outnumbers complaint two to one. Only ${sb.find(b=>b.stance==="Looking back").pieces} pieces sit in a retrospective slot, and just ${sb.find(b=>b.stance==="Staging a debate").pieces} are staged as a debate between opposing views.</div>
       <div class="src">Rubric-to-job map in <code>analyze_subjects.py</code>, published in the data file. Standalone pieces carry no rubric and are out of scope here, so this describes the curated third of the catalogue.</div></div>`;
 
@@ -330,25 +398,10 @@ Promise.all([
     ${hbar(S.headline_words.slice(0,22).map(w=>({k:w.word,v:w.headlines,
         c:["mamdani","zohran","adams","eric","mayor","trump"].includes(w.word)?"#e7466d"
           :["crime","jail","rikers","violence","police","safety","gun"].includes(w.word)?"#217ebe"
-          :["conversation"].includes(w.word)?"#c7cad0":"#57aa4a"})),{labelW:130,valSuffix:" headlines"})}
+          :["conversation"].includes(w.word)?"#c7cad0":"#57aa4a"})))}
     <div class="legend"><span><i class="sw" style="background:#e7466d"></i>People and office</span><span><i class="sw" style="background:#217ebe"></i>Crime and punishment</span><span><i class="sw" style="background:#57aa4a"></i>Everything else</span><span><i class="sw" style="background:#c7cad0"></i>Format artifact</span></div>
     <div class="insight">Read as a list, the headline vocabulary is more about criminal justice than the subject tags suggest: crime, jail, Rikers, violence, police, safety and gun together outrank every other cluster, even though those beats have fallen by half as a share of what gets published. Headlines are the last place the old identity persists. The single most common word in five years of headlines is now a person's name &mdash; Mamdani, at ${S.headline_words.find(w=>w.word==="mamdani").headlines} &mdash; and "better" appears in ${S.headline_words.find(w=>w.word==="better").headlines}, which is the prescriptive posture showing up in the copy. "Conversation" at ${S.headline_words.find(w=>w.word==="conversation").headlines} is a format artifact, not a subject: it is the Q&amp;A series naming itself.</div>
     <div class="src">Stoplist and the singular/plural merges are written out in <code>analyze_subjects.py</code>; the top 40 words are in the data file. Counting once per headline means a word repeated in one title is not double-counted.</div></div>`;
-
-  // 5d. Can a headline tell opinion from analysis? Tested, not asserted.
-  const HT=S.headline_signal_test, hs=l=>HT.rows.find(r=>r.signal===l);
-  html+=`<div class="card" id="signal"><h2>Can you tell opinion from analysis by the headline?</h2>
-    <div class="hint">Testable, so we tested it. Each headline was labelled by the signals it carries &mdash; prescriptive language ("should," "must," "a better way") versus analytical language ("by the numbers," "the state of," "how rare is") &mdash; and the label checked against the content type the pipeline assigned from the article itself, never from the title. Q&amp;As, podcasts, book reviews and tools are excluded: they are a third thing, neither opinion nor analysis. That leaves ${nf(HT.argument_pieces)} pieces.</div>
-    <div class="band b3">
-      <div class="bi"><div class="bn" style="color:#217ebe">${hs("analysis signal").lift_vs_base}&times;</div><div class="bl">analysis signals work</div>
-        <div class="bd">${hs("analysis signal").headlines} headlines carry analytical language, and ${hs("analysis signal").pct_data_analysis}% of them really are data analyses &mdash; against a base rate of ${HT.base_rate_data_analysis}%. Reliable signal.</div></div>
-      <div class="bi"><div class="bn" style="color:#e7466d">${hs("opinion signal").lift_vs_base}&times;</div><div class="bl">opinion signals don't</div>
-        <div class="bd">${hs("opinion signal").headlines} headlines carry prescriptive language and ${(100-hs("opinion signal").pct_data_analysis).toFixed(1)}% are opinion &mdash; but so are ${HT.base_rate_opinion}% of all pieces. The detector adds essentially nothing.</div></div>
-      <div class="bi"><div class="bn">${hs("no signal").share_of_argument}%</div><div class="bl">give no signal at all</div>
-        <div class="bd">${nf(hs("no signal").headlines)} headlines carry neither marker &mdash; "When Rent Regulation Makes Sense," "Modern Community Safety Includes More than Police." Declarative, and unreadable either way.</div></div>
-    </div>
-    <div class="insight">The answer is no for opinion and yes for analysis, and the asymmetry is the interesting part. You cannot detect strong opinion from a Vital City headline because opinion <i>is</i> the baseline: ${HT.base_rate_opinion}% of argument pieces are commentary, so a classifier that guessed "opinion" every time would score ${HT.base_rate_opinion}% and know nothing. The prescriptive-language detector fires on only ${hs("opinion signal").share_of_argument}% of headlines and lands almost exactly on that base rate &mdash; ${hs("opinion signal").lift_vs_base}&times; lift, which is no lift. Analysis is the opposite: it is rare enough (${HT.base_rate_data_analysis}%) that naming it in the headline is informative, and a headline with data framing is ${hs("analysis signal").lift_vs_base} times likelier to sit on a data piece. Practical read: the house voice is so consistently argumentative that argument is invisible in the copy, and the headlines that stand out are the ones announcing evidence.</div>
-    <div class="src">All signal patterns are published in <code>data/subject_analysis.json</code> and defined in <code>analyze_subjects.py</code>. Lift is the bucket's data-analysis rate divided by the base rate; 1.0&times; means the label tells you nothing you didn't already know. This is a keyword test on ${nf(HT.argument_pieces)} titles, not a language model reading the pieces &mdash; it measures what headline <i>wording</i> reveals, which is exactly the question asked. ${HT.excluded_non_argument} non-argument pieces excluded.</div></div>`;
 
   // 6. Where the quantitative work goes.
   const treat=S.beats.filter(b=>b.pieces>=30).map(b=>{
@@ -357,7 +410,7 @@ Promise.all([
   }).sort((a,b)=>b.dshare-a.dshare);
   html+=`<div class="card" id="treatment"><h2>Where the data treatment goes</h2>
     <div class="hint">Share of each beat's pieces that are data analysis rather than argument. Beats with 30+ pieces.</div>
-    ${hbar(treat.map(t=>({k:t.beat,v:t.dshare,c:t.dshare>=10?"#217ebe":"#c7cad0"})),{labelW:210,valSuffix:"%"})}
+    ${hbar(treat.map(t=>({k:t.beat,v:t.dshare,c:t.dshare>=10?"#217ebe":"#c7cad0"})),{valSuffix:"%"})}
     <div class="insight">The quantitative work is concentrated almost entirely in criminal justice. Jails (${treat.find(t=>t.beat.startsWith("Jails")).dshare}%), crime (${treat.find(t=>t.beat.startsWith("Crime")).dshare}%) and courts (${treat.find(t=>t.beat.startsWith("Courts")).dshare}%) are the only beats where at least one piece in ten is a data analysis. The beats that grew fastest get the least of it: the economy and budgets is ${treat.find(t=>t.beat.startsWith("Money")).dshare}% data, housing ${treat.find(t=>t.beat==="Housing").dshare}%, technology ${treat.find(t=>t.beat==="Technology").dshare}%, city government ${treat.find(t=>t.beat.startsWith("City government")).dshare}%. The data operation still points where the journal started, not where it has moved.</div>
     <div class="src">Type per piece from the catalogue classifier. A piece counts toward each of its beats.</div></div>`;
 
@@ -366,7 +419,7 @@ Promise.all([
   const credAuthRows=D.by_credential_authors.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999"}));
   html+=`<div class="card" id="credentials"><h2>Who writes for Vital City</h2>
     <div class="hint">Primary author's professional background. <span class="toggle" id="credTog"><button data-m="pieces" class="on">By pieces</button><button data-m="authors">By distinct authors</button></span></div>
-    <div id="credChart">${hbar(credRows,{labelW:220})}</div>
+    <div id="credChart">${hbar(credRows)}</div>
     <div class="insight">Academics are the largest single group of bylines &mdash; about a quarter of all pieces &mdash; but the mix is deliberately broad: former public officials, journalists, nonprofit and advocacy voices, think-tank researchers, lawyers and private-sector leaders all appear in numbers. It reads like a policy journal that pulls scholars and practitioners onto the same pages. The most prolific contributors, after the institutional "Vital City" byline: ${D.prolific.filter(p=>p.name!=="Vital City").slice(0,8).map(p=>`<b>${esc(p.name)}</b> (${p.posts})`).join(", ")}.</div>
     <div class="src">Single label per piece, applied to the primary author by an automated bio reading (see <a href="#method">how we did this</a>). Approximate &mdash; many contributors hold several credentials at once.</div></div>`;
 
@@ -376,7 +429,7 @@ Promise.all([
         bc=bench.find(b=>b.beat.startsWith("City government"));
   html+=`<div class="card" id="bench"><h2>Specialist circles and open benches</h2>
     <div class="hint">Share of each beat written by its five most frequent bylines. Beats with 30+ pieces. A high number is a small expert circle; a low one is a wide bench.</div>
-    ${hbar(bench.map(b=>({k:b.beat+" · "+b.distinct_bylines+" bylines",v:b.top5_share,c:BEATCO[b.beat]||"#217ebe"})),{labelW:290,valSuffix:"%"})}
+    ${hbar(bench.map(b=>({k:b.beat+" · "+b.distinct_bylines+" bylines",v:b.top5_share,c:BEATCO[b.beat]||"#217ebe"})),{valSuffix:"%"})}
     <div class="insight">The founding subjects are written by a tight circle, the newer ones by a crowd. Jails is the most concentrated beat in the catalogue &mdash; five bylines write ${bj.top5_share}% of its ${bj.pieces} pieces (${bj.top3[0].name} and ${bj.top3[1].name} lead it), and only ${bj.distinct_bylines} people have ever written one. At the other end, the built city draws on ${bl.distinct_bylines} bylines for ${bl.pieces} pieces with the top five accounting for just ${bl.top5_share}%, and City Hall on ${bc.distinct_bylines}. Across the whole catalogue, ${S.bench.wrote_once} of ${S.bench.primary_bylines} bylines (${S.bench.wrote_once_share}%) have written exactly one piece: the beats Vital City grew into are staffed by many hands writing once, while the beats it was founded on are held by a small group of returning experts.</div>
     <div class="src">Primary byline only; "Vital City" counts as one byline. Source: <code>analyze_subjects.py</code>.</div></div>`;
 
@@ -387,9 +440,56 @@ Promise.all([
   document.querySelectorAll("#credTog button").forEach(b=>b.onclick=()=>{
     document.querySelectorAll("#credTog button").forEach(x=>x.classList.remove("on"));
     b.classList.add("on");
-    cc.innerHTML = b.dataset.m==="authors" ? hbar(credAuthRows,{labelW:220}) : hbar(credRows,{labelW:220});
+    cc.innerHTML = b.dataset.m==="authors" ? hbar(credAuthRows) : hbar(credRows);
   });
-}).catch(e=>{document.getElementById("app").innerHTML='<div class="loading">Could not load catalogue data. Run <code>python3 analyze_catalogue.py</code> first.</div>';console.error(e);});
+}
+
+// Charts are sized in real pixels, so a width change means they must be rebuilt.
+// Debounced, and only when the width actually moved, so scrolling on mobile
+// (which fires resize as the URL bar hides) does not thrash.
+let DATA=null, lastW=0;
+function renderAll(){
+  if(!DATA) return;
+  build(DATA[0], DATA[1]);
+  lastW = chartW();
+}
+function onWidthChange(){
+  if(Math.abs(chartW()-lastW) > 12) renderAll();
+}
+let reflow;
+const scheduleReflow = ()=>{ clearTimeout(reflow); reflow=setTimeout(onWidthChange,160); };
+// A ResizeObserver on the container catches every layout change — a window
+// resize, a zoom, a device-metrics change, a scrollbar appearing. Watching the
+// window resize event alone missed cases where the viewport changed without one.
+// Keep a reference: an observer created inline with nothing holding it can be
+// garbage-collected, and then no reflow ever fires.
+let appRO = null;
+if(window.ResizeObserver){
+  appRO = new ResizeObserver(scheduleReflow);
+  appRO.observe(document.getElementById("app"));
+}
+addEventListener("resize", scheduleReflow);
+// Belt and braces. ResizeObserver and the resize event are the right hooks, but
+// both depend on the rendering lifecycle, which some embedded/background views
+// starve — in a pane where frames are not painted neither ever fires. A
+// throttled check on user interaction costs nothing and guarantees the charts
+// correct themselves the moment anyone touches the page.
+let lastPoke = 0;
+function poke(){
+  const now = performance.now();
+  if(now - lastPoke < 250) return;
+  lastPoke = now;
+  if(Math.abs(chartW()-lastW) > 12) renderAll();
+}
+addEventListener("scroll", poke, {passive:true});
+addEventListener("pointerdown", poke, {passive:true});
+addEventListener("pageshow", scheduleReflow);
+
+Promise.all([
+  fetch("../data/catalogue_analysis.json?cb="+Date.now()).then(r=>r.json()),
+  fetch("../data/subject_analysis.json?cb="+Date.now()).then(r=>r.json()),
+]).then(d=>{ DATA=d; renderAll(); })
+ .catch(e=>{document.getElementById("app").innerHTML='<div class="loading">Could not load catalogue data. Run <code>python3 analyze_catalogue.py</code> first.</div>';console.error(e);});
 </script>
 </body>
 </html>
