@@ -1,0 +1,71 @@
+# Weekly Ghost <-> Mailchimp sync check.
+#
+# WHAT THIS DOES: looks at both subscriber lists and reports what a sync WOULD
+# change. It does not change anything.
+#
+# WHAT MAKES IT SAFE: writing requires the repo secret RECONCILE_ALLOW_WRITES to
+# equal "yes". That secret does not exist. Until someone creates it, every run
+# is a preview, no matter what. To switch it off again later, delete the secret
+# -- no code change, and it can be done from a phone.
+#
+# Deliberately its own workflow, not part of network-refresh.yml: a dashboard
+# data failure must never leave a half-finished subscriber sync behind.
+name: Subscriber sync check (preview only)
+
+on:
+  schedule:
+    # 18:00 UTC Wednesday = 2pm ET in summer, 1pm ET in winter. Cron is fixed
+    # UTC and does not follow daylight saving, so the ET hour shifts by one in
+    # November. Both are Wednesday afternoon, which is what was asked for.
+    - cron: "0 18 * * 3"
+  workflow_dispatch:        # also runnable on demand from the Actions tab
+
+permissions:
+  contents: read            # never needs to write to the repo
+
+concurrency:
+  group: reconcile          # never let two runs overlap
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Logic tests first. If the safety rules are broken, stop before touching
+      # any live credentials.
+      - name: Check the safety rules still hold
+        run: python3 reconcile_subscribers.py --self-test
+
+      - name: Compare the two lists and report
+        env:
+          MAILCHIMP_KEY: ${{ secrets.MAILCHIMP_KEY }}
+          GHOST_ADMIN_KEY: ${{ secrets.GHOST_ADMIN_KEY }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_DM_TO: ${{ secrets.SLACK_DM_TO }}
+          # Absent = preview. Present and "yes" = writes allowed.
+          RECONCILE_ALLOW_WRITES: ${{ secrets.RECONCILE_ALLOW_WRITES }}
+        run: |
+          python3 reconcile_subscribers.py \
+            --slack \
+            --report  reconcile-report.txt \
+            --json    reconcile-plan.json
+
+      # The full detail, kept off the public repo because it lists subscriber
+      # emails. Downloadable from the run page by repo collaborators only.
+      - name: Attach the full report to this run
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sync-report
+          path: |
+            reconcile-report.txt
+            reconcile-plan.json
+          retention-days: 90
+          if-no-files-found: warn

@@ -311,6 +311,78 @@ def self_test():
     return 1 if fails else 0
 
 
+# ------------------------------------------------------------------- report
+def build_summary(rec, err=None):
+    """The weekly report, as plain text. This is what a person actually reads.
+
+    Written for the person who does this sync by hand: it should answer "is
+    there anything for me to do, and does the robot agree with me?" without
+    needing to open GitHub. Emails are included because the reviewer needs to
+    recognize the names — which is exactly why this goes to a DM and an
+    access-controlled artifact, never to the public repo.
+    """
+    L = []
+    if err:
+        L.append("*Ghost / Mailchimp sync check - COULD NOT RUN*")
+        L.append(f"```{err}```")
+        L.append("Nothing was changed. This needs a look.")
+        return "\n".join(L)
+
+    p, mode = rec["plan"], rec["mode"]
+    add, unsub, skip = p["to_mailchimp"], p["to_ghost_unsub"], p["skipped_pingpong"]
+    live = mode == "apply"
+    L.append(f"*Ghost / Mailchimp sync check - {rec['at'][:10]}*")
+    L.append("_Preview only. Nothing was changed._" if not live else "_LIVE RUN - changes were made._")
+    L.append("")
+    L.append(f"Ghost members: {rec['ghost_members']:,}   |   Mailchimp records: {rec['mailchimp_records']:,}")
+    L.append("")
+
+    if not add and not unsub:
+        L.append("*Nothing to do this week.* The two lists agree.")
+    else:
+        verb = ("Added" if live else "Would add")
+        L.append(f"*{verb} to Mailchimp: {len(add)}*  (signed up on the website, not on the list yet)")
+        for r in add[:25]:
+            L.append(f"  - {r['email']}")
+        if len(add) > 25: L.append(f"  ...and {len(add)-25} more (see the attached file)")
+        L.append("")
+        verb = ("Unsubscribed" if live else "Would unsubscribe")
+        L.append(f"*{verb} in Ghost: {len(unsub)}*  (unsubscribed in Mailchimp, still on in Ghost)")
+        for r in unsub[:25]:
+            L.append(f"  - {r['email']}")
+        if len(unsub) > 25: L.append(f"  ...and {len(unsub)-25} more (see the attached file)")
+
+    if skip:
+        L.append("")
+        L.append(f"_Left alone: {len(skip)} already unsubscribed in Mailchimp. "
+                 "Not re-added, on purpose - re-adding them would start a loop._")
+    if live and rec.get("result", {}).get("errors"):
+        L.append("")
+        L.append(f"*{len(rec['result']['errors'])} errors - see the attached file.*")
+    if not live:
+        L.append("")
+        L.append("_This is a preview so it can be checked against how the sync is done by "
+                 "hand. It will keep previewing until someone deliberately turns writing on._")
+    return "\n".join(L)
+
+
+def post_slack(text):
+    """Post to a Slack DM. Loud on failure: a report nobody receives is worse
+    than no report, because it looks like everything is fine."""
+    tok, to = os.environ.get("SLACK_BOT_TOKEN"), os.environ.get("SLACK_DM_TO")
+    if not tok or not to:
+        raise Abort("SLACK_BOT_TOKEN / SLACK_DM_TO not set - report has nowhere to go")
+    req = urllib.request.Request(
+        "https://slack.com/api/chat.postMessage",
+        data=json.dumps({"channel": to, "text": text, "unfurl_links": False}).encode(),
+        headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json; charset=utf-8"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        resp = json.loads(r.read() or b"{}")
+    if not resp.get("ok"):
+        raise Abort(f"Slack refused the message: {resp.get('error')}")
+    log("posted report to Slack")
+
+
 # ---------------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser(description="Reconcile Ghost and Mailchimp subscribers.")
@@ -318,6 +390,9 @@ def main():
                     help="actually write. Also requires RECONCILE_ALLOW_WRITES=yes.")
     ap.add_argument("--json", metavar="PATH", help="write the plan as JSON")
     ap.add_argument("--self-test", action="store_true", help="run logic tests, no network")
+    ap.add_argument("--slack", action="store_true",
+                    help="post the report to Slack (needs SLACK_BOT_TOKEN + SLACK_DM_TO)")
+    ap.add_argument("--report", metavar="PATH", help="also write the report as a text file")
     a = ap.parse_args()
 
     if a.self_test:
@@ -340,7 +415,11 @@ def main():
         plan = build_plan(ghost, mc)
         check_guardrails(ghost, mc, plan)
     except Abort as e:
+        # An abort must still reach a human. Silence would read as "all clear".
         log(f"\nABORTED — nothing was changed.\n  {e}")
+        if a.slack:
+            try: post_slack(build_summary(None, err=str(e)))
+            except Exception as e2: log(f"and the Slack alert also failed: {e2}")
         return 2
 
     mode = "APPLY (writing)" if writes else "DRY RUN (nothing will change)"
@@ -376,6 +455,12 @@ def main():
     if a.json:
         Path(a.json).write_text(json.dumps(rec, indent=1))
     print(f"audit log: {LOGDIR / f'reconcile_{stamp}.json'}")
+
+    summary = build_summary(rec)
+    if a.report:
+        Path(a.report).write_text(summary)
+    if a.slack:
+        post_slack(summary)   # raises Abort -> nonzero exit, so a lost report is visible
     return 0
 
 
