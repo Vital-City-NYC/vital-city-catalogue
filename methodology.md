@@ -69,6 +69,27 @@ Ghost stores two kinds of tags. We split them by Ghost's own `visibility` flag:
 
 A single article can belong to more than one issue/series and to many topics.
 
+### Numbered issues, named issues, and the gap at 12
+
+Not every issue got a number. Vital City has run **special online issues that
+were never numbered**, and in Ghost these carry a named internal tag rather than
+`#issue-N`. Two consequences worth knowing:
+
+- **The numbered sequence skips 12.** That is not a missing issue: **"What Makes
+  Cities Tick" is issue 12**, published unnumbered. Its 20 pieces ran from March
+  2023 to April 2025, closing between issue 11 (March 2025) and issue 13
+  (September 2025). We record this here rather than renumbering the tag, because
+  Ghost is the source of truth for what a piece is tagged and the analysis should
+  not invent a tag the CMS does not carry. The numbered sequence is also not
+  strictly chronological — issue 14 opened before issue 13.
+- **A named internal tag is usually an issue, not a standing series.** Most of
+  them publish every piece on a single day (`congestion-pricing`,
+  `crime-in-2023-and-2024`), or roll out over a few weeks. Only a handful —
+  `data-stories`, `what-makes-cities-tick`, `just-fix-it` — genuinely recur
+  across years. So anything that counts "issues" must count numbered and named
+  tags together; counting only `#issue-N` undercounts issues by roughly a third
+  and overstates how much is published outside an issue.
+
 ### Tags deliberately dropped as junk
 
 Two internal tags are migration/system artifacts, not real classifications, and
