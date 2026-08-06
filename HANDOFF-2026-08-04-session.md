@@ -7,7 +7,69 @@ feature** and **the gotchas discovered in this session**, several of which cost 
 
 ---
 
-## 1. UNFINISHED — the live request
+## 0. Status board (newest first)
+
+| Item | State |
+|---|---|
+| **Ghost ↔ Mailchimp reconciler** | **BUILT, DRY-RUN ONLY, DELIBERATELY NOT ENABLED.** See §1A. Josh wants the current manual owner to approve before it writes anything. |
+| "Ask your own questions of this data" card | **Shipped.** Downloads the full decrypted dataset (~1.7 MB) + a generated guide of the nine ways the data misleads. Any user can hand both to Claude/ChatGPT. |
+| Built-in narrative analysis engine | **Spec'd, not built.** See §1B. |
+| Preferred-source tracking | Shipped and live. |
+| Piece + author look-ups, impact bands | Shipped and live. |
+
+---
+
+## 1A. Ghost ↔ Mailchimp reconciler — DO NOT ENABLE WITHOUT APPROVAL
+
+**Josh's ask:** automate the two manual sync jobs — (1) new subscribers arrive in Ghost and
+must be added to Mailchimp; (2) unsubscribes happen in Mailchimp and must be reflected in
+Ghost. **Explicitly: design and test it, but do not turn it on.** A person currently does this
+by hand and must approve first.
+
+**File:** `reconcile_subscribers.py`. **Default mode is dry run.** It cannot write unless
+given `--apply` *and* `RECONCILE_ALLOW_WRITES=yes` in the environment. There is no workflow
+wired to it — turning it on is a deliberate, separate act (see the runbook at the bottom of
+the script).
+
+### The one hazard that matters: the ping-pong loop
+
+If task 1 is written naively it will re-add the very people task 2 just unsubscribed —
+Ghost still lists them as subscribed, so they look like "new", get pushed back into Mailchimp,
+get unsubscribed again, forever. **Task 1 must exclude anyone Mailchimp knows as
+unsubscribed or cleaned.** The script does this and there is a test for it. Never remove that
+filter.
+
+### Design decisions worth preserving
+
+- **Never deletes anyone.** "Remove from the Ghost list" means *unsubscribe from the
+  newsletter* (clear their newsletter subscription), not delete the member — deleting would
+  destroy signup date, attribution and history, and is irreversible.
+- **Both Mailchimp `unsubscribed` and `cleaned`** (hard-bounced) stop Ghost sending.
+- **Fails loud** on a suspiciously small API response rather than concluding "everyone
+  unsubscribed" and acting on it (see `feedback_scrapers_fail_loud`).
+- **Change cap** per run; above it the script aborts and asks for a human.
+- **Idempotent** — a second run with no new activity proposes zero changes.
+- **Writes an audit file** of every proposed/applied change, every run, dry or not.
+
+### Test results (2026-08-04)
+
+`python3 reconcile_subscribers.py --self-test` — **13/13 pass**, no network needed. Covers
+the ping-pong guard, cleaned/bounced handling, idempotence, members with no newsletter,
+malformed emails, and all three guard rails (tiny population, over-cap, normal passes).
+
+Also dry-run against the **real merged population** (`private/people.json`, 10,845 Ghost /
+13,000 Mailchimp): **3 additions proposed, 0 removals, 0 ping-pong skips**, and re-planning
+after applying the plan in-memory yields **0 further changes** (idempotent).
+
+*Caveat on that second test:* `people.json` has already reconciled the two systems, so it
+cannot produce task-2 (unsubscribe) candidates — that path is covered by the fixture tests,
+not by live divergence. **The first live dry run against the real APIs is still the real
+test**, and it has not been run: it needs `MAILCHIMP_KEY` and `GHOST_ADMIN_KEY`, which are
+CI secrets and not available locally. Have the manual owner run it (step 1 of the runbook).
+
+---
+
+## 1B. UNFINISHED — narrative analysis engine
 
 **Josh's ask, verbatim:** *"can you build in the ability for any user of the growth dashboard
 to get a detailed narrative analysis like the one you just produced, using all the data feeds
