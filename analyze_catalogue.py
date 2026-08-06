@@ -177,6 +177,57 @@ cadence = {
   "current_per_week_all": current["per_week_all"],
 }
 
+
+# 6b-ii. Robustness check on the cadence figure.
+# A piece is sometimes published on the weekly rhythm and folded into an issue
+# only afterwards. Its issue tag then says "issue piece" even though it reached
+# readers as part of the ordinary stream, so the strict measure above undercounts
+# the rolling cadence — and it is not stable over time, because a standalone
+# piece today can become an issue piece in six months.
+#
+# These can be told apart. Most issues drop on one day, so for each issue tag we
+# take the date carrying the most of its pieces and treat anything more than
+# three days away as published on the rhythm and absorbed later. The looser
+# cadence counts those pieces back in. It keys off publication timing rather than
+# tag membership, so it does not drift as tags are added.
+DROP_WINDOW = 3
+_tag_dates = collections.defaultdict(list)
+for a in CAT:
+    if a.get("published_date"):
+        for i in (a.get("issues") or []):
+            _tag_dates[i].append(datetime.date(*map(int, a["published_date"].split("-"))))
+_drop = {t: collections.Counter(ds).most_common(1)[0][0] for t, ds in _tag_dates.items()}
+def _folded_in(a):
+    """True if the piece carries an issue tag but published away from every one
+    of its issues' drop dates — i.e. it ran on the weekly rhythm."""
+    iss = a.get("issues") or []
+    if not iss or not a.get("published_date"):
+        return False
+    pd_ = datetime.date(*map(int, a["published_date"].split("-")))
+    return all(abs((pd_ - _drop[i]).days) > DROP_WINDOW for i in iss if i in _drop)
+
+_folded = [a for a in CAT if _folded_in(a)]
+_n_issue_tagged = sum(1 for a in CAT if a.get("issues"))
+def _loose_rate(yr=None):
+    ps = [a for a in CAT if (yr is None or year(a.get("published_date")) == yr)]
+    n = sum(1 for a in ps if not a.get("issues") or _folded_in(a))
+    w = _weeks(yr) if yr else sum(_weeks(y) for y in sorted({year(a.get("published_date"))
+                                                             for a in CAT if a.get("published_date")}))
+    return round(n / w, 2)
+
+cadence_robustness = {
+  "drop_window_days": DROP_WINDOW,
+  "issue_tagged_pieces": _n_issue_tagged,
+  "published_away_from_drop": len(_folded),
+  "share_of_issue_pieces": round(len(_folded)/_n_issue_tagged*100, 1) if _n_issue_tagged else 0,
+  "current_year_strict": current["per_week_outside_issues"],
+  "current_year_loose": _loose_rate(current["year"]),
+  "all_time_strict": cadence["all_time_per_week_outside_issues"],
+  "all_time_loose": _loose_rate(),
+  "all_time_all": cadence["all_time_per_week"],
+}
+cadence["robustness"] = cadence_robustness
+
 # 6c. Publishing rhythm — which day of the week, which month.
 # The cadence figures above are averages; this is what the average is made of.
 # Weekday is derived from the publication date, so it reflects when a piece went
