@@ -76,6 +76,35 @@
   .updnote a{display:inline-block;margin-top:4px;color:var(--vc-cerulean);font-weight:700;text-decoration:none}
   .updnote a:hover{text-decoration:underline}
   .updcaution{margin-top:8px;color:var(--vc-charcoal)}
+  /* Read-only detail view. Wider than the edit form because it is a reading
+     surface, not a set of inputs. */
+  .detailbox{width:560px}
+  .dtHead{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+  .dtHead h3{margin:0}
+  .dtSub{font-size:12.5px;color:var(--vc-charcoal);margin-top:3px}
+  .dtBadges{display:flex;flex-wrap:wrap;gap:5px;margin:11px 0 4px}
+  .dtBadges:empty{display:none}
+  .dtSec{margin-top:16px;border-top:1px solid var(--vc-cloud);padding-top:11px}
+  .dtSec h4{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);
+            font-weight:700;margin:0 0 7px}
+  .dtRow{display:flex;gap:10px;font-size:13px;padding:3px 0;align-items:baseline}
+  .dtRow dt{flex:0 0 118px;color:var(--vc-charcoal);font-size:11.5px}
+  .dtRow dd{margin:0;flex:1;min-width:0;word-break:break-word}
+  .dtRow dd .muted{color:var(--vc-charcoal)}
+  /* Metric tiles: the numbers people actually came to read */
+  .dtMetrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--vc-cloud);
+             border:1px solid var(--vc-cloud);margin-top:4px}
+  .dtM{background:var(--vc-white);padding:9px 10px}
+  .dtM .v{font-weight:900;font-size:19px;line-height:1.1;font-variant-numeric:tabular-nums}
+  .dtM .k{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);
+          font-weight:700;margin-top:3px}
+  .dtM.off .v{color:var(--vc-cloud)}
+  .dtNote{background:var(--vc-paper2);padding:9px 11px;font-size:13px;line-height:1.5;white-space:pre-wrap}
+  .dtCav{font-size:11px;color:var(--vc-charcoal);line-height:1.45;margin-top:7px}
+  @media(max-width:560px){.dtMetrics{grid-template-columns:repeat(2,1fr)}.dtRow{flex-direction:column;gap:1px}.dtRow dt{flex:none}}
+  html.dark .dtM{background:#212329}
+  html.dark .dtNote{background:#2b2d34}
+  html.dark .dtSec{border-top-color:#3a3d45}
   .modalbtns{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
   .modalbtns .lbl-note{font-size:11px;flex:1 1 100%}
   .stat .num.unsubnum{color:#c8102e}
@@ -527,6 +556,28 @@
           </tr></thead>
           <tbody id="rows"></tbody>
         </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Read-only detail view. Clicking a row lands here, not in the form: most
+       opens are to look something up, not to change it, and an edit box invites
+       accidental edits. The pen (in the row, or here) is the way into editing. -->
+  <div id="detailModal" class="modal" style="display:none">
+    <div class="modalbox detailbox">
+      <div class="dtHead">
+        <div>
+          <h3 id="dtName">—</h3>
+          <div id="dtSub" class="dtSub"></div>
+        </div>
+        <button class="btn" id="dtEdit" title="Edit this contact">&#9998; Edit</button>
+      </div>
+      <div id="dtBadges" class="dtBadges"></div>
+      <div id="dtBody"></div>
+      <div class="modalbtns">
+        <button class="btn primary" id="dtClose">Close</button>
+        <button class="btn" id="dtEmailCard" title="Copy this contact's full details to the clipboard so you can email it to someone.">&#9993; Email this card</button>
+        <button class="btn" id="dtCopyLink" title="Copy a link that reopens this contact.">Copy link</button>
       </div>
     </div>
   </div>
@@ -991,7 +1042,7 @@ function init(){
   document.addEventListener("keydown",e=>{
     // Cmd/Ctrl-Enter saves the open edit card (works from any field in it).
     if((e.metaKey||e.ctrlKey)&&e.key==="Enter"&&$("#editModal").style.display!=="none"){ e.preventDefault(); saveEdit(); return; }
-    if(e.key==="Escape"){ ["editModal","emailModal","dupModal","helpModal","reviewModal"].forEach(id=>{const m=$("#"+id);if(m)m.style.display="none";}); return; }
+    if(e.key==="Escape"){ ["detailModal","editModal","emailModal","dupModal","helpModal","reviewModal"].forEach(id=>{const m=$("#"+id);if(m)m.style.display="none";}); return; }
     const inField=/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
     if((e.key==="/"||((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k")) && !inField){ e.preventDefault(); $("#q").focus(); }
     else if(e.key==="?" && !inField){ const m=$("#helpModal"); m.style.display=m.style.display==="flex"?"none":"flex"; }
@@ -1014,6 +1065,13 @@ function init(){
   $("#edSave").addEventListener("click",saveEdit);
   $("#edCancel").addEventListener("click",closeEdit);
   $("#edDelete").addEventListener("click",()=>{ if(editKey) deleteEntry(editKey); });
+  $("#dtClose").addEventListener("click",closeDetail);
+  $("#dtEmailCard").addEventListener("click",emailCard);
+  $("#dtCopyLink").addEventListener("click",copyCardLink);
+  // Pen in the detail view: hand off to the form for the same person.
+  $("#dtEdit").addEventListener("click",()=>{ const k=detailKey; closeDetail(); if(k) openEdit(k); });
+  // Click the backdrop to dismiss, matching the other windows.
+  $("#detailModal").addEventListener("click",e=>{ if(e.target.id==="detailModal") closeDetail(); });
   $("#edEmailCard").addEventListener("click",emailCard);
   $("#edCopyLink").addEventListener("click",copyCardLink);
   $("#edRevertGuess").addEventListener("click",revertGuess);
@@ -1024,13 +1082,13 @@ function init(){
     const st=e.target.closest(".star"); if(st){e.stopPropagation();toggleStar(st.dataset.key);return;}
     const ec=e.target.closest(".emcopy"); if(ec){e.stopPropagation();navigator.clipboard.writeText(ec.dataset.email).then(()=>toast("Copied "+ec.dataset.email)).catch(()=>toast("Copy failed"));return;}
     const ed=e.target.closest(".edit"); if(ed){e.stopPropagation();openEdit(ed.dataset.key);return;}
-    const nd=e.target.closest(".notedot"); if(nd){e.stopPropagation();openEdit(nd.dataset.key);return;}
+    const nd=e.target.closest(".notedot"); if(nd){e.stopPropagation();openDetail(nd.dataset.key);return;}
     const cf=e.target.closest(".confirm"); if(cf){e.stopPropagation();confirmName(cf.dataset.key);return;}
     if(e.target.closest("a.pill-link")||e.target.closest("a.emlink")) return;   // let catalogue + mailto links open
     const el=e.target.closest("[data-type]"); if(el){toggleCat(el.dataset.type,true);return;}   // a type tag → filter
     // Click anywhere else on the row to view that person's details.
     if(window.getSelection && String(window.getSelection())) return;   // don't hijack a text selection
-    const row=e.target.closest("tr[data-key]"); if(row) openEdit(row.dataset.key);
+    const row=e.target.closest("tr[data-key]"); if(row) openDetail(row.dataset.key);
   });
   if(!applyHash()) render();   // a shared #link reopens its filters; else default view
 }
@@ -1303,11 +1361,87 @@ function mergePeople(keys){
   buildStats(); syncToggles(); render();
   toast(`Merged ${recs.length} records into ${n||m.e}`);
 }
+// ---------------------------------------------------------------- detail view
+// Everything we hold on one person, read-only. The table shows six columns; this
+// shows the rest — recent-activity counts, click rate, tenure, article count,
+// press details, and which of several emails is actually subscribed.
+let detailKey=null;
+function openDetail(key){
+  const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
+  detailKey=key;
+  const nm=[firstName(p),lastName(p)].filter(Boolean).join(" ")||p.n||p.e||"(no name)";
+  $("#dtName").textContent=nm;
+  $("#dtSub").innerHTML=[p.inst&&esc(p.inst),p.role&&esc(p.role)].filter(Boolean).join(" &middot; ")
+    ||'<span class="muted">No institution on file</span>';
+
+  const B=[];
+  if(p.ns==="guess") B.push(`<span class="badge" style="background:var(--vc-cloud);color:var(--vc-black)" title="This name was inferred from the email address, not confirmed by a person.">GUESSED NAME</span>`);
+  if(p.wiki) B.push(`<span class="badge b-wiki" title="Appears to have an English Wikipedia page — matched conservatively from context clues, so a rough signal of public profile, not a verified fact.">&#9733; NOTABLE</span>`);
+  if(p.press) B.push(`<span class="badge b-press">PRESS</span>`);
+  if(p.unsub) B.push(`<span class="badge" style="background:#c8102e;color:#fff">UNSUBSCRIBED</span>`);
+  else if(p.mem) B.push(`<span class="badge b-mem">SUBSCRIBER</span>`);
+  if(p.don) B.push(`<span class="badge b-don">DONOR</span>`);
+  if(p.auth) B.push(`<span class="badge" style="background:var(--vc-plum,#7a5ea6);color:#fff">CONTRIBUTOR</span>`);
+  if(p.star) B.push(`<span class="badge" style="background:var(--vc-gold,#d9a441);color:#fff">&#9733; STARRED</span>`);
+  if(p.added) B.push(`<span class="badge" style="background:var(--vc-charcoal);color:#fff">ADDED BY HAND</span>`);
+  $("#dtBadges").innerHTML=B.join(" ");
+
+  const row=(k,v)=>v?`<div class="dtRow"><dt>${k}</dt><dd>${v}</dd></div>`:"";
+  const sec=(h,inner)=>inner?`<div class="dtSec"><h4>${h}</h4>${inner}</div>`:"";
+  const M=(v,k,on)=>`<div class="dtM${on?"":" off"}"><div class="v">${v}</div><div class="k">${k}</div></div>`;
+  const subs=new Set(p.sub_emails||[]);
+  const emails=(p.emails||[]).map(e=>
+    `${esc(e)}${e===p.e?' <span class="muted">(primary)</span>':''}`+
+    `${subs.has(e)?' <span class="badge b-mem" style="font-size:8.5px">on list</span>':''}`+
+    `${e===p.recent_email?' <span class="muted">&middot; most recently opened</span>':''}`).join("<br>");
+
+  // Engagement. Open rate is the least trustworthy number here, so it is labelled
+  // as such rather than presented alongside the others without comment.
+  const eng=(p.mem||p.unsub)?
+    `<div class="dtMetrics">
+       ${M((p.erate||0)+"/5","Mailchimp rating",p.erate)}
+       ${M((p.eopen||0)+"%","Open rate",p.eopen)}
+       ${M((p.eclick||0)+"%","Click rate",p.eclick)}
+       ${M(engScore(p),"Engagement score",engScore(p))}
+     </div>
+     ${(p.d30c||p.d7c)?`<div class="dtRow" style="margin-top:8px"><dt>Recent opens</dt><dd>${p.d7c?`${p.d7c} in the last 7 days`:""}${(p.d7c&&p.d30c)?" &middot; ":""}${p.d30c?`${p.d30c} in the last 30 days`:""}</dd></div>`:""}
+     ${row("Subscribed",p.since?esc(p.since):"")}
+     ${row("Unsubscribed",p.udate?esc(p.udate):"")}
+     <div class="dtCav">Engagement score = Mailchimp rating &times; 20 + open rate, out of 200.
+       Open rate is inflated by Apple Mail's automatic opens, and a brand-new subscriber can show
+       a high percentage off very few sends &mdash; click rate is the more reliable half.</div>`:"";
+
+  const don=p.don?`<div class="dtMetrics">
+       ${M("$"+Math.round(p.damt||0).toLocaleString(),"Lifetime",p.damt)}
+       ${M(p.dcnt||0,"Gifts",p.dcnt)}
+       ${M(p.dlast?esc(p.dlast).slice(0,7):"—","Last gift",p.dlast)}
+       ${M(p.dcnt>1?"Repeat":"First-time","Status",1)}
+     </div>`:"";
+
+  $("#dtBody").innerHTML=
+    sec("Contact", row("Emails",emails||'<span class="muted">none on file</span>')
+      + row("Types",(p.types||[]).map(esc).join(", "))
+      + row("Specialties",(p.topics||[]).map(esc).join(", "))
+      + row("Press outlet",p.poutlet?esc(p.poutlet):"")
+      + row("Press handle",p.ptw?esc(p.ptw):""))
+    + sec("Newsletter",eng)
+    + sec("Giving",don)
+    + sec("Contributions", p.auth?
+        row("Pieces written",(p.arts||0)+"")+row("Byline",esc(p.aname||"")):"")
+    + sec("Notes", p.note?`<div class="dtNote">${esc(p.note)}</div>`:"")
+    + sec("Provenance", row("Sources",(p.src||[]).map(esc).join(", "))
+      + row("Name",p.ns==="given"?"Confirmed by a person":"Inferred from the email address"));
+
+  $("#detailModal").style.display="flex";
+  $("#dtEdit").focus();
+}
+function closeDetail(){ $("#detailModal").style.display="none"; detailKey=null; }
+
 let editKey=null, addMode=false;
 function openEdit(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
   editKey=key; addMode=false;
-  $("#edTitle").textContent="Contact details";
+  $("#edTitle").textContent="Edit contact";
   $("#edFirst").value=firstName(p)||""; $("#edLast").value=lastName(p)||""; $("#edInst").value=p.inst||"";
   $("#edEmails").value=(p.emails||[]).join("\n");
   $("#edTypes").value=(p.types||[]).join(", "); $("#edTopics").value=(p.topics||[]).join(", ");
@@ -1380,14 +1514,15 @@ function revertGuess(){
   closeEdit(); render(); toast("Name set back to a gray guess");
 }
 function copyCardLink(){
-  if(!editKey) return;
-  const url=location.origin+location.pathname+"#"+encodeURIComponent(JSON.stringify({person:pidFor(editKey)}));
+  const k=editKey||detailKey; if(!k) return;
+  const url=location.origin+location.pathname+"#"+encodeURIComponent(JSON.stringify({person:pidFor(k)}));
   navigator.clipboard.writeText(url)
     .then(()=>toast("Link to this contact card copied — opens for anyone with the passphrase"))
     .catch(()=>toast("Copy failed"));
 }
 function emailCard(){
-  const p=PEOPLE.find(x=>personKey(x)===editKey); if(!p) return;
+  // serves both the detail view and the edit form
+  const p=PEOPLE.find(x=>personKey(x)===(editKey||detailKey)); if(!p) return;
   const L=["Name: "+(p.n||"")];
   if(p.inst) L.push("Institution: "+p.inst);
   if(p.emails&&p.emails.length) L.push("Email: "+p.emails.join(", "));
@@ -1554,7 +1689,7 @@ function applyHash(){
     // A per-contact link (#{"person":"<id>"}) opens that person's card.
     if(o.person){
       const p=PEOPLE.find(x=>pidFor(personKey(x))===o.person);
-      if(p) openEdit(personKey(p));
+      if(p) openDetail(personKey(p));
       else toast("That contact link could not be found — they may have been removed.");
     }
     return true;
