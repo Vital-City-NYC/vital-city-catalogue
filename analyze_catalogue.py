@@ -131,6 +131,52 @@ for y in sorted(wc_year):
     wc_by_year.append({"year": y, "n": len(v), "p25": int(q[0]),
                        "median": int(statistics.median(v)), "p75": int(q[2]), "max": max(v)})
 
+# 6b. Publishing cadence, with and without issue pieces.
+# Issues do not arrive weekly — a whole issue lands on a single day (issue 16
+# published all 23 of its pieces on 2026-06-10), so a raw pieces-per-week figure
+# blends a steady stream with occasional 25-piece drops. Excluding issue pieces
+# gives the cadence of the rolling operation.
+#
+# "In an issue" means carrying ANY internal (#) tag, numbered or named. The
+# named ones are not standing series — they are issues named for their theme
+# ("how-many-people-should-new-york-citys-jails-hold"), most publishing every
+# piece on one day — so excluding only the numbered ones would overstate the
+# standalone rate.
+#
+# Weeks are elapsed weeks, not 52: 2021 starts at launch and the current year
+# stops at the pull date, so partial years are not understated.
+import datetime
+_meta = json.load(open(ROOT / "data/meta.json"))
+LAUNCH = datetime.date(*map(int, _meta["date_range"][0].split("-")))
+PULL   = datetime.date(*map(int, _meta["date_range"][1].split("-")))
+def _weeks(y):
+    start = max(datetime.date(int(y), 1, 1), LAUNCH)
+    end   = min(datetime.date(int(y), 12, 31), PULL)
+    return max((end - start).days / 7 + 1/7, 0.1)
+
+cadence_by_year = []
+for y in sorted({year(a.get("published_date")) for a in CAT if a.get("published_date")}):
+    ps = [a for a in CAT if year(a.get("published_date")) == y]
+    solo = [a for a in ps if not a.get("issues")]
+    wks = _weeks(y)
+    cadence_by_year.append({
+      "year": y, "weeks": round(wks, 1), "pieces": len(ps), "outside_issues": len(solo),
+      "per_week_all": round(len(ps)/wks, 2),
+      "per_week_outside_issues": round(len(solo)/wks, 2),
+      "partial": y in (LAUNCH.strftime("%Y"), PULL.strftime("%Y"))})
+_tot_wks = sum(c["weeks"] for c in cadence_by_year)
+_tot_solo = sum(c["outside_issues"] for c in cadence_by_year)
+current = cadence_by_year[-1]
+cadence = {
+  "by_year": cadence_by_year,
+  "total_weeks": round(_tot_wks, 1),
+  "all_time_per_week": round(len(CAT)/_tot_wks, 2),
+  "all_time_per_week_outside_issues": round(_tot_solo/_tot_wks, 2),
+  "current_year": current["year"],
+  "current_per_week_outside_issues": current["per_week_outside_issues"],
+  "current_per_week_all": current["per_week_all"],
+}
+
 # 7. Collaboration
 by_nauthors = collections.Counter(len(a.get("authors") or []) for a in CAT)
 
@@ -167,6 +213,7 @@ out = {
   "by_nauthors": dict(sorted(by_nauthors.items())),
   "prolific": prolific,
   "n_issues": len(issues),
+  "cadence": cadence,
 }
 (ROOT / "data/catalogue_analysis.json").write_text(json.dumps(out, indent=2))
 

@@ -716,6 +716,11 @@
         <div class="sechead-sub">What we publish and send, and how each piece performs — the machine that drives the two sections above.</div>
       </div>
 
+      <div class="card" id="catShape" title="A census of everything Vital City has published, independent of how it performed: what it was about, what job it did, who wrote it and how long it ran.&#10;&#10;Why it matters: Every other panel in this section measures how a piece did. This one measures what we chose to make. Coverage drift, a narrowing house form and a contributor bench that turns over are editorial facts that no performance metric will surface.&#10;&#10;Source: the Ghost content catalogue, recomputed on each daily refresh.">
+        <h2>What we publish, in aggregate <span class="hint">the whole catalogue by subject, format, length and byline · updates with the daily catalogue refresh</span></h2>
+        <div id="catShapeBody"></div>
+      </div>
+
       <div class="card" id="benchmarks">
         <h2>How to judge a piece <span class="hint" id="bmHint">benchmark bands · first 30 days after publication</span></h2>
         <div id="benchmarksBody"></div>
@@ -1110,6 +1115,7 @@ function boot(data){
   renderPreferredSource(data);
   renderAskAI(data);
   renderPieceBenchmarks(data);
+  renderCatalogueShape();
   renderPieceLookup(data);
   renderAuthorLookup(data);
   setupReportTabs();
@@ -2308,6 +2314,74 @@ function timeAgo(iso){
 // Benchmark bands for judging a single piece. Uses the FULL distribution of
 // first-30-days-after-publication views (not the top-N story/engagement pulls,
 // which would make "average" mean "average of our best work").
+// ---------------------------------------------------------------------------
+// What we publish, in aggregate.
+// Reads the two public catalogue aggregates from the same repo rather than the
+// encrypted growth bundle: they are already recomputed on every daily refresh
+// by analyze_catalogue.py / analyze_subjects.py, so there is nothing to keep in
+// sync here. Full workings, charts and method live on ../catalogue-analysis/.
+// ---------------------------------------------------------------------------
+async function renderCatalogueShape(){
+  const host = $("#catShapeBody"); if(!host) return;
+  const grab = async u => { const r = await fetch(u+"?cb="+Date.now());
+    if(!r.ok) throw new Error(u.split("/").pop()+" -> HTTP "+r.status); return r.json(); };
+  let D, S;
+  try {
+    [D, S] = await Promise.all([grab("../data/catalogue_analysis.json"),
+                                grab("../data/subject_analysis.json")]);
+  } catch(e) {
+    host.innerHTML = `<div class="flagnote"><b>Catalogue aggregates unavailable.</b> ${esc(e.message)}. `+
+      `They are built by <code>analyze_catalogue.py</code> and <code>analyze_subjects.py</code> on the daily refresh; `+
+      `the full analysis is at <a href="../catalogue-analysis/" style="color:var(--vc-cerulean)">the catalogue, analyzed</a>.</div>`;
+    return;
+  }
+  const total = D.total_pieces, C = D.cadence, W = D.wc_stats, B = S.beat_shift;
+  const ty = n => { const r = D.by_type.find(x=>x[0]===n); return r ? r[1] : 0; };
+  const beat = pre => B.beats.find(b=>b.beat.startsWith(pre)) || {early:0,late:0};
+  const cj = beat("Crime"), hall = beat("City government");
+  const argue = Math.round((ty("opinion/commentary")+ty("policy"))/total*100);
+  const meds = D.wc_by_year.map(r=>r.median);
+  const stance = (S.stance.buckets||[]).filter(b=>b.stance!=="Unsorted");
+  const presc = stance[0]||{}, diag = stance.find(b=>b.stance.startsWith("Diagnosing"))||{};
+
+  const cells = [
+    ["Pieces a week", C.current_per_week_outside_issues.toFixed(1),
+     `in ${C.current_year}, outside issues · ${C.by_year.find(r=>r.year==="2022").per_week_outside_issues.toFixed(1)} in 2022`],
+    ["Published", fmtN(total), `since ${D.meta.date_range[0].slice(0,4)} · ${fmtN(D.meta.total_authors)} bylines`],
+    ["Is argument", argue+"%", `${ty("data analysis")} data analyses · ${ty("q&a")} Q&As · ${ty("podcast")} podcasts`],
+    ["Median length", fmtN(W.median), `words · unmoved in five years`],
+    ["Wrote once", S.bench.wrote_once_share+"%", `${fmtN(S.bench.wrote_once)} of ${fmtN(S.bench.primary_bylines)} bylines`],
+    ["In an issue", S.curation.share+"%", `${fmtN(S.curation.in_curated_issue)} pieces · issues land in bursts`],
+  ];
+  const grid = `<div class="perfgrid">`+cells.map(([l,n,s])=>
+    `<div class="perfcell"><div class="pl" style="font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700">${l}</div>`+
+    `<div style="font-family:var(--vc-serif);font-weight:900;font-size:26px;line-height:1.1;margin-top:4px">${n}</div>`+
+    `<div style="font-size:10.5px;color:var(--vc-charcoal);margin-top:3px">${s}</div></div>`).join("")+`</div>`;
+
+  const findings = [
+    [`A criminal-justice journal became a city-policy journal`,
+     `Crime fell from ${Math.round(cj.early)}% of pieces in ${B.early_years[0]}–${B.early_years[B.early_years.length-1]} to ${Math.round(cj.late)}% in ${B.late_years.join("–")}, while city government went from ${Math.round(hall.early)}% to ${Math.round(hall.late)}% and is now the largest beat. The absolute criminal-justice count still rose — ${S.criminal_justice_cluster.by_year["2022"].cj} pieces in 2022 to ${S.criminal_justice_cluster.by_year["2025"].cj} in 2025 — so this is everything else growing, not a retreat.`],
+    [`The data operation points where the journal started, not where it moved`,
+     `Jails, crime and courts are the only beats where at least one piece in ten is a data analysis. The fastest-growing beats get the least of it.`],
+    [`The house form is enforced, not emergent`,
+     `The median has not left a ${Math.max(...meds)-Math.min(...meds)}-word band in five years (${meds.map(m=>fmtN(m)).join(", ")}) while output tripled and ${S.bench.wrote_once_share}% of bylines wrote exactly once. The length comes from the editing.`],
+    [`We publish prescriptions, not complaints`,
+     `Among pieces in curated issues, ${Math.round(presc.share_of_rubriced||0)}% sit in a "what to do" slot against ${Math.round(diag.share_of_rubriced||0)}% diagnosing what is broken — roughly two to one.`],
+    [`The bench is wide and shallow where we grew`,
+     `Founding beats are held by a small circle of returning experts; the beats added since are staffed by many hands writing once.`],
+  ];
+  const list = `<table class="tbl" style="margin-top:14px"><tbody>`+findings.map(([h,b])=>
+    `<tr><td style="padding:8px 6px"><div style="font-weight:700;font-size:12.5px">${h}</div>`+
+    `<div style="font-size:11.5px;color:var(--vc-charcoal);line-height:1.5;margin-top:2px">${b}</div></td></tr>`).join("")+`</tbody></table>`;
+
+  host.innerHTML = grid + list +
+    `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.5">`+
+    `Charts, beat-by-beat detail and full method: <a href="../catalogue-analysis/" style="color:var(--vc-cerulean);font-weight:700">the catalogue, analyzed</a> · `+
+    `searchable archive: <a href="../" style="color:var(--vc-cerulean);font-weight:700">the catalogue</a>. `+
+    `Cadence excludes any piece in an issue, numbered or named, and uses weeks elapsed rather than 52. `+
+    `Data pull ${esc((D.meta.generated_at||"").slice(0,10))}.</div>`;
+}
+
 function renderPieceBenchmarks(data){
   const host = $("#benchmarksBody"); if(!host) return;
   const bm = (data.ga4 || {}).piece_benchmarks || {};
