@@ -177,6 +177,44 @@ cadence = {
   "current_per_week_all": current["per_week_all"],
 }
 
+# 6c. Publishing rhythm — which day of the week, which month.
+# The cadence figures above are averages; this is what the average is made of.
+# Weekday is derived from the publication date, so it reflects when a piece went
+# live, not when it was written or edited.
+WD = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+MONTHS = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"]
+_wd, _mo = collections.Counter(), collections.Counter()
+for a in CAT:
+    ds = a.get("published_date")
+    if not ds:
+        continue
+    dt = datetime.date(*map(int, ds.split("-")))
+    _wd[WD[dt.weekday()]] += 1
+    _mo[dt.month] += 1
+_dated = sum(_wd.values())
+# Months are normalised per occurrence of that month in the covered period, so a
+# month the catalogue has lived through five times is not flattered over one it
+# has seen four times.
+_month_spans = collections.Counter()
+_m, _y0 = LAUNCH.month, LAUNCH.year
+while (_y0, _m) <= (PULL.year, PULL.month):
+    _month_spans[_m] += 1
+    _m = 1 if _m == 12 else _m + 1
+    if _m == 1:
+        _y0 += 1
+rhythm = {
+  "n_dated": _dated,
+  "by_weekday": [{"day": d, "pieces": _wd[d], "share": round(_wd[d]/_dated*100, 1)} for d in WD],
+  "top_day": max(WD, key=lambda d: _wd[d]),
+  "top_day_share": round(max(_wd.values())/_dated*100, 1),
+  "midweek_share": round(sum(_wd[d] for d in ("Tue", "Wed", "Thu"))/_dated*100, 1),
+  "weekend_pieces": _wd["Sat"] + _wd["Sun"],
+  "by_month": [{"month": MONTHS[m-1], "abbr": MONTHS[m-1][:3], "pieces": _mo[m],
+                "occurrences": _month_spans[m],
+                "per_occurrence": round(_mo[m]/_month_spans[m], 1)} for m in range(1, 13)],
+}
+
 # 7. Collaboration
 by_nauthors = collections.Counter(len(a.get("authors") or []) for a in CAT)
 
@@ -214,6 +252,7 @@ out = {
   "prolific": prolific,
   "n_issues": len(issues),
   "cadence": cadence,
+  "rhythm": rhythm,
 }
 (ROOT / "data/catalogue_analysis.json").write_text(json.dumps(out, indent=2))
 

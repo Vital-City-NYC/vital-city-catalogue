@@ -720,5 +720,135 @@
     "current_year": "2026",
     "current_per_week_outside_issues": 3.97,
     "current_per_week_all": 5.52
+  },
+  "rhythm": {
+    "n_dated": 883,
+    "by_weekday": [
+      {
+        "day": "Mon",
+        "pieces": 53,
+        "share": 6.0
+      },
+      {
+        "day": "Tue",
+        "pieces": 158,
+        "share": 17.9
+      },
+      {
+        "day": "Wed",
+        "pieces": 424,
+        "share": 48.0
+      },
+      {
+        "day": "Thu",
+        "pieces": 171,
+        "share": 19.4
+      },
+      {
+        "day": "Fri",
+        "pieces": 60,
+        "share": 6.8
+      },
+      {
+        "day": "Sat",
+        "pieces": 17,
+        "share": 1.9
+      },
+      {
+        "day": "Sun",
+        "pieces": 0,
+        "share": 0.0
+      }
+    ],
+    "top_day": "Wed",
+    "top_day_share": 48.0,
+    "midweek_share": 85.3,
+    "weekend_pieces": 17,
+    "by_month": [
+      {
+        "month": "January",
+        "abbr": "Jan",
+        "pieces": 68,
+        "occurrences": 5,
+        "per_occurrence": 13.6
+      },
+      {
+        "month": "February",
+        "abbr": "Feb",
+        "pieces": 72,
+        "occurrences": 5,
+        "per_occurrence": 14.4
+      },
+      {
+        "month": "March",
+        "abbr": "Mar",
+        "pieces": 134,
+        "occurrences": 5,
+        "per_occurrence": 26.8
+      },
+      {
+        "month": "April",
+        "abbr": "Apr",
+        "pieces": 54,
+        "occurrences": 5,
+        "per_occurrence": 10.8
+      },
+      {
+        "month": "May",
+        "abbr": "May",
+        "pieces": 68,
+        "occurrences": 5,
+        "per_occurrence": 13.6
+      },
+      {
+        "month": "June",
+        "abbr": "Jun",
+        "pieces": 112,
+        "occurrences": 5,
+        "per_occurrence": 22.4
+      },
+      {
+        "month": "July",
+        "abbr": "Jul",
+        "pieces": 47,
+        "occurrences": 5,
+        "per_occurrence": 9.4
+      },
+      {
+        "month": "August",
+        "abbr": "Aug",
+        "pieces": 27,
+        "occurrences": 5,
+        "per_occurrence": 5.4
+      },
+      {
+        "month": "September",
+        "abbr": "Sep",
+        "pieces": 95,
+        "occurrences": 5,
+        "per_occurrence": 19.0
+      },
+      {
+        "month": "October",
+        "abbr": "Oct",
+        "pieces": 98,
+        "occurrences": 5,
+        "per_occurrence": 19.6
+      },
+      {
+        "month": "November",
+        "abbr": "Nov",
+        "pieces": 49,
+        "occurrences": 5,
+        "per_occurrence": 9.8
+      },
+      {
+        "month": "December",
+        "abbr": "Dec",
+        "pieces": 59,
+        "occurrences": 5,
+        "per_occurrence": 11.8
+      }
+    ]
   }
 }

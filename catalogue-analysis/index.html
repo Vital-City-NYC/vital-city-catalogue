@@ -83,7 +83,7 @@
   <div class="sub">Every piece Vital City has published on vitalcitynyc.org &mdash; <b>what it was about, what job it did, who wrote it and how long it ran</b>. Built from the same Ghost content pull that powers the searchable <a href="../">catalogue</a>.</div>
 </header>
 <nav class="secnav">
-  <a href="#shape">The shape</a><a href="#subject">Subject</a><a href="#shift">How it moved</a>
+  <a href="#shape">The shape</a><a href="#rhythm">Rhythm</a><a href="#subject">Subject</a><a href="#shift">How it moved</a>
   <a href="#arc">The job</a>
   <a href="#length">Length</a><a href="#mayors">Headlines</a><a href="#treatment">Data treatment</a>
   <a href="#credentials">Who writes</a><a href="#bench">Who writes what</a>
@@ -220,7 +220,8 @@ function hbar(rows, {w=null,color=null,valSuffix=""}={}){
   const bw = w - LW - valW;
   let s=`<svg viewBox="0 0 ${w} ${h}" role="img">`;
   rows.forEach((r,i)=>{
-    const y=CH.padY+i*CH.row, len=Math.max(2,r.v/max*bw), c=r.c||color||"#217ebe";
+    // A true zero draws no bar at all — a minimum-width stub would imply "a few".
+    const y=CH.padY+i*CH.row, len=r.v===0?0:Math.max(2,r.v/max*bw), c=r.c||color||"#217ebe";
     s+=`<text class="bar-lbl" x="${LW-CH.gutter}" y="${y+CH.row/2+4}" text-anchor="end">${esc(fit(r.k,LW-CH.gutter))}</text>`;
     s+=`<rect x="${LW}" y="${y+(CH.row-CH.bar)/2}" width="${len}" height="${CH.bar}" rx="2" fill="${c}"><title>${esc(r.k)}: ${nf(r.v)}${valSuffix}</title></rect>`;
     s+=`<text class="bar-val" x="${LW+len+7}" y="${y+CH.row/2+4}">${nf(r.v)}${valSuffix}${r.pct!=null?' · '+r.pct+'%':''}</text>`;
@@ -339,6 +340,17 @@ function build(D,S){
         <div class="bd">The rolling cadence in ${CAD.current_year}, up from ${CAD.by_year.find(r=>r.year==="2022").per_week_outside_issues.toFixed(1)} a week in 2022 &mdash; a fifteenfold rise, faster than total output grew. Counting issue pieces too it is ${cy.per_week_all.toFixed(1)} a week, but issues arrive in bursts, not weekly, so that figure blends a steady stream with occasional 25-piece drops.</div></div>
     </div>
     <div class="src">Format vocabulary mirrors the sections vitalcitynyc.org uses; every call records its reason (see <a href="../methodology.md">methodology</a>). Word counts from Ghost, ${nf(D.wc_stats.n)} pieces with a count. Cadence uses weeks actually elapsed, not 52 &mdash; ${CAD.current_year} runs ${cy.weeks} weeks to the pull date. "Outside issues" excludes any piece carrying an internal issue tag, numbered or named: the named ones are issues named for their theme, not standing series, so counting only the numbered ones would overstate the standalone rate.</div></div>`;
+
+  // 0b. What the weekly average is actually made of.
+  const R=D.rhythm, hi=[...R.by_month].sort((a,b)=>b.per_occurrence-a.per_occurrence)[0],
+        lo=[...R.by_month].sort((a,b)=>a.per_occurrence-b.per_occurrence)[0],
+        wed=R.by_weekday.find(d=>d.day==="Wed");
+  html+=`<div class="card" id="rhythm"><h2>Everything happens on Wednesday</h2>
+    <div class="hint">Pieces by day of the week, across all ${nf(R.n_dated)} dated pieces. This is what the ${CAD.current_per_week_outside_issues.toFixed(1)}-a-week average above is made of.</div>
+    ${hbar(R.by_weekday.map(d=>({k:d.day,v:d.pieces,pct:Math.round(d.share),
+        c:d.day==="Wed"?"#050507":(d.day==="Tue"||d.day==="Thu")?"#5b6b7a":"#c7cad0"})))}
+    <div class="insight">Nearly half of everything Vital City has ever published &mdash; ${nf(wed.pieces)} pieces, ${wed.share}% &mdash; went live on a Wednesday, and ${Math.round(R.midweek_share)}% landed on a Tuesday, Wednesday or Thursday. The edges barely exist: ${R.by_weekday.find(d=>d.day==="Mon").pieces} pieces on a Monday, ${R.by_weekday.find(d=>d.day==="Fri").pieces} on a Friday, ${R.weekend_pieces} on a weekend in five years, and <b>not one piece, ever, on a Sunday</b>. A per-week average therefore describes an accounting period, not a publishing pattern: the real unit is a Wednesday, and the question for any given week is how many pieces it carries.</div>
+    <div class="src">Day of week from the publication date &mdash; when a piece went live, not when it was written. Seasonally the same lumpiness holds: normalising for how many times the catalogue has lived through each month, ${hi.month} averages ${hi.per_occurrence} pieces and ${lo.month} just ${lo.per_occurrence}, a ${Math.round(hi.per_occurrence/lo.per_occurrence)}-to-1 swing between the busiest and quietest months of the year.</div></div>`;
 
   // 1. The anchor chart: what the pieces are about.
   html+=`<div class="card" id="subject"><h2>What the pieces are about</h2>
