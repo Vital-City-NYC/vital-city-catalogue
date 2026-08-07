@@ -210,7 +210,7 @@
   },
   {
     "name": "Jamie Rubin",
-    "post_count": 33,
+    "post_count": 34,
     "slugs": [
       "a-housing-agenda-for-the-next-mayor",
       "adam-lubinsky-interview",
@@ -240,6 +240,7 @@
       "remembering-michael-ray-richardson",
       "renita-francois-interview-neighborhood-safety",
       "ross-barkan-on-whos-not-running-and-why",
+      "state-of-nyc-restaurant-industry-andrew-rigie",
       "the-myth-of-millionaire-flight",
       "vital-city-after-hours-a-conversation-with-ed-glaeser",
       "what-happens-if-adams-resigns",
@@ -451,6 +452,27 @@
     "website": null
   },
   {
+    "name": "Nicole Gelinas",
+    "post_count": 10,
+    "slugs": [
+      "movement-new-yorks-long-war-to-take-back-its-streets-from-the-car-excerpt",
+      "mta-new-app-subway-omny",
+      "new-york-stilled-life-feral-city-review",
+      "our-transit-tomorrow",
+      "saved-by-the-camera",
+      "serve-the-walkers",
+      "tables-and-chairs",
+      "the-four-forces-that-have-shaped-the-subway-system",
+      "times-square-good-times-square-bad",
+      "wall-street-future-nyc"
+    ],
+    "slug": "gelinas-nicole",
+    "bio": "is a Manhattan Institute senior fellow and author of the book \"Movement: New York’s Long War to Take Back Its Streets From the Car.\"",
+    "url": "https://www.vitalcitynyc.org/author/gelinas-nicole/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "David Schleicher",
     "post_count": 9,
     "slugs": [
@@ -487,26 +509,6 @@
     "slug": "hall-john",
     "bio": "is a retired police professional and a National Institute of Justice Law Enforcement Advancing Data and Science (LEADS) Scholar.",
     "url": "https://www.vitalcitynyc.org/author/hall-john/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Nicole Gelinas",
-    "post_count": 9,
-    "slugs": [
-      "movement-new-yorks-long-war-to-take-back-its-streets-from-the-car-excerpt",
-      "mta-new-app-subway-omny",
-      "new-york-stilled-life-feral-city-review",
-      "our-transit-tomorrow",
-      "saved-by-the-camera",
-      "serve-the-walkers",
-      "tables-and-chairs",
-      "the-four-forces-that-have-shaped-the-subway-system",
-      "times-square-good-times-square-bad"
-    ],
-    "slug": "gelinas-nicole",
-    "bio": "is a Manhattan Institute senior fellow and author of the book \"Movement: New York’s Long War to Take Back Its Streets From the Car.\"",
-    "url": "https://www.vitalcitynyc.org/author/gelinas-nicole/",
     "twitter": null,
     "website": null
   },
@@ -710,6 +712,21 @@
     "slug": "norman-sara",
     "bio": "is the principal in the Law Offices of Sara Norman, located in San Francisco, California. Previously, she served as deputy director of the Prison Law Office, where she managed a nonprofit devoted to class-action system reform litigation.",
     "url": "https://www.vitalcitynyc.org/author/norman-sara/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Carol Kellermann",
+    "post_count": 4,
+    "slugs": [
+      "a-budget-crash-course-for-zohran-mamdani",
+      "nyc-rainy-day-fund-improvements-mamdani",
+      "six-meaningful-long-term-city-budget-cuts",
+      "tough-budget-choices-ahead-for-zohran-mamdani"
+    ],
+    "slug": "kellermann-carol",
+    "bio": "is a long-time civic leader with experience in city government and as chief executive of a number of nonprofit organizations, including the Citizens Budget Commission, The September 11th Fund and Learning Leaders.",
+    "url": "https://www.vitalcitynyc.org/author/kellermann-carol/",
     "twitter": null,
     "website": null
   },
@@ -1054,20 +1071,6 @@
     "website": null
   },
   {
-    "name": "Sherry Glied",
-    "post_count": 3,
-    "slugs": [
-      "mamdani-affordability-conundrum-nyc",
-      "the-hubris-of-social-scientists",
-      "why-it-takes-four-new-housing-units-to-get-one-person-off-the-street"
-    ],
-    "slug": "glied-sherry",
-    "bio": "is a professor at Robert F. Wagner Graduate School of Public Service, and was dean of the school from 2013 to 2025.",
-    "url": "https://www.vitalcitynyc.org/author/glied-sherry/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Yonah Freemark",
     "post_count": 3,
     "slugs": [
@@ -1162,20 +1165,6 @@
     "slug": "schneider-benjamin",
     "bio": "is a freelance journalist and Bloomberg CityLab contributor currently and author of the recently published book, \"The Unfinished Metropolis: Igniting the City-Building Revolution.\"",
     "url": "https://www.vitalcitynyc.org/author/schneider-benjamin/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Carol Kellermann",
-    "post_count": 3,
-    "slugs": [
-      "a-budget-crash-course-for-zohran-mamdani",
-      "six-meaningful-long-term-city-budget-cuts",
-      "tough-budget-choices-ahead-for-zohran-mamdani"
-    ],
-    "slug": "kellermann-carol",
-    "bio": "is a long-time civic leader with experience in city government and as chief executive of a number of nonprofit organizations, including the Citizens Budget Commission, The September 11th Fund and Learning Leaders.",
-    "url": "https://www.vitalcitynyc.org/author/kellermann-carol/",
     "twitter": null,
     "website": null
   },
@@ -1425,14 +1414,14 @@
     "website": null
   },
   {
-    "name": "Tal Roded",
+    "name": "Pascale Mevs Fitzgerald",
     "post_count": 2,
     "slugs": [
-      "nyc-job-quality-problem"
+      "nyc-workforce-development-wealth-gap"
     ],
-    "slug": "roded-tal",
-    "bio": "is a data scientist and author of the public policy-focused substack NYCuriosity. He currently serves on Manhattan Community Board 3.",
-    "url": "https://www.vitalcitynyc.org/author/roded-tal/",
+    "slug": "fitzgerald-pascale-mevs",
+    "bio": "is an education and workforce professional in pursuit of her Ph.D. at Columbia Teachers College.",
+    "url": "https://www.vitalcitynyc.org/author/fitzgerald-pascale-mevs/",
     "twitter": null,
     "website": null
   },
@@ -1537,6 +1526,19 @@
     "slug": "bloomfield-david",
     "bio": "is a professor of education leadership, law and policy at Brooklyn College and The CUNY Graduate Center. He was general counsel to the New York City Board of Education prior to mayoral control.",
     "url": "https://www.vitalcitynyc.org/author/bloomfield-david/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Sherry Glied",
+    "post_count": 2,
+    "slugs": [
+      "the-hubris-of-social-scientists",
+      "why-it-takes-four-new-housing-units-to-get-one-person-off-the-street"
+    ],
+    "slug": "glied-sherry",
+    "bio": "is a professor at Robert F. Wagner Graduate School of Public Service, and was dean of the school from 2013 to 2025.",
+    "url": "https://www.vitalcitynyc.org/author/glied-sherry/",
     "twitter": null,
     "website": null
   },
@@ -2347,14 +2349,26 @@
     "website": null
   },
   {
+    "name": "Rebecca Gale",
+    "post_count": 1,
+    "slugs": [
+      "childcare-needs-funding-stream-mamdani-nyc"
+    ],
+    "slug": "gale-rebecca",
+    "bio": "is a staff writer at the Better Life Lab at New America, where she covers childcare. ",
+    "url": "https://www.vitalcitynyc.org/author/gale-rebecca/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Michael Sedillo",
     "post_count": 1,
     "slugs": [
       "nyc-nonprofit-contracting-reform"
     ],
-    "slug": "michael",
+    "slug": "sedillo-michael",
     "bio": "is the former executive director of the New York City Mayor's Office of Nonprofit Services.",
-    "url": "https://www.vitalcitynyc.org/author/michael/",
+    "url": "https://www.vitalcitynyc.org/author/sedillo-michael/",
     "twitter": null,
     "website": null
   },
@@ -2707,18 +2721,6 @@
     "website": null
   },
   {
-    "name": "Pascale Mevs Fitzgerald",
-    "post_count": 1,
-    "slugs": [
-      "nyc-workforce-development-wealth-gap"
-    ],
-    "slug": "fitzgerald-pascale-mevs",
-    "bio": "is an education and workforce professional in pursuit of her Ph.D. at Columbia Teachers College.",
-    "url": "https://www.vitalcitynyc.org/author/fitzgerald-pascale-mevs/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Bill Hammond",
     "post_count": 1,
     "slugs": [
@@ -2727,6 +2729,18 @@
     "slug": "hammond-bill",
     "bio": "is a senior fellow with the Empire Center for Public Policy.",
     "url": "https://www.vitalcitynyc.org/author/hammond-bill/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Tal Roded",
+    "post_count": 1,
+    "slugs": [
+      "nyc-job-quality-problem"
+    ],
+    "slug": "roded-tal",
+    "bio": "is a data scientist and author of the public policy-focused substack NYCuriosity. He currently serves on Manhattan Community Board 3.",
+    "url": "https://www.vitalcitynyc.org/author/roded-tal/",
     "twitter": null,
     "website": null
   },
@@ -3703,74 +3717,38 @@
     "website": null
   },
   {
-    "name": "Brian DeLay",
+    "name": "Kate Daugherty",
     "post_count": 1,
     "slugs": [
-      "gun-culture-then-and-now"
+      "what-we-know-and-dont-know-about-guns"
     ],
-    "slug": "delay-brian",
-    "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of “The Myth of Continuity in American Gun Culture,” and the 2025–2026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
-    "url": "https://www.vitalcitynyc.org/author/delay-brian/",
+    "slug": "daugherty-kate",
+    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
     "twitter": null,
     "website": null
   },
   {
-    "name": "Rosanna Smart",
+    "name": "Greg Lickenbrock",
     "post_count": 1,
     "slugs": [
-      "the-case-against-futility-in-gun-regulation"
+      "the-money-behind-mass-shootings"
     ],
-    "slug": "smart-rosanna",
-    "bio": "is a senior economist at RAND and codirector of the RAND Drug Policy Research Center and RAND Gun Policy in America initiative. She was selected as the 2025 Mark Kleiman Memorial Lecturer.",
-    "url": "https://www.vitalcitynyc.org/author/smart-rosanna/",
+    "slug": "lickenbrock-greg",
+    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
     "twitter": null,
     "website": null
   },
   {
-    "name": "Chris Marvin",
+    "name": "Daniel Semenza",
     "post_count": 1,
     "slugs": [
-      "licensed-to-kill-concealed-carry-training-course"
+      "the-80-20-rule-of-gun-supply"
     ],
-    "slug": "marvin-chris",
-    "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
-    "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Theodore Roosevelt IV",
-    "post_count": 1,
-    "slugs": [
-      "guns-my-family-and-me"
-    ],
-    "slug": "roosevelt-theodore-iv",
-    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Nina Vinik",
-    "post_count": 1,
-    "slugs": [
-      "breaking-through-with-the-next-generation-on-firearms"
-    ],
-    "slug": "vinik-nina",
-    "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
-    "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Samantha J. Simon",
-    "post_count": 1,
-    "slugs": [
-      "the-good-gun-owner"
-    ],
-    "slug": "simon-samantha-j",
-    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+    "slug": "semenza-daniel",
+    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
     "twitter": null,
     "website": null
   },
@@ -3811,38 +3789,74 @@
     "website": null
   },
   {
-    "name": "Greg Lickenbrock",
+    "name": "Samantha J. Simon",
     "post_count": 1,
     "slugs": [
-      "the-money-behind-mass-shootings"
+      "the-good-gun-owner"
     ],
-    "slug": "lickenbrock-greg",
-    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
+    "slug": "simon-samantha-j",
+    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
     "twitter": null,
     "website": null
   },
   {
-    "name": "Daniel Semenza",
+    "name": "Nina Vinik",
     "post_count": 1,
     "slugs": [
-      "the-80-20-rule-of-gun-supply"
+      "breaking-through-with-the-next-generation-on-firearms"
     ],
-    "slug": "semenza-daniel",
-    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
+    "slug": "vinik-nina",
+    "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
+    "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
     "twitter": null,
     "website": null
   },
   {
-    "name": "Kate Daugherty",
+    "name": "Theodore Roosevelt IV",
     "post_count": 1,
     "slugs": [
-      "what-we-know-and-dont-know-about-guns"
+      "guns-my-family-and-me"
     ],
-    "slug": "daugherty-kate",
-    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
-    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+    "slug": "roosevelt-theodore-iv",
+    "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
+    "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Chris Marvin",
+    "post_count": 1,
+    "slugs": [
+      "licensed-to-kill-concealed-carry-training-course"
+    ],
+    "slug": "marvin-chris",
+    "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
+    "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Rosanna Smart",
+    "post_count": 1,
+    "slugs": [
+      "the-case-against-futility-in-gun-regulation"
+    ],
+    "slug": "smart-rosanna",
+    "bio": "is a senior economist at RAND and codirector of the RAND Drug Policy Research Center and RAND Gun Policy in America initiative. She was selected as the 2025 Mark Kleiman Memorial Lecturer.",
+    "url": "https://www.vitalcitynyc.org/author/smart-rosanna/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Brian DeLay",
+    "post_count": 1,
+    "slugs": [
+      "gun-culture-then-and-now"
+    ],
+    "slug": "delay-brian",
+    "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of “The Myth of Continuity in American Gun Culture,” and the 2025–2026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
+    "url": "https://www.vitalcitynyc.org/author/delay-brian/",
     "twitter": null,
     "website": null
   },
@@ -4195,18 +4209,6 @@
     "website": null
   },
   {
-    "name": "Meryl Chertoff",
-    "post_count": 1,
-    "slugs": [
-      "trumps-executive-orders-have-cities-in-the-crosshairs"
-    ],
-    "slug": "chertoff-meryl",
-    "bio": "is adjunct professor of law at Georgetown University Law Center.",
-    "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Adam Cohen",
     "post_count": 1,
     "slugs": [
@@ -4215,6 +4217,18 @@
     "slug": "cohen-adam",
     "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
     "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Meryl Chertoff",
+    "post_count": 1,
+    "slugs": [
+      "trumps-executive-orders-have-cities-in-the-crosshairs"
+    ],
+    "slug": "chertoff-meryl",
+    "bio": "is adjunct professor of law at Georgetown University Law Center.",
+    "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
     "twitter": null,
     "website": null
   },

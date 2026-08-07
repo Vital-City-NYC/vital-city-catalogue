@@ -1,15 +1,40 @@
 {
-  "generated_at": "2026-08-06T11:51:11.270365+00:00",
+  "generated_at": "2026-08-07T00:50:17.774715+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 883,
-  "total_authors": 488,
+  "total_posts": 886,
+  "total_authors": 489,
   "total_issues": 29,
   "total_topics": 213,
   "date_range": [
     "2021-09-15",
-    "2026-08-05"
+    "2026-08-06"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 4,
+  "new_articles": [
+    {
+      "title": "Come Again Another Day?",
+      "url": "https://www.vitalcitynyc.org/nyc-rainy-day-fund-improvements-mamdani/",
+      "published_date": "2026-08-06",
+      "primary_author": "Carol Kellermann"
+    },
+    {
+      "title": "Complexity on the Menu: The State of New York City's Restaurant Industry",
+      "url": "https://www.vitalcitynyc.org/state-of-nyc-restaurant-industry-andrew-rigie/",
+      "published_date": "2026-08-06",
+      "primary_author": "Jamie Rubin"
+    },
+    {
+      "title": "Mamdani Is Hitting Many Milestones on Childcare. Except One.",
+      "url": "https://www.vitalcitynyc.org/childcare-needs-funding-stream-mamdani-nyc/",
+      "published_date": "2026-08-06",
+      "primary_author": "Rebecca Gale"
+    },
+    {
+      "title": "Whither Wall Street?",
+      "url": "https://www.vitalcitynyc.org/wall-street-future-nyc/",
+      "published_date": "2026-06-10",
+      "primary_author": "Nicole Gelinas"
+    }
+  ]
 }

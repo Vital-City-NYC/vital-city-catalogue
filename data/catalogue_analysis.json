@@ -1,27 +1,52 @@
 {
   "meta": {
-    "generated_at": "2026-08-06T11:51:11.270365+00:00",
+    "generated_at": "2026-08-07T00:50:17.774715+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 883,
-    "total_authors": 488,
+    "total_posts": 886,
+    "total_authors": 489,
     "total_issues": 29,
     "total_topics": 213,
     "date_range": [
       "2021-09-15",
-      "2026-08-05"
+      "2026-08-06"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 4,
+    "new_articles": [
+      {
+        "title": "Come Again Another Day?",
+        "url": "https://www.vitalcitynyc.org/nyc-rainy-day-fund-improvements-mamdani/",
+        "published_date": "2026-08-06",
+        "primary_author": "Carol Kellermann"
+      },
+      {
+        "title": "Complexity on the Menu: The State of New York City's Restaurant Industry",
+        "url": "https://www.vitalcitynyc.org/state-of-nyc-restaurant-industry-andrew-rigie/",
+        "published_date": "2026-08-06",
+        "primary_author": "Jamie Rubin"
+      },
+      {
+        "title": "Mamdani Is Hitting Many Milestones on Childcare. Except One.",
+        "url": "https://www.vitalcitynyc.org/childcare-needs-funding-stream-mamdani-nyc/",
+        "published_date": "2026-08-06",
+        "primary_author": "Rebecca Gale"
+      },
+      {
+        "title": "Whither Wall Street?",
+        "url": "https://www.vitalcitynyc.org/wall-street-future-nyc/",
+        "published_date": "2026-06-10",
+        "primary_author": "Nicole Gelinas"
+      }
+    ]
   },
-  "total_pieces": 883,
+  "total_pieces": 886,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 171
+    "2026": 174
   },
   "by_month": {
     "2021-09": 1,
@@ -77,12 +102,12 @@
     "2026-05": 22,
     "2026-06": 44,
     "2026-07": 22,
-    "2026-08": 2
+    "2026-08": 5
   },
   "by_type": [
     [
       "opinion/commentary",
-      713
+      716
     ],
     [
       "q&a",
@@ -90,11 +115,11 @@
     ],
     [
       "data analysis",
-      48
+      47
     ],
     [
       "podcast",
-      28
+      29
     ],
     [
       "something else",
@@ -124,7 +149,7 @@
     ],
     [
       "City Government",
-      133
+      134
     ],
     [
       "Government Operations",
@@ -160,7 +185,7 @@
     ],
     [
       "Economics",
-      52
+      53
     ],
     [
       "Jails",
@@ -183,20 +208,20 @@
       31
     ],
     [
+      "Education",
+      30
+    ],
+    [
       "data",
       30
     ],
     [
-      "Education",
+      "Budget",
       29
     ],
     [
       "Podcast",
-      28
-    ],
-    [
-      "Budget",
-      27
+      29
     ],
     [
       "Quality of Life",
@@ -219,15 +244,15 @@
   "by_credential_pieces": [
     [
       "Academic",
-      218
+      217
     ],
     [
       "Nonprofit / advocacy",
-      107
+      108
     ],
     [
       "Journalist / media",
-      98
+      99
     ],
     [
       "Vital City (institutional)",
@@ -243,11 +268,11 @@
     ],
     [
       "Business / private sector",
-      57
+      58
     ],
     [
       "Think tank / research institute",
-      50
+      51
     ],
     [
       "Architecture / design / planning",
@@ -281,7 +306,7 @@
     ],
     [
       "Journalist / media",
-      35
+      36
     ],
     [
       "Government / public official",
@@ -345,7 +370,7 @@
       "2023": 4,
       "2024": 20,
       "2025": 54,
-      "2026": 55
+      "2026": 56
     },
     "Government Operations": {
       "2022": 1,
@@ -383,24 +408,24 @@
     }
   },
   "wc_stats": {
-    "n": 874,
+    "n": 877,
     "median": 1618,
-    "mean": 1904,
+    "mean": 1901,
     "p90": 2841,
     "max": 30332,
-    "p10": 922,
-    "p25": 1272,
+    "p10": 916,
+    "p25": 1271,
     "p75": 2137,
-    "p95": 3860,
+    "p95": 3854,
     "no_count": 9,
-    "core_1000_2499": 641,
-    "under_500": 38,
+    "core_1000_2499": 643,
+    "under_500": 39,
     "over_5000": 24
   },
   "wc_buckets": [
     [
       "<500",
-      38
+      39
     ],
     [
       "500-999",
@@ -408,7 +433,7 @@
     ],
     [
       "1,000-1,999",
-      513
+      515
     ],
     [
       "2,000-2,999",
@@ -430,7 +455,7 @@
       {
         "floor": 0,
         "label": "0",
-        "n": 26
+        "n": 27
       },
       {
         "floor": 250,
@@ -450,12 +475,12 @@
       {
         "floor": 1000,
         "label": "1,000",
-        "n": 107
+        "n": 108
       },
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 140
+        "n": 141
       },
       {
         "floor": 1500,
@@ -470,12 +495,12 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 68
+        "n": 67
       },
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 60
+        "n": 61
       },
       {
         "floor": 2500,
@@ -539,15 +564,15 @@
     },
     {
       "year": "2026",
-      "n": 167,
-      "p25": 1271,
-      "median": 1690,
-      "p75": 2410,
+      "n": 170,
+      "p25": 1268,
+      "median": 1662,
+      "p75": 2394,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 748,
+    "1": 751,
     "2": 106,
     "3": 26,
     "4": 1,
@@ -572,7 +597,7 @@
     },
     {
       "name": "Jamie Rubin",
-      "posts": 33,
+      "posts": 34,
       "credential": "Business / private sector"
     },
     {
@@ -616,6 +641,11 @@
       "credential": "Academic"
     },
     {
+      "name": "Nicole Gelinas",
+      "posts": 10,
+      "credential": "Think tank / research institute"
+    },
+    {
       "name": "David Schleicher",
       "posts": 9,
       "credential": "Academic"
@@ -624,11 +654,6 @@
       "name": "John Hall",
       "posts": 9,
       "credential": "Government / public official"
-    },
-    {
-      "name": "Nicole Gelinas",
-      "posts": 9,
-      "credential": "Think tank / research institute"
     },
     {
       "name": "Bradley Tusk",
@@ -706,34 +731,34 @@
       },
       {
         "year": "2026",
-        "weeks": 31.0,
-        "pieces": 171,
-        "outside_issues": 123,
-        "per_week_all": 5.52,
-        "per_week_outside_issues": 3.97,
+        "weeks": 31.1,
+        "pieces": 174,
+        "outside_issues": 126,
+        "per_week_all": 5.59,
+        "per_week_outside_issues": 4.05,
         "partial": true
       }
     ],
-    "total_weeks": 255.0,
-    "all_time_per_week": 3.46,
-    "all_time_per_week_outside_issues": 1.58,
+    "total_weeks": 255.1,
+    "all_time_per_week": 3.47,
+    "all_time_per_week_outside_issues": 1.59,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.97,
-    "current_per_week_all": 5.52,
+    "current_per_week_outside_issues": 4.05,
+    "current_per_week_all": 5.59,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 480,
       "published_away_from_drop": 61,
       "share_of_issue_pieces": 12.7,
-      "current_year_strict": 3.97,
-      "current_year_loose": 4.13,
-      "all_time_strict": 1.58,
-      "all_time_loose": 1.82,
-      "all_time_all": 3.46
+      "current_year_strict": 4.05,
+      "current_year_loose": 4.21,
+      "all_time_strict": 1.59,
+      "all_time_loose": 1.83,
+      "all_time_all": 3.47
     }
   },
   "rhythm": {
-    "n_dated": 883,
+    "n_dated": 886,
     "by_weekday": [
       {
         "day": "Mon",
@@ -743,17 +768,17 @@
       {
         "day": "Tue",
         "pieces": 158,
-        "share": 17.9
+        "share": 17.8
       },
       {
         "day": "Wed",
         "pieces": 424,
-        "share": 48.0
+        "share": 47.9
       },
       {
         "day": "Thu",
-        "pieces": 171,
-        "share": 19.4
+        "pieces": 174,
+        "share": 19.6
       },
       {
         "day": "Fri",
@@ -772,7 +797,7 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 48.0,
+    "top_day_share": 47.9,
     "midweek_share": 85.3,
     "weekend_pieces": 17,
     "by_month": [
@@ -828,9 +853,9 @@
       {
         "month": "August",
         "abbr": "Aug",
-        "pieces": 27,
+        "pieces": 30,
         "occurrences": 5,
-        "per_occurrence": 5.4
+        "per_occurrence": 6.0
       },
       {
         "month": "September",

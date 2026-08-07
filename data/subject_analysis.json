@@ -1,6 +1,6 @@
 {
-  "generated_from": "2026-08-06T11:51:11.270365+00:00",
-  "total_pieces": 883,
+  "generated_from": "2026-08-07T00:50:17.774715+00:00",
+  "total_pieces": 886,
   "n_topics_normalized": 206,
   "topic_bucket_sizes": {
     "subjects": 135,
@@ -8,9 +8,9 @@
     "rubrics": 48
   },
   "topic_bucket_piece_volume": {
-    "subject_tag_applications": 1957,
-    "meta_tag_applications": 204,
-    "rubric_tag_applications": 292
+    "subject_tag_applications": 1965,
+    "meta_tag_applications": 205,
+    "rubric_tag_applications": 291
   },
   "rubrics_listed": [
     "Beyond False Simplicity",
@@ -90,13 +90,13 @@
   "beats": [
     {
       "beat": "City government & governance",
-      "pieces": 251,
+      "pieces": 252,
       "share": 28.4,
-      "median_words": 1591,
+      "median_words": 1588,
       "types": [
         [
           "opinion/commentary",
-          203
+          204
         ],
         [
           "q&a",
@@ -128,13 +128,13 @@
         "2023": 18,
         "2024": 58,
         "2025": 109,
-        "2026": 65
+        "2026": 66
       }
     },
     {
       "beat": "Crime & violence",
       "pieces": 235,
-      "share": 26.6,
+      "share": 26.5,
       "median_words": 1625,
       "types": [
         [
@@ -247,7 +247,7 @@
     {
       "beat": "Courts & prosecution",
       "pieces": 112,
-      "share": 12.7,
+      "share": 12.6,
       "median_words": 1595,
       "types": [
         [
@@ -320,21 +320,21 @@
     },
     {
       "beat": "Money, budgets & the economy",
-      "pieces": 82,
-      "share": 9.3,
-      "median_words": 1608,
+      "pieces": 85,
+      "share": 9.6,
+      "median_words": 1591,
       "types": [
         [
           "opinion/commentary",
-          69
+          72
         ],
         [
           "podcast",
-          8
+          9
         ],
         [
           "data analysis",
-          3
+          2
         ],
         [
           "something else",
@@ -349,7 +349,7 @@
         "2023": 7,
         "2024": 15,
         "2025": 22,
-        "2026": 38
+        "2026": 41
       }
     },
     {
@@ -562,13 +562,13 @@
     },
     {
       "beat": "Education & youth",
-      "pieces": 35,
-      "share": 4.0,
-      "median_words": 1635,
+      "pieces": 36,
+      "share": 4.1,
+      "median_words": 1620,
       "types": [
         [
           "opinion/commentary",
-          33
+          34
         ],
         [
           "data analysis",
@@ -583,13 +583,13 @@
         "2023": 5,
         "2024": 8,
         "2025": 14,
-        "2026": 8
+        "2026": 9
       }
     },
     {
       "beat": "State, federal & beyond NYC",
       "pieces": 34,
-      "share": 3.9,
+      "share": 3.8,
       "median_words": 1820,
       "types": [
         [
@@ -809,7 +809,7 @@
     {
       "a": "City government & governance",
       "b": "Money, budgets & the economy",
-      "pieces": 28
+      "pieces": 29
     },
     {
       "a": "Land use & the built city",
@@ -849,7 +849,7 @@
     {
       "a": "City government & governance",
       "b": "Education & youth",
-      "pieces": 18
+      "pieces": 19
     },
     {
       "a": "City government & governance",
@@ -1131,27 +1131,6 @@
       ]
     },
     {
-      "beat": "Education & youth",
-      "pieces": 35,
-      "distinct_bylines": 30,
-      "top5_share": 28.6,
-      "vital_city_share": 5.7,
-      "top3": [
-        {
-          "name": "Joseph P. Viteritti",
-          "pieces": 2
-        },
-        {
-          "name": "David Bloomfield",
-          "pieces": 2
-        },
-        {
-          "name": "Elliot Haspel",
-          "pieces": 2
-        }
-      ]
-    },
-    {
       "beat": "Race, gender & inequality",
       "pieces": 28,
       "distinct_bylines": 25,
@@ -1169,6 +1148,27 @@
         {
           "name": "Eli Dvorkin",
           "pieces": 1
+        }
+      ]
+    },
+    {
+      "beat": "Education & youth",
+      "pieces": 36,
+      "distinct_bylines": 31,
+      "top5_share": 27.8,
+      "vital_city_share": 5.6,
+      "top3": [
+        {
+          "name": "Joseph P. Viteritti",
+          "pieces": 2
+        },
+        {
+          "name": "David Bloomfield",
+          "pieces": 2
+        },
+        {
+          "name": "Elliot Haspel",
+          "pieces": 2
         }
       ]
     },
@@ -1195,31 +1195,31 @@
     },
     {
       "beat": "Money, budgets & the economy",
-      "pieces": 82,
-      "distinct_bylines": 61,
-      "top5_share": 25.6,
-      "vital_city_share": 4.9,
+      "pieces": 85,
+      "distinct_bylines": 62,
+      "top5_share": 27.1,
+      "vital_city_share": 4.7,
       "top3": [
         {
           "name": "Jamie Rubin",
-          "pieces": 8
+          "pieces": 9
         },
         {
-          "name": "Paul Francis",
+          "name": "Carol Kellermann",
           "pieces": 4
         },
         {
-          "name": "Vital City",
+          "name": "Paul Francis",
           "pieces": 4
         }
       ]
     },
     {
       "beat": "City government & governance",
-      "pieces": 251,
+      "pieces": 252,
       "distinct_bylines": 154,
-      "top5_share": 25.5,
-      "vital_city_share": 9.2,
+      "top5_share": 25.4,
+      "vital_city_share": 9.1,
       "top3": [
         {
           "name": "Vital City",
@@ -1389,9 +1389,9 @@
     },
     {
       "beat": "City government & governance",
-      "pieces": 251,
+      "pieces": 252,
       "with_history": 20,
-      "share": 8.0
+      "share": 7.9
     },
     {
       "beat": "Jails & incarceration",
@@ -1401,9 +1401,9 @@
     },
     {
       "beat": "Education & youth",
-      "pieces": 35,
+      "pieces": 36,
       "with_history": 2,
-      "share": 5.7
+      "share": 5.6
     },
     {
       "beat": "Homelessness & social services",
@@ -1437,7 +1437,7 @@
     },
     {
       "beat": "Money, budgets & the economy",
-      "pieces": 82,
+      "pieces": 85,
       "with_history": 2,
       "share": 2.4
     }
@@ -1450,7 +1450,7 @@
       "Jails & incarceration"
     ],
     "pieces": 378,
-    "share": 42.8,
+    "share": 42.7,
     "by_year": {
       "2021": {
         "cj": 0,
@@ -1479,37 +1479,37 @@
       },
       "2026": {
         "cj": 47,
-        "total": 171,
-        "share": 27.5
+        "total": 174,
+        "share": 27.0
       }
     }
   },
   "beats_per_piece": {
     "0": 17,
-    "1": 193,
+    "1": 195,
     "2": 544,
-    "3": 111,
+    "3": 112,
     "4": 15,
     "5": 3
   },
   "stance": {
-    "pieces_with_rubric": 291,
-    "coverage_share": 33.0,
+    "pieces_with_rubric": 290,
+    "coverage_share": 32.7,
     "buckets": [
       {
         "stance": "Prescribing a fix",
         "pieces": 116,
-        "share_of_rubriced": 39.9
+        "share_of_rubriced": 40.0
       },
       {
         "stance": "Framing the terms",
         "pieces": 69,
-        "share_of_rubriced": 23.7
+        "share_of_rubriced": 23.8
       },
       {
         "stance": "Diagnosing what's broken",
-        "pieces": 58,
-        "share_of_rubriced": 19.9
+        "pieces": 57,
+        "share_of_rubriced": 19.7
       },
       {
         "stance": "Looking ahead",
@@ -1599,8 +1599,8 @@
   },
   "curation": {
     "in_curated_issue": 480,
-    "share": 54.4,
-    "standalone": 403,
+    "share": 54.2,
+    "standalone": 406,
     "n_issues_and_series": 29,
     "named_series_top": [
       {
@@ -1664,11 +1664,11 @@
       "2026"
     ],
     "early_pieces": 200,
-    "late_pieces": 458,
+    "late_pieces": 461,
     "beats": [
       {
         "beat": "City government & governance",
-        "pieces": 251,
+        "pieces": 252,
         "early": 9.5,
         "late": 38.0,
         "change": 28.5
@@ -1677,36 +1677,36 @@
         "beat": "Politics & elections",
         "pieces": 64,
         "early": 0.5,
-        "late": 11.4,
-        "change": 10.9
+        "late": 11.3,
+        "change": 10.8
       },
       {
         "beat": "Housing",
         "pieces": 79,
         "early": 3.0,
-        "late": 13.5,
-        "change": 10.5
+        "late": 13.4,
+        "change": 10.4
       },
       {
         "beat": "Money, budgets & the economy",
-        "pieces": 82,
+        "pieces": 85,
         "early": 3.5,
-        "late": 13.1,
-        "change": 9.6
+        "late": 13.7,
+        "change": 10.2
       },
       {
         "beat": "Transportation",
         "pieces": 75,
         "early": 2.0,
-        "late": 9.0,
-        "change": 7.0
+        "late": 8.9,
+        "change": 6.9
       },
       {
         "beat": "State, federal & beyond NYC",
         "pieces": 34,
         "early": 2.0,
-        "late": 5.7,
-        "change": 3.7
+        "late": 5.6,
+        "change": 3.6
       },
       {
         "beat": "Technology",
@@ -1717,17 +1717,17 @@
       },
       {
         "beat": "Education & youth",
-        "pieces": 35,
+        "pieces": 36,
         "early": 2.5,
-        "late": 4.8,
-        "change": 2.3
+        "late": 5.0,
+        "change": 2.5
       },
       {
         "beat": "Land use & the built city",
         "pieces": 154,
         "early": 18.5,
-        "late": 17.9,
-        "change": -0.6
+        "late": 17.8,
+        "change": -0.7
       },
       {
         "beat": "Policing",
@@ -1740,15 +1740,15 @@
         "beat": "History & the long view",
         "pieces": 144,
         "early": 20.0,
-        "late": 14.2,
-        "change": -5.8
+        "late": 14.1,
+        "change": -5.9
       },
       {
         "beat": "Culture & city life",
         "pieces": 93,
         "early": 14.5,
-        "late": 8.3,
-        "change": -6.2
+        "late": 8.2,
+        "change": -6.3
       },
       {
         "beat": "Courts & prosecution",
@@ -1775,22 +1775,26 @@
         "beat": "Crime & violence",
         "pieces": 235,
         "early": 40.0,
-        "late": 19.7,
-        "change": -20.3
+        "late": 19.5,
+        "change": -20.5
       }
     ]
   },
   "named_in_headline": [
     {
       "name": "Mamdani",
-      "headlines": 53,
-      "share": 6.0,
+      "headlines": 54,
+      "share": 6.1,
       "by_year": {
         "2025": 29,
-        "2026": 24
+        "2026": 25
       },
       "first": "2025-06-16",
       "titles": [
+        {
+          "date": "2026-08-06",
+          "title": "Mamdani Is Hitting Many Milestones on Childcare. Except One."
+        },
         {
           "date": "2026-07-30",
           "title": "The Big Hole in Mamdani’s Housing Plan"
@@ -2131,11 +2135,11 @@
         },
         {
           "date": "2025-04-29",
-          "title": "Trump’s Executive Orders Have Cities in the Crosshairs"
+          "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days"
         },
         {
           "date": "2025-04-29",
-          "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days"
+          "title": "Trump’s Executive Orders Have Cities in the Crosshairs"
         },
         {
           "date": "2025-04-03",
@@ -2222,8 +2226,8 @@
   "headline_words": [
     {
       "word": "mamdani",
-      "headlines": 53,
-      "share": 6.0
+      "headlines": 54,
+      "share": 6.1
     },
     {
       "word": "crime",
@@ -2243,7 +2247,7 @@
     {
       "word": "conversation",
       "headlines": 27,
-      "share": 3.1
+      "share": 3.0
     },
     {
       "word": "public",
@@ -2276,6 +2280,11 @@
       "share": 2.0
     },
     {
+      "word": "state",
+      "headlines": 16,
+      "share": 1.8
+    },
+    {
       "word": "police",
       "headlines": 16,
       "share": 1.8
@@ -2292,11 +2301,6 @@
     },
     {
       "word": "rikers",
-      "headlines": 15,
-      "share": 1.7
-    },
-    {
-      "word": "state",
       "headlines": 15,
       "share": 1.7
     },
@@ -2422,17 +2426,17 @@
     }
   ],
   "headline_signal_test": {
-    "argument_pieces": 773,
-    "excluded_non_argument": 110,
-    "base_rate_data_analysis": 6.2,
-    "base_rate_opinion": 93.8,
+    "argument_pieces": 775,
+    "excluded_non_argument": 111,
+    "base_rate_data_analysis": 6.1,
+    "base_rate_opinion": 93.9,
     "rows": [
       {
         "signal": "analysis signal",
         "headlines": 45,
         "share_of_argument": 5.8,
         "pct_data_analysis": 48.9,
-        "lift_vs_base": 7.9
+        "lift_vs_base": 8.1
       },
       {
         "signal": "opinion signal",
@@ -2446,13 +2450,13 @@
         "headlines": 3,
         "share_of_argument": 0.4,
         "pct_data_analysis": 33.3,
-        "lift_vs_base": 5.4
+        "lift_vs_base": 5.5
       },
       {
         "signal": "no signal",
-        "headlines": 656,
+        "headlines": 658,
         "share_of_argument": 84.9,
-        "pct_data_analysis": 3.7,
+        "pct_data_analysis": 3.5,
         "lift_vs_base": 0.6
       }
     ],
@@ -2473,9 +2477,9 @@
     }
   },
   "bench": {
-    "primary_bylines": 407,
-    "wrote_once": 282,
-    "wrote_once_share": 69.3
+    "primary_bylines": 408,
+    "wrote_once": 283,
+    "wrote_once_share": 69.4
   },
   "history_only_pieces": 104,
   "pieces_with_no_subject_tag": {
