@@ -718,7 +718,7 @@
     "type_basis": "default",
     "published_date": "2026-07-02",
     "published_at": "2026-07-02T20:58:00.000+00:00",
-    "updated_at": "2026-07-22T18:19:35.000+00:00",
+    "updated_at": "2026-08-07T21:16:41.000+00:00",
     "primary_author": "Aaron Short",
     "authors": [
       "Aaron Short"
@@ -734,9 +734,9 @@
     "excerpt": "A concise catalog of his achievements and stumbles six months in",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/07/55357594016_1d9120afa6.jpg",
     "featured": false,
-    "visibility": "public",
-    "word_count": 2531,
-    "reading_minutes": 11,
+    "visibility": "members",
+    "word_count": 152,
+    "reading_minutes": 1,
     "id": "6a46cf2f53354f000134c12e"
   },
   {
@@ -775,7 +775,7 @@
     "type_basis": "default",
     "published_date": "2026-07-01",
     "published_at": "2026-07-01T13:10:29.000+00:00",
-    "updated_at": "2026-07-22T18:06:18.000+00:00",
+    "updated_at": "2026-08-07T20:44:18.000+00:00",
     "primary_author": "Bradley Tusk",
     "authors": [
       "Bradley Tusk"
@@ -791,9 +791,9 @@
     "excerpt": "One former city official's view of where he’s excelled and where he’s come up short",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/07/zohran-mamdani-pool-opening.jpg",
     "featured": true,
-    "visibility": "public",
-    "word_count": 2675,
-    "reading_minutes": 12,
+    "visibility": "members",
+    "word_count": 64,
+    "reading_minutes": 1,
     "id": "6a428648430d280001056e57"
   },
   {
@@ -27264,7 +27264,9 @@
     ],
     "topics": [
       "Report",
-      "data"
+      "data",
+      "Jails",
+      "Rikers"
     ],
     "issues": [],
     "issue_numbers": [],
