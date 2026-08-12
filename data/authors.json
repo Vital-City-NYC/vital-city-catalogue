@@ -1071,6 +1071,20 @@
     "website": null
   },
   {
+    "name": "Sherry Glied",
+    "post_count": 3,
+    "slugs": [
+      "mamdani-affordability-conundrum-nyc",
+      "the-hubris-of-social-scientists",
+      "why-it-takes-four-new-housing-units-to-get-one-person-off-the-street"
+    ],
+    "slug": "glied-sherry",
+    "bio": "is a professor at Robert F. Wagner Graduate School of Public Service, and was dean of the school from 2013 to 2025.",
+    "url": "https://www.vitalcitynyc.org/author/glied-sherry/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Yonah Freemark",
     "post_count": 3,
     "slugs": [
@@ -1414,18 +1428,6 @@
     "website": null
   },
   {
-    "name": "Pascale Mevs Fitzgerald",
-    "post_count": 2,
-    "slugs": [
-      "nyc-workforce-development-wealth-gap"
-    ],
-    "slug": "fitzgerald-pascale-mevs",
-    "bio": "is an education and workforce professional in pursuit of her Ph.D. at Columbia Teachers College.",
-    "url": "https://www.vitalcitynyc.org/author/fitzgerald-pascale-mevs/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Daniel DiSalvo",
     "post_count": 2,
     "slugs": [
@@ -1526,19 +1528,6 @@
     "slug": "bloomfield-david",
     "bio": "is a professor of education leadership, law and policy at Brooklyn College and The CUNY Graduate Center. He was general counsel to the New York City Board of Education prior to mayoral control.",
     "url": "https://www.vitalcitynyc.org/author/bloomfield-david/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Sherry Glied",
-    "post_count": 2,
-    "slugs": [
-      "the-hubris-of-social-scientists",
-      "why-it-takes-four-new-housing-units-to-get-one-person-off-the-street"
-    ],
-    "slug": "glied-sherry",
-    "bio": "is a professor at Robert F. Wagner Graduate School of Public Service, and was dean of the school from 2013 to 2025.",
-    "url": "https://www.vitalcitynyc.org/author/glied-sherry/",
     "twitter": null,
     "website": null
   },
@@ -2349,6 +2338,42 @@
     "website": null
   },
   {
+    "name": "Tahra Hoops",
+    "post_count": 1,
+    "slugs": [
+      "mamdani-housing-production-plan-achievements"
+    ],
+    "slug": "hoops-tahra",
+    "bio": "is the director of economic analysis at the Chamber of Progress, where she co-writes the Rebuild — a weekly blog focused on lowering the cost of living in blue states and cities.",
+    "url": "https://www.vitalcitynyc.org/author/hoops-tahra/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Megan Gafford",
+    "post_count": 1,
+    "slugs": [
+      "nyc-needs-new-ornamental-architecture"
+    ],
+    "slug": "gafford-megan",
+    "bio": "is an artist and writer based in New York City. In May 2026, she was awarded a New Aesthetics grant from Patrick Collison and Tyler Cowen to try to invent a new style of ornamental architecture.",
+    "url": "https://www.vitalcitynyc.org/author/gafford-megan/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Andrew Miller",
+    "post_count": 1,
+    "slugs": [
+      "waymo-driverless-ridehail-strategy-nyc"
+    ],
+    "slug": "miller-andrew",
+    "bio": "Andrew Miller is a consultant, advisor and speaker on innovative mobility and smart cities. He is a fellow at the Roots of Progress Institute and writes deep-dive articles on mobility, innovation, and transit for his Substack, \"Changing Lanes.\"",
+    "url": "https://www.vitalcitynyc.org/author/miller-andrew/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Rebecca Gale",
     "post_count": 1,
     "slugs": [
@@ -2717,6 +2742,18 @@
     "slug": "giles-jared",
     "bio": "is the vice president of STEAM Engine and founder of SquareOne, a consulting firm focused on education, workforce and economic development.",
     "url": "https://www.vitalcitynyc.org/author/giles-jared/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Pascale Mevs Fitzgerald",
+    "post_count": 1,
+    "slugs": [
+      "nyc-workforce-development-wealth-gap"
+    ],
+    "slug": "fitzgerald-pascale-mevs",
+    "bio": "is an education and workforce professional in pursuit of her Ph.D. at Columbia Teachers College.",
+    "url": "https://www.vitalcitynyc.org/author/fitzgerald-pascale-mevs/",
     "twitter": null,
     "website": null
   },
@@ -4209,18 +4246,6 @@
     "website": null
   },
   {
-    "name": "Adam Cohen",
-    "post_count": 1,
-    "slugs": [
-      "trumps-bizarro-new-deal"
-    ],
-    "slug": "cohen-adam",
-    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Meryl Chertoff",
     "post_count": 1,
     "slugs": [
@@ -4229,6 +4254,18 @@
     "slug": "chertoff-meryl",
     "bio": "is adjunct professor of law at Georgetown University Law Center.",
     "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Adam Cohen",
+    "post_count": 1,
+    "slugs": [
+      "trumps-bizarro-new-deal"
+    ],
+    "slug": "cohen-adam",
+    "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+    "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
     "twitter": null,
     "website": null
   },

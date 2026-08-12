@@ -1,27 +1,52 @@
 {
   "meta": {
-    "generated_at": "2026-08-12T11:22:51.212170+00:00",
+    "generated_at": "2026-08-12T23:18:26.424806+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 886,
-    "total_authors": 489,
+    "total_posts": 889,
+    "total_authors": 492,
     "total_issues": 29,
     "total_topics": 214,
     "date_range": [
       "2021-09-15",
-      "2026-08-06"
+      "2026-08-12"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 4,
+    "new_articles": [
+      {
+        "title": "Appreciate Mamdani\u2019s Housing Achievement",
+        "url": "https://www.vitalcitynyc.org/mamdani-housing-production-plan-achievements/",
+        "published_date": "2026-08-12",
+        "primary_author": "Tahra Hoops"
+      },
+      {
+        "title": "New York Needs New Ornamental Architecture",
+        "url": "https://www.vitalcitynyc.org/nyc-needs-new-ornamental-architecture/",
+        "published_date": "2026-08-12",
+        "primary_author": "Megan Gafford"
+      },
+      {
+        "title": "How To Make Driverless Ride-Hail Work in New York",
+        "url": "https://www.vitalcitynyc.org/waymo-driverless-ridehail-strategy-nyc/",
+        "published_date": "2026-08-12",
+        "primary_author": "Andrew Miller"
+      },
+      {
+        "title": "The Affordability Conundrum",
+        "url": "https://www.vitalcitynyc.org/mamdani-affordability-conundrum-nyc/",
+        "published_date": "2026-06-10",
+        "primary_author": "Sherry Glied"
+      }
+    ]
   },
-  "total_pieces": 886,
+  "total_pieces": 889,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 174
+    "2026": 177
   },
   "by_month": {
     "2021-09": 1,
@@ -77,12 +102,12 @@
     "2026-05": 22,
     "2026-06": 44,
     "2026-07": 22,
-    "2026-08": 5
+    "2026-08": 8
   },
   "by_type": [
     [
       "opinion/commentary",
-      716
+      719
     ],
     [
       "q&a",
@@ -124,7 +149,7 @@
     ],
     [
       "City Government",
-      134
+      136
     ],
     [
       "Government Operations",
@@ -132,15 +157,15 @@
     ],
     [
       "City Planning",
-      110
+      111
+    ],
+    [
+      "Housing",
+      79
     ],
     [
       "Justice",
       79
-    ],
-    [
-      "Housing",
-      78
     ],
     [
       "culture",
@@ -172,15 +197,15 @@
     ],
     [
       "Transit",
+      33
+    ],
+    [
+      "Technology",
       32
     ],
     [
       "Public Health",
       32
-    ],
-    [
-      "Technology",
-      31
     ],
     [
       "Education",
@@ -219,7 +244,7 @@
   "by_credential_pieces": [
     [
       "Academic",
-      217
+      218
     ],
     [
       "Nonprofit / advocacy",
@@ -235,7 +260,7 @@
     ],
     [
       "Other / unclassified",
-      91
+      92
     ],
     [
       "Government / public official",
@@ -251,7 +276,7 @@
     ],
     [
       "Architecture / design / planning",
-      29
+      30
     ],
     [
       "Legal practitioner",
@@ -273,7 +298,7 @@
     ],
     [
       "Other / unclassified",
-      103
+      105
     ],
     [
       "Nonprofit / advocacy",
@@ -301,7 +326,7 @@
     ],
     [
       "Architecture / design / planning",
-      14
+      15
     ],
     [
       "Unknown / no bio",
@@ -322,8 +347,8 @@
     "City Government",
     "Government Operations",
     "City Planning",
-    "Justice",
     "Housing",
+    "Justice",
     "culture"
   ],
   "topic_by_year": {
@@ -345,7 +370,7 @@
       "2023": 4,
       "2024": 20,
       "2025": 54,
-      "2026": 56
+      "2026": 58
     },
     "Government Operations": {
       "2022": 1,
@@ -359,7 +384,13 @@
       "2023": 17,
       "2024": 32,
       "2025": 39,
-      "2026": 16
+      "2026": 17
+    },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 37,
+      "2026": 26
     },
     "Justice": {
       "2022": 4,
@@ -367,12 +398,6 @@
       "2024": 27,
       "2025": 13,
       "2026": 9
-    },
-    "Housing": {
-      "2023": 5,
-      "2024": 11,
-      "2025": 37,
-      "2026": 25
     },
     "culture": {
       "2022": 4,
@@ -383,17 +408,17 @@
     }
   },
   "wc_stats": {
-    "n": 877,
-    "median": 1614,
-    "mean": 1895,
+    "n": 880,
+    "median": 1616,
+    "mean": 1897,
     "p90": 2841,
     "max": 30332,
     "p10": 909,
-    "p25": 1268,
-    "p75": 2127,
-    "p95": 3854,
+    "p25": 1269,
+    "p75": 2135,
+    "p95": 3849,
     "no_count": 9,
-    "core_1000_2499": 643,
+    "core_1000_2499": 646,
     "under_500": 41,
     "over_5000": 24
   },
@@ -408,11 +433,11 @@
     ],
     [
       "1,000-1,999",
-      515
+      516
     ],
     [
       "2,000-2,999",
-      182
+      184
     ],
     [
       "3,000-4,999",
@@ -460,7 +485,7 @@
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 161
+        "n": 162
       },
       {
         "floor": 1750,
@@ -475,7 +500,7 @@
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 61
+        "n": 63
       },
       {
         "floor": 2500,
@@ -539,15 +564,15 @@
     },
     {
       "year": "2026",
-      "n": 170,
-      "p25": 1242,
-      "median": 1630,
-      "p75": 2377,
+      "n": 173,
+      "p25": 1258,
+      "median": 1639,
+      "p75": 2384,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 751,
+    "1": 754,
     "2": 106,
     "3": 26,
     "4": 1,
@@ -706,34 +731,34 @@
       },
       {
         "year": "2026",
-        "weeks": 31.1,
-        "pieces": 174,
-        "outside_issues": 126,
-        "per_week_all": 5.59,
-        "per_week_outside_issues": 4.05,
+        "weeks": 32.0,
+        "pieces": 177,
+        "outside_issues": 129,
+        "per_week_all": 5.53,
+        "per_week_outside_issues": 4.03,
         "partial": true
       }
     ],
-    "total_weeks": 255.1,
+    "total_weeks": 256.0,
     "all_time_per_week": 3.47,
-    "all_time_per_week_outside_issues": 1.59,
+    "all_time_per_week_outside_issues": 1.6,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.05,
-    "current_per_week_all": 5.59,
+    "current_per_week_outside_issues": 4.03,
+    "current_per_week_all": 5.53,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 480,
       "published_away_from_drop": 61,
       "share_of_issue_pieces": 12.7,
-      "current_year_strict": 4.05,
-      "current_year_loose": 4.21,
-      "all_time_strict": 1.59,
+      "current_year_strict": 4.03,
+      "current_year_loose": 4.19,
+      "all_time_strict": 1.6,
       "all_time_loose": 1.83,
       "all_time_all": 3.47
     }
   },
   "rhythm": {
-    "n_dated": 886,
+    "n_dated": 889,
     "by_weekday": [
       {
         "day": "Mon",
@@ -747,8 +772,8 @@
       },
       {
         "day": "Wed",
-        "pieces": 424,
-        "share": 47.9
+        "pieces": 427,
+        "share": 48.0
       },
       {
         "day": "Thu",
@@ -758,7 +783,7 @@
       {
         "day": "Fri",
         "pieces": 60,
-        "share": 6.8
+        "share": 6.7
       },
       {
         "day": "Sat",
@@ -772,8 +797,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.9,
-    "midweek_share": 85.3,
+    "top_day_share": 48.0,
+    "midweek_share": 85.4,
     "weekend_pieces": 17,
     "by_month": [
       {
@@ -828,9 +853,9 @@
       {
         "month": "August",
         "abbr": "Aug",
-        "pieces": 30,
+        "pieces": 33,
         "occurrences": 5,
-        "per_occurrence": 6.0
+        "per_occurrence": 6.6
       },
       {
         "month": "September",

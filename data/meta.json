@@ -1,15 +1,40 @@
 {
-  "generated_at": "2026-08-12T11:22:51.212170+00:00",
+  "generated_at": "2026-08-12T23:18:26.424806+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 886,
-  "total_authors": 489,
+  "total_posts": 889,
+  "total_authors": 492,
   "total_issues": 29,
   "total_topics": 214,
   "date_range": [
     "2021-09-15",
-    "2026-08-06"
+    "2026-08-12"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 4,
+  "new_articles": [
+    {
+      "title": "Appreciate Mamdani’s Housing Achievement",
+      "url": "https://www.vitalcitynyc.org/mamdani-housing-production-plan-achievements/",
+      "published_date": "2026-08-12",
+      "primary_author": "Tahra Hoops"
+    },
+    {
+      "title": "New York Needs New Ornamental Architecture",
+      "url": "https://www.vitalcitynyc.org/nyc-needs-new-ornamental-architecture/",
+      "published_date": "2026-08-12",
+      "primary_author": "Megan Gafford"
+    },
+    {
+      "title": "How To Make Driverless Ride-Hail Work in New York",
+      "url": "https://www.vitalcitynyc.org/waymo-driverless-ridehail-strategy-nyc/",
+      "published_date": "2026-08-12",
+      "primary_author": "Andrew Miller"
+    },
+    {
+      "title": "The Affordability Conundrum",
+      "url": "https://www.vitalcitynyc.org/mamdani-affordability-conundrum-nyc/",
+      "published_date": "2026-06-10",
+      "primary_author": "Sherry Glied"
+    }
+  ]
 }
