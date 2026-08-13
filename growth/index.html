@@ -470,6 +470,33 @@
   html.dark .rptbar input[type=date],html.dark .btn-rpt,html.dark .qchip{background:#26282c;color:#e8e8ea;border-color:#3a3d42}
   html.dark .btn-rpt.primary{background:#e8e8ea;color:#050507}
   html.dark .rpt-caveat{background:#26282c;border-left-color:#3a3d42}
+
+  /* "What New York is Googling" — commissioning view */
+  .tsHead{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--vc-cloud);
+          border:1px solid var(--vc-cloud);margin-bottom:12px}
+  .tsStat{background:var(--vc-white);padding:11px 13px}
+  .tsStat .v{font-weight:900;font-size:22px;line-height:1.1;font-variant-numeric:tabular-nums}
+  .tsStat .k{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin-top:3px}
+  .tsStat .f{font-size:11px;color:var(--vc-charcoal);margin-top:3px}
+  .tsControls{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+  .tsPills{display:flex;gap:5px;flex-wrap:wrap}
+  .tsPill{background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:20px;
+          padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;color:var(--vc-charcoal);
+          font-family:inherit}
+  .tsPill:hover{border-color:var(--vc-charcoal)}
+  .tsPill.on{background:var(--vc-black);border-color:var(--vc-black);color:#fff}
+  .sbadge{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.05em;
+          padding:2px 5px;border-radius:3px;margin-right:5px;vertical-align:1px;white-space:nowrap}
+  .s-gap{background:#c8102e;color:#fff}
+  .s-weak{background:var(--vc-orange);color:#fff}
+  .s-ok{background:var(--vc-cloud);color:var(--vc-charcoal)}
+  .s-nav{background:transparent;color:var(--vc-cloud);border:1px solid var(--vc-cloud)}
+  tr.ts-nav{opacity:.55}
+  @media(max-width:700px){.tsHead{grid-template-columns:1fr}}
+  html.dark .tsStat{background:#212329}
+  html.dark .tsPill{background:#212329;border-color:#3a3d45;color:#c9ccd2}
+  html.dark .tsPill.on{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  html.dark .s-ok{background:#3a3d45;color:#c9ccd2}
 </style>
 </head>
 <body>
@@ -3935,50 +3962,121 @@ function renderTraffic(data){
 }
 
 // Search Console — how people find Vital City on Google. Totals + top queries.
-// What New York is Googling — top NYC politics/policy searches this year,
-// whether or not they reach Vital City. Impression-ranked from Search Console
-// (the broadest free demand signal), with a live filter box.
+// What New York is Googling — reframed around the editorial question: what
+// should we commission? Raw impressions answer "what is popular"; they do not
+// answer "where are we losing readers we could have had". So the default sort
+// is estimated MISSED clicks — demand we are shown for and failing to convert.
+//
+// Expected click-through by ranking position (rough industry curve). Used only
+// to size the gap; it is a yardstick, not a promise.
+function expCTR(pos){
+  return pos<=1.5?28: pos<=2.5?15: pos<=3.5?11: pos<=5?8: pos<=7?5: pos<=10?3: 1.5;
+}
+// Navigational searches ("new york", "nyc") have no editorial intent — nobody
+// commissions a piece to answer them. Flagged rather than hidden.
+const NAV_Q = /^(new york|new york city|nyc|manhattan|brooklyn|queens|the bronx)$/i;
+function searchRows(rows){
+  return rows.map(r=>{
+    const exp = expCTR(r.position);
+    const missed = Math.max(0, Math.round((exp - r.ctr)/100 * r.impressions));
+    const nav = NAV_Q.test((r.query||"").trim());
+    // Three editorial states, because each implies a different action.
+    const state = nav ? "nav"
+      : !r.piece ? "gap"
+      : (r.ctr < exp*0.45 && r.impressions >= 3000) ? "weak"
+      : "ok";
+    return {...r, exp, missed, state, nav};
+  });
+}
 function renderTopSearches(data){
   const host = $("#topSearchesBody"); if(!host) return;
   const gsc = data.search_console || {};
-  const rows = gsc.topic_searches || [];
+  const raw = gsc.topic_searches || [];
   if(!gsc.available){
     host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.55">Connect Search Console to populate this &mdash; see the How it works page.</div>`;
     return;
   }
-  if(!rows.length){
+  if(!raw.length){
     host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal)">No NYC politics or policy searches surfaced for this year yet.</div>`;
     return;
   }
   const yr = (gsc.topic_search_start||'').slice(0,4) || 'this year';
-  const rowHTML = r => `<tr>
-    <td>${esc(r.query)}</td>
+  const asOf = gsc.as_of ? ` &middot; data through ${esc(gsc.as_of)}` : "";
+  const rows = searchRows(raw);
+  const n = st => rows.filter(r=>r.state===st).length;
+  const sum = (list,k) => list.reduce((t,r)=>t+(r[k]||0),0);
+  const gaps = rows.filter(r=>r.state==="gap"), weaks = rows.filter(r=>r.state==="weak");
+
+  const badge = r =>
+      r.state==="gap"  ? `<span class="sbadge s-gap" title="No Vital City piece matched this search. Real demand, nothing answering it.">COMMISSION</span>`
+    : r.state==="weak" ? `<span class="sbadge s-weak" title="A piece ranks for this but earns far fewer clicks than its position should. The page is not answering the question people are asking.">REWORK</span>`
+    : r.state==="nav"  ? `<span class="sbadge s-nav" title="Navigational search with no editorial intent — nobody commissions a piece for this.">NAVIGATIONAL</span>`
+    :                    `<span class="sbadge s-ok" title="Ranking and converting about as well as this position should.">WORKING</span>`;
+
+  const rowHTML = r => `<tr class="ts-${r.state}">
+    <td>${badge(r)} ${esc(r.query)}</td>
     <td class="num">${fmtN(r.impressions)}</td>
-    <td class="num">${r.position}</td>
+    <td class="num">${fmtN(r.clicks)}</td>
+    <td class="num">${r.ctr.toFixed(1)}%</td>
+    <td class="num">${r.position.toFixed(1)}</td>
+    <td class="num"${r.missed>=500?' style="font-weight:800"':''} title="Roughly how many extra clicks a page at position ${r.position.toFixed(1)} would typically earn (~${r.exp}% click-through) minus what this actually earns (${r.ctr.toFixed(1)}%). An estimate of the size of the gap, not a forecast.">${r.missed>=50?"~"+fmtN(r.missed):"&mdash;"}</td>
     <td>${r.piece
         ? `<a href="${esc(r.piece.url)}" target="_blank" rel="noopener">${esc(r.piece.title)}</a>`
-        : `<span class="warnflag" title="No clearly-matching Vital City piece — a possible story idea.">not yet covered</span>`}</td>
+        : `<span class="warnflag">nothing matched</span>`}</td>
   </tr>`;
+
   host.innerHTML = `
-    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:10px">The searches New Yorkers actually run about city politics and policy in ${yr}, ranked by how often each one happened &mdash; <b>whether or not anyone clicked through to Vital City</b>. A quick read on where public attention is going, and which of those questions Vital City has (or hasn&rsquo;t) answered.</div>
-    <input id="tsFilter" type="search" placeholder="Filter these searches &mdash; try &ldquo;housing&rdquo;, &ldquo;mamdani&rdquo;, &ldquo;rent&rdquo;&hellip;" autocomplete="off"
-      style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid var(--vc-cloud);border-radius:6px;font-family:inherit;font-size:13px;margin-bottom:10px;background:var(--vc-white);color:var(--vc-black)">
+    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:12px">What New Yorkers searched about city politics and policy in ${yr}${asOf}. Sorted by <b>the clicks we are missing</b> rather than raw popularity &mdash; a search we already answer well is not a commission, and a search nobody can find us for is.</div>
+    <div class="tsHead">
+      <div class="tsStat"><div class="v">${fmtN(sum(gaps,'impressions'))}</div><div class="k">Searches with no piece</div><div class="f">${n('gap')} quer${n('gap')===1?'y':'ies'} &middot; ~${fmtN(sum(gaps,'missed'))} clicks unclaimed</div></div>
+      <div class="tsStat"><div class="v">${fmtN(sum(weaks,'impressions'))}</div><div class="k">Covered but not converting</div><div class="f">${n('weak')} quer${n('weak')===1?'y':'ies'} &middot; ~${fmtN(sum(weaks,'missed'))} clicks unclaimed</div></div>
+      <div class="tsStat"><div class="v">${fmtN(sum(rows,'clicks'))}</div><div class="k">Clicks actually earned</div><div class="f">of ${fmtN(sum(rows,'impressions'))} times shown (${(100*sum(rows,'clicks')/sum(rows,'impressions')).toFixed(1)}%)</div></div>
+    </div>
+    <div class="tsControls">
+      <div class="tsPills">
+        <button class="tsPill on" data-f="all">All ${rows.length}</button>
+        <button class="tsPill" data-f="gap">Commission ${n('gap')}</button>
+        <button class="tsPill" data-f="weak">Rework ${n('weak')}</button>
+        <button class="tsPill" data-f="ok">Working ${n('ok')}</button>
+      </div>
+      <div class="tsPills">
+        <button class="tsPill sort on" data-s="missed">Sort: biggest gap</button>
+        <button class="tsPill sort" data-s="impressions">Sort: most searched</button>
+      </div>
+    </div>
+    <input id="tsFilter" type="search" placeholder="Filter these searches &mdash; try &ldquo;housing&rdquo;, &ldquo;mamdani&rdquo;, &ldquo;crime&rdquo;&hellip;" autocomplete="off"
+      style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid var(--vc-cloud);border-radius:6px;font-family:inherit;font-size:13px;margin:10px 0;background:var(--vc-white);color:var(--vc-black)">
     <div id="tsCount" style="font-size:11px;color:var(--vc-charcoal);margin-bottom:6px"></div>
     <table class="tbl" style="width:100%"><thead><tr>
       <th title="The words New Yorkers typed into Google.">Search</th>
-      <th class="num" title="How many times this search happened and a Vital City page appeared in the results this year (impressions) — the best free proxy for demand. See the note below.">Times shown</th>
-      <th class="num" title="Vital City's average ranking for this search. 1 = top of Google's first page; higher means buried further down.">Avg pos</th>
-      <th title="The Vital City piece that ranks for this search, if any. 'Not yet covered' means the automated match found no clear piece — a possible story idea.">On Vital City?</th>
+      <th class="num" title="Times a Vital City page appeared in the results for this search. The best free proxy for demand.">Shown</th>
+      <th class="num" title="Times someone actually clicked through to Vital City.">Clicks</th>
+      <th class="num" title="Clicks divided by times shown. The share of interested searchers we actually captured.">CTR</th>
+      <th class="num" title="Vital City's average ranking. 1 = top of page one.">Pos</th>
+      <th class="num" title="Estimated clicks we are missing: what a page at this ranking would typically earn, minus what it earns now. This is the column to commission against.">Gap</th>
+      <th title="The Vital City piece that ranks for this search, if the automated matcher found one.">Piece that ranks</th>
     </tr></thead><tbody id="tsBody"></tbody></table>
-    <div class="flagnote" style="margin-top:10px"><b>What this is &mdash; and isn&rsquo;t.</b> Source: Google Search Console, ${yr} to date. These are searches where a Vital City page appeared in Google&rsquo;s results at least once, ranked by impressions &mdash; the <b>broadest free read on demand, but not the entire universe of searches.</b> A term Vital City has never ranked for at all won&rsquo;t show up here; capturing those needs Google Keyword Planner (free, some setup) or a paid SEO tool. &ldquo;Times shown&rdquo; is not the same as a term&rsquo;s total Google search volume. NYC-politics/policy relevance is an automated keyword filter, so a stray entry may be off-topic.</div>`;
+    <div class="flagnote" style="margin-top:10px"><b>How to read this.</b> <b>COMMISSION</b> = real search demand with no Vital City piece matched. <b>REWORK</b> = a piece ranks but earns under half the clicks its position should, so it is not answering the question being asked. <b>Gap</b> is an estimate built from a standard click-through-by-position curve &mdash; a yardstick for sizing the opportunity, not a forecast. <b>Two cautions.</b> The piece matcher is automated: &ldquo;nothing matched&rdquo; can mean the match failed rather than the subject is uncovered, so check before commissioning &mdash; <i>mamdani approval rating</i> is marked uncovered yet earns thousands of clicks, which means something is ranking. And related searches are counted separately, so the several Mamdani variants below understate that topic&rsquo;s true combined demand. Source: Google Search Console, ${yr} to date; only searches Vital City already appears for, so a subject the site has never ranked for cannot show up here at all.</div>`;
+
   const inp = host.querySelector("#tsFilter"), tb = host.querySelector("#tsBody"), cnt = host.querySelector("#tsCount");
-  const draw = f => {
-    const list = f ? rows.filter(r => r.query.toLowerCase().includes(f)) : rows;
+  let filt="all", sortK="missed";
+  const draw = () => {
+    const f = (inp.value||"").toLowerCase().trim();
+    let list = rows.filter(r => filt==="all" ? true : r.state===filt);
+    if(f) list = list.filter(r => r.query.toLowerCase().includes(f));
+    list = list.slice().sort((x,y)=> (y[sortK]||0)-(x[sortK]||0));
     tb.innerHTML = list.map(rowHTML).join("");
-    cnt.textContent = `${list.length} search${list.length===1?'':'es'}${f?` matching “${f}”`:` this year, most-searched first`}`;
+    const label = filt==="gap"?"with nothing covering them":filt==="weak"?"ranking but not converting":filt==="ok"?"working as expected":"this year";
+    cnt.textContent = `${list.length} search${list.length===1?'':'es'} ${label}${f?` matching “${f}”`:``} · ${sortK==="missed"?"biggest gap first":"most searched first"}`;
   };
-  inp.addEventListener("input", () => draw(inp.value.toLowerCase().trim()));
-  draw("");
+  host.querySelectorAll(".tsPill[data-f]").forEach(b=>b.addEventListener("click",()=>{
+    filt=b.dataset.f; host.querySelectorAll(".tsPill[data-f]").forEach(x=>x.classList.toggle("on",x===b)); draw();
+  }));
+  host.querySelectorAll(".tsPill[data-s]").forEach(b=>b.addEventListener("click",()=>{
+    sortK=b.dataset.s; host.querySelectorAll(".tsPill[data-s]").forEach(x=>x.classList.toggle("on",x===b)); draw();
+  }));
+  inp.addEventListener("input", draw);
+  draw();
 }
 
 function renderSearchConsole(data){
