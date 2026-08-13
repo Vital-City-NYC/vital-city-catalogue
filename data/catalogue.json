@@ -264,7 +264,7 @@
     "type_basis": "default",
     "published_date": "2026-07-30",
     "published_at": "2026-07-30T14:21:00.000+00:00",
-    "updated_at": "2026-07-30T14:21:00.000+00:00",
+    "updated_at": "2026-08-13T15:26:01.000+00:00",
     "primary_author": "Paul Francis",
     "authors": [
       "Paul Francis"
@@ -280,9 +280,9 @@
     "excerpt": "How will 200,000 units of affordable housing be financed?",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/07/Cropping-Tool---2026-07-30T101235.743.png",
     "featured": false,
-    "visibility": "public",
-    "word_count": 3553,
-    "reading_minutes": 15,
+    "visibility": "members",
+    "word_count": 88,
+    "reading_minutes": 1,
     "id": "6a6b5c49d8aad900019c9d6a"
   },
   {
