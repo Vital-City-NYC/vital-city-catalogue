@@ -3980,10 +3980,10 @@ function searchRows(rows){
     const exp = expCTR(r.position);
     const missed = Math.max(0, Math.round((exp - r.ctr)/100 * r.impressions));
     const nav = NAV_Q.test((r.query||"").trim());
-    // Three editorial states, because each implies a different action.
+    // Descriptive states only — what the data shows, not what to do about it.
     const state = nav ? "nav"
-      : !r.piece ? "gap"
-      : (r.ctr < exp*0.45 && r.impressions >= 3000) ? "weak"
+      : !r.piece ? "nomatch"
+      : (r.ctr < exp*0.45 && r.impressions >= 3000) ? "under"
       : "ok";
     return {...r, exp, missed, state, nav};
   });
@@ -4005,13 +4005,14 @@ function renderTopSearches(data){
   const rows = searchRows(raw);
   const n = st => rows.filter(r=>r.state===st).length;
   const sum = (list,k) => list.reduce((t,r)=>t+(r[k]||0),0);
-  const gaps = rows.filter(r=>r.state==="gap"), weaks = rows.filter(r=>r.state==="weak");
+  const gaps = rows.filter(r=>r.state==="nomatch"), weaks = rows.filter(r=>r.state==="under");
 
+  // Badges state a fact about the row. What to do about it is an editorial call.
   const badge = r =>
-      r.state==="gap"  ? `<span class="sbadge s-gap" title="No Vital City piece matched this search. Real demand, nothing answering it.">COMMISSION</span>`
-    : r.state==="weak" ? `<span class="sbadge s-weak" title="A piece ranks for this but earns far fewer clicks than its position should. The page is not answering the question people are asking.">REWORK</span>`
-    : r.state==="nav"  ? `<span class="sbadge s-nav" title="Navigational search with no editorial intent — nobody commissions a piece for this.">NAVIGATIONAL</span>`
-    :                    `<span class="sbadge s-ok" title="Ranking and converting about as well as this position should.">WORKING</span>`;
+      r.state==="nomatch" ? `<span class="sbadge s-gap" title="The automated matcher found no Vital City piece for this search.">NO MATCH</span>`
+    : r.state==="under"   ? `<span class="sbadge s-weak" title="Click-through is under half what this ranking position typically earns.">UNDER PAR</span>`
+    : r.state==="nav"     ? `<span class="sbadge s-nav" title="Navigational search — someone typing a place name, not a question.">NAVIGATIONAL</span>`
+    :                       ``;
 
   const rowHTML = r => `<tr class="ts-${r.state}">
     <td>${badge(r)} ${esc(r.query)}</td>
@@ -4026,18 +4027,18 @@ function renderTopSearches(data){
   </tr>`;
 
   host.innerHTML = `
-    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:12px">What New Yorkers searched about city politics and policy in ${yr}${asOf}. Sorted by <b>the clicks we are missing</b> rather than raw popularity &mdash; a search we already answer well is not a commission, and a search nobody can find us for is.</div>
+    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-bottom:12px">What New Yorkers searched about city politics and policy in ${yr}${asOf}. Sorted by <b>the gap between the clicks each ranking should earn and what it earns</b>, rather than by raw popularity. Toggle to sort by volume instead.</div>
     <div class="tsHead">
-      <div class="tsStat"><div class="v">${fmtN(sum(gaps,'impressions'))}</div><div class="k">Searches with no piece</div><div class="f">${n('gap')} quer${n('gap')===1?'y':'ies'} &middot; ~${fmtN(sum(gaps,'missed'))} clicks unclaimed</div></div>
-      <div class="tsStat"><div class="v">${fmtN(sum(weaks,'impressions'))}</div><div class="k">Covered but not converting</div><div class="f">${n('weak')} quer${n('weak')===1?'y':'ies'} &middot; ~${fmtN(sum(weaks,'missed'))} clicks unclaimed</div></div>
+      <div class="tsStat"><div class="v">${fmtN(sum(gaps,'impressions'))}</div><div class="k">Shown for, no piece matched</div><div class="f">${n('nomatch')} quer${n('nomatch')===1?'y':'ies'} &middot; ~${fmtN(sum(gaps,'missed'))} clicks short of par</div></div>
+      <div class="tsStat"><div class="v">${fmtN(sum(weaks,'impressions'))}</div><div class="k">Has a piece, under par</div><div class="f">${n('under')} quer${n('under')===1?'y':'ies'} &middot; ~${fmtN(sum(weaks,'missed'))} clicks short of par</div></div>
       <div class="tsStat"><div class="v">${fmtN(sum(rows,'clicks'))}</div><div class="k">Clicks actually earned</div><div class="f">of ${fmtN(sum(rows,'impressions'))} times shown (${(100*sum(rows,'clicks')/sum(rows,'impressions')).toFixed(1)}%)</div></div>
     </div>
     <div class="tsControls">
       <div class="tsPills">
         <button class="tsPill on" data-f="all">All ${rows.length}</button>
-        <button class="tsPill" data-f="gap">Commission ${n('gap')}</button>
-        <button class="tsPill" data-f="weak">Rework ${n('weak')}</button>
-        <button class="tsPill" data-f="ok">Working ${n('ok')}</button>
+        <button class="tsPill" data-f="nomatch">No piece matched ${n('nomatch')}</button>
+        <button class="tsPill" data-f="under">Under par ${n('under')}</button>
+        <button class="tsPill" data-f="ok">At or above par ${n('ok')}</button>
       </div>
       <div class="tsPills">
         <button class="tsPill sort on" data-s="missed">Sort: biggest gap</button>
@@ -4056,7 +4057,7 @@ function renderTopSearches(data){
       <th class="num" title="Estimated clicks we are missing: what a page at this ranking would typically earn, minus what it earns now. This is the column to commission against.">Gap</th>
       <th title="The Vital City piece that ranks for this search, if the automated matcher found one.">Piece that ranks</th>
     </tr></thead><tbody id="tsBody"></tbody></table>
-    <div class="flagnote" style="margin-top:10px"><b>How to read this.</b> <b>COMMISSION</b> = real search demand with no Vital City piece matched. <b>REWORK</b> = a piece ranks but earns under half the clicks its position should, so it is not answering the question being asked. <b>Gap</b> is an estimate built from a standard click-through-by-position curve &mdash; a yardstick for sizing the opportunity, not a forecast. <b>Two cautions.</b> The piece matcher is automated: &ldquo;nothing matched&rdquo; can mean the match failed rather than the subject is uncovered, so check before commissioning &mdash; <i>mamdani approval rating</i> is marked uncovered yet earns thousands of clicks, which means something is ranking. And related searches are counted separately, so the several Mamdani variants below understate that topic&rsquo;s true combined demand. Source: Google Search Console, ${yr} to date; only searches Vital City already appears for, so a subject the site has never ranked for cannot show up here at all.</div>`;
+    <div class="flagnote" style="margin-top:10px"><b>How to read this.</b> <b>NO MATCH</b> = the automated matcher found no Vital City piece for that search. <b>UNDER PAR</b> = a piece ranks but click-through is under half what that position typically earns. <b>Gap</b> is the estimated difference between the two, built from a standard click-through-by-position curve &mdash; a yardstick for sizing, not a forecast. These describe the data; what they are worth editorially is a separate judgment. <b>Two cautions.</b> The piece matcher is automated: &ldquo;nothing matched&rdquo; can mean the match failed rather than the subject is uncovered, so check before commissioning &mdash; <i>mamdani approval rating</i> is marked uncovered yet earns thousands of clicks, which means something is ranking. And related searches are counted separately, so the several Mamdani variants below understate that topic&rsquo;s true combined demand. Source: Google Search Console, ${yr} to date; only searches Vital City already appears for, so a subject the site has never ranked for cannot show up here at all.</div>`;
 
   const inp = host.querySelector("#tsFilter"), tb = host.querySelector("#tsBody"), cnt = host.querySelector("#tsCount");
   let filt="all", sortK="missed";
@@ -4066,7 +4067,7 @@ function renderTopSearches(data){
     if(f) list = list.filter(r => r.query.toLowerCase().includes(f));
     list = list.slice().sort((x,y)=> (y[sortK]||0)-(x[sortK]||0));
     tb.innerHTML = list.map(rowHTML).join("");
-    const label = filt==="gap"?"with nothing covering them":filt==="weak"?"ranking but not converting":filt==="ok"?"working as expected":"this year";
+    const label = filt==="nomatch"?"with no piece matched":filt==="under"?"under par for their ranking":filt==="ok"?"at or above par":"this year";
     cnt.textContent = `${list.length} search${list.length===1?'':'es'} ${label}${f?` matching “${f}”`:``} · ${sortK==="missed"?"biggest gap first":"most searched first"}`;
   };
   host.querySelectorAll(".tsPill[data-f]").forEach(b=>b.addEventListener("click",()=>{
