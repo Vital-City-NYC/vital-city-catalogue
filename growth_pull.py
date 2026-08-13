@@ -2154,6 +2154,21 @@ def pull_search_console():
         _N = len(_idx) or 1
         def _idf(t): return _math.log(1 + _N / _df.get(t, 0.5))
         _mmemo = {}
+        # url -> title from the catalogue index built for match_piece. Lets the
+        # Google-attributed pages carry a real headline instead of a slug.
+        _by_url = {}
+        for _s, _fl, _t, _u in _idx:
+            if _u:
+                _by_url[_u.rstrip("/")] = _t
+        def _title_for_url(u):
+            if not u: return ""
+            key = u.split("?")[0].split("#")[0].rstrip("/")
+            if key in _by_url: return _by_url[key]
+            slug = key.split("/")[-1]
+            for k, t in _by_url.items():
+                if k.rstrip("/").endswith("/" + slug): return t
+            return ""
+
         def match_piece(q):
             if q in _mmemo: return _mmemo[q]
             qt = _uni(q) | _bg(q); res = None
@@ -2248,6 +2263,63 @@ def pull_search_console():
             r"|co-?op city|nimby|upzon|migrant|asylum|outdoor dining|open streets"
             r"|specialized high school|gifted and talented|zoning|homeless|shelter"
             r"|precinct|stop and frisk|subway", re.I)
+        # Google's own query->page attribution. Far better than guessing from the
+        # title: match_piece() is a fuzzy text matcher and produced false
+        # "nothing matched" rows for queries that plainly do rank (e.g. "mamdani
+        # approval rating" -> /assessing-mamdani-six-months-in/). Used first;
+        # the fuzzy matcher stays only as a fallback where Google attributes
+        # nothing.
+        qpage = {}
+        try:
+            for r in query({"startDate": ytd_start, "endDate": end,
+                            "dimensions": ["query", "page"], "rowLimit": 25000}):
+                q, url = r["keys"][0], r["keys"][1]
+                c = int(r.get("clicks", 0)), int(r.get("impressions", 0))
+                # keep the best-performing page per query
+                if q not in qpage or c > qpage[q][1]:
+                    qpage[q] = (url, c)
+            log(f"  search console: query->page attribution for {len(qpage):,} queries")
+        except Exception as e:
+            log(f"  search console: query+page pull failed ({e}) — falling back to title matching")
+
+        def attributed(q):
+            """Google's attribution first, then the fuzzy title matcher."""
+            hit = qpage.get(q)
+            if hit:
+                url = hit[0]
+                t = _title_for_url(url)
+                return {"title": t or url.rstrip("/").split("/")[-1].replace("-", " ").title(),
+                        "url": url, "source": "google"}
+            m = match_piece(q)
+            if m:
+                m = dict(m); m["source"] = "title-match"
+            return m
+
+        # Per-query direction: first half of the year to date vs second half.
+        # Answers "is this search growing or fading", which a flat annual total
+        # cannot. Sampled on the top queries only, to keep the request small.
+        trend = {}
+        try:
+            drows = query({"startDate": ytd_start, "endDate": end,
+                           "dimensions": ["query", "date"], "rowLimit": 25000})
+            from collections import defaultdict as _dd
+            byq = _dd(list)
+            for r in drows:
+                byq[r["keys"][0]].append((r["keys"][1], int(r.get("impressions", 0))))
+            for q, pts in byq.items():
+                if len(pts) < 6:
+                    continue                      # too little history to call
+                pts.sort()
+                half = len(pts) // 2
+                a = sum(v for _, v in pts[:half]) or 0
+                b = sum(v for _, v in pts[half:]) or 0
+                if a < 50:
+                    continue                      # tiny base makes the ratio noise
+                trend[q] = round((b - a) / a * 100)
+            log(f"  search console: trend direction for {len(trend):,} queries")
+        except Exception as e:
+            log(f"  search console: query+date pull failed ({e})")
+
         try:
             yrows = query({"startDate": ytd_start, "endDate": end,
                            "dimensions": ["query"], "rowLimit": 5000})
@@ -2260,7 +2332,8 @@ def pull_search_console():
                               "impressions": int(r.get("impressions", 0)),
                               "ctr": round((r.get("ctr") or 0) * 100, 1),
                               "position": round(r.get("position") or 0, 1),
-                              "piece": match_piece(q)})
+                              "trend": trend.get(q),
+                              "piece": attributed(q)})
             topic.sort(key=lambda x: -x["impressions"])
             topic_searches = topic[:40]
             log(f"  search console: {len(topic_searches)} top NYC politics/policy searches YTD (from {len(yrows)} queries since {ytd_start})")
@@ -2268,10 +2341,42 @@ def pull_search_console():
             log(f"  search console: top-searches pull failed ({e})")
             topic_searches = []
 
+        # Channels beyond web search. Discover has no query dimension by design
+        # (nobody searched — Google pushed it), so it is reported by page.
+        channels = {}
+        d90 = (today - timedelta(days=93)).isoformat()
+        for key, body, label in (
+            ("discover", {"type": "discover"}, "Discover"),
+            ("google_news", {"type": "googleNews"}, "Google News"),
+            ("news_appearance", {"type": "news"}, "News search results"),
+        ):
+            try:
+                tot = query({"startDate": d90, "endDate": end, **body})
+                t0 = tot[0] if tot else {}
+                entry = {"label": label,
+                         "clicks": int(t0.get("clicks", 0)),
+                         "impressions": int(t0.get("impressions", 0)),
+                         "ctr": round((t0.get("ctr") or 0) * 100, 2)}
+                if key == "discover":
+                    entry["top_pages"] = [
+                        {"url": r["keys"][0], "title": _title_for_url(r["keys"][0]),
+                         "clicks": int(r.get("clicks", 0)),
+                         "impressions": int(r.get("impressions", 0))}
+                        for r in query({"startDate": d90, "endDate": end,
+                                        "dimensions": ["page"], "rowLimit": 15, **body})]
+                channels[key] = entry
+            except Exception as e:
+                log(f"  search console: {label} pull failed ({e})")
+                channels[key] = {"label": label, "unavailable": str(e)[:120]}
+        if channels:
+            log("  search console: channels " + ", ".join(
+                f"{v.get('label')}={v.get('clicks','n/a')}cl" for v in channels.values()))
+
         return {"available": True, "site": site, "window_days": 28,
                 "windows": windows, "windows_avail": WINDOWS,
                 "totals": default["totals"], "top_queries": default["top_queries"], "as_of": end,
-                "topic_searches": topic_searches, "topic_search_start": ytd_start}
+                "topic_searches": topic_searches, "topic_search_start": ytd_start,
+                "channels": channels, "channels_window_start": d90}
     except Exception as e:
         log(f"  search console pull failed: {e}")
         return {"available": False, "reason": f"Search Console configured but the pull failed: {e}", "setup": GSC_SETUP}

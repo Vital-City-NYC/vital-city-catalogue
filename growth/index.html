@@ -829,6 +829,11 @@
         <div id="topSearchesBody"></div>
       </div>
 
+      <div class="card" id="searchChannels">
+        <h2>Beyond web search &mdash; Discover and News <span class="hint">Google channels that do not show up in query reports · last 90 days</span></h2>
+        <div id="searchChannelsBody"></div>
+      </div>
+
       <div class="card" id="social">
         <h2>Social reach — X, LinkedIn, Bluesky, Instagram <span class="hint">followers + latest posts per platform · all free sources · coverage labeled per panel</span></h2>
         <div id="socialBody"></div>
@@ -1158,6 +1163,7 @@ function boot(data){
   renderTraffic(data);
   renderSearchConsole(data);
   renderTopSearches(data);
+  renderSearchChannels(data);
   renderBigPicture(data);
   renderAudienceQuality(data);
   // After every card has rendered, sprinkle clickable ⓘ icons on metric
@@ -3988,6 +3994,14 @@ function searchRows(rows){
     return {...r, exp, missed, state, nav};
   });
 }
+// Direction of demand. A flat annual total cannot tell a search that spiked in
+// February and died from one growing every week.
+function trendCell(t){
+  if(t===null || t===undefined) return `<span style="color:var(--vc-cloud)">&mdash;</span>`;
+  if(t >= 25)  return `<span style="color:var(--vc-green);font-weight:800" title="Impressions up ${t}% in the second half of the year to date versus the first.">&#9650; ${t}%</span>`;
+  if(t <= -25) return `<span style="color:#c8102e;font-weight:800" title="Impressions down ${Math.abs(t)}% in the second half of the year to date versus the first.">&#9660; ${Math.abs(t)}%</span>`;
+  return `<span style="color:var(--vc-charcoal)" title="Roughly flat across the year to date (${t>=0?'+':''}${t}%).">flat</span>`;
+}
 function renderTopSearches(data){
   const host = $("#topSearchesBody"); if(!host) return;
   const gsc = data.search_console || {};
@@ -4021,8 +4035,9 @@ function renderTopSearches(data){
     <td class="num">${r.ctr.toFixed(1)}%</td>
     <td class="num">${r.position.toFixed(1)}</td>
     <td class="num"${r.missed>=500?' style="font-weight:800"':''} title="Roughly how many extra clicks a page at position ${r.position.toFixed(1)} would typically earn (~${r.exp}% click-through) minus what this actually earns (${r.ctr.toFixed(1)}%). An estimate of the size of the gap, not a forecast.">${r.missed>=50?"~"+fmtN(r.missed):"&mdash;"}</td>
+    <td class="num">${trendCell(r.trend)}</td>
     <td>${r.piece
-        ? `<a href="${esc(r.piece.url)}" target="_blank" rel="noopener">${esc(r.piece.title)}</a>`
+        ? `<a href="${esc(r.piece.url)}" target="_blank" rel="noopener">${esc(r.piece.title)}</a>${r.piece.source==="title-match"?` <span class="tsSrc" title="Matched by comparing the search to piece titles — Google did not attribute this query to a page, so treat it as a guess.">guessed</span>`:``}`
         : `<span class="warnflag">nothing matched</span>`}</td>
   </tr>`;
 
@@ -4054,7 +4069,8 @@ function renderTopSearches(data){
       <th class="num" title="Times someone actually clicked through to Vital City.">Clicks</th>
       <th class="num" title="Clicks divided by times shown. The share of interested searchers we actually captured.">CTR</th>
       <th class="num" title="Vital City's average ranking. 1 = top of page one.">Pos</th>
-      <th class="num" title="Estimated clicks we are missing: what a page at this ranking would typically earn, minus what it earns now. This is the column to commission against.">Gap</th>
+      <th class="num" title="Estimated clicks we are missing: what a page at this ranking would typically earn, minus what it earns now.">Gap</th>
+      <th class="num" title="Whether this search is growing or fading — impressions in the second half of the year to date versus the first. Blank where there is too little history to say.">Trend</th>
       <th title="The Vital City piece that ranks for this search, if the automated matcher found one.">Piece that ranks</th>
     </tr></thead><tbody id="tsBody"></tbody></table>
     <div class="flagnote" style="margin-top:10px"><b>How to read this.</b> <b>NO MATCH</b> = the automated matcher found no Vital City piece for that search. <b>UNDER PAR</b> = a piece ranks but click-through is under half what that position typically earns. <b>Gap</b> is the estimated difference between the two, built from a standard click-through-by-position curve &mdash; a yardstick for sizing, not a forecast. These describe the data; what they are worth editorially is a separate judgment. <b>Two cautions.</b> The piece matcher is automated: &ldquo;nothing matched&rdquo; can mean the match failed rather than the subject is uncovered, so check before commissioning &mdash; <i>mamdani approval rating</i> is marked uncovered yet earns thousands of clicks, which means something is ranking. And related searches are counted separately, so the several Mamdani variants below understate that topic&rsquo;s true combined demand. Source: Google Search Console, ${yr} to date; only searches Vital City already appears for, so a subject the site has never ranked for cannot show up here at all.</div>`;
@@ -4078,6 +4094,39 @@ function renderTopSearches(data){
   }));
   inp.addEventListener("input", draw);
   draw();
+}
+
+// Discover, Google News and the news search appearance are separate report types
+// in Search Console. None of them appear in a query report, so all three were
+// invisible on this dashboard until now. Discover has no query dimension at all
+// — nobody searched, Google pushed the piece into a feed — so it is reported by
+// page, which makes it a read on what the feed picks up rather than what people
+// look for.
+function renderSearchChannels(data){
+  const host = $("#searchChannelsBody"); if(!host) return;
+  const gsc = data.search_console || {}, ch = gsc.channels;
+  if(!gsc.available || !ch){
+    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal)">Not pulled yet &mdash; runs with the next refresh.</div>`;
+    return;
+  }
+  const order = ["news_appearance","google_news","discover"];
+  const tiles = order.filter(k=>ch[k]).map(k=>{
+    const c = ch[k];
+    if(c.unavailable) return `<div class="tsStat"><div class="v" style="color:var(--vc-cloud)">&mdash;</div><div class="k">${esc(c.label)}</div><div class="f">${esc(c.unavailable)}</div></div>`;
+    return `<div class="tsStat"><div class="v">${fmtN(c.clicks)}</div><div class="k">${esc(c.label)} &middot; clicks</div><div class="f">${fmtN(c.impressions)} shown &middot; ${c.ctr}% click-through</div></div>`;
+  }).join("");
+  const d = ch.discover || {};
+  const pages = (d.top_pages||[]).filter(p=>p.clicks>0).slice(0,8);
+  host.innerHTML = `
+    <div style="font-size:12.5px;line-height:1.55;margin-bottom:10px">Three Google channels that never appear in a search-query report, so nothing else on this dashboard counts them. <b>News results</b> is the largest by a wide margin. <b>Discover</b> is Google pushing a piece into someone&rsquo;s feed &mdash; there is no search behind it, so it is reported by piece, not by query.</div>
+    <div class="tsHead">${tiles}</div>
+    ${pages.length ? `
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">What Discover picked up</div>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:6px">Which pieces the feed surfaced. Often not the same pieces search rewards &mdash; a separate signal about what travels.</div>
+      <table class="tbl" style="width:100%"><thead><tr><th>Piece</th><th class="num">Clicks</th><th class="num">Shown</th></tr></thead><tbody>
+      ${pages.map(p=>`<tr><td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title||p.url.replace(/^https?:\/\/[^/]+\//,"").replace(/\/$/,""))}</a></td><td class="num">${fmtN(p.clicks)}</td><td class="num">${fmtN(p.impressions)}</td></tr>`).join("")}
+      </tbody></table>` : ``}
+    <div class="flagnote" style="margin-top:10px">Source: Google Search Console, last 90 days${gsc.channels_window_start?` (from ${esc(gsc.channels_window_start)})`:``}. These are separate report types, so their clicks are <b>not</b> included in the web-search figures elsewhere on this page &mdash; do not add them together without checking for overlap between news results and ordinary web results.</div>`;
 }
 
 function renderSearchConsole(data){
