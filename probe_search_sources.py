@@ -25,7 +25,9 @@ USAGE
 import json, os, sys, base64, time, urllib.request, urllib.parse, urllib.error
 from datetime import date, timedelta
 
-SITE = "https://www.vitalcitynyc.org/"
+# Domain property, not URL-prefix. Using the URL-prefix form returns 403 for
+# everything — which is exactly what the first run of this probe did.
+SITE = os.environ.get("SC_SITE", "sc-domain:vitalcitynyc.org")
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122 Safari/537.36"}
 
