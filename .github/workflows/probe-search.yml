@@ -1,0 +1,27 @@
+# One-off, read-only probe of what search-demand data is available to us.
+#
+# Manual dispatch only — no schedule. It writes nothing and changes no dashboard
+# file; it asks Search Console and Google Trends what they will return and prints
+# the answers, so we build on evidence rather than on what the docs imply.
+name: Probe search data sources (read-only)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet cryptography
+      - name: Ask each source what it returns
+        env:
+          GA4_CREDS_JSON: ${{ secrets.GA4_CREDS_JSON }}
+        run: python3 probe_search_sources.py
