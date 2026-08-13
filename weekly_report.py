@@ -108,6 +108,117 @@ def newsletter_learnings(mc, run_date):
                        f"{round(100*gtot/tot)}% gave a reason): {parts}.")
     return out
 
+def week_trends(g, people, run_date, sign7, signP, unsub7, unsubP, gift_total, ts):
+    """Week-over-week movement. A weekly report should say which way things moved,
+    not just where they stand."""
+    L = ["## This week's trends",
+         "*Each number against the week before. Single weeks are noisy — treat direction as a hint, not a finding.*"]
+    def arrow(now, prev, unit="", invert=False):
+        if prev is None or now is None: return None
+        if not prev: return f"{now:,}{unit} (no prior-week baseline)"
+        pct = round((now - prev) / prev * 100)
+        good = (pct < 0) if invert else (pct > 0)
+        mark = "▲" if pct > 0 else ("▼" if pct < 0 else "•")
+        word = "" if pct == 0 else ("  ← better" if good and abs(pct) >= 15 else
+                                    "  ← worse" if (not good) and abs(pct) >= 15 else "")
+        return f"{now:,}{unit} {mark} {'+' if pct>0 else ''}{pct}% vs {prev:,}{unit}{word}"
+
+    rows = [("Signups", arrow(sign7, signP)),
+            ("Unsubscribes", arrow(unsub7, unsubP, invert=True)),
+            ("Net list change", arrow(sign7 - unsub7, signP - unsubP))]
+    comp = [t for t in ts if not t.get("partial")]
+    if len(comp) >= 2:
+        rows.append(("Visitors (last full week)", arrow(comp[-1]["visitors"], comp[-2]["visitors"])))
+        rows.append(("Page views", arrow(comp[-1].get("pageviews"), comp[-2].get("pageviews"))))
+    db = g.get("donorbox", {}); ds = db.get("daily_series", [])
+    def gsum(a, b):
+        return sum(x.get("amt", 0) for x in ds
+                   if x.get("d") and a <= datetime.strptime(x["d"][:10], "%Y-%m-%d").date() <= b)
+    gp = gsum(run_date - timedelta(days=13), run_date - timedelta(days=7))
+    if ds: rows.append(("Online giving", arrow(round(gift_total), round(gp), unit=" USD")))
+    for k, v in rows:
+        if v: L.append(f"- **{k}:** {v}")
+    L.append("")
+    return L
+
+
+def broader_trends(g, run_date):
+    """The multi-year arcs a single week cannot show. Everything here is computed
+    from the same feeds; the caveats are stated because each of these three
+    numbers is easy to misread."""
+    mc = g.get("mailchimp", {})
+    L = ["## The broader picture",
+         "*Longer arcs, for context. This is where a weekly number either matters or doesn't.*"]
+
+    # 1. Signups by calendar year.
+    ms = mc.get("monthly_signups", [])
+    if ms:
+        yr = {}
+        for r in ms: yr[r["month"][:4]] = yr.get(r["month"][:4], 0) + (r.get("new_signups") or 0)
+        ys = sorted(k for k in yr if k >= "2022")
+        L.append("**Signups by year:** " + " · ".join(f"{k} {yr[k]:,}" for k in ys))
+        cur, prev = ys[-1], ys[-2] if len(ys) > 1 else None
+        elapsed = run_date.timetuple().tm_yday / 365.0
+        pace = round(yr[cur] / elapsed) if elapsed > 0.05 else None
+        if pace: L.append(f"  - {cur} is on pace for about **{pace:,}** at the current rate.")
+        L.append("  - *2025 is inflated by a wave of bot signups, so treat it as a ceiling rather than a"
+                 " benchmark. The cleaner comparison for this year is 2024.*")
+        cum = [r for r in ms if r.get("cum_subs")]
+        if len(cum) >= 7:
+            a, b = cum[-7]["cum_subs"], cum[-1]["cum_subs"]
+            L.append(f"  - List size over six months: {a:,} → {b:,} ({b-a:+,}). "
+                     "A flat or falling total while signups continue means removals are keeping pace — "
+                     "expected while the list is being cleaned.")
+
+    # 2. Email engagement as the list scales. The most important slow trend here.
+    mcm = [r for r in mc.get("monthly_campaigns", []) if r.get("open_pct")]
+    if mcm:
+        byy = {}
+        for r in mcm: byy.setdefault(r["month"][:4], []).append(r)
+        L.append("")
+        L.append("**Email engagement as the list grew:**")
+        L.append("")
+        L.append("| Year | Avg open | Avg click | Avg recipients |")
+        L.append("|---|---|---|---|")
+        for k in sorted(byy):
+            v = byy[k]
+            L.append(f"| {k} | {st.mean([x['open_pct'] for x in v]):.1f}% | "
+                     f"{st.mean([x['click_pct'] for x in v]):.2f}% | "
+                     f"{round(st.mean([x.get('recipients') or 0 for x in v])):,} |")
+        ks = sorted(byy)
+        if len(ks) >= 2:
+            o_now = st.mean([x["open_pct"] for x in byy[ks[-1]]])
+            o_then = st.mean([x["open_pct"] for x in byy[ks[-2]]])
+            L.append(f"  - Open rate moved {o_then:.1f}% → {o_now:.1f}% year over year. "
+                     "Some of that is arithmetic: a bigger list is a less self-selected one. "
+                     "Worth watching is whether *click* rate follows, since clicks are the half "
+                     "Apple's automatic opens cannot inflate.")
+
+    # 3. Traffic trajectory over the available window.
+    ts = [t for t in (g.get("ghost_traffic", {}).get("traffic_series") or []) if not t.get("partial")]
+    if len(ts) >= 8:
+        half = len(ts) // 2
+        a = st.mean([t["visitors"] for t in ts[:half]]); b = st.mean([t["visitors"] for t in ts[half:]])
+        L.append("")
+        L.append(f"**Website traffic:** weekly visitors averaged {round(a):,} over the first half of the "
+                 f"last {len(ts)} weeks and {round(b):,} over the second "
+                 f"({round((b-a)/a*100):+d}%).")
+        L.append("  - Recent weeks: " + " → ".join(f"{round(t['visitors']/1000,1)}k" for t in ts[-8:]))
+
+    # 4. Giving is seasonal; a quiet month is not a decline.
+    dbm = g.get("donorbox", {}).get("monthly_series", [])
+    if len(dbm) >= 4:
+        top = max(dbm, key=lambda r: r.get("amt", 0))
+        tot = sum(r.get("amt", 0) for r in dbm)
+        L.append("")
+        L.append(f"**Online giving is concentrated:** {fmtUSD(top['amt'])} of {fmtUSD(tot)} "
+                 f"({round(100*top['amt']/tot)}%) came in {top['m']} alone.")
+        L.append("  - *Giving here is campaign-driven, so a quiet month between campaigns is the normal "
+                 "shape and not a downward trend.*")
+    L.append("")
+    return L
+
+
 def build(growth, people, run_date):
     g = growth; gt = g.get("ghost_traffic", {}); mc = g.get("mailchimp", {}); db = g.get("donorbox", {})
     l7 = (run_date - timedelta(days=6), run_date)
@@ -204,6 +315,7 @@ def build(growth, people, run_date):
                  f"{(last_complete or {}).get('visitors',0):,} visitors in the last full week, and "
                  f"{fmtUSD(gift_total)} in online gifts. Most-read piece: “{top1}.”\n")
 
+    lines += week_trends(g, people, run_date, sign7, signP, unsub7, unsubP, gift_total, ts)
     lines.append("## The 30-day trend")
     lines.append("*The longer view — last 30 days vs the 30 before. Less noise than a single week.*")
     lines.append(f"- **Signups:** {s30} ({chg(s30, s30p)} vs prior 30d) · **unsubscribes:** {u30} → **net {('+' if s30-u30>=0 else '')}{s30-u30}**")
@@ -212,6 +324,7 @@ def build(growth, people, run_date):
         lines.append(f"  - Weekly visitors, last 6 weeks: {' → '.join(traj)} *(last is partial)*")
     lines.append(f"- **Online giving:** {fmtUSD(give30)} from {give30c} gifts ({chg(give30, give30p)} vs prior 30d).")
     lines.append("*Note: one outsized week in either 30-day window can swing these deltas — the weekly trajectory above shows the real shape.*\n")
+    lines += broader_trends(g, run_date)
 
     lines.append("## Newsletter list")
     lines.append(f"- **New signups: {sign7}** — {delta(sign7, signP)}; ~{avg_wk}/week is the 8-week average.")
