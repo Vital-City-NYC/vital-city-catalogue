@@ -264,6 +264,7 @@ VARIANTS = {
              "mamdani-pied-a-terre-surcharge-tax-rollout-mistake-nyc",
              "nyc-economy-zohran-mamdani-efficiency",
              "nyc-joint-developments-public-land-housing",
+             "new-yorks-mamdani-ny-civil-service-system",
              "expert-advice-for-mamdanis-commission-on-government-efficiency"],
    "extra_spots": [{"t": "The housing issue — 29 pieces on how New York builds (Issue 14)",
                     "u": "https://www.vitalcitynyc.org/issue-14/", "a": "A full themed issue"}]},
