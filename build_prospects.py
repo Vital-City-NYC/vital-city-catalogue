@@ -367,7 +367,7 @@ def main():
           R("Government addresses", f"{len(gov):,}", f"{sum(1 for r in gov if 'nyc.gov' in dom(r)):,} on nyc.gov: City Council, Health, Planning, both DA offices, the courts"),
           R("University addresses", f"{len(edu):,}", "led by NYU, Columbia and John Jay"),
           R("Nonprofit addresses", f"{len(org):,}", "Vera, Osborne, Arnold Ventures, CBC, Court Innovation among the densest"),
-          R("Reads inside funders", "Arnold, Bloomberg, Robin Hood, Guggenheim, Revson, Tiger, Clark, MacArthur", "see the warm-doors table"),
+          R("Staff at grantmaking foundations who subscribe", "Arnold Ventures, Bloomberg Philanthropies, Robin Hood, Guggenheim, Revson, Tiger, Clark, MacArthur", "counts and names in the warm-doors table above"),
         ]),
         G("Engagement vs industry", [
           R("Click-to-open rate", f"{_avg(m26,'ctor_pct')}%", "cross-industry benchmark 5.3-8.6% — the metric Apple's auto-opens cannot inflate"),
@@ -382,6 +382,7 @@ def main():
         G("Policy impact — the receipts", [
           R("Mayor Mamdani", "Sat with Vital City for an hour on public safety", "after calling himself 'quite taken' by the annual crime analysis",
             [{"t":"the interview","u":"https://www.vitalcitynyc.org/zohran-mamdani-talks-public-safety/"},
+             {"t":"'quite taken' (NY Editorial Board)","u":"https://nyeditorialboard.substack.com/p/zohran-mamdani-interview-transcript"},
              {"t":"the crime analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"}]),
           R("Rikers Island", "Made the case for a federal receiver; a judge has since appointed one", "",
             [{"t":"the case","u":"https://www.vitalcitynyc.org/the-rikers-receivership-risk-and-opportunity/"},
