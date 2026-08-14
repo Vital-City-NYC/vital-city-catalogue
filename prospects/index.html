@@ -67,6 +67,34 @@
   .beat b{font-variant-numeric:tabular-nums}
   .src{font-size:10.5px;color:var(--vc-charcoal);margin-top:11px;line-height:1.5}
   .loading{padding:50px;text-align:center;color:var(--vc-charcoal)}
+  /* funder showcase */
+  .fitTiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--vc-black);border:1px solid var(--vc-black);margin:4px 0 18px}
+  .fitTile{background:var(--vc-white);padding:16px 16px 13px}
+  .fitTile .n{font-weight:900;font-size:34px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .fitTile .l{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-top:6px}
+  .fitTile .s{font-size:11px;color:var(--vc-charcoal);margin-top:3px;line-height:1.45}
+  .fitSec{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--vc-charcoal);margin:20px 0 8px;border-bottom:1px solid var(--vc-black);padding-bottom:4px}
+  .rcp{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--vc-paper2);align-items:baseline}
+  .rcp .rh{flex:0 0 128px;font-weight:900;font-size:13px}
+  .rcp .rb{flex:1;font-size:13px;line-height:1.5}
+  .rcp .rb .rn{color:var(--vc-charcoal);font-size:12px}
+  .rcp .rb .rl{font-size:11px;margin-top:2px}
+  .rcp .rl a{margin-right:9px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+  .chip{background:var(--vc-paper2);border-radius:14px;padding:4px 11px;font-size:11.5px;font-weight:700}
+  .chip b{font-variant-numeric:tabular-nums}
+  .cite{font-size:12px;padding:5px 0 5px 10px;border-left:2px solid var(--vc-cloud);margin:5px 0}
+  .cite .co{font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-right:7px}
+  .cite .cd{color:var(--vc-charcoal);font-size:10.5px;margin-left:7px}
+  .prodgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .prod{border:1px solid var(--vc-cloud);padding:13px 14px;background:var(--vc-paper)}
+  .prod .pn{font-weight:900;font-size:14px}
+  .prod .pc{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 6px}
+  .prod .pd{font-size:12px;line-height:1.5}
+  .prod .pl{font-size:11px;margin-top:7px}
+  .prod .pl a{margin-right:9px}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:760px){.fitTiles,.prodgrid{grid-template-columns:1fr};.twocol{grid-template-columns:1fr};.rcp{flex-direction:column;gap:2px}}
   @media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}}
   @media(max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)};.wrap{padding:16px 14px 50px}}
   html.dark{--vc-paper:#17181c;--vc-white:#212329;--vc-black:#e8e8e5;--vc-charcoal:#a2a5ad;--vc-cloud:#3a3d45;--vc-paper2:#2b2d34}
@@ -231,8 +259,8 @@ function boot(d){
   </div>
 
   <div class="card" id="fit">
-    <h2>What we can show funders <button class="exp" id="factsMd">&#8681; Download .md</button><button class="exp" id="factsAll" style="margin-right:6px">&#9112; Copy all</button></h2>
-    <div class="hint">The audience-evidence sheet for a funder conversation &mdash; computed fresh from the live data on every nightly rebuild (as of ${esc((d.funder_facts||{}).asof||d.generated_at)}), never hand-typed. Copy a section or the whole thing.</div>
+    <h2>The case for funders <button class="exp" id="factsMd">&#8681; Download .md</button><button class="exp" id="factsAll" style="margin-right:6px">&#9112; Copy all</button></h2>
+    <div class="hint">Reach, influence and growth &mdash; every number computed fresh from the live data on each nightly rebuild (as of ${esc((d.funder_facts||{}).asof||d.generated_at)}), never hand-typed. Copy a section or the whole thing.</div>
     <div id="factsBody"></div>
     <div style="margin-top:14px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700">Published pieces by topic since January ${new Date().getFullYear()-1}</div>
     <div class="beats" style="margin-top:6px">${(d.beats||[]).map(([t,n])=>`<span class="beat"><b>${n}</b> ${esc(t)}</span>`).join("")}</div>
@@ -259,35 +287,51 @@ function boot(d){
     </div>
   </div>`;
 
-  // ---- funder facts: grouped stat rows, each group copyable ----
-  const FF=d.funder_facts||{groups:[]};
-  function groupMd(g){
-    return "## "+g.title+"\n"+g.rows.map(r=>`- **${r.label}:** ${r.value}${r.note?` — ${r.note}`:""}${(r.links||[]).length?" ("+r.links.map(l=>`[${l.t}](${l.u})`).join(", ")+")":""}`).join("\n");
-  }
+  // ---- funder showcase: tiles, receipts, press, products — all exportable ----
+  const FF=d.funder_facts||{};
   function allMd(){
-    return "# Vital City — audience evidence for funders\nAs of "+(FF.asof||"")+". Computed from live Mailchimp, Ghost analytics, the contact database and the catalogue.\n\n"
-      + FF.groups.map(groupMd).join("\n\n")
-      + "\n\n*"+(FF.benchmark_note||"")+"*\n";
+    const L=["# Vital City — the case for funders","As of "+(FF.asof||"")+". Computed from live Mailchimp, Ghost analytics, the press tracker, the contact database and the catalogue.",""];
+    L.push("## The numbers");
+    (FF.tiles||[]).forEach(t=>L.push(`- **${t.n}** ${t.l} — ${t.s}`));
+    L.push("","## Policy impact — the receipts");
+    (FF.receipts||[]).forEach(r=>L.push(`- **${r.head}:** ${r.claim}${r.note?` — ${r.note}`:""}${(r.links||[]).length?" ("+r.links.map(l=>`[${l.t}](${l.u})`).join(", ")+")":""}`));
+    if(FF.press){L.push("","## In the press",`${FF.press.total} citations across ${FF.press.outlets} tracked outlets since ${FF.press.since}: `+(FF.press.top||[]).map(o=>`${o.outlet} (${o.n})`).join(", ")+".");
+      (FF.press.samples||[]).forEach(x=>L.push(`- ${x.outlet}, ${x.date}: [${x.title}](${x.url})`));}
+    L.push("","## Policy products");
+    (FF.products||[]).forEach(p=>L.push(`- **${p.name}** (${p.count} pieces): ${p.desc} `+(p.links||[]).map(l=>`[${l.t}](${l.u})`).join(", ")));
+    L.push("","## Engagement vs industry");
+    (FF.engagement||[]).forEach(r=>L.push(`- **${r.label}:** ${r.value} — ${r.note}`));
+    L.push("","## Who reads it");
+    (FF.audience||[]).forEach(r=>L.push(`- **${r.label}:** ${r.value} — ${r.note}`));
+    L.push("","*"+(FF.benchmark_note||"")+"*");
+    return L.join("\n");
   }
   function copyText(t,btn){
     (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{
       const o=btn.textContent; btn.textContent="Copied ✓"; setTimeout(()=>btn.textContent=o,1400);
     }).catch(()=>{const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();btn.textContent="Copied ✓";});
   }
-  $("#factsBody").innerHTML=FF.groups.map((g,i)=>`
-    <div style="margin-top:${i?14:2}px">
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--vc-charcoal)">${esc(g.title)}
-        <button class="exp" data-g="${i}" style="float:none;margin-left:8px;padding:2px 8px">&#9112; Copy</button></div>
-      <table class="tbl" style="margin-top:4px"><tbody>
-        ${g.rows.map(r=>`<tr><td style="width:230px"><b>${esc(r.label)}</b></td><td class="n" style="text-align:left;white-space:normal">${esc(r.value)}</td><td class="why">${esc(r.note)}${(r.links||[]).length?`<div style="margin-top:3px">${r.links.map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join(" &middot; ")}</div>`:""}</td></tr>`).join("")}
-      </tbody></table>
-    </div>`).join("");
-  document.querySelectorAll("#factsBody [data-g]").forEach(b=>b.addEventListener("click",()=>copyText(groupMd(FF.groups[+b.dataset.g]),b)));
+  $("#factsBody").innerHTML=`
+    <div class="fitTiles">${(FF.tiles||[]).map(t=>`<div class="fitTile"><div class="n">${esc(t.n)}</div><div class="l">${esc(t.l)}</div><div class="s">${esc(t.s)}</div></div>`).join("")}</div>
+    <div class="fitSec">Policy impact — the receipts</div>
+    ${(FF.receipts||[]).map(r=>`<div class="rcp"><div class="rh">${esc(r.head)}</div><div class="rb">${esc(r.claim)}${r.note?` <span class="rn">— ${esc(r.note)}</span>`:""}<div class="rl">${(r.links||[]).map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div></div></div>`).join("")}
+    <div class="fitSec">In the press</div>
+    <div style="font-size:12.5px">${esc(String((FF.press||{}).total||0))} citations across ${esc(String((FF.press||{}).outlets||0))} tracked outlets since ${esc((FF.press||{}).since||"")} — a floor, not a total (whitelist of ~25 outlets).</div>
+    <div class="chips">${(((FF.press||{}).top)||[]).map(o=>`<span class="chip">${esc(o.outlet)} <b>${o.n}</b></span>`).join("")}</div>
+    ${(((FF.press||{}).samples)||[]).map(x=>`<div class="cite"><span class="co">${esc(x.outlet)}</span><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a><span class="cd">${esc(x.date)}</span></div>`).join("")}
+    <div class="fitSec">Policy products</div>
+    <div class="prodgrid">${(FF.products||[]).map(p=>`<div class="prod"><div class="pn">${esc(p.name)}</div><div class="pc">${p.count} pieces</div><div class="pd">${esc(p.desc)}</div><div class="pl">${(p.links||[]).map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div></div>`).join("")}</div>
+    <div class="twocol" style="margin-top:16px">
+      <div><div class="fitSec" style="margin-top:0">Engagement vs industry</div>
+        <table class="tbl"><tbody>${(FF.engagement||[]).map(r=>`<tr><td style="width:130px"><b>${esc(r.label)}</b></td><td class="n" style="text-align:left">${esc(r.value)}</td><td class="why">${esc(r.note)}</td></tr>`).join("")}</tbody></table></div>
+      <div><div class="fitSec" style="margin-top:0">Who reads it</div>
+        <table class="tbl"><tbody>${(FF.audience||[]).map(r=>`<tr><td style="width:150px"><b>${esc(r.label)}</b></td><td class="why" style="white-space:normal">${esc(r.value)}${r.note?` — ${esc(r.note)}`:""}</td></tr>`).join("")}</tbody></table></div>
+    </div>`;
   $("#factsAll").addEventListener("click",e=>copyText(allMd(),e.target));
   $("#factsMd").addEventListener("click",()=>{
     const a=document.createElement("a");
     a.href=URL.createObjectURL(new Blob([allMd()],{type:"text/markdown"}));
-    a.download=`vital-city-funder-facts-${FF.asof||""}.md`; a.click(); URL.revokeObjectURL(a.href);
+    a.download=`vital-city-funder-case-${FF.asof||""}.md`; a.click(); URL.revokeObjectURL(a.href);
   });
 
   const cols=["n","inst","damt","dcnt","dlast","eopen","eclick","why","e"];

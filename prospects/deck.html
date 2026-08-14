@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Vital City — the case for support</title>
+<style>
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-green:#57aa4a; --vc-orange:#ff7c53; --vc-cerulean:#217ebe;
+    --vc-magenta:#e7466d; --vc-paper2:#eeeeec; --vc-plum:#7a5ea6; --vc-gold:#d9a441;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--vc-paper2);color:var(--vc-black);font-family:var(--vc-sans);
+       font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--vc-cerulean)}
+
+  /* gate — identical passphrase flow to the rest of the suite */
+  .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px 38px;max-width:420px;
+           box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gatebox h1{font-size:20px;margin:0 0 6px}
+  .gatebox p{font-size:12.5px;color:var(--vc-charcoal);margin:0 0 16px;line-height:1.5}
+  .gatebox input{width:100%;padding:10px 12px;border:1.5px solid var(--vc-black);font-family:inherit;font-size:14px;background:var(--vc-white);color:var(--vc-black)}
+  .gatebox button{margin-top:12px;width:100%;padding:10px;border:1.5px solid var(--vc-black);background:var(--vc-black);
+                  color:var(--vc-white);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer}
+  .err{color:var(--vc-magenta);font-size:12px;margin-top:8px;min-height:16px}
+
+  /* deck */
+  .stage{max-width:1080px;margin:0 auto;padding:18px 16px 70px}
+  .slide{background:var(--vc-white);border:1px solid var(--vc-black);box-shadow:7px 7px 0 rgba(5,5,7,.10);
+         padding:44px 52px;margin-bottom:22px;min-height:560px;display:flex;flex-direction:column;
+         position:relative;page-break-after:always;break-after:page}
+  .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.16em;font-weight:800;color:var(--vc-charcoal)}
+  .wm{font-family:var(--vc-sans);font-weight:900;letter-spacing:-.02em;font-size:15px}
+  .slide h2{font-size:34px;line-height:1.12;letter-spacing:-.02em;margin:14px 0 10px;max-width:22ch}
+  .slide h3{font-size:19px;margin:0 0 6px;letter-spacing:-.01em}
+  .lede{font-size:17px;line-height:1.45;color:var(--vc-black);max-width:60ch;margin:0 0 18px}
+  .foot{position:absolute;left:52px;right:52px;bottom:18px;display:flex;justify-content:space-between;
+        font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--vc-charcoal);font-weight:700}
+
+  /* cover */
+  .cover{justify-content:center}
+  .cover h1{font-size:62px;line-height:1.02;letter-spacing:-.035em;margin:18px 0 14px;max-width:16ch}
+  .cover .sub{font-size:17px;color:var(--vc-charcoal);max-width:52ch}
+
+  /* figure grid — every number here is read from the live data */
+  .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:2px;background:var(--vc-cloud);
+        border:1px solid var(--vc-cloud);margin:6px 0 14px}
+  .fig{background:var(--vc-white);padding:16px 18px}
+  .fig .v{font-size:34px;font-weight:900;letter-spacing:-.03em;line-height:1.05}
+  .fig .v.text{font-size:16px;font-weight:800;line-height:1.3}
+  .fig .k{font-size:12px;font-weight:700;margin-top:4px}
+  .fig .n{font-size:11px;color:var(--vc-charcoal);margin-top:3px;line-height:1.4}
+
+  .rows{border-top:1px solid var(--vc-cloud)}
+  .row{border-bottom:1px solid var(--vc-cloud);padding:11px 0;display:flex;gap:16px;align-items:baseline}
+  .row .rk{flex:0 0 210px;font-weight:800;font-size:13.5px}
+  .row .rv{flex:1;font-size:13.5px}
+  .row .rn{font-size:11.5px;color:var(--vc-charcoal);margin-top:2px;line-height:1.45}
+  .links a{font-size:11px;margin-right:10px;white-space:nowrap}
+
+  .bullets{margin:0;padding-left:18px;max-width:62ch}
+  .bullets li{margin-bottom:9px;font-size:15px;line-height:1.5}
+
+  .caveat{border-left:3px solid var(--vc-gold);background:#fdf8ec;padding:10px 14px;font-size:12px;
+          line-height:1.5;margin:12px 0}
+  .held{border-left:3px solid var(--vc-magenta);background:#fdeef2;padding:10px 14px;font-size:12px;
+        line-height:1.5;margin:12px 0}
+  .src{font-size:11.5px;color:var(--vc-charcoal);line-height:1.6}
+  .src b{color:var(--vc-black)}
+
+  /* nav */
+  .bar{position:fixed;left:0;right:0;bottom:0;background:var(--vc-black);color:var(--vc-white);
+       display:flex;align-items:center;justify-content:space-between;padding:8px 16px;font-size:11px;
+       letter-spacing:.08em;text-transform:uppercase;font-weight:700;z-index:400}
+  .bar button{background:none;border:1.5px solid var(--vc-white);color:var(--vc-white);font-family:inherit;
+              font-weight:800;font-size:11px;padding:5px 12px;cursor:pointer;margin-left:6px;letter-spacing:.06em}
+  .bar a{color:var(--vc-white)}
+
+  @media print{
+    body{background:#fff}
+    .bar,.gate{display:none!important}
+    .stage{max-width:none;padding:0}
+    .slide{box-shadow:none;border:none;margin:0;min-height:96vh;padding:36px 40px}
+    .held{display:none}          /* claims held back never print into a funder copy */
+  }
+  @media (max-width:700px){
+    .slide{padding:28px 22px;min-height:0}
+    .cover h1{font-size:40px}
+    .slide h2{font-size:26px}
+    .foot{position:static;margin-top:22px;left:auto;right:auto}
+    .row{display:block}
+    .row .rk{flex:none;margin-bottom:2px}
+  }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>The case for support</h1>
+    <p>Fundraising material. Same passphrase as the contacts, growth and prospects tools.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="current-password">
+    <button id="unlock">Unlock</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="stage" id="stage"></div>
+  <div class="bar">
+    <div><span class="wm">Vital City</span> &nbsp;·&nbsp; the case for support</div>
+    <div>
+      <span id="pos"></span>
+      <button id="prev">&larr;</button><button id="next">&rarr;</button>
+      <button id="print">Print / PDF</button>
+      <button id="lock">Lock</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const PASSKEY="vc_net_pass", TTL=90*24*3600*1000;
+function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+TTL}))}catch{}}
+function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
+  const o=JSON.parse(r);if(o&&o.pass&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null}catch{return null}}
+function b64d(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+async function unlock(fromStore){
+  $("#err").textContent="";
+  const pass=$("#pw").value.trim(); if(!pass){$("#err").textContent="Enter the passphrase.";return}
+  try{
+    const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
+    const data=await decryptBlob(pass,blob);
+    savePass(pass); $("#gate").style.display="none"; $("#app").style.display="";
+    build(data);
+  }catch(e){console.error(e);$("#err").textContent="Wrong passphrase, or data unavailable.";if(fromStore)try{localStorage.removeItem(PASSKEY)}catch{}}
+}
+$("#unlock").addEventListener("click",()=>unlock(false));
+$("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
+(async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
+$("#lock").addEventListener("click",e=>{e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()});
+$("#print").addEventListener("click",()=>window.print());
+
+const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=n=>"$"+Number(n||0).toLocaleString();
+
+// Claims that are not yet externally citable. Each is shown on screen with the
+// reason and is suppressed from print, so a deck handed to a funder cannot
+// carry an assertion we cannot source. Delete an entry once its URL is found —
+// the claim then flows through from the data like every other receipt.
+const EXTERNAL_HOLD=[
+  {re:/New York Times exclusive/i,
+   why:"The New York Times exclusive is asserted in the positioning language, but no URL has been located. On screen only until one is added."}
+];
+const heldReason=t=>{const h=EXTERNAL_HOLD.find(x=>x.re.test(String(t||"")));return h?h.why:null};
+
+// --- reading the live figures -------------------------------------------
+// Every number in this deck comes out of funder_facts, which build_prospects.py
+// recomputes on each nightly rebuild. Nothing here is typed by hand, so the
+// deck cannot quietly drift from the data the way a pasted figure does.
+let FF={}, D={};
+const group=t=>(FF.groups||[]).find(g=>(g.title||"").toLowerCase().startsWith(t.toLowerCase()))||{rows:[]};
+const row=(g,label)=>((group(g).rows)||[]).find(r=>(r.label||"").toLowerCase().startsWith(label.toLowerCase()))||{};
+const val=(g,label,fallback)=>{const r=row(g,label);return r.value!==undefined&&r.value!==null&&r.value!==""?r.value:(fallback||"—")};
+
+function figs(items){
+  return `<div class="figs">${items.map(it=>{
+    const isText=!/^[\d$+\-]/.test(String(it.v));
+    return `<div class="fig"><div class="v${isText?" text":""}">${esc(it.v)}</div>
+      <div class="k">${esc(it.k)}</div>${it.n?`<div class="n">${esc(it.n)}</div>`:""}</div>`;
+  }).join("")}</div>`;
+}
+function rowsOf(groupTitle,opts){
+  const o=opts||{}, g=group(groupTitle);
+  const keep=(g.rows||[]).filter(r=>!(o.skip||[]).some(s=>(r.label||"").toLowerCase().startsWith(s.toLowerCase())));
+  return `<div class="rows">${keep.map(r=>{
+    const held=heldReason(r.value)||heldReason(r.note);
+    return `<div class="row${held?" is-held":""}">
+      <div class="rk">${esc(r.label)}</div>
+      <div class="rv">${esc(r.value)}
+        ${r.note?`<div class="rn">${esc(r.note)}</div>`:""}
+        ${(r.links||[]).length?`<div class="rn links">${r.links.map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div>`:""}
+        ${held?`<div class="held">Held back from the external deck: ${esc(held)}</div>`:""}
+      </div></div>`;
+  }).join("")}</div>`;
+}
+
+// --- the deck ------------------------------------------------------------
+// Narrative is Vital City's own approved language, carried over from the two
+// decks this merges (the case-for-support deck and the event-sponsorship deck).
+// Positioning wording is deliberately kept in this one place: it is in flux,
+// so it is edited here, not scattered across slides.
+function slides(){
+  const t=D.topline||{}, asof=FF.asof||D.generated_at||"";
+  const S=[];
+
+  S.push({cover:true,html:`
+    <div class="eyebrow">A case for support &nbsp;·&nbsp; New York City</div>
+    <h1>The evidence New York runs on.</h1>
+    <div class="sub">A nonprofit publication and think tank: a journal, a research shop and a convener, built as one thing.</div>`});
+
+  S.push({eyebrow:"The moment",html:`
+    <h2>A new administration is rewriting how New York City works. Someone has to hold the evidence.</h2>
+    <p class="lede">The city has a new mayor, a new set of deputy mayors, a federal receiver at Rikers Island, a charter revision fight and an affordability crisis that will define the decade. Every one of those debates is about to be settled, well or badly, by whoever brings the best facts into the room.</p>
+    <h3>What is missing</h3>
+    <ul class="bullets">
+      <li>Newsroom capacity for urban policy has collapsed.</li>
+      <li>Academic research reaches City Hall years late, if ever.</li>
+      <li>Advocacy shops arrive with a conclusion already written.</li>
+    </ul>
+    <p class="lede" style="margin-top:14px">Vital City occupies the empty middle: rigorous enough for the researchers, readable enough for the deputy mayor, independent enough that both sides cite it.</p>`});
+
+  S.push({eyebrow:"What we produce",html:`
+    <h2>Original analysis, at a volume that compounds.</h2>
+    ${figs([
+      {v:val("Output","Pieces published"),k:"Pieces published",n:(row("Output","Pieces published").note||"")},
+      {v:val("Output","Flourish charts"),k:"Original charts in the catalogue",n:"Original data analysis is the differentiator"},
+      {v:val("Output","Press citations"),k:"Press citations tracked",n:(row("Output","Press citations").note||"")},
+      {v:val("Audience","Newsletter subscribers"),k:"Newsletter subscribers",n:"Mailchimp, current"}
+    ])}
+    <p class="lede">The catalogue is the asset. It is what a program officer can audit, and it is why reporters, agencies and advocates keep arriving at the same source.</p>`});
+
+  S.push({eyebrow:"The audience",html:`
+    <h2>It is not the size of the list. It is who is on it.</h2>
+    ${rowsOf("Who reads it")}
+    <div class="caveat"><b>Read the engagement numbers in this order.</b> Click-to-open is the honest headline: Apple Mail's automatic opens inflate open rates across the whole industry, so an open rate is not a like-for-like comparison and a click is.</div>`});
+
+  S.push({eyebrow:"Engagement",html:`
+    <h2>Against the industry, the gap is in clicks, not opens.</h2>
+    ${rowsOf("Engagement vs industry")}
+    ${figs([
+      {v:val("Audience","Regular readers"),k:"Regular readers",n:"Open rate 50% and above — the engaged core"},
+      {v:val("Audience","Opened in the last year"),k:"Opened in the last year",n:"Distinct people"},
+      {v:val("Audience","Wikipedia-notable"),k:"Wikipedia-notable subscribers",n:"A conservative floor: matched, not estimated"}
+    ])}`});
+
+  S.push({eyebrow:"Reach",html:`
+    <h2>The website, and where it is heading.</h2>
+    ${rowsOf("Web traffic")}
+    ${figs([{v:val("Output","LinkedIn followers"),k:"LinkedIn followers",n:(row("Output","LinkedIn followers").note||"")}])}
+    <div class="caveat"><b>On subscriber growth.</b> The 2025 signup surge is inflated by bot registrations. Use 2024 as the volume baseline for any year-over-year growth claim.</div>`});
+
+  S.push({eyebrow:"Impact",html:`
+    <h2>Ideas go in. Policy comes out. Sometimes within days.</h2>
+    ${rowsOf("Policy impact")}`});
+
+  S.push({eyebrow:"The base",html:`
+    <h2>New Yorkers started paying for this before we ever asked you to.</h2>
+    ${figs([
+      {v:money(t.raised),k:"Raised online",n:"Donorbox, since the first online gift"},
+      {v:String(t.donors||"—"),k:"Online donors",n:t.median_gift?("Median gift "+money(t.median_gift)):""},
+      {v:(t.top5_pct!=null?t.top5_pct+"%":"—"),k:"From the top five donors",n:"Concentration, not yet a base"}
+    ])}
+    <div class="caveat"><b>Every giving figure here is Donorbox only.</b> Checks, wire transfers, donor-advised-fund grants and foundation grants do not pass through Donorbox and appear nowhere in this data, so these totals understate real giving by whatever arrives through those channels.</div>`});
+
+  S.push({eyebrow:"The ask",html:`
+    <h2>Fund the room where it is decided.</h2>
+    <p class="lede">Vital City is small, and that is the opportunity: a gift here does not disappear into overhead, it buys a specific piece of the machine that turns evidence into policy.</p>
+    <ul class="bullets">
+      <li><b>More original analysis.</b> The data work is what gets cited, and it is the most expensive thing we do.</li>
+      <li><b>More convening.</b> Putting the people who decide and the people with the evidence in one room, on the record.</li>
+      <li><b>More reach into City Hall.</b> The readers listed here are already there; the work is getting the right piece in front of them at the right moment.</li>
+      <li><b>Capacity to answer fast.</b> The permitting fixes ran days before City Hall's own report. That timing is a capability, not luck.</li>
+    </ul>`});
+
+  S.push({eyebrow:"Sources",html:`
+    <h2>Every number in this deck, and where it comes from.</h2>
+    <div class="src">
+      <p><b>All figures are computed, not typed.</b> Each number is read from the fundraising-prospects dataset, which is rebuilt from the primary systems on every nightly run and last refreshed <b>${esc(asof)}</b>. Audience and engagement come from Mailchimp; website traffic from Ghost analytics and Google Analytics; giving from Donorbox; the catalogue from the Ghost publishing interface; the audience composition from the Vital City network database, which fuses subscribers, contributors and contacts and hand-codes them by role.</p>
+      <p><b>Caveats that travel with these numbers.</b> Giving is Donorbox only, so checks, wires, donor-advised funds and foundation grants are invisible here. The 2025 signup surge is bot-inflated, so 2024 is the honest volume baseline. Open rates are inflated industry-wide by Apple Mail privacy protection, which is why click-to-open leads the engagement slide.</p>
+      <p><b>Impact claims</b> are Vital City's own accounting, each carrying its source links above. ${esc(FF.benchmark_note||"")}</p>
+      <p><b>This deck was assembled with AI assistance.</b> Every figure comes from a primary Vital City system; the narrative claims come from Vital City's own record. Verify any figure before it goes to a funder.</p>
+    </div>`});
+
+  return S;
+}
+
+function build(data){
+  D=data||{}; FF=D.funder_facts||{};
+  const S=slides();
+  $("#stage").innerHTML=S.map((s,i)=>`
+    <section class="slide${s.cover?" cover":""}" id="s${i}">
+      ${s.eyebrow?`<div class="eyebrow">${esc(s.eyebrow)}</div>`:""}
+      ${s.html}
+      <div class="foot"><span>Vital City · The case for support</span><span>${String(i+1).padStart(2,"0")}</span></div>
+    </section>`).join("");
+  let cur=0;
+  const go=i=>{cur=Math.max(0,Math.min(S.length-1,i));
+    document.getElementById("s"+cur).scrollIntoView({behavior:"smooth",block:"start"});
+    $("#pos").textContent=`${cur+1} / ${S.length}`;};
+  $("#pos").textContent=`1 / ${S.length}`;
+  $("#next").addEventListener("click",()=>go(cur+1));
+  $("#prev").addEventListener("click",()=>go(cur-1));
+  document.addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();go(cur+1)}
+    if(e.key==="ArrowLeft"){e.preventDefault();go(cur-1)}
+    if(e.key==="p"||e.key==="P"){window.print()}
+  });
+}
+</script>
+</body>
+</html>

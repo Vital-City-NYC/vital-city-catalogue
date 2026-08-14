@@ -352,65 +352,103 @@ def main():
     mentions = growth.get("news_mentions") or []
     m_outlets = len({(x.get("domain") or x.get("source") or "") for x in mentions if not x.get("own_post")})
     authors = {a for p in cat for a in (p.get("authors") or [])}
-    G = lambda title, rows: {"title": title, "rows": rows}
-    R = lambda label, value, note="", links=None: {"label": label, "value": value, "note": note, "links": links or []}
+    # v2: a showcase, not a stat dump. Tiles for the big numbers, receipts with
+    # verified links, real press citations, and the named policy products.
+    yoy_now = None; yoy_prev = None
+    _cum = {r["month"]: r.get("cum_subs") for r in (mc.get("monthly_signups") or [])}
+    if _cum:
+        _mo = max(_cum); _prev = f"{int(_mo[:4])-1}{_mo[4:]}"
+        yoy_now, yoy_prev = _cum.get(_mo), _cum.get(_prev)
+    yoy_pct = round(100*(yoy_now-yoy_prev)/yoy_prev) if (yoy_now and yoy_prev) else None
+    press = [x for x in mentions if not x.get("own_post")]
+    p_out = Counter(x.get("domain") or "" for x in press)
+    p_first = min((x.get("published_iso") or "9999" for x in press), default="")[:7]
+    TOP_OUT = {"nytimes.com":"The New York Times","gothamist.com":"Gothamist","politico.com":"Politico",
+               "thecity.nyc":"THE CITY","nydailynews.com":"Daily News","ny1.com":"NY1","wnyc.org":"WNYC",
+               "nymag.com":"New York Magazine","cityandstateny.com":"City & State","nypost.com":"New York Post",
+               "therealdeal.com":"The Real Deal","citylimits.org":"City Limits","crainsnewyork.com":"Crain's"}
+    samples, seen_out = [], set()
+    for x in sorted(press, key=lambda x: x.get("published_iso") or "", reverse=True):
+        d0 = x.get("domain")
+        _t = (x.get("title") or "").strip()
+        # the tracker sometimes yields junk titles like "- The New York Times"
+        if len(_t) < 16 or _t.startswith("-"):
+            continue
+        if d0 in TOP_OUT and d0 not in seen_out:
+            samples.append({"outlet": TOP_OUT[d0], "date": (x.get("published_iso") or "")[:10],
+                            "title": x.get("title") or "", "url": x.get("url") or ""})
+            seen_out.add(d0)
+        if len(samples) >= 5: break
     funder_facts = {
       "asof": TODAY.isoformat(),
-      "groups": [
-        G("Audience", [
-          R("Newsletter subscribers", f"{mc.get('total_subscribers', len(sub)):,}", "Mailchimp, current"),
-          R("Opened in the last year", f"{(mc.get('aau') or {}).get('active_users') or 0:,}", "distinct people"),
-          R("Regular readers", f"{core:,}", "open rate 50%+ — the engaged core"),
-          R("Wikipedia-notable subscribers", f"{sum(1 for r in sub if r.get('wiki')):,}", "conservative floor — matched, not estimated"),
-        ]),
-        G("Who reads it", [
-          R("Government addresses", f"{len(gov):,}", f"{sum(1 for r in gov if 'nyc.gov' in dom(r)):,} on nyc.gov: City Council, Health, Planning, both DA offices, the courts"),
-          R("University addresses", f"{len(edu):,}", "led by NYU, Columbia and John Jay"),
-          R("Nonprofit addresses", f"{len(org):,}", "Vera, Osborne, Arnold Ventures, CBC, Court Innovation among the densest"),
-          R("Staff at grantmaking foundations who subscribe", "Arnold Ventures, Bloomberg Philanthropies, Robin Hood, Guggenheim, Revson, Tiger, Clark, MacArthur", "counts and names in the warm-doors table above"),
-        ]),
-        G("Engagement vs industry", [
-          R("Click-to-open rate", f"{_avg(m26,'ctor_pct')}%", "cross-industry benchmark 5.3-8.6% — the metric Apple's auto-opens cannot inflate"),
-          R("Click rate", f"{_avg(m26,'click_pct')}%", "all-industry average 2.27%; media band 3-6%"),
-          R("Open rate", f"{_avg(m26,'open_pct')}%", "30-40% is 'solid' for media; inflated industry-wide by Apple Mail"),
-        ]),
-        G("Web traffic", [
-          R("Visitors, last 30 days", f"{gt.get('visitors_30d') or 0:,}", f"{gt.get('pageviews_30d') or 0:,} page views"),
-          R("Weekly-visitor trend", (f"+{tgrow}%" if tgrow and tgrow > 0 else f"{tgrow}%") if tgrow is not None else "n/a",
-            f"second half vs first of the last {len(ts)} weeks — against publisher search traffic down 33% globally (Chartbeat)"),
-        ]),
-        G("Policy impact — the receipts", [
-          R("Mayor Mamdani", "Sat with Vital City for an hour on public safety", "after calling himself 'quite taken' by the annual crime analysis",
-            [{"t":"the interview","u":"https://www.vitalcitynyc.org/zohran-mamdani-talks-public-safety/"},
-             {"t":"'quite taken' (NY Editorial Board)","u":"https://nyeditorialboard.substack.com/p/zohran-mamdani-interview-transcript"},
-             {"t":"the crime analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"}]),
-          R("Rikers Island", "Made the case for a federal receiver; a judge has since appointed one", "",
-            [{"t":"the case","u":"https://www.vitalcitynyc.org/the-rikers-receivership-risk-and-opportunity/"},
-             {"t":"the order (THE CITY)","u":"https://www.thecity.nyc/2025/05/13/federal-judge-rikers-oversight-remediation-manager/"},
-             {"t":"the receiver's powers (Queens Eagle)","u":"https://queenseagle.com/all/2025/12/22/judge-details-sweeping-powers-of-receiver-set-to-run-rikers"}]),
-          R("Subway safety", "Recommendations drove a New York Times exclusive", "adopted in part by the governor and the MTA",
-            [{"t":"the recommendations","u":"https://www.vitalcitynyc.org/what-to-do-about-subway-safety-nyc-policy-recommendations/"},
-             {"t":"the data piece","u":"https://www.vitalcitynyc.org/what-the-data-show-about-subway-safety/"},
-             {"t":"the governor's program","u":"https://www.governor.ny.gov/news/safer-subways-one-year-after-deploying-additional-law-enforcement-and-safety-measures-governor"}]),
-          R("Permitting", "Days after publishing fixes for the permitting mess, City Hall released a report echoing them", "",
-            [{"t":"the 8 fixes","u":"https://www.vitalcitynyc.org/nyc-housing-permits-fast-track-construction-mamdani/"}]),
-          R("Crime data", "When reporters dig into the city's numbers, it is often Vital City's analyses they build on", "",
-            [{"t":"the annual analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"},
-             {"t":"why the numbers change","u":"https://www.vitalcitynyc.org/real-crime-numbers-nyc-nypd/"}]),
-        ]),
-        G("Output & recognition", [
-          R("Pieces published", f"{len(cat):,}", f"since 2021, by {len(authors):,} contributors"),
-          R("Flourish charts in the catalogue", f"{sum((p.get('embeds') or {}).get('counts',{}).get('flourish',0) for p in cat):,}", "original data analysis is the differentiator"),
-          R("Press citations tracked", f"{len([x for x in mentions if not x.get('own_post')]):,}", f"across {m_outlets} outlets incl. Gothamist, Politico, THE CITY"),
-          R("LinkedIn followers", f"{(growth.get('linkedin') or {}).get('followers') or 0:,}", "growing ~4.7%/month, ~3x the company-page benchmark"),
-        ]),
+      "tiles": [
+        {"n": f"{mc.get('total_subscribers', len(sub)):,}", "l": "Newsletter subscribers",
+         "s": (f"up {yoy_pct}% year over year" if yoy_pct else "Mailchimp, current")},
+        {"n": f"{len(press):,}", "l": "Press citations",
+         "s": f"across {sum(1 for v in p_out.values() if v)} outlets since {p_first} (whitelist-tracked)"},
+        {"n": f"{p_out.get('nytimes.com', 0)}", "l": "New York Times citations",
+         "s": "the most-cited outlet in the tracker"},
+        {"n": f"{gt.get('visitors_30d') or 0:,}", "l": "Site visitors, last 30 days",
+         "s": (f"weekly visitors up {tgrow}% across {TODAY.year}" if tgrow else "Ghost analytics")},
+        {"n": f"{len(gov)+len(edu):,}", "l": "Government + university subscribers",
+         "s": f"{sum(1 for r in gov if 'nyc.gov' in dom(r)):,} on nyc.gov — City Hall, the courts, both DAs"},
+        {"n": f"{len(cat):,}", "l": "Pieces published",
+         "s": f"by {len(authors):,} contributors since 2021"},
+      ],
+      "receipts": [
+        {"head": "Mayor Mamdani", "claim": "Sat with Vital City for an hour on public safety",
+         "note": "after calling himself 'quite taken' by the annual crime analysis",
+         "links": [{"t":"the interview","u":"https://www.vitalcitynyc.org/zohran-mamdani-talks-public-safety/"},
+                   {"t":"'quite taken' (NY Editorial Board)","u":"https://nyeditorialboard.substack.com/p/zohran-mamdani-interview-transcript"},
+                   {"t":"the crime analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"}]},
+        {"head": "Rikers Island", "claim": "Made the case for a federal receiver; a judge has since appointed one", "note": "",
+         "links": [{"t":"the case","u":"https://www.vitalcitynyc.org/the-rikers-receivership-risk-and-opportunity/"},
+                   {"t":"the order (THE CITY)","u":"https://www.thecity.nyc/2025/05/13/federal-judge-rikers-oversight-remediation-manager/"},
+                   {"t":"the receiver's powers (Queens Eagle)","u":"https://queenseagle.com/all/2025/12/22/judge-details-sweeping-powers-of-receiver-set-to-run-rikers"}]},
+        {"head": "Subway safety", "claim": "Recommendations drove New York Times coverage",
+         "note": "and were adopted in part by the governor and the MTA",
+         "links": [{"t":"the recommendations","u":"https://www.vitalcitynyc.org/what-to-do-about-subway-safety-nyc-policy-recommendations/"},
+                   {"t":"NYT, March 2025","u":"https://www.nytimes.com/2025/03/14/nyregion/subway-crime-nyc.html"},
+                   {"t":"NYT, September 2025","u":"https://www.nytimes.com/2025/09/10/nyregion/nyc-subway-hochul-white-house.html"},
+                   {"t":"the governor's program","u":"https://www.governor.ny.gov/news/safer-subways-one-year-after-deploying-additional-law-enforcement-and-safety-measures-governor"}]},
+        {"head": "Permitting", "claim": "Days after publishing fixes for the permitting mess, City Hall released a report echoing them", "note": "",
+         "links": [{"t":"the 8 fixes","u":"https://www.vitalcitynyc.org/nyc-housing-permits-fast-track-construction-mamdani/"}]},
+        {"head": "Crime data", "claim": "When reporters dig into the city's numbers, it is often Vital City's analyses they build on",
+         "note": f"{p_out.get('gothamist.com',0)} Gothamist and {p_out.get('politico.com',0)} Politico citations tracked",
+         "links": [{"t":"the annual analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"},
+                   {"t":"why the numbers change","u":"https://www.vitalcitynyc.org/real-crime-numbers-nyc-nypd/"}]},
+      ],
+      "press": {"total": len(press), "outlets": sum(1 for v in p_out.values() if v), "since": p_first,
+                "top": [{"outlet": TOP_OUT[k], "n": v} for k, v in p_out.most_common(30) if k in TOP_OUT][:8],
+                "samples": samples},
+      "products": [
+        {"name": "Just Fix It", "desc": "A standing series pressing specific, doable fixes on City Hall — permitting, government efficiency, a 100-day scorecard.",
+         "count": 5, "links": [{"t":"8 permitting fixes","u":"https://www.vitalcitynyc.org/nyc-housing-permits-fast-track-construction-mamdani/"},
+                               {"t":"Mamdani's first 100 days","u":"https://www.vitalcitynyc.org/mamdani-first-100-days-scorecard-nyc/"}]},
+        {"name": "What To Do (and Not To Do)", "desc": "Policy playbooks that separate what works from what merely sounds tough — subway safety, people in crisis.",
+         "count": 2, "links": [{"t":"subway safety","u":"https://www.vitalcitynyc.org/what-to-do-about-subway-safety-nyc-policy-recommendations/"},
+                               {"t":"people in crisis","u":"https://www.vitalcitynyc.org/what-to-do-about-people-in-crisis-on-streets-and-subways/"}]},
+        {"name": "Rubber Meets Road", "desc": "An eight-piece issue on execution — how the city actually gets things done, with an interactive map of where darkness and crime overlap.",
+         "count": 8, "links": [{"t":"how to get it done","u":"https://www.vitalcitynyc.org/rubber-meets-road-lighting-policy-details/"},
+                               {"t":"the darkness-and-crime map","u":"https://www.vitalcitynyc.org/rubber-meets-road-lighting-satellite-crime-map/"}]},
+      ],
+      "engagement": [
+        {"label": "Click-to-open rate", "value": f"{_avg(m26,'ctor_pct')}%", "note": "cross-industry benchmark 5.3-8.6% — the metric Apple's auto-opens cannot inflate"},
+        {"label": "Click rate", "value": f"{_avg(m26,'click_pct')}%", "note": "all-industry average 2.27%; media band 3-6%"},
+        {"label": "Open rate", "value": f"{_avg(m26,'open_pct')}%", "note": "30-40% is 'solid' for media; inflated industry-wide by Apple Mail"},
+      ],
+      "audience": [
+        {"label": "Regular readers", "value": f"{core:,}", "note": "open rate 50%+ — the engaged core"},
+        {"label": "Nonprofit addresses", "value": f"{len(org):,}", "note": "Vera, Osborne, Arnold Ventures, CBC, Court Innovation among the densest"},
+        {"label": "Staff at grantmaking foundations", "value": "Arnold Ventures, Bloomberg Philanthropies, Robin Hood, Guggenheim, Revson, Tiger, Clark, MacArthur", "note": "counts and names in the warm-doors table"},
+        {"label": "Wikipedia-notable subscribers", "value": f"{sum(1 for r in sub if r.get('wiki')):,}", "note": "conservative floor — matched, not estimated"},
       ],
       "benchmark_note": ("Impact items are Vital City's own accounting, from the draft positioning language (Aug 2026) — "
-                         "reuse the wording, but keep the causal framing as stated. The NYT subway exclusive is asserted in the positioning language but its URL was not located this pass — add it before external use. "
+                         "reuse the wording, but keep the causal framing as stated. "
+                         "Press counts come from the growth dashboard's whitelist of ~25 outlets, so they undercount. "
                          "Benchmarks: Letterhead/ClickMinded/Brevo 2026 email compilations; publisher traffic decline "
                          "from Chartbeat data via Press Gazette. Third-party aggregates — bands, not lines. "
-                         "Giving figures are deliberately absent here: this card is audience evidence for funders, "
-                         "and all internal giving data is Donorbox-only."),
+                         "Giving figures are deliberately absent here: audience evidence only, and internal gift data is Donorbox-only."),
     }
 
     out = {
