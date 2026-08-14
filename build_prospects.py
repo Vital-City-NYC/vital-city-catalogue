@@ -353,7 +353,7 @@ def main():
     m_outlets = len({(x.get("domain") or x.get("source") or "") for x in mentions if not x.get("own_post")})
     authors = {a for p in cat for a in (p.get("authors") or [])}
     G = lambda title, rows: {"title": title, "rows": rows}
-    R = lambda label, value, note="": {"label": label, "value": value, "note": note}
+    R = lambda label, value, note="", links=None: {"label": label, "value": value, "note": note, "links": links or []}
     funder_facts = {
       "asof": TODAY.isoformat(),
       "groups": [
@@ -380,11 +380,22 @@ def main():
             f"second half vs first of the last {len(ts)} weeks — against publisher search traffic down 33% globally (Chartbeat)"),
         ]),
         G("Policy impact — the receipts", [
-          R("Mayor Mamdani", "Sat with Vital City for an hour on public safety", "after calling himself 'quite taken' by the annual crime analysis"),
-          R("Rikers Island", "Made the case for a federal receiver; a judge has since appointed one", ""),
-          R("Subway safety", "Recommendations drove a New York Times exclusive", "adopted in part by the governor and the MTA"),
-          R("Permitting", "Days after publishing fixes for the permitting mess, City Hall released a report echoing them", ""),
-          R("Crime data", "When reporters dig into the city's numbers, it is often Vital City's analyses they build on", ""),
+          R("Mayor Mamdani", "Sat with Vital City for an hour on public safety", "after calling himself 'quite taken' by the annual crime analysis",
+            [{"t":"the interview","u":"https://www.vitalcitynyc.org/zohran-mamdani-talks-public-safety/"},
+             {"t":"the crime analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"}]),
+          R("Rikers Island", "Made the case for a federal receiver; a judge has since appointed one", "",
+            [{"t":"the case","u":"https://www.vitalcitynyc.org/the-rikers-receivership-risk-and-opportunity/"},
+             {"t":"the order (THE CITY)","u":"https://www.thecity.nyc/2025/05/13/federal-judge-rikers-oversight-remediation-manager/"},
+             {"t":"the receiver's powers (Queens Eagle)","u":"https://queenseagle.com/all/2025/12/22/judge-details-sweeping-powers-of-receiver-set-to-run-rikers"}]),
+          R("Subway safety", "Recommendations drove a New York Times exclusive", "adopted in part by the governor and the MTA",
+            [{"t":"the recommendations","u":"https://www.vitalcitynyc.org/what-to-do-about-subway-safety-nyc-policy-recommendations/"},
+             {"t":"the data piece","u":"https://www.vitalcitynyc.org/what-the-data-show-about-subway-safety/"},
+             {"t":"the governor's program","u":"https://www.governor.ny.gov/news/safer-subways-one-year-after-deploying-additional-law-enforcement-and-safety-measures-governor"}]),
+          R("Permitting", "Days after publishing fixes for the permitting mess, City Hall released a report echoing them", "",
+            [{"t":"the 8 fixes","u":"https://www.vitalcitynyc.org/nyc-housing-permits-fast-track-construction-mamdani/"}]),
+          R("Crime data", "When reporters dig into the city's numbers, it is often Vital City's analyses they build on", "",
+            [{"t":"the annual analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"},
+             {"t":"why the numbers change","u":"https://www.vitalcitynyc.org/real-crime-numbers-nyc-nypd/"}]),
         ]),
         G("Output & recognition", [
           R("Pieces published", f"{len(cat):,}", f"since 2021, by {len(authors):,} contributors"),
@@ -394,7 +405,7 @@ def main():
         ]),
       ],
       "benchmark_note": ("Impact items are Vital City's own accounting, from the draft positioning language (Aug 2026) — "
-                         "reuse the wording, but keep the causal framing as stated. "
+                         "reuse the wording, but keep the causal framing as stated. The NYT subway exclusive is asserted in the positioning language but its URL was not located this pass — add it before external use. "
                          "Benchmarks: Letterhead/ClickMinded/Brevo 2026 email compilations; publisher traffic decline "
                          "from Chartbeat data via Press Gazette. Third-party aggregates — bands, not lines. "
                          "Giving figures are deliberately absent here: this card is audience evidence for funders, "

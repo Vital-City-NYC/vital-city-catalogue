@@ -262,7 +262,7 @@ function boot(d){
   // ---- funder facts: grouped stat rows, each group copyable ----
   const FF=d.funder_facts||{groups:[]};
   function groupMd(g){
-    return "## "+g.title+"\n"+g.rows.map(r=>`- **${r.label}:** ${r.value}${r.note?` — ${r.note}`:""}`).join("\n");
+    return "## "+g.title+"\n"+g.rows.map(r=>`- **${r.label}:** ${r.value}${r.note?` — ${r.note}`:""}${(r.links||[]).length?" ("+r.links.map(l=>`[${l.t}](${l.u})`).join(", ")+")":""}`).join("\n");
   }
   function allMd(){
     return "# Vital City — audience evidence for funders\nAs of "+(FF.asof||"")+". Computed from live Mailchimp, Ghost analytics, the contact database and the catalogue.\n\n"
@@ -279,7 +279,7 @@ function boot(d){
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--vc-charcoal)">${esc(g.title)}
         <button class="exp" data-g="${i}" style="float:none;margin-left:8px;padding:2px 8px">&#9112; Copy</button></div>
       <table class="tbl" style="margin-top:4px"><tbody>
-        ${g.rows.map(r=>`<tr><td style="width:230px"><b>${esc(r.label)}</b></td><td class="n" style="text-align:left;white-space:normal">${esc(r.value)}</td><td class="why">${esc(r.note)}</td></tr>`).join("")}
+        ${g.rows.map(r=>`<tr><td style="width:230px"><b>${esc(r.label)}</b></td><td class="n" style="text-align:left;white-space:normal">${esc(r.value)}</td><td class="why">${esc(r.note)}${(r.links||[]).length?`<div style="margin-top:3px">${r.links.map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join(" &middot; ")}</div>`:""}</td></tr>`).join("")}
       </tbody></table>
     </div>`).join("");
   document.querySelectorAll("#factsBody [data-g]").forEach(b=>b.addEventListener("click",()=>copyText(groupMd(FF.groups[+b.dataset.g]),b)));
