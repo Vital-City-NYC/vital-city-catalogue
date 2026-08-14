@@ -49,6 +49,12 @@ def fetch_all_posts():
         url = (
             f"{API_BASE}/posts/?key={API_KEY}"
             f"&include=authors,tags&limit=50&page={page}"
+            # feature_image_caption carries the photo credit ("Mark Abramson /
+            # The New York Times / Redux"); alt is the accessibility text.
+            f"&fields=id,uuid,title,slug,url,excerpt,custom_excerpt,feature_image,"
+            f"feature_image_alt,feature_image_caption,featured,visibility,"
+            f"published_at,updated_at,created_at,reading_time"
+            f"&formats=html"
             f"&order=published_at%20desc"
         )
         try:
@@ -71,6 +77,70 @@ def fetch_all_posts():
 
 TAG_RE = re.compile(r"<[^>]+>")
 WS_RE = re.compile(r"\s+")
+
+
+# ---------------------------------------------------------------------------
+# What material is embedded in a piece.
+#
+# The article HTML is already fetched for word counts, so this costs no extra
+# request. Two forms matter:
+#   - Flourish ships as <div class="flourish-embed" data-src="visualisation/ID">,
+#     NOT an iframe, so an iframe-only scan misses every chart.
+#   - Everything else is an <iframe>, classified by host.
+# Vital City embeds its own projects more than anything else, across four
+# different GitHub Pages orgs, so those are recognised as one category.
+# ---------------------------------------------------------------------------
+FLOURISH_RE = re.compile(r'data-src=["\']((?:visualisation|story)/[^"\']+)', re.I)
+IFRAME_RE   = re.compile(r'<iframe[^>]+src=["\']([^"\']+)', re.I)
+_SELF_HOSTS = ("vitalcity-nyc.github.io", "vital-city.github.io",
+               "vital-city-nyc.github.io", "joshgreenman1973.github.io",
+               "vitalcitynyc.org")
+_KINDS = (
+    ("podcast",     ("simplecast.com", "soundcloud.com", "spotify.com", "megaphone.fm",
+                     "libsyn.com", "buzzsprout.com", "art19.com")),
+    ("video",       ("youtube.com", "youtu.be", "vimeo.com", "descript.com")),
+    # Flourish ships two ways: a <div data-src> and an iframe on flo.uri.sh.
+    # Counting only the div undercounts it badly -- 54 of 889 pieces use the
+    # iframe form.
+    ("flourish",    ("flo.uri.sh", "public.flourish.studio")),
+    ("chart",       ("datawrapper", "dwcdn.net", "tableau", "infogram")),
+    ("document",    ("docs.google.com", "drive.google.com", "documentcloud.org",
+                     "scribd.com")),
+    ("social",      ("twitter.com", "x.com", "instagram.com", "bsky.app", "tiktok.com")),
+    ("map",         ("google.com/maps", "mapbox", "arcgis", "felt.com")),
+    ("form",        ("typeform", "airtable", "surveymonkey", "jotform")),
+)
+
+def _iframe_kind(url):
+    u = (url or "").lower()
+    if any(h in u for h in _SELF_HOSTS):
+        return "vital city project"
+    for kind, hosts in _KINDS:
+        if any(h in u for h in hosts):
+            return kind
+    return "other"
+
+def extract_embeds(html):
+    """Return {flourish:[...], iframes:[...], counts:{...}} for one piece."""
+    html = html or ""
+    flourish = []
+    for src in FLOURISH_RE.findall(html):
+        vid = src.split("?")[0].split("/")[-1]
+        flourish.append({"id": vid, "src": src,
+                         "url": f"https://public.flourish.studio/{src.split('?')[0]}/"})
+    iframes = []
+    for src in IFRAME_RE.findall(html):
+        try:
+            host = src.split("//", 1)[-1].split("/")[0].lower()
+        except Exception:
+            host = ""
+        iframes.append({"url": src, "host": host, "kind": _iframe_kind(src)})
+    counts = {"flourish": len(flourish)}
+    for e in iframes:
+        counts[e["kind"]] = counts.get(e["kind"], 0) + 1
+    return {"flourish": flourish, "iframes": iframes,
+            "counts": {k: v for k, v in counts.items() if v},
+            "total": len(flourish) + len(iframes)}
 
 
 def html_to_text(html):
@@ -288,6 +358,15 @@ def normalize_post(p):
         "summary": one_line_summary(p),
         "excerpt": p.get("custom_excerpt") or (p.get("excerpt") or "").strip() or None,
         "feature_image": p.get("feature_image"),
+        # Header-image provenance. The caption is where the credit lives
+        # ("Mark Abramson / The New York Times / Redux"); stored as plain text
+        # since Ghost wraps it in markup.
+        "feature_image_alt": (p.get("feature_image_alt") or "").strip() or None,
+        "feature_image_credit": html_to_text(p.get("feature_image_caption") or "").strip() or None,
+        # What is embedded in the piece: Flourish charts by id, plus every
+        # iframe classified by host. Costs no extra request -- the HTML is
+        # already fetched for the word count.
+        "embeds": extract_embeds(p.get("html")),
         "featured": p.get("featured", False),
         "visibility": p.get("visibility"),
         "word_count": word_count(p.get("html")),
