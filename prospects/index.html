@@ -266,7 +266,10 @@ function boot(d){
   </div>
 
   <div class="card" id="fit">
-    <h2>The case for funders <button class="exp" id="factsMd">&#8681; Download .md</button><button class="exp" id="factsAll" style="margin-right:6px">&#9112; Copy all</button></h2>
+    <h2>The case for funders
+      <button class="exp" id="factsMd">&#8681; Download .md</button>
+      <button class="exp" id="factsAll" style="margin-right:6px">&#9112; Copy all</button>
+      <a class="exp" href="deck.html" target="_blank" rel="noopener" style="margin-right:6px;text-decoration:none;background:var(--vc-black);color:#fff;border-color:var(--vc-black)" title="The presentable deck version of this case. It reads the same nightly data as this page, so every open IS the updated version — print to PDF from there to hand a funder a current copy.">&#9654; Generate the deck</a></h2>
     <div class="hint">Reach, influence and growth &mdash; every number computed fresh from the live data on each nightly rebuild (as of ${esc((d.funder_facts||{}).asof||d.generated_at)}), never hand-typed. Copy a section or the whole thing.</div>
     <div id="factsBody"></div>
     <div style="margin-top:14px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700">Published pieces by topic since January ${new Date().getFullYear()-1}</div>
