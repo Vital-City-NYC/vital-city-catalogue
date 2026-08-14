@@ -207,6 +207,19 @@
     .controls select { flex: 1 1 45%; max-width: none; }
     .stat .num { font-size: 28px; }
   }
+  /* Embedded material + header-image credit */
+  .embcell{max-width:132px;min-width:96px}
+  .epill{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.02em;padding:2px 6px;
+         border-radius:3px;margin:0 3px 3px 0;cursor:pointer;white-space:nowrap;
+         background:var(--vc-cloud);color:var(--vc-black)}
+  .epill:hover{background:var(--vc-black);color:#fff}
+  .e-flourish{background:#217ebe;color:#fff}
+  .e-vitalcityproject{background:#57aa4a;color:#fff}
+  .e-podcast{background:#7a5ea6;color:#fff}
+  .e-video{background:#e7466d;color:#fff}
+  .e-document{background:#d9a441;color:#fff}
+  .credit{display:block;font-size:10px;color:var(--vc-charcoal);line-height:1.35;margin-top:2px}
+  .nocred{color:var(--vc-cloud)}
 </style>
 </head>
 <body>
@@ -231,6 +244,16 @@
   <select id="fTopic"><option value="">All topics</option></select>
   <select id="fIssue"><option value="">All issues</option></select>
   <select id="fYear"><option value="">All years</option></select>
+  <select id="fEmbed" title="What material is embedded in the piece — Flourish charts, podcast players, Vital City's own projects, video, documents.">
+    <option value="">Any embedded material</option>
+    <option value="__any">Has any embed</option>
+    <option value="__none">No embeds</option>
+    <option value="flourish">Flourish chart</option>
+    <option value="podcast">Podcast player</option>
+    <option value="vital city project">Vital City project</option>
+    <option value="video">Video</option>
+    <option value="document">Document</option>
+  </select>
   <label class="chk"><input type="checkbox" id="fFeatured"> Featured</label>
   <button class="clear" id="clear">Clear</button>
 </div>
@@ -241,6 +264,7 @@
     <thead><tr>
       <th data-k="published_date">Date <span class="arrow"></span></th>
       <th data-k="type">Type <span class="arrow"></span></th>
+      <th data-k="embed_count" title="Charts, players and other material embedded in the piece, plus the header-image credit.">Embeds &amp; image <span class="arrow"></span></th>
       <th data-k="title">Title &amp; summary <span class="arrow"></span></th>
       <th data-k="primary_author">Author <span class="arrow"></span></th>
       <th data-k="topics">Topics <span class="arrow"></span></th>
@@ -364,6 +388,14 @@ function bind() {
     if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = (k==="published_date"||k==="word_count")?-1:1; }
     render();
   }));
+  // clicking an embed pill filters to that kind, matching how topic and author work
+  document.addEventListener("click", e => {
+    const p = e.target.closest("[data-embed]");
+    if (!p) return;
+    const sel = $("#fEmbed");
+    sel.value = (sel.value === p.dataset.embed) ? "" : p.dataset.embed;
+    render();
+  });
   // delegate clicks on author / topic / issue to set the matching filter
   $("#rows").addEventListener("click", e => {
     const el = e.target.closest("[data-author],[data-topic],[data-issue],[data-type],[data-cat]"); if (!el) return;
@@ -380,7 +412,7 @@ function bind() {
 function filtered() {
   const q = $("#q").value.trim().toLowerCase();
   const ftype = $("#fType").value, fatype = $("#fAuthorType").value, fa = $("#fAuthor").value, ft = $("#fTopic").value, fi = $("#fIssue").value, fy = $("#fYear").value;
-  const feat = $("#fFeatured").checked;
+  const feat = $("#fFeatured").checked, fe = $("#fEmbed").value;
   return DATA.filter(r => {
     if (ftype && r.type !== ftype) return false;
     if (fatype && !articleCats(r).includes(fatype)) return false;
@@ -389,9 +421,20 @@ function filtered() {
     if (fi && !(r.issues||[]).includes(fi)) return false;
     if (fy && !(r.published_date||"").startsWith(fy)) return false;
     if (feat && !r.featured) return false;
+    if (fe) {
+      const cnts = (r.embeds && r.embeds.counts) || {};
+      const total = (r.embeds && r.embeds.total) || 0;
+      if (fe === "__any"  && !total) return false;
+      else if (fe === "__none" && total) return false;
+      else if (fe !== "__any" && fe !== "__none" && !cnts[fe]) return false;
+    }
     if (q) {
+      // Photo credit and embed kinds are searchable too, so "magnum" finds every
+      // piece with a Magnum photograph and "flourish" every charted piece.
+      const cnts = (r.embeds && r.embeds.counts) || {};
       const hay = [r.title, r.summary, r.type, (r.authors||[]).join(" "), (r.topics||[]).join(" "),
-        (r.issues||[]).join(" ")].join(" ").toLowerCase();
+        (r.issues||[]).join(" "), r.feature_image_credit || "", r.feature_image_alt || "",
+        Object.keys(cnts).join(" ")].join(" ").toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -403,6 +446,7 @@ function sortRows(rows) {
   return rows.sort((a, b) => {
     let va, vb;
     if (k === "topics" || k === "issues") { va=(a[k]||[]).join(" "); vb=(b[k]||[]).join(" "); }
+    else if (k === "embed_count") { va=(a.embeds&&a.embeds.total)||0; vb=(b.embeds&&b.embeds.total)||0; }
     else { va = a[k]; vb = b[k]; }
     if (va == null) va = ""; if (vb == null) vb = "";
     if (typeof va === "number") return (va - vb) * sortDir;
@@ -410,6 +454,19 @@ function sortRows(rows) {
   });
 }
 
+// What is embedded in a piece, plus who took the header photograph. Kept
+// compact: a count per kind, and the credit underneath.
+const EMB_LABEL = {"flourish":"chart","podcast":"podcast","vital city project":"VC project",
+                   "video":"video","document":"doc","chart":"chart","social":"social",
+                   "map":"map","form":"form","other":"embed"};
+function embedCell(r, esc){
+  const c = (r.embeds && r.embeds.counts) || {};
+  const pills = Object.keys(c).sort((a,b)=>c[b]-c[a]).map(k =>
+    `<span class="epill e-${k.replace(/[^a-z]/g,"")}" data-embed="${esc(k)}" title="${c[k]} ${esc(k)} embed${c[k]===1?"":"s"} in this piece — click to filter">${esc(EMB_LABEL[k]||k)}${c[k]>1?` ${c[k]}`:""}</span>`).join("");
+  const cred = r.feature_image_credit
+    ? `<span class="credit" title="Header image credit">${esc(r.feature_image_credit)}</span>` : "";
+  return pills + cred || '<span class="nocred">&mdash;</span>';
+}
 function render() {
   const rows = sortRows(filtered());
   document.querySelectorAll("thead th .arrow").forEach(a => a.textContent = "");
@@ -424,6 +481,7 @@ function render() {
     <tr>
       <td class="date">${fmtDate(r.published_date)}</td>
       <td class="typecell">${r.type?`<span class="tt ${typeClass(r.type)}" data-type="${esc(r.type)}">${esc(r.type)}</span>`:''}</td>
+      <td class="embcell">${embedCell(r, esc)}</td>
       <td class="title">${r.featured?'<span class="star">★ </span>':''}<a class="headline" href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a>${r.summary?`<span class="summary">${esc(r.summary)}</span>`:''}</td>
       <td>${(r.authors||[]).map(a=>`<a class="author" data-author="${esc(a)}">${esc(a)}</a>`).join(", ")}${HAS_CRM?articleCats(r).map(c=>`<span class="catpill" data-cat="${esc(c)}">${esc(c)}</span>`).join(""):""}</td>
       <td>${(r.topics||[]).map(t=>`<span class="pill" data-topic="${esc(t)}">${esc(t)}</span>`).join("")}</td>
