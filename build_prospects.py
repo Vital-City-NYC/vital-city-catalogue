@@ -103,7 +103,7 @@ FUNDERS = [
  {"name":"Coefficient Giving","domain":"coefficientgiving.org","lead":True,"cat":"abundance","pursuit":True,
   "focus":"Abundance and growth: housing, land use, state capacity, evidence-based policy",
   "fit":["housing","city government","economy"],
-  "note":"IN PURSUIT (per Josh, Aug 2026). Formerly Open Philanthropy; its Abundance and Growth fund is the closest large pool to Vital City's actual work. Pitch the policy-analysis output, not the journalism."},
+  "note":"IN PURSUIT and furthest along: Matt Clancy (Abundance & Growth fund) is engaged and was intrigued by COGE as a jumping-off point for 'DOGE done right'; an 18-month government-effectiveness project (~$300K Vital City + $125K partner) is being pitched, intro sent Aug 3. CEO Alexander Berger has amplified Ted's work on X."},
  {"name":"Arnold Ventures — government performance","domain":"arnoldventures.org","lead":True,"cat":"abundance",
   "focus":"Evidence-based policy, government performance (beyond the criminal-justice program above)",
   "fit":["city government","data journalism"],
@@ -251,6 +251,26 @@ def bio_descriptor(bio):
     b = re.sub(r"^\s*(is|was|became)\s+(an?|the)?\s*", "", (bio or "").strip(), flags=re.I)
     b = re.split(r"\.\s|, where| and (?:a |an |the |former )", b)[0].strip(" .,;")
     return b[:88]
+
+# The live pipeline, read from the inbox (Aug 2026 scan of fundraising email).
+# Each row carries its evidence: the thread and date it comes from. These are
+# conversations in motion, not leads to research.
+PIPELINE = [
+ {"name":"Coefficient Giving — COGE project","status":"pitch in progress",
+  "date":"2026-08-04","note":"18-month government-effectiveness project, ~$300K Vital City costs + $125K partner; intro sent Aug 3; Matt Clancy engaged; budget being finalized.","src":"threads: 'Abundance journalism pitch', 'coefficient giving — can the three of us chat?', 'before I go offline today'"},
+ {"name":"New America (reporting grants)","status":"active conversation",
+  "date":"2026-07-15","note":"Would support a story on COGE 'centering the human experiences and costs of government inefficiency.' Ted responded re: contributor-driven model. Small grant, fast.","src":"thread: 'New Reporting Grants on Ballot Initiatives' (swenson@newamerica.org)"},
+ {"name":"ABNY Foundation","status":"declined, partnership open",
+  "date":"2026-07-23","note":"SYEP application declined (190 applicants) but ABNY proposed a partnership around convenings/'playbook' release. Liz and Josh planned to discuss what partnership means before engaging.","src":"thread: 'Vital City//ABNY Foundation Grant Notification & Partnership Proposal'"},
+ {"name":"Reihan Salam / Manhattan Institute","status":"meeting being scheduled",
+  "date":"2026-07-29","note":"'A bird tells me you may have a Vital City fundraising idea' — Salam confirmed, meeting set for early August. Nature of the idea unknown.","src":"thread: 'Also a bird tells me you may have a Vital City fundraising idea?'"},
+ {"name":"William T. Grant Foundation","status":"inbound interest, dormant",
+  "date":"2025-03-27","note":"Reached out to 'connect' — read internally as possible invitation to apply ('how do you publish consistently high-quality work with such a small staff'). Youth-outcomes research funder. No follow-up found since.","src":"thread: 'Connecting Vital City and the William T. Grant Foundation'"},
+ {"name":"Education funders (via Charles Sahm)","status":"intelligence in hand",
+  "date":"2026-07-31","note":"Sahm delivered PDFs mapping the major funders of The 74, Chalkbeat/Civic News and peers, with notes on current interests. An education-vertical pitch has a ready-made target list sitting in the inbox.","src":"thread: 'Education Funders'"},
+ {"name":"SocialSphere Index (Della Volpe)","status":"fundable product built",
+  "date":"2026-02-16","note":"Joint VC/SocialSphere research index with a funder pitch built into the final report (beautiful.ai deck); Jamie Rubin's brainchild. A packaged thing to put in front of funders.","src":"thread: 'Final report (with funder pitch)'"},
+]
 
 def load(path, default=None):
     try:
@@ -536,6 +556,7 @@ def main():
         "funders": funders_out,
         "beats": beats,
         "funder_facts": funder_facts,
+        "pipeline": PIPELINE,
         "readiness": {
             "sponsor": "Fund for the City of New York (FCNY)",
             "ein": "13-2612524", "status": "501(c)(3) via fiscal sponsorship",

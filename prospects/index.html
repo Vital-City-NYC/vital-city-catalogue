@@ -252,6 +252,16 @@ function boot(d){
     <tbody>${current.map(frow).join("")}</tbody></table>
     <div class="ins">Renewals are the cheapest money in fundraising. Arnold (12 readers, a byline) and Guggenheim (staff who donate personally) are deep relationships with obvious expansion cases; Achelis &amp; Bodman, Public Welfare and Teagle fund without a single staff reader on file &mdash; worth asking who the program officer is and getting them on the list.</div>
 
+    <h2 style="margin-top:26px">The live pipeline &mdash; from the inbox</h2>
+    <div class="hint">Conversations already in motion, surfaced from an Aug 2026 scan of fundraising email. Each row cites the thread it comes from.</div>
+    <table class="tbl"><thead><tr><th>Who</th><th>Status</th><th>As of</th><th>What's happening</th></tr></thead>
+    <tbody>${(d.pipeline||[]).map(p=>`<tr>
+      <td><b>${esc(p.name)}</b><div class="why">${esc(p.src)}</div></td>
+      <td><span class="badge" style="background:${/progress|active|scheduled/.test(p.status)?"var(--vc-green)":/declined/.test(p.status)?"var(--vc-orange)":/dormant/.test(p.status)?"#c8102e":"var(--vc-cerulean)"};color:#fff">${esc(p.status.toUpperCase())}</span></td>
+      <td class="n">${esc(p.date)}</td>
+      <td style="max-width:340px">${esc(p.note)}</td></tr>`).join("")}</tbody></table>
+    <div class="ins warn"><b>Two things this table surfaces.</b> William T. Grant reached out sixteen months ago and the thread appears to have gone cold &mdash; an inbound from a funder is rare enough that it may deserve a revival note. And the Sahm education-funder intelligence is sitting unused: it is a target list without a pitch attached to it yet.</div>
+
     <h2 style="margin-top:26px">Warm doors &mdash; readers, not yet funders</h2>
     <div class="hint">Foundations whose staff already read Vital City but which do not appear on the about page as funders.</div>
     <table class="tbl"><thead><tr><th>Funder &middot; focus &middot; beat fit</th><th>Readers</th><th>Engaged</th><th>Donors</th><th>Who</th><th>Note</th></tr></thead>
