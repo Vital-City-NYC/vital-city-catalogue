@@ -297,15 +297,15 @@ function slides(){
 
   S.push({eyebrow:"The bylines",html:`
     <h2>The people who shape the debate write here.</h2>
-    <div class="bygrid">${(FF.influentials||[]).map(p=>`
+    <div class="bygrid">${((FF.seniors||{}).people||[]).filter(p=>p.feat).map(p=>`
       <div class="by">
         <div class="bn">${esc(p.n)}</div>
-        <div class="bw">${esc(p.who)}</div>
+        <div class="bw">${esc(p.who||"")}</div>
         <div class="bp">${(p.pieces||[]).slice(0,1).map(x=>`&ldquo;<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.t)}</a>&rdquo;`).join("")}
           ${p.npieces>1?`<span class="more"> +${p.npieces-1} more</span>`:""}</div>
       </div>`).join("")}
     </div>
-    <div class="bf-cap" style="margin-top:10px">A sample, not a masthead: ${esc(String(tile("Pieces published").s||"").replace("by ","")).split(" since")[0]||"492 contributors"} in all — criminologists, economists, planners, prosecutors, formerly incarcerated New Yorkers, mayors. Selected here for public prominence and breadth of perspective; pieces and counts are matched live from the catalogue.</div>`});
+    <div class="bf-cap" style="margin-top:10px">Ten of a deeper bench: ${esc(String((FF.seniors||{}).count||""))} leading authors &mdash; economists, criminologists, planners, deans, a sitting news anchor, the CEO of Robin Hood &mdash; have written ${esc(String((FF.seniors||{}).pieces_total||""))} pieces for Vital City among them, within a contributor pool of 492. Descriptors come from each author's own bio; pieces and counts are matched live from the catalogue.</div>`});
 
   S.push({eyebrow:"The audience",html:`
     <h2>It is not the size of the list. It is who is on it.</h2>

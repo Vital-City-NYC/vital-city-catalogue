@@ -17,7 +17,7 @@ Design rules, deliberately repeated from the rest of the repo:
 - No single opaque score. Every list shows the components (gave, opens, clicks,
   tag) that put a person on it.
 """
-import json, os, base64, secrets, statistics as st
+import json, os, re, base64, secrets, statistics as st
 from datetime import date, datetime
 from pathlib import Path
 from collections import defaultdict, Counter
@@ -214,24 +214,43 @@ def load_event(people):
     out["unconverted"] = sum(1 for x in out["attended"] if not x["gave_after"])
     return out
 
-# Most-influential contributors for the deck. Curated Aug 2026 from the
-# Wikipedia-notability ranking of bylined authors (article length as the rough
-# prominence proxy), hand-filtered: deceased/archival authors excluded, chosen
-# for breadth across discipline and political lean. The DESCRIPTIONS are
-# point-in-time (Wikipedia, Aug 2026); the PIECES are matched live from the
-# catalogue at every build, so links and counts stay current.
-INFLUENTIALS = [
-  ("Edward Glaeser", "Harvard economist — the leading urban economist of his generation"),
-  ("Richard Florida", "Urban theorist, author of The Rise of the Creative Class"),
-  ("Megan McArdle", "Washington Post columnist"),
-  ("Jonathan Rauch", "Brookings senior fellow and The Atlantic contributing writer"),
-  ("Carlina Rivera", "New York City Council member"),
-  ("Erwin Chemerinsky", "Dean of Berkeley Law, leading constitutional scholar"),
-  ("Brandon del Pozo", "Former police chief, Brown professor of policy and policing"),
-  ("Majora Carter", "Urban revitalization strategist, Peabody-winning broadcaster"),
-  ("Carlo Ratti", "MIT Senseable City Lab director and architect"),
-  ("Bradley Tusk", "Venture capitalist and political strategist"),
+# Senior contributors — Josh's slate (docx, Aug 2026): the 34 marked YES
+# (yellow+underline). Gelinas declined; Florida and Morgan Williams were
+# unconfirmed at read time. Display name -> exact catalogue author name (None =
+# no byline yet). Descriptors are pulled from each author's own Ghost bio at
+# build time, so they stay current and are never invented here.
+SENIORS = [
+  ("Alex Armlovich","Alex Armlovich"),("Neil Barsky","Neil Barsky"),
+  ("Richard Buery Jr.","Richard Buery Jr."),("Vishaan Chakrabarti","Vishaan Chakrabarti"),
+  ("Aaron Chalfin","Aaron Chalfin"),("Jelani Cobb","Jelani Cobb"),
+  ("John Della Volpe","John Della Volpe"),("Brandon del Pozo","Brandon del Pozo"),
+  ("Jennifer Doleac","Jennifer Doleac"),("Cara Eckholm","Cara Eckholm"),
+  ("Ingrid Gould Ellen","Ingrid Gould Ellen"),("Barry Friedman","Barry Friedman"),
+  ("Edward Glaeser","Edward Glaeser"),("Sherry Glied","Sherry Glied"),
+  ("Gloria Gong","Gloria Gong"),("Henry Grabar","Henry Grabar"),
+  ("Arpit Gupta","Arpit Gupta"),("Anna Harvey","Anna Harvey"),
+  ("Nancy La Vigne",None),("Errol Louis","Errol Louis"),
+  ("Jens Ludwig","Jens Ludwig"),("John MacDonald","John MacDonald"),
+  ("Tracey L. Meares","Tracey L. Meares"),("Peter Moskos","Peter Moskos"),
+  ("Alex R. Piquero","Alex R. Piquero"),("Kerri M. Raissian","Kerri M. Raissian"),
+  ("John K. Roman","John K. Roman"),("Julie Sandorf","Julie Sandorf"),
+  ("David Schleicher","David Schleicher"),("Harry Siegel","Harry Siegel"),
+  ("Martha Stark","Martha Stark"),("Carl Weisbrod","Carl Weisbrod"),
+  ("Claire Weisz","Claire Weisz"),("Bruce Western","Bruce Western"),
 ]
+
+# The ten to feature as cards on the influence slide (breadth of discipline:
+# economics, architecture, policing, law, housing, media, philanthropy). The
+# other 24 roll into the aggregate bench line.
+FEATURED = {"Edward Glaeser","Vishaan Chakrabarti","Jelani Cobb","Richard Buery Jr.",
+            "Tracey L. Meares","Jens Ludwig","Ingrid Gould Ellen","Aaron Chalfin",
+            "Brandon del Pozo","Errol Louis"}
+
+def bio_descriptor(bio):
+    """First clause of the author's own Ghost bio, as the safe descriptor."""
+    b = re.sub(r"^\s*(is|was|became)\s+(an?|the)?\s*", "", (bio or "").strip(), flags=re.I)
+    b = re.split(r"\.\s|, where| and (?:a |an |the |former )", b)[0].strip(" .,;")
+    return b[:88]
 
 def load(path, default=None):
     try:
@@ -480,15 +499,20 @@ def main():
         {"label": "Staff at grantmaking foundations", "value": "Arnold Ventures, Bloomberg Philanthropies, Robin Hood, Guggenheim, Revson, Tiger, Clark, MacArthur", "note": "counts and names in the warm-doors table"},
         {"label": "Wikipedia-notable subscribers", "value": f"{sum(1 for r in sub if r.get('wiki')):,}", "note": "conservative floor — matched, not estimated"},
       ],
-      "influentials": [
-        {"n": name, "who": who,
-         "npieces": len([p for p in cat if name in (p.get("authors") or []) or p.get("primary_author") == name]),
-         "pieces": [{"t": p["title"], "u": p["url"]} for p in sorted(
-             [p for p in cat if name in (p.get("authors") or []) or p.get("primary_author") == name],
-             key=lambda p: p.get("published_date") or "", reverse=True)[:2]]}
-        for name, who in INFLUENTIALS
-        if any(name in (p.get("authors") or []) or p.get("primary_author") == name for p in cat)
-      ],
+      "seniors": (lambda au: {
+          "people": [
+            {"n": disp,
+             "who": bio_descriptor((au.get(cn) or {}).get("bio")) if cn else "",
+             "npieces": len([p for p in cat if cn and (cn in (p.get("authors") or []) or p.get("primary_author") == cn)]),
+             "feat": 1 if disp in FEATURED else 0,
+             "pieces": [{"t": p["title"], "u": p["url"]} for p in sorted(
+                 [p for p in cat if cn and (cn in (p.get("authors") or []) or p.get("primary_author") == cn)],
+                 key=lambda p: p.get("published_date") or "", reverse=True)[:1]]}
+            for disp, cn in SENIORS],
+          "count": len(SENIORS),
+          "pieces_total": sum(len([p for p in cat if cn and (cn in (p.get("authors") or []) or p.get("primary_author") == cn)])
+                              for _, cn in SENIORS),
+      })({x["name"]: x for x in (load(ROOT / "data" / "authors.json") or [])}),
       "longview": {
         # list size at each year end (current year = latest month available)
         "list": [{"y": y, "n": v} for y, v in sorted({
