@@ -220,6 +220,15 @@
   .e-document{background:#d9a441;color:#fff}
   .credit{display:block;font-size:10px;color:var(--vc-charcoal);line-height:1.35;margin-top:2px}
   .nocred{color:var(--vc-cloud)}
+  /* Cross-tool switcher — identical on every page so it reads as one suite */
+  .toolnav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0 2px}
+  .toolnav .tlab{font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:var(--vc-charcoal);margin-right:3px}
+  .toolnav a{padding:5px 13px;border:1.5px solid var(--vc-black);border-radius:16px;font-size:12px;font-weight:800;
+             text-decoration:none;color:var(--vc-black);background:var(--vc-white);letter-spacing:.01em}
+  .toolnav a:hover{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  .toolnav a.here{background:var(--vc-black);color:var(--vc-white);cursor:default;pointer-events:none}
+  html.dark .toolnav a.here{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+
   #embpop{position:absolute;z-index:120;background:var(--vc-white,#fff);border:1px solid var(--vc-black,#050507);
           box-shadow:5px 5px 0 rgba(5,5,7,.12);padding:12px 14px;max-width:340px;font-size:12px}
   #embpop .epTitle{font-weight:800;font-size:11px;margin-bottom:7px}
@@ -234,11 +243,10 @@
 <header class="masthead">
   <div class="mastlinks">
     <a href="catalogue-analysis/" title="What the catalogue adds up to: subject, format, contributors, length">The catalogue, analyzed</a>
-    <a href="growth/" title="Open the growth dashboard (staff)">Growth dashboard</a>
-    <a href="network/" title="Open the contact master search (staff)">Contacts</a>
   </div>
   <div class="wordmark">Vital City</div>
   <h1>Content catalogue</h1>
+  <nav class="toolnav" aria-label="Vital City tools"><span class="tlab">Tools</span><a href="./" class="here">Catalogue</a><a href="growth/">Growth</a><a href="network/">Contacts</a></nav>
   <div class="sub">Every article published on vitalcitynyc.org, searchable by author, topic, issue and date. For what it all adds up to, see <a href="catalogue-analysis/" style="color:var(--vc-cerulean);text-decoration:underline">the catalogue, analyzed</a>.</div>
 </header>
 

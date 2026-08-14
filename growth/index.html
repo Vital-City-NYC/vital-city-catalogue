@@ -497,6 +497,14 @@
   html.dark .tsPill{background:#212329;border-color:#3a3d45;color:#c9ccd2}
   html.dark .tsPill.on{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
   html.dark .s-ok{background:#3a3d45;color:#c9ccd2}
+  /* Cross-tool switcher — identical on every page so it reads as one suite */
+  .toolnav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0 2px}
+  .toolnav .tlab{font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:var(--vc-charcoal);margin-right:3px}
+  .toolnav a{padding:5px 13px;border:1.5px solid var(--vc-black);border-radius:16px;font-size:12px;font-weight:800;
+             text-decoration:none;color:var(--vc-black);background:var(--vc-white);letter-spacing:.01em}
+  .toolnav a:hover{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  .toolnav a.here{background:var(--vc-black);color:var(--vc-white);cursor:default;pointer-events:none}
+  html.dark .toolnav a.here{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
 </style>
 </head>
 <body>
@@ -518,14 +526,12 @@
     <div class="mastlinks">
       <a href="about.html" target="_blank">How it works ↗</a>
       <a href="#" id="printReport" title="Print or save the whole dashboard as a nicely formatted PDF">🖨 Print / PDF</a>
-      <a href="../" title="Open the public content catalogue">Catalogue</a>
-      <a href="../network/" title="Open the contact master search">Contacts</a>
-      <a href="../prospects/" title="Open the fundraising prospects page">Prospects</a>
       <a href="#" id="themeToggle">🌙 Dark mode</a>
       <a href="#" id="forget" title="You stay logged in automatically on this device for 90 days (refreshed each visit) — and the same login covers the Contact tool too, so you shouldn't need to re-enter the passphrase. 'Lock' is the opposite: tap it to forget the saved passphrase and re-lock now, e.g. on a shared or public computer.">Lock</a>
     </div>
     <div class="wm">Vital City</div>
     <h1>Growth dashboard</h1>
+    <nav class="toolnav" aria-label="Vital City tools"><span class="tlab">Tools</span><a href="../">Catalogue</a><a href="../growth/" class="here">Growth</a><a href="../network/">Contacts</a><a href="../prospects/">Prospects</a></nav>
     <div class="sub" id="subline">Ordered by priority: growing the list first, then donors and influence, then the content engine that drives both. List health and raw traffic signals at the bottom.</div>
   </header>
   <div class="confbar">Confidential · internal growth metrics · do not redistribute</div>

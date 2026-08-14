@@ -72,6 +72,14 @@
   html.dark{--vc-paper:#17181c;--vc-white:#212329;--vc-black:#e8e8e5;--vc-charcoal:#a2a5ad;--vc-cloud:#3a3d45;--vc-paper2:#2b2d34}
   html.dark .gatebox,html.dark .card{box-shadow:none}
   html.dark .b-lead{background:#3a3d45;color:#c9ccd2}
+  /* Cross-tool switcher — identical on every page so it reads as one suite */
+  .toolnav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0 2px}
+  .toolnav .tlab{font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:var(--vc-charcoal);margin-right:3px}
+  .toolnav a{padding:5px 13px;border:1.5px solid var(--vc-black);border-radius:16px;font-size:12px;font-weight:800;
+             text-decoration:none;color:var(--vc-black);background:var(--vc-white);letter-spacing:.01em}
+  .toolnav a:hover{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  .toolnav a.here{background:var(--vc-black);color:var(--vc-white);cursor:default;pointer-events:none}
+  html.dark .toolnav a.here{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
 </style>
 </head>
 <body>
@@ -94,11 +102,10 @@
   <div>
     <div class="wm">Vital City</div>
     <h1>Fundraising prospects</h1>
+    <nav class="toolnav" aria-label="Vital City tools"><span class="tlab">Tools</span><a href="../">Catalogue</a><a href="../growth/">Growth</a><a href="../network/">Contacts</a><a href="../prospects/" class="here">Prospects</a></nav>
     <div class="sub">Who might fund Vital City &mdash; institutions and individuals &mdash; ranked by the evidence in our own data. Leads are labelled as leads.</div>
   </div>
-  <nav class="hnav">
-    <a href="../">Catalogue</a><a href="../growth/">Growth</a><a href="../network/">Contacts</a><a href="#" id="lock">Lock</a>
-  </nav>
+  <nav class="hnav"><a href="#" id="lock">Lock</a></nav>
 </header>
 <nav class="jump">
   <a href="#grants">Grant landscape</a><a href="#fit">What we can show funders</a>
@@ -141,6 +148,10 @@ $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
 document.addEventListener("click",e=>{if(e.target.id==="lock"){e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()}});
 
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+// Same hash the contacts tool uses for its deep links, so a prospect row can
+// open that person's full profile card directly.
+function cyrb53(str,seed=0){let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(let i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507);h1^=Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507);h2^=Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0);}
+const profileURL=e=>"../network/#"+encodeURIComponent(JSON.stringify({person:cyrb53(e||"").toString(36)}));
 const fmtN=n=>Number(n||0).toLocaleString();
 const money=n=>"$"+fmtN(Math.round(n||0));
 
@@ -173,7 +184,7 @@ function boot(d){
         <div>${(f.fit||[]).map(x=>`<span class="fit">${esc(x)}</span>`).join("")}</div></td>
     <td class="n">${f.readers||"—"}</td><td class="n">${f.engaged||"—"}</td><td class="n">${f.donors||"—"}</td>
     <td style="max-width:220px">${f.names&&f.names.length?esc(f.names.join(", ")):'<span class="why">—</span>'}</td>
-    <td style="max-width:250px" class="why">${esc(f.note)}</td></tr>`;
+    <td style="max-width:250px" class="why">${esc(f.note)}${f.grantees?`<div style="margin-top:5px;padding-top:4px;border-top:1px dashed var(--vc-cloud)"><b>Funds:</b> ${esc(f.grantees.who)}<div style="font-size:9.5px;opacity:.75">${esc(f.grantees.src)}</div></div>`:`<div style="margin-top:4px;font-size:9.5px;opacity:.6">Grantees not researched this pass.</div>`}</td></tr>`;
 
   const T=d.tiers||{};
   const tierDefs=[
@@ -183,11 +194,13 @@ function boot(d){
     ["notables","Notable, never asked","Wikipedia-matched public profiles reading regularly, no gift on record."],
     ["principals","Principals","Their own firm or practice in their email domain (inferred — treat as a lead, verify before assuming capacity)."],
     ["foundation_staff","Foundation staff","Institutional doors. Invite and inform; do not solicit a personal check — it can cost the grant relationship."],
-    ["lybunt","Gave before, not this year","Every donor whose last gift predates January. Re-asks convert far better than cold asks."]];
+    ["lybunt","Gave before, not this year","Every donor whose last gift predates January. Re-asks convert far better than cold asks."],
+    ["party","Nov '25 party",(d.event?`${d.event.invited} invited, ${(d.event.attended||[]).length} RSVP'd yes, ${d.event.regrets} regrets. ${d.event.gave_after} gave afterward (${money(d.event.gave_after_amt)}); <b>${d.event.unconverted} attended and have never given — they came to a fundraiser. The warmest unconverted list on this page.</b> Sorted unconverted-first.`:"No event file loaded.")]];
   const prow=p=>`<tr>
-    <td>${p.wiki?'<span class="badge b-star">★</span>':""}<b>${esc(p.n)||'<span class="why">(no name)</span>'}</b>
+    <td>${p.wiki?'<span class="badge b-star">★</span>':""}<a href="${profileURL(p.e)}" target="_blank" rel="noopener" title="Open this person's full profile in the contact tool" style="color:inherit"><b>${esc(p.n)||'<span class="why">(no name)</span>'}</b></a>
         ${(p.types||[]).map(x=>`<span class="fit">${esc(x)}</span>`).join("")}
-        <div class="why">${esc(p.inst)}</div></td>
+        <div class="why">${esc(p.inst)}</div>
+        <div class="why"><a href="mailto:${esc(p.e)}">${esc(p.e)}</a></div></td>
     <td class="n">${p.damt?money(p.damt):"—"}</td>
     <td class="n">${p.dcnt||"—"}</td>
     <td class="n">${p.dlast||"—"}</td>
@@ -218,10 +231,13 @@ function boot(d){
   </div>
 
   <div class="card" id="fit">
-    <h2>What we can show funders</h2>
-    <div class="hint">Published pieces by topic since January ${new Date().getFullYear()-1} &mdash; the evidence base a program officer would ask about, straight from the catalogue.</div>
-    <div class="beats">${(d.beats||[]).map(([t,n])=>`<span class="beat"><b>${n}</b> ${esc(t)}</span>`).join("")}</div>
+    <h2>What we can show funders <button class="exp" id="factsMd">&#8681; Download .md</button><button class="exp" id="factsAll" style="margin-right:6px">&#9112; Copy all</button></h2>
+    <div class="hint">The audience-evidence sheet for a funder conversation &mdash; computed fresh from the live data on every nightly rebuild (as of ${esc((d.funder_facts||{}).asof||d.generated_at)}), never hand-typed. Copy a section or the whole thing.</div>
+    <div id="factsBody"></div>
+    <div style="margin-top:14px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700">Published pieces by topic since January ${new Date().getFullYear()-1}</div>
+    <div class="beats" style="margin-top:6px">${(d.beats||[]).map(([t,n])=>`<span class="beat"><b>${n}</b> ${esc(t)}</span>`).join("")}</div>
     <div class="ins">Match the pitch to the funder: criminal-justice output for Arnold, Guggenheim, MacArthur and Tow; housing, city-government and economy for the abundance funders &mdash; that trio is the abundance-agenda evidence base; the NYC civic beats for Revson, Kaplan and the community funders. The journalism frame is the weakest pitch Vital City can make &mdash; the analysis is the product.</div>
+    <div class="src">${esc((d.funder_facts||{}).benchmark_note||"")}</div>
   </div>
 
   <div class="card" id="people">
@@ -233,7 +249,7 @@ function boot(d){
 
   <div class="card" id="base">
     <h2>The donor base, plainly</h2>
-    <div class="ins">All ${fmtN(t.donors)} <b>online</b> donors arrived from one autumn campaign plus its echoes: ${t.top5_pct}% of the money came from five people, the median gift is ${money(t.median_gift)}, and only ${t.repeat_pct}% have given twice. That is a launch, not yet a base &mdash; and it is the online slice only; anything given by check, DAF or grant is invisible here. The two structural moves this page supports: convert one-time donors to a second gift (the ${(T.second||[]).length} names in that tab), and re-ask the ${(T.lybunt||[]).length} whose last gift predates January.</div>
+    <div class="ins">All ${fmtN(t.donors)} <b>online</b> donors arrived from one autumn campaign plus its echoes: ${t.top5_pct}% of the money came from five people, the median gift is ${money(t.median_gift)}, and only ${t.repeat_pct}% have given twice. That is a launch, not yet a base &mdash; and it is the online slice only; anything given by check, DAF or grant is invisible here. The two structural moves this page supports: convert one-time donors to a second gift (the ${(T.second||[]).length} names in that tab), re-ask the ${(T.lybunt||[]).length} whose last gift predates January${d.event?`, and call the ${d.event.unconverted} people who came to the November party and never gave`:``}.</div>
   </div>
 
   <div class="card" id="method">
@@ -243,12 +259,43 @@ function boot(d){
     </div>
   </div>`;
 
+  // ---- funder facts: grouped stat rows, each group copyable ----
+  const FF=d.funder_facts||{groups:[]};
+  function groupMd(g){
+    return "## "+g.title+"\n"+g.rows.map(r=>`- **${r.label}:** ${r.value}${r.note?` — ${r.note}`:""}`).join("\n");
+  }
+  function allMd(){
+    return "# Vital City — audience evidence for funders\nAs of "+(FF.asof||"")+". Computed from live Mailchimp, Ghost analytics, the contact database and the catalogue.\n\n"
+      + FF.groups.map(groupMd).join("\n\n")
+      + "\n\n*"+(FF.benchmark_note||"")+"*\n";
+  }
+  function copyText(t,btn){
+    (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{
+      const o=btn.textContent; btn.textContent="Copied ✓"; setTimeout(()=>btn.textContent=o,1400);
+    }).catch(()=>{const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();btn.textContent="Copied ✓";});
+  }
+  $("#factsBody").innerHTML=FF.groups.map((g,i)=>`
+    <div style="margin-top:${i?14:2}px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--vc-charcoal)">${esc(g.title)}
+        <button class="exp" data-g="${i}" style="float:none;margin-left:8px;padding:2px 8px">&#9112; Copy</button></div>
+      <table class="tbl" style="margin-top:4px"><tbody>
+        ${g.rows.map(r=>`<tr><td style="width:230px"><b>${esc(r.label)}</b></td><td class="n" style="text-align:left;white-space:normal">${esc(r.value)}</td><td class="why">${esc(r.note)}</td></tr>`).join("")}
+      </tbody></table>
+    </div>`).join("");
+  document.querySelectorAll("#factsBody [data-g]").forEach(b=>b.addEventListener("click",()=>copyText(groupMd(FF.groups[+b.dataset.g]),b)));
+  $("#factsAll").addEventListener("click",e=>copyText(allMd(),e.target));
+  $("#factsMd").addEventListener("click",()=>{
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([allMd()],{type:"text/markdown"}));
+    a.download=`vital-city-funder-facts-${FF.asof||""}.md`; a.click(); URL.revokeObjectURL(a.href);
+  });
+
   const cols=["n","inst","damt","dcnt","dlast","eopen","eclick","why","e"];
   function renderTier(key){
     const def=tierDefs.find(x=>x[0]===key), rows=T[key]||[];
     $("#tierBody").innerHTML=`
       <button class="exp" id="tierCsv">&#8681; CSV</button>
-      <div class="hint" style="margin-bottom:8px">${esc(def[2])}</div>
+      <div class="hint" style="margin-bottom:8px">${def[0]==="party"?def[2]:esc(def[2])}</div>
       <table class="tbl"><thead><tr><th>Who</th><th>Given</th><th>Gifts</th><th>Last</th><th>Opens</th><th>Clicks</th><th>Why listed</th></tr></thead>
       <tbody>${rows.slice(0,60).map(prow).join("")||'<tr><td colspan="7" class="why">Nobody currently qualifies.</td></tr>'}</tbody></table>
       ${rows.length>60?`<div class="why" style="margin-top:6px">Showing 60 of ${rows.length} — the CSV has all of them.</div>`:""}`;

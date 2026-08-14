@@ -142,6 +142,60 @@ FUNDERS = [
 ]
 
 
+
+# Who each funder currently funds — the fit check Josh asked for. Researched
+# Aug 2026 with sources; where a funder was NOT researched this pass, the field
+# says so instead of guessing. Grant claims are examples, not exhaustive lists,
+# and current-ness must be verified on the funder's own grants database.
+GRANTEES = {
+ "Coefficient Giving": {"who":"California YIMBY ($2M general support), YIMBY Action, YIMBY Law, Sightline Institute, Urban Institute, Greater Greater Washington — ~$27M into housing/land-use reform since 2015","src":"openphilanthropy.org grants pages; Inside Philanthropy (verified Aug 2026)"},
+ "Hewlett Foundation — Economy and Society": {"who":"Roosevelt Institute, Niskanen Center, MIT Economics (Shaping the Future of Work) — $33.2M across 49 grants in 2024","src":"hewlett.org; Chronicle of Philanthropy (verified Aug 2026)"},
+ "Arnold Ventures": {"who":"Council on Criminal Justice and CUNY Institute for State & Local Governance were both launched with Arnold support — and both have staff among Vital City readers","src":"widely reported; verify current grants at arnoldventures.org/grants"},
+ "Arnold Ventures — government performance": {"who":"See Arnold Ventures above — same grants database covers the government-performance portfolio","src":"arnoldventures.org/grants"},
+ "Harry Frank Guggenheim Foundation": {"who":"Grants to individual scholars researching violence (its core program), plus research prizes — it funds researchers more than organizations","src":"hfg.org (program structure; verify)"},
+ "Revson Foundation": {"who":"Helped launch THE CITY; long record of NYC journalism and civic grants","src":"widely reported; verify at revsonfoundation.org/grants"},
+ "Emergent Ventures (Mercatus)": {"who":"Small fast grants to individual researchers, writers and founders rather than organizations — the fit is a person or project, not general support","src":"mercatus.org/emergent-ventures (program structure)"},
+}
+
+EVENT_CSV = ROOT / "private" / "events" / "2025-11-fundraiser.csv"
+
+def load_event(people):
+    """The November 2025 house party — the one recorded ASK in the file.
+    Matches invitees to the contact DB by email, then by normalized name."""
+    import csv as _csv
+    if not EVENT_CSV.exists():
+        return None
+    rows = list(_csv.DictReader(open(EVENT_CSV)))
+    by_email = {}
+    for p in people:
+        for e in ([p.get("e")] + (p.get("emails") or [])):
+            if e: by_email[e.lower()] = p
+    by_name = {(p.get("n") or "").strip().lower(): p for p in people if p.get("n")}
+    out = {"invited": len(rows), "attended": [], "regrets": 0, "no_response": 0}
+    for r in rows:
+        st = (r.get("Status") or "").strip()
+        email = (r.get("Email/Phone Number") or "").strip().lower()
+        name = (r.get("Full Name") or "").strip()
+        p = by_email.get(email) or by_name.get(name.lower())
+        if st == "Attending":
+            gave_after = bool(p and (p.get("dlast") or "") >= "2025-11")
+            rec = person_row(p, "RSVP'd yes to the Nov '25 party") if p else                   {"n": name, "e": email, "inst": "", "damt": 0, "dcnt": 0, "dlast": "",
+                   "eopen": 0, "eclick": 0, "wiki": 0, "types": [],
+                   "why": "RSVP'd yes; NOT in the contact database"}
+            rec["gave_after"] = 1 if gave_after else 0
+            if not gave_after and rec["why"].startswith("RSVP"):
+                rec["why"] += " — no gift since"
+            out["attended"].append(rec)
+        elif st == "Regrets":
+            out["regrets"] += 1
+        else:
+            out["no_response"] += 1
+    out["attended"].sort(key=lambda x: (x["gave_after"], -x["damt"], -x["eopen"]))
+    out["gave_after"] = sum(1 for x in out["attended"] if x["gave_after"])
+    out["gave_after_amt"] = round(sum(x["damt"] for x in out["attended"] if x["gave_after"]))
+    out["unconverted"] = sum(1 for x in out["attended"] if not x["gave_after"])
+    return out
+
 def load(path, default=None):
     try:
         return json.load(open(path))
@@ -212,6 +266,7 @@ def main():
         funders_out.append({
             "name": f["name"], "focus": f["focus"], "fit": f["fit"], "note": f["note"],
             "lead": bool(f.get("lead")), "cat": f.get("cat"), "pursuit": bool(f.get("pursuit")),
+            "grantees": GRANTEES.get(f["name"]),
             "readers": len(ppl), "engaged": len(engaged),
             "donors": sum(1 for r in ppl if r.get("don")),
             "names": [r.get("n") for r in sorted(ppl, key=lambda r: -(r.get("eopen") or 0))
@@ -264,16 +319,81 @@ def main():
             principals.append(pr)
     principals.sort(key=lambda x: -x["eopen"])
 
+    event = load_event(people)
+
     lybunt = [person_row(r, "Gave last year, nothing this year")
               for r in donors if (r.get("dlast") or "") < f"{TODAY.year}-01"
               and not r.get("unsub")]
     lybunt.sort(key=lambda x: -x["damt"])
+
+
+    # ---------------- what we can show funders: computed, not typed ----------
+    mc = growth.get("mailchimp", {}) or {}
+    gt = growth.get("ghost_traffic", {}) or {}
+    m26 = [r for r in (mc.get("monthly_campaigns") or []) if r.get("month", "") >= f"{TODAY.year}-01" and r.get("open_pct")]
+    def _avg(rows, k):
+        v = [r[k] for r in rows if r.get(k) is not None]
+        return round(st.mean(v), 1) if v else None
+    ts = [t for t in (gt.get("traffic_series") or []) if not t.get("partial")]
+    half = len(ts) // 2
+    tgrow = None
+    if half >= 4:
+        a = st.mean([t["visitors"] for t in ts[:half]]); b = st.mean([t["visitors"] for t in ts[half:]])
+        tgrow = round((b - a) / a * 100)
+    dom = lambda r: (r.get("e") or "").split("@")[-1].lower()
+    gov = [r for r in sub if dom(r).endswith(".gov")]
+    edu = [r for r in sub if dom(r).endswith(".edu")]
+    org = [r for r in sub if dom(r).endswith(".org")]
+    core = sum(1 for r in sub if (r.get("eopen") or 0) >= 50)
+    mentions = growth.get("news_mentions") or []
+    m_outlets = len({(x.get("domain") or x.get("source") or "") for x in mentions if not x.get("own_post")})
+    authors = {a for p in cat for a in (p.get("authors") or [])}
+    G = lambda title, rows: {"title": title, "rows": rows}
+    R = lambda label, value, note="": {"label": label, "value": value, "note": note}
+    funder_facts = {
+      "asof": TODAY.isoformat(),
+      "groups": [
+        G("Audience", [
+          R("Newsletter subscribers", f"{mc.get('total_subscribers', len(sub)):,}", "Mailchimp, current"),
+          R("Opened in the last year", f"{(mc.get('aau') or {}).get('active_users') or 0:,}", "distinct people"),
+          R("Regular readers", f"{core:,}", "open rate 50%+ — the engaged core"),
+          R("Wikipedia-notable subscribers", f"{sum(1 for r in sub if r.get('wiki')):,}", "conservative floor — matched, not estimated"),
+        ]),
+        G("Who reads it", [
+          R("Government addresses", f"{len(gov):,}", f"{sum(1 for r in gov if 'nyc.gov' in dom(r)):,} on nyc.gov: City Council, Health, Planning, both DA offices, the courts"),
+          R("University addresses", f"{len(edu):,}", "led by NYU, Columbia and John Jay"),
+          R("Nonprofit addresses", f"{len(org):,}", "Vera, Osborne, Arnold Ventures, CBC, Court Innovation among the densest"),
+          R("Reads inside funders", "Arnold, Bloomberg, Robin Hood, Guggenheim, Revson, Tiger, Clark, MacArthur", "see the warm-doors table"),
+        ]),
+        G("Engagement vs industry", [
+          R("Click-to-open rate", f"{_avg(m26,'ctor_pct')}%", "cross-industry benchmark 5.3-8.6% — the metric Apple's auto-opens cannot inflate"),
+          R("Click rate", f"{_avg(m26,'click_pct')}%", "all-industry average 2.27%; media band 3-6%"),
+          R("Open rate", f"{_avg(m26,'open_pct')}%", "30-40% is 'solid' for media; inflated industry-wide by Apple Mail"),
+        ]),
+        G("Web traffic", [
+          R("Visitors, last 30 days", f"{gt.get('visitors_30d') or 0:,}", f"{gt.get('pageviews_30d') or 0:,} page views"),
+          R("Weekly-visitor trend", (f"+{tgrow}%" if tgrow and tgrow > 0 else f"{tgrow}%") if tgrow is not None else "n/a",
+            f"second half vs first of the last {len(ts)} weeks — against publisher search traffic down 33% globally (Chartbeat)"),
+        ]),
+        G("Output & recognition", [
+          R("Pieces published", f"{len(cat):,}", f"since 2021, by {len(authors):,} contributors"),
+          R("Flourish charts in the catalogue", f"{sum((p.get('embeds') or {}).get('counts',{}).get('flourish',0) for p in cat):,}", "original data analysis is the differentiator"),
+          R("Press citations tracked", f"{len([x for x in mentions if not x.get('own_post')]):,}", f"across {m_outlets} outlets incl. Gothamist, Politico, THE CITY"),
+          R("LinkedIn followers", f"{(growth.get('linkedin') or {}).get('followers') or 0:,}", "growing ~4.7%/month, ~3x the company-page benchmark"),
+        ]),
+      ],
+      "benchmark_note": ("Benchmarks: Letterhead/ClickMinded/Brevo 2026 email compilations; publisher traffic decline "
+                         "from Chartbeat data via Press Gazette. Third-party aggregates — bands, not lines. "
+                         "Giving figures are deliberately absent here: this card is audience evidence for funders, "
+                         "and all internal giving data is Donorbox-only."),
+    }
 
     out = {
         "generated_at": TODAY.isoformat(),
         "topline": topline,
         "funders": funders_out,
         "beats": beats,
+        "funder_facts": funder_facts,
         "readiness": {
             "sponsor": "Fund for the City of New York (FCNY)",
             "ein": "13-2612524", "status": "501(c)(3) via fiscal sponsorship",
@@ -282,7 +402,9 @@ def main():
         "tiers": {
             "advisors": advisors, "upgrade": upgrade, "second": second,
             "notables": notables, "principals": principals,
-            "foundation_staff": fstaff, "lybunt": lybunt},
+            "foundation_staff": fstaff, "lybunt": lybunt,
+            "party": (event or {}).get("attended", [])},
+        "event": event,
         "counts": {"subscribers": len(sub), "donors": len(donors)},
     }
     OUT.parent.mkdir(exist_ok=True)
