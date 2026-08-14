@@ -90,6 +90,24 @@
   .pull{font-family:var(--vc-serif);font-size:22px;line-height:1.35;max-width:30ch;margin:16px 0;
         padding-left:16px;border-left:4px solid var(--vc-cerulean)}
 
+  /* the live site, framed as a browser window — Vital City uses the text
+     wordmark only (house rule: never the raster logo), so the site itself is
+     the visual identity here */
+  .browserframe{border:1.5px solid var(--vc-black);background:var(--vc-white);
+                box-shadow:9px 9px 0 var(--vc-orange);margin:14px 0 8px;max-width:860px}
+  .bf-bar{display:flex;align-items:center;gap:6px;background:var(--vc-paper2);
+          border-bottom:1.5px solid var(--vc-black);padding:8px 12px}
+  .bf-bar i{width:9px;height:9px;border-radius:50%;background:var(--vc-cloud);display:inline-block}
+  .bf-bar i:nth-child(1){background:var(--vc-magenta)}
+  .bf-bar i:nth-child(2){background:var(--vc-gold)}
+  .bf-bar i:nth-child(3){background:var(--vc-green)}
+  .bf-url{font-size:11px;color:var(--vc-charcoal);font-weight:700;margin-left:8px;letter-spacing:.03em}
+  .bf-view{position:relative;height:430px;overflow:hidden;background:var(--vc-paper)}
+  .bf-view iframe{width:200%;height:860px;border:0;transform:scale(.5);transform-origin:0 0;pointer-events:none}
+  .bf-cap{font-size:11px;color:var(--vc-charcoal);margin-top:8px}
+  .clogo{width:230px;margin-bottom:30px;filter:brightness(0) invert(1)}   /* black art -> paper white on the cover */
+  .slide:not(.cover) .slogo{position:absolute;top:46px;right:54px;width:110px;opacity:.85}
+
   /* nav */
   .bar{position:fixed;left:0;right:0;bottom:0;background:var(--vc-black);color:var(--vc-white);
        display:flex;align-items:center;justify-content:space-between;padding:8px 16px;font-size:11px;
@@ -212,9 +230,18 @@ function slides(){
   const S=[];
 
   S.push({cover:true,html:`
+    <img class="clogo" src="vc-logo-black.png" alt="Vital City">
     <div class="eyebrow">A case for support &nbsp;·&nbsp; New York City &nbsp;·&nbsp; ${esc(asof.slice(0,4))}</div>
     <h1>The evidence New York runs on.</h1>
-    <div class="sub">A nonprofit journal, research shop and convener, built as one thing: timely commentary from the people shaping urban policy, data rendered intelligible, and evidence-based recommendations pressed into practice.</div>`});
+    <div class="sub"><b style="color:var(--vc-paper)">Pragmatic solutions to tough urban problems.</b> A nonprofit journal, research shop and convener, built as one thing: timely commentary from the people shaping urban policy, data rendered intelligible, and evidence-based recommendations pressed into practice.</div>`});
+
+  S.push({eyebrow:"The publication",html:`
+    <h2>Pragmatism, published daily.</h2>
+    <div class="browserframe">
+      <div class="bf-bar"><i></i><i></i><i></i><span class="bf-url">vitalcitynyc.org</span></div>
+      <div class="bf-view"><iframe src="https://www.vitalcitynyc.org/" loading="eager" title="vitalcitynyc.org, live" scrolling="no"></iframe></div>
+    </div>
+    <div class="bf-cap">The Vital City homepage, vitalcitynyc.org — as of ${esc(asof)}, the date this copy of the deck was generated. If this panel prints blank, the printed copy simply omits the preview; every figure elsewhere is unaffected.</div>`});
 
   S.push({eyebrow:"The moment",html:`
     <h2>A new administration is rewriting how New York City works. Someone has to hold the evidence.</h2>
@@ -279,7 +306,7 @@ function slides(){
           <div class="rn links">${(p.links||[]).map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div>
         </div></div>`).join("")}
     </div>
-    <p class="lede" style="margin-top:14px">Each is a repeatable format for turning evidence into something a decision-maker can act on — and each is a fundable unit in its own right.</p>`});
+    <p class="lede" style="margin-top:14px">This is what pragmatism looks like as an editorial form: not manifestos but fixes — specific, doable, assigned to the desk that can act on them. Each format is repeatable, and each is a fundable unit in its own right.</p>`});
 
   S.push({eyebrow:"The base",html:`
     <h2>New Yorkers started paying for this before we ever asked you to.</h2>
@@ -292,7 +319,7 @@ function slides(){
 
   S.push({eyebrow:"The ask",html:`
     <h2>Fund the room where it is decided.</h2>
-    <p class="lede">Vital City is small, and that is the opportunity: a gift here does not disappear into overhead. It buys a specific piece of the machine that turns evidence into policy.</p>
+    <p class="lede">Vital City is built on one conviction: tough urban problems have pragmatic solutions, and the gap between the two is evidence put in the right hands. A gift here does not disappear into overhead — it buys a specific piece of that machine.</p>
     <ul class="bullets">
       <li><b>More original analysis.</b> The data work is what gets cited — ${esc(String((FF.press||{}).total||""))} times and counting — and it is the most expensive thing we do.</li>
       <li><b>More convening.</b> The people who decide and the people with the evidence, in one room, on the record.</li>
@@ -317,6 +344,7 @@ function build(data){
   const S=slides();
   $("#stage").innerHTML=S.map((s,i)=>`
     <section class="slide${s.cover?" cover":""}" id="s${i}">
+      ${s.cover?"":`<img class="slogo" src="vc-logo-black.png" alt="">`}
       ${s.eyebrow?`<div class="eyebrow">${esc(s.eyebrow)}</div>`:""}
       ${s.html}
       <div class="foot"><span>Vital City · The case for support</span><span>${String(i+1).padStart(2,"0")}</span></div>
