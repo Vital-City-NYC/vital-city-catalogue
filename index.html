@@ -220,6 +220,14 @@
   .e-document{background:#d9a441;color:#fff}
   .credit{display:block;font-size:10px;color:var(--vc-charcoal);line-height:1.35;margin-top:2px}
   .nocred{color:var(--vc-cloud)}
+  #embpop{position:absolute;z-index:120;background:var(--vc-white,#fff);border:1px solid var(--vc-black,#050507);
+          box-shadow:5px 5px 0 rgba(5,5,7,.12);padding:12px 14px;max-width:340px;font-size:12px}
+  #embpop .epTitle{font-weight:800;font-size:11px;margin-bottom:7px}
+  #embpop .epLinks a{display:block;color:var(--vc-cerulean,#217ebe);padding:2px 0;text-decoration:underline;word-break:break-all}
+  #embpop .epFilter{margin-top:9px;background:var(--vc-black,#050507);color:#fff;border:0;padding:5px 9px;
+          font-size:10px;font-weight:700;cursor:pointer;font-family:inherit}
+  .credit{cursor:pointer}
+  .credit:hover{color:var(--vc-cerulean,#217ebe);text-decoration:underline}
 </style>
 </head>
 <body>
@@ -244,6 +252,7 @@
   <select id="fTopic"><option value="">All topics</option></select>
   <select id="fIssue"><option value="">All issues</option></select>
   <select id="fYear"><option value="">All years</option></select>
+  <select id="fCredit" title="Filter by header-image photographer or source. Counts show how many pieces used each."><option value="">All photography</option></select>
   <select id="fEmbed" title="What material is embedded in the piece — Flourish charts, podcast players, Vital City's own projects, video, documents.">
     <option value="">Any embedded material</option>
     <option value="__any">Has any embed</option>
@@ -374,13 +383,17 @@ function buildFilters() {
     .map(t => opt(t, `${t} (${topics[t]})`)).join("");
   $("#fIssue").innerHTML += ISSUES.map(i => opt(i.name, `${i.display_name} (${i.post_count})`)).join("");
   $("#fYear").innerHTML += Object.keys(years).sort((a,b)=>b-a).map(y => opt(y, y)).join("");
+  const credits = {};
+  DATA.forEach(r => { const c = r.feature_image_credit; if (c) credits[c] = (credits[c]||0)+1; });
+  $("#fCredit").innerHTML += Object.keys(credits).sort((a,b)=>credits[b]-credits[a]||a.localeCompare(b))
+    .map(c => opt(c, `${c} (${credits[c]})`)).join("");
 }
 
 function bind() {
-  ["#q","#fType","#fAuthorType","#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s => $(s).addEventListener("input", render));
+  ["#q","#fType","#fAuthorType","#fAuthor","#fTopic","#fIssue","#fYear","#fCredit","#fEmbed"].forEach(s => $(s).addEventListener("input", render));
   $("#fFeatured").addEventListener("change", render);
   $("#clear").addEventListener("click", () => {
-    $("#q").value=""; ["#fType","#fAuthorType","#fAuthor","#fTopic","#fIssue","#fYear"].forEach(s=>$(s).value="");
+    $("#q").value=""; ["#fType","#fAuthorType","#fAuthor","#fTopic","#fIssue","#fYear","#fCredit","#fEmbed"].forEach(s=>$(s).value="");
     $("#fFeatured").checked=false; render();
   });
   document.querySelectorAll("thead th").forEach(th => th.addEventListener("click", () => {
@@ -388,14 +401,21 @@ function bind() {
     if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = (k==="published_date"||k==="word_count")?-1:1; }
     render();
   }));
-  // clicking an embed pill filters to that kind, matching how topic and author work
+  // pill -> popover with the actual chart links; its footer button -> filter
   document.addEventListener("click", e => {
-    const p = e.target.closest("[data-embed]");
-    if (!p) return;
-    const sel = $("#fEmbed");
-    sel.value = (sel.value === p.dataset.embed) ? "" : p.dataset.embed;
-    render();
+    const fb = e.target.closest(".epFilter");
+    if (fb) { $("#fEmbed").value = fb.dataset.embed; closeEmbedPop(); render(); return; }
+    const p = e.target.closest(".epill");
+    if (p) { showEmbedPop(p); e.stopPropagation(); return; }
+    const cr = e.target.closest("[data-credit]");
+    if (cr) {
+      const sel = $("#fCredit");
+      sel.value = (sel.value === cr.dataset.credit) ? "" : cr.dataset.credit;
+      render(); return;
+    }
+    if (!e.target.closest("#embpop")) closeEmbedPop();
   });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeEmbedPop(); });
   // delegate clicks on author / topic / issue to set the matching filter
   $("#rows").addEventListener("click", e => {
     const el = e.target.closest("[data-author],[data-topic],[data-issue],[data-type],[data-cat]"); if (!el) return;
@@ -412,7 +432,7 @@ function bind() {
 function filtered() {
   const q = $("#q").value.trim().toLowerCase();
   const ftype = $("#fType").value, fatype = $("#fAuthorType").value, fa = $("#fAuthor").value, ft = $("#fTopic").value, fi = $("#fIssue").value, fy = $("#fYear").value;
-  const feat = $("#fFeatured").checked, fe = $("#fEmbed").value;
+  const feat = $("#fFeatured").checked, fe = $("#fEmbed").value, fc = $("#fCredit").value;
   return DATA.filter(r => {
     if (ftype && r.type !== ftype) return false;
     if (fatype && !articleCats(r).includes(fatype)) return false;
@@ -421,6 +441,7 @@ function filtered() {
     if (fi && !(r.issues||[]).includes(fi)) return false;
     if (fy && !(r.published_date||"").startsWith(fy)) return false;
     if (feat && !r.featured) return false;
+    if (fc && (r.feature_image_credit || "") !== fc) return false;
     if (fe) {
       const cnts = (r.embeds && r.embeds.counts) || {};
       const total = (r.embeds && r.embeds.total) || 0;
@@ -462,11 +483,38 @@ const EMB_LABEL = {"flourish":"chart","podcast":"podcast","vital city project":"
 function embedCell(r, esc){
   const c = (r.embeds && r.embeds.counts) || {};
   const pills = Object.keys(c).sort((a,b)=>c[b]-c[a]).map(k =>
-    `<span class="epill e-${k.replace(/[^a-z]/g,"")}" data-embed="${esc(k)}" title="${c[k]} ${esc(k)} embed${c[k]===1?"":"s"} in this piece — click to filter">${esc(EMB_LABEL[k]||k)}${c[k]>1?` ${c[k]}`:""}</span>`).join("");
+    `<span class="epill e-${k.replace(/[^a-z]/g,"")}" data-embed="${esc(k)}" data-pid="${esc(r.id)}" title="${c[k]} ${esc(k)} embed${c[k]===1?"":"s"} — click for the list, with links">${esc(EMB_LABEL[k]||k)}${c[k]>1?` ${c[k]}`:""}</span>`).join("");
   const cred = r.feature_image_credit
-    ? `<span class="credit" title="Header image credit">${esc(r.feature_image_credit)}</span>` : "";
+    ? `<span class="credit" data-credit="${esc(r.feature_image_credit)}" title="Header image: ${esc(r.feature_image_credit)} — click to see every piece using this photographer/source">${esc(r.feature_image_credit)}</span>` : "";
   return pills + cred || '<span class="nocred">&mdash;</span>';
 }
+// Popover listing exactly what is embedded in one piece, with links. The pill
+// used to jump straight to a filter, which answered "show me more like this"
+// but not "what are these seven charts?" — this answers both.
+function showEmbedPop(pill){
+  closeEmbedPop();
+  const r = DATA.find(x => String(x.id) === pill.dataset.pid); if(!r) return;
+  const kind = pill.dataset.embed, esc2 = s => String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const fl = (r.embeds.flourish||[]);
+  const ifr = (r.embeds.iframes||[]).filter(e => e.kind === kind);
+  let rows = "";
+  if(kind === "flourish"){
+    rows = fl.map((x,i)=>`<a href="${esc2(x.url)}" target="_blank" rel="noopener">Flourish visualisation ${esc2(x.id)}</a>`).join("")
+         + ifr.filter(e=>e.host.includes("flo.uri.sh")).map(e=>`<a href="${esc2(e.url)}" target="_blank" rel="noopener">${esc2(e.url.split("//")[1]||e.url)}</a>`).join("");
+  } else {
+    rows = ifr.map(e=>`<a href="${esc2(e.url)}" target="_blank" rel="noopener">${esc2((e.url.split("//")[1]||e.url).slice(0,58))}</a>`).join("");
+  }
+  const pop = document.createElement("div");
+  pop.id = "embpop";
+  pop.innerHTML = `<div class="epTitle">${esc2(EMB_LABEL[kind]||kind)} embeds &middot; ${esc2(r.title).slice(0,60)}</div>
+    <div class="epLinks">${rows || "<span class='nocred'>none found</span>"}</div>
+    <button class="epFilter" data-embed="${esc2(kind)}">Show every piece with a ${esc2(EMB_LABEL[kind]||kind)} &rarr;</button>`;
+  document.body.appendChild(pop);
+  const b = pill.getBoundingClientRect();
+  pop.style.left = Math.min(b.left, innerWidth - pop.offsetWidth - 12) + "px";
+  pop.style.top = (b.bottom + scrollY + 6) + "px";
+}
+function closeEmbedPop(){ const p = document.getElementById("embpop"); if(p) p.remove(); }
 function render() {
   const rows = sortRows(filtered());
   document.querySelectorAll("thead th .arrow").forEach(a => a.textContent = "");
