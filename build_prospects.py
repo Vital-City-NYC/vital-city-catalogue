@@ -106,6 +106,10 @@ FUNDERS = [
   "focus":"Reimagining capitalism, technology and governance",
   "fit":["economy","technology"],
   "note":"Adjacent rather than central; strongest if the pitch leads with data analysis of how city systems perform."},
+ {"name":"TransitCenter","domain":"transitcenter.org","lead":True,"cat":"abundance",
+  "focus":"US transit improvement and advocacy (an operating foundation)",
+  "fit":["transit","city government"],
+  "note":"The subway-safety recommendations — NYT exclusive, partly adopted by the governor and MTA — are a ready-made door here. It runs its own programs as much as it grants; the fit is partnership as much as funding."},
  {"name":"Renaissance Philanthropy","domain":"renaissancephilanthropy.org","lead":True,"cat":"abundance",
   "focus":"Ambitious science, technology and state-capacity initiatives",
   "fit":["city government","technology"],
@@ -375,6 +379,13 @@ def main():
           R("Weekly-visitor trend", (f"+{tgrow}%" if tgrow and tgrow > 0 else f"{tgrow}%") if tgrow is not None else "n/a",
             f"second half vs first of the last {len(ts)} weeks — against publisher search traffic down 33% globally (Chartbeat)"),
         ]),
+        G("Policy impact — the receipts", [
+          R("Mayor Mamdani", "Sat with Vital City for an hour on public safety", "after calling himself 'quite taken' by the annual crime analysis"),
+          R("Rikers Island", "Made the case for a federal receiver; a judge has since appointed one", ""),
+          R("Subway safety", "Recommendations drove a New York Times exclusive", "adopted in part by the governor and the MTA"),
+          R("Permitting", "Days after publishing fixes for the permitting mess, City Hall released a report echoing them", ""),
+          R("Crime data", "When reporters dig into the city's numbers, it is often Vital City's analyses they build on", ""),
+        ]),
         G("Output & recognition", [
           R("Pieces published", f"{len(cat):,}", f"since 2021, by {len(authors):,} contributors"),
           R("Flourish charts in the catalogue", f"{sum((p.get('embeds') or {}).get('counts',{}).get('flourish',0) for p in cat):,}", "original data analysis is the differentiator"),
@@ -382,7 +393,9 @@ def main():
           R("LinkedIn followers", f"{(growth.get('linkedin') or {}).get('followers') or 0:,}", "growing ~4.7%/month, ~3x the company-page benchmark"),
         ]),
       ],
-      "benchmark_note": ("Benchmarks: Letterhead/ClickMinded/Brevo 2026 email compilations; publisher traffic decline "
+      "benchmark_note": ("Impact items are Vital City's own accounting, from the draft positioning language (Aug 2026) — "
+                         "reuse the wording, but keep the causal framing as stated. "
+                         "Benchmarks: Letterhead/ClickMinded/Brevo 2026 email compilations; publisher traffic decline "
                          "from Chartbeat data via Press Gazette. Third-party aggregates — bands, not lines. "
                          "Giving figures are deliberately absent here: this card is audience evidence for funders, "
                          "and all internal giving data is Donorbox-only."),
