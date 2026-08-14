@@ -302,6 +302,18 @@ def main():
     people = load(PEOPLE) or []
     growth = load(GROWTH) or {}
     cat = load(CAT) or []
+    # FAIL LOUD. A missing or truncated source must never produce a plausible-
+    # looking page of zeros — that already happened once (a build ran against
+    # deleted /tmp copies, silently wrote zero-subscriber data, and was
+    # committed). Empty in, error out.
+    if len(people) < 1000:
+        raise SystemExit(f"REFUSING TO BUILD: people source {PEOPLE} has {len(people)} rows (floor 1000). "
+                         "Wrong path or truncated file — fix the source, do not publish zeros.")
+    if not (growth.get("mailchimp") or {}).get("total_subscribers"):
+        raise SystemExit(f"REFUSING TO BUILD: growth source {GROWTH} lacks mailchimp.total_subscribers. "
+                         "Wrong path or truncated file — fix the source, do not publish zeros.")
+    if len(cat) < 100:
+        raise SystemExit(f"REFUSING TO BUILD: catalogue has {len(cat)} pieces (floor 100).")
     infer = (load(INFER) or {}).get("rows", [])
 
     sub = [r for r in people if r.get("mem") and not r.get("unsub") and r.get("e")]
