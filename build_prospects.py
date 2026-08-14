@@ -272,6 +272,15 @@ PIPELINE = [
   "date":"2026-02-16","note":"Joint VC/SocialSphere research index with a funder pitch built into the final report (beautiful.ai deck); Jamie Rubin's brainchild. A packaged thing to put in front of funders.","src":"thread: 'Final report (with funder pitch)'"},
 ]
 
+# Press mentions per year, from the hand-kept "media mentions and praise"
+# archive (Josh's docx, 293 dated entries parsed Aug 2026, last entry
+# 2026-06-22). This is the ONLY consistent multi-year mentions series: the
+# automated tracker begins Nov 2025 and covers a ~25-outlet whitelist, while
+# this archive is broader (Atlantic, Reason, HKS, Washington Times...) but
+# updated by hand. The two are never mixed in one chart.
+MENTIONS_ARCHIVE = {"2021": 1, "2022": 6, "2023": 14, "2024": 57, "2025": 133, "2026": 82}
+MENTIONS_ARCHIVE_ASOF = "2026-06-22"
+
 def load(path, default=None):
     try:
         return json.load(open(path))
@@ -506,6 +515,8 @@ def main():
       "press": {"total": len(press), "outlets": sum(1 for v in p_out.values() if v), "since": p_first,
                 "y2026": sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))),
                 "permonth": round(sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))) / max(1, TODAY.month - 0.5), 1),
+                "by_year": [{"y": y, "n": n} for y, n in sorted(MENTIONS_ARCHIVE.items()) if y >= "2022"],
+                "by_year_asof": MENTIONS_ARCHIVE_ASOF,
                 "top": [{"outlet": TOP_OUT[k], "n": v} for k, v in p_out.most_common(30) if k in TOP_OUT][:8],
                 "samples": samples},
       "products": [
