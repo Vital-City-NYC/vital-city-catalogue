@@ -119,11 +119,13 @@
 
   /* long-view bars */
   .yrchart{margin:6px 0 4px}
-  .yrrow{display:flex;align-items:center;gap:10px;margin:7px 0}
-  .yrrow .yl{flex:0 0 46px;font-weight:900;font-size:13px;font-variant-numeric:tabular-nums}
-  .yrrow .yb{height:26px;background:var(--vc-cerulean);min-width:2px}
+  .yrrow{display:grid;grid-template-columns:46px 1fr;gap:4px 10px;align-items:center;margin:9px 0}
+  .yrrow .yl{font-weight:900;font-size:13px;font-variant-numeric:tabular-nums}
+  .yrrow .ytrack{position:relative;height:26px;display:block}
+  .yrrow .yb{height:26px;background:var(--vc-cerulean);min-width:2px;display:block}
   .yrrow.alt .yb{background:var(--vc-orange)}
-  .yrrow .yv{font-family:var(--vc-serif);font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .yrrow .ymeta{grid-column:2;display:flex;gap:8px;align-items:baseline;margin-top:-2px}
+  .yrrow .yv{font-family:var(--vc-serif);font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;white-space:nowrap}
   .yrrow .yn{font-size:10.5px;color:var(--vc-charcoal)}
   .twochart{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:30px}
   @media(max-width:700px){.twochart{grid-template-columns:1fr}}
@@ -174,6 +176,7 @@
       <span id="pos"></span>
       <button id="prev">&larr;</button><button id="next">&rarr;</button>
       <button id="print">Print / PDF</button>
+      <button id="email" title="Downloads a self-contained copy of the deck (no passphrase needed to open it) and opens an email draft — attach the downloaded file, or a printed PDF, to the draft.">&#9993; Email</button>
       <button id="lock">Lock</button>
     </div>
   </div>
@@ -207,6 +210,46 @@ $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
 (async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
 $("#lock").addEventListener("click",e=>{e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()});
 $("#print").addEventListener("click",()=>window.print());
+// "Email the deck": the gated URL is useless to a funder (and the passphrase
+// must never leave the team — it unlocks the contact database too). So this
+// exports a SELF-CONTAINED, ungated copy of the rendered deck: the DOM as it
+// stands, gate and controls stripped, logo inlined. The payload is only what
+// is already on the slides — funder_facts and topline — never the prospect
+// tiers or any contact data, which live on the other page entirely.
+async function emailDeck(){
+  if(getComputedStyle($("#gate")).display!=="none") return;
+  let logoData="";
+  try{
+    const blob=await fetch("vc-logo-black.png").then(r=>r.blob());
+    logoData=await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.readAsDataURL(blob);});
+  }catch(e){}
+  const doc=document.documentElement.cloneNode(true);
+  doc.querySelectorAll("#gate,.bar,script").forEach(n=>n.remove());
+  if(logoData) doc.querySelectorAll("img[src='vc-logo-black.png']").forEach(i=>i.setAttribute("src",logoData));
+  const app=doc.querySelector("#app"); if(app) app.style.display="";
+  const stamp=(FF.asof||"").slice(0,10);
+  const note=doc.createElement("div");
+  note.setAttribute("style","max-width:1080px;margin:0 auto;padding:6px 16px 26px;font-size:11px;color:#707175;font-family:system-ui,sans-serif");
+  note.textContent="Vital City — the case for support · generated "+stamp+" · figures computed from live systems as of that date.";
+  (doc.querySelector(".stage")||doc.querySelector("body")).appendChild(note);
+  const html="<!doctype html>\n"+doc.outerHTML;
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));
+  a.download=`Vital-City-case-for-support-${stamp}.html`;
+  a.click(); URL.revokeObjectURL(a.href);
+  setTimeout(()=>{
+    const su=encodeURIComponent("Vital City — the case for support");
+    const bo=encodeURIComponent(
+      "Sharing Vital City's case for support (attached; current as of "+stamp+").\n\n"+
+      "Vital City is a nonprofit journal, research shop and convener focused on pragmatic solutions to tough urban problems in New York City.\n\n"+
+      "[Attach the file that just downloaded — or a PDF printed from it — before sending.]");
+    window.open("mailto:?subject="+su+"&body="+bo,"_self");
+  },600);
+}
+$("#email").addEventListener("click",emailDeck);
+if(/[?&]email=1/.test(location.search)){
+  const _e=setInterval(()=>{ if(document.body.textContent.length>4000){clearInterval(_e);setTimeout(emailDeck,400);} },150);
+}
 // ?print=1 (used by the prospects page's download button): open the print
 // dialog as soon as the deck has rendered — the PDF saved is generated from
 // the current nightly data.
@@ -335,12 +378,15 @@ function slides(){
       const lv=FF.longview||{}; const yr=new Date().getFullYear();
       const chart=(rows,alt,noteFor)=>{
         const mx=Math.max(...rows.map(r=>r.n),1);
+        // Bars live in an identical full-width track per row and are scaled
+        // 0-100% of it; value and note sit BELOW the bar so text can never
+        // compress the visual encoding. Length = value, always.
         return `<div class="yrchart">${rows.map(r=>`
           <div class="yrrow${alt?" alt":""}">
             <span class="yl">${esc(r.y)}</span>
-            <span class="yb" style="width:${Math.max(2,Math.round(r.n/mx*52))}%"></span>
-            <span class="yv">${Number(r.n).toLocaleString()}</span>
-            ${noteFor(r)?`<span class="yn">${noteFor(r)}</span>`:""}
+            <span class="ytrack"><span class="yb" style="width:${Math.max(1,(r.n/mx*100)).toFixed(1)}%"></span></span>
+            <span class="ymeta"><span class="yv">${Number(r.n).toLocaleString()}</span>
+            ${noteFor(r)?`<span class="yn">${noteFor(r)}</span>`:""}</span>
           </div>`).join("")}</div>`;
       };
       return `<div class="twochart">
