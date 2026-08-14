@@ -151,6 +151,12 @@ $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
 (async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
 $("#lock").addEventListener("click",e=>{e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()});
 $("#print").addEventListener("click",()=>window.print());
+// ?print=1 (used by the prospects page's download button): open the print
+// dialog as soon as the deck has rendered, so "download a fresh deck" is one
+// click — the PDF the viewer saves is generated from the current data.
+if(/[?&]print=1/.test(location.search)){
+  const _t=setInterval(()=>{ if(document.body.textContent.length>4000){clearInterval(_t);setTimeout(()=>window.print(),400);} },150);
+}
 
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money=n=>"$"+Number(n||0).toLocaleString();
