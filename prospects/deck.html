@@ -347,7 +347,7 @@ function slides(){
     <div class="caveat"><b>These counts are floors.</b> The tracker watches a whitelist of ~25 outlets for the exact phrase, the handle and URL shares — podcast mentions, paywalled uses and everything outside the whitelist are missed.</div>`});
 
   S.push({eyebrow:"Media influence, continued",html:`
-    <h2>Cited across the spectrum, not from one corner of it.</h2>
+    <h2>Cited from City Journal to Mother Jones.</h2>
     <p class="lede">Vital City is cited approvingly by City Journal and Mother Jones alike — read closely by the correction commissioner, quoted by the mayor. The analyses are built to be usable by people who disagree with each other, and they are.</p>
     <p class="pull">When reporters dig into the city's crime numbers, it is often Vital City's analyses they build on.</p>
     <p class="lede">That is a deliberate product choice: the data work is published with methods attached, at the speed of the news cycle, under a name both sides can print.</p>`});
@@ -367,7 +367,7 @@ function slides(){
     <div class="bf-cap" style="margin-top:10px">Ten of a deeper bench: ${esc(String((FF.seniors||{}).count||""))} leading authors &mdash; economists, criminologists, planners, deans, a sitting news anchor, the CEO of Robin Hood &mdash; have written ${esc(String((FF.seniors||{}).pieces_total||""))} pieces for Vital City among them, within a contributor pool of 492. Descriptors come from each author's own bio; pieces and counts are matched live from the catalogue.</div>`});
 
   S.push({eyebrow:"The audience",html:`
-    <h2>It is not the size of the list. It is who is on it.</h2>
+    <h2>The value of this list is who is on it.</h2>
     ${figs([
       {v:String(tile("Government + university").n||"—").split(" ")[0]==="—"?"—":esc(tile("Government + university").n),k:"Government + university subscribers",n:esc(tile("Government + university").s||""),hero:true},
       {v:esc(arow(FF.audience,"Wikipedia-notable").value||"—"),k:"Wikipedia-notable subscribers",n:"A conservative floor — matched, not estimated"},
@@ -418,7 +418,7 @@ function slides(){
     <div class="caveat"><b>Reading these honestly:</b> visitor counts start in 2023 because that is when analytics begin — earlier years are unmeasured, not zero, and 2026 is on pace to pass 2025 with a third of the year left. The 2025 list-size jump includes a wave of bot registrations, since cleaned; 2024 is the honest baseline for organic list-growth claims. The visitor and output numbers carry no such caveat.</div>`});
 
   S.push({eyebrow:"The products",html:`
-    <h2>Policy products, not just publishing.</h2>
+    <h2>Formats built to get things fixed.</h2>
     <div class="rows">${(V
       ? V.products.map(n=>(FF.products||[]).find(p=>p.name===n)).filter(Boolean)
       : (FF.products||[])).map(p=>`
@@ -427,7 +427,7 @@ function slides(){
           <div class="rn links">${(p.links||[]).map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div>
         </div></div>`).join("")}
     </div>
-    <p class="lede" style="margin-top:14px">This is what pragmatism looks like as an editorial form: not manifestos but fixes — specific, doable, assigned to the desk that can act on them. Each format is repeatable, and each is a fundable unit in its own right.</p>`});
+    <p class="lede" style="margin-top:14px">Each entry names a fix a specific desk could carry out, with the how attached. The formats repeat, and each one is fundable on its own.</p>`});
 
   if(V) S.push({eyebrow:"Selected work",html:`
     <h2>${esc(V.spot_title)}</h2>
@@ -435,14 +435,14 @@ function slides(){
       <div class="row"><div class="rk" style="flex:0 0 150px;font-size:12px;color:var(--vc-charcoal)">${esc(x.a)}</div>
         <div class="rv">&ldquo;<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.t)}</a>&rdquo;</div></div>`).join("")}
     </div>
-    <p class="lede" style="margin-top:14px">Six of ${esc(String((FF.tiles||[]).find(t=>t.l==="Pieces published")?.n||"889"))} &mdash; chosen for this audience; the full catalogue is searchable at vitalcitynyc.org.</p>`});
+    <p class="lede" style="margin-top:14px">Six of ${esc(String((FF.tiles||[]).find(t=>t.l==="Pieces published")?.n||"889"))}, chosen for this audience. The full catalogue is searchable at vitalcitynyc.org.</p>`});
 
   S.push({eyebrow:"The base",html:`
     <h2>New Yorkers started paying for this before we ever asked you to.</h2>
     ${figs([
       {v:money(t.raised),k:"Raised online",n:"Donorbox, since the first online gift"},
       {v:String(t.donors||"—"),k:"Online donors",n:t.median_gift?("Median gift "+money(t.median_gift)):""},
-      {v:(t.top5_pct!=null?t.top5_pct+"%":"—"),k:"From the top five donors",n:"Concentration, not yet a base"}
+      {v:(t.top5_pct!=null?t.top5_pct+"%":"—"),k:"From the top five donors",n:"Early-stage concentration"}
     ])}
     <div class="caveat"><b>Every giving figure here is Donorbox only.</b> Checks, wire transfers, donor-advised-fund grants and foundation grants do not pass through Donorbox — these totals understate real giving by whatever arrives through those channels.</div>`});
 
@@ -453,14 +453,14 @@ function slides(){
       <li><b>More original analysis.</b> The data work is what gets cited — ${esc(String((FF.press||{}).total||""))} times and counting — and it is the most expensive thing we do.</li>
       <li><b>More convening.</b> The people who decide and the people with the evidence, in one room, on the record.</li>
       <li><b>More reach into City Hall.</b> The readers are already there; the work is getting the right piece in front of them at the right moment.</li>
-      <li><b>Capacity to answer fast.</b> The permitting fixes ran days before City Hall's own report. That timing is a capability, not luck.</li>
+      <li><b>Capacity to answer fast.</b> The permitting fixes ran days before City Hall's own report. That speed took standing capacity.</li>
     </ul>`});
 
   S.push({eyebrow:"Sources",html:`
     <h2>Every number in this deck, and where it comes from.</h2>
     <div class="src">
-      <p><b>All figures are computed, not typed.</b> Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed <b>${esc(asof)}</b>. Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News tracker over a ~25-outlet whitelist; giving from Donorbox; the catalogue from the Ghost publishing platform; audience composition from the Vital City contact database, which fuses subscribers, contributors and contacts.</p>
-      <p><b>Caveats that travel with these numbers.</b> Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are whitelist floors, not totals.</p>
+      <p><b>Every figure is computed from a primary system; none is typed in by hand.</b> Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed <b>${esc(asof)}</b>. Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News tracker over a ~25-outlet whitelist; giving from Donorbox; the catalogue from the Ghost publishing platform; audience composition from the Vital City contact database, which fuses subscribers, contributors and contacts.</p>
+      <p><b>Caveats that travel with these numbers.</b> Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are floors set by the tracker's ~25-outlet whitelist.</p>
       <p><b>Impact claims</b> are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate.</p>
       <p><b>This deck was assembled with AI assistance.</b> Every figure comes from a primary Vital City system; verify any figure before it goes to a funder.</p>
     </div>`});
