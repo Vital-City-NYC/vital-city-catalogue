@@ -1,0 +1,71 @@
+{
+ "note": "Follower-count history, one row per observation. 'live' rows are scraped/API each nightly run (LinkedIn, Bluesky); 'manual' rows are hand-refreshed via update_social.py or a Claude session (X, Instagram, Facebook are login-walled to scrapers). Counts are public information.",
+ "rows": [
+  {
+   "d": "2026-06-25",
+   "p": "x",
+   "n": 4320,
+   "src": "manual"
+  },
+  {
+   "d": "2026-06-25",
+   "p": "instagram",
+   "n": 675,
+   "src": "manual"
+  },
+  {
+   "d": "2026-06-28",
+   "p": "linkedin",
+   "n": 3136,
+   "src": "live"
+  },
+  {
+   "d": "2026-06-28",
+   "p": "bluesky",
+   "n": 1707,
+   "src": "live"
+  },
+  {
+   "d": "2026-08-06",
+   "p": "linkedin",
+   "n": 3327,
+   "src": "live"
+  },
+  {
+   "d": "2026-08-06",
+   "p": "bluesky",
+   "n": 1720,
+   "src": "live"
+  },
+  {
+   "d": "2026-08-14",
+   "p": "linkedin",
+   "n": 3362,
+   "src": "live"
+  },
+  {
+   "d": "2026-08-14",
+   "p": "bluesky",
+   "n": 1726,
+   "src": "live"
+  },
+  {
+   "d": "2026-08-14",
+   "p": "x",
+   "n": 4484,
+   "src": "manual"
+  },
+  {
+   "d": "2026-08-14",
+   "p": "instagram",
+   "n": 765,
+   "src": "manual"
+  },
+  {
+   "d": "2026-08-14",
+   "p": "facebook",
+   "n": 208,
+   "src": "manual"
+  }
+ ]
+}

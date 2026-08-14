@@ -3460,8 +3460,9 @@ def pull_donorbox():
 # these by hand (and bump as_of). Used only when the live fetch can't get a
 # count, so the Social-followers total can still include all four platforms.
 MANUAL_FOLLOWERS = {
-    "x":         {"followers": 4320, "as_of": "2026-06-25"},
-    "instagram": {"followers": 675,  "as_of": "2026-06-25"},
+    "x":         {"followers": 4484, "as_of": "2026-08-14"},
+    "instagram": {"followers": 765, "as_of": "2026-08-14"},
+    "facebook":  {"followers": 208, "as_of": "2026-08-14"},
 }
 
 
@@ -4176,12 +4177,40 @@ def main():
         # Reuses the GA4 service account; auto-detects the property.
         "search_console": pull_search_console(),
         "x_profile":  xprof,
+        # Facebook page followers — login-walled to scrapers, so manual
+        # snapshots via update_social.py, same as X and Instagram.
+        "facebook": _manual_follower_stub("facebook", "facebook.com/vitalcitynyc",
+                                          "Facebook login-walls scrapers — manual snapshot"),
         # Who follows VC on X — point-in-time follower export, cross-matched to
         # the contact DB. Manual snapshot (X's API is paid); refresh by dropping
         # a new CSV into the bundle.
         "x_followers": pull_x_followers(),
         "instagram":  pull_instagram(),
     }
+    # ---- durable follower history -------------------------------------------
+    # One row per platform per day, committed to data/ so the series survives
+    # every run. This is what turns "screenshot the count occasionally" into an
+    # automatic record: live platforms append themselves nightly; manual ones
+    # append whenever update_social.py records a new snapshot.
+    try:
+        hp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "social_history.json")
+        hist = json.load(open(hp)) if os.path.exists(hp) else {"rows": []}
+        today_s = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        have = {(r["p"], r["d"]) for r in hist["rows"]}
+        def _rec(p, n, src, d=None):
+            d = d or today_s
+            if n and (p, d) not in have:
+                hist["rows"].append({"d": d, "p": p, "n": int(n), "src": src})
+        _rec("linkedin", (out.get("linkedin") or {}).get("followers"), "live")
+        _rec("bluesky", (out.get("bluesky") or {}).get("followers"), "live")
+        for p in ("x_profile", "instagram", "facebook"):
+            v = out.get(p) or {}
+            _rec("x" if p == "x_profile" else p, v.get("followers"), "manual", v.get("as_of"))
+        hist["rows"].sort(key=lambda r: (r["d"], r["p"]))
+        json.dump(hist, open(hp, "w"), indent=1)
+        log(f"  social history: {len(hist['rows'])} observations on file")
+    except Exception as e:
+        log(f"  social history append failed ({e}) — non-fatal")
 
     # ---- Enrich the per-piece index with the signals that live in OTHER pulls,
     # so the look-up tool can show one piece's full picture in one place:

@@ -505,6 +505,13 @@
   .toolnav a:hover{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
   .toolnav a.here{background:var(--vc-black);color:var(--vc-white);cursor:default;pointer-events:none}
   html.dark .toolnav a.here{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  .strow{display:grid;grid-template-columns:84px 76px 1fr auto;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--vc-paper2);font-size:12.5px}
+  .strow .stp{font-weight:800}
+  .strow .stn{font-weight:900;font-variant-numeric:tabular-nums;text-align:right}
+  .strow .std{color:var(--vc-charcoal);font-size:11.5px}
+  .strow .sts{font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:var(--vc-green)}
+  .strow .sts.old{color:#c8102e}
+  @media(max-width:640px){.strow{grid-template-columns:70px 70px 1fr;gap:6px}.strow .sts{grid-column:3;text-align:right}}
 </style>
 </head>
 <body>
@@ -844,6 +851,7 @@
       <div class="card" id="social">
         <h2>Social reach — X, LinkedIn, Bluesky, Instagram <span class="hint">followers + latest posts per platform · all free sources · coverage labeled per panel</span></h2>
         <div id="socialBody"></div>
+        <div id="socialTrend"></div>
         <div id="urlShares" style="margin-top:18px"></div>
       </div>
 
@@ -1171,6 +1179,7 @@ function boot(data){
   renderSearchConsole(data);
   renderTopSearches(data);
   renderSearchChannels(data);
+  renderSocialTrend();
   renderBigPicture(data);
   renderAudienceQuality(data);
   // After every card has rendered, sprinkle clickable ⓘ icons on metric
@@ -3082,6 +3091,38 @@ function renderXFollowers(data){
     <div class="flagnote" style="margin-top:12px"><b>Point-in-time snapshot, ${esc(xf.as_of||"")}.</b> X's API is paid, so this is a manual export, not live — it won't move until a fresh one is loaded. <b>Combined reach</b> sums followers-of-followers and isn't deduped, so it's a ceiling, not a real audience count. The "on our list?" match is by name/handle against the contact DB, and messy X display names undercount real overlap — so the "not on list" count runs a little high (a few flagged accounts are already subscribers under a cleaner name). Verification flags weren't included in this export.</div>`;
 }
 
+// The running record: follower history from data/social_history.json —
+// appended nightly for LinkedIn and Bluesky, and whenever a manual snapshot is
+// recorded for X / Instagram / Facebook (update_social.py, or ask a Claude
+// session to read the counts in a browser). This replaces screenshotting.
+async function renderSocialTrend(){
+  const host = document.getElementById("socialTrend"); if(!host) return;
+  let hist;
+  try { hist = await fetch("../data/social_history.json",{cache:"no-cache"}).then(r=>r.json()); }
+  catch(e){ return; }
+  const rows = hist.rows||[];
+  const P = [["x","X"],["linkedin","LinkedIn"],["bluesky","Bluesky"],["instagram","Instagram"],["facebook","Facebook"]];
+  const today = Date.now();
+  const items = P.map(([k,label])=>{
+    const r = rows.filter(x=>x.p===k).sort((a,b)=>a.d<b.d?-1:1);
+    if(!r.length) return null;
+    const first=r[0], last=r[r.length-1];
+    const days=(new Date(last.d)-new Date(first.d))/86400000;
+    const delta=last.n-first.n;
+    const permo=(days>=21&&first.n)?(Math.pow(last.n/first.n,30/days)-1)*100:null;
+    const stale=Math.round((today-new Date(last.d))/86400000);
+    const manual=last.src==="manual";
+    return `<div class="strow">
+      <span class="stp">${label}</span>
+      <span class="stn">${last.n.toLocaleString()}</span>
+      <span class="std">${delta>0?"+":""}${delta.toLocaleString()} since ${first.d}${permo!=null?` · ~${permo.toFixed(1)}%/mo`:""}</span>
+      <span class="sts${manual&&stale>35?" old":""}">${manual?`manual · ${stale===0?"today":stale+"d old"}`:"auto nightly"}</span>
+    </div>`;
+  }).filter(Boolean).join("");
+  host.innerHTML = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--vc-charcoal);margin:18px 0 7px" title="One observation per platform per day, kept forever in data/social_history.json. LinkedIn and Bluesky record themselves on every nightly refresh; X, Instagram and Facebook are login-walled to scrapers, so their rows are manual snapshots — when one goes stale, ask Claude to read the current counts in a browser, or run update_social.py.">The running record</div>
+  ${items}
+  <div style="font-size:10.5px;color:var(--vc-charcoal);margin-top:6px">Growth rates use the full span on record and need three weeks of history before they show. Manual rows flag their age; red means it is time for a fresh snapshot.</div>`;
+}
 function renderSocial(x, ig, news, li, bs){
   li = li || {}; bs = bs || {};
   renderSocial._args = [x, ig, news, li, bs];   // for theme-toggle re-render
