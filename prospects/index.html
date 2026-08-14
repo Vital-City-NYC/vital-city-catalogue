@@ -165,9 +165,11 @@ function boot(d){
   ].map(([l,n,f])=>`<div class="kpi"><div class="lbl">${l}</div><div class="num">${n}</div><div class="fine">${f}</div></div>`).join("");
 
   const warm=(d.funders||[]).filter(f=>!f.lead);
-  const leads=(d.funders||[]).filter(f=>f.lead);
+  const abund=(d.funders||[]).filter(f=>f.lead&&f.cat==="abundance");
+  const journo=(d.funders||[]).filter(f=>f.lead&&f.cat==="journalism");
+  const other=(d.funders||[]).filter(f=>f.lead&&!f.cat);
   const frow=f=>`<tr>
-    <td><b>${esc(f.name)}</b><div class="why">${esc(f.focus)}</div>
+    <td>${f.pursuit?'<span class="badge" style="background:var(--vc-magenta);color:#fff">IN PURSUIT</span> ':""}<b>${esc(f.name)}</b><div class="why">${esc(f.focus)}</div>
         <div>${(f.fit||[]).map(x=>`<span class="fit">${esc(x)}</span>`).join("")}</div></td>
     <td class="n">${f.readers||"—"}</td><td class="n">${f.engaged||"—"}</td><td class="n">${f.donors||"—"}</td>
     <td style="max-width:220px">${f.names&&f.names.length?esc(f.names.join(", ")):'<span class="why">—</span>'}</td>
@@ -201,10 +203,16 @@ function boot(d){
     <tbody>${warm.map(frow).join("")}</tbody></table>
     <div class="ins">Arnold Ventures is the standout: twelve readers, ten of them engaged, and John Arnold himself has a Vital City byline and a 99% open rate. Guggenheim is the only funder whose staff have personally donated. These are relationships that already exist &mdash; the work is converting readership into a conversation, not cold outreach.</div>
 
-    <h2 style="margin-top:26px">External leads &mdash; not yet in the room</h2>
-    <div class="hint">Well-known funders of policy journalism and civic research whose stated focus fits Vital City's beats, with little or no reader presence in our file.</div>
+    <h2 style="margin-top:26px">Abundance &amp; state capacity &mdash; the active hunt</h2>
+    <div class="hint">Vital City is commentary, policy analysis and data analysis &mdash; not a newsroom. This is the funder space where that profile is central rather than off-center, and where pursuit is currently focused.</div>
     <table class="tbl"><thead><tr><th>Funder &middot; focus &middot; beat fit</th><th>Readers</th><th>Engaged</th><th>Donors</th><th>Who</th><th>Note</th></tr></thead>
-    <tbody>${leads.map(frow).join("")}</tbody></table>
+    <tbody>${abund.map(frow).join("")}</tbody></table>
+    <div class="ins">The pitch shape that fits this space: <b>policy explainers, analysis and recommendations</b> &mdash; what would it take to build, permit, staff and run New York City better &mdash; backed by the housing, city-government and economy output in the next card. Lead with the work product, not the publication.</div>
+
+    <h2 style="margin-top:26px">Journalism funders &mdash; off-center, pursue selectively</h2>
+    <div class="hint">Big pools, but built for news gathering. A commentary-and-analysis journal is off-profile for most of them; the wedge, where one exists, is the data-journalism output or the civic-information frame.</div>
+    <table class="tbl"><thead><tr><th>Funder &middot; focus &middot; beat fit</th><th>Readers</th><th>Engaged</th><th>Donors</th><th>Who</th><th>Note</th></tr></thead>
+    <tbody>${journo.concat(other).map(frow).join("")}</tbody></table>
     <div class="ins warn"><b>These are leads to verify, not research.</b> Programs, deadlines and eligibility change; several of these funders work by invitation. Check the funder's own site and current filings before anyone spends time on an approach, and nothing on this page should be pasted into an application.</div>
     <div class="ins"><b>Grant readiness:</b> Vital City is a 501(c)(3) project via fiscal sponsorship by the <b>Fund for the City of New York</b> (EIN 13-2612524). Applications and checks route through the sponsor &mdash; confirm current terms with FCNY before quoting them to a funder.</div>
   </div>
@@ -213,7 +221,7 @@ function boot(d){
     <h2>What we can show funders</h2>
     <div class="hint">Published pieces by topic since January ${new Date().getFullYear()-1} &mdash; the evidence base a program officer would ask about, straight from the catalogue.</div>
     <div class="beats">${(d.beats||[]).map(([t,n])=>`<span class="beat"><b>${n}</b> ${esc(t)}</span>`).join("")}</div>
-    <div class="ins">Match the pitch to the funder: criminal-justice output for Arnold, Guggenheim, MacArthur and Tow; the city-government and housing beats for Revson, Kaplan and the NYC civic funders; the journalism operation itself for Press Forward, Knight and AJP.</div>
+    <div class="ins">Match the pitch to the funder: criminal-justice output for Arnold, Guggenheim, MacArthur and Tow; housing, city-government and economy for the abundance funders &mdash; that trio is the abundance-agenda evidence base; the NYC civic beats for Revson, Kaplan and the community funders. The journalism frame is the weakest pitch Vital City can make &mdash; the analysis is the product.</div>
   </div>
 
   <div class="card" id="people">
