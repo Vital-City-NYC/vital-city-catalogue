@@ -106,6 +106,7 @@
 </nav>
 <div class="wrap">
   <div class="kpis" id="kpis"></div>
+  <div style="font-size:11px;color:var(--vc-charcoal);margin:-16px 0 22px;line-height:1.5"><b>Every giving figure on this page is Donorbox only.</b> Checks, wire transfers, donor-advised-fund grants and foundation grants do not pass through Donorbox and appear nowhere in this data &mdash; so totals, donor counts, concentration and the lapsed list all understate reality by whatever arrives through those channels.</div>
   <div id="cards"><div class="loading">Loading&hellip;</div></div>
 </div>
 </div>
@@ -155,7 +156,7 @@ function boot(d){
   $("#stamp").textContent="built "+(d.generated_at||"");
   const t=d.topline||{};
   $("#kpis").innerHTML=[
-    ["Raised to date",money(t.raised),`${t.donors} donors · median ${money(t.median_gift)}`],
+    ["Online giving (Donorbox)",money(t.raised),`${t.donors} online donors · median ${money(t.median_gift)}`],
     ["From top 5 donors",(t.top5_pct||0)+"%","extremely concentrated"],
     ["Repeat donors",t.repeat+` (${t.repeat_pct}%)`,"gave more than once"],
     ["Recurring",t.recurring_donors!=null?t.recurring_donors:"—",t.mrr?`~${money(t.mrr)}/mo`:"no estimate"],
@@ -224,13 +225,13 @@ function boot(d){
 
   <div class="card" id="base">
     <h2>The donor base, plainly</h2>
-    <div class="ins">All ${fmtN(t.donors)} donors arrived from one autumn campaign plus its echoes: ${t.top5_pct}% of the money came from five people, the median gift is ${money(t.median_gift)}, and only ${t.repeat_pct}% have given twice. That is a launch, not yet a base. The two structural moves this page supports: convert one-time donors to a second gift (the ${(T.second||[]).length} names in that tab), and re-ask the ${(T.lybunt||[]).length} whose last gift predates January.</div>
+    <div class="ins">All ${fmtN(t.donors)} <b>online</b> donors arrived from one autumn campaign plus its echoes: ${t.top5_pct}% of the money came from five people, the median gift is ${money(t.median_gift)}, and only ${t.repeat_pct}% have given twice. That is a launch, not yet a base &mdash; and it is the online slice only; anything given by check, DAF or grant is invisible here. The two structural moves this page supports: convert one-time donors to a second gift (the ${(T.second||[]).length} names in that tab), and re-ask the ${(T.lybunt||[]).length} whose last gift predates January.</div>
   </div>
 
   <div class="card" id="method">
     <h2>Method &amp; limits</h2>
     <div class="src">
-    Built ${esc(d.generated_at||"")} from the merged contact database (Ghost, Mailchimp, Donorbox, hand-maintained CRM), the growth pull and the public catalogue. Facts and inferences are labelled: gift amounts and CRM tags are facts; "principal" rows come from email-domain inference and are leads; the external funder list is curated by hand from public knowledge of each funder's stated focus and must be verified before use. Reader counts for funders are matched on email domain and recorded institution &mdash; staff using personal addresses are invisible, so counts are floors. Engagement percentages are Mailchimp open/click rates; Apple Mail inflates opens, so clicks are the more reliable half. No wealth screening, no real-estate data and no giving-elsewhere data exist anywhere in this file: capacity is the weakest signal on this page and is never presented as more than an inference.
+    Built ${esc(d.generated_at||"")} from the merged contact database (Ghost, Mailchimp, Donorbox, hand-maintained CRM), the growth pull and the public catalogue. Facts and inferences are labelled: gift amounts and CRM tags are facts; "principal" rows come from email-domain inference and are leads; the external funder list is curated by hand from public knowledge of each funder's stated focus and must be verified before use. Reader counts for funders are matched on email domain and recorded institution &mdash; staff using personal addresses are invisible, so counts are floors. Engagement percentages are Mailchimp open/click rates; Apple Mail inflates opens, so clicks are the more reliable half. All gift data is Donorbox, so giving by check, wire, donor-advised fund or foundation grant is entirely absent. No wealth screening, no real-estate data and no giving-elsewhere data exist anywhere in this file: capacity is the weakest signal on this page and is never presented as more than an inference.
     </div>
   </div>`;
 
