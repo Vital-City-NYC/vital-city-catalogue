@@ -125,7 +125,7 @@
   .yrrow.alt .yb{background:var(--vc-orange)}
   .yrrow .yv{font-family:var(--vc-serif);font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
   .yrrow .yn{font-size:10.5px;color:var(--vc-charcoal)}
-  .twochart{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+  .twochart{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:30px}
   @media(max-width:700px){.twochart{grid-template-columns:1fr}}
 
   /* nav */
@@ -344,13 +344,16 @@ function slides(){
           </div>`).join("")}</div>`;
       };
       return `<div class="twochart">
+        <div><h3>Unique website visitors</h3>
+          ${chart(lv.visitors||[],false,r=>String(yr)===r.y?"to date":"")}
+          ${lv.visitors_alltime?`<div class="bf-cap">${Number(lv.visitors_alltime).toLocaleString()} all-time (GA4, which begins in 2023 — earlier years are unmeasured, not zero).</div>`:""}</div>
         <div><h3>Email list at year end</h3>
-          ${chart(lv.list||[],false,r=>r.y==="2025"?"includes bot signups, since cleaned":(String(yr)===r.y?"to date":""))}</div>
+          ${chart(lv.list||[],true,r=>r.y==="2025"?"includes bot signups, since cleaned":(String(yr)===r.y?"to date":""))}</div>
         <div><h3>Pieces published per year</h3>
-          ${chart(lv.pieces||[],true,r=>String(yr)===r.y?"to date":"")}</div>
+          ${chart(lv.pieces||[],false,r=>String(yr)===r.y?"to date":"")}</div>
       </div>`;
     })()}
-    <div class="caveat"><b>Reading the 2025 bar honestly:</b> the list-size jump that year includes a wave of bot registrations, since cleaned; 2024 is the honest baseline for organic growth claims. Output growth carries no such caveat — the publishing pace is real.</div>`});
+    <div class="caveat"><b>Reading these honestly:</b> visitor counts start in 2023 because that is when analytics begin — earlier years are unmeasured, not zero, and 2026 is on pace to pass 2025 with a third of the year left. The 2025 list-size jump includes a wave of bot registrations, since cleaned; 2024 is the honest baseline for organic list-growth claims. The visitor and output numbers carry no such caveat.</div>`});
 
   S.push({eyebrow:"The products",html:`
     <h2>Policy products, not just publishing.</h2>

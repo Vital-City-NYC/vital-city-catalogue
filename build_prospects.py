@@ -549,10 +549,17 @@ def main():
         # list size at each year end (current year = latest month available)
         "list": [{"y": y, "n": v} for y, v in sorted({
             m[:4]: c for m, c in sorted(_cum.items()) if c
-        }.items())],
+        }.items()) if y >= "2022"],
+        # unique visitors per year, from GA4 (property history starts 2023 —
+        # there is no web-traffic data for 2021-22, and that absence is stated
+        # on the slide rather than papered over)
+        "visitors": [{"y": str(r["year"]), "n": r["users"]}
+                     for r in ((growth.get("ga4") or {}).get("by_year") or {}).get("years", [])
+                     if r.get("users")],
+        "visitors_alltime": (((growth.get("ga4") or {}).get("by_year") or {}).get("alltime") or {}).get("users"),
         "pieces": [{"y": y, "n": n} for y, n in sorted(Counter(
             (p.get("published_date") or "")[:4] for p in cat
-            if (p.get("published_date") or "")[:4].isdigit()).items())],
+            if (p.get("published_date") or "")[:4].isdigit()).items()) if y >= "2022"],
       },
       "benchmark_note": ("Impact items are Vital City's own accounting, from the draft positioning language (Aug 2026) — "
                          "reuse the wording, but keep the causal framing as stated. "
