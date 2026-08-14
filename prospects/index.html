@@ -39,7 +39,7 @@
   .wrap{max-width:1080px;margin:0 auto;padding:22px 30px 70px}
   .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin-bottom:24px}
   .kpi{background:var(--vc-white);padding:13px 14px}
-  .kpi .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700}
+  .kpi .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;display:flex;align-items:flex-end;min-height:24px}
   .kpi .num{font-weight:900;font-size:26px;line-height:1.08;margin-top:4px;font-variant-numeric:tabular-nums}
   .kpi .fine{font-size:10.5px;color:var(--vc-charcoal);margin-top:3px}
   .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:18px 20px 16px;margin:0 0 22px;box-shadow:0 1px 2px rgba(5,5,7,.05)}
@@ -195,7 +195,7 @@ function boot(d){
   $("#stamp").textContent="built "+(d.generated_at||"");
   const t=d.topline||{};
   $("#kpis").innerHTML=[
-    ["Online giving (Donorbox)",money(t.raised),`${t.donors} online donors · median ${money(t.median_gift)}`],
+    ["Online giving",money(t.raised),`Donorbox only · ${t.donors} donors · median ${money(t.median_gift)}`],
     ["From top 5 donors",(t.top5_pct||0)+"%","extremely concentrated"],
     ["Repeat donors",t.repeat+` (${t.repeat_pct}%)`,"gave more than once"],
     ["Recurring",t.recurring_donors!=null?t.recurring_donors:"—",t.mrr?`~${money(t.mrr)}/mo`:"no estimate"],
@@ -203,12 +203,13 @@ function boot(d){
     ["Last gift",t.last_gift_month||"—","month of most recent gift"],
   ].map(([l,n,f])=>`<div class="kpi"><div class="lbl">${l}</div><div class="num">${n}</div><div class="fine">${f}</div></div>`).join("");
 
-  const warm=(d.funders||[]).filter(f=>!f.lead);
+  const current=(d.funders||[]).filter(f=>!f.lead&&f.current);
+  const warm=(d.funders||[]).filter(f=>!f.lead&&!f.current);
   const abund=(d.funders||[]).filter(f=>f.lead&&f.cat==="abundance");
   const journo=(d.funders||[]).filter(f=>f.lead&&f.cat==="journalism");
   const other=(d.funders||[]).filter(f=>f.lead&&!f.cat);
   const frow=f=>`<tr>
-    <td>${f.pursuit?'<span class="badge" style="background:var(--vc-magenta);color:#fff">IN PURSUIT</span> ':""}<b>${esc(f.name)}</b><div class="why">${esc(f.focus)}</div>
+    <td>${f.current?'<span class="badge b-warm">CURRENT</span> ':""}${f.pursuit?'<span class="badge" style="background:var(--vc-magenta);color:#fff">IN PURSUIT</span> ':""}<b>${esc(f.name)}</b><div class="why">${esc(f.focus)}</div>
         <div>${(f.fit||[]).map(x=>`<span class="fit">${esc(x)}</span>`).join("")}</div></td>
     <td class="n">${f.readers||"—"}</td><td class="n">${f.engaged||"—"}</td><td class="n">${f.donors||"—"}</td>
     <td style="max-width:220px">${f.names&&f.names.length?esc(f.names.join(", ")):'<span class="why">—</span>'}</td>
@@ -238,11 +239,17 @@ function boot(d){
 
   $("#cards").innerHTML=`
   <div class="card" id="grants">
-    <h2>The grant landscape &mdash; warm doors first</h2>
-    <div class="hint">Funders whose staff already read Vital City, with the evidence. Reader counts are matched by email domain and recorded institution, so they are floors, not totals.</div>
+    <h2>Current funders &mdash; renew and grow</h2>
+    <div class="hint">The eight institutions named on <a href="https://www.vitalcitynyc.org/about/" target="_blank" rel="noopener">vitalcitynyc.org/about</a> (read Aug 2026), with what the subscriber file shows about each relationship. Reader counts are floors.</div>
+    <table class="tbl"><thead><tr><th>Funder &middot; focus &middot; beat fit</th><th>Readers</th><th>Engaged</th><th>Donors</th><th>Who</th><th>Note</th></tr></thead>
+    <tbody>${current.map(frow).join("")}</tbody></table>
+    <div class="ins">Renewals are the cheapest money in fundraising. Arnold (12 readers, a byline) and Guggenheim (staff who donate personally) are deep relationships with obvious expansion cases; Achelis &amp; Bodman, Public Welfare and Teagle fund without a single staff reader on file &mdash; worth asking who the program officer is and getting them on the list.</div>
+
+    <h2 style="margin-top:26px">Warm doors &mdash; readers, not yet funders</h2>
+    <div class="hint">Foundations whose staff already read Vital City but which do not appear on the about page as funders.</div>
     <table class="tbl"><thead><tr><th>Funder &middot; focus &middot; beat fit</th><th>Readers</th><th>Engaged</th><th>Donors</th><th>Who</th><th>Note</th></tr></thead>
     <tbody>${warm.map(frow).join("")}</tbody></table>
-    <div class="ins">Arnold Ventures is the standout: twelve readers, ten of them engaged, and John Arnold himself has a Vital City byline and a 99% open rate. Guggenheim is the only funder whose staff have personally donated. These are relationships that already exist &mdash; the work is converting readership into a conversation, not cold outreach.</div>
+    <div class="ins">Bloomberg Philanthropies (seven readers including Bloomberg Associates staff), Robin Hood (an advisor on the masthead), Clark and MacArthur all read without funding &mdash; these are the true prospects among institutions, and the ask starts from demonstrated attention rather than cold outreach.</div>
 
     <h2 style="margin-top:26px">Abundance &amp; state capacity &mdash; the active hunt</h2>
     <div class="hint">Vital City is commentary, policy analysis and data analysis &mdash; not a newsroom. This is the funder space where that profile is central rather than off-center, and where pursuit is currently focused.</div>
