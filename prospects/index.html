@@ -291,6 +291,12 @@ function boot(d){
     <div class="deckcta">
       <a href="deck.html?print=1" target="_blank" rel="noopener" class="deckbtn">&#8681;&nbsp; Download / print the current deck</a>
       <div class="deckwhy">Opens the presentation deck and its print-to-PDF dialog in one click. The deck is generated from the same nightly data as this page &mdash; <b>whatever you save is current as of the last rebuild</b>, never a stale file. (<a href="deck.html" target="_blank" rel="noopener">open without printing</a> &middot; <a href="deck.html?email=1" target="_blank" rel="noopener" title="Downloads a self-contained, passphrase-free copy and opens an email draft to attach it to.">email it</a>)</div>
+      <div style="flex-basis:100%;display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:2px">
+        <span style="font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:var(--vc-charcoal)">Audience versions</span>
+        <a class="exp" style="float:none;text-decoration:none" href="deck.html?v=abundance" target="_blank" rel="noopener" title="Same deck, re-weighted: Just Fix It and permitting lead, housing/state-capacity authors carded, six selected pieces on building and governing.">Abundance</a>
+        <a class="exp" style="float:none;text-decoration:none" href="deck.html?v=justice" target="_blank" rel="noopener" title="Rikers and crime-data receipts lead, criminologist bench carded, six selected pieces on safety and justice.">Criminal justice</a>
+        <a class="exp" style="float:none;text-decoration:none" href="deck.html?v=civic" target="_blank" rel="noopener" title="Civic-governance framing: Mamdani coverage leads, media/civic authors carded, six selected pieces on the civic conversation.">Civic / journalism</a>
+      </div>
     </div>
     <div id="factsBody"></div>
     <div style="margin-top:14px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700">Published pieces by topic since January ${new Date().getFullYear()-1}</div>

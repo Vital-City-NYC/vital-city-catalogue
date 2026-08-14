@@ -235,7 +235,7 @@ async function emailDeck(){
   const html="<!doctype html>\n"+doc.outerHTML;
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));
-  a.download=`Vital-City-case-for-support-${stamp}.html`;
+  a.download=`Vital-City-case-for-support-${VKEY?VKEY+"-":""}${stamp}.html`;
   a.click(); URL.revokeObjectURL(a.href);
   setTimeout(()=>{
     const su=encodeURIComponent("Vital City — the case for support");
@@ -276,8 +276,10 @@ function figs(items){
       <div class="k">${esc(it.k)}</div>${it.n?`<div class="n">${esc(it.n)}</div>`:""}</div>`;
   }).join("")}</div>`;
 }
-function receiptRows(){
-  return `<div class="rows">${(FF.receipts||[]).map(r=>`
+function receiptRows(order){
+  let rs=(FF.receipts||[]).slice();
+  if(order) rs.sort((a,b)=>{const i=order.indexOf(a.head),j=order.indexOf(b.head);return (i<0?99:i)-(j<0?99:j);});
+  return `<div class="rows">${rs.map(r=>`
     <div class="row"><div class="rk">${esc(r.head)}</div>
       <div class="rv">${esc(r.claim)}${r.note?` <span style="color:var(--vc-charcoal)">— ${esc(r.note)}</span>`:""}
         ${(r.links||[]).length?`<div class="rn links">${r.links.map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div>`:""}
@@ -288,13 +290,18 @@ function receiptRows(){
 // Narrative is Vital City's own approved language, merged from the case-for-
 // support and event-sponsorship decks. Positioning wording is in flux, so it
 // lives here in one place and nowhere else.
+// Audience variant: ?v=abundance | justice | civic. Same skeleton — the
+// variant changes which receipts lead, which authors are carded, which product
+// comes first, and adds a spotlight slide of selected pieces.
+const VKEY=(new URLSearchParams(location.search).get("v")||"").toLowerCase();
 function slides(){
   const t=D.topline||{}, P=FF.press||{}, asof=FF.asof||D.generated_at||"";
+  const V=(D.variants||{})[VKEY]||null;
   const S=[];
 
   S.push({cover:true,html:`
     <img class="clogo" src="vc-logo-black.png" alt="Vital City">
-    <div class="eyebrow">A case for support &nbsp;·&nbsp; New York City &nbsp;·&nbsp; ${esc(asof.slice(0,4))}</div>
+    <div class="eyebrow">A case for support &nbsp;·&nbsp; New York City &nbsp;·&nbsp; ${esc(asof.slice(0,4))}${V?` &nbsp;·&nbsp; ${esc(V.label)}`:""}</div>
     <h1>The evidence New York runs on.</h1>
     <div class="sub"><b style="color:var(--vc-paper)">Pragmatic solutions to tough urban problems.</b> A nonprofit journal, research shop and convener, built as one thing: timely commentary from the people shaping urban policy, data rendered intelligible, and evidence-based recommendations pressed into practice.</div>`});
 
@@ -319,7 +326,7 @@ function slides(){
 
   S.push({eyebrow:"Impact",html:`
     <h2>Ideas go in. Policy comes out. Sometimes within days.</h2>
-    ${receiptRows()}`});
+    ${receiptRows(V?V.receipts:null)}`});
 
   S.push({eyebrow:"Media influence",html:`
     <h2>When New York's press corps needs the numbers, it comes here.</h2>
@@ -348,7 +355,9 @@ function slides(){
 
   S.push({eyebrow:"The bylines",html:`
     <h2>The people who shape the debate write here.</h2>
-    <div class="bygrid">${((FF.seniors||{}).people||[]).filter(p=>p.feat).map(p=>`
+    <div class="bygrid">${(V
+      ? V.authors.map(n=>((FF.seniors||{}).people||[]).find(p=>p.n===n)).filter(Boolean)
+      : ((FF.seniors||{}).people||[]).filter(p=>p.feat)).map(p=>`
       <div class="by">
         <div class="bn">${esc(p.n)}</div>
         <div class="bw">${esc(p.who||"")}</div>
@@ -411,13 +420,23 @@ function slides(){
 
   S.push({eyebrow:"The products",html:`
     <h2>Policy products, not just publishing.</h2>
-    <div class="rows">${(FF.products||[]).map(p=>`
+    <div class="rows">${(V
+      ? V.products.map(n=>(FF.products||[]).find(p=>p.name===n)).filter(Boolean)
+      : (FF.products||[])).map(p=>`
       <div class="row"><div class="rk">${esc(p.name)}</div>
         <div class="rv">${esc(p.desc)}
           <div class="rn links">${(p.links||[]).map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div>
         </div></div>`).join("")}
     </div>
     <p class="lede" style="margin-top:14px">This is what pragmatism looks like as an editorial form: not manifestos but fixes — specific, doable, assigned to the desk that can act on them. Each format is repeatable, and each is a fundable unit in its own right.</p>`});
+
+  if(V) S.push({eyebrow:"Selected work",html:`
+    <h2>${esc(V.spot_title)}</h2>
+    <div class="rows">${(V.spots||[]).map(x=>`
+      <div class="row"><div class="rk" style="flex:0 0 150px;font-size:12px;color:var(--vc-charcoal)">${esc(x.a)}</div>
+        <div class="rv">&ldquo;<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.t)}</a>&rdquo;</div></div>`).join("")}
+    </div>
+    <p class="lede" style="margin-top:14px">Six of ${esc(String((FF.tiles||[]).find(t=>t.l==="Pieces published")?.n||"889"))} &mdash; chosen for this audience; the full catalogue is searchable at vitalcitynyc.org.</p>`});
 
   S.push({eyebrow:"The base",html:`
     <h2>New Yorkers started paying for this before we ever asked you to.</h2>

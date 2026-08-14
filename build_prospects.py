@@ -246,6 +246,55 @@ FEATURED = {"Edward Glaeser","Vishaan Chakrabarti","Jelani Cobb","Richard Buery 
             "Tracey L. Meares","Jens Ludwig","Ingrid Gould Ellen","Aaron Chalfin",
             "Brandon del Pozo","Errol Louis"}
 
+# Audience-targeted deck variants. Same skeleton, different emphasis: which
+# receipts lead, which authors are carded, which pieces are spotlit, which
+# product comes first. Spotlight slugs are RESOLVED against the catalogue at
+# build time — a missing slug is dropped with a warning, never invented.
+VARIANTS = {
+ "abundance": {
+   "label": "Prepared for funders of abundance & state capacity",
+   "spot_title": "Selected work: building, permitting, governing",
+   "receipts": ["Permitting","Zohran Mamdani","Subway safety","Crime data","Rikers Island"],
+   "authors": ["Edward Glaeser","David Schleicher","Arpit Gupta","Alex Armlovich","Henry Grabar",
+               "Ingrid Gould Ellen","Vishaan Chakrabarti","Martha Stark","Carl Weisbrod","Claire Weisz"],
+   "products": ["Just Fix It","Rubber Meets Road","What To Do (and Not To Do)"],
+   "spots": ["nyc-housing-permits-fast-track-construction-mamdani",
+             "government-improvements-mamdani-can-tackle-in-the-first-100-days",
+             "nyc-grocery-cost-explained",
+             "mamdani-pied-a-terre-surcharge-tax-rollout-mistake-nyc",
+             "nyc-economy-zohran-mamdani-efficiency",
+             "nyc-joint-developments-public-land-housing",
+             "expert-advice-for-mamdanis-commission-on-government-efficiency"],
+   "extra_spots": [{"t": "The housing issue — 29 pieces on how New York builds (Issue 14)",
+                    "u": "https://www.vitalcitynyc.org/issue-14/", "a": "A full themed issue"}]},
+ "justice": {
+   "label": "Prepared for funders of criminal-justice policy",
+   "spot_title": "Selected work: public safety and justice",
+   "receipts": ["Rikers Island","Crime data","Subway safety","Zohran Mamdani","Permitting"],
+   "authors": ["Aaron Chalfin","Brandon del Pozo","Tracey L. Meares","Jens Ludwig","Bruce Western",
+               "Alex R. Piquero","Jennifer Doleac","John K. Roman","Anna Harvey","John MacDonald"],
+   "products": ["What To Do (and Not To Do)","Just Fix It","Rubber Meets Road"],
+   "spots": ["crime-in-new-york-city-trends-statistics",
+             "twenty-strategies-for-reducing-crime-in-cities",
+             "what-to-do-about-subway-safety-nyc-policy-recommendations",
+             "the-rikers-receivership-risk-and-opportunity",
+             "rikers-receiver-jails-reform-lessons",
+             "real-crime-numbers-nyc-nypd"]},
+ "civic": {
+   "label": "Prepared for funders of civic life & local journalism",
+   "spot_title": "Selected work: the civic conversation",
+   "receipts": ["Zohran Mamdani","Subway safety","Permitting","Crime data","Rikers Island"],
+   "authors": ["Errol Louis","Jelani Cobb","Richard Buery Jr.","Harry Siegel","Julie Sandorf",
+               "John Della Volpe","Sherry Glied","Barry Friedman","Cara Eckholm","Kerri M. Raissian"],
+   "products": ["Rubber Meets Road","Just Fix It","What To Do (and Not To Do)"],
+   "spots": ["what-has-mamdani-done-so-far",
+             "assessing-mamdani-six-months-in",
+             "zohran-mamdani-talks-public-safety",
+             "what-la-guardia-gave-new-york",
+             "social-infrastructure-nyc-mamdani",
+             "mamdani-first-100-days-scorecard-nyc"]},
+}
+
 def bio_descriptor(bio):
     """First clause of the author's own Ghost bio, as the safe descriptor."""
     b = re.sub(r"^\s*(is|was|became)\s+(an?|the)?\s*", "", (bio or "").strip(), flags=re.I)
@@ -586,6 +635,16 @@ def main():
         "funders": funders_out,
         "beats": beats,
         "funder_facts": funder_facts,
+        "variants": (lambda: {
+            k: {"label": v["label"], "spot_title": v["spot_title"],
+                "receipts": v["receipts"], "authors": v["authors"], "products": v["products"],
+                "spots": [{"t": p["title"], "u": p["url"],
+                           "a": p.get("primary_author") or ", ".join((p.get("authors") or [])[:2])}
+                          for slug in v["spots"]
+                          for p in [next((x for x in cat if (x.get("url") or "").rstrip("/").endswith("/"+slug)), None)]
+                          if p or print(f"  WARNING variant {k}: slug not found: {slug}")]
+                + (v.get("extra_spots") or [])}
+            for k, v in VARIANTS.items()})(),
         "pipeline": PIPELINE,
         "readiness": {
             "sponsor": "Fund for the City of New York (FCNY)",
