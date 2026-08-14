@@ -6,11 +6,14 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Vital City — the case for support</title>
 <style>
+  @font-face{font-family:'GascogneTS';src:url('../growth/fonts/GascogneTS-Light.ttf') format('truetype');
+             font-weight:300 900;font-style:normal;font-display:swap;}
   :root{
     --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
     --vc-cloud:#dddddd; --vc-green:#57aa4a; --vc-orange:#ff7c53; --vc-cerulean:#217ebe;
     --vc-magenta:#e7466d; --vc-paper2:#eeeeec; --vc-plum:#7a5ea6; --vc-gold:#d9a441;
     --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+    --vc-serif:"GascogneTS","Source Serif 4",Georgia,Times,serif;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--vc-paper2);color:var(--vc-black);font-family:var(--vc-sans);
@@ -31,46 +34,61 @@
   /* deck */
   .stage{max-width:1080px;margin:0 auto;padding:18px 16px 70px}
   .slide{background:var(--vc-white);border:1px solid var(--vc-black);box-shadow:7px 7px 0 rgba(5,5,7,.10);
-         padding:44px 52px;margin-bottom:22px;min-height:560px;display:flex;flex-direction:column;
+         padding:46px 54px;margin-bottom:22px;min-height:600px;display:flex;flex-direction:column;
          position:relative;page-break-after:always;break-after:page}
-  .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.16em;font-weight:800;color:var(--vc-charcoal)}
-  .wm{font-family:var(--vc-sans);font-weight:900;letter-spacing:-.02em;font-size:15px}
-  .slide h2{font-size:34px;line-height:1.12;letter-spacing:-.02em;margin:14px 0 10px;max-width:22ch}
-  .slide h3{font-size:19px;margin:0 0 6px;letter-spacing:-.01em}
-  .lede{font-size:17px;line-height:1.45;color:var(--vc-black);max-width:60ch;margin:0 0 18px}
-  .foot{position:absolute;left:52px;right:52px;bottom:18px;display:flex;justify-content:space-between;
+  .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.18em;font-weight:800;color:var(--vc-cerulean)}
+  .eyebrow::after{content:"";display:block;width:44px;height:3px;background:var(--vc-orange);margin-top:8px}
+  .wm{font-weight:900;letter-spacing:.22em;font-size:12px;text-transform:uppercase}
+  .slide h2{font-family:var(--vc-serif);font-weight:700;font-size:40px;line-height:1.08;letter-spacing:-.01em;margin:16px 0 12px;max-width:24ch}
+  .slide h3{font-size:18px;margin:14px 0 6px;letter-spacing:-.01em;font-weight:900}
+  .lede{font-size:16.5px;line-height:1.5;max-width:62ch;margin:0 0 16px}
+  .foot{position:absolute;left:54px;right:54px;bottom:18px;display:flex;justify-content:space-between;
         font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--vc-charcoal);font-weight:700}
 
-  /* cover */
-  .cover{justify-content:center}
-  .cover h1{font-size:62px;line-height:1.02;letter-spacing:-.035em;margin:18px 0 14px;max-width:16ch}
-  .cover .sub{font-size:17px;color:var(--vc-charcoal);max-width:52ch}
+  /* cover — black, in the house style */
+  .cover{justify-content:center;background:var(--vc-black);color:var(--vc-paper);border-color:var(--vc-black)}
+  .cover .eyebrow{color:var(--vc-orange)}
+  .cover h1{font-family:var(--vc-serif);font-weight:700;font-size:74px;line-height:1.0;letter-spacing:-.015em;margin:20px 0 18px;max-width:15ch}
+  .cover .sub{font-size:18px;color:#c9ccd2;max-width:52ch;line-height:1.55}
+  .cover .foot{color:#8a8d94}
 
-  /* figure grid — every number here is read from the live data */
-  .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:2px;background:var(--vc-cloud);
-        border:1px solid var(--vc-cloud);margin:6px 0 14px}
-  .fig{background:var(--vc-white);padding:16px 18px}
-  .fig .v{font-size:34px;font-weight:900;letter-spacing:-.03em;line-height:1.05}
-  .fig .v.text{font-size:16px;font-weight:800;line-height:1.3}
-  .fig .k{font-size:12px;font-weight:700;margin-top:4px}
-  .fig .n{font-size:11px;color:var(--vc-charcoal);margin-top:3px;line-height:1.4}
+  /* figures — serif numerals, the house look */
+  .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px;background:var(--vc-black);
+        border:1px solid var(--vc-black);margin:8px 0 16px}
+  .fig{background:var(--vc-white);padding:18px 18px 15px}
+  .fig .v{font-family:var(--vc-serif);font-size:46px;font-weight:700;letter-spacing:-.02em;line-height:1}
+  .fig .v small{font-size:24px}
+  .fig .k{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-top:7px}
+  .fig .n{font-size:11px;color:var(--vc-charcoal);margin-top:3px;line-height:1.45}
+  .fig.hero{background:var(--vc-black);color:var(--vc-paper)}
+  .fig.hero .n{color:#a2a5ad}
 
-  .rows{border-top:1px solid var(--vc-cloud)}
-  .row{border-bottom:1px solid var(--vc-cloud);padding:11px 0;display:flex;gap:16px;align-items:baseline}
-  .row .rk{flex:0 0 210px;font-weight:800;font-size:13.5px}
-  .row .rv{flex:1;font-size:13.5px}
+  .rows{border-top:2px solid var(--vc-black)}
+  .row{border-bottom:1px solid var(--vc-cloud);padding:12px 0;display:flex;gap:16px;align-items:baseline}
+  .row .rk{flex:0 0 190px;font-weight:900;font-size:13.5px}
+  .row .rv{flex:1;font-size:14px;line-height:1.5}
   .row .rn{font-size:11.5px;color:var(--vc-charcoal);margin-top:2px;line-height:1.45}
   .links a{font-size:11px;margin-right:10px;white-space:nowrap}
 
-  .bullets{margin:0;padding-left:18px;max-width:62ch}
-  .bullets li{margin-bottom:9px;font-size:15px;line-height:1.5}
+  .bullets{margin:0;padding-left:19px;max-width:64ch}
+  .bullets li{margin-bottom:10px;font-size:15px;line-height:1.5}
+  .bullets li::marker{color:var(--vc-orange);font-weight:900}
+
+  /* press */
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 14px}
+  .chip{background:var(--vc-paper2);border-radius:3px;padding:5px 11px;font-size:12px;font-weight:700}
+  .chip b{font-family:var(--vc-serif);font-size:15px;margin-left:3px}
+  .chip.first{background:var(--vc-black);color:var(--vc-paper)}
+  .cite{font-size:13.5px;padding:8px 0 8px 14px;border-left:3px solid var(--vc-orange);margin:9px 0;line-height:1.45}
+  .cite .co{font-weight:900;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;margin-right:8px}
+  .cite .cd{color:var(--vc-charcoal);font-size:11px;margin-left:8px}
 
   .caveat{border-left:3px solid var(--vc-gold);background:#fdf8ec;padding:10px 14px;font-size:12px;
           line-height:1.5;margin:12px 0}
-  .held{border-left:3px solid var(--vc-magenta);background:#fdeef2;padding:10px 14px;font-size:12px;
-        line-height:1.5;margin:12px 0}
   .src{font-size:11.5px;color:var(--vc-charcoal);line-height:1.6}
   .src b{color:var(--vc-black)}
+  .pull{font-family:var(--vc-serif);font-size:22px;line-height:1.35;max-width:30ch;margin:16px 0;
+        padding-left:16px;border-left:4px solid var(--vc-cerulean)}
 
   /* nav */
   .bar{position:fixed;left:0;right:0;bottom:0;background:var(--vc-black);color:var(--vc-white);
@@ -78,20 +96,20 @@
        letter-spacing:.08em;text-transform:uppercase;font-weight:700;z-index:400}
   .bar button{background:none;border:1.5px solid var(--vc-white);color:var(--vc-white);font-family:inherit;
               font-weight:800;font-size:11px;padding:5px 12px;cursor:pointer;margin-left:6px;letter-spacing:.06em}
-  .bar a{color:var(--vc-white)}
 
   @media print{
     body{background:#fff}
     .bar,.gate{display:none!important}
     .stage{max-width:none;padding:0}
-    .slide{box-shadow:none;border:none;margin:0;min-height:96vh;padding:36px 40px}
-    .held{display:none}          /* claims held back never print into a funder copy */
+    .slide{box-shadow:none;border:none;margin:0;min-height:96vh;padding:38px 42px}
+    .cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .fig.hero,.chip.first{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
   @media (max-width:700px){
     .slide{padding:28px 22px;min-height:0}
-    .cover h1{font-size:40px}
-    .slide h2{font-size:26px}
-    .foot{position:static;margin-top:22px;left:auto;right:auto}
+    .cover h1{font-size:44px}
+    .slide h2{font-size:28px}
+    .foot{position:static;margin-top:22px}
     .row{display:block}
     .row .rk{flex:none;margin-bottom:2px}
   }
@@ -152,8 +170,8 @@ $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
 $("#lock").addEventListener("click",e=>{e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()});
 $("#print").addEventListener("click",()=>window.print());
 // ?print=1 (used by the prospects page's download button): open the print
-// dialog as soon as the deck has rendered, so "download a fresh deck" is one
-// click — the PDF the viewer saves is generated from the current data.
+// dialog as soon as the deck has rendered — the PDF saved is generated from
+// the current nightly data.
 if(/[?&]print=1/.test(location.search)){
   const _t=setInterval(()=>{ if(document.body.textContent.length>4000){clearInterval(_t);setTimeout(()=>window.print(),400);} },150);
 }
@@ -161,105 +179,107 @@ if(/[?&]print=1/.test(location.search)){
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money=n=>"$"+Number(n||0).toLocaleString();
 
-// Claims that are not yet externally citable. Each is shown on screen with the
-// reason and is suppressed from print, so a deck handed to a funder cannot
-// carry an assertion we cannot source. Delete an entry once its URL is found —
-// the claim then flows through from the data like every other receipt.
-const EXTERNAL_HOLD=[
-  {re:/New York Times exclusive/i,
-   why:"The New York Times exclusive is asserted in the positioning language, but no URL has been located. On screen only until one is added."}
-];
-const heldReason=t=>{const h=EXTERNAL_HOLD.find(x=>x.re.test(String(t||"")));return h?h.why:null};
-
-// --- reading the live figures -------------------------------------------
-// Every number in this deck comes out of funder_facts, which build_prospects.py
-// recomputes on each nightly rebuild. Nothing here is typed by hand, so the
-// deck cannot quietly drift from the data the way a pasted figure does.
+// --- reading the live figures --------------------------------------------
+// Every number is read from funder_facts (v2: tiles / receipts / press /
+// products / engagement / audience), which build_prospects.py recomputes on
+// each nightly rebuild. Nothing here is typed by hand, so the deck cannot
+// quietly drift from the data the way a pasted figure does.
 let FF={}, D={};
-const group=t=>(FF.groups||[]).find(g=>(g.title||"").toLowerCase().startsWith(t.toLowerCase()))||{rows:[]};
-const row=(g,label)=>((group(g).rows)||[]).find(r=>(r.label||"").toLowerCase().startsWith(label.toLowerCase()))||{};
-const val=(g,label,fallback)=>{const r=row(g,label);return r.value!==undefined&&r.value!==null&&r.value!==""?r.value:(fallback||"—")};
+const tile=l=>((FF.tiles||[]).find(t=>(t.l||"").toLowerCase().startsWith(l.toLowerCase())))||{};
+const arow=(arr,l)=>((arr||[]).find(r=>(r.label||"").toLowerCase().startsWith(l.toLowerCase())))||{};
 
 function figs(items){
-  return `<div class="figs">${items.map(it=>{
+  return `<div class="figs">${items.filter(Boolean).map(it=>{
     const isText=!/^[\d$+\-]/.test(String(it.v));
-    return `<div class="fig"><div class="v${isText?" text":""}">${esc(it.v)}</div>
+    return `<div class="fig${it.hero?" hero":""}"><div class="v"${isText?' style="font-size:20px;line-height:1.3;font-family:var(--vc-sans);font-weight:800"':''}>${esc(it.v)}</div>
       <div class="k">${esc(it.k)}</div>${it.n?`<div class="n">${esc(it.n)}</div>`:""}</div>`;
   }).join("")}</div>`;
 }
-function rowsOf(groupTitle,opts){
-  const o=opts||{}, g=group(groupTitle);
-  const keep=(g.rows||[]).filter(r=>!(o.skip||[]).some(s=>(r.label||"").toLowerCase().startsWith(s.toLowerCase())));
-  return `<div class="rows">${keep.map(r=>{
-    const held=heldReason(r.value)||heldReason(r.note);
-    return `<div class="row${held?" is-held":""}">
-      <div class="rk">${esc(r.label)}</div>
-      <div class="rv">${esc(r.value)}
-        ${r.note?`<div class="rn">${esc(r.note)}</div>`:""}
+function receiptRows(){
+  return `<div class="rows">${(FF.receipts||[]).map(r=>`
+    <div class="row"><div class="rk">${esc(r.head)}</div>
+      <div class="rv">${esc(r.claim)}${r.note?` <span style="color:var(--vc-charcoal)">— ${esc(r.note)}</span>`:""}
         ${(r.links||[]).length?`<div class="rn links">${r.links.map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div>`:""}
-        ${held?`<div class="held">Held back from the external deck: ${esc(held)}</div>`:""}
-      </div></div>`;
-  }).join("")}</div>`;
+      </div></div>`).join("")}</div>`;
 }
 
-// --- the deck ------------------------------------------------------------
-// Narrative is Vital City's own approved language, carried over from the two
-// decks this merges (the case-for-support deck and the event-sponsorship deck).
-// Positioning wording is deliberately kept in this one place: it is in flux,
-// so it is edited here, not scattered across slides.
+// --- the deck -------------------------------------------------------------
+// Narrative is Vital City's own approved language, merged from the case-for-
+// support and event-sponsorship decks. Positioning wording is in flux, so it
+// lives here in one place and nowhere else.
 function slides(){
-  const t=D.topline||{}, asof=FF.asof||D.generated_at||"";
+  const t=D.topline||{}, P=FF.press||{}, asof=FF.asof||D.generated_at||"";
   const S=[];
 
   S.push({cover:true,html:`
-    <div class="eyebrow">A case for support &nbsp;·&nbsp; New York City</div>
+    <div class="eyebrow">A case for support &nbsp;·&nbsp; New York City &nbsp;·&nbsp; ${esc(asof.slice(0,4))}</div>
     <h1>The evidence New York runs on.</h1>
-    <div class="sub">A nonprofit publication and think tank: a journal, a research shop and a convener, built as one thing.</div>`});
+    <div class="sub">A nonprofit journal, research shop and convener, built as one thing: timely commentary from the people shaping urban policy, data rendered intelligible, and evidence-based recommendations pressed into practice.</div>`});
 
   S.push({eyebrow:"The moment",html:`
     <h2>A new administration is rewriting how New York City works. Someone has to hold the evidence.</h2>
-    <p class="lede">The city has a new mayor, a new set of deputy mayors, a federal receiver at Rikers Island, a charter revision fight and an affordability crisis that will define the decade. Every one of those debates is about to be settled, well or badly, by whoever brings the best facts into the room.</p>
+    <p class="lede">A new mayor, a federal receiver at Rikers Island, a charter revision fight and an affordability crisis that will define the decade. Every one of those debates is about to be settled — well or badly — by whoever brings the best facts into the room.</p>
     <h3>What is missing</h3>
     <ul class="bullets">
       <li>Newsroom capacity for urban policy has collapsed.</li>
       <li>Academic research reaches City Hall years late, if ever.</li>
       <li>Advocacy shops arrive with a conclusion already written.</li>
     </ul>
-    <p class="lede" style="margin-top:14px">Vital City occupies the empty middle: rigorous enough for the researchers, readable enough for the deputy mayor, independent enough that both sides cite it.</p>`});
-
-  S.push({eyebrow:"What we produce",html:`
-    <h2>Original analysis, at a volume that compounds.</h2>
-    ${figs([
-      {v:val("Output","Pieces published"),k:"Pieces published",n:(row("Output","Pieces published").note||"")},
-      {v:val("Output","Flourish charts"),k:"Original charts in the catalogue",n:"Original data analysis is the differentiator"},
-      {v:val("Output","Press citations"),k:"Press citations tracked",n:(row("Output","Press citations").note||"")},
-      {v:val("Audience","Newsletter subscribers"),k:"Newsletter subscribers",n:"Mailchimp, current"}
-    ])}
-    <p class="lede">The catalogue is the asset. It is what a program officer can audit, and it is why reporters, agencies and advocates keep arriving at the same source.</p>`});
-
-  S.push({eyebrow:"The audience",html:`
-    <h2>It is not the size of the list. It is who is on it.</h2>
-    ${rowsOf("Who reads it")}
-    <div class="caveat"><b>Read the engagement numbers in this order.</b> Click-to-open is the honest headline: Apple Mail's automatic opens inflate open rates across the whole industry, so an open rate is not a like-for-like comparison and a click is.</div>`});
-
-  S.push({eyebrow:"Engagement",html:`
-    <h2>Against the industry, the gap is in clicks, not opens.</h2>
-    ${rowsOf("Engagement vs industry")}
-    ${figs([
-      {v:val("Audience","Regular readers"),k:"Regular readers",n:"Open rate 50% and above — the engaged core"},
-      {v:val("Audience","Opened in the last year"),k:"Opened in the last year",n:"Distinct people"},
-      {v:val("Audience","Wikipedia-notable"),k:"Wikipedia-notable subscribers",n:"A conservative floor: matched, not estimated"}
-    ])}`});
-
-  S.push({eyebrow:"Reach",html:`
-    <h2>The website, and where it is heading.</h2>
-    ${rowsOf("Web traffic")}
-    ${figs([{v:val("Output","LinkedIn followers"),k:"LinkedIn followers",n:(row("Output","LinkedIn followers").note||"")}])}
-    <div class="caveat"><b>On subscriber growth.</b> The 2025 signup surge is inflated by bot registrations. Use 2024 as the volume baseline for any year-over-year growth claim.</div>`});
+    <p class="pull">Vital City occupies the empty middle: rigorous enough for the researchers, readable enough for the deputy mayor, independent enough that both sides cite it.</p>`});
 
   S.push({eyebrow:"Impact",html:`
     <h2>Ideas go in. Policy comes out. Sometimes within days.</h2>
-    ${rowsOf("Policy impact")}`});
+    ${receiptRows()}`});
+
+  S.push({eyebrow:"Media influence",html:`
+    <h2>When New York's press corps needs the numbers, it comes here.</h2>
+    ${figs([
+      {v:String(P.total||"—"),k:"Press citations tracked",n:"Across "+(P.outlets||"—")+" outlets since "+esc(P.since||""),hero:true},
+      {v:String(tile("New York Times").n||"—"),k:"New York Times citations",n:"The most-cited outlet in the tracker"},
+      {v:String(P.y2026||"—"),k:"Citations in "+asof.slice(0,4),n:(P.permonth?("~"+P.permonth+" a month — one every day and a half"):"")}
+    ])}
+    <div class="chips">${(P.top||[]).map((o,i)=>`<span class="chip${i===0?" first":""}">${esc(o.outlet)}<b>${o.n}</b></span>`).join("")}</div>
+    ${(P.samples||[]).slice(0,4).map(x=>`<div class="cite"><span class="co">${esc(x.outlet)}</span><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a><span class="cd">${esc(x.date)}</span></div>`).join("")}
+    <div class="caveat"><b>These counts are floors.</b> The tracker watches a whitelist of ~25 outlets for the exact phrase, the handle and URL shares — podcast mentions, paywalled uses and everything outside the whitelist are missed.</div>`});
+
+  S.push({eyebrow:"Media influence, continued",html:`
+    <h2>Cited across the spectrum, not from one corner of it.</h2>
+    <p class="lede">Vital City is cited approvingly by City Journal and Mother Jones alike — read closely by the correction commissioner, quoted by the mayor. The analyses are built to be usable by people who disagree with each other, and they are.</p>
+    <p class="pull">When reporters dig into the city's crime numbers, it is often Vital City's analyses they build on.</p>
+    <p class="lede">That is a deliberate product choice: the data work is published with methods attached, at the speed of the news cycle, under a name both sides can print.</p>`});
+
+  S.push({eyebrow:"The audience",html:`
+    <h2>It is not the size of the list. It is who is on it.</h2>
+    ${figs([
+      {v:String(tile("Government + university").n||"—").split(" ")[0]==="—"?"—":esc(tile("Government + university").n),k:"Government + university subscribers",n:esc(tile("Government + university").s||""),hero:true},
+      {v:esc(arow(FF.audience,"Wikipedia-notable").value||"—"),k:"Wikipedia-notable subscribers",n:"A conservative floor — matched, not estimated"},
+      {v:esc(arow(FF.audience,"Regular readers").value||"—"),k:"Regular readers",n:"Open rate 50% and above — the engaged core"}
+    ])}
+    <div class="rows">
+      <div class="row"><div class="rk">Inside government</div><div class="rv">${esc(tile("Government + university").s||"")} — the people these analyses are written to reach receive them directly.</div></div>
+      <div class="row"><div class="rk">Inside the funders</div><div class="rv">${esc(arow(FF.audience,"Staff at grantmaking foundations").value||"")}</div></div>
+      <div class="row"><div class="rk">Newsletter</div><div class="rv">${esc(tile("Newsletter subscribers").n||"—")} subscribers, ${esc(tile("Newsletter subscribers").s||"")}</div></div>
+    </div>
+    <div class="caveat"><b>On engagement:</b> click-to-open is the honest metric (${esc(arow(FF.engagement,"Click-to-open").value||"—")} against a 5.3–8.6% cross-industry band) — Apple Mail inflates raw open rates for everyone, so clicks are the like-for-like comparison.</div>`});
+
+  S.push({eyebrow:"Reach",html:`
+    <h2>Growing, in a year when publisher traffic is collapsing.</h2>
+    ${figs([
+      {v:esc(tile("Site visitors").n||"—"),k:"Site visitors, last 30 days",n:esc(tile("Site visitors").s||""),hero:true},
+      {v:esc(tile("Pieces published").n||"—"),k:"Pieces published",n:esc(tile("Pieces published").s||"")}
+    ])}
+    <p class="lede">Publisher search traffic fell by a third globally last year; small publishers lost more. Vital City's weekly visitors rose instead — the archive keeps ranking because the analyses keep being the source.</p>
+    <div class="caveat"><b>On subscriber growth.</b> The 2025 signup surge is inflated by bot registrations; 2024 is the honest volume baseline for growth claims.</div>`});
+
+  S.push({eyebrow:"The products",html:`
+    <h2>Policy products, not just publishing.</h2>
+    <div class="rows">${(FF.products||[]).map(p=>`
+      <div class="row"><div class="rk">${esc(p.name)}</div>
+        <div class="rv">${esc(p.desc)}
+          <div class="rn links">${(p.links||[]).map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div>
+        </div></div>`).join("")}
+    </div>
+    <p class="lede" style="margin-top:14px">Each is a repeatable format for turning evidence into something a decision-maker can act on — and each is a fundable unit in its own right.</p>`});
 
   S.push({eyebrow:"The base",html:`
     <h2>New Yorkers started paying for this before we ever asked you to.</h2>
@@ -268,25 +288,25 @@ function slides(){
       {v:String(t.donors||"—"),k:"Online donors",n:t.median_gift?("Median gift "+money(t.median_gift)):""},
       {v:(t.top5_pct!=null?t.top5_pct+"%":"—"),k:"From the top five donors",n:"Concentration, not yet a base"}
     ])}
-    <div class="caveat"><b>Every giving figure here is Donorbox only.</b> Checks, wire transfers, donor-advised-fund grants and foundation grants do not pass through Donorbox and appear nowhere in this data, so these totals understate real giving by whatever arrives through those channels.</div>`});
+    <div class="caveat"><b>Every giving figure here is Donorbox only.</b> Checks, wire transfers, donor-advised-fund grants and foundation grants do not pass through Donorbox — these totals understate real giving by whatever arrives through those channels.</div>`});
 
   S.push({eyebrow:"The ask",html:`
     <h2>Fund the room where it is decided.</h2>
-    <p class="lede">Vital City is small, and that is the opportunity: a gift here does not disappear into overhead, it buys a specific piece of the machine that turns evidence into policy.</p>
+    <p class="lede">Vital City is small, and that is the opportunity: a gift here does not disappear into overhead. It buys a specific piece of the machine that turns evidence into policy.</p>
     <ul class="bullets">
-      <li><b>More original analysis.</b> The data work is what gets cited, and it is the most expensive thing we do.</li>
-      <li><b>More convening.</b> Putting the people who decide and the people with the evidence in one room, on the record.</li>
-      <li><b>More reach into City Hall.</b> The readers listed here are already there; the work is getting the right piece in front of them at the right moment.</li>
+      <li><b>More original analysis.</b> The data work is what gets cited — ${esc(String((FF.press||{}).total||""))} times and counting — and it is the most expensive thing we do.</li>
+      <li><b>More convening.</b> The people who decide and the people with the evidence, in one room, on the record.</li>
+      <li><b>More reach into City Hall.</b> The readers are already there; the work is getting the right piece in front of them at the right moment.</li>
       <li><b>Capacity to answer fast.</b> The permitting fixes ran days before City Hall's own report. That timing is a capability, not luck.</li>
     </ul>`});
 
   S.push({eyebrow:"Sources",html:`
     <h2>Every number in this deck, and where it comes from.</h2>
     <div class="src">
-      <p><b>All figures are computed, not typed.</b> Each number is read from the fundraising-prospects dataset, which is rebuilt from the primary systems on every nightly run and last refreshed <b>${esc(asof)}</b>. Audience and engagement come from Mailchimp; website traffic from Ghost analytics and Google Analytics; giving from Donorbox; the catalogue from the Ghost publishing interface; the audience composition from the Vital City network database, which fuses subscribers, contributors and contacts and hand-codes them by role.</p>
-      <p><b>Caveats that travel with these numbers.</b> Giving is Donorbox only, so checks, wires, donor-advised funds and foundation grants are invisible here. The 2025 signup surge is bot-inflated, so 2024 is the honest volume baseline. Open rates are inflated industry-wide by Apple Mail privacy protection, which is why click-to-open leads the engagement slide.</p>
-      <p><b>Impact claims</b> are Vital City's own accounting, each carrying its source links above. ${esc(FF.benchmark_note||"")}</p>
-      <p><b>This deck was assembled with AI assistance.</b> Every figure comes from a primary Vital City system; the narrative claims come from Vital City's own record. Verify any figure before it goes to a funder.</p>
+      <p><b>All figures are computed, not typed.</b> Each number is read from the fundraising-prospects dataset, rebuilt from the primary systems on every nightly run and last refreshed <b>${esc(asof)}</b>. Audience and engagement come from Mailchimp; website traffic from Ghost analytics; press citations from a Google News tracker over a ~25-outlet whitelist; giving from Donorbox; the catalogue from the Ghost publishing platform; audience composition from the Vital City contact database, which fuses subscribers, contributors and contacts.</p>
+      <p><b>Caveats that travel with these numbers.</b> Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are whitelist floors, not totals.</p>
+      <p><b>Impact claims</b> are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate.</p>
+      <p><b>This deck was assembled with AI assistance.</b> Every figure comes from a primary Vital City system; verify any figure before it goes to a funder.</p>
     </div>`});
 
   return S;

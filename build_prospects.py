@@ -411,8 +411,8 @@ def main():
          "s": f"by {len(authors):,} contributors since 2021"},
       ],
       "receipts": [
-        {"head": "Mayor Mamdani", "claim": "Sat with Vital City for an hour on public safety",
-         "note": "after calling himself 'quite taken' by the annual crime analysis",
+        {"head": "Zohran Mamdani", "claim": "As a candidate, sat with Vital City for an hour on public safety",
+         "note": "after calling himself 'quite taken' by the annual crime analysis — he is now the mayor",
          "links": [{"t":"the interview","u":"https://www.vitalcitynyc.org/zohran-mamdani-talks-public-safety/"},
                    {"t":"'quite taken' (NY Editorial Board)","u":"https://nyeditorialboard.substack.com/p/zohran-mamdani-interview-transcript"},
                    {"t":"the crime analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"}]},
@@ -434,6 +434,8 @@ def main():
                    {"t":"why the numbers change","u":"https://www.vitalcitynyc.org/real-crime-numbers-nyc-nypd/"}]},
       ],
       "press": {"total": len(press), "outlets": sum(1 for v in p_out.values() if v), "since": p_first,
+                "y2026": sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))),
+                "permonth": round(sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))) / max(1, TODAY.month - 0.5), 1),
                 "top": [{"outlet": TOP_OUT[k], "n": v} for k, v in p_out.most_common(30) if k in TOP_OUT][:8],
                 "samples": samples},
       "products": [
