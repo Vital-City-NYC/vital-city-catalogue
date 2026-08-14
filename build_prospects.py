@@ -214,6 +214,25 @@ def load_event(people):
     out["unconverted"] = sum(1 for x in out["attended"] if not x["gave_after"])
     return out
 
+# Most-influential contributors for the deck. Curated Aug 2026 from the
+# Wikipedia-notability ranking of bylined authors (article length as the rough
+# prominence proxy), hand-filtered: deceased/archival authors excluded, chosen
+# for breadth across discipline and political lean. The DESCRIPTIONS are
+# point-in-time (Wikipedia, Aug 2026); the PIECES are matched live from the
+# catalogue at every build, so links and counts stay current.
+INFLUENTIALS = [
+  ("Edward Glaeser", "Harvard economist — the leading urban economist of his generation"),
+  ("Richard Florida", "Urban theorist, author of The Rise of the Creative Class"),
+  ("Megan McArdle", "Washington Post columnist"),
+  ("Jonathan Rauch", "Brookings senior fellow and The Atlantic contributing writer"),
+  ("Carlina Rivera", "New York City Council member"),
+  ("Erwin Chemerinsky", "Dean of Berkeley Law, leading constitutional scholar"),
+  ("Brandon del Pozo", "Former police chief, Brown professor of policy and policing"),
+  ("Majora Carter", "Urban revitalization strategist, Peabody-winning broadcaster"),
+  ("Carlo Ratti", "MIT Senseable City Lab director and architect"),
+  ("Bradley Tusk", "Venture capitalist and political strategist"),
+]
+
 def load(path, default=None):
     try:
         return json.load(open(path))
@@ -460,6 +479,15 @@ def main():
         {"label": "Nonprofit addresses", "value": f"{len(org):,}", "note": "Vera, Osborne, Arnold Ventures, CBC, Court Innovation among the densest"},
         {"label": "Staff at grantmaking foundations", "value": "Arnold Ventures, Bloomberg Philanthropies, Robin Hood, Guggenheim, Revson, Tiger, Clark, MacArthur", "note": "counts and names in the warm-doors table"},
         {"label": "Wikipedia-notable subscribers", "value": f"{sum(1 for r in sub if r.get('wiki')):,}", "note": "conservative floor — matched, not estimated"},
+      ],
+      "influentials": [
+        {"n": name, "who": who,
+         "npieces": len([p for p in cat if name in (p.get("authors") or []) or p.get("primary_author") == name]),
+         "pieces": [{"t": p["title"], "u": p["url"]} for p in sorted(
+             [p for p in cat if name in (p.get("authors") or []) or p.get("primary_author") == name],
+             key=lambda p: p.get("published_date") or "", reverse=True)[:2]]}
+        for name, who in INFLUENTIALS
+        if any(name in (p.get("authors") or []) or p.get("primary_author") == name for p in cat)
       ],
       "longview": {
         # list size at each year end (current year = latest month available)

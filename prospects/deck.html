@@ -108,6 +108,15 @@
   .clogo{width:230px;margin-bottom:30px;filter:brightness(0) invert(1)}   /* black art -> paper white on the cover */
   .slide:not(.cover) .slogo{position:absolute;top:46px;right:54px;width:110px;opacity:.85}
 
+  /* bylines grid */
+  .bygrid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin-top:8px}
+  .by{background:var(--vc-white);padding:13px 15px}
+  .by .bn{font-family:var(--vc-serif);font-weight:700;font-size:19px;line-height:1.1}
+  .by .bw{font-size:11px;color:var(--vc-charcoal);margin:3px 0 5px;line-height:1.4}
+  .by .bp{font-size:11.5px;line-height:1.45}
+  .by .bp .more{color:var(--vc-charcoal);font-size:10.5px}
+  @media(max-width:700px){.bygrid{grid-template-columns:1fr}}
+
   /* long-view bars */
   .yrchart{margin:6px 0 4px}
   .yrrow{display:flex;align-items:center;gap:10px;margin:7px 0}
@@ -285,6 +294,18 @@ function slides(){
     <p class="lede">Vital City is cited approvingly by City Journal and Mother Jones alike — read closely by the correction commissioner, quoted by the mayor. The analyses are built to be usable by people who disagree with each other, and they are.</p>
     <p class="pull">When reporters dig into the city's crime numbers, it is often Vital City's analyses they build on.</p>
     <p class="lede">That is a deliberate product choice: the data work is published with methods attached, at the speed of the news cycle, under a name both sides can print.</p>`});
+
+  S.push({eyebrow:"The bylines",html:`
+    <h2>The people who shape the debate write here.</h2>
+    <div class="bygrid">${(FF.influentials||[]).map(p=>`
+      <div class="by">
+        <div class="bn">${esc(p.n)}</div>
+        <div class="bw">${esc(p.who)}</div>
+        <div class="bp">${(p.pieces||[]).slice(0,1).map(x=>`&ldquo;<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.t)}</a>&rdquo;`).join("")}
+          ${p.npieces>1?`<span class="more"> +${p.npieces-1} more</span>`:""}</div>
+      </div>`).join("")}
+    </div>
+    <div class="bf-cap" style="margin-top:10px">A sample, not a masthead: ${esc(String(tile("Pieces published").s||"").replace("by ","")).split(" since")[0]||"492 contributors"} in all — criminologists, economists, planners, prosecutors, formerly incarcerated New Yorkers, mayors. Selected here for public prominence and breadth of perspective; pieces and counts are matched live from the catalogue.</div>`});
 
   S.push({eyebrow:"The audience",html:`
     <h2>It is not the size of the list. It is who is on it.</h2>
