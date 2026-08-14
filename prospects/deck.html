@@ -313,7 +313,7 @@ function slides(){
     <div class="bf-cap">The Vital City homepage, vitalcitynyc.org — as of ${esc(asof)}, the date this copy of the deck was generated. If this panel prints blank, the printed copy simply omits the preview; every figure elsewhere is unaffected.</div>`});
 
   S.push({eyebrow:"The moment",html:`
-    <h2>A new administration is rewriting how New York City works. Someone has to hold the evidence.</h2>
+    <h2>A new administration is rewriting how New York City works. Someone has to guide it toward what the evidence supports.</h2>
     <p class="lede">A new mayor, a federal receiver at Rikers Island, a charter revision fight and an affordability crisis that will define the decade. Every one of those debates is about to be settled — well or badly — by whoever brings the best facts into the room.</p>
     <h3>What is missing</h3>
     <ul class="bullets">
@@ -324,11 +324,11 @@ function slides(){
     <p class="pull">Vital City occupies the empty middle: rigorous enough for the researchers, readable enough for the deputy mayor, independent enough that both sides cite it.</p>`});
 
   S.push({eyebrow:"Impact",html:`
-    <h2>Ideas go in. Policy comes out. Sometimes within days.</h2>
+    <h2>Where the work has moved policy.</h2>
     ${receiptRows(V?V.receipts:null)}`});
 
   S.push({eyebrow:"Media influence",html:`
-    <h2>When New York's press corps needs the numbers, it comes here.</h2>
+    <h2>When New York's press corps needs intelligent, honest analysis, it comes here.</h2>
     ${figs([
       {v:String(P.total||"—"),k:"Press citations tracked",n:"Across "+(P.outlets||"—")+" outlets since "+esc(P.since||""),hero:true},
       {v:String(tile("New York Times").n||"—"),k:"New York Times citations",n:"The most-cited outlet in the tracker"},
@@ -353,7 +353,7 @@ function slides(){
     <p class="lede">That is a deliberate product choice: the data work is published with methods attached, at the speed of the news cycle, under a name both sides can print.</p>`});
 
   S.push({eyebrow:"The bylines",html:`
-    <h2>The people who shape the debate write here.</h2>
+    <h2>The people who shape the debate.</h2>
     <div class="bygrid">${(V
       ? V.authors.map(n=>((FF.seniors||{}).people||[]).find(p=>p.n===n)).filter(Boolean)
       : ((FF.seniors||{}).people||[]).filter(p=>p.feat)).map(p=>`

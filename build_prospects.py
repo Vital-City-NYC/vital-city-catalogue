@@ -515,7 +515,11 @@ def main():
         _mo = max(_cum); _prev = f"{int(_mo[:4])-1}{_mo[4:]}"
         yoy_now, yoy_prev = _cum.get(_mo), _cum.get(_prev)
     yoy_pct = round(100*(yoy_now-yoy_prev)/yoy_prev) if (yoy_now and yoy_prev) else None
-    press = [x for x in mentions if not x.get("own_post")]
+    # Drop rows dated before Vital City existed (Sept 2021): those are social
+    # profile pages whose account-creation dates leak in as publication dates,
+    # not press citations. Genuine backfill from 2022 on stays.
+    press = [x for x in mentions if not x.get("own_post")
+             and (x.get("published_iso") or "9999") >= "2021-09"]
     p_out = Counter(x.get("domain") or "" for x in press)
     p_first = min((x.get("published_iso") or "9999" for x in press), default="")[:7]
     TOP_OUT = {"nytimes.com":"The New York Times","gothamist.com":"Gothamist","politico.com":"Politico",
