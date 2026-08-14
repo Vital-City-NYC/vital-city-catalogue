@@ -455,11 +455,21 @@ def main():
         {"label": "Open rate", "value": f"{_avg(m26,'open_pct')}%", "note": "30-40% is 'solid' for media; inflated industry-wide by Apple Mail"},
       ],
       "audience": [
-        {"label": "Regular readers", "value": f"{core:,}", "note": "open rate 50%+ — the engaged core"},
+        {"label": "Email list, full size", "value": f"{mc.get('total_subscribers', len(sub)):,}",
+         "note": (f"up {yoy_pct}% year over year" if yoy_pct else "Mailchimp, current")},
         {"label": "Nonprofit addresses", "value": f"{len(org):,}", "note": "Vera, Osborne, Arnold Ventures, CBC, Court Innovation among the densest"},
         {"label": "Staff at grantmaking foundations", "value": "Arnold Ventures, Bloomberg Philanthropies, Robin Hood, Guggenheim, Revson, Tiger, Clark, MacArthur", "note": "counts and names in the warm-doors table"},
         {"label": "Wikipedia-notable subscribers", "value": f"{sum(1 for r in sub if r.get('wiki')):,}", "note": "conservative floor — matched, not estimated"},
       ],
+      "longview": {
+        # list size at each year end (current year = latest month available)
+        "list": [{"y": y, "n": v} for y, v in sorted({
+            m[:4]: c for m, c in sorted(_cum.items()) if c
+        }.items())],
+        "pieces": [{"y": y, "n": n} for y, n in sorted(Counter(
+            (p.get("published_date") or "")[:4] for p in cat
+            if (p.get("published_date") or "")[:4].isdigit()).items())],
+      },
       "benchmark_note": ("Impact items are Vital City's own accounting, from the draft positioning language (Aug 2026) — "
                          "reuse the wording, but keep the causal framing as stated. "
                          "Press counts come from the growth dashboard's whitelist of ~25 outlets, so they undercount. "

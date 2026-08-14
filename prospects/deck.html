@@ -108,6 +108,17 @@
   .clogo{width:230px;margin-bottom:30px;filter:brightness(0) invert(1)}   /* black art -> paper white on the cover */
   .slide:not(.cover) .slogo{position:absolute;top:46px;right:54px;width:110px;opacity:.85}
 
+  /* long-view bars */
+  .yrchart{margin:6px 0 4px}
+  .yrrow{display:flex;align-items:center;gap:10px;margin:7px 0}
+  .yrrow .yl{flex:0 0 46px;font-weight:900;font-size:13px;font-variant-numeric:tabular-nums}
+  .yrrow .yb{height:26px;background:var(--vc-cerulean);min-width:2px}
+  .yrrow.alt .yb{background:var(--vc-orange)}
+  .yrrow .yv{font-family:var(--vc-serif);font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .yrrow .yn{font-size:10.5px;color:var(--vc-charcoal)}
+  .twochart{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+  @media(max-width:700px){.twochart{grid-template-columns:1fr}}
+
   /* nav */
   .bar{position:fixed;left:0;right:0;bottom:0;background:var(--vc-black);color:var(--vc-white);
        display:flex;align-items:center;justify-content:space-between;padding:8px 16px;font-size:11px;
@@ -280,12 +291,11 @@ function slides(){
     ${figs([
       {v:String(tile("Government + university").n||"—").split(" ")[0]==="—"?"—":esc(tile("Government + university").n),k:"Government + university subscribers",n:esc(tile("Government + university").s||""),hero:true},
       {v:esc(arow(FF.audience,"Wikipedia-notable").value||"—"),k:"Wikipedia-notable subscribers",n:"A conservative floor — matched, not estimated"},
-      {v:esc(arow(FF.audience,"Regular readers").value||"—"),k:"Regular readers",n:"Open rate 50% and above — the engaged core"}
+      {v:esc(arow(FF.audience,"Email list").value||"—"),k:"Email list, full size",n:esc(arow(FF.audience,"Email list").note||"")}
     ])}
     <div class="rows">
       <div class="row"><div class="rk">Inside government</div><div class="rv">${esc(tile("Government + university").s||"")} — the people these analyses are written to reach receive them directly.</div></div>
       <div class="row"><div class="rk">Inside the funders</div><div class="rv">${esc(arow(FF.audience,"Staff at grantmaking foundations").value||"")}</div></div>
-      <div class="row"><div class="rk">Newsletter</div><div class="rv">${esc(tile("Newsletter subscribers").n||"—")} subscribers, ${esc(tile("Newsletter subscribers").s||"")}</div></div>
     </div>
     <div class="caveat"><b>On engagement:</b> click-to-open is the honest metric (${esc(arow(FF.engagement,"Click-to-open").value||"—")} against a 5.3–8.6% cross-industry band) — Apple Mail inflates raw open rates for everyone, so clicks are the like-for-like comparison.</div>`});
 
@@ -297,6 +307,29 @@ function slides(){
     ])}
     <p class="lede">Publisher search traffic fell by a third globally last year; small publishers lost more. Vital City's weekly visitors rose instead — the archive keeps ranking because the analyses keep being the source.</p>
     <div class="caveat"><b>On subscriber growth.</b> The 2025 signup surge is inflated by bot registrations; 2024 is the honest volume baseline for growth claims.</div>`});
+
+  S.push({eyebrow:"The long view",html:`
+    <h2>Year over year over year.</h2>
+    ${(()=>{
+      const lv=FF.longview||{}; const yr=new Date().getFullYear();
+      const chart=(rows,alt,noteFor)=>{
+        const mx=Math.max(...rows.map(r=>r.n),1);
+        return `<div class="yrchart">${rows.map(r=>`
+          <div class="yrrow${alt?" alt":""}">
+            <span class="yl">${esc(r.y)}</span>
+            <span class="yb" style="width:${Math.max(2,Math.round(r.n/mx*52))}%"></span>
+            <span class="yv">${Number(r.n).toLocaleString()}</span>
+            ${noteFor(r)?`<span class="yn">${noteFor(r)}</span>`:""}
+          </div>`).join("")}</div>`;
+      };
+      return `<div class="twochart">
+        <div><h3>Email list at year end</h3>
+          ${chart(lv.list||[],false,r=>r.y==="2025"?"includes bot signups, since cleaned":(String(yr)===r.y?"to date":""))}</div>
+        <div><h3>Pieces published per year</h3>
+          ${chart(lv.pieces||[],true,r=>String(yr)===r.y?"to date":"")}</div>
+      </div>`;
+    })()}
+    <div class="caveat"><b>Reading the 2025 bar honestly:</b> the list-size jump that year includes a wave of bot registrations, since cleaned; 2024 is the honest baseline for organic growth claims. Output growth carries no such caveat — the publishing pace is real.</div>`});
 
   S.push({eyebrow:"The products",html:`
     <h2>Policy products, not just publishing.</h2>
