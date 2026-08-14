@@ -48,7 +48,7 @@
   /* cover — black, in the house style */
   .cover{justify-content:center;background:var(--vc-black);color:var(--vc-paper);border-color:var(--vc-black)}
   .cover .eyebrow{color:var(--vc-orange)}
-  .cover h1{font-family:var(--vc-serif);font-weight:700;font-size:74px;line-height:1.0;letter-spacing:-.015em;margin:20px 0 18px;max-width:15ch}
+  .cover h1{font-family:var(--vc-serif);font-weight:700;font-size:74px;line-height:1.0;letter-spacing:-.015em;margin:20px 0 18px;max-width:18ch}
   .cover .sub{font-size:18px;color:#c9ccd2;max-width:52ch;line-height:1.55}
   .cover .foot{color:#8a8d94}
 
@@ -301,7 +301,7 @@ function slides(){
   S.push({cover:true,html:`
     <img class="clogo" src="vc-logo-black.png" alt="Vital City">
     <div class="eyebrow">A case for support &nbsp;·&nbsp; New York City &nbsp;·&nbsp; ${esc(asof.slice(0,4))}${V?` &nbsp;·&nbsp; ${esc(V.label)}`:""}</div>
-    <h1>The evidence New York runs on.</h1>
+    <h1>The evidence New&nbsp;York runs&nbsp;on.</h1>
     <div class="sub"><b style="color:var(--vc-paper)">Pragmatic solutions to tough urban problems.</b> A nonprofit journal, research shop and convener, built as one thing: timely commentary from the people shaping urban policy, data rendered intelligible, and evidence-based recommendations pressed into practice.</div>`});
 
   S.push({eyebrow:"The publication",html:`
