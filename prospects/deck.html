@@ -51,6 +51,7 @@
   .cover h1{font-family:var(--vc-serif);font-weight:700;font-size:74px;line-height:1.0;letter-spacing:-.015em;margin:20px 0 18px;max-width:18ch}
   .cover .sub{font-size:18px;color:#c9ccd2;max-width:52ch;line-height:1.55}
   .cover .foot{color:#8a8d94}
+  .cover .cdate{color:#6f727a}
 
   /* figures — serif numerals, the house look */
   .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px;background:var(--vc-black);
@@ -369,7 +370,8 @@ async function exportPptx(){
   { const s=slide("A case for support  ·  New York City  ·  "+asof.slice(0,4)+(V?"  ·  "+V.label:""),"The evidence\nNew York runs on.",{dark:true});
     s.addText([{text:"Pragmatic solutions to tough urban problems. ",options:{bold:true,color:PAP}},
       {text:"A nonprofit journal, research shop and convener, built as one thing: timely commentary from the people shaping urban policy, data rendered intelligible, and evidence-based recommendations pressed into practice.",options:{color:"C9CCD2"}}],
-      {x:L,y:4.35,w:8.6,h:1.5,fontSize:14,fontFace:SANS,valign:"top",lineSpacingMultiple:1.25}); }
+      {x:L,y:4.35,w:8.6,h:1.5,fontSize:14,fontFace:SANS,valign:"top",lineSpacingMultiple:1.25});
+    s.addText("Prepared "+fmtDate(asof),{x:CW+L-4.5,y:6.95,w:4.5,h:0.25,fontSize:8,color:"6F727A",fontFace:SANS,align:"right"}); }
   // 2 the moment
   { const s=slide("The moment","A new administration is rewriting how New York City works. Someone has to guide it toward what the evidence supports.");
     let y=2.25;
@@ -488,6 +490,7 @@ if(/[?&]print=1/.test(location.search)){
   const _t=setInterval(()=>{ if(document.body.textContent.length>4000){clearInterval(_t);setTimeout(()=>window.print(),400);} },150);
 }
 
+const fmtDate=d=>{const x=new Date(String(d).slice(0,10)+"T12:00:00");return isNaN(x)?String(d).slice(0,10):x.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});};
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money=n=>"$"+Number(n||0).toLocaleString();
 
@@ -530,11 +533,12 @@ function slides(){
   const V=(D.variants||{})[VKEY]||null;
   const S=[];
 
-  S.push({cover:true,html:`
+  S.push({cover:true,date:fmtDate(asof),html:`
     <img class="clogo" src="vc-logo-black.png" alt="Vital City">
     <div class="eyebrow">A case for support &nbsp;·&nbsp; New York City &nbsp;·&nbsp; ${esc(asof.slice(0,4))}${V?` &nbsp;·&nbsp; ${esc(V.label)}`:""}</div>
     <h1>The evidence New&nbsp;York runs&nbsp;on.</h1>
-    <div class="sub"><b style="color:var(--vc-paper)">Pragmatic solutions to tough urban problems.</b> A nonprofit journal, research shop and convener, built as one thing: timely commentary from the people shaping urban policy, data rendered intelligible, and evidence-based recommendations pressed into practice.</div>`});
+    <div class="sub"><b style="color:var(--vc-paper)">Pragmatic solutions to tough urban problems.</b> A nonprofit journal, research shop and convener, built as one thing: timely commentary from the people shaping urban policy, data rendered intelligible, and evidence-based recommendations pressed into practice.</div>
+`});
 
   S.push({eyebrow:"The publication",html:`
     <h2>Pragmatism, published daily.</h2>
@@ -708,7 +712,7 @@ function build(data){
       ${s.cover?"":`<img class="slogo" src="vc-logo-black.png" alt="">`}
       ${s.eyebrow?`<div class="eyebrow">${esc(s.eyebrow)}</div>`:""}
       ${s.html}
-      <div class="foot"><span>Vital City · The case for support</span><span>${String(i+1).padStart(2,"0")}</span></div>
+      <div class="foot"><span>Vital City · The case for support</span><span>${s.cover?`<span class="cdate">Prepared ${esc(s.date)}</span> &nbsp;·&nbsp; `:""}${String(i+1).padStart(2,"0")}</span></div>
     </section>`).join("");
   let cur=0;
   const go=i=>{cur=Math.max(0,Math.min(S.length-1,i));
