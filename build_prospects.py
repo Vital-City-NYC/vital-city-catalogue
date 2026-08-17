@@ -310,8 +310,11 @@ VARIANTS = {
 def bio_descriptor(bio):
     """First clause of the author's own Ghost bio, as the safe descriptor."""
     b = re.sub(r"^\s*(is|was|became)\s+(an?|the)?\s*", "", (bio or "").strip(), flags=re.I)
-    b = re.split(r"\.\s|, where| and (?:a |an |the |former )", b)[0].strip(" .,;")
-    return b[:88]
+    # Named chairs read "the Edwin A. and Betty L. Bergman Distinguished Service
+    # Professor" — splitting on ". " chopped that to "Edwin A". Split only on a
+    # sentence end (period followed by a capital, not an initial).
+    b = re.split(r"(?<=[a-z\)])\.\s+(?=[A-Z])|, where| and (?:a |an |the |former )", b)[0].strip(" .,;")
+    return b[:96]
 
 # Funder conversations on record as of an Aug 2026 review of fundraising email.
 # NO status field and NO quoted email text: this page gets shared, and neither
