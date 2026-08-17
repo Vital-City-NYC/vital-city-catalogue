@@ -1,4 +1,4 @@
-# Handoff — 2026-08-14 · The prospects page, the funder deck, and everything around them
+# Handoff — 2026-08-14 (updated end of day) · The prospects page, the funder deck, social tracking, and everything around them
 
 Continues HANDOFF-2026-08-04-session.md (reconciler design, growth-dashboard work).
 Repo: vitalcity-nyc/vital-city-catalogue · push as **vitalcity-nyc** (`gh auth switch`).
@@ -62,9 +62,19 @@ Live-site browser-frame on slide 2, dated not "live now". All numbers read from
   bundled CSV).
 - **Charts**: fixed-track bars only — flex/inline layouts distorted lengths
   twice; verify with the pixel-vs-value measurement, target 0.0%.
-- **Voice**: AI-tell purge done (stacked "X, not Y" antithesis was the
-  fingerprint). Kept "matched, not estimated" / "unmeasured, not zero" — load-
-  bearing. Headlines de-echoed; don't reintroduce swagger ("Ideas go in...").
+- **Voice**: AI-tell purge done against Wikipedia's "Signs of AI writing" —
+  the fingerprint was stacked "X, not Y" antithesis (7 in one deck), eight
+  phrase-level cuts only. Kept "matched, not estimated" / "unmeasured, not
+  zero" — load-bearing methodology, not decoration. Josh's rule: don't rewrite
+  every sentence; just nothing that reads embarrassingly AI (think Pangram).
+  Headlines since: media slide = "intelligent, honest analysis" (not "the
+  numbers"); moment slide = "guide it toward what the evidence supports";
+  impact = "Where the work has moved policy" (killed "Ideas go in. Policy comes
+  out." as too swaggery); bylines = "The people who shape the debate". Echo
+  scan across all 14 headlines: only "year over year over year" repeats, by
+  design. Cover h1 has &nbsp; glue + 18ch measure so "on." never orphans.
+- **Eyebrow rules** size to their own word (fit-content + 100% ::after); the
+  pull quote has no bar. Josh dislikes extra rule lines — don't add any back.
 
 ## 3. Hard-won integrity rules (violations already happened once each)
 
@@ -74,14 +84,45 @@ Live-site browser-frame on slide 2, dated not "live now". All numbers read from
    through `tail -1` — the counts line IS the alarm. Verify data.enc by
    decrypting it before pushing.
 2. **Press counts**: tracker rows before 2021-09 are social-profile junk
-   (account-creation dates) — filtered at source. Tracker backfill 2022+ is
-   real. Counts are whitelist floors (~25 outlets).
+   (Instagram/LinkedIn PROFILE pages leaking account-creation dates as
+   publication dates; it made the tile read "since 2015-11") — filtered at
+   source in build_prospects. 407 -> 395, "since 2022-01". Tracker backfill
+   2022+ is real (7/9/59 vs Josh's manual archive 6/14/57). Counts are
+   whitelist floors (~25 outlets).
 3. **Donorbox-only** on every giving figure. 2025 signups bot-inflated → 2024
    is the volume baseline. Apple MPP inflates opens → click-to-open leads.
 4. Current funders are RENEWALS, never prospects (about-page is the source).
 5. NYT subway pieces: nytimes.com/2025/03/14 + /2025/09/10 (nyregion) — sourced.
    Mamdani "quite taken": NY Editorial Board substack transcript. Met VC **as a
    candidate**.
+
+## 3b. Social follower tracking (built end of day)
+
+The problem was never fetching a number — nothing KEPT A SERIES (LinkedIn's
+baseline had to be recovered from git). Now:
+
+- `data/social_history.json` — one observation per platform per day, committed
+  forever. Seeded with all recoverable points; today's fresh reads: X 4,484 ·
+  LinkedIn 3,362 · Bluesky 1,726 · Instagram 765 · Facebook 208 (first time
+  tracked). Schema: `{d, p, n, src: live|manual}`.
+- `growth_pull.py` appends nightly (idempotent per platform+day, non-fatal):
+  **LinkedIn + Bluesky are truly automatic** (public page meta / official API).
+  **X, Instagram, Facebook are login-walled to scrapers** — verified
+  empirically: X syndication endpoint dead, IG no-login profile API blocked
+  even from a residential IP, FB og-meta empty. Their rows come from
+  MANUAL_FOLLOWERS in growth_pull.py.
+- `update_social.py <platform> <count> [--asof]` — the 10-second manual
+  refresh; appends history AND rewrites MANUAL_FOLLOWERS. Or: any Claude
+  session can read the counts in the in-app browser (x.com/VitalCityNYC,
+  instagram.com/vitalcitynyc, facebook.com/vitalcitynyc — all readable when
+  navigated, not curled) and run it.
+- Growth page social card gained "The running record": count, delta over the
+  full span, compounded %/mo (needs 21+ days of history), freshness flag —
+  manual rows show age and turn RED past 35 days. That red is the prompt.
+- First rates: LinkedIn ~4.5%/mo, IG ~7.8%/mo (tiny base), X ~2.3%/mo, Bluesky
+  ~0.7%/mo.
+- Only true-automation path for X: Basic API tier (~$200/mo) — flagged to Josh
+  as a cost decision, not recommended either way.
 
 ## 4. Coordination
 
@@ -99,6 +140,8 @@ audience,longview,seniors,variants}; its deck work must rebase on main.
   yellow+underline). UNANNOUNCED — deck says "deeper bench", never the label.
 - **W.T. Grant**: inbound Mar 2025, gone cold — flagged for revival.
 - **Sahm education-funder map**: sitting in email, no pitch attached.
+- **Social manual snapshots**: X/IG/FB rows go red on the growth page after
+  35 days — refresh via browser read + update_social.py (see 3b).
 - **Weekly report**: Thursdays noon (launchd com.vitalcity.weekly-report),
   writes to Desktop; past reports live in Trash — Josh discards after reading.
 - **Search Console upgrades** shipped (query+page attribution, trend column,
