@@ -1,4 +1,4 @@
-# Handoff — 2026-08-14 (updated end of day) · The prospects page, the funder deck, social tracking, and everything around them
+# Handoff — updated 2026-08-17 · The prospects page, the funder deck (HTML + PowerPoint), social tracking, and everything around them
 
 Continues HANDOFF-2026-08-04-session.md (reconciler design, growth-dashboard work).
 Repo: vitalcity-nyc/vital-city-catalogue · push as **vitalcity-nyc** (`gh auth switch`).
@@ -50,7 +50,30 @@ Live-site browser-frame on slide 2, dated not "live now". All numbers read from
   (pied-à-terre), Gordon/Paley (civil service), housing issue (Issue 14).
   Justice incl. Renita Francois ("now NYC Deputy Mayor for Community Safety" —
   **title is Josh's word; her Ghost bio is stale**), both Rikers issues, guns.
-- **Print**: `?print=1` auto-opens the dialog (the CTA's big button).
+- **Print**: `?print=1` auto-opens the dialog (the CTA's big button). Prints
+  LANDSCAPE (@page letter landscape), one slide per 7.3in fixed sheet.
+- **Editable PowerPoint** (`?pptx=1` / ✎ PowerPoint button / "editable
+  PowerPoint" link on the prospects CTA): `exportPptx()` in deck.html builds a
+  real .pptx from the DATA (not the DOM) with pptxgenjs 4.0.1, vendored at
+  `prospects/vendor/pptxgen.bundle.js` (460KB, self-hosted, no CDN). Design
+  system mirrors the HTML: black cover + `vc-logo-white.png` (PowerPoint can't
+  apply CSS invert — the black logo was invisible on black), Georgia display,
+  orange eyebrow rule, black-bordered tile strip w/ hero tile, hairline rows
+  with real hyperlinks (64), gold caveats, NATIVE bar charts (series reversed —
+  PPT draws first category at the bottom), byline cards. Body y is measured
+  from headline height (`s._bodyY`), never fixed. Variants carry through.
+  Josh's standard for this: "look as good as the HTML" and "pay attention to
+  all little design details" — audit EVERY slide in PowerPoint after any
+  change (open the file, page through, zoom). Known-good v5 = 13 slides, 4
+  charts, 64 links, zero blanks. Local audit trick that works: capture the
+  blob in-page (monkeypatch writeFile → write({outputType:"blob"})), POST it
+  to a throwaway 127.0.0.1 receiver, open in PowerPoint. PowerPoint's
+  AppleScript PNG-export and the PowerPoint MCP's get_slide_content both fail
+  on this machine — screenshot instead. Browser blocks a second download of
+  the same filename, which is why the receiver exists.
+- **Bio descriptor parser** (build_prospects `bio_descriptor`): splits only on
+  a real sentence end `(?<=[a-z\)])\.\s+(?=[A-Z])` — the old ". " split
+  turned Jens Ludwig into "Edwin A" (named chair). Watch for this class of bug.
 - **Email**: `?email=1` / ✉ button → downloads a self-contained ungated copy
   (funder_facts + topline ONLY — verified no contact data) + opens mailto draft.
 - **Long view**: visitors (GA4 `by_year`, starts 2023 — "unmeasured, not zero"),
@@ -96,7 +119,7 @@ Live-site browser-frame on slide 2, dated not "live now". All numbers read from
    Mamdani "quite taken": NY Editorial Board substack transcript. Met VC **as a
    candidate**.
 
-## 3b. Social follower tracking (built end of day)
+## 3b. Social follower tracking (built Aug 14)
 
 The problem was never fetching a number — nothing KEPT A SERIES (LinkedIn's
 baseline had to be recovered from git). Now:
@@ -123,6 +146,19 @@ baseline had to be recovered from git). Now:
   ~0.7%/mo.
 - Only true-automation path for X: Basic API tier (~$200/mo) — flagged to Josh
   as a cost decision, not recommended either way.
+
+## 3c. Aug 17 fixes worth knowing
+
+- "John ARNOLD" reappeared on the prospects page: the shared-edit override IS
+  applied by the nightly people build (live network/data.enc reads correctly);
+  the stale name was only in prospects/data.enc from an ad-hoc LOCAL build
+  against an old people.json copy. Rule: any local build_prospects run MUST
+  refetch live people/growth first, then decrypt-verify data.enc before push.
+  Second time a local blob carried bad data to prod (first: all-zeros). A
+  staleness guard (refuse if people source older than live blob) was proposed
+  to Josh, not yet built.
+- Print/email/pptx flows all read the same variant param; email export is a
+  self-contained HTML (verified no contact data); pptx is the editable one.
 
 ## 4. Coordination
 
