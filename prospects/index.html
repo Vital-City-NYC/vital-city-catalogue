@@ -61,6 +61,12 @@
   .tab{background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:18px;padding:5px 12px;font-size:11.5px;font-weight:700;cursor:pointer;color:var(--vc-charcoal);font-family:inherit}
   .tab.on{background:var(--vc-black);border-color:var(--vc-black);color:#fff}
   .why{font-size:10.5px;color:var(--vc-charcoal)}
+  .vgrid{flex-basis:100%;margin-top:6px;font-size:10.5px}
+  .vhead,.vrow{display:grid;grid-template-columns:150px 70px 70px 120px 70px;gap:6px;align-items:center}
+  .vhead{font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:var(--vc-charcoal);padding-bottom:3px;border-bottom:1px solid var(--vc-cloud);margin-bottom:3px}
+  .vrow{padding:2px 0}
+  .vrow .exp{float:none;text-decoration:none;text-align:center;padding:3px 6px}
+  .vname{font-weight:700}
   .exp{background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:4px;padding:4px 10px;font-size:10.5px;font-weight:700;cursor:pointer;font-family:inherit;float:right}
   .deckcta{display:flex;align-items:center;gap:14px;background:var(--vc-paper2);border:1px solid var(--vc-cloud);padding:12px 14px;margin:2px 0 16px;flex-wrap:wrap}
   .deckbtn{background:var(--vc-black);color:#fff;font-weight:900;font-size:14px;padding:11px 18px;text-decoration:none;border-radius:4px;white-space:nowrap}
@@ -289,12 +295,19 @@ function boot(d){
     <div class="hint">Reach, influence and growth &mdash; every number computed fresh from the live data on each nightly rebuild (as of ${esc((d.funder_facts||{}).asof||d.generated_at)}), never hand-typed. Copy a section or the whole thing.</div>
     <div class="deckcta">
       <a href="deck.html?print=1" target="_blank" rel="noopener" class="deckbtn">&#8681;&nbsp; Download / print the current deck</a>
-      <div class="deckwhy">Opens the presentation deck and its print-to-PDF dialog in one click (prints landscape, one slide per page). The deck is generated from the same nightly data as this page &mdash; <b>whatever you save is current as of the last rebuild</b>, never a stale file. (<a href="deck.html" target="_blank" rel="noopener">open without printing</a> &middot; <a href="deck.html?pptx=1" target="_blank" rel="noopener" title="Downloads an editable PowerPoint (.pptx) built from the same live data — every number and sentence is a text box you can change."><b>editable PowerPoint</b></a> &middot; <a href="deck.html?email=1" target="_blank" rel="noopener" title="Downloads a self-contained, passphrase-free copy and opens an email draft to attach it to.">email it</a>)</div>
-      <div style="flex-basis:100%;display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:2px">
-        <span style="font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:var(--vc-charcoal)">Audience versions</span>
-        <a class="exp" style="float:none;text-decoration:none" href="deck.html?v=abundance" target="_blank" rel="noopener" title="Same deck, re-weighted: Just Fix It and permitting lead, housing/state-capacity authors carded, six selected pieces on building and governing.">Abundance</a>
-        <a class="exp" style="float:none;text-decoration:none" href="deck.html?v=justice" target="_blank" rel="noopener" title="Rikers and crime-data receipts lead, criminologist bench carded, six selected pieces on safety and justice.">Criminal justice</a>
-        <a class="exp" style="float:none;text-decoration:none" href="deck.html?v=civic" target="_blank" rel="noopener" title="Civic-governance framing: Mamdani coverage leads, media/civic authors carded, six selected pieces on the civic conversation.">Civic / journalism</a>
+      <div class="deckwhy">Opens the presentation deck and its print-to-PDF dialog in one click (prints landscape, one slide per page). The deck is generated from the same nightly data as this page &mdash; <b>whatever you save is current as of the last rebuild</b>, never a stale file. Each version below comes in every format.</div>
+      <div class="vgrid">
+        <div class="vhead"><span>Version</span><span>Open</span><span>Print / PDF</span><span>Editable PowerPoint</span><span>Email</span></div>
+        ${[
+          ["","General","The full deck, unweighted."],
+          ["abundance","Abundance","Same deck, re-weighted: Just Fix It and permitting lead, housing/state-capacity authors carded, six selected pieces on building and governing."],
+          ["justice","Criminal justice","Rikers and crime-data receipts lead, criminologist bench carded, six selected pieces on safety and justice."],
+          ["civic","Civic / journalism","Civic-governance framing: Mamdani coverage leads, media/civic authors carded, six selected pieces on the civic conversation."]
+        ].map(([v,label,tip])=>{const q=v?`?v=${v}&`:"?";const b=v?`?v=${v}`:"";return `<div class="vrow"><span class="vname" title="${tip}">${label}</span>
+          <a class="exp" href="deck.html${b}" target="_blank" rel="noopener">view</a>
+          <a class="exp" href="deck.html${q}print=1" target="_blank" rel="noopener" title="Opens the deck and its print-to-PDF dialog (landscape, one slide per page).">print</a>
+          <a class="exp" href="deck.html${q}pptx=1" target="_blank" rel="noopener" title="Downloads an editable .pptx built from the same live data — every number and sentence is a text box you can change."><b>PowerPoint</b></a>
+          <a class="exp" href="deck.html${q}email=1" target="_blank" rel="noopener" title="Downloads a self-contained, passphrase-free copy and opens an email draft to attach it to.">email</a></div>`}).join("")}
       </div>
     </div>
     <div id="factsBody"></div>
