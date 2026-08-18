@@ -43,7 +43,7 @@
     "type_basis": "default",
     "published_date": "2026-08-12",
     "published_at": "2026-08-12T18:11:00.000+00:00",
-    "updated_at": "2026-08-12T18:11:00.000+00:00",
+    "updated_at": "2026-08-18T21:33:17.000+00:00",
     "primary_author": null,
     "authors": [
       "Megan Gafford"
@@ -3542,6 +3542,52 @@
     "id": "6a0b236f687b8600010ac18e"
   },
   {
+    "title": "The Research on Street Lighting and Crime",
+    "slug": "rubber-meets-road-evidence-browser",
+    "url": "https://www.vitalcitynyc.org/rubber-meets-road-evidence-browser/",
+    "type": "map/tool",
+    "type_basis": "html:embed-is-the-piece",
+    "published_date": "2026-05-20",
+    "published_at": "2026-05-20T14:56:00.000+00:00",
+    "updated_at": "2026-08-18T17:58:39.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Street Lighting",
+      "Crime"
+    ],
+    "issues": [
+      "rubber-meets-road"
+    ],
+    "issue_numbers": [],
+    "summary": "An evidence browser",
+    "excerpt": "An evidence browser",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/08/Cropping-Tool---2026-08-18T134414.858.png",
+    "feature_image_alt": "Storefronts on Essex Street in New York City's Chinatown are lit up at night as two people walk by, one with a bike and one with an umbrella",
+    "feature_image_credit": "Gavin Zeigler / Alamy Stock Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [
+        {
+          "url": "https://vitalcity-nyc.github.io/street-lighting-crime/",
+          "host": "vitalcity-nyc.github.io",
+          "kind": "vital city project"
+        }
+      ],
+      "counts": {
+        "vital city project": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 0,
+    "reading_minutes": 1,
+    "id": "6a8499aeb0bdfe0001ca8807"
+  },
+  {
     "title": "What Well-Lit Streets Should Feel Like",
     "slug": "rubber-meets-road-lighting-design-deep-dive",
     "url": "https://www.vitalcitynyc.org/rubber-meets-road-lighting-design-deep-dive/",
@@ -3874,7 +3920,7 @@
     "type_basis": "default",
     "published_date": "2026-05-13",
     "published_at": "2026-05-13T15:09:17.000+00:00",
-    "updated_at": "2026-06-22T17:19:21.000+00:00",
+    "updated_at": "2026-08-18T17:43:45.000+00:00",
     "primary_author": null,
     "authors": [
       "Howard Yaruss"
@@ -3897,9 +3943,9 @@
       "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 1146,
-    "reading_minutes": 5,
+    "visibility": "members",
+    "word_count": 133,
+    "reading_minutes": 1,
     "id": "6a034b1bcfd6eb00011c7518"
   },
   {
@@ -5850,45 +5896,6 @@
     "id": "69a04c0ad4006a00010a42dd"
   },
   {
-    "title": "How Prevention Reduced Crime and How To Get More of It",
-    "slug": "how-prevention-reduced-crime-suggestions-analysis",
-    "url": "https://www.vitalcitynyc.org/how-prevention-reduced-crime-suggestions-analysis/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-02-19",
-    "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-06-23T14:01:03.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "John K. Roman"
-    ],
-    "topics": [
-      "Crime",
-      "Police Reform",
-      "Where We Are"
-    ],
-    "issues": [
-      "crime-looking-back-at-2025-and-ahead-to-2026"
-    ],
-    "issue_numbers": [],
-    "summary": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
-    "excerpt": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay-jhlwlo0xkeggt_nyc27760-auto-format-compress-1776260478549.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Alex Webb / Magnum Photos",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1897,
-    "reading_minutes": 8,
-    "id": "69a04c0ad4006a00010a42e3"
-  },
-  {
     "title": "The NYPD’s Crime-Reduction Strategy: Chief of Department Michael LiPetri in Conversation",
     "slug": "nypd-crime-strategy-questions-michael-lipetri",
     "url": "https://www.vitalcitynyc.org/nypd-crime-strategy-questions-michael-lipetri/",
@@ -6191,6 +6198,45 @@
     "id": "69a04c0ad4006a00010a42e7"
   },
   {
+    "title": "How Prevention Reduced Crime and How To Get More of It",
+    "slug": "how-prevention-reduced-crime-suggestions-analysis",
+    "url": "https://www.vitalcitynyc.org/how-prevention-reduced-crime-suggestions-analysis/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-02-19",
+    "published_at": "2026-02-19T17:00:54.000+00:00",
+    "updated_at": "2026-06-23T14:01:03.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "John K. Roman"
+    ],
+    "topics": [
+      "Crime",
+      "Police Reform",
+      "Where We Are"
+    ],
+    "issues": [
+      "crime-looking-back-at-2025-and-ahead-to-2026"
+    ],
+    "issue_numbers": [],
+    "summary": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
+    "excerpt": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay-jhlwlo0xkeggt_nyc27760-auto-format-compress-1776260478549.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Alex Webb / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1897,
+    "reading_minutes": 8,
+    "id": "69a04c0ad4006a00010a42e3"
+  },
+  {
     "title": "The State of Crime in New York City: 2025 and Beyond",
     "slug": "crime-in-new-york-city-trends-statistics",
     "url": "https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/",
@@ -6401,43 +6447,214 @@
     "id": "69a04c0ad4006a00010a42df"
   },
   {
-    "title": "Does Mayor Mamdani Have a Public Safety Strategy?",
-    "slug": "mamdani-public-safety-strategy-nyc",
-    "url": "https://www.vitalcitynyc.org/mamdani-public-safety-strategy-nyc/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
+    "title": "The State of Crime in New York City: 2025 and Beyond",
+    "slug": "crime-in-new-york-city-trends-statistics",
+    "url": "https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/",
+    "type": "data analysis",
+    "type_basis": "tag:data-stories",
     "published_date": "2026-02-19",
     "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-05-21T20:11:28.000+00:00",
+    "updated_at": "2026-05-21T20:11:51.000+00:00",
     "primary_author": null,
     "authors": [
-      "Elizabeth Glazer"
+      "Vital City"
     ],
     "topics": [
-      "Police Reform",
-      "Where We’re Headed",
-      "Crime"
+      "Crime",
+      "Incarceration",
+      "Justice",
+      "Where We Are",
+      "Crime Stories",
+      "Data Stories"
     ],
     "issues": [
       "crime-looking-back-at-2025-and-ahead-to-2026"
     ],
     "issue_numbers": [],
-    "summary": "It’s not an easy question to answer.",
-    "excerpt": "It’s not an easy question to answer.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/azsgrlwlo0xkemd0_par414809-auto-format-compress-1776259650841.jpg",
+    "summary": "What happened in 2025 and what it bodes for 2026",
+    "excerpt": "What happened in 2025 and what it bodes for 2026",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/azyuesfobigegixz_copyofcroppingtool-png-auto-format-compress-1776259649997.jpg",
     "feature_image_alt": null,
-    "feature_image_credit": "Paolo Pellegrin / Magnum Photos",
+    "feature_image_credit": "Melissa O'Shaughnessy",
     "embeds": {
-      "flourish": [],
+      "flourish": [
+        {
+          "id": "26985192",
+          "src": "visualisation/26985192?1271209",
+          "url": "https://public.flourish.studio/visualisation/26985192/"
+        },
+        {
+          "id": "27572522",
+          "src": "visualisation/27572522?1271209",
+          "url": "https://public.flourish.studio/visualisation/27572522/"
+        },
+        {
+          "id": "26769061",
+          "src": "visualisation/26769061?1271209",
+          "url": "https://public.flourish.studio/visualisation/26769061/"
+        },
+        {
+          "id": "26768975",
+          "src": "visualisation/26768975?1271209",
+          "url": "https://public.flourish.studio/visualisation/26768975/"
+        },
+        {
+          "id": "26942014",
+          "src": "visualisation/26942014?1271209",
+          "url": "https://public.flourish.studio/visualisation/26942014/"
+        },
+        {
+          "id": "26955266",
+          "src": "visualisation/26955266?1271209",
+          "url": "https://public.flourish.studio/visualisation/26955266/"
+        },
+        {
+          "id": "26966401",
+          "src": "visualisation/26966401?1271209",
+          "url": "https://public.flourish.studio/visualisation/26966401/"
+        },
+        {
+          "id": "27513317",
+          "src": "visualisation/27513317?1271209",
+          "url": "https://public.flourish.studio/visualisation/27513317/"
+        },
+        {
+          "id": "27695732",
+          "src": "visualisation/27695732?1271209",
+          "url": "https://public.flourish.studio/visualisation/27695732/"
+        },
+        {
+          "id": "26984895",
+          "src": "visualisation/26984895?1271209",
+          "url": "https://public.flourish.studio/visualisation/26984895/"
+        },
+        {
+          "id": "27514899",
+          "src": "visualisation/27514899?1271209",
+          "url": "https://public.flourish.studio/visualisation/27514899/"
+        },
+        {
+          "id": "27514132",
+          "src": "visualisation/27514132?1271209",
+          "url": "https://public.flourish.studio/visualisation/27514132/"
+        },
+        {
+          "id": "27517413",
+          "src": "visualisation/27517413?1271209",
+          "url": "https://public.flourish.studio/visualisation/27517413/"
+        },
+        {
+          "id": "27637936",
+          "src": "visualisation/27637936?1271209",
+          "url": "https://public.flourish.studio/visualisation/27637936/"
+        },
+        {
+          "id": "26956155",
+          "src": "visualisation/26956155?1271209",
+          "url": "https://public.flourish.studio/visualisation/26956155/"
+        },
+        {
+          "id": "27518027",
+          "src": "visualisation/27518027?1271209",
+          "url": "https://public.flourish.studio/visualisation/27518027/"
+        },
+        {
+          "id": "27607918",
+          "src": "visualisation/27607918?1271209",
+          "url": "https://public.flourish.studio/visualisation/27607918/"
+        },
+        {
+          "id": "3584921",
+          "src": "story/3584921?1271209",
+          "url": "https://public.flourish.studio/story/3584921/"
+        },
+        {
+          "id": "27696978",
+          "src": "visualisation/27696978?1271209",
+          "url": "https://public.flourish.studio/visualisation/27696978/"
+        },
+        {
+          "id": "27681605",
+          "src": "visualisation/27681605?1271209",
+          "url": "https://public.flourish.studio/visualisation/27681605/"
+        },
+        {
+          "id": "26966966",
+          "src": "visualisation/26966966?1271209",
+          "url": "https://public.flourish.studio/visualisation/26966966/"
+        },
+        {
+          "id": "27591529",
+          "src": "visualisation/27591529?1271209",
+          "url": "https://public.flourish.studio/visualisation/27591529/"
+        },
+        {
+          "id": "22163700",
+          "src": "visualisation/22163700?1271209",
+          "url": "https://public.flourish.studio/visualisation/22163700/"
+        },
+        {
+          "id": "27590425",
+          "src": "visualisation/27590425?1271209",
+          "url": "https://public.flourish.studio/visualisation/27590425/"
+        },
+        {
+          "id": "27628953",
+          "src": "visualisation/27628953?1271209",
+          "url": "https://public.flourish.studio/visualisation/27628953/"
+        },
+        {
+          "id": "27682211",
+          "src": "visualisation/27682211?1271209",
+          "url": "https://public.flourish.studio/visualisation/27682211/"
+        },
+        {
+          "id": "27196814",
+          "src": "visualisation/27196814?1271209",
+          "url": "https://public.flourish.studio/visualisation/27196814/"
+        },
+        {
+          "id": "27196283",
+          "src": "visualisation/27196283?1271209",
+          "url": "https://public.flourish.studio/visualisation/27196283/"
+        },
+        {
+          "id": "3578021",
+          "src": "story/3578021?1271209",
+          "url": "https://public.flourish.studio/story/3578021/"
+        },
+        {
+          "id": "27605793",
+          "src": "visualisation/27605793?1271209",
+          "url": "https://public.flourish.studio/visualisation/27605793/"
+        },
+        {
+          "id": "27605819",
+          "src": "visualisation/27605819?1271209",
+          "url": "https://public.flourish.studio/visualisation/27605819/"
+        },
+        {
+          "id": "27647243",
+          "src": "visualisation/27647243?1271209",
+          "url": "https://public.flourish.studio/visualisation/27647243/"
+        },
+        {
+          "id": "27647329",
+          "src": "visualisation/27647329?1271209",
+          "url": "https://public.flourish.studio/visualisation/27647329/"
+        }
+      ],
       "iframes": [],
-      "counts": {},
-      "total": 0
+      "counts": {
+        "flourish": 33
+      },
+      "total": 33
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2251,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a42e1"
+    "word_count": 2897,
+    "reading_minutes": 13,
+    "id": "69a04c0ad4006a00010a42df"
   },
   {
     "title": "Does Mayor Mamdani Have a Public Safety Strategy?",
@@ -7865,6 +8082,54 @@
     "id": "69a04c0ad4006a00010a4283"
   },
   {
+    "title": "How the System Works (or Doesn’t)",
+    "slug": "how-the-system-works-for-people-in-crisis-on-streets-and-subways",
+    "url": "https://www.vitalcitynyc.org/how-the-system-works-for-people-in-crisis-on-streets-and-subways/",
+    "type": "policy",
+    "type_basis": "series:what-to-do-and-not-to-do",
+    "published_date": "2025-12-16",
+    "published_at": "2025-12-16T11:00:04.000+00:00",
+    "updated_at": "2026-08-17T16:39:57.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Homelessness",
+      "Mental Health",
+      "People in Crisis on Streets and Subways",
+      "policy"
+    ],
+    "issues": [
+      "what-to-do-and-not-to-do"
+    ],
+    "issue_numbers": [],
+    "summary": "This is one of three supporting documents connected to Vital City’s recommendations on serious mental illness and homelessness.",
+    "excerpt": "This is one of three supporting documents connected to Vital City’s recommendations on serious mental illness and homelessness.\n\n\nA profile of the population\n\nOn any given night, about 4,000 people are living on the street in New York City. That figure, drawn from a point-in-time count, understates the scale of the problem: Because people cycle in and out of unsheltered homelessness, the number of unique individuals affected over the course of a year is likely much higher.\n\nNew York isn’t alone",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/atxfjxnyclf9ohxz_20210707-dsc01101-auto-format-compress-1776259663766.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Melissa O'Shaughnessy",
+    "embeds": {
+      "flourish": [],
+      "iframes": [
+        {
+          "url": "https://drive.google.com/file/d/1tc0vOUB5vkV6ekkac-0_Fw5trNJQeAds/preview",
+          "host": "drive.google.com",
+          "kind": "document"
+        }
+      ],
+      "counts": {
+        "document": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 14799,
+    "reading_minutes": 64,
+    "id": "69a04c0ad4006a00010a427e"
+  },
+  {
     "title": "Subway Safety: What the Data Show",
     "slug": "what-the-data-show-about-subway-safety",
     "url": "https://www.vitalcitynyc.org/what-the-data-show-about-subway-safety/",
@@ -8077,54 +8342,6 @@
     "word_count": 2105,
     "reading_minutes": 9,
     "id": "69a04c0ad4006a00010a3fe2"
-  },
-  {
-    "title": "How the System Works (or Doesn’t)",
-    "slug": "how-the-system-works-for-people-in-crisis-on-streets-and-subways",
-    "url": "https://www.vitalcitynyc.org/how-the-system-works-for-people-in-crisis-on-streets-and-subways/",
-    "type": "policy",
-    "type_basis": "series:what-to-do-and-not-to-do",
-    "published_date": "2025-12-16",
-    "published_at": "2025-12-16T11:00:04.000+00:00",
-    "updated_at": "2026-08-17T16:39:57.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Vital City"
-    ],
-    "topics": [
-      "Homelessness",
-      "Mental Health",
-      "People in Crisis on Streets and Subways",
-      "policy"
-    ],
-    "issues": [
-      "what-to-do-and-not-to-do"
-    ],
-    "issue_numbers": [],
-    "summary": "This is one of three supporting documents connected to Vital City’s recommendations on serious mental illness and homelessness.",
-    "excerpt": "This is one of three supporting documents connected to Vital City’s recommendations on serious mental illness and homelessness.\n\n\nA profile of the population\n\nOn any given night, about 4,000 people are living on the street in New York City. That figure, drawn from a point-in-time count, understates the scale of the problem: Because people cycle in and out of unsheltered homelessness, the number of unique individuals affected over the course of a year is likely much higher.\n\nNew York isn’t alone",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/atxfjxnyclf9ohxz_20210707-dsc01101-auto-format-compress-1776259663766.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Melissa O'Shaughnessy",
-    "embeds": {
-      "flourish": [],
-      "iframes": [
-        {
-          "url": "https://drive.google.com/file/d/1tc0vOUB5vkV6ekkac-0_Fw5trNJQeAds/preview",
-          "host": "drive.google.com",
-          "kind": "document"
-        }
-      ],
-      "counts": {
-        "document": 1
-      },
-      "total": 1
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 14799,
-    "reading_minutes": 64,
-    "id": "69a04c0ad4006a00010a427e"
   },
   {
     "title": "Case Studies from Other Large Cities",
@@ -10690,6 +10907,321 @@
     "id": "69a04c0ad4006a00010a42a4"
   },
   {
+    "title": "What Hangs in the Balance Sheets",
+    "slug": "what-hangs-in-the-balance-sheets",
+    "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-16T19:02:02.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "What We Can and Can't Afford",
+      "Economics",
+      "Government Operations"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Two New York City apartment buildings’ costs and revenue",
+    "excerpt": "Two New York City apartment buildings’ costs and revenue",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhfp2gnhvftpqhy_h_16282379-auto-format-compress-1776259678798.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Karsten Moran / The New York Times / Redux",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 3276,
+    "reading_minutes": 14,
+    "id": "69a04c0ad4006a00010a401a"
+  },
+  {
+    "title": "My First Adult Apartment",
+    "slug": "my-first-adult-apartment",
+    "url": "https://www.vitalcitynyc.org/my-first-adult-apartment/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-15T13:36:47.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "A Survey"
+    ],
+    "topics": [
+      "Housing",
+      "culture",
+      "Hello To All That",
+      "City Government"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Finding a place of your own in New York is notoriously challenging — but also rewarding. We asked some New Yorkers to reflect on their first apartments in the city.",
+    "excerpt": "Finding a place of your own in New York is notoriously challenging — but also rewarding. We asked some New Yorkers to reflect on their first apartments in the city.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amq9gwgnhvftpu7-_croppingtool-12--png-auto-format-compress-1776259680064.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Carolyn Drake / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 4707,
+    "reading_minutes": 20,
+    "id": "69a04c0ad4006a00010a4280"
+  },
+  {
+    "title": "A Housing Agenda for the Next Mayor",
+    "slug": "a-housing-agenda-for-the-next-mayor",
+    "url": "https://www.vitalcitynyc.org/a-housing-agenda-for-the-next-mayor/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-15T13:36:47.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Jamie Rubin"
+    ],
+    "topics": [
+      "Housing",
+      "If I Had a Hammer...",
+      "City Government"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Five ways the next administration can help provide an affordable place to live for every New Yorker",
+    "excerpt": "Five ways the next administration can help provide an affordable place to live for every New Yorker",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amq6oggnhvftpu35_croppingtool-7--png-auto-format-compress-1776259680515.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Bill Tompkins / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2105,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a421c"
+  },
+  {
+    "title": "The Rent Is Too Damn High (But Also Too Low)",
+    "slug": "the-rent-is-too-damn-high-but-also-too-low",
+    "url": "https://www.vitalcitynyc.org/the-rent-is-too-damn-high-but-also-too-low/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-15T13:36:47.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Howard Slatkin"
+    ],
+    "topics": [
+      "Housing",
+      "What We Can and Can't Afford",
+      "Inequality"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Three strategies for addressing both the needs of renters and the financial challenges of maintaining their buildings",
+    "excerpt": "Three strategies for addressing both the needs of renters and the financial challenges of maintaining their buildings",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhesmgnhvftpqhn_h_15199390-auto-format-compress-1776259681081.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Lauren Fleishman / The New York Times / Redux",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2158,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a4218"
+  },
+  {
+    "title": "The High Price of Fine Print",
+    "slug": "the-high-price-of-fine-print",
+    "url": "https://www.vitalcitynyc.org/the-high-price-of-fine-print/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-15T13:36:46.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Henry Grabar"
+    ],
+    "topics": [
+      "Housing",
+      "What We Can and Can't Afford",
+      "Inequality"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Overly complex building codes are a big reason why housing construction costs so much.",
+    "excerpt": "Overly complex building codes are a big reason why housing construction costs so much.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amrbv2gnhvftpu_a_croppingtool-16--png-auto-format-compress-1776259679914.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "RichardBakerRisk / Alamy Stock Photo",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "24669523",
+          "src": "visualisation/24669523?1271209",
+          "url": "https://public.flourish.studio/visualisation/24669523/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2079,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a4016"
+  },
+  {
+    "title": "Teachings from Tokyo",
+    "slug": "teachings-from-tokyo",
+    "url": "https://www.vitalcitynyc.org/teachings-from-tokyo/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-15T13:36:46.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Joe McReynolds"
+    ],
+    "topics": [
+      "Housing",
+      "If I Had a Hammer...",
+      "City Planning",
+      "Government Operations"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "How the world’s premier megacity produces housing and maintains affordability",
+    "excerpt": "How the world’s premier megacity produces housing and maintains affordability",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhln2gnhvftpqj2_nn11482826-auto-format-compress-1776259679939.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Harry Gruyaert / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2122,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a4014"
+  },
+  {
+    "title": "New York City Needs a Two-Track Mind",
+    "slug": "new-york-city-needs-a-two-track-mind",
+    "url": "https://www.vitalcitynyc.org/new-york-city-needs-a-two-track-mind/",
+    "type": "data analysis",
+    "type_basis": "html:3-chart-embeds",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-15T13:36:46.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Yonah Freemark"
+    ],
+    "topics": [
+      "If I Had a Hammer...",
+      "Housing",
+      "Transit"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Housing and transit planning go naturally together.",
+    "excerpt": "Housing and transit planning go naturally together.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhlxmgnhvftpqkn_gettyimages-467354324-auto-format-compress-1776259679484.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Andrew Burton / Getty Images",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "24748721",
+          "src": "visualisation/24748721?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748721/"
+        },
+        {
+          "id": "24748824",
+          "src": "visualisation/24748824?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748824/"
+        },
+        {
+          "id": "24748892",
+          "src": "visualisation/24748892?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748892/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 3
+      },
+      "total": 3
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1552,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4013"
+  },
+  {
     "title": "Learning from Jersey City",
     "slug": "learning-from-jersey-city",
     "url": "https://www.vitalcitynyc.org/learning-from-jersey-city/",
@@ -10793,156 +11325,6 @@
     "id": "69a04c0ad4006a00010a4011"
   },
   {
-    "title": "New York City Needs a Two-Track Mind",
-    "slug": "new-york-city-needs-a-two-track-mind",
-    "url": "https://www.vitalcitynyc.org/new-york-city-needs-a-two-track-mind/",
-    "type": "data analysis",
-    "type_basis": "html:3-chart-embeds",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-15T13:36:46.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Yonah Freemark"
-    ],
-    "topics": [
-      "If I Had a Hammer...",
-      "Housing",
-      "Transit"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Housing and transit planning go naturally together.",
-    "excerpt": "Housing and transit planning go naturally together.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhlxmgnhvftpqkn_gettyimages-467354324-auto-format-compress-1776259679484.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Andrew Burton / Getty Images",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "24748721",
-          "src": "visualisation/24748721?1271209",
-          "url": "https://public.flourish.studio/visualisation/24748721/"
-        },
-        {
-          "id": "24748824",
-          "src": "visualisation/24748824?1271209",
-          "url": "https://public.flourish.studio/visualisation/24748824/"
-        },
-        {
-          "id": "24748892",
-          "src": "visualisation/24748892?1271209",
-          "url": "https://public.flourish.studio/visualisation/24748892/"
-        }
-      ],
-      "iframes": [],
-      "counts": {
-        "flourish": 3
-      },
-      "total": 3
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1552,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4013"
-  },
-  {
-    "title": "Teachings from Tokyo",
-    "slug": "teachings-from-tokyo",
-    "url": "https://www.vitalcitynyc.org/teachings-from-tokyo/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-15T13:36:46.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Joe McReynolds"
-    ],
-    "topics": [
-      "Housing",
-      "If I Had a Hammer...",
-      "City Planning",
-      "Government Operations"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "How the world’s premier megacity produces housing and maintains affordability",
-    "excerpt": "How the world’s premier megacity produces housing and maintains affordability",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhln2gnhvftpqj2_nn11482826-auto-format-compress-1776259679939.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Harry Gruyaert / Magnum Photos",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2122,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a4014"
-  },
-  {
-    "title": "The High Price of Fine Print",
-    "slug": "the-high-price-of-fine-print",
-    "url": "https://www.vitalcitynyc.org/the-high-price-of-fine-print/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-15T13:36:46.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Henry Grabar"
-    ],
-    "topics": [
-      "Housing",
-      "What We Can and Can't Afford",
-      "Inequality"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Overly complex building codes are a big reason why housing construction costs so much.",
-    "excerpt": "Overly complex building codes are a big reason why housing construction costs so much.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amrbv2gnhvftpu_a_croppingtool-16--png-auto-format-compress-1776259679914.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "RichardBakerRisk / Alamy Stock Photo",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "24669523",
-          "src": "visualisation/24669523?1271209",
-          "url": "https://public.flourish.studio/visualisation/24669523/"
-        }
-      ],
-      "iframes": [],
-      "counts": {
-        "flourish": 1
-      },
-      "total": 1
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2079,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a4016"
-  },
-  {
     "title": "The Property Tax Cannot Stand",
     "slug": "the-property-tax-cannot-stand",
     "url": "https://www.vitalcitynyc.org/the-property-tax-cannot-stand/",
@@ -10999,171 +11381,6 @@
     "word_count": 2353,
     "reading_minutes": 10,
     "id": "69a04c0ad4006a00010a4017"
-  },
-  {
-    "title": "The Rent Is Too Damn High (But Also Too Low)",
-    "slug": "the-rent-is-too-damn-high-but-also-too-low",
-    "url": "https://www.vitalcitynyc.org/the-rent-is-too-damn-high-but-also-too-low/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-15T13:36:47.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Howard Slatkin"
-    ],
-    "topics": [
-      "Housing",
-      "What We Can and Can't Afford",
-      "Inequality"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Three strategies for addressing both the needs of renters and the financial challenges of maintaining their buildings",
-    "excerpt": "Three strategies for addressing both the needs of renters and the financial challenges of maintaining their buildings",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhesmgnhvftpqhn_h_15199390-auto-format-compress-1776259681081.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Lauren Fleishman / The New York Times / Redux",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2158,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a4218"
-  },
-  {
-    "title": "A Housing Agenda for the Next Mayor",
-    "slug": "a-housing-agenda-for-the-next-mayor",
-    "url": "https://www.vitalcitynyc.org/a-housing-agenda-for-the-next-mayor/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-15T13:36:47.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Jamie Rubin"
-    ],
-    "topics": [
-      "Housing",
-      "If I Had a Hammer...",
-      "City Government"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Five ways the next administration can help provide an affordable place to live for every New Yorker",
-    "excerpt": "Five ways the next administration can help provide an affordable place to live for every New Yorker",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amq6oggnhvftpu35_croppingtool-7--png-auto-format-compress-1776259680515.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Bill Tompkins / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2105,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a421c"
-  },
-  {
-    "title": "My First Adult Apartment",
-    "slug": "my-first-adult-apartment",
-    "url": "https://www.vitalcitynyc.org/my-first-adult-apartment/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-15T13:36:47.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "A Survey"
-    ],
-    "topics": [
-      "Housing",
-      "culture",
-      "Hello To All That",
-      "City Government"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Finding a place of your own in New York is notoriously challenging — but also rewarding. We asked some New Yorkers to reflect on their first apartments in the city.",
-    "excerpt": "Finding a place of your own in New York is notoriously challenging — but also rewarding. We asked some New Yorkers to reflect on their first apartments in the city.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amq9gwgnhvftpu7-_croppingtool-12--png-auto-format-compress-1776259680064.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Carolyn Drake / Magnum Photos",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 4707,
-    "reading_minutes": 20,
-    "id": "69a04c0ad4006a00010a4280"
-  },
-  {
-    "title": "What Hangs in the Balance Sheets",
-    "slug": "what-hangs-in-the-balance-sheets",
-    "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-16T19:02:02.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Vital City"
-    ],
-    "topics": [
-      "What We Can and Can't Afford",
-      "Economics",
-      "Government Operations"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Two New York City apartment buildings’ costs and revenue",
-    "excerpt": "Two New York City apartment buildings’ costs and revenue",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhfp2gnhvftpqhy_h_16282379-auto-format-compress-1776259678798.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Karsten Moran / The New York Times / Redux",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 3276,
-    "reading_minutes": 14,
-    "id": "69a04c0ad4006a00010a401a"
   },
   {
     "title": "Local Democracy is Land-Use Policy",
@@ -11879,50 +12096,9 @@
     "id": "69a04c0ad4006a00010a4262"
   },
   {
-    "title": "Editors’ Note",
-    "slug": "editors-note-issue-13",
-    "url": "https://www.vitalcitynyc.org/editors-note-issue-13/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:49.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Megan Kang",
-      "Elizabeth Glazer"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Overview"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "How so many guns got into so many American hands",
-    "excerpt": "How so many guns got into so many American hands",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amavdggnhvfto1o1_765433239901-auto-format-compress-1776259685450.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "John Locher / AP Photo",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1534,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4021"
-  },
-  {
-    "title": "Licensed to Kill",
-    "slug": "licensed-to-kill-concealed-carry-training-course",
-    "url": "https://www.vitalcitynyc.org/licensed-to-kill-concealed-carry-training-course/",
+    "title": "The Good Gun Owner",
+    "slug": "the-good-gun-owner",
+    "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
@@ -11930,12 +12106,12 @@
     "updated_at": "2026-04-15T13:36:51.000+00:00",
     "primary_author": null,
     "authors": [
-      "Chris Marvin"
+      "Samantha J. Simon"
     ],
     "topics": [
-      "Gun Violence",
+      "Police Reform",
       "Modern Evolution: Marketing and Profits",
-      "Crime"
+      "Gun Violence"
     ],
     "issues": [
       "issue-13"
@@ -11943,11 +12119,11 @@
     "issue_numbers": [
       13
     ],
-    "summary": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
-    "excerpt": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6iwgnhvfto1y1_gettyimages-1246074845-auto-format-compress-1776259688484.jpg",
+    "summary": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "excerpt": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6omgnhvfto1zu_gettyimages-51135991-auto-format-compress-1776259687678.jpg",
     "feature_image_alt": null,
-    "feature_image_credit": "Natalie Behring / Getty Images",
+    "feature_image_credit": "Spencer Platt / Getty Images",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -11956,9 +12132,50 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2392,
+    "word_count": 2291,
     "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a4217"
+    "id": "69a04c0ad4006a00010a401d"
+  },
+  {
+    "title": "Gun Culture Then and Now",
+    "slug": "gun-culture-then-and-now",
+    "url": "https://www.vitalcitynyc.org/gun-culture-then-and-now/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:51.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Brian DeLay"
+    ],
+    "topics": [
+      "History",
+      "Gun Violence",
+      "Foundations: The Wild West and the Nation"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "Firearm ownership meant something very different when the United States was founded.",
+    "excerpt": "Firearm ownership meant something very different when the United States was founded.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amaz0wgnhvfto1tj_nyc6884-auto-format-compress-1776259688184.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Paul Fusco / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1600,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4246"
   },
   {
     "title": "The Case Against Futility",
@@ -12003,9 +12220,9 @@
     "id": "69a04c0ad4006a00010a4219"
   },
   {
-    "title": "Gun Culture Then and Now",
-    "slug": "gun-culture-then-and-now",
-    "url": "https://www.vitalcitynyc.org/gun-culture-then-and-now/",
+    "title": "Licensed to Kill",
+    "slug": "licensed-to-kill-concealed-carry-training-course",
+    "url": "https://www.vitalcitynyc.org/licensed-to-kill-concealed-carry-training-course/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
@@ -12013,12 +12230,12 @@
     "updated_at": "2026-04-15T13:36:51.000+00:00",
     "primary_author": null,
     "authors": [
-      "Brian DeLay"
+      "Chris Marvin"
     ],
     "topics": [
-      "History",
       "Gun Violence",
-      "Foundations: The Wild West and the Nation"
+      "Modern Evolution: Marketing and Profits",
+      "Crime"
     ],
     "issues": [
       "issue-13"
@@ -12026,11 +12243,11 @@
     "issue_numbers": [
       13
     ],
-    "summary": "Firearm ownership meant something very different when the United States was founded.",
-    "excerpt": "Firearm ownership meant something very different when the United States was founded.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amaz0wgnhvfto1tj_nyc6884-auto-format-compress-1776259688184.jpg",
+    "summary": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
+    "excerpt": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6iwgnhvfto1y1_gettyimages-1246074845-auto-format-compress-1776259688484.jpg",
     "feature_image_alt": null,
-    "feature_image_credit": "Paul Fusco / Magnum Photos",
+    "feature_image_credit": "Natalie Behring / Getty Images",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -12039,9 +12256,9 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1600,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4246"
+    "word_count": 2392,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a4217"
   },
   {
     "title": "Guns, My Family and Me",
@@ -12124,97 +12341,6 @@
     "word_count": 1635,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4024"
-  },
-  {
-    "title": "The Good Gun Owner",
-    "slug": "the-good-gun-owner",
-    "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:51.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Samantha J. Simon"
-    ],
-    "topics": [
-      "Police Reform",
-      "Modern Evolution: Marketing and Profits",
-      "Gun Violence"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
-    "excerpt": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6omgnhvfto1zu_gettyimages-51135991-auto-format-compress-1776259687678.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Spencer Platt / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2291,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a401d"
-  },
-  {
-    "title": "How Modern Bullets Maximize Lethality",
-    "slug": "how-modern-bullets-maximize-lethality",
-    "url": "https://www.vitalcitynyc.org/how-modern-bullets-maximize-lethality/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Stephen Hargarten",
-      "Jennifer Tucker"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Modern Evolution: Marketing and Profits",
-      "History"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "Tracking bullets with modern visualization techniques",
-    "excerpt": "Tracking bullets with modern visualization techniques",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama4a2gnhvfto1wt_gettyimages-919161012-auto-format-compress-1776259686608.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Michele Eve Sandberg / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [
-        {
-          "url": "https://www.youtube.com/embed/1ZIgiTrg56w?si=P4kNReOc-whJKw1E",
-          "host": "www.youtube.com",
-          "kind": "video"
-        }
-      ],
-      "counts": {
-        "video": 1
-      },
-      "total": 1
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1479,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a4211"
   },
   {
     "title": "My Seven Guns: A Personal Inventory",
@@ -12521,6 +12647,47 @@
     "id": "69a04c0ad4006a00010a401e"
   },
   {
+    "title": "Editors’ Note",
+    "slug": "editors-note-issue-13",
+    "url": "https://www.vitalcitynyc.org/editors-note-issue-13/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:49.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Megan Kang",
+      "Elizabeth Glazer"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Overview"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "How so many guns got into so many American hands",
+    "excerpt": "How so many guns got into so many American hands",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amavdggnhvfto1o1_765433239901-auto-format-compress-1776259685450.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "John Locher / AP Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1534,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4021"
+  },
+  {
     "title": "A Different Frontier, a Parallel History",
     "slug": "learning-from-australias-gun-evolution",
     "url": "https://www.vitalcitynyc.org/learning-from-australias-gun-evolution/",
@@ -12613,6 +12780,56 @@
     "word_count": 1404,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a401b"
+  },
+  {
+    "title": "How Modern Bullets Maximize Lethality",
+    "slug": "how-modern-bullets-maximize-lethality",
+    "url": "https://www.vitalcitynyc.org/how-modern-bullets-maximize-lethality/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Stephen Hargarten",
+      "Jennifer Tucker"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Modern Evolution: Marketing and Profits",
+      "History"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "Tracking bullets with modern visualization techniques",
+    "excerpt": "Tracking bullets with modern visualization techniques",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama4a2gnhvfto1wt_gettyimages-919161012-auto-format-compress-1776259686608.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Michele Eve Sandberg / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [
+        {
+          "url": "https://www.youtube.com/embed/1ZIgiTrg56w?si=P4kNReOc-whJKw1E",
+          "host": "www.youtube.com",
+          "kind": "video"
+        }
+      ],
+      "counts": {
+        "video": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1479,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a4211"
   },
   {
     "title": "The Long Chain",

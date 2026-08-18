@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 94,
+    "post_count": 96,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -60,6 +60,7 @@
       "riding-while-female-a-safer-subway-for-women-too",
       "robert-sampson-adam-gopnik-interview",
       "robert-sampson-adam-gopnik-interview-transcript",
+      "rubber-meets-road-evidence-browser",
       "rubber-meets-road-lighting-311-crime-map",
       "rubber-meets-road-lighting-app",
       "rubber-meets-road-lighting-design-deep-dive",
@@ -106,7 +107,7 @@
   },
   {
     "name": "Elizabeth Glazer",
-    "post_count": 48,
+    "post_count": 47,
     "slugs": [
       "a-brief-history-of-the-3300-target",
       "a-rare-remedy-to-the-persistent-brutality-of-rikers",
@@ -3753,14 +3754,26 @@
     "website": null
   },
   {
-    "name": "Chris Marvin",
+    "name": "Samantha J. Simon",
     "post_count": 1,
     "slugs": [
-      "licensed-to-kill-concealed-carry-training-course"
+      "the-good-gun-owner"
     ],
-    "slug": "marvin-chris",
-    "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
-    "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
+    "slug": "simon-samantha-j",
+    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Brian DeLay",
+    "post_count": 1,
+    "slugs": [
+      "gun-culture-then-and-now"
+    ],
+    "slug": "delay-brian",
+    "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of “The Myth of Continuity in American Gun Culture,” and the 2025–2026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
+    "url": "https://www.vitalcitynyc.org/author/delay-brian/",
     "twitter": null,
     "website": null
   },
@@ -3777,14 +3790,14 @@
     "website": null
   },
   {
-    "name": "Brian DeLay",
+    "name": "Chris Marvin",
     "post_count": 1,
     "slugs": [
-      "gun-culture-then-and-now"
+      "licensed-to-kill-concealed-carry-training-course"
     ],
-    "slug": "delay-brian",
-    "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of “The Myth of Continuity in American Gun Culture,” and the 2025–2026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
-    "url": "https://www.vitalcitynyc.org/author/delay-brian/",
+    "slug": "marvin-chris",
+    "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
+    "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
     "twitter": null,
     "website": null
   },
@@ -3809,42 +3822,6 @@
     "slug": "vinik-nina",
     "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
     "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Samantha J. Simon",
-    "post_count": 1,
-    "slugs": [
-      "the-good-gun-owner"
-    ],
-    "slug": "simon-samantha-j",
-    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Stephen Hargarten",
-    "post_count": 1,
-    "slugs": [
-      "how-modern-bullets-maximize-lethality"
-    ],
-    "slug": "hargarten-stephen",
-    "bio": "is an American emergency physician, gun violence researcher and professor at the Medical College of Wisconsin in Milwaukee.",
-    "url": "https://www.vitalcitynyc.org/author/hargarten-stephen/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Jennifer Tucker",
-    "post_count": 1,
-    "slugs": [
-      "how-modern-bullets-maximize-lethality"
-    ],
-    "slug": "tucker-jennifer",
-    "bio": "is a professor of history at Wesleyan University and the founding director of Wesleyan’s Center for the Study of Guns and Society.",
-    "url": "https://www.vitalcitynyc.org/author/tucker-jennifer/",
     "twitter": null,
     "website": null
   },
@@ -3893,6 +3870,30 @@
     "slug": "daugherty-kate",
     "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
     "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Stephen Hargarten",
+    "post_count": 1,
+    "slugs": [
+      "how-modern-bullets-maximize-lethality"
+    ],
+    "slug": "hargarten-stephen",
+    "bio": "is an American emergency physician, gun violence researcher and professor at the Medical College of Wisconsin in Milwaukee.",
+    "url": "https://www.vitalcitynyc.org/author/hargarten-stephen/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Jennifer Tucker",
+    "post_count": 1,
+    "slugs": [
+      "how-modern-bullets-maximize-lethality"
+    ],
+    "slug": "tucker-jennifer",
+    "bio": "is a professor of history at Wesleyan University and the founding director of Wesleyan’s Center for the Study of Guns and Society.",
+    "url": "https://www.vitalcitynyc.org/author/tucker-jennifer/",
     "twitter": null,
     "website": null
   },

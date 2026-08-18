@@ -1,7 +1,7 @@
 [
   {
     "name": "Crime",
-    "post_count": 144
+    "post_count": 145
   },
   {
     "name": "History",
@@ -20,11 +20,11 @@
     "post_count": 111
   },
   {
-    "name": "Housing",
-    "post_count": 79
+    "name": "Justice",
+    "post_count": 80
   },
   {
-    "name": "Justice",
+    "name": "Housing",
     "post_count": 79
   },
   {
@@ -37,7 +37,7 @@
   },
   {
     "name": "Police Reform",
-    "post_count": 56
+    "post_count": 55
   },
   {
     "name": "Politics",
@@ -92,15 +92,15 @@
     "post_count": 26
   },
   {
+    "name": "Incarceration",
+    "post_count": 24
+  },
+  {
     "name": "interview",
     "post_count": 24
   },
   {
     "name": "Infrastructure",
-    "post_count": 23
-  },
-  {
-    "name": "Incarceration",
     "post_count": 23
   },
   {
@@ -112,15 +112,15 @@
     "post_count": 21
   },
   {
+    "name": "Data Stories",
+    "post_count": 19
+  },
+  {
     "name": "Subway Crime",
     "post_count": 19
   },
   {
     "name": "Neighborhood Life",
-    "post_count": 18
-  },
-  {
-    "name": "Data Stories",
     "post_count": 18
   },
   {
@@ -240,6 +240,10 @@
     "post_count": 8
   },
   {
+    "name": "Street Lighting",
+    "post_count": 8
+  },
+  {
     "name": "Prosecution",
     "post_count": 8
   },
@@ -258,10 +262,6 @@
   {
     "name": "Toward Solutions",
     "post_count": 8
-  },
-  {
-    "name": "Street Lighting",
-    "post_count": 7
   },
   {
     "name": "Governance",
@@ -320,7 +320,7 @@
     "post_count": 6
   },
   {
-    "name": "Where We’re Headed",
+    "name": "Where We Are",
     "post_count": 6
   },
   {
@@ -368,7 +368,7 @@
     "post_count": 5
   },
   {
-    "name": "Where We Are",
+    "name": "Where We’re Headed",
     "post_count": 5
   },
   {
@@ -421,6 +421,10 @@
   },
   {
     "name": "Sanitation",
+    "post_count": 4
+  },
+  {
+    "name": "Crime Stories",
     "post_count": 4
   },
   {
@@ -493,10 +497,6 @@
   },
   {
     "name": "About This Project",
-    "post_count": 3
-  },
-  {
-    "name": "Crime Stories",
     "post_count": 3
   },
   {

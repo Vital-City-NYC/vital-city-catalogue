@@ -1,8 +1,8 @@
 {
   "meta": {
-    "generated_at": "2026-08-18T11:13:52.706518+00:00",
+    "generated_at": "2026-08-18T23:09:09.997752+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 889,
+    "total_posts": 890,
     "total_authors": 492,
     "total_issues": 29,
     "total_topics": 214,
@@ -11,17 +11,24 @@
       "2026-08-12"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 1,
+    "new_articles": [
+      {
+        "title": "The Research on Street Lighting and Crime",
+        "url": "https://www.vitalcitynyc.org/rubber-meets-road-evidence-browser/",
+        "published_date": "2026-05-20",
+        "primary_author": null
+      }
+    ]
   },
-  "total_pieces": 889,
+  "total_pieces": 890,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 177
+    "2026": 178
   },
   "by_month": {
     "2021-09": 1,
@@ -74,7 +81,7 @@
     "2026-02": 23,
     "2026-03": 17,
     "2026-04": 23,
-    "2026-05": 22,
+    "2026-05": 23,
     "2026-06": 44,
     "2026-07": 22,
     "2026-08": 8
@@ -82,7 +89,7 @@
   "by_type": [
     [
       "opinion/commentary",
-      719
+      718
     ],
     [
       "q&a",
@@ -90,7 +97,7 @@
     ],
     [
       "data analysis",
-      47
+      48
     ],
     [
       "podcast",
@@ -110,13 +117,13 @@
     ],
     [
       "map/tool",
-      4
+      5
     ]
   ],
   "by_topic_top25": [
     [
       "Crime",
-      144
+      145
     ],
     [
       "History",
@@ -135,11 +142,11 @@
       111
     ],
     [
-      "Housing",
-      79
+      "Justice",
+      80
     ],
     [
-      "Justice",
+      "Housing",
       79
     ],
     [
@@ -152,7 +159,7 @@
     ],
     [
       "Police Reform",
-      56
+      55
     ],
     [
       "Politics",
@@ -207,19 +214,19 @@
       26
     ],
     [
-      "interview",
+      "Incarceration",
       24
     ],
     [
-      "Infrastructure",
-      23
+      "interview",
+      24
     ]
   ],
   "n_topics_total": 214,
   "by_credential_pieces": [
     [
       "Unknown / no bio",
-      889
+      890
     ]
   ],
   "by_credential_authors": [
@@ -278,8 +285,8 @@
     "City Government",
     "Government Operations",
     "City Planning",
-    "Housing",
     "Justice",
+    "Housing",
     "culture"
   ],
   "topic_by_year": {
@@ -288,7 +295,7 @@
       "2023": 37,
       "2024": 38,
       "2025": 31,
-      "2026": 20
+      "2026": 21
     },
     "History": {
       "2022": 12,
@@ -317,18 +324,18 @@
       "2025": 39,
       "2026": 17
     },
-    "Housing": {
-      "2023": 5,
-      "2024": 11,
-      "2025": 37,
-      "2026": 26
-    },
     "Justice": {
       "2022": 4,
       "2023": 26,
       "2024": 27,
       "2025": 13,
-      "2026": 9
+      "2026": 10
+    },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 37,
+      "2026": 26
     },
     "culture": {
       "2022": 4,
@@ -341,22 +348,22 @@
   "wc_stats": {
     "n": 880,
     "median": 1616,
-    "mean": 1894,
-    "p90": 2838,
+    "mean": 1893,
+    "p90": 2841,
     "max": 30332,
-    "p10": 909,
+    "p10": 906,
     "p25": 1269,
     "p75": 2135,
     "p95": 3849,
-    "no_count": 9,
-    "core_1000_2499": 646,
-    "under_500": 42,
+    "no_count": 10,
+    "core_1000_2499": 644,
+    "under_500": 43,
     "over_5000": 24
   },
   "wc_buckets": [
     [
       "<500",
-      42
+      43
     ],
     [
       "500-999",
@@ -364,7 +371,7 @@
     ],
     [
       "1,000-1,999",
-      515
+      514
     ],
     [
       "2,000-2,999",
@@ -386,7 +393,7 @@
       {
         "floor": 0,
         "label": "0",
-        "n": 30
+        "n": 31
       },
       {
         "floor": 250,
@@ -406,7 +413,7 @@
       {
         "floor": 1000,
         "label": "1,000",
-        "n": 107
+        "n": 106
       },
       {
         "floor": 1250,
@@ -431,7 +438,7 @@
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 64
+        "n": 63
       },
       {
         "floor": 2500,
@@ -441,7 +448,7 @@
       {
         "floor": 2750,
         "label": "2,750",
-        "n": 20
+        "n": 21
       },
       {
         "floor": 3000,
@@ -498,12 +505,12 @@
       "n": 173,
       "p25": 1258,
       "median": 1639,
-      "p75": 2378,
+      "p75": 2384,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 754,
+    "1": 755,
     "2": 106,
     "3": 26,
     "4": 1,
@@ -513,12 +520,12 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 94,
+      "posts": 96,
       "credential": "Vital City (institutional)"
     },
     {
       "name": "Elizabeth Glazer",
-      "posts": 48,
+      "posts": 47,
       "credential": "Government / public official"
     },
     {
@@ -663,33 +670,33 @@
       {
         "year": "2026",
         "weeks": 32.0,
-        "pieces": 177,
+        "pieces": 178,
         "outside_issues": 129,
-        "per_week_all": 5.53,
+        "per_week_all": 5.56,
         "per_week_outside_issues": 4.03,
         "partial": true
       }
     ],
     "total_weeks": 256.0,
-    "all_time_per_week": 3.47,
+    "all_time_per_week": 3.48,
     "all_time_per_week_outside_issues": 1.6,
     "current_year": "2026",
     "current_per_week_outside_issues": 4.03,
-    "current_per_week_all": 5.53,
+    "current_per_week_all": 5.56,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 480,
+      "issue_tagged_pieces": 481,
       "published_away_from_drop": 61,
       "share_of_issue_pieces": 12.7,
       "current_year_strict": 4.03,
       "current_year_loose": 4.19,
       "all_time_strict": 1.6,
       "all_time_loose": 1.83,
-      "all_time_all": 3.47
+      "all_time_all": 3.48
     }
   },
   "rhythm": {
-    "n_dated": 889,
+    "n_dated": 890,
     "by_weekday": [
       {
         "day": "Mon",
@@ -703,8 +710,8 @@
       },
       {
         "day": "Wed",
-        "pieces": 427,
-        "share": 48.0
+        "pieces": 428,
+        "share": 48.1
       },
       {
         "day": "Thu",
@@ -728,7 +735,7 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 48.0,
+    "top_day_share": 48.1,
     "midweek_share": 85.4,
     "weekend_pieces": 17,
     "by_month": [
@@ -763,9 +770,9 @@
       {
         "month": "May",
         "abbr": "May",
-        "pieces": 68,
+        "pieces": 69,
         "occurrences": 5,
-        "per_occurrence": 13.6
+        "per_occurrence": 13.8
       },
       {
         "month": "June",
