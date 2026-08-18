@@ -278,6 +278,11 @@ async function exportPptx(){
   const arow=(arr,l)=>((arr||[]).find(r=>(r.label||"").toLowerCase().startsWith(l.toLowerCase())))||{};
 
   // ---- primitives ----
+  // PowerPoint gives every text box a 0.1in internal margin, which pushed all
+  // type 0.1in right of the shapes it is meant to align with — the eyebrow rule
+  // and the row hairlines started left of their text and ended short of it.
+  // Zero the insets so text and rules share one left edge.
+  const TX=(sl,t,o)=>sl.addText(t,Object.assign({margin:0},o));
   let n=0;
   function slide(eyebrow,head,opts={}){
     n++; const s=pptx.addSlide(); const dark=!!opts.dark;
@@ -285,7 +290,7 @@ async function exportPptx(){
     const lg=dark?(logoW||logo):logo;
     if(lg) s.addImage({data:lg,x:dark?L:W-L-1.25,y:dark?0.75:0.45,w:dark?2.3:1.25,h:dark?0.48:0.26});
     if(eyebrow){
-      s.addText(eyebrow.toUpperCase(),{x:L,y:dark?1.6:0.5,w:8,h:0.28,fontSize:9,bold:true,color:dark?ORG:CER,charSpacing:4,fontFace:SANS});
+      TX(s,eyebrow.toUpperCase(),{x:L,y:dark?1.6:0.5,w:8,h:0.28,fontSize:9,bold:true,color:dark?ORG:CER,charSpacing:4,fontFace:SANS});
       // orange rule sized to the word: ~0.075in per char at 9pt with tracking
       s.addShape(pptx.ShapeType.rect,{x:L,y:dark?1.9:0.8,w:Math.max(0.5,eyebrow.length*0.086),h:0.045,fill:{color:ORG},line:{color:ORG,width:0}});
     }
@@ -295,11 +300,11 @@ async function exportPptx(){
       // under it instead of at a fixed y — a 3-line headline no longer collides.
       const lines=dark?2:Math.min(3,Math.ceil(head.replace(/\n/g,"").length/58));
       const hh=dark?2.0:0.44*lines+0.15;
-      s.addText(head,{x:L,y:dark?2.05:0.95,w:dark?9.6:CW,h:hh,fontSize:dark?44:27,bold:true,color:dark?PAP:BLK,fontFace:SERIF,valign:"top",fit:"shrink",lineSpacingMultiple:0.95});
+      TX(s,head,{x:L,y:dark?2.05:0.95,w:dark?9.6:CW,h:hh,fontSize:dark?44:27,bold:true,color:dark?PAP:BLK,fontFace:SERIF,valign:"top",fit:"shrink",lineSpacingMultiple:0.95});
       s._bodyY=(dark?2.05:0.95)+hh+0.22;   // where body content may begin
     }
-    s.addText(`Vital City · The case for support`,{x:L,y:7.02,w:6,h:0.25,fontSize:7.5,color:dark?"8A8D94":CHAR,charSpacing:2,fontFace:SANS});
-    s.addText(String(n).padStart(2,"0"),{x:W-L-1,y:7.02,w:1,h:0.25,fontSize:7.5,color:dark?"8A8D94":CHAR,align:"right",fontFace:SANS});
+    TX(s,`Vital City · The case for support`,{x:L,y:7.02,w:6,h:0.25,fontSize:7.5,color:dark?"8A8D94":CHAR,charSpacing:2,fontFace:SANS});
+    TX(s,String(n).padStart(2,"0"),{x:W-L-1,y:7.02,w:1,h:0.25,fontSize:7.5,color:dark?"8A8D94":CHAR,align:"right",fontFace:SANS});
     return s;
   }
   function figs(s,y,items){
@@ -309,9 +314,9 @@ async function exportPptx(){
     items.forEach((it,i)=>{
       const x=L+i*(w+gap), hero=!!it.hero;
       s.addShape(pptx.ShapeType.rect,{x,y,w,h,fill:{color:hero?BLK:WHT},line:{color:hero?BLK:WHT,width:0}});
-      s.addText(String(it.v),{x:x+0.2,y:y+0.12,w:w-0.4,h:0.7,fontSize:34,bold:true,color:hero?PAP:BLK,fontFace:SERIF,fit:"shrink"});
-      s.addText(String(it.k).toUpperCase(),{x:x+0.2,y:y+0.84,w:w-0.4,h:0.26,fontSize:8.5,bold:true,color:hero?PAP:BLK,charSpacing:1.5,fontFace:SANS});
-      if(it.n) s.addText(String(it.n),{x:x+0.2,y:y+1.08,w:w-0.4,h:0.38,fontSize:8,color:hero?"A2A5AD":CHAR,fontFace:SANS,fit:"shrink"});
+      TX(s,String(it.v),{x:x+0.2,y:y+0.12,w:w-0.4,h:0.7,fontSize:34,bold:true,color:hero?PAP:BLK,fontFace:SERIF,fit:"shrink"});
+      TX(s,String(it.k).toUpperCase(),{x:x+0.2,y:y+0.84,w:w-0.4,h:0.26,fontSize:8.5,bold:true,color:hero?PAP:BLK,charSpacing:1.5,fontFace:SANS});
+      if(it.n) TX(s,String(it.n),{x:x+0.2,y:y+1.08,w:w-0.4,h:0.38,fontSize:8,color:hero?"A2A5AD":CHAR,fontFace:SANS,fit:"shrink"});
     });
     return y+h+0.25;
   }
@@ -322,7 +327,7 @@ async function exportPptx(){
     list.forEach((r,i)=>{
       const yy=y+i*rh;
       const kp=r.k.split("\n");
-      s.addText(kp.length>1?[{text:kp[0],options:{bold:true,fontSize:10.5,color:BLK}},{text:"\n"+kp[1],options:{fontSize:8.5,color:CHAR}}]:r.k,
+      TX(s,kp.length>1?[{text:kp[0],options:{bold:true,fontSize:10.5,color:BLK}},{text:"\n"+kp[1],options:{fontSize:8.5,color:CHAR}}]:r.k,
         {x:L,y:yy+0.08,w:kw,h:rh-0.1,fontSize:10.5,bold:kp.length===1,color:BLK,fontFace:SANS,valign:"top"});
       const parts=[{text:r.v,options:{fontSize:10.5,color:BLK,fontFace:SANS}}];
       if(r.note) parts.push({text:" — "+r.note,options:{fontSize:9.5,color:CHAR,fontFace:SANS}});
@@ -331,31 +336,31 @@ async function exportPptx(){
         r.links.forEach((l,j)=>{parts.push({text:l.t,options:{fontSize:8.5,color:CER,fontFace:SANS,hyperlink:{url:l.u}}});
           if(j<r.links.length-1) parts.push({text:"   ",options:{fontSize:8.5}});});
       }
-      s.addText(parts,{x:L+kw,y:yy+0.08,w:CW-kw,h:rh-0.1,fontFace:SANS,valign:"top",fit:"shrink"});
+      TX(s,parts,{x:L+kw,y:yy+0.08,w:CW-kw,h:rh-0.1,fontFace:SANS,valign:"top",fit:"shrink"});
       s.addShape(pptx.ShapeType.line,{x:L,y:yy+rh,w:CW,h:0,line:{color:CLOUD,width:0.75}});
     });
     return y+list.length*rh+0.2;
   }
   function lede(s,y,text,opts={}){
-    s.addText(text,{x:L,y,w:opts.w||CW*0.82,h:opts.h||0.9,fontSize:opts.size||12.5,color:opts.color||BLK,fontFace:SANS,valign:"top",fit:"shrink",lineSpacingMultiple:1.15});
+    TX(s,text,{x:L,y,w:opts.w||CW*0.82,h:opts.h||0.9,fontSize:opts.size||12.5,color:opts.color||BLK,fontFace:SANS,valign:"top",fit:"shrink",lineSpacingMultiple:1.15});
     return y+(opts.h||0.9)+0.1;
   }
   function caveat(s,y,bold,text){
     // gold left rule + tinted box — the HTML .caveat look
     s.addShape(pptx.ShapeType.rect,{x:L,y,w:CW,h:0.6,fill:{color:"FDF8EC"},line:{color:"FDF8EC",width:0}});
     s.addShape(pptx.ShapeType.rect,{x:L,y,w:0.05,h:0.6,fill:{color:GOLD},line:{color:GOLD,width:0}});
-    s.addText([{text:bold+" ",options:{bold:true}},{text,options:{}}],{x:L+0.18,y:y+0.05,w:CW-0.3,h:0.5,fontSize:9,color:BLK,fontFace:SANS,valign:"top",fit:"shrink"});
+    TX(s,[{text:bold+" ",options:{bold:true}},{text,options:{}}],{x:L+0.18,y:y+0.05,w:CW-0.3,h:0.5,fontSize:9,color:BLK,fontFace:SANS,valign:"top",fit:"shrink"});
     return y+0.75;
   }
-  function pull(s,y,text){ s.addText(text,{x:L,y,w:8.5,h:1.2,fontSize:18,color:BLK,fontFace:SERIF,valign:"top",fit:"shrink",lineSpacingMultiple:1.2}); return y+1.3; }
+  function pull(s,y,text){ TX(s,text,{x:L,y,w:8.5,h:1.2,fontSize:18,color:BLK,fontFace:SERIF,valign:"top",fit:"shrink",lineSpacingMultiple:1.2}); return y+1.3; }
   function bullets(s,y,items,color){
     items.forEach((it,i)=>{
       const parts=typeof it==="string"?[{text:it}]:[{text:it.b+" ",options:{bold:true}},{text:it.t}];
-      s.addText(parts,{x:L,y:y+i*0.5,w:CW*0.85,h:0.48,fontSize:12,color:color||BLK,fontFace:SANS,bullet:{code:"25CF",indent:14},valign:"top",fit:"shrink"});
+      TX(s,parts,{x:L,y:y+i*0.5,w:CW*0.85,h:0.48,fontSize:12,color:color||BLK,fontFace:SANS,bullet:{code:"25CF",indent:14},valign:"top",fit:"shrink"});
     }); return y+items.length*0.5+0.1;
   }
   function barchart(s,x,y,w,h,title,labels,values,color){
-    s.addText(title,{x,y,w,h:0.3,fontSize:11,bold:true,color:BLK,fontFace:SANS});
+    TX(s,title,{x,y,w,h:0.3,fontSize:11,bold:true,color:BLK,fontFace:SANS});
     // PowerPoint draws the FIRST category at the BOTTOM of a horizontal bar
     // chart; reverse so the oldest year reads at the top, like the HTML.
     labels=labels.slice().reverse(); values=values.slice().reverse();
@@ -368,15 +373,15 @@ async function exportPptx(){
   // ---- slides ----
   // 1 cover
   { const s=slide("A case for support  ·  New York City  ·  "+asof.slice(0,4)+(V?"  ·  "+V.label:""),"The evidence\nNew York runs on.",{dark:true});
-    s.addText([{text:"Pragmatic solutions to tough urban problems. ",options:{bold:true,color:PAP}},
+    TX(s,[{text:"Pragmatic solutions to tough urban problems. ",options:{bold:true,color:PAP}},
       {text:"A nonprofit journal, research shop and convener, built as one thing: timely commentary from the people shaping urban policy, data rendered intelligible, and evidence-based recommendations pressed into practice.",options:{color:"C9CCD2"}}],
       {x:L,y:4.35,w:8.6,h:1.5,fontSize:14,fontFace:SANS,valign:"top",lineSpacingMultiple:1.25});
-    s.addText("Prepared "+fmtDate(asof),{x:6.9,y:7.02,w:4.0,h:0.25,fontSize:7.5,color:"6F727A",fontFace:SANS,align:"right",charSpacing:2}); }
+    TX(s,"Prepared "+fmtDate(asof),{x:6.9,y:7.02,w:4.0,h:0.25,fontSize:7.5,color:"6F727A",fontFace:SANS,align:"right",charSpacing:2}); }
   // 2 the moment
   { const s=slide("The moment","A new administration is rewriting how New York City works. Someone has to guide it toward what the evidence supports.");
     let y=2.25;
     y=lede(s,y,"A new mayor, a federal receiver at Rikers Island, a charter revision fight and an affordability crisis that will define the decade. Every one of those debates is about to be settled — well or badly — by whoever brings the best facts into the room.",{h:0.95});
-    s.addText("WHAT IS MISSING",{x:L,y,w:6,h:0.3,fontSize:9,bold:true,color:BLK,charSpacing:2,fontFace:SANS}); y+=0.35;
+    TX(s,"WHAT IS MISSING",{x:L,y,w:6,h:0.3,fontSize:9,bold:true,color:BLK,charSpacing:2,fontFace:SANS}); y+=0.35;
     y=bullets(s,y,["Newsroom capacity for urban policy has collapsed.","Academic research reaches City Hall years late, if ever.","Advocacy shops arrive with a conclusion already written."]);
     pull(s,y+0.1,"Vital City occupies the empty middle: rigorous enough for the researchers, readable enough for the deputy mayor, independent enough that both sides cite it."); }
   // 3 impact
@@ -391,10 +396,10 @@ async function exportPptx(){
       {v:P.y2026||"—",k:"Citations in "+asof.slice(0,4),n:P.permonth?("~"+P.permonth+" a month — one every day and a half"):""}]);
     if((P.by_year||[]).length){
       barchart(s,L,y,5.6,2.35,"Mentions per year (hand-kept archive)",P.by_year.map(r=>r.y),P.by_year.map(r=>r.n),ORG);
-      s.addText((P.top||[]).map(o=>o.outlet+"  "+o.n).join("    ·    "),{x:L+6,y:y+0.35,w:CW-6,h:0.9,fontSize:10,bold:true,color:BLK,fontFace:SANS,valign:"top",fit:"shrink"});
+      TX(s,(P.top||[]).map(o=>o.outlet+"  "+o.n).join("    ·    "),{x:L+6,y:y+0.35,w:CW-6,h:0.9,fontSize:10,bold:true,color:BLK,fontFace:SANS,valign:"top",fit:"shrink"});
       (P.samples||[]).slice(0,2).forEach((x,i)=>{
         s.addShape(pptx.ShapeType.rect,{x:L+6,y:y+1.35+i*0.42,w:0.04,h:0.34,fill:{color:ORG},line:{color:ORG,width:0}});
-        s.addText([{text:x.outlet.toUpperCase()+"  ",options:{bold:true,fontSize:8,charSpacing:1}},{text:x.title,options:{fontSize:9.5,color:CER,hyperlink:{url:x.url}}}],{x:L+6.15,y:y+1.33+i*0.42,w:CW-6.2,h:0.38,fontFace:SANS,valign:"top",fit:"shrink"});
+        TX(s,[{text:x.outlet.toUpperCase()+"  ",options:{bold:true,fontSize:8,charSpacing:1}},{text:x.title,options:{fontSize:9.5,color:CER,hyperlink:{url:x.url}}}],{x:L+6.15,y:y+1.33+i*0.42,w:CW-6.2,h:0.38,fontFace:SANS,valign:"top",fit:"shrink"});
       });
       y+=2.5;
     }
@@ -412,12 +417,12 @@ async function exportPptx(){
     people.slice(0,10).forEach((p,i)=>{
       const x=L+(i%cols)*(cw+0.2), y=(s._bodyY||2.15)+Math.floor(i/cols)*(ch+0.06);
       s.addShape(pptx.ShapeType.rect,{x,y,w:cw,h:ch,fill:{color:WHT},line:{color:CLOUD,width:0.75}});
-      s.addText(p.n,{x:x+0.15,y:y+0.06,w:cw-0.3,h:0.3,fontSize:13,bold:true,color:BLK,fontFace:SERIF});
-      s.addText(clip(p.who,74),{x:x+0.15,y:y+0.34,w:cw-0.3,h:0.24,fontSize:8.5,color:CHAR,fontFace:SANS});
+      TX(s,p.n,{x:x+0.15,y:y+0.06,w:cw-0.3,h:0.3,fontSize:13,bold:true,color:BLK,fontFace:SERIF});
+      TX(s,clip(p.who,74),{x:x+0.15,y:y+0.34,w:cw-0.3,h:0.24,fontSize:8.5,color:CHAR,fontFace:SANS});
       const pc=(p.pieces||[])[0];
-      if(pc) s.addText([{text:"“"+clip(pc.t,70)+"”",options:{color:CER,hyperlink:{url:pc.u}}},{text:p.npieces>1?"   +"+(p.npieces-1)+" more":"",options:{color:CHAR}}],{x:x+0.15,y:y+0.57,w:cw-0.3,h:0.24,fontSize:8.5,fontFace:SANS});
+      if(pc) TX(s,[{text:"“"+clip(pc.t,70)+"”",options:{color:CER,hyperlink:{url:pc.u}}},{text:p.npieces>1?"   +"+(p.npieces-1)+" more":"",options:{color:CHAR}}],{x:x+0.15,y:y+0.57,w:cw-0.3,h:0.24,fontSize:8.5,fontFace:SANS});
     });
-    s.addText(`Ten of a deeper bench: ${(FF.seniors||{}).count||""} leading authors have written ${(FF.seniors||{}).pieces_total||""} pieces for Vital City among them, within a contributor pool of 492.`,{x:L,y:6.55,w:CW,h:0.35,fontSize:8.5,color:CHAR,fontFace:SANS}); }
+    TX(s,`Ten of a deeper bench: ${(FF.seniors||{}).count||""} leading authors have written ${(FF.seniors||{}).pieces_total||""} pieces for Vital City among them, within a contributor pool of 492.`,{x:L,y:6.55,w:CW,h:0.35,fontSize:8.5,color:CHAR,fontFace:SANS}); }
   // 7 audience
   { const s=slide("The audience","The value of this list is who is on it.");
     let y=figs(s,s._bodyY||2.2,[
@@ -472,7 +477,7 @@ async function exportPptx(){
       [{text:"Caveats that travel with these numbers. ",options:{bold:true}},{text:"Giving is Donorbox only. The 2025 signup surge is bot-inflated; 2024 is the volume baseline. Open rates are inflated industry-wide by Apple Mail, which is why click-to-open leads. Press counts are floors set by the tracker's whitelist."}],
       [{text:"Impact claims ",options:{bold:true}},{text:"are Vital City's own accounting, each carrying its source links on the impact slide. The Mamdani conversation took place while he was a candidate."}],
       [{text:"This deck was assembled with AI assistance. ",options:{bold:true}},{text:"Every figure comes from a primary Vital City system; verify any figure before it goes to a funder."}]];
-    paras.forEach((p,i)=>s.addText(p,{x:L,y:(s._bodyY||2.2)+i*1.0,w:CW,h:1.0,fontSize:10.5,color:BLK,fontFace:SANS,valign:"top",lineSpacingMultiple:1.2,fit:"shrink"})); }
+    paras.forEach((p,i)=>TX(s,p,{x:L,y:(s._bodyY||2.2)+i*1.0,w:CW,h:1.0,fontSize:10.5,color:BLK,fontFace:SANS,valign:"top",lineSpacingMultiple:1.2,fit:"shrink"})); }
 
   await pptx.writeFile({fileName:`Vital-City-case-for-support-${VKEY?VKEY+"-":""}${asof}.pptx`});
 }
