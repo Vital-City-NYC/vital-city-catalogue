@@ -3,7 +3,7 @@
 // Data:  network-first with cache fallback, so a dead network still shows the
 //        last snapshot and the app says how old it is. Encrypted blobs only —
 //        nothing readable is ever stored by the worker itself.
-const VERSION = "vc-live-v1";
+const VERSION = "vc-live-v2";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest",
                "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-180.png",
                "../fonts/GascogneTS-Light.ttf"];
@@ -22,6 +22,14 @@ self.addEventListener("fetch", e => {
     return;
   }
   if (e.request.method !== "GET") return;
+  // The app shell itself is network-first: an update must reach installed
+  // users on their next open, with the cache only as the offline fallback.
+  const isShell = e.request.mode === "navigate" || /\/(index\.html)?$/.test(u.pathname);
+  if (isShell && u.origin === location.origin) {
+    e.respondWith(fetch(e.request).then(r => { const c = r.clone(); caches.open(VERSION).then(x => x.put(e.request, c)); return r; })
+      .catch(() => caches.match(e.request).then(h => h || caches.match("./index.html"))));
+    return;
+  }
   e.respondWith(caches.match(e.request).then(hit => hit || fetch(e.request).then(r => {
     if (u.origin === location.origin || /typekit|fonts/.test(u.host)) { const c = r.clone(); caches.open(VERSION).then(x => x.put(e.request, c)); }
     return r;
