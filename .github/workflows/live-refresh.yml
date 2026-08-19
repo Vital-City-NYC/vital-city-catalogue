@@ -1,0 +1,79 @@
+name: live-refresh
+
+# The real-time-ish feed behind the live growth PWA (growth/live/).
+#
+# Every 20 minutes during New York waking hours (hourly overnight) this pulls
+# the fast signals — GA4 realtime + today, Ghost members/posts, Mailchimp
+# signups, Donorbox gifts, follower counts, press RSS — encrypts them with the
+# suite passphrase and force-pushes ONE file to the orphan `live` branch.
+#
+# Why a branch and not main: at this cadence a commit to main would mean ~50
+# commits and ~50 Pages deploys a day. The `live` branch holds a single commit
+# that is overwritten each run, and the app reads it straight from
+# raw.githubusercontent.com (CORS-open, ~5 min edge cache). main never sees it.
+#
+# The deep dashboard (growth/data.enc) is unchanged and still comes from the
+# twice-daily network-refresh workflow; the app reads both.
+
+on:
+  schedule:
+    - cron: "*/20 10-23 * * *"    # 10:00–23:59 UTC = 6am–7:59pm ET, every 20 min
+    - cron: "*/20 0-3 * * *"      # 00:00–03:59 UTC = 8pm–11:59pm ET, every 20 min
+    - cron: "0 4-9 * * *"         # overnight ET: hourly
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-refresh
+  cancel-in-progress: true        # a late run is worthless; let the newer one win
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet cryptography
+
+      - name: Pull the live signals
+        env:
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_CREDS_JSON:  ${{ secrets.GA4_CREDS_JSON }}
+          GHOST_ADMIN_KEY: ${{ secrets.GHOST_ADMIN_KEY }}
+          GHOST_STAFF_KEY: ${{ secrets.GHOST_STAFF_KEY }}
+          MAILCHIMP_KEY:   ${{ secrets.MAILCHIMP_KEY }}
+          DONORBOX_KEY:    ${{ secrets.DONORBOX_KEY }}
+          DONORBOX_EMAIL:  info@vitalcitynyc.org
+        run: python3 live_pull.py      # exits non-zero if EVERY source failed — that must fail the job
+
+      - name: Encrypt
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: python3 encrypt_live.py /tmp/live.enc
+
+      - name: Publish to the `live` branch (single overwritten commit)
+        run: |
+          set -e
+          test -s /tmp/live.enc
+          [ "$(wc -c < /tmp/live.enc)" -gt 2000 ] || { echo "live.enc suspiciously small"; exit 1; }
+          rm -rf /tmp/livepub && mkdir /tmp/livepub && cd /tmp/livepub
+          git init -q -b live
+          git config user.name "Vital City Bot"
+          git config user.email "actions@users.noreply.github.com"
+          cp /tmp/live.enc live.enc
+          printf 'Live feed for the growth PWA. One file, overwritten every run by live-refresh.yml. Encrypted; nothing here is readable without the suite passphrase.\n' > README.md
+          git add live.enc README.md
+          git commit -q -m "live $(date -u '+%Y-%m-%dT%H:%MZ')"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push -q --force origin live
+          echo "published live.enc ($(wc -c < live.enc) bytes) to branch live"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

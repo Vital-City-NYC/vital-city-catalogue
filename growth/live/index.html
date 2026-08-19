@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#050507">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VC Live">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
+<title>Vital City Live</title>
+<style>
+  @font-face{font-family:'GascogneTS';src:url('../fonts/GascogneTS-Light.ttf') format('truetype');font-weight:300 900;font-style:normal;font-display:swap;}
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-green:#57aa4a; --vc-orange:#ff7c53; --vc-cerulean:#217ebe;
+    --vc-magenta:#e7466d; --vc-paper2:#eeeeec; --vc-gold:#d9a441; --vc-chartreuse:#dde44c;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+    --vc-serif:"GascogneTS","Source Serif 4",Georgia,Times,serif;
+    --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;font-synthesis:none;min-height:100dvh}
+  a{color:var(--vc-cerulean);text-decoration:none}
+  button{font-family:inherit}
+
+  /* gate */
+  .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500;padding:24px}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:28px 26px;max-width:380px;width:100%;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gatebox .wm{font-weight:900;letter-spacing:.22em;font-size:11px;text-transform:uppercase}
+  .gatebox h1{font-family:var(--vc-serif);font-weight:700;font-size:30px;margin:8px 0 4px;letter-spacing:-.01em}
+  .gatebox p{font-size:12.5px;color:var(--vc-charcoal);margin:0 0 14px;line-height:1.5}
+  .gatebox input{width:100%;padding:11px 12px;border:1.5px solid var(--vc-black);font-family:inherit;font-size:16px;background:var(--vc-white)}
+  .gatebox button{margin-top:10px;width:100%;padding:11px;border:1.5px solid var(--vc-black);background:var(--vc-black);color:var(--vc-white);font-weight:800;font-size:13px;cursor:pointer}
+  .err{color:var(--vc-magenta);font-size:12px;margin-top:8px;min-height:16px}
+
+  /* masthead */
+  .mast{background:var(--vc-black);color:var(--vc-paper);padding:calc(12px + var(--sat)) 18px 12px;position:sticky;top:0;z-index:50}
+  .mast .row{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .mast .wm{font-weight:900;letter-spacing:.22em;font-size:11px;text-transform:uppercase}
+  .mast .wm b{color:var(--vc-orange);font-weight:900}
+  .fresh{font-size:11px;color:#a2a5ad;display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--vc-green);display:inline-block}
+  .fresh .dot.stale{background:var(--vc-gold)} .fresh .dot.dead{background:var(--vc-magenta)}
+  .fresh button{background:none;border:1px solid #3a3c42;color:#c9ccd2;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;cursor:pointer;font-weight:800}
+
+  /* tabs */
+  .tabs{position:fixed;left:0;right:0;bottom:0;background:var(--vc-black);display:flex;z-index:60;padding-bottom:var(--sab);border-top:1px solid #222}
+  .tabs button{flex:1;background:none;border:0;color:#8a8d94;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;padding:11px 4px 9px;cursor:pointer;border-top:3px solid transparent}
+  .tabs button.on{color:var(--vc-paper);border-top-color:var(--vc-orange)}
+
+  main{padding:14px 14px calc(76px + var(--sab));max-width:720px;margin:0 auto}
+  .screen{display:none} .screen.on{display:block}
+
+  /* section heads + eyebrow */
+  .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.16em;font-weight:800;color:var(--vc-cerulean);width:fit-content;margin:18px 0 8px}
+  .eyebrow::after{content:"";display:block;width:100%;height:3px;background:var(--vc-orange);margin-top:5px}
+  .eyebrow:first-child{margin-top:4px}
+  h2.head{font-family:var(--vc-serif);font-weight:700;font-size:24px;line-height:1.1;letter-spacing:-.01em;margin:6px 0 10px}
+  .sub{font-size:12px;color:var(--vc-charcoal);line-height:1.45;margin:-4px 0 10px}
+
+  /* hero */
+  .hero{background:var(--vc-black);color:var(--vc-paper);padding:18px 18px 14px;border:1px solid var(--vc-black);margin-bottom:10px;position:relative;overflow:hidden}
+  .hero .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.14em;font-weight:800;color:var(--vc-orange)}
+  .hero .big{font-family:var(--vc-serif);font-weight:700;font-size:72px;line-height:.95;letter-spacing:-.02em;margin:6px 0 4px}
+  .hero .big small{font-size:22px;color:#a2a5ad;letter-spacing:0;margin-left:8px;font-family:var(--vc-sans);font-weight:400}
+  .hero .n{font-size:12px;color:#a2a5ad}
+  .hero svg{position:absolute;right:14px;bottom:12px;width:44%;height:54px;opacity:.95}
+  .pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--vc-green);margin-right:6px;box-shadow:0 0 0 0 rgba(87,170,74,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(87,170,74,.55)}70%{box-shadow:0 0 0 9px rgba(87,170,74,0)}100%{box-shadow:0 0 0 0 rgba(87,170,74,0)}}
+
+  /* tiles */
+  .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--vc-black);border:1px solid var(--vc-black);margin:0 0 12px}
+  .tiles.three{grid-template-columns:repeat(3,1fr)}
+  .tile{background:var(--vc-white);padding:12px 12px 10px;min-width:0}
+  .tile .v{font-family:var(--vc-serif);font-weight:700;font-size:32px;line-height:1;letter-spacing:-.02em}
+  .tile .v small{font-size:16px;color:var(--vc-charcoal);font-family:var(--vc-sans);font-weight:400;margin-left:3px}
+  .tile .k{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-top:6px;line-height:1.3}
+  .tile .n{font-size:11px;color:var(--vc-charcoal);margin-top:2px;line-height:1.4}
+  .tile .d{font-size:11px;font-weight:800;margin-top:3px}
+  .d.up{color:var(--vc-green)} .d.down{color:#b5604e} .d.flat{color:var(--vc-charcoal)}
+  .tile.stub{background:repeating-linear-gradient(45deg,var(--vc-white),var(--vc-white) 8px,var(--vc-paper2) 8px,var(--vc-paper2) 16px)}
+  .tile.stub .v{color:var(--vc-charcoal);font-size:18px;font-family:var(--vc-sans);font-weight:700;padding-top:6px}
+
+  /* lists */
+  .rows{border-top:2px solid var(--vc-black);margin-bottom:12px;background:var(--vc-white)}
+  .row{border-bottom:1px solid var(--vc-cloud);padding:10px 12px;display:flex;gap:12px;align-items:baseline}
+  .row .rk{font-family:var(--vc-serif);font-weight:700;font-size:20px;min-width:46px;text-align:right;letter-spacing:-.01em;line-height:1}
+  .row .rk small{font-size:11px;font-family:var(--vc-sans);color:var(--vc-charcoal);font-weight:400;display:block;margin-top:2px;letter-spacing:0}
+  .row .rv{flex:1;min-width:0;font-size:13.5px;line-height:1.35}
+  .row .rv a{color:var(--vc-black)}
+  .row .rn{font-size:11px;color:var(--vc-charcoal);margin-top:2px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .bar{height:5px;background:var(--vc-cerulean);margin-top:5px;max-width:100%}
+  .row.muted .rv{color:var(--vc-charcoal)}
+
+  /* charts */
+  .chart{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:12px 12px 8px;margin-bottom:10px}
+  .chart h3{font-size:12px;margin:0 0 2px;letter-spacing:-.005em;font-weight:800}
+  .chart .cap{font-size:11px;color:var(--vc-charcoal);margin:0 0 8px;line-height:1.4}
+  .chart svg{width:100%;height:auto;display:block;overflow:visible}
+  .legend{display:flex;gap:14px;font-size:10.5px;color:var(--vc-charcoal);margin-top:6px;flex-wrap:wrap}
+  .legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
+  .ax{font-size:9px;fill:var(--vc-charcoal);font-family:var(--vc-sans)}
+  .vl{font-size:9.5px;fill:var(--vc-black);font-family:var(--vc-serif);font-weight:700}
+
+  .caveat{border-left:3px solid var(--vc-gold);background:#fdf8ec;padding:9px 12px;font-size:11.5px;line-height:1.45;margin:10px 0}
+  .note{font-size:11px;color:var(--vc-charcoal);line-height:1.5;margin:6px 0 14px}
+  .pill{display:inline-block;background:var(--vc-paper2);border-radius:3px;padding:2px 7px;font-size:10.5px;font-weight:700;margin:0 4px 4px 0}
+  .pill.first{background:var(--vc-black);color:var(--vc-paper)}
+
+  /* deeper cards */
+  .cards{display:grid;grid-template-columns:1fr;gap:8px}
+  .card{background:var(--vc-white);border:1px solid var(--vc-black);padding:12px 14px;display:block;color:var(--vc-black);position:relative;box-shadow:4px 4px 0 rgba(5,5,7,.08)}
+  .card:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(5,5,7,.08)}
+  .card .ck{font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:var(--vc-cerulean)}
+  .card .ct{font-family:var(--vc-serif);font-weight:700;font-size:20px;line-height:1.1;margin:4px 0 4px}
+  .card .cs{font-size:12px;color:var(--vc-charcoal);line-height:1.45}
+  .card .go{position:absolute;right:14px;top:12px;font-size:18px;color:var(--vc-orange)}
+  .empty{padding:14px 12px;color:var(--vc-charcoal);font-size:12.5px;background:var(--vc-white);border:1px solid var(--vc-cloud)}
+  @media(min-width:560px){ .cards{grid-template-columns:1fr 1fr} .hero .big{font-size:84px} }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>Live</h1>
+    <p>The site right now, today, this week and the last 28 days. Same passphrase as the contacts, growth and prospects tools.</p>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="Passphrase" inputmode="text">
+    <button id="unlock">Unlock</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <header class="mast">
+    <div class="row">
+      <div class="wm">Vital City <b>·</b> Live</div>
+      <div class="fresh"><span class="dot" id="dot"></span><span id="freshtxt">loading…</span><button id="refresh" title="Refresh">↻</button></div>
+    </div>
+  </header>
+  <main>
+    <section class="screen on" id="scr-now"></section>
+    <section class="screen" id="scr-week"></section>
+    <section class="screen" id="scr-trends"></section>
+    <section class="screen" id="scr-deeper"></section>
+  </main>
+  <nav class="tabs">
+    <button data-s="now" class="on">Now</button>
+    <button data-s="week">Week</button>
+    <button data-s="trends">28 days</button>
+    <button data-s="deeper">Deeper</button>
+  </nav>
+</div>
+
+<script>
+// ----------------------------------------------------------------- config
+// Live feed: one encrypted file on the `live` branch, rewritten every 20 min
+// by live-refresh.yml. Read straight from raw.githubusercontent (CORS-open,
+// ~5-minute edge cache) so nothing here depends on a Pages deploy.
+const LIVE_DEFAULT = "https://raw.githubusercontent.com/vitalcity-nyc/vital-city-catalogue/live/live.enc";
+// ?live=<url> overrides the feed (local testing against a freshly built live.enc).
+const LIVE_URL  = new URLSearchParams(location.search).get("live") || LIVE_DEFAULT;
+// Deep data: the full growth dashboard's blob (twice-daily), same origin.
+const DEEP_URL  = "../data.enc";
+const DASH      = "../index.html";
+const PASSKEY   = "vc_net_pass";
+const $ = s => document.querySelector(s);
+
+// ----------------------------------------------------------------- crypto (identical to the suite)
+const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function decryptBlob(pass, blob){
+  const km = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({name:"PBKDF2", salt:b64d(blob.salt), iterations:blob.iters, hash:"SHA-256"}, km, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+  const pt = await crypto.subtle.decrypt({name:"AES-GCM", iv:b64d(blob.iv)}, key, b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+function savePass(p){ try{ localStorage.setItem(PASSKEY, JSON.stringify({pass:p, exp:Date.now()+1000*60*60*24*30})); }catch{} }
+function loadPass(){
+  try{ const raw = localStorage.getItem(PASSKEY); if(!raw) return "";
+       const o = JSON.parse(raw); if(o && o.pass){ if(!o.exp || o.exp > Date.now()) return o.pass; localStorage.removeItem(PASSKEY); return ""; }
+       return typeof o === "string" ? o : raw; }catch{ return ""; }
+}
+
+// ----------------------------------------------------------------- state
+let PASS = "", LIVE = null, DEEP = null, liveAt = null;
+let tick = null;
+
+async function fetchJSON(url, opts){ const r = await fetch(url, opts); if(!r.ok) throw new Error(url + " " + r.status); return r.json(); }
+
+async function loadLive(){
+  const blob = await fetchJSON(LIVE_URL + "?t=" + Math.floor(Date.now()/60000), {cache:"no-store"});
+  LIVE = await decryptBlob(PASS, blob); liveAt = new Date(LIVE.generated_at);
+}
+async function loadDeep(){
+  try{ const blob = await fetchJSON(DEEP_URL, {cache:"no-cache"}); DEEP = await decryptBlob(PASS, blob); }
+  catch(e){ console.warn("deep data unavailable", e); DEEP = null; }
+}
+
+async function unlock(fromStore){
+  $("#err").textContent = "";
+  const pass = $("#pw").value.trim(); if(!pass){ $("#err").textContent = "Enter the passphrase."; return; }
+  PASS = pass;
+  try{
+    await loadLive();
+  }catch(e){
+    console.error(e);
+    // Wrong passphrase is the likely cause; a missing live branch is the other.
+    $("#err").textContent = /OperationError|decrypt/i.test(String(e)) ? "Wrong passphrase." : "Live feed not reachable yet (" + (e.message||e) + ").";
+    if(fromStore) try{ localStorage.removeItem(PASSKEY); }catch{}
+    return;
+  }
+  savePass(pass); $("#gate").style.display = "none"; $("#app").style.display = "";
+  render(); loadDeep().then(render);
+  clearInterval(tick); tick = setInterval(async()=>{ try{ await loadLive(); render(); }catch(e){ freshness(); } }, 5*60*1000);
+  document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible") refresh(); });
+}
+async function refresh(){ $("#refresh").textContent = "…"; try{ await loadLive(); render(); }catch(e){ freshness(); } $("#refresh").textContent = "↻"; }
+
+$("#unlock").addEventListener("click", ()=>unlock(false));
+$("#pw").addEventListener("keydown", e=>{ if(e.key==="Enter") unlock(false); });
+$("#refresh").addEventListener("click", refresh);
+(async()=>{ const p = loadPass(); if(p){ $("#pw").value = p; await unlock(true); } })();
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click", ()=>{
+  document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on", x===b));
+  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on", s.id==="scr-"+b.dataset.s));
+  window.scrollTo(0,0);
+}));
+
+// ----------------------------------------------------------------- helpers
+const fmt = n => (n==null||isNaN(n)) ? "—" : Number(n).toLocaleString("en-US");
+const money = n => (n==null) ? "—" : "$" + Number(n).toLocaleString("en-US", {maximumFractionDigits:0});
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pct = (a,b) => (b>0 && a!=null) ? Math.round((a-b)/b*100) : null;
+const DOW = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function delta(a, b, label){
+  const p = pct(a,b); if(p==null) return "";
+  const cls = p>2 ? "up" : p<-2 ? "down" : "flat";
+  const arrow = p>2 ? "▲" : p<-2 ? "▼" : "▶";
+  return `<div class="d ${cls}">${arrow} ${Math.abs(p)}% ${esc(label||"")}</div>`;
+}
+function dayLabel(iso){ const d = new Date(iso+"T12:00:00"); return DOW[d.getDay()].slice(0,3); }
+function shortDate(iso){ const d = new Date(iso+"T12:00:00"); return MON[d.getMonth()]+" "+d.getDate(); }
+function ago(d){ if(!d) return "—"; const m = Math.round((Date.now()-d.getTime())/60000); if(m<1) return "just now"; if(m<60) return m+" min ago"; const h = Math.floor(m/60); const d=Math.round(h/24); return h<24 ? h+"h "+(m%60)+"m ago" : d===1 ? "yesterday" : d+" days ago"; }
+function sumLast(arr, key, n){ return (arr||[]).slice(-n).reduce((s,r)=>s+(+r[key]||0),0); }
+function sumPrev(arr, key, n){ const a=(arr||[]); return a.slice(Math.max(0,a.length-2*n), a.length-n).reduce((s,r)=>s+(+r[key]||0),0); }
+
+function tile(v, k, n, extra, cls){ return `<div class="tile ${cls||""}"><div class="v">${v}</div><div class="k">${esc(k)}</div>${n?`<div class="n">${n}</div>`:""}${extra||""}</div>`; }
+function stub(k, why){ return `<div class="tile stub"><div class="v">not connected</div><div class="k">${esc(k)}</div><div class="n">${esc(why||"")}</div></div>`; }
+
+// Bars: one series, optional ghost comparison series behind it. Fixed-track
+// math (value → width/height is linear, zero-based) — no distortion.
+function barsSVG(series, opts={}){
+  const w = 600, h = opts.h||120, padL = 0, padB = 16, n = series.length;
+  const all = series.flatMap(s => [s.v, s.cmp||0]);
+  const max = Math.max(1, ...all);
+  const gap = 3, bw = (w - gap*(n-1))/n;
+  const color = opts.color||"var(--vc-cerulean)", cmpc = opts.cmpColor||"#dcdcd8";
+  let out = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="height:${h}px">`;
+  series.forEach((s,i)=>{
+    const x = padL + i*(bw+gap);
+    if(s.cmp!=null){ const ch = (s.cmp/max)*(h-padB-14); out += `<rect x="${x}" y="${h-padB-ch}" width="${bw}" height="${ch}" fill="${cmpc}"/>`; }
+    const bh = (s.v/max)*(h-padB-14);
+    out += `<rect x="${x}" y="${h-padB-bh}" width="${bw}" height="${Math.max(bh, s.v>0?1.5:0)}" fill="${s.hi?'var(--vc-orange)':color}"/>`;
+    if(opts.values && (n<=14 || i===n-1 || s.v===max)) out += `<text class="vl" x="${x+bw/2}" y="${h-padB-bh-3}" text-anchor="middle">${fmt(s.v)}</text>`;
+    if(s.lbl!=null && (n<=14 || i%7===0 || i===n-1)) out += `<text class="ax" x="${x+bw/2}" y="${h-3}" text-anchor="middle">${esc(s.lbl)}</text>`;
+  });
+  return out + `</svg>`;
+}
+// Line with area, for 28-day and weekly series.
+function lineSVG(vals, opts={}){
+  const w=600, h=opts.h||110, pb=14, n=vals.length; if(!n) return "";
+  const max=Math.max(1,...vals.map(v=>+v||0)), min=0;
+  const x=i=> n>1 ? i*(w/(n-1)) : 0, y=v=> (h-pb) - ((v-min)/(max-min||1))*(h-pb-8);
+  const pts = vals.map((v,i)=>`${x(i).toFixed(1)},${y(+v||0).toFixed(1)}`).join(" ");
+  const area = `M0,${h-pb} L${pts.split(" ").join(" L")} L${w},${h-pb} Z`;
+  let out = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="height:${h}px">
+    <path d="${area}" fill="${opts.fill||'rgba(33,126,190,.12)'}"/>
+    <polyline points="${pts}" fill="none" stroke="${opts.color||'var(--vc-cerulean)'}" stroke-width="2.2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`;
+  if(opts.avg){ const ap = opts.avg.map((v,i)=>v==null?null:`${x(i).toFixed(1)},${y(v).toFixed(1)}`).filter(Boolean).join(" ");
+    out += `<polyline points="${ap}" fill="none" stroke="var(--vc-black)" stroke-width="1.4" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/>`; }
+  const last = vals[n-1];
+  out += `<circle cx="${x(n-1)}" cy="${y(+last||0)}" r="3.5" fill="${opts.color||'var(--vc-cerulean)'}"/>`;
+  (opts.labels||[]).forEach((l,i)=>{ if(l) out += `<text class="ax" x="${x(i)}" y="${h-2}" text-anchor="${i===0?'start':i===n-1?'end':'middle'}">${esc(l)}</text>`; });
+  return out + "</svg>";
+}
+function movAvg(vals, k){ return vals.map((_,i)=> i<k-1 ? null : vals.slice(i-k+1,i+1).reduce((a,b)=>a+b,0)/k); }
+
+// ----------------------------------------------------------------- freshness
+function freshness(){
+  const m = liveAt ? (Date.now()-liveAt.getTime())/60000 : 999;
+  $("#dot").className = "dot" + (m>90 ? " dead" : m>35 ? " stale" : "");
+  $("#freshtxt").textContent = liveAt ? ("updated " + ago(liveAt)) : "no live data";
+}
+
+// ----------------------------------------------------------------- NOW
+function renderNow(){
+  const L = LIVE, S = L.site||{}, G = L.ghost||{}, M = L.list||{}, D = L.giving||{}, P = L.press||{};
+  const parts = [];
+  // ---- hero: on the site right now
+  if(S.available && S.now){
+    const spark = lineSVG(S.now.by_minute||[], {h:54, color:"var(--vc-orange)", fill:"rgba(255,124,83,.18)"});
+    parts.push(`<div class="hero">
+      <div class="lbl"><span class="pulse"></span>On the site right now</div>
+      <div class="big">${fmt(S.now.active_users)}<small>people, last 30 min</small></div>
+      <div class="n">Google Analytics realtime · as of ${ago(liveAt)}</div>
+      ${spark}
+    </div>`);
+    const pages = (S.now.pages||[]).filter(p=>p.active>0).slice(0,8);
+    if(pages.length){
+      parts.push(`<div class="eyebrow">Being read right now</div><div class="rows">` +
+        pages.map(p=>`<div class="row"><div class="rk">${fmt(p.active)}</div><div class="rv">${esc(p.title||"").replace(/\s*[—|-]\s*Vital City\s*$/,"")}</div></div>`).join("") + `</div>`);
+    }
+  } else {
+    parts.push(`<div class="hero"><div class="lbl">On the site right now</div><div class="big" style="font-size:26px;font-family:var(--vc-sans);font-weight:700;color:#a2a5ad;margin-top:10px">realtime not connected</div><div class="n">${esc(S.reason||"GA4 credentials are only in the GitHub workflow; the next scheduled run fills this in.")}</div></div>`);
+  }
+
+  // ---- today
+  parts.push(`<div class="eyebrow">Today so far</div>`);
+  const T = S.today||{};
+  const hourNow = T.hour_now!=null ? T.hour_now : new Date().getHours();
+  let todayTiles = "";
+  if(S.available && T.today){
+    // honest comparison: same weekday last week, through the SAME hour
+    const hb = T.by_hour||{}, tt = hb.today||[], lw = hb.same_day_last_week||[];
+    const lwSoFar = lw.slice(0, hourNow+1).reduce((a,b)=>a+b,0);
+    const dow = DOW[new Date(L.today_ny+"T12:00:00").getDay()];
+    todayTiles += tile(fmt(T.today.users), "visitors today", `vs ${fmt(lwSoFar)} last ${dow} by this hour`, delta(T.today.users, lwSoFar, "vs last week, same hour"), "");
+    todayTiles += tile(fmt(T.today.views), "page views today", `${fmt(T.yesterday.views)} all of yesterday`, "", "");
+  } else {
+    todayTiles += stub("visitors today", "GA4"); todayTiles += stub("page views today", "GA4");
+  }
+  todayTiles += G.available ? tile(fmt(G.new_today), "signups today", `${fmt(G.new_7d)} in 7 days · Ghost, the live signup flow`, "", "")
+                            : stub("signups today", G.reason);
+  todayTiles += M.available ? tile(fmt(M.subscribers), "on the newsletter list", `Mailchimp · ${fmt(M.unsubs_7d)} unsubscribed in 7 days`, "", "")
+                            : stub("newsletter list", M.reason);
+  todayTiles += D.available ? tile(D.today.gifts ? money(D.today.amount) : "0", D.today.gifts ? `gifts today (${D.today.gifts})` : "gifts today",
+                                   `${fmt(D.d7.gifts)} gifts · ${money(D.d7.amount)} in 7 days`, "", "")
+                            : stub("gifts today", D.reason);
+  todayTiles += P.available ? tile(fmt(P.count_48h), "press mentions, 48h", "Google News, \"Vital City\" + NYC", "", "")
+                            : stub("press mentions", P.reason);
+  parts.push(`<div class="tiles">${todayTiles}</div>`);
+
+  // today hour-by-hour vs last week
+  if(S.available && T.by_hour){
+    const tt = T.by_hour.today||[], lw = T.by_hour.same_day_last_week||[];
+    const ser = Array.from({length:24},(_,h)=>({v: h<=hourNow ? (tt[h]||0) : 0, cmp: lw[h]||0, lbl: (h%6===0)? (h===0?"12a":h<12?h+"a":h===12?"12p":(h-12)+"p") : null, hi:h===hourNow}));
+    parts.push(`<div class="chart"><h3>Today, hour by hour</h3><div class="cap">Visitors per hour (orange = this hour). Grey = the same weekday last week.</div>${barsSVG(ser,{h:110})}</div>`);
+  }
+
+  // ---- latest output
+  parts.push(`<div class="eyebrow">Latest</div><div class="rows">`);
+  if(G.available && G.latest_post){
+    const lp = G.latest_post, when = lp.published_at ? new Date(lp.published_at) : null;
+    parts.push(`<div class="row"><div class="rk" style="font-size:11px;font-family:var(--vc-sans);color:var(--vc-charcoal);font-weight:800;text-transform:uppercase;letter-spacing:.06em;min-width:56px">Post</div>
+      <div class="rv"><a href="${esc(lp.url)}" target="_blank" rel="noopener">${esc(lp.title)}</a><div class="rn">${when? esc(ago(when)) : ""}${G.posts_today? ` · ${G.posts_today} published today`:""}</div></div></div>`);
+  }
+  if(M.available && M.last_campaign){
+    const c = M.last_campaign, when = c.sent ? new Date(c.sent) : null;
+    parts.push(`<div class="row"><div class="rk" style="font-size:11px;font-family:var(--vc-sans);color:var(--vc-charcoal);font-weight:800;text-transform:uppercase;letter-spacing:.06em;min-width:56px">Email</div>
+      <div class="rv">${esc(c.subject||"(no subject)")}<div class="rn">${when?esc(ago(when)):""} · ${fmt(c.emails)} sent · ${c.open_rate!=null?Math.round(c.open_rate*100)+"% open":""} · ${c.click_rate!=null?(c.click_rate*100).toFixed(1)+"% click":""}</div></div></div>`);
+  }
+  if(P.available && (P.items||[]).length){
+    P.items.slice(0,3).forEach(it=>{
+      parts.push(`<div class="row"><div class="rk" style="font-size:11px;font-family:var(--vc-sans);color:var(--vc-charcoal);font-weight:800;text-transform:uppercase;letter-spacing:.06em;min-width:56px">Press</div>
+        <div class="rv"><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc((it.title||"").replace(/\s-\s[^-]+$/,""))}</a><div class="rn">${esc(it.source||"")}</div></div></div>`);
+    });
+  }
+  parts.push(`</div>`);
+  parts.push(`<div class="note">Live data refreshes every 20 minutes (hourly overnight). "Today" is the New York calendar day. Visitor figures here are Google Analytics; the full dashboard's 30-day tile uses Ghost's own analytics, which runs higher — the two are not the same instrument.</div>`);
+  $("#scr-now").innerHTML = parts.join("");
+}
+
+// ----------------------------------------------------------------- WEEK
+function renderWeek(){
+  const L = LIVE, S = L.site||{}, G = L.ghost||{}, M = L.list||{}, D = L.giving||{}, SO = L.social||{};
+  const parts = [];
+  parts.push(`<div class="eyebrow">This week vs last</div>`);
+  // traffic 7 vs prior 7 (daily bars with ghost comparison)
+  if(S.available && (S.daily||[]).length>=14){
+    const d = S.daily, last7 = d.slice(-7), prev7 = d.slice(-14,-7);
+    const u7 = sumLast(d,"users",7), up = sumPrev(d,"users",7), v7 = sumLast(d,"views",7), vp = sumPrev(d,"views",7);
+    parts.push(`<div class="tiles">${tile(fmt(u7),"visitors, last 7 days",`${fmt(up)} the 7 before`,delta(u7,up,"week on week"))}${tile(fmt(v7),"page views, last 7 days",`${fmt(vp)} the 7 before`,delta(v7,vp,"week on week"))}</div>`);
+    const ser = last7.map((r,i)=>({v:r.users, cmp:prev7[i]?prev7[i].users:0, lbl:dayLabel(r.d), hi:i===6}));
+    parts.push(`<div class="chart"><h3>Visitors by day</h3><div class="cap">Last 7 days (blue, today in orange and still counting) over the 7 before (grey).</div>${barsSVG(ser,{h:120,values:true})}</div>`);
+  } else if(!S.available){
+    parts.push(`<div class="tiles">${stub("visitors, last 7 days","GA4")}${stub("page views, last 7 days","GA4")}</div>`);
+  }
+  // list
+  if(G.available){
+    const gd = G.new_by_day||[], g7 = gd.slice(-7), gPrev = sumPrev(gd,"n",7);
+    const unsubBy = {}; (M.by_day||[]).forEach(r=>{ unsubBy[r.d]=r.unsubs; });
+    const u7 = M.available ? M.unsubs_7d : null;
+    parts.push(`<div class="tiles three">${tile(fmt(G.new_7d),"signups, 7 days",`${fmt(gPrev)} the week before`,delta(G.new_7d,gPrev,""))}${tile(u7==null?"—":fmt(u7),"unsubscribes, 7 days",u7==null?"Mailchimp offline":"")}${tile(u7==null?"—":fmt((G.new_7d||0)-u7),"net, 7 days","signups minus unsubs")}</div>`);
+    parts.push(`<div class="chart"><h3>Signups by day</h3><div class="cap">New Ghost members (green). Unsubscribes from Mailchimp as the grey ghost bar.</div>${barsSVG(g7.map((r,i)=>({v:r.n,cmp:unsubBy[r.d]||0,lbl:dayLabel(r.d),hi:i===6})),{h:110,values:true,color:"var(--vc-green)"})}</div>`);
+  }
+  // posts this week with views
+  parts.push(`<div class="eyebrow">Published this week</div>`);
+  if(G.available && (G.posts_7d||[]).length){
+    const views = {}; (S.top_week||[]).forEach(p=>{ views[p.path.replace(/\/$/,"").split("/").pop()] = p; });
+    const maxv = Math.max(1, ...(G.posts_7d.map(p=>(views[p.slug]||{}).views||0)));
+    parts.push(`<div class="rows">` + G.posts_7d.map(p=>{
+      const v = views[p.slug]; const when = p.published_at? new Date(p.published_at):null;
+      return `<div class="row"><div class="rk">${v?fmt(v.views):"—"}<small>views</small></div><div class="rv"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+        <div class="rn">${esc((p.authors||[]).join(", "))}${when?" · "+esc(DOW[when.getDay()]):""}${p.visibility && p.visibility!=="public" ? " · members only":""}</div>
+        ${v?`<div class="bar" style="width:${Math.max(2,Math.round(v.views/maxv*100))}%"></div>`:""}</div></div>`;
+    }).join("") + `</div>`);
+    if(!S.available) parts.push(`<div class="note">View counts come from GA4 and appear once the workflow has run with its credentials.</div>`);
+  } else {
+    parts.push(`<div class="empty">${G.available ? "Nothing published in the last 7 days." : "Ghost not reachable: "+esc(G.reason||"")}</div>`);
+  }
+  // most read this week (any age)
+  if(S.available && (S.top_week||[]).length){
+    const maxv = S.top_week[0].views||1;
+    parts.push(`<div class="eyebrow">Most read this week</div><div class="rows">` + S.top_week.slice(0,10).map(p=>
+      `<div class="row"><div class="rk">${fmt(p.views)}<small>views</small></div><div class="rv"><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" rel="noopener">${esc((p.title||p.path).replace(/\s*[—|-]\s*Vital City\s*$/,""))}</a><div class="bar" style="width:${Math.max(2,Math.round(p.views/maxv*100))}%"></div></div></div>`).join("") + `</div>`);
+  }
+  // giving + social
+  parts.push(`<div class="eyebrow">Also this week</div><div class="tiles">`);
+  parts.push(D.available ? tile(money(D.d7.amount), `online gifts, 7 days (${fmt(D.d7.gifts)})`, `${money(D.d28.amount)} across ${fmt(D.d28.gifts)} gifts in 28 days`) : stub("online gifts","Donorbox"));
+  parts.push(G.available ? tile(fmt(G.new_7d), "new Ghost members, 7 days", `${fmt(G.new_28d)} in 28 days`) : stub("new members","Ghost"));
+  const bs = SO.bluesky||{}, li = SO.linkedin||{};
+  parts.push(bs.available ? tile(fmt(bs.followers), "Bluesky followers", bs.d7!=null?`+${fmt(bs.followers-bs.d7)} in 7 days`:"", "") : stub("Bluesky","public API"));
+  parts.push(li.available ? tile(fmt(li.followers), "LinkedIn followers", li.d7!=null?`+${fmt(li.followers-li.d7)} in 7 days`:(li.as_of?`as of ${li.as_of}`:""), "") : stub("LinkedIn","page scrape blocked"));
+  parts.push(`</div>`);
+  const man = SO.manual||{};
+  if(Object.keys(man).length) parts.push(`<div class="note">Hand-refreshed (login-walled to scrapers): ${Object.entries(man).map(([k,v])=>`${k} ${fmt(v.followers)} (${v.as_of})`).join(" · ")}.</div>`);
+  $("#scr-week").innerHTML = parts.join("");
+}
+
+// ----------------------------------------------------------------- TRENDS (28d + the long view)
+function renderTrends(){
+  const L = LIVE, S = L.site||{}, G = L.ghost||{}, M = L.list||{}, D = L.giving||{};
+  const parts = [];
+  parts.push(`<div class="eyebrow">Last 28 days</div>`);
+  if(S.available && (S.daily||[]).length){
+    const d = S.daily, vals = d.map(r=>r.users), lab = d.map((r,i)=> i%7===0||i===d.length-1 ? shortDate(r.d) : "");
+    const u28 = vals.reduce((a,b)=>a+b,0), first14 = vals.slice(0,14).reduce((a,b)=>a+b,0), last14 = vals.slice(14).reduce((a,b)=>a+b,0);
+    parts.push(`<div class="tiles">${tile(fmt(u28),"visitors, 28 days",`${fmt(Math.round(u28/28))} a day on average`)}${tile(fmt(last14),"last 14 days",`${fmt(first14)} the 14 before`,delta(last14,first14,""))}</div>`);
+    parts.push(`<div class="chart"><h3>Daily visitors</h3><div class="cap">Dashed line is the 7-day average. Today is partial.</div>${lineSVG(vals,{h:120,avg:movAvg(vals,7),labels:lab})}</div>`);
+  }
+  if(G.available && (G.new_by_day||[]).length){
+    const bd = G.new_by_day, lab = bd.map((r,i)=> i%7===0||i===bd.length-1 ? shortDate(r.d) : "");
+    const unsubBy = {}; (M.by_day||[]).forEach(r=>{ unsubBy[r.d]=r.unsubs; });
+    const u28 = M.available ? M.unsubs_28d : null;
+    parts.push(`<div class="tiles three">${tile(fmt(G.new_28d),"signups, 28d","Ghost")}${tile(u28==null?"—":fmt(u28),"unsubscribes, 28d","Mailchimp")}${tile(u28==null?"—":fmt((G.new_28d||0)-u28),"net, 28d","")}</div>`);
+    parts.push(`<div class="chart"><h3>Signups by day</h3><div class="cap">New Ghost members (green); Mailchimp unsubscribes as the grey ghost bar. Ghost is the live flow — it syncs to the Mailchimp list on Thursdays, which is why Mailchimp's own daily opt-ins bunch up.</div>${barsSVG(bd.map((r,i)=>({v:r.n,cmp:unsubBy[r.d]||0,lbl:lab[i]||null})),{h:110,color:"var(--vc-green)"})}</div>`);
+  }
+  if(D.available && (D.by_day||[]).length){
+    const bd = D.by_day, lab = bd.map((r,i)=> i%7===0||i===bd.length-1 ? shortDate(r.d) : "");
+    parts.push(`<div class="chart"><h3>Online gifts by day</h3><div class="cap">${money(D.d28.amount)} across ${fmt(D.d28.gifts)} gifts in 28 days (Donorbox only — checks, wires and DAF grants do not appear).</div>${barsSVG(bd.map((r,i)=>({v:Math.round(r.amount),lbl:lab[i]||null})),{h:100,color:"var(--vc-gold)"})}</div>`);
+  }
+  if(S.available && (S.top_28d||[]).length){
+    const maxv = S.top_28d[0].views||1;
+    parts.push(`<div class="eyebrow">Most read, 28 days</div><div class="rows">` + S.top_28d.slice(0,12).map(p=>
+      `<div class="row"><div class="rk">${fmt(p.views)}<small>views</small></div><div class="rv"><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" rel="noopener">${esc((p.title||p.path).replace(/\s*[—|-]\s*Vital City\s*$/,""))}</a><div class="bar" style="width:${Math.max(2,Math.round(p.views/maxv*100))}%"></div></div></div>`).join("") + `</div>`);
+  }
+
+  // ---- the long view, from the deep dashboard data (twice daily)
+  parts.push(`<div class="eyebrow">The long view</div>`);
+  if(DEEP){
+    const ga = DEEP.ga4||{}, mc = DEEP.mailchimp||{}, gen = DEEP.generated_at ? new Date(DEEP.generated_at) : null;
+    parts.push(`<div class="sub">From the full dashboard's data, rebuilt twice a day${gen?` (last ${esc(ago(gen))})`:""}.</div>`);
+    const tw = (ga.traffic_weekly||[]).slice(-52);
+    if(tw.length){
+      // drop the current partial week from the line so it does not read as a collapse
+      const full = tw.slice(0,-1), vals = full.map(r=>r.visits), lab = full.map((r,i)=> i%13===0||i===full.length-1 ? shortDate(r.wk) : "");
+      const last4 = vals.slice(-4).reduce((a,b)=>a+b,0)/4, prev4 = vals.slice(-8,-4).reduce((a,b)=>a+b,0)/4;
+      parts.push(`<div class="chart"><h3>Weekly visitors, last year</h3><div class="cap">GA4, full weeks only (the week in progress is left off). Latest full week: ${fmt(vals[vals.length-1])}.</div>${lineSVG(vals,{h:120,avg:movAvg(vals,4),labels:lab})}
+        <div class="legend"><span><i style="background:var(--vc-cerulean)"></i>weekly visitors</span><span><i style="background:var(--vc-black)"></i>4-week average ${delta(last4,prev4,"vs prior 4")}</span></div></div>`);
+    }
+    const ms = (mc.monthly_signups||[]).slice(-24);
+    if(ms.length){
+      const vals = ms.map(r=>r.cum_subs), lab = ms.map((r,i)=> i%6===0||i===ms.length-1 ? r.month.slice(2).replace("-","/") : "");
+      parts.push(`<div class="chart"><h3>Newsletter list, two years</h3><div class="cap">Subscribers at month end. Now ${fmt(vals[vals.length-1])}; ${fmt(vals[Math.max(0,vals.length-13)])} a year ago.</div>${lineSVG(vals,{h:110,labels:lab,color:"var(--vc-green)",fill:"rgba(87,170,74,.12)"})}</div>`);
+      parts.push(`<div class="chart"><h3>New signups by month</h3><div class="cap">Mailchimp opt-ins per month; the current month is partial.</div>${barsSVG(ms.map((r,i)=>({v:r.new_signups,lbl:lab[i]||null,hi:i===ms.length-1})),{h:100,color:"var(--vc-green)"})}</div>`);
+    }
+    const by = ((ga.by_year||{}).years||[]);
+    if(by.length){
+      parts.push(`<div class="tiles three">${by.slice(-3).map(y=>tile(fmt(y.users), `visitors in ${y.year}`, y.year===new Date().getFullYear()?"so far":"")).join("")}</div>`);
+    }
+  } else {
+    parts.push(`<div class="empty">Deep data not loaded — open the full dashboard once on this device, or check the network.</div>`);
+  }
+  $("#scr-trends").innerHTML = parts.join("");
+}
+
+// ----------------------------------------------------------------- DEEPER
+function renderDeeper(){
+  const parts = [];
+  parts.push(`<div class="eyebrow">Deeper analysis</div><h2 class="head">The full dashboard, by section.</h2><div class="sub">Everything below is rebuilt twice a day by the nightly job and opens in the growth dashboard. Same passphrase, already unlocked.</div>`);
+  const mc = (DEEP||{}).mailchimp||{}, gt = (DEEP||{}).ghost_traffic||{}, db = (DEEP||{}).donorbox||{}, sc = (DEEP||{}).search_console||{}, ga=(DEEP||{}).ga4||{};
+  const cards = [
+    ["At a glance", "sec-glance", "The headline numbers in one strip", DEEP ? `${fmt(mc.total_subscribers)} subscribers · ${fmt(gt.visitors_30d)} visitors in 30 days (Ghost analytics)` : ""],
+    ["Growing the list", "sec-growth", "Where signups come from, and what converts", DEEP ? `${fmt((mc.monthly_signups||[]).slice(-1)[0]?.new_signups)} signups so far this month · avg open ${mc.avg_open_rate!=null?mc.avg_open_rate+"%":"—"}` : ""],
+    ["Donors & influence", "sec-donors", "Gifts, recurring donors, notable readers", DEEP ? `${money((db.windows||{}).ytd?.amount)} online giving year to date · ${fmt((db.windows||{}).ytd?.donors)} donors` : ""],
+    ["The content engine", "sec-content", "What gets read, how long, and by whom", DEEP ? `${fmt((ga.by_year||{}).alltime?.users)} all-time visitors · reader benchmarks by piece` : ""],
+    ["List health", "sec-health", "Unsubscribes, cleaning, the bot wave", ""],
+    ["Reach & traffic", "sec-reach", "Search, social, press and returning readers", DEEP && sc.available ? `Search Console connected · returning share ${((ga.returning||{}).d30||{}).returning_pct||"—"}%` : ""],
+  ];
+  parts.push(`<div class="cards">` + cards.map(([t,id,s,kp])=>`<a class="card" href="${DASH}#${id}"><div class="ck">${esc(s)}</div><div class="ct">${esc(t)}</div>${kp?`<div class="cs">${esc(kp)}</div>`:""}<div class="go">→</div></a>`).join("") + `</div>`);
+  parts.push(`<div class="eyebrow">Elsewhere in the suite</div><div class="cards">
+    <a class="card" href="../../prospects/"><div class="ck">Fundraising</div><div class="ct">Prospects</div><div class="cs">Giving, grant landscape, pipeline, the funder deck.</div><div class="go">→</div></a>
+    <a class="card" href="../../network/"><div class="ck">People</div><div class="ct">Contacts</div><div class="cs">Every reader, donor and contributor, searchable.</div><div class="go">→</div></a>
+    <a class="card" href="../../catalogue-analysis/"><div class="ck">Editorial</div><div class="ct">The catalogue, analyzed</div><div class="cs">Beats, formats, contributors across every piece.</div><div class="go">→</div></a>
+    <a class="card" href="../about.html"><div class="ck">Method</div><div class="ct">How it works</div><div class="cs">Sources, definitions and the caveats behind every number.</div><div class="go">→</div></a>
+  </div>`);
+  parts.push(`<div class="caveat"><b>Two instruments, two numbers.</b> This app's visitor counts are Google Analytics. The dashboard's 30-day visitor tile is Ghost's own analytics, which counts more generously. Neither is wrong; quote one and say which.</div>`);
+  parts.push(`<div class="note">Built with AI assistance. Every figure comes from a primary system (GA4, Ghost, Mailchimp, Donorbox, public follower counts, Google News); verify before it goes anywhere external.</div>`);
+  $("#scr-deeper").innerHTML = parts.join("");
+}
+
+function render(){
+  if(!LIVE) return;
+  freshness();
+  try{ renderNow(); }catch(e){ console.error(e); $("#scr-now").innerHTML = `<div class="empty">Render error: ${esc(e.message)}</div>`; }
+  try{ renderWeek(); }catch(e){ console.error(e); $("#scr-week").innerHTML = `<div class="empty">Render error: ${esc(e.message)}</div>`; }
+  try{ renderTrends(); }catch(e){ console.error(e); $("#scr-trends").innerHTML = `<div class="empty">Render error: ${esc(e.message)}</div>`; }
+  try{ renderDeeper(); }catch(e){ console.error(e); }
+}
+setInterval(freshness, 30000);
+
+// PWA
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>

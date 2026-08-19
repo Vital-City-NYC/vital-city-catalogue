@@ -16,3 +16,4 @@ launchd.network.err.log
 # Private contact CRM — never publish. Local-only cross-analysis layer.
 private/
 *.xlsx
+growth/live/live.enc
