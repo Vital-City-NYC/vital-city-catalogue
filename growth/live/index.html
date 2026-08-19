@@ -70,7 +70,8 @@
   .hero .big{font-family:var(--vc-serif);font-weight:700;font-size:72px;line-height:.95;letter-spacing:-.02em;margin:6px 0 4px}
   .hero .big small{font-size:22px;color:#a2a5ad;letter-spacing:0;margin-left:8px;font-family:var(--vc-sans);font-weight:400}
   .hero .n{font-size:12px;color:#a2a5ad}
-  .hero svg{position:absolute;right:14px;bottom:12px;width:44%;height:54px;opacity:.95}
+  .hero .spark{margin:8px 0 2px} .hero .spark svg{display:block;width:100%;height:44px;opacity:.95}
+  .hero .spark .cap{font-size:10px;color:#8a8d94;margin-top:2px;letter-spacing:.04em}
   .pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--vc-green);margin-right:6px;box-shadow:0 0 0 0 rgba(87,170,74,.6);animation:pulse 2s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(87,170,74,.55)}70%{box-shadow:0 0 0 9px rgba(87,170,74,0)}100%{box-shadow:0 0 0 0 rgba(87,170,74,0)}}
 
@@ -323,7 +324,7 @@ function renderNow(){
       <div class="lbl"><span class="pulse"></span>On the site right now</div>
       <div class="big">${fmt(S.now.active_users)}<small>people, last 30 min</small></div>
       <div class="n">Google Analytics realtime · as of ${ago(liveAt)}</div>
-      ${spark}
+      <div class="spark">${spark}<div class="cap">active users per minute, last 30 minutes</div></div>
     </div>`);
     const pages = (S.now.pages||[]).filter(p=>p.active>0).slice(0,8);
     if(pages.length){
