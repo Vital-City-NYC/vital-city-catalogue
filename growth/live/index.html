@@ -392,8 +392,11 @@ function renderWeek(){
   // traffic 7 vs prior 7 (daily bars with ghost comparison)
   if(S.available && (S.daily||[]).length>=14){
     const d = S.daily, last7 = d.slice(-7), prev7 = d.slice(-14,-7);
-    const u7 = sumLast(d,"users",7), up = sumPrev(d,"users",7), v7 = sumLast(d,"views",7), vp = sumPrev(d,"views",7);
-    parts.push(`<div class="tiles">${tile(fmt(u7),"visitors, last 7 days",`${fmt(up)} the 7 before`,delta(u7,up,"week on week"))}${tile(fmt(v7),"page views, last 7 days",`${fmt(vp)} the 7 before`,delta(v7,vp,"week on week"))}</div>`);
+    // tiles: seven COMPLETE days (yesterday back) vs the seven before — today
+    // is partial and would bias a week-on-week read downward every morning
+    const done = d.slice(0,-1);
+    const u7 = sumLast(done,"users",7), up = sumPrev(done,"users",7), v7 = sumLast(done,"views",7), vp = sumPrev(done,"views",7);
+    parts.push(`<div class="tiles">${tile(fmt(u7),"visitors, last 7 full days",`${fmt(up)} the 7 before`,delta(u7,up,"week on week"))}${tile(fmt(v7),"page views, last 7 full days",`${fmt(vp)} the 7 before`,delta(v7,vp,"week on week"))}</div>`);
     const ser = last7.map((r,i)=>({v:r.users, cmp:prev7[i]?prev7[i].users:0, lbl:dayLabel(r.d), hi:i===6}));
     parts.push(`<div class="chart"><h3>Visitors by day</h3><div class="cap">Last 7 days (blue, today in orange and still counting) over the 7 before (grey).</div>${barsSVG(ser,{h:120,values:true})}</div>`);
   } else if(!S.available){
@@ -401,10 +404,10 @@ function renderWeek(){
   }
   // list
   if(G.available){
-    const gd = G.new_by_day||[], g7 = gd.slice(-7), gPrev = sumPrev(gd,"n",7);
+    const gd = G.new_by_day||[], g7 = gd.slice(-7), gDone = gd.slice(0,-1), g7n = sumLast(gDone,"n",7), gPrev = sumPrev(gDone,"n",7);
     const unsubBy = {}; (M.by_day||[]).forEach(r=>{ unsubBy[r.d]=r.unsubs; });
     const u7 = M.available ? M.unsubs_7d : null;
-    parts.push(`<div class="tiles three">${tile(fmt(G.new_7d),"signups, 7 days",`${fmt(gPrev)} the week before`,delta(G.new_7d,gPrev,""))}${tile(u7==null?"—":fmt(u7),"unsubscribes, 7 days",u7==null?"Mailchimp offline":"")}${tile(u7==null?"—":fmt((G.new_7d||0)-u7),"net, 7 days","signups minus unsubs")}</div>`);
+    parts.push(`<div class="tiles three">${tile(fmt(g7n),"signups, 7 full days",`${fmt(gPrev)} the week before · ${fmt(G.new_today)} so far today`,delta(g7n,gPrev,""))}${tile(u7==null?"—":fmt(u7),"unsubscribes, 7 days",u7==null?"Mailchimp offline":"")}${tile(u7==null?"—":fmt((G.new_7d||0)-u7),"net, 7 days","signups minus unsubs")}</div>`);
     parts.push(`<div class="chart"><h3>Signups by day</h3><div class="cap">New Ghost members (green). Unsubscribes from Mailchimp as the grey ghost bar.</div>${barsSVG(g7.map((r,i)=>({v:r.n,cmp:unsubBy[r.d]||0,lbl:dayLabel(r.d),hi:i===6})),{h:110,values:true,color:"var(--vc-green)"})}</div>`);
   }
   // posts this week with views
