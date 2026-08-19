@@ -108,6 +108,11 @@
   .ax{font-size:9px;fill:var(--vc-charcoal);font-family:var(--vc-sans)}
   .vl{font-size:9.5px;fill:var(--vc-black);font-family:var(--vc-serif);font-weight:700}
 
+  .readme{border-left:3px solid var(--vc-gold);background:#fdf8ec;padding:8px 12px 8px;margin:0 0 12px;font-size:11.5px;line-height:1.45}
+  .readme summary{cursor:pointer;font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);list-style:none;display:flex;justify-content:space-between}
+  .readme summary::-webkit-details-marker{display:none}
+  .readme summary::after{content:"show";color:var(--vc-cerulean)} .readme[open] summary::after{content:"hide"}
+  .readme ul{margin:6px 0 0;padding-left:16px} .readme li{margin-bottom:4px}
   .caveat{border-left:3px solid var(--vc-gold);background:#fdf8ec;padding:9px 12px;font-size:11.5px;line-height:1.45;margin:10px 0}
   .note{font-size:11px;color:var(--vc-charcoal);line-height:1.5;margin:6px 0 14px}
   .pill{display:inline-block;background:var(--vc-paper2);border-radius:3px;padding:2px 7px;font-size:10.5px;font-weight:700;margin:0 4px 4px 0}
@@ -305,6 +310,12 @@ function freshness(){
 function renderNow(){
   const L = LIVE, S = L.site||{}, G = L.ghost||{}, M = L.list||{}, D = L.giving||{}, P = L.press||{};
   const parts = [];
+  parts.push(`<details class="readme" id="readme"${localStorage.getItem("vc_live_readme")==="closed"?"":" open"}><summary>Before you read these numbers</summary><ul>
+    <li><b>"Today" trails the clock.</b> Google Analytics processes hourly data with a lag of several hours; only the "right now" count is current. Today is compared with last week through the last processed hour, not through now.</li>
+    <li><b>Signups are Ghost, not Mailchimp.</b> Ghost syncs to the Mailchimp list on Thursdays, so Mailchimp's daily signups bunch there. The list total is Mailchimp.</li>
+    <li><b>Visitors here are GA4.</b> The full dashboard's 30-day tile is Ghost analytics, which runs about a quarter higher. Quote one and say which.</li>
+    <li><b>Small numbers move.</b> Daily gifts and signups are single digits on a normal day; a one-day swing is noise until it repeats.</li>
+  </ul></details>`);
   // ---- hero: on the site right now
   if(S.available && S.now){
     const spark = lineSVG(S.now.by_minute||[], {h:54, color:"var(--vc-orange)", fill:"rgba(255,124,83,.18)"});
@@ -380,7 +391,7 @@ function renderNow(){
     });
   }
   parts.push(`</div>`);
-  parts.push(`<div class="note">Live data refreshes every 20 minutes (hourly overnight). "Today" is the New York calendar day. Visitor figures here are Google Analytics; the full dashboard's 30-day tile uses Ghost's own analytics, which runs higher — the two are not the same instrument.</div>`);
+  parts.push(`<div class="note">Refreshes every 20 minutes (hourly overnight). "Today" is the New York calendar day.</div>`);
   $("#scr-now").innerHTML = parts.join("");
 }
 
@@ -535,6 +546,7 @@ function render(){
   try{ renderDeeper(); }catch(e){ console.error(e); }
 }
 setInterval(freshness, 30000);
+document.addEventListener("toggle", e=>{ if(e.target && e.target.id==="readme") try{ localStorage.setItem("vc_live_readme", e.target.open?"open":"closed"); }catch{} }, true);
 
 // PWA
 if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
