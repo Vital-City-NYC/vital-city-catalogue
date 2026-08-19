@@ -1,34 +1,34 @@
 {
   "meta": {
-    "generated_at": "2026-08-18T23:09:09.997752+00:00",
+    "generated_at": "2026-08-19T11:12:02.434454+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 890,
-    "total_authors": 492,
+    "total_posts": 891,
+    "total_authors": 493,
     "total_issues": 29,
     "total_topics": 214,
     "date_range": [
       "2021-09-15",
-      "2026-08-12"
+      "2026-08-19"
     ],
     "first_run": false,
     "new_article_count": 1,
     "new_articles": [
       {
-        "title": "The Research on Street Lighting and Crime",
-        "url": "https://www.vitalcitynyc.org/rubber-meets-road-evidence-browser/",
-        "published_date": "2026-05-20",
+        "title": "Zohran Mamdani's Promise and the Reality of Supermarket Prices",
+        "url": "https://www.vitalcitynyc.org/mamdani-city-run-grocery-stores-economic-challenges/",
+        "published_date": "2026-08-19",
         "primary_author": null
       }
     ]
   },
-  "total_pieces": 890,
+  "total_pieces": 891,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 178
+    "2026": 179
   },
   "by_month": {
     "2021-09": 1,
@@ -84,16 +84,16 @@
     "2026-05": 23,
     "2026-06": 44,
     "2026-07": 22,
-    "2026-08": 8
+    "2026-08": 9
   },
   "by_type": [
     [
       "opinion/commentary",
-      718
+      720
     ],
     [
       "q&a",
-      58
+      57
     ],
     [
       "data analysis",
@@ -131,7 +131,7 @@
     ],
     [
       "City Government",
-      136
+      137
     ],
     [
       "Government Operations",
@@ -167,7 +167,7 @@
     ],
     [
       "Economics",
-      53
+      54
     ],
     [
       "Jails",
@@ -226,13 +226,13 @@
   "by_credential_pieces": [
     [
       "Unknown / no bio",
-      890
+      891
     ]
   ],
   "by_credential_authors": [
     [
       "Academic",
-      153
+      154
     ],
     [
       "Other / unclassified",
@@ -308,7 +308,7 @@
       "2023": 4,
       "2024": 20,
       "2025": 54,
-      "2026": 58
+      "2026": 59
     },
     "Government Operations": {
       "2022": 1,
@@ -346,17 +346,17 @@
     }
   },
   "wc_stats": {
-    "n": 880,
-    "median": 1616,
-    "mean": 1893,
-    "p90": 2841,
+    "n": 881,
+    "median": 1618,
+    "mean": 1894,
+    "p90": 2838,
     "max": 30332,
     "p10": 906,
-    "p25": 1269,
-    "p75": 2135,
+    "p25": 1270,
+    "p75": 2133,
     "p95": 3849,
     "no_count": 10,
-    "core_1000_2499": 644,
+    "core_1000_2499": 645,
     "under_500": 43,
     "over_5000": 24
   },
@@ -371,7 +371,7 @@
     ],
     [
       "1,000-1,999",
-      514
+      515
     ],
     [
       "2,000-2,999",
@@ -418,7 +418,7 @@
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 141
+        "n": 140
       },
       {
         "floor": 1500,
@@ -428,7 +428,7 @@
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 105
+        "n": 107
       },
       {
         "floor": 2000,
@@ -502,15 +502,15 @@
     },
     {
       "year": "2026",
-      "n": 173,
-      "p25": 1258,
-      "median": 1639,
-      "p75": 2384,
+      "n": 174,
+      "p25": 1263,
+      "median": 1687,
+      "p75": 2382,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 755,
+    "1": 756,
     "2": 106,
     "3": 26,
     "4": 1,
@@ -520,7 +520,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 96,
+      "posts": 95,
       "credential": "Vital City (institutional)"
     },
     {
@@ -599,12 +599,12 @@
       "credential": "Business / private sector"
     },
     {
-      "name": "Paul Reeping",
-      "posts": 7,
+      "name": "John K. Roman",
+      "posts": 8,
       "credential": "Think tank / research institute"
     },
     {
-      "name": "John K. Roman",
+      "name": "Paul Reeping",
       "posts": 7,
       "credential": "Think tank / research institute"
     },
@@ -669,54 +669,54 @@
       },
       {
         "year": "2026",
-        "weeks": 32.0,
-        "pieces": 178,
-        "outside_issues": 129,
-        "per_week_all": 5.56,
-        "per_week_outside_issues": 4.03,
+        "weeks": 33.0,
+        "pieces": 179,
+        "outside_issues": 130,
+        "per_week_all": 5.42,
+        "per_week_outside_issues": 3.94,
         "partial": true
       }
     ],
-    "total_weeks": 256.0,
-    "all_time_per_week": 3.48,
+    "total_weeks": 257.0,
+    "all_time_per_week": 3.47,
     "all_time_per_week_outside_issues": 1.6,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.03,
-    "current_per_week_all": 5.56,
+    "current_per_week_outside_issues": 3.94,
+    "current_per_week_all": 5.42,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 481,
       "published_away_from_drop": 61,
       "share_of_issue_pieces": 12.7,
-      "current_year_strict": 4.03,
-      "current_year_loose": 4.19,
+      "current_year_strict": 3.94,
+      "current_year_loose": 4.09,
       "all_time_strict": 1.6,
       "all_time_loose": 1.83,
-      "all_time_all": 3.48
+      "all_time_all": 3.47
     }
   },
   "rhythm": {
-    "n_dated": 890,
+    "n_dated": 891,
     "by_weekday": [
       {
         "day": "Mon",
         "pieces": 53,
-        "share": 6.0
+        "share": 5.9
       },
       {
         "day": "Tue",
         "pieces": 158,
-        "share": 17.8
+        "share": 17.7
       },
       {
         "day": "Wed",
-        "pieces": 428,
+        "pieces": 429,
         "share": 48.1
       },
       {
         "day": "Thu",
         "pieces": 174,
-        "share": 19.6
+        "share": 19.5
       },
       {
         "day": "Fri",
@@ -791,9 +791,9 @@
       {
         "month": "August",
         "abbr": "Aug",
-        "pieces": 33,
+        "pieces": 34,
         "occurrences": 5,
-        "per_occurrence": 6.6
+        "per_occurrence": 6.8
       },
       {
         "month": "September",

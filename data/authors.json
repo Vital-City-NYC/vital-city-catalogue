@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 96,
+    "post_count": 95,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -50,7 +50,6 @@
       "nyc-economy-data-story",
       "nyc-housing-permits-fast-track-construction-mamdani",
       "nyc-mamdani-coge-government-efficiency-ballot-reform-recommendations",
-      "nypd-crime-strategy-questions-michael-lipetri",
       "our-advice-to-the-new-york-times-about-a-vexing-editorial-decision",
       "predictability-begets-productivity",
       "questions-answers-trump-noem-dhs-ice",
@@ -533,6 +532,24 @@
     "website": null
   },
   {
+    "name": "John K. Roman",
+    "post_count": 8,
+    "slugs": [
+      "a-tale-of-two-divergent-paths",
+      "balancing-deterrence-and-prevention-the-role-of-research",
+      "forecasting-new-york-city-crime-in-2024",
+      "how-prevention-reduced-crime-suggestions-analysis",
+      "the-golden-age-of-crime-reduction-is-now",
+      "toward-a-new-discipline-macro-criminology",
+      "twenty-strategies-for-reducing-crime-in-cities"
+    ],
+    "slug": "roman-john-k",
+    "bio": "is a senior fellow at NORC at the University of Chicago. He also serves as the co-Director of the National Prevention Science Coalition.",
+    "url": "https://www.vitalcitynyc.org/author/roman-john-k/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Paul Reeping",
     "post_count": 7,
     "slugs": [
@@ -547,24 +564,6 @@
     "slug": "reeping-paul",
     "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
     "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "John K. Roman",
-    "post_count": 7,
-    "slugs": [
-      "a-tale-of-two-divergent-paths",
-      "balancing-deterrence-and-prevention-the-role-of-research",
-      "forecasting-new-york-city-crime-in-2024",
-      "how-prevention-reduced-crime-suggestions-analysis",
-      "the-golden-age-of-crime-reduction-is-now",
-      "toward-a-new-discipline-macro-criminology",
-      "twenty-strategies-for-reducing-crime-in-cities"
-    ],
-    "slug": "roman-john-k",
-    "bio": "is a senior fellow at NORC at the University of Chicago. He also serves as the co-Director of the National Prevention Science Coalition.",
-    "url": "https://www.vitalcitynyc.org/author/roman-john-k/",
     "twitter": null,
     "website": null
   },
@@ -2338,6 +2337,18 @@
     "website": null
   },
   {
+    "name": "David L. Ortega",
+    "post_count": 1,
+    "slugs": [
+      "mamdani-city-run-grocery-stores-economic-challenges"
+    ],
+    "slug": "ortega-david-l",
+    "bio": "is professor and Noel W. Stuckman Chair in Food Economics and Policy at Michigan State University.",
+    "url": "https://www.vitalcitynyc.org/author/ortega-david-l/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Tahra Hoops",
     "post_count": 1,
     "slugs": [
@@ -3754,18 +3765,6 @@
     "website": null
   },
   {
-    "name": "Samantha J. Simon",
-    "post_count": 1,
-    "slugs": [
-      "the-good-gun-owner"
-    ],
-    "slug": "simon-samantha-j",
-    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Brian DeLay",
     "post_count": 1,
     "slugs": [
@@ -3826,6 +3825,30 @@
     "website": null
   },
   {
+    "name": "Stephen Hargarten",
+    "post_count": 1,
+    "slugs": [
+      "how-modern-bullets-maximize-lethality"
+    ],
+    "slug": "hargarten-stephen",
+    "bio": "is an American emergency physician, gun violence researcher and professor at the Medical College of Wisconsin in Milwaukee.",
+    "url": "https://www.vitalcitynyc.org/author/hargarten-stephen/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Jennifer Tucker",
+    "post_count": 1,
+    "slugs": [
+      "how-modern-bullets-maximize-lethality"
+    ],
+    "slug": "tucker-jennifer",
+    "bio": "is a professor of history at Wesleyan University and the founding director of Wesleyan’s Center for the Study of Guns and Society.",
+    "url": "https://www.vitalcitynyc.org/author/tucker-jennifer/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Charles Buckhanan",
     "post_count": 1,
     "slugs": [
@@ -3862,6 +3885,18 @@
     "website": null
   },
   {
+    "name": "Samantha J. Simon",
+    "post_count": 1,
+    "slugs": [
+      "the-good-gun-owner"
+    ],
+    "slug": "simon-samantha-j",
+    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Kate Daugherty",
     "post_count": 1,
     "slugs": [
@@ -3870,30 +3905,6 @@
     "slug": "daugherty-kate",
     "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
     "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Stephen Hargarten",
-    "post_count": 1,
-    "slugs": [
-      "how-modern-bullets-maximize-lethality"
-    ],
-    "slug": "hargarten-stephen",
-    "bio": "is an American emergency physician, gun violence researcher and professor at the Medical College of Wisconsin in Milwaukee.",
-    "url": "https://www.vitalcitynyc.org/author/hargarten-stephen/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Jennifer Tucker",
-    "post_count": 1,
-    "slugs": [
-      "how-modern-bullets-maximize-lethality"
-    ],
-    "slug": "tucker-jennifer",
-    "bio": "is a professor of history at Wesleyan University and the founding director of Wesleyan’s Center for the Study of Guns and Society.",
-    "url": "https://www.vitalcitynyc.org/author/tucker-jennifer/",
     "twitter": null,
     "website": null
   },
