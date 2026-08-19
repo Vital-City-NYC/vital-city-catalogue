@@ -236,7 +236,7 @@ document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",
 // ----------------------------------------------------------------- helpers
 const fmt = n => (n==null||isNaN(n)) ? "—" : Number(n).toLocaleString("en-US");
 const money = n => (n==null) ? "—" : "$" + Number(n).toLocaleString("en-US", {maximumFractionDigits:0});
-const cleanTitle = t => String(t||"").replace(/^\s*Vital City\s*[|—–-]\s*/i,"").replace(/\s*[|—–-]\s*Vital City\s*$/i,"");
+const cleanTitle = t => /^\s*Vital City\s*$/i.test(String(t||"")) ? "Homepage" : String(t||"").replace(/^\s*Vital City\s*[|—–-]\s*/i,"").replace(/\s*[|—–-]\s*Vital City\s*$/i,"");
 const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const pct = (a,b) => (b>0 && a!=null) ? Math.round((a-b)/b*100) : null;
 const DOW = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -271,7 +271,7 @@ function barsSVG(series, opts={}){
     const bh = (s.v/max)*(h-padB-14);
     out += `<rect x="${x}" y="${h-padB-bh}" width="${bw}" height="${Math.max(bh, s.v>0?1.5:0)}" fill="${s.hi?'var(--vc-orange)':color}"/>`;
     if(opts.values && (n<=14 || i===n-1 || s.v===max)) out += `<text class="vl" x="${x+bw/2}" y="${h-padB-bh-3}" text-anchor="middle">${fmt(s.v)}</text>`;
-    if(s.lbl!=null && (n<=14 || i%7===0 || i===n-1)) out += `<text class="ax" x="${x+bw/2}" y="${h-3}" text-anchor="middle">${esc(s.lbl)}</text>`;
+    if(s.lbl!=null && s.lbl!=="") out += `<text class="ax" x="${x+bw/2}" y="${h-3}" text-anchor="middle">${esc(s.lbl)}</text>`;
   });
   return out + `</svg>`;
 }
