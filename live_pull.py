@@ -23,7 +23,13 @@ Sources
   Mailchimp               list total; signups and unsubscribes by day (28d)
   Donorbox                gifts today / 7d / 28d (count + amount)
   Bluesky + LinkedIn      follower counts (public), vs data/social_history.json
-  Google News RSS         mentions of "Vital City" in the last 48h
+
+Press is deliberately NOT pulled here. An unscoped Google News search for the
+phrase "Vital City" returns generic New York crime stories that never mention
+us — Google matches loosely. The deep dashboard's tracker queries each
+whitelisted outlet with site:<domain>, which is what makes its 380 citations
+trustworthy, and it runs twice a day. The app reads those instead. One
+instrument, not two.
 
 Every source is wrapped: a failure writes {available:false, reason} for that
 block and the run still succeeds, so one dead API never blanks the app. The
@@ -37,7 +43,6 @@ import base64, json, os, re, sys, urllib.parse, urllib.request
 from collections import Counter, defaultdict
 from datetime import datetime, timezone, timedelta, date
 from pathlib import Path
-from xml.etree import ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent
 PRIV = ROOT / "private"
@@ -419,23 +424,6 @@ def pull_social_live():
             "manual": {k: {"followers": v.get("n"), "as_of": v.get("d")} for k, v in manual.items()}}
 
 
-def pull_news_live():
-    q = urllib.parse.quote('"Vital City" (NYC OR "New York")')
-    xml = http_get(f"https://news.google.com/rss/search?q={q}+when:2d&hl=en-US&gl=US&ceid=US:en", timeout=20)
-    root = ET.fromstring(xml)
-    items = []
-    for it in root.iter("item"):
-        t = (it.findtext("title") or "").strip()
-        link = (it.findtext("link") or "").strip()
-        pub = (it.findtext("pubDate") or "").strip()
-        src = it.find("source")
-        source = (src.text if src is not None else "") or ""
-        if re.search(r"vital\s*city", source, re.I) or "vitalcitynyc.org" in link:
-            continue            # Google News indexes our own site; that is not press
-        items.append({"title": t, "url": link, "published": pub, "source": source})
-    return {"count_48h": len(items), "items": items[:10]}
-
-
 # ------------------------------------------------------------------ main
 def main():
     log(f"live_pull @ {NOW_NY.isoformat()} (NY)")
@@ -449,9 +437,8 @@ def main():
         "list":     safe("mailchimp", pull_mailchimp_live),
         "giving":   safe("donorbox", pull_donorbox_live),
         "social":   safe("social", pull_social_live),
-        "press":    safe("news", pull_news_live),
     }
-    ok = [k for k in ("site", "ghost", "list", "giving", "social", "press") if out[k].get("available")]
+    ok = [k for k in ("site", "ghost", "list", "giving", "social") if out[k].get("available")]
     out["sources_ok"] = ok
     if not ok:
         log("ERROR: every source failed — refusing to write an empty live.json")
@@ -459,7 +446,7 @@ def main():
     PRIV.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, ensure_ascii=False))
     log(f"wrote {OUT} ({OUT.stat().st_size:,} bytes) — sources ok: {', '.join(ok)}")
-    for k in ("site", "ghost", "list", "giving", "social", "press"):
+    for k in ("site", "ghost", "list", "giving", "social"):
         if not out[k].get("available"):
             log(f"  NOTE {k}: {out[k].get('reason')}")
 

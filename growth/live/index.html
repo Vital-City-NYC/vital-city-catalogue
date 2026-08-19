@@ -309,7 +309,7 @@ function freshness(){
 
 // ----------------------------------------------------------------- NOW
 function renderNow(){
-  const L = LIVE, S = L.site||{}, G = L.ghost||{}, M = L.list||{}, D = L.giving||{}, P = L.press||{};
+  const L = LIVE, S = L.site||{}, G = L.ghost||{}, M = L.list||{}, D = L.giving||{};
   const parts = [];
   parts.push(`<details class="readme" id="readme"${localStorage.getItem("vc_live_readme")==="closed"?"":" open"}><summary>Before you read these numbers</summary><ul>
     <li><b>"Today" trails the clock.</b> Google Analytics processes hourly data with a lag of several hours; only the "right now" count is current. Today is compared with last week through the last processed hour, not through now.</li>
@@ -361,8 +361,9 @@ function renderNow(){
   todayTiles += D.available ? tile(D.today.gifts ? money(D.today.amount) : "0", D.today.gifts ? `gifts today (${D.today.gifts})` : "gifts today",
                                    `${fmt(D.d7.gifts)} gifts · ${money(D.d7.amount)} in 7 days`, "", "")
                             : stub("gifts today", D.reason);
-  todayTiles += P.available ? tile(fmt(P.count_48h), "press mentions, 48h", "Google News, \"Vital City\" + NYC", "", "")
-                            : stub("press mentions", P.reason);
+  const uToday = ((M.by_day||[]).slice(-1)[0]||{}).unsubs;
+  todayTiles += M.available ? tile(fmt(uToday), "unsubscribes today", `${fmt(M.unsubs_7d)} in 7 days · Mailchimp`, "", "")
+                            : stub("unsubscribes today", M.reason);
   parts.push(`<div class="tiles">${todayTiles}</div>`);
 
   // today hour-by-hour vs last week
@@ -385,14 +386,19 @@ function renderNow(){
     parts.push(`<div class="row"><div class="rk" style="font-size:11px;font-family:var(--vc-sans);color:var(--vc-charcoal);font-weight:800;text-transform:uppercase;letter-spacing:.06em;min-width:56px">Email</div>
       <div class="rv">${esc(c.subject||"(no subject)")}<div class="rn">${when?esc(ago(when)):""} · ${fmt(c.emails)} sent · ${c.open_rate!=null?Math.round(c.open_rate*100)+"% open":""} · ${c.click_rate!=null?(c.click_rate*100).toFixed(1)+"% click":""}</div></div></div>`);
   }
-  if(P.available && (P.items||[]).length){
-    P.items.slice(0,3).forEach(it=>{
-      parts.push(`<div class="row"><div class="rk" style="font-size:11px;font-family:var(--vc-sans);color:var(--vc-charcoal);font-weight:800;text-transform:uppercase;letter-spacing:.06em;min-width:56px">Press</div>
-        <div class="rv"><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc((it.title||"").replace(/\s-\s[^-]+$/,""))}</a><div class="rn">${esc(it.source||"")}</div></div></div>`);
-    });
-  }
+  // Press comes from the deep dashboard's tracker (each whitelisted outlet
+  // queried with site:<domain>), not a live search — an unscoped phrase search
+  // returns New York crime stories that never mention Vital City.
+  const mentions = (((DEEP||{}).news_mentions)||[])
+    .filter(x => x.kind === "media" && x.published_iso && !x.own_post)
+    .sort((a,b) => b.published_iso.localeCompare(a.published_iso)).slice(0,3);
+  mentions.forEach(it=>{
+    const when = new Date(it.published_iso);
+    parts.push(`<div class="row"><div class="rk" style="font-size:11px;font-family:var(--vc-sans);color:var(--vc-charcoal);font-weight:800;text-transform:uppercase;letter-spacing:.06em;min-width:56px">Press</div>
+      <div class="rv"><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title||"")}</a><div class="rn">${esc(it.source||"")} · ${esc(shortDate(it.published_iso.slice(0,10)))}</div></div></div>`);
+  });
   parts.push(`</div>`);
-  parts.push(`<div class="note">Refreshes every 20 minutes (hourly overnight). "Today" is the New York calendar day.</div>`);
+  parts.push(`<div class="note">Refreshes every 20 minutes (hourly overnight). "Today" is the New York calendar day. Press comes from the tracked-outlet list in the full dashboard, rebuilt twice a day — a live search for the phrase pulls in unrelated New York news.</div>`);
   $("#scr-now").innerHTML = parts.join("");
 }
 
