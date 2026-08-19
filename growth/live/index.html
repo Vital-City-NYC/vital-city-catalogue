@@ -236,6 +236,7 @@ document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",
 // ----------------------------------------------------------------- helpers
 const fmt = n => (n==null||isNaN(n)) ? "—" : Number(n).toLocaleString("en-US");
 const money = n => (n==null) ? "—" : "$" + Number(n).toLocaleString("en-US", {maximumFractionDigits:0});
+const cleanTitle = t => String(t||"").replace(/^\s*Vital City\s*[|—–-]\s*/i,"").replace(/\s*[|—–-]\s*Vital City\s*$/i,"");
 const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const pct = (a,b) => (b>0 && a!=null) ? Math.round((a-b)/b*100) : null;
 const DOW = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -248,7 +249,7 @@ function delta(a, b, label){
 }
 function dayLabel(iso){ const d = new Date(iso+"T12:00:00"); return DOW[d.getDay()].slice(0,3); }
 function shortDate(iso){ const d = new Date(iso+"T12:00:00"); return MON[d.getMonth()]+" "+d.getDate(); }
-function ago(d){ if(!d) return "—"; const m = Math.round((Date.now()-d.getTime())/60000); if(m<1) return "just now"; if(m<60) return m+" min ago"; const h = Math.floor(m/60); const d=Math.round(h/24); return h<24 ? h+"h "+(m%60)+"m ago" : d===1 ? "yesterday" : d+" days ago"; }
+function ago(d){ if(!d) return "—"; const m = Math.round((Date.now()-d.getTime())/60000); if(m<1) return "just now"; if(m<60) return m+" min ago"; const h = Math.floor(m/60); const dd=Math.round(h/24); return h<24 ? h+"h "+(m%60)+"m ago" : dd===1 ? "yesterday" : dd+" days ago"; }
 function sumLast(arr, key, n){ return (arr||[]).slice(-n).reduce((s,r)=>s+(+r[key]||0),0); }
 function sumPrev(arr, key, n){ const a=(arr||[]); return a.slice(Math.max(0,a.length-2*n), a.length-n).reduce((s,r)=>s+(+r[key]||0),0); }
 
@@ -316,7 +317,7 @@ function renderNow(){
     const pages = (S.now.pages||[]).filter(p=>p.active>0).slice(0,8);
     if(pages.length){
       parts.push(`<div class="eyebrow">Being read right now</div><div class="rows">` +
-        pages.map(p=>`<div class="row"><div class="rk">${fmt(p.active)}</div><div class="rv">${esc(p.title||"").replace(/\s*[—|-]\s*Vital City\s*$/,"")}</div></div>`).join("") + `</div>`);
+        pages.map(p=>`<div class="row"><div class="rk">${fmt(p.active)}</div><div class="rv">${esc(cleanTitle(p.title))}</div></div>`).join("") + `</div>`);
     }
   } else {
     parts.push(`<div class="hero"><div class="lbl">On the site right now</div><div class="big" style="font-size:26px;font-family:var(--vc-sans);font-weight:700;color:#a2a5ad;margin-top:10px">realtime not connected</div><div class="n">${esc(S.reason||"GA4 credentials are only in the GitHub workflow; the next scheduled run fills this in.")}</div></div>`);
@@ -330,10 +331,14 @@ function renderNow(){
   if(S.available && T.today){
     // honest comparison: same weekday last week, through the SAME hour
     const hb = T.by_hour||{}, tt = hb.today||[], lw = hb.same_day_last_week||[];
-    const lwSoFar = lw.slice(0, hourNow+1).reduce((a,b)=>a+b,0);
+    // GA4 standard reports trail the clock by hours; compare through the last
+    // hour GA4 has actually processed, and say so.
+    const thru = (T.processed_through_hour!=null && T.processed_through_hour>=0) ? T.processed_through_hour : hourNow;
+    const lwSoFar = lw.slice(0, thru+1).reduce((a,b)=>a+b,0);
     const dow = DOW[new Date(L.today_ny+"T12:00:00").getDay()];
-    todayTiles += tile(fmt(T.today.users), "visitors today", `vs ${fmt(lwSoFar)} last ${dow} by this hour`, delta(T.today.users, lwSoFar, "vs last week, same hour"), "");
-    todayTiles += tile(fmt(T.today.views), "page views today", `${fmt(T.yesterday.views)} all of yesterday`, "", "");
+    const hlabel = h => h===0?"midnight":h<12?h+"am":h===12?"noon":(h-12)+"pm";
+    todayTiles += tile(fmt(T.today.users), "visitors today", `through ${hlabel(thru)} (GA4 lag) · ${fmt(lwSoFar)} last ${dow} by then`, delta(T.today.users, lwSoFar, "vs last week, same hours"), "");
+    todayTiles += tile(fmt(T.today.views), "page views today", `through ${hlabel(thru)} · ${fmt(T.yesterday.views)} all of yesterday`, "", "");
   } else {
     todayTiles += stub("visitors today", "GA4"); todayTiles += stub("page views today", "GA4");
   }
@@ -351,8 +356,9 @@ function renderNow(){
   // today hour-by-hour vs last week
   if(S.available && T.by_hour){
     const tt = T.by_hour.today||[], lw = T.by_hour.same_day_last_week||[];
-    const ser = Array.from({length:24},(_,h)=>({v: h<=hourNow ? (tt[h]||0) : 0, cmp: lw[h]||0, lbl: (h%6===0)? (h===0?"12a":h<12?h+"a":h===12?"12p":(h-12)+"p") : null, hi:h===hourNow}));
-    parts.push(`<div class="chart"><h3>Today, hour by hour</h3><div class="cap">Visitors per hour (orange = this hour). Grey = the same weekday last week.</div>${barsSVG(ser,{h:110})}</div>`);
+    const thru = (T.processed_through_hour!=null && T.processed_through_hour>=0) ? T.processed_through_hour : hourNow;
+    const ser = Array.from({length:24},(_,h)=>({v: h<=thru ? (tt[h]||0) : 0, cmp: lw[h]||0, lbl: (h%6===0)? (h===0?"12a":h<12?h+"a":h===12?"12p":(h-12)+"p") : null, hi:h===thru}));
+    parts.push(`<div class="chart"><h3>Today, hour by hour</h3><div class="cap">Visitors per hour; orange is the last hour GA4 has processed (it trails the clock). Grey = the same weekday last week. The realtime count above is current.</div>${barsSVG(ser,{h:110})}</div>`);
   }
 
   // ---- latest output
@@ -404,7 +410,7 @@ function renderWeek(){
   // posts this week with views
   parts.push(`<div class="eyebrow">Published this week</div>`);
   if(G.available && (G.posts_7d||[]).length){
-    const views = {}; (S.top_week||[]).forEach(p=>{ views[p.path.replace(/\/$/,"").split("/").pop()] = p; });
+    const views = Object.assign({}, S.views_7d_by_slug||{}); (S.top_week||[]).forEach(p=>{ const k=p.path.replace(/\/$/,"").split("/").pop(); if(!views[k]) views[k]=p; });
     const maxv = Math.max(1, ...(G.posts_7d.map(p=>(views[p.slug]||{}).views||0)));
     parts.push(`<div class="rows">` + G.posts_7d.map(p=>{
       const v = views[p.slug]; const when = p.published_at? new Date(p.published_at):null;
@@ -420,7 +426,7 @@ function renderWeek(){
   if(S.available && (S.top_week||[]).length){
     const maxv = S.top_week[0].views||1;
     parts.push(`<div class="eyebrow">Most read this week</div><div class="rows">` + S.top_week.slice(0,10).map(p=>
-      `<div class="row"><div class="rk">${fmt(p.views)}<small>views</small></div><div class="rv"><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" rel="noopener">${esc((p.title||p.path).replace(/\s*[—|-]\s*Vital City\s*$/,""))}</a><div class="bar" style="width:${Math.max(2,Math.round(p.views/maxv*100))}%"></div></div></div>`).join("") + `</div>`);
+      `<div class="row"><div class="rk">${fmt(p.views)}<small>views</small></div><div class="rv"><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" rel="noopener">${esc(cleanTitle(p.title)||p.path)}</a><div class="bar" style="width:${Math.max(2,Math.round(p.views/maxv*100))}%"></div></div></div>`).join("") + `</div>`);
   }
   // giving + social
   parts.push(`<div class="eyebrow">Also this week</div><div class="tiles">`);
@@ -460,7 +466,7 @@ function renderTrends(){
   if(S.available && (S.top_28d||[]).length){
     const maxv = S.top_28d[0].views||1;
     parts.push(`<div class="eyebrow">Most read, 28 days</div><div class="rows">` + S.top_28d.slice(0,12).map(p=>
-      `<div class="row"><div class="rk">${fmt(p.views)}<small>views</small></div><div class="rv"><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" rel="noopener">${esc((p.title||p.path).replace(/\s*[—|-]\s*Vital City\s*$/,""))}</a><div class="bar" style="width:${Math.max(2,Math.round(p.views/maxv*100))}%"></div></div></div>`).join("") + `</div>`);
+      `<div class="row"><div class="rk">${fmt(p.views)}<small>views</small></div><div class="rv"><a href="https://www.vitalcitynyc.org${esc(p.path)}" target="_blank" rel="noopener">${esc(cleanTitle(p.title)||p.path)}</a><div class="bar" style="width:${Math.max(2,Math.round(p.views/maxv*100))}%"></div></div></div>`).join("") + `</div>`);
   }
 
   // ---- the long view, from the deep dashboard data (twice daily)

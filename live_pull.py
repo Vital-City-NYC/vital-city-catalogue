@@ -212,6 +212,31 @@ def pull_ga4_live():
     out["top_today"] = top("today", "today")
     out["top_week"]  = top("6daysAgo", "today")
     out["top_28d"]   = top(f"{DAYS-1}daysAgo", "today", n=15)
+
+    # Views for every page path, last 7 days, so the app can look up THIS
+    # WEEK'S POSTS by slug whether or not they made the top ten. 400 rows
+    # covers the whole tail at Vital City's volume.
+    rep = _ga4_post(prop, token, "runReport", {
+        "dateRanges": [{"startDate": "6daysAgo", "endDate": "today"}],
+        "dimensions": [{"name": "pagePath"}],
+        "metrics": [{"name": "screenPageViews"}, {"name": "totalUsers"}],
+        "orderBys": [{"metric": {"metricName": "screenPageViews"}, "desc": True}],
+        "limit": 400,
+    })
+    by_slug = {}
+    for d, m in _rows(rep):
+        p = _pretty_path(d[0]).rstrip("/")
+        slug = p.split("/")[-1]
+        if not slug: continue
+        a = by_slug.setdefault(slug, {"views": 0, "users": 0})
+        a["views"] += int(m[0]); a["users"] += int(m[1])
+    out["views_7d_by_slug"] = by_slug
+
+    # How far GA4 has actually processed today (standard reports lag the
+    # realtime report by hours). The last hour with any users is the honest
+    # "through" point for today-vs-last-week comparisons.
+    tt = out["today"]["by_hour"]["today"]
+    out["today"]["processed_through_hour"] = max([i for i, v in enumerate(tt) if v > 0] or [-1])
     return out
 
 
