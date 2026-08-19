@@ -104,10 +104,34 @@
   .chart h3{font-size:12px;margin:0 0 2px;letter-spacing:-.005em;font-weight:800}
   .chart .cap{font-size:11px;color:var(--vc-charcoal);margin:0 0 8px;line-height:1.4}
   .chart svg{width:100%;height:auto;display:block;overflow:visible}
-  .legend{display:flex;gap:14px;font-size:10.5px;color:var(--vc-charcoal);margin-top:6px;flex-wrap:wrap}
+  .legend{display:flex;gap:14px;font-size:11.5px;color:var(--vc-charcoal);margin-top:8px;flex-wrap:wrap}
   .legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
-  .ax{font-size:9px;fill:var(--vc-charcoal);font-family:var(--vc-sans)}
-  .vl{font-size:9.5px;fill:var(--vc-black);font-family:var(--vc-serif);font-weight:700}
+
+  /* Bars are HTML, not SVG text: an SVG scaled with preserveAspectRatio="none"
+     squashes its own labels to about half size on a phone. Heights are a plain
+     linear share of the max, so the pixels match the values. */
+  .barwrap{position:relative;margin-top:4px}
+  .bars{display:flex;align-items:flex-end;gap:3px}
+  .barwrap .gline+.bars{padding-top:14px}
+  .bcol{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end}
+  .bval{font-family:var(--vc-serif);font-weight:700;font-size:13px;line-height:1;text-align:center;
+        margin-bottom:4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .btrack{position:relative;width:100%}
+  .bbar{position:absolute;left:0;right:0;bottom:0;z-index:1}
+  .bcmp{position:absolute;left:0;right:0;bottom:0;background:#dcdcd8}
+  /* axis labels live in their own positioned row: a 10px-wide column cannot
+     hold "Aug 19", and centring it inside one clips the ends of the range */
+  .bxrow{position:relative;height:17px;margin-top:6px}
+  .bxrow span{position:absolute;font-size:11.5px;color:var(--vc-charcoal);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .gline{position:absolute;left:0;right:0;border-top:1px dashed var(--vc-cloud);font-size:11px;
+         color:var(--vc-charcoal);text-align:right;line-height:1;padding-top:3px;pointer-events:none}
+  .gline b{font-family:var(--vc-serif);font-weight:700;font-size:12px;color:var(--vc-black)}
+
+  .linewrap{position:relative;margin-top:2px}
+  .lmeta{font-size:11.5px;color:var(--vc-charcoal);margin-bottom:4px}
+  .lmeta b{font-family:var(--vc-serif);font-size:14px;color:var(--vc-black);font-variant-numeric:tabular-nums}
+  .lxrow{position:relative;height:17px;margin-top:4px}
+  .lxrow span{position:absolute;font-size:11.5px;color:var(--vc-charcoal);white-space:nowrap;font-variant-numeric:tabular-nums}
 
   .readme{border-left:3px solid var(--vc-gold);background:#fdf8ec;padding:8px 12px 8px;margin:0 0 12px;font-size:11.5px;line-height:1.45}
   .readme summary{cursor:pointer;font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);list-style:none;display:flex;justify-content:space-between}
@@ -262,42 +286,61 @@ function sumPrev(arr, key, n){ const a=(arr||[]); return a.slice(Math.max(0,a.le
 function tile(v, k, n, extra, cls){ return `<div class="tile ${cls||""}"><div class="v">${v}</div><div class="k">${esc(k)}</div>${n?`<div class="n">${n}</div>`:""}${extra||""}</div>`; }
 function stub(k, why){ return `<div class="tile stub"><div class="v">not connected</div><div class="k">${esc(k)}</div><div class="n">${esc(why||"")}</div></div>`; }
 
-// Bars: one series, optional ghost comparison series behind it. Fixed-track
-// math (value → width/height is linear, zero-based) — no distortion.
-function barsSVG(series, opts={}){
-  const w = 600, h = opts.h||120, padL = 0, padB = 16, n = series.length;
-  const all = series.flatMap(s => [s.v, s.cmp||0]);
-  const max = Math.max(1, ...all);
-  const gap = 3, bw = (w - gap*(n-1))/n;
-  const color = opts.color||"var(--vc-cerulean)", cmpc = opts.cmpColor||"#dcdcd8";
-  let out = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="height:${h}px">`;
-  series.forEach((s,i)=>{
-    const x = padL + i*(bw+gap);
-    if(s.cmp!=null){ const ch = (s.cmp/max)*(h-padB-14); out += `<rect x="${x}" y="${h-padB-ch}" width="${bw}" height="${ch}" fill="${cmpc}"/>`; }
-    const bh = (s.v/max)*(h-padB-14);
-    out += `<rect x="${x}" y="${h-padB-bh}" width="${bw}" height="${Math.max(bh, s.v>0?1.5:0)}" fill="${s.hi?'var(--vc-orange)':color}"/>`;
-    if(opts.values && (n<=14 || i===n-1 || s.v===max)) out += `<text class="vl" x="${x+bw/2}" y="${h-padB-bh-3}" text-anchor="middle">${fmt(s.v)}</text>`;
-    if(s.lbl!=null && s.lbl!=="") out += `<text class="ax" x="${x+bw/2}" y="${h-3}" text-anchor="middle">${esc(s.lbl)}</text>`;
-  });
-  return out + `</svg>`;
+// Bars: one series, optional ghost comparison behind it. Value labels are real
+// HTML at real sizes; when the series is too dense to label every bar, the top
+// gridline carries the scale instead.
+function barChart(series, opts={}){
+  const n = series.length, h = opts.h||100, F = opts.fmt || fmt;
+  const color = opts.color||"var(--vc-cerulean)";
+  const max = Math.max(1, ...series.flatMap(x => [+x.v||0, +x.cmp||0]));
+  const showVals = opts.values===true || (opts.values!==false && n<=8);
+  const px = v => Math.round((+v||0)/max*h);
+  const cols = series.map(x=>{
+    const bh = px(x.v), ch = x.cmp!=null ? px(x.cmp) : 0;
+    return `<div class="bcol">
+      ${showVals?`<div class="bval">${F(x.v)}</div>`:""}
+      <div class="btrack" style="height:${h}px">
+        ${ch?`<div class="bcmp" style="height:${ch}px"></div>`:""}
+        <div class="bbar" style="height:${Math.max(bh, (+x.v>0)?2:0)}px;background:${x.hi?"var(--vc-orange)":color}"></div>
+      </div>
+    </div>`;
+  }).join("");
+  const axis = series.map((x,i)=>{
+    if(!x.lbl) return "";
+    const pos = i===0 ? "left:0" : i===n-1 ? "right:0" : `left:${((i+0.5)/n*100).toFixed(2)}%;transform:translateX(-50%)`;
+    return `<span style="${pos}">${esc(x.lbl)}</span>`;
+  }).join("");
+  // scale line sits at the top of the tracks, which is the maximum
+  const gl = showVals ? "" : `<div class="gline" style="top:0"><b>${F(max)}</b>${opts.scaleNote?" "+esc(opts.scaleNote):""}</div>`;
+  return `<div class="barwrap">${gl}<div class="bars">${cols}</div><div class="bxrow">${axis}</div></div>`;
 }
-// Line with area, for 28-day and weekly series.
-function lineSVG(vals, opts={}){
-  const w=600, h=opts.h||110, pb=14, n=vals.length; if(!n) return "";
-  const max=Math.max(1,...vals.map(v=>+v||0)), min=0;
-  const x=i=> n>1 ? i*(w/(n-1)) : 0, y=v=> (h-pb) - ((v-min)/(max-min||1))*(h-pb-8);
-  const pts = vals.map((v,i)=>`${x(i).toFixed(1)},${y(+v||0).toFixed(1)}`).join(" ");
-  const area = `M0,${h-pb} L${pts.split(" ").join(" L")} L${w},${h-pb} Z`;
-  let out = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="height:${h}px">
-    <path d="${area}" fill="${opts.fill||'rgba(33,126,190,.12)'}"/>
-    <polyline points="${pts}" fill="none" stroke="${opts.color||'var(--vc-cerulean)'}" stroke-width="2.2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`;
-  if(opts.avg){ const ap = opts.avg.map((v,i)=>v==null?null:`${x(i).toFixed(1)},${y(v).toFixed(1)}`).filter(Boolean).join(" ");
-    out += `<polyline points="${ap}" fill="none" stroke="var(--vc-black)" stroke-width="1.4" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/>`; }
-  const last = vals[n-1];
-  out += `<circle cx="${x(n-1)}" cy="${y(+last||0)}" r="3.5" fill="${opts.color||'var(--vc-cerulean)'}"/>`;
-  (opts.labels||[]).forEach((l,i)=>{ if(l) out += `<text class="ax" x="${x(i)}" y="${h-2}" text-anchor="${i===0?'start':i===n-1?'end':'middle'}">${esc(l)}</text>`; });
-  return out + "</svg>";
+
+// Line with area. The path is SVG (stretched to the container on purpose);
+// every number around it is HTML, so nothing gets squashed.
+function lineChart(vals, opts={}){
+  const h = opts.h||110, n = vals.length; if(!n) return "";
+  const max = Math.max(1, ...vals.map(v=>+v||0));
+  const x = i => n>1 ? i*(600/(n-1)) : 0, y = v => (h-4) - ((+v||0)/max)*(h-12);
+  const pts = vals.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+  let svg = `<svg viewBox="0 0 600 ${h}" preserveAspectRatio="none" style="display:block;width:100%;height:${h}px;overflow:visible">
+    <path d="M0,${h} L${pts.split(" ").join(" L")} L600,${h} Z" fill="${opts.fill||"rgba(33,126,190,.12)"}"/>
+    <polyline points="${pts}" fill="none" stroke="${opts.color||"var(--vc-cerulean)"}" stroke-width="2.4" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`;
+  if(opts.avg){
+    const ap = opts.avg.map((v,i)=> v==null?null:`${x(i).toFixed(1)},${y(v).toFixed(1)}`).filter(Boolean).join(" ");
+    svg += `<polyline points="${ap}" fill="none" stroke="var(--vc-black)" stroke-width="1.6" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/>`;
+  }
+  svg += `<circle cx="${x(n-1)}" cy="${y(vals[n-1])}" r="4" fill="${opts.color||"var(--vc-cerulean)"}" vector-effect="non-scaling-stroke"/></svg>`;
+  if(opts.bare) return svg;
+  const labels = (opts.labels||[]).map((l,i)=>{
+    if(!l) return "";
+    const pos = i===0 ? 'left:0' : i===n-1 ? 'right:0' : `left:${(i/(n-1)*100).toFixed(1)}%;transform:translateX(-50%)`;
+    return `<span style="${pos}">${esc(l)}</span>`;
+  }).join("");
+  const F = opts.fmt || fmt;
+  const meta = `<div class="lmeta">peak <b>${F(max)}</b> · latest <b>${F(vals[n-1])}</b>${opts.metaNote?" · "+esc(opts.metaNote):""}</div>`;
+  return `<div class="linewrap">${meta}${svg}<div class="lxrow">${labels}</div></div>`;
 }
+
 function movAvg(vals, k){ return vals.map((_,i)=> i<k-1 ? null : vals.slice(i-k+1,i+1).reduce((a,b)=>a+b,0)/k); }
 
 // ----------------------------------------------------------------- freshness
@@ -319,7 +362,7 @@ function renderNow(){
   </ul></details>`);
   // ---- hero: on the site right now
   if(S.available && S.now){
-    const spark = lineSVG(S.now.by_minute||[], {h:54, color:"var(--vc-orange)", fill:"rgba(255,124,83,.18)"});
+    const spark = lineChart(S.now.by_minute||[], {h:54, color:"var(--vc-orange)", fill:"rgba(255,124,83,.18)", bare:true});
     parts.push(`<div class="hero">
       <div class="lbl"><span class="pulse"></span>On the site right now</div>
       <div class="big">${fmt(S.now.active_users)}<small>people, last 30 min</small></div>
@@ -371,7 +414,7 @@ function renderNow(){
     const tt = T.by_hour.today||[], lw = T.by_hour.same_day_last_week||[];
     const thru = (T.processed_through_hour!=null && T.processed_through_hour>=0) ? T.processed_through_hour : hourNow;
     const ser = Array.from({length:24},(_,h)=>({v: h<=thru ? (tt[h]||0) : 0, cmp: lw[h]||0, lbl: (h%6===0)? (h===0?"12a":h<12?h+"a":h===12?"12p":(h-12)+"p") : null, hi:h===thru}));
-    parts.push(`<div class="chart"><h3>Today, hour by hour</h3><div class="cap">Visitors per hour; orange is the last hour GA4 has processed (it trails the clock). Grey = the same weekday last week. The realtime count above is current.</div>${barsSVG(ser,{h:110})}</div>`);
+    parts.push(`<div class="chart"><h3>Today, hour by hour</h3><div class="cap">Visitors per hour; orange is the last hour GA4 has processed (it trails the clock). Grey = the same weekday last week. The realtime count above is current.</div>${barChart(ser,{h:110})}</div>`);
   }
 
   // ---- latest output
@@ -416,7 +459,7 @@ function renderWeek(){
     const u7 = sumLast(done,"users",7), up = sumPrev(done,"users",7), v7 = sumLast(done,"views",7), vp = sumPrev(done,"views",7);
     parts.push(`<div class="tiles">${tile(fmt(u7),"visitors, last 7 full days",`${fmt(up)} the 7 before`,delta(u7,up,"week on week"))}${tile(fmt(v7),"page views, last 7 full days",`${fmt(vp)} the 7 before`,delta(v7,vp,"week on week"))}</div>`);
     const ser = last7.map((r,i)=>({v:r.users, cmp:prev7[i]?prev7[i].users:0, lbl:dayLabel(r.d), hi:i===6}));
-    parts.push(`<div class="chart"><h3>Visitors by day</h3><div class="cap">Last 7 days (blue, today in orange and still counting) over the 7 before (grey).</div>${barsSVG(ser,{h:120,values:true})}</div>`);
+    parts.push(`<div class="chart"><h3>Visitors by day</h3><div class="cap">Last 7 days (blue, today in orange and still counting) over the 7 before (grey).</div>${barChart(ser,{h:120,values:true})}</div>`);
   } else if(!S.available){
     parts.push(`<div class="tiles">${stub("visitors, last 7 days","GA4")}${stub("page views, last 7 days","GA4")}</div>`);
   }
@@ -426,7 +469,7 @@ function renderWeek(){
     const unsubBy = {}; (M.by_day||[]).forEach(r=>{ unsubBy[r.d]=r.unsubs; });
     const u7 = M.available ? M.unsubs_7d : null;
     parts.push(`<div class="tiles three">${tile(fmt(g7n),"signups, 7 full days",`${fmt(gPrev)} the week before · ${fmt(G.new_today)} so far today`,delta(g7n,gPrev,""))}${tile(u7==null?"—":fmt(u7),"unsubscribes, 7 days",u7==null?"Mailchimp offline":"")}${tile(u7==null?"—":fmt((G.new_7d||0)-u7),"net, 7 days","signups minus unsubs")}</div>`);
-    parts.push(`<div class="chart"><h3>Signups by day</h3><div class="cap">New Ghost members (green). Unsubscribes from Mailchimp as the grey ghost bar.</div>${barsSVG(g7.map((r,i)=>({v:r.n,cmp:unsubBy[r.d]||0,lbl:dayLabel(r.d),hi:i===6})),{h:110,values:true,color:"var(--vc-green)"})}</div>`);
+    parts.push(`<div class="chart"><h3>Signups by day</h3><div class="cap">New Ghost members (green). Unsubscribes from Mailchimp as the grey ghost bar.</div>${barChart(g7.map((r,i)=>({v:r.n,cmp:unsubBy[r.d]||0,lbl:dayLabel(r.d),hi:i===6})),{h:110,values:true,color:"var(--vc-green)"})}</div>`);
   }
   // posts this week with views
   parts.push(`<div class="eyebrow">Published this week</div>`);
@@ -471,18 +514,18 @@ function renderTrends(){
     const d = S.daily, vals = d.map(r=>r.users), lab = d.map((r,i)=> i%7===0||i===d.length-1 ? shortDate(r.d) : "");
     const u28 = vals.reduce((a,b)=>a+b,0), first14 = vals.slice(0,14).reduce((a,b)=>a+b,0), last14 = vals.slice(14).reduce((a,b)=>a+b,0);
     parts.push(`<div class="tiles">${tile(fmt(u28),"visitors, 28 days",`${fmt(Math.round(u28/28))} a day on average`)}${tile(fmt(last14),"last 14 days",`${fmt(first14)} the 14 before`,delta(last14,first14,""))}</div>`);
-    parts.push(`<div class="chart"><h3>Daily visitors</h3><div class="cap">Dashed line is the 7-day average. Today is partial.</div>${lineSVG(vals,{h:120,avg:movAvg(vals,7),labels:lab})}</div>`);
+    parts.push(`<div class="chart"><h3>Daily visitors</h3><div class="cap">Dashed line is the 7-day average. Today is partial.</div>${lineChart(vals,{h:120,avg:movAvg(vals,7),labels:lab})}</div>`);
   }
   if(G.available && (G.new_by_day||[]).length){
     const bd = G.new_by_day, lab = bd.map((r,i)=> i%7===0||i===bd.length-1 ? shortDate(r.d) : "");
     const unsubBy = {}; (M.by_day||[]).forEach(r=>{ unsubBy[r.d]=r.unsubs; });
     const u28 = M.available ? M.unsubs_28d : null;
     parts.push(`<div class="tiles three">${tile(fmt(G.new_28d),"signups, 28d","Ghost")}${tile(u28==null?"—":fmt(u28),"unsubscribes, 28d","Mailchimp")}${tile(u28==null?"—":fmt((G.new_28d||0)-u28),"net, 28d","")}</div>`);
-    parts.push(`<div class="chart"><h3>Signups by day</h3><div class="cap">New Ghost members (green); Mailchimp unsubscribes as the grey ghost bar. Ghost is the live flow — it syncs to the Mailchimp list on Thursdays, which is why Mailchimp's own daily opt-ins bunch up.</div>${barsSVG(bd.map((r,i)=>({v:r.n,cmp:unsubBy[r.d]||0,lbl:lab[i]||null})),{h:110,color:"var(--vc-green)"})}</div>`);
+    parts.push(`<div class="chart"><h3>Signups by day</h3><div class="cap">New Ghost members (green); Mailchimp unsubscribes as the grey ghost bar. Ghost is the live flow — it syncs to the Mailchimp list on Thursdays, which is why Mailchimp's own daily opt-ins bunch up.</div>${barChart(bd.map((r,i)=>({v:r.n,cmp:unsubBy[r.d]||0,lbl:lab[i]||null})),{h:110,color:"var(--vc-green)"})}</div>`);
   }
   if(D.available && (D.by_day||[]).length){
     const bd = D.by_day, lab = bd.map((r,i)=> i%7===0||i===bd.length-1 ? shortDate(r.d) : "");
-    parts.push(`<div class="chart"><h3>Online gifts by day</h3><div class="cap">${money(D.d28.amount)} across ${fmt(D.d28.gifts)} gifts in 28 days (Donorbox only — checks, wires and DAF grants do not appear).</div>${barsSVG(bd.map((r,i)=>({v:Math.round(r.amount),lbl:lab[i]||null})),{h:100,color:"var(--vc-gold)"})}</div>`);
+    parts.push(`<div class="chart"><h3>Online gifts by day</h3><div class="cap">${money(D.d28.amount)} across ${fmt(D.d28.gifts)} gifts in 28 days (Donorbox only — checks, wires and DAF grants do not appear).</div>${barChart(bd.map((r,i)=>({v:Math.round(r.amount),lbl:lab[i]||null})),{h:100,color:"var(--vc-gold)",fmt:money,scaleNote:"biggest day"})}</div>`);
   }
   if(S.available && (S.top_28d||[]).length){
     const maxv = S.top_28d[0].views||1;
@@ -500,14 +543,14 @@ function renderTrends(){
       // drop the current partial week from the line so it does not read as a collapse
       const full = tw.slice(0,-1), vals = full.map(r=>r.visits), lab = full.map((r,i)=> i%13===0||i===full.length-1 ? shortDate(r.wk) : "");
       const last4 = vals.slice(-4).reduce((a,b)=>a+b,0)/4, prev4 = vals.slice(-8,-4).reduce((a,b)=>a+b,0)/4;
-      parts.push(`<div class="chart"><h3>Weekly visitors, last year</h3><div class="cap">GA4, full weeks only (the week in progress is left off). Latest full week: ${fmt(vals[vals.length-1])}.</div>${lineSVG(vals,{h:120,avg:movAvg(vals,4),labels:lab})}
+      parts.push(`<div class="chart"><h3>Weekly visitors, last year</h3><div class="cap">GA4, full weeks only (the week in progress is left off). Latest full week: ${fmt(vals[vals.length-1])}.</div>${lineChart(vals,{h:120,avg:movAvg(vals,4),labels:lab})}
         <div class="legend"><span><i style="background:var(--vc-cerulean)"></i>weekly visitors</span><span><i style="background:var(--vc-black)"></i>4-week average ${delta(last4,prev4,"vs prior 4")}</span></div></div>`);
     }
     const ms = (mc.monthly_signups||[]).slice(-24);
     if(ms.length){
       const vals = ms.map(r=>r.cum_subs), lab = ms.map((r,i)=> i%6===0||i===ms.length-1 ? r.month.slice(2).replace("-","/") : "");
-      parts.push(`<div class="chart"><h3>Newsletter list, two years</h3><div class="cap">Subscribers at month end. Now ${fmt(vals[vals.length-1])}; ${fmt(vals[Math.max(0,vals.length-13)])} a year ago.</div>${lineSVG(vals,{h:110,labels:lab,color:"var(--vc-green)",fill:"rgba(87,170,74,.12)"})}</div>`);
-      parts.push(`<div class="chart"><h3>New signups by month</h3><div class="cap">Mailchimp opt-ins per month; the current month is partial.</div>${barsSVG(ms.map((r,i)=>({v:r.new_signups,lbl:lab[i]||null,hi:i===ms.length-1})),{h:100,color:"var(--vc-green)"})}</div>`);
+      parts.push(`<div class="chart"><h3>Newsletter list, two years</h3><div class="cap">Subscribers at month end. Now ${fmt(vals[vals.length-1])}; ${fmt(vals[Math.max(0,vals.length-13)])} a year ago.</div>${lineChart(vals,{h:110,labels:lab,color:"var(--vc-green)",fill:"rgba(87,170,74,.12)"})}</div>`);
+      parts.push(`<div class="chart"><h3>New signups by month</h3><div class="cap">Mailchimp opt-ins per month; the current month is partial.</div>${barChart(ms.map((r,i)=>({v:r.new_signups,lbl:lab[i]||null,hi:i===ms.length-1})),{h:100,color:"var(--vc-green)"})}</div>`);
     }
     const by = ((ga.by_year||{}).years||[]);
     if(by.length){
