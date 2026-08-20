@@ -1,8 +1,8 @@
 {
   "meta": {
-    "generated_at": "2026-08-19T11:12:02.434454+00:00",
+    "generated_at": "2026-08-20T11:13:00.319527+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 891,
+    "total_posts": 893,
     "total_authors": 493,
     "total_issues": 29,
     "total_topics": 214,
@@ -11,24 +11,36 @@
       "2026-08-19"
     ],
     "first_run": false,
-    "new_article_count": 1,
+    "new_article_count": 3,
     "new_articles": [
       {
-        "title": "Zohran Mamdani's Promise and the Reality of Supermarket Prices",
-        "url": "https://www.vitalcitynyc.org/mamdani-city-run-grocery-stores-economic-challenges/",
+        "title": "13 Fixes for New York City Government That Go Beyond the Charter",
+        "url": "https://www.vitalcitynyc.org/nyc-coge-charter-reform-government-operations-fixes/",
         "published_date": "2026-08-19",
+        "primary_author": null
+      },
+      {
+        "title": "Mamdani\u2019s PIT Crews: Government Innovation, or Innovation Theater?",
+        "url": "https://www.vitalcitynyc.org/mamdani-pit-crews-government-tech-problems/",
+        "published_date": "2026-08-19",
+        "primary_author": null
+      },
+      {
+        "title": "The Invisible Thread That Connects Cases of Excessive Force and Low Clearance Rates",
+        "url": "https://www.vitalcitynyc.org/ice-impunity-police-law-enforcement-accountability/",
+        "published_date": "2026-02-19",
         "primary_author": null
       }
     ]
   },
-  "total_pieces": 891,
+  "total_pieces": 893,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 179
+    "2026": 181
   },
   "by_month": {
     "2021-09": 1,
@@ -84,12 +96,12 @@
     "2026-05": 23,
     "2026-06": 44,
     "2026-07": 22,
-    "2026-08": 9
+    "2026-08": 11
   },
   "by_type": [
     [
       "opinion/commentary",
-      720
+      721
     ],
     [
       "q&a",
@@ -109,7 +121,7 @@
     ],
     [
       "policy",
-      12
+      13
     ],
     [
       "book review",
@@ -131,22 +143,22 @@
     ],
     [
       "City Government",
-      137
+      139
     ],
     [
       "Government Operations",
-      124
+      126
     ],
     [
       "City Planning",
       111
     ],
     [
-      "Justice",
-      80
+      "Housing",
+      79
     ],
     [
-      "Housing",
+      "Justice",
       79
     ],
     [
@@ -159,7 +171,7 @@
     ],
     [
       "Police Reform",
-      55
+      56
     ],
     [
       "Politics",
@@ -178,12 +190,12 @@
       42
     ],
     [
-      "Transit",
+      "Technology",
       33
     ],
     [
-      "Technology",
-      32
+      "Transit",
+      33
     ],
     [
       "Public Health",
@@ -226,7 +238,7 @@
   "by_credential_pieces": [
     [
       "Unknown / no bio",
-      891
+      893
     ]
   ],
   "by_credential_authors": [
@@ -260,7 +272,7 @@
     ],
     [
       "Legal practitioner",
-      17
+      18
     ],
     [
       "Architecture / design / planning",
@@ -268,7 +280,7 @@
     ],
     [
       "Unknown / no bio",
-      9
+      8
     ],
     [
       "Vital City (institutional)",
@@ -285,8 +297,8 @@
     "City Government",
     "Government Operations",
     "City Planning",
-    "Justice",
     "Housing",
+    "Justice",
     "culture"
   ],
   "topic_by_year": {
@@ -308,14 +320,14 @@
       "2023": 4,
       "2024": 20,
       "2025": 54,
-      "2026": 59
+      "2026": 61
     },
     "Government Operations": {
       "2022": 1,
       "2023": 16,
       "2024": 38,
       "2025": 57,
-      "2026": 12
+      "2026": 14
     },
     "City Planning": {
       "2022": 6,
@@ -324,18 +336,18 @@
       "2025": 39,
       "2026": 17
     },
-    "Justice": {
-      "2022": 4,
-      "2023": 26,
-      "2024": 27,
-      "2025": 13,
-      "2026": 10
-    },
     "Housing": {
       "2023": 5,
       "2024": 11,
       "2025": 37,
       "2026": 26
+    },
+    "Justice": {
+      "2022": 4,
+      "2023": 26,
+      "2024": 27,
+      "2025": 13,
+      "2026": 9
     },
     "culture": {
       "2022": 4,
@@ -346,17 +358,17 @@
     }
   },
   "wc_stats": {
-    "n": 881,
+    "n": 883,
     "median": 1618,
-    "mean": 1894,
-    "p90": 2838,
+    "mean": 1895,
+    "p90": 2841,
     "max": 30332,
-    "p10": 906,
-    "p25": 1270,
-    "p75": 2133,
-    "p95": 3849,
+    "p10": 907,
+    "p25": 1269,
+    "p75": 2137,
+    "p95": 3848,
     "no_count": 10,
-    "core_1000_2499": 645,
+    "core_1000_2499": 646,
     "under_500": 43,
     "over_5000": 24
   },
@@ -375,11 +387,11 @@
     ],
     [
       "2,000-2,999",
-      185
+      186
     ],
     [
       "3,000-4,999",
-      53
+      54
     ],
     [
       "5,000+",
@@ -413,7 +425,7 @@
       {
         "floor": 1000,
         "label": "1,000",
-        "n": 106
+        "n": 107
       },
       {
         "floor": 1250,
@@ -423,7 +435,7 @@
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 162
+        "n": 161
       },
       {
         "floor": 1750,
@@ -438,7 +450,7 @@
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 63
+        "n": 64
       },
       {
         "floor": 2500,
@@ -458,7 +470,7 @@
       {
         "floor": 3250,
         "label": "3,250",
-        "n": 11
+        "n": 12
       },
       {
         "floor": 3500,
@@ -502,16 +514,16 @@
     },
     {
       "year": "2026",
-      "n": 174,
-      "p25": 1263,
+      "n": 176,
+      "p25": 1253,
       "median": 1687,
-      "p75": 2382,
+      "p75": 2395,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 756,
-    "2": 106,
+    "1": 759,
+    "2": 105,
     "3": 26,
     "4": 1,
     "8": 1,
@@ -520,7 +532,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 95,
+      "posts": 96,
       "credential": "Vital City (institutional)"
     },
     {
@@ -670,10 +682,10 @@
       {
         "year": "2026",
         "weeks": 33.0,
-        "pieces": 179,
-        "outside_issues": 130,
-        "per_week_all": 5.42,
-        "per_week_outside_issues": 3.94,
+        "pieces": 181,
+        "outside_issues": 131,
+        "per_week_all": 5.48,
+        "per_week_outside_issues": 3.97,
         "partial": true
       }
     ],
@@ -681,22 +693,22 @@
     "all_time_per_week": 3.47,
     "all_time_per_week_outside_issues": 1.6,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.94,
-    "current_per_week_all": 5.42,
+    "current_per_week_outside_issues": 3.97,
+    "current_per_week_all": 5.48,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 481,
-      "published_away_from_drop": 61,
-      "share_of_issue_pieces": 12.7,
-      "current_year_strict": 3.94,
-      "current_year_loose": 4.09,
+      "issue_tagged_pieces": 482,
+      "published_away_from_drop": 62,
+      "share_of_issue_pieces": 12.9,
+      "current_year_strict": 3.97,
+      "current_year_loose": 4.15,
       "all_time_strict": 1.6,
-      "all_time_loose": 1.83,
+      "all_time_loose": 1.84,
       "all_time_all": 3.47
     }
   },
   "rhythm": {
-    "n_dated": 891,
+    "n_dated": 893,
     "by_weekday": [
       {
         "day": "Mon",
@@ -710,8 +722,8 @@
       },
       {
         "day": "Wed",
-        "pieces": 429,
-        "share": 48.1
+        "pieces": 431,
+        "share": 48.3
       },
       {
         "day": "Thu",
@@ -735,7 +747,7 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 48.1,
+    "top_day_share": 48.3,
     "midweek_share": 85.4,
     "weekend_pieces": 17,
     "by_month": [
@@ -791,9 +803,9 @@
       {
         "month": "August",
         "abbr": "Aug",
-        "pieces": 34,
+        "pieces": 36,
         "occurrences": 5,
-        "per_occurrence": 6.8
+        "per_occurrence": 7.2
       },
       {
         "month": "September",

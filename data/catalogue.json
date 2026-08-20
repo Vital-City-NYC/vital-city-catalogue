@@ -1,5 +1,81 @@
 [
   {
+    "title": "13 Fixes for New York City Government That Go Beyond the Charter",
+    "slug": "nyc-coge-charter-reform-government-operations-fixes",
+    "url": "https://www.vitalcitynyc.org/nyc-coge-charter-reform-government-operations-fixes/",
+    "type": "policy",
+    "type_basis": "series:just-fix-it",
+    "published_date": "2026-08-19",
+    "published_at": "2026-08-19T16:39:47.000+00:00",
+    "updated_at": "2026-08-19T17:24:37.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Just Fix It",
+      "City Government",
+      "Government Operations"
+    ],
+    "issues": [
+      "just-fix-it"
+    ],
+    "issue_numbers": [],
+    "summary": "Where the City of New York can — and should — do more, regardless of what happens in November",
+    "excerpt": "Where the City of New York can — and should — do more, regardless of what happens in November",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/08/Cropping-Tool---2026-08-19T121545.351.png",
+    "feature_image_alt": "A row of bike racks on a city sidewalk, the rightmost rack twisted out of shape",
+    "feature_image_credit": "Pau Buscató",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 3392,
+    "reading_minutes": 15,
+    "id": "6a85d6c8aa4b31000133e02b"
+  },
+  {
+    "title": "Mamdani’s PIT Crews: Government Innovation, or Innovation Theater?",
+    "slug": "mamdani-pit-crews-government-tech-problems",
+    "url": "https://www.vitalcitynyc.org/mamdani-pit-crews-government-tech-problems/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-08-19",
+    "published_at": "2026-08-19T16:11:34.000+00:00",
+    "updated_at": "2026-08-19T16:11:34.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Matthew Burton"
+    ],
+    "topics": [
+      "City Government",
+      "Technology",
+      "Government Operations"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "New York City needs durable solutions to the tech problems that plague government.",
+    "excerpt": "New York City needs durable solutions to the tech problems that plague government.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/08/Cropping-Tool---2026-08-19T115518.522.png",
+    "feature_image_alt": "An office worker sits behind his computer monitor in the right of frame; in the left of frame, an unseen figure points a finger towards his desk above another monitor",
+    "feature_image_credit": "Carl de Keyser / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2401,
+    "reading_minutes": 10,
+    "id": "6a832304c673b700019590eb"
+  },
+  {
     "title": "Zohran Mamdani's Promise and the Reality of Supermarket Prices",
     "slug": "mamdani-city-run-grocery-stores-economic-challenges",
     "url": "https://www.vitalcitynyc.org/mamdani-city-run-grocery-stores-economic-challenges/",
@@ -6117,85 +6193,6 @@
     "id": "69a04c0ad4006a00010a42e5"
   },
   {
-    "title": "Gang Databases Are Crucial to Shooting Reduction Efforts",
-    "slug": "nypd-gang-database-shooting-reduction",
-    "url": "https://www.vitalcitynyc.org/nypd-gang-database-shooting-reduction/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-02-19",
-    "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-04-15T13:36:26.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Anthony A. Braga",
-      "Christopher Winship"
-    ],
-    "topics": [
-      "Justice",
-      "Where We’re Headed"
-    ],
-    "issues": [
-      "crime-looking-back-at-2025-and-ahead-to-2026"
-    ],
-    "issue_numbers": [],
-    "summary": "Reforms are warranted, abolition is not.",
-    "excerpt": "Reforms are warranted, abolition is not.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aypxjt0yxlcxvoim_oshaughnessy_20150717-dsc01694-auto-format-2ccompress-rect-573-2c0-2c2123-2c1417-w-2697-h-1800-1776259653109.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Melissa O'Shaughnessy",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1709,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a42e6"
-  },
-  {
-    "title": "The Top Five Crime and Justice Stories of 2025",
-    "slug": "biggest-crime-justice-stories-america-2025",
-    "url": "https://www.vitalcitynyc.org/biggest-crime-justice-stories-america-2025/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-02-19",
-    "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-04-15T13:36:26.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Adam Gelb",
-      "Alex R. Piquero"
-    ],
-    "topics": [
-      "Crime",
-      "Justice",
-      "Where We Are"
-    ],
-    "issues": [
-      "crime-looking-back-at-2025-and-ahead-to-2026"
-    ],
-    "issue_numbers": [],
-    "summary": "What shaped perception and realities of crime in America",
-    "excerpt": "What shaped perception and realities of crime in America",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay8-qlwlo0xkef9v_nyc130345-auto-format-compress-1776259650591.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Peter van Agtmael / Magnum Photos",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1690,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a42e7"
-  },
-  {
     "title": "How Prevention Reduced Crime and How To Get More of It",
     "slug": "how-prevention-reduced-crime-suggestions-analysis",
     "url": "https://www.vitalcitynyc.org/how-prevention-reduced-crime-suggestions-analysis/",
@@ -6443,6 +6440,85 @@
     "word_count": 2897,
     "reading_minutes": 13,
     "id": "69a04c0ad4006a00010a42df"
+  },
+  {
+    "title": "The Top Five Crime and Justice Stories of 2025",
+    "slug": "biggest-crime-justice-stories-america-2025",
+    "url": "https://www.vitalcitynyc.org/biggest-crime-justice-stories-america-2025/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-02-19",
+    "published_at": "2026-02-19T17:00:54.000+00:00",
+    "updated_at": "2026-04-15T13:36:26.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Adam Gelb",
+      "Alex R. Piquero"
+    ],
+    "topics": [
+      "Crime",
+      "Justice",
+      "Where We Are"
+    ],
+    "issues": [
+      "crime-looking-back-at-2025-and-ahead-to-2026"
+    ],
+    "issue_numbers": [],
+    "summary": "What shaped perception and realities of crime in America",
+    "excerpt": "What shaped perception and realities of crime in America",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay8-qlwlo0xkef9v_nyc130345-auto-format-compress-1776259650591.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Peter van Agtmael / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1690,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a42e7"
+  },
+  {
+    "title": "The Invisible Thread That Connects Cases of Excessive Force and Low Clearance Rates",
+    "slug": "ice-impunity-police-law-enforcement-accountability",
+    "url": "https://www.vitalcitynyc.org/ice-impunity-police-law-enforcement-accountability/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-02-19",
+    "published_at": "2026-02-19T17:00:54.000+00:00",
+    "updated_at": "2026-04-15T13:36:26.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Marc A. Levin"
+    ],
+    "topics": [
+      "Immigration",
+      "Police Reform",
+      "Where We’re Headed"
+    ],
+    "issues": [
+      "crime-looking-back-at-2025-and-ahead-to-2026"
+    ],
+    "issue_numbers": [],
+    "summary": "The underlying problem is impunity.",
+    "excerpt": "The underlying problem is impunity.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/azxy_cfobigeghk2_gettyimages-2261143607-auto-format-compress-1776259652409.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Leila Navidi / The Minnesota Star Tribune / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1167,
+    "reading_minutes": 5,
+    "id": "69a04c0ad4006a00010a42e9"
   },
   {
     "title": "How Prevention Reduced Crime and How To Get More of It",
@@ -12133,22 +12209,23 @@
     "id": "69a04c0ad4006a00010a4262"
   },
   {
-    "title": "A Different Frontier, a Parallel History",
-    "slug": "learning-from-australias-gun-evolution",
-    "url": "https://www.vitalcitynyc.org/learning-from-australias-gun-evolution/",
+    "title": "The 80/20 Rule of Gun Supply",
+    "slug": "the-80-20-rule-of-gun-supply",
+    "url": "https://www.vitalcitynyc.org/the-80-20-rule-of-gun-supply/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:49.000+00:00",
+    "updated_at": "2026-04-15T13:36:50.000+00:00",
     "primary_author": null,
     "authors": [
-      "Ted Alcorn"
+      "Daniel Semenza"
     ],
     "topics": [
-      "History",
-      "Modern Evolution: Marketing and Profits",
-      "Guns"
+      "Gun Violence",
+      "What Can Be Done?",
+      "Crime",
+      "History"
     ],
     "issues": [
       "issue-13"
@@ -12156,11 +12233,11 @@
     "issue_numbers": [
       13
     ],
-    "summary": "What we can and can’t learn from Australia’s gun evolution",
-    "excerpt": "What we can and can’t learn from Australia’s gun evolution",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama8rwgnhvfto11a_gettyimages-540012357-auto-format-compress-1776259685025.jpg",
+    "summary": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
+    "excerpt": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambmuwgnhvfto1_k_gettyimages-94668620-auto-format-compress-1776259687304.jpg",
     "feature_image_alt": null,
-    "feature_image_credit": "The AGE / Getty Images",
+    "feature_image_credit": "Andrew Burton / Bloomberg / Getty Images",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -12169,9 +12246,9 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1600,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a401c"
+    "word_count": 2361,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a4020"
   },
   {
     "title": "Gun Culture Then and Now",
@@ -12337,6 +12414,362 @@
     "word_count": 1341,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a420e"
+  },
+  {
+    "title": "The Good Gun Owner",
+    "slug": "the-good-gun-owner",
+    "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:51.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Samantha J. Simon"
+    ],
+    "topics": [
+      "Police Reform",
+      "Modern Evolution: Marketing and Profits",
+      "Gun Violence"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "excerpt": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6omgnhvfto1zu_gettyimages-51135991-auto-format-compress-1776259687678.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Spencer Platt / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2291,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a401d"
+  },
+  {
+    "title": "The Money Behind Mass Shootings",
+    "slug": "the-money-behind-mass-shootings",
+    "url": "https://www.vitalcitynyc.org/the-money-behind-mass-shootings/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Greg Lickenbrock"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Modern Evolution: Marketing and Profits",
+      "Economics"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
+    "excerpt": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama5awgnhvfto1yk_gettyimages-107596655-auto-format-compress-1776259686592.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "The Washington Post / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2177,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a401f"
+  },
+  {
+    "title": "What We Know and Don’t Know About Guns",
+    "slug": "what-we-know-and-dont-know-about-guns",
+    "url": "https://www.vitalcitynyc.org/what-we-know-and-dont-know-about-guns/",
+    "type": "data analysis",
+    "type_basis": "html:17-chart-embeds",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Kate Daugherty",
+      "Paul Reeping",
+      "Megan Kang"
+    ],
+    "topics": [
+      "data",
+      "Overview",
+      "Gun Violence",
+      "History"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "Parsing the data",
+    "excerpt": "Parsing the data",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amaxzmgnhvfto1qh_d23hn0-auto-format-compress-1776259687014.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Kristoffer Tripplaar / Alamy Stock Photo",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "24731717",
+          "src": "visualisation/24731717?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731717/"
+        },
+        {
+          "id": "24731821",
+          "src": "visualisation/24731821?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731821/"
+        },
+        {
+          "id": "24730813",
+          "src": "visualisation/24730813?1271209",
+          "url": "https://public.flourish.studio/visualisation/24730813/"
+        },
+        {
+          "id": "24731657",
+          "src": "visualisation/24731657?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731657/"
+        },
+        {
+          "id": "24730916",
+          "src": "visualisation/24730916?1271209",
+          "url": "https://public.flourish.studio/visualisation/24730916/"
+        },
+        {
+          "id": "24731887",
+          "src": "visualisation/24731887?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731887/"
+        },
+        {
+          "id": "24795769",
+          "src": "visualisation/24795769?1271209",
+          "url": "https://public.flourish.studio/visualisation/24795769/"
+        },
+        {
+          "id": "24701566",
+          "src": "visualisation/24701566?1271209",
+          "url": "https://public.flourish.studio/visualisation/24701566/"
+        },
+        {
+          "id": "24701768",
+          "src": "visualisation/24701768?1271209",
+          "url": "https://public.flourish.studio/visualisation/24701768/"
+        },
+        {
+          "id": "24780816",
+          "src": "visualisation/24780816?1271209",
+          "url": "https://public.flourish.studio/visualisation/24780816/"
+        },
+        {
+          "id": "24701934",
+          "src": "visualisation/24701934?1271209",
+          "url": "https://public.flourish.studio/visualisation/24701934/"
+        },
+        {
+          "id": "3282227",
+          "src": "story/3282227?1271209",
+          "url": "https://public.flourish.studio/story/3282227/"
+        },
+        {
+          "id": "24780493",
+          "src": "visualisation/24780493?1271209",
+          "url": "https://public.flourish.studio/visualisation/24780493/"
+        },
+        {
+          "id": "24731510",
+          "src": "visualisation/24731510?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731510/"
+        },
+        {
+          "id": "24731118",
+          "src": "visualisation/24731118?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731118/"
+        },
+        {
+          "id": "24731289",
+          "src": "visualisation/24731289?1271209",
+          "url": "https://public.flourish.studio/visualisation/24731289/"
+        },
+        {
+          "id": "24732005",
+          "src": "visualisation/24732005?1271209",
+          "url": "https://public.flourish.studio/visualisation/24732005/"
+        }
+      ],
+      "iframes": [
+        {
+          "url": "https://www.youtube.com/embed/1ZIgiTrg56w?si=P4kNReOc-whJKw1E",
+          "host": "www.youtube.com",
+          "kind": "video"
+        }
+      ],
+      "counts": {
+        "flourish": 17,
+        "video": 1
+      },
+      "total": 18
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1649,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a401e"
+  },
+  {
+    "title": "Editors’ Note",
+    "slug": "editors-note-issue-13",
+    "url": "https://www.vitalcitynyc.org/editors-note-issue-13/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:49.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Megan Kang",
+      "Elizabeth Glazer"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Overview"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "How so many guns got into so many American hands",
+    "excerpt": "How so many guns got into so many American hands",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amavdggnhvfto1o1_765433239901-auto-format-compress-1776259685450.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "John Locher / AP Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1534,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4021"
+  },
+  {
+    "title": "A Different Frontier, a Parallel History",
+    "slug": "learning-from-australias-gun-evolution",
+    "url": "https://www.vitalcitynyc.org/learning-from-australias-gun-evolution/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:49.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Ted Alcorn"
+    ],
+    "topics": [
+      "History",
+      "Modern Evolution: Marketing and Profits",
+      "Guns"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "What we can and can’t learn from Australia’s gun evolution",
+    "excerpt": "What we can and can’t learn from Australia’s gun evolution",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama8rwgnhvfto11a_gettyimages-540012357-auto-format-compress-1776259685025.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "The AGE / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1600,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a401c"
+  },
+  {
+    "title": "Before the Trigger Is Pulled",
+    "slug": "before-the-trigger-is-pulled",
+    "url": "https://www.vitalcitynyc.org/before-the-trigger-is-pulled/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:49.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Jens Ludwig"
+    ],
+    "topics": [
+      "Gun Violence",
+      "What Can Be Done?"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "The case for smarter deterrence",
+    "excerpt": "The case for smarter deterrence",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambq8ggnhvfto2ck_par112603-auto-format-compress-1776259685262.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Alex Webb / Magnum Photos",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "24748665",
+          "src": "visualisation/24748665?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748665/"
+        },
+        {
+          "id": "24748637",
+          "src": "visualisation/24748637?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748637/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 2
+      },
+      "total": 2
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1404,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a401b"
   },
   {
     "title": "Breaking Through With the Next Generation",
@@ -12510,363 +12943,6 @@
     "word_count": 4100,
     "reading_minutes": 18,
     "id": "69a04c0ad4006a00010a4022"
-  },
-  {
-    "title": "The 80/20 Rule of Gun Supply",
-    "slug": "the-80-20-rule-of-gun-supply",
-    "url": "https://www.vitalcitynyc.org/the-80-20-rule-of-gun-supply/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Daniel Semenza"
-    ],
-    "topics": [
-      "Gun Violence",
-      "What Can Be Done?",
-      "Crime",
-      "History"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
-    "excerpt": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambmuwgnhvfto1_k_gettyimages-94668620-auto-format-compress-1776259687304.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Andrew Burton / Bloomberg / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2361,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a4020"
-  },
-  {
-    "title": "The Money Behind Mass Shootings",
-    "slug": "the-money-behind-mass-shootings",
-    "url": "https://www.vitalcitynyc.org/the-money-behind-mass-shootings/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Greg Lickenbrock"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Modern Evolution: Marketing and Profits",
-      "Economics"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
-    "excerpt": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama5awgnhvfto1yk_gettyimages-107596655-auto-format-compress-1776259686592.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "The Washington Post / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2177,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a401f"
-  },
-  {
-    "title": "Before the Trigger Is Pulled",
-    "slug": "before-the-trigger-is-pulled",
-    "url": "https://www.vitalcitynyc.org/before-the-trigger-is-pulled/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:49.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Jens Ludwig"
-    ],
-    "topics": [
-      "Gun Violence",
-      "What Can Be Done?"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "The case for smarter deterrence",
-    "excerpt": "The case for smarter deterrence",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambq8ggnhvfto2ck_par112603-auto-format-compress-1776259685262.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Alex Webb / Magnum Photos",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "24748665",
-          "src": "visualisation/24748665?1271209",
-          "url": "https://public.flourish.studio/visualisation/24748665/"
-        },
-        {
-          "id": "24748637",
-          "src": "visualisation/24748637?1271209",
-          "url": "https://public.flourish.studio/visualisation/24748637/"
-        }
-      ],
-      "iframes": [],
-      "counts": {
-        "flourish": 2
-      },
-      "total": 2
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1404,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a401b"
-  },
-  {
-    "title": "Editors’ Note",
-    "slug": "editors-note-issue-13",
-    "url": "https://www.vitalcitynyc.org/editors-note-issue-13/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:49.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Megan Kang",
-      "Elizabeth Glazer"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Overview"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "How so many guns got into so many American hands",
-    "excerpt": "How so many guns got into so many American hands",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amavdggnhvfto1o1_765433239901-auto-format-compress-1776259685450.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "John Locher / AP Photo",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1534,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4021"
-  },
-  {
-    "title": "The Good Gun Owner",
-    "slug": "the-good-gun-owner",
-    "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:51.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Samantha J. Simon"
-    ],
-    "topics": [
-      "Police Reform",
-      "Modern Evolution: Marketing and Profits",
-      "Gun Violence"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
-    "excerpt": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6omgnhvfto1zu_gettyimages-51135991-auto-format-compress-1776259687678.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Spencer Platt / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2291,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a401d"
-  },
-  {
-    "title": "What We Know and Don’t Know About Guns",
-    "slug": "what-we-know-and-dont-know-about-guns",
-    "url": "https://www.vitalcitynyc.org/what-we-know-and-dont-know-about-guns/",
-    "type": "data analysis",
-    "type_basis": "html:17-chart-embeds",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Kate Daugherty",
-      "Paul Reeping",
-      "Megan Kang"
-    ],
-    "topics": [
-      "data",
-      "Overview",
-      "Gun Violence",
-      "History"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "Parsing the data",
-    "excerpt": "Parsing the data",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amaxzmgnhvfto1qh_d23hn0-auto-format-compress-1776259687014.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Kristoffer Tripplaar / Alamy Stock Photo",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "24731717",
-          "src": "visualisation/24731717?1271209",
-          "url": "https://public.flourish.studio/visualisation/24731717/"
-        },
-        {
-          "id": "24731821",
-          "src": "visualisation/24731821?1271209",
-          "url": "https://public.flourish.studio/visualisation/24731821/"
-        },
-        {
-          "id": "24730813",
-          "src": "visualisation/24730813?1271209",
-          "url": "https://public.flourish.studio/visualisation/24730813/"
-        },
-        {
-          "id": "24731657",
-          "src": "visualisation/24731657?1271209",
-          "url": "https://public.flourish.studio/visualisation/24731657/"
-        },
-        {
-          "id": "24730916",
-          "src": "visualisation/24730916?1271209",
-          "url": "https://public.flourish.studio/visualisation/24730916/"
-        },
-        {
-          "id": "24731887",
-          "src": "visualisation/24731887?1271209",
-          "url": "https://public.flourish.studio/visualisation/24731887/"
-        },
-        {
-          "id": "24795769",
-          "src": "visualisation/24795769?1271209",
-          "url": "https://public.flourish.studio/visualisation/24795769/"
-        },
-        {
-          "id": "24701566",
-          "src": "visualisation/24701566?1271209",
-          "url": "https://public.flourish.studio/visualisation/24701566/"
-        },
-        {
-          "id": "24701768",
-          "src": "visualisation/24701768?1271209",
-          "url": "https://public.flourish.studio/visualisation/24701768/"
-        },
-        {
-          "id": "24780816",
-          "src": "visualisation/24780816?1271209",
-          "url": "https://public.flourish.studio/visualisation/24780816/"
-        },
-        {
-          "id": "24701934",
-          "src": "visualisation/24701934?1271209",
-          "url": "https://public.flourish.studio/visualisation/24701934/"
-        },
-        {
-          "id": "3282227",
-          "src": "story/3282227?1271209",
-          "url": "https://public.flourish.studio/story/3282227/"
-        },
-        {
-          "id": "24780493",
-          "src": "visualisation/24780493?1271209",
-          "url": "https://public.flourish.studio/visualisation/24780493/"
-        },
-        {
-          "id": "24731510",
-          "src": "visualisation/24731510?1271209",
-          "url": "https://public.flourish.studio/visualisation/24731510/"
-        },
-        {
-          "id": "24731118",
-          "src": "visualisation/24731118?1271209",
-          "url": "https://public.flourish.studio/visualisation/24731118/"
-        },
-        {
-          "id": "24731289",
-          "src": "visualisation/24731289?1271209",
-          "url": "https://public.flourish.studio/visualisation/24731289/"
-        },
-        {
-          "id": "24732005",
-          "src": "visualisation/24732005?1271209",
-          "url": "https://public.flourish.studio/visualisation/24732005/"
-        }
-      ],
-      "iframes": [
-        {
-          "url": "https://www.youtube.com/embed/1ZIgiTrg56w?si=P4kNReOc-whJKw1E",
-          "host": "www.youtube.com",
-          "kind": "video"
-        }
-      ],
-      "counts": {
-        "flourish": 17,
-        "video": 1
-      },
-      "total": 18
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1649,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a401e"
   },
   {
     "title": "The Long Chain",
@@ -15925,6 +16001,45 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
+    "title": "Donald Trump vs. the Rule of Law, and New York City",
+    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
+    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:02.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Harry Siegel"
+    ],
+    "topics": [
+      "Politics",
+      "Repercussions",
+      "Corruption"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Anadolu / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1560,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a404b"
+  },
+  {
     "title": "Is It Time for Cities to Go It Alone?",
     "slug": "is-it-time-for-cities-to-go-it-alone",
     "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
@@ -15964,33 +16079,32 @@
     "id": "69a04c0ad4006a00010a4049"
   },
   {
-    "title": "What You Can Do About Trump",
-    "slug": "what-you-can-do-about-trump",
-    "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
+    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
+    "slug": "trumps-bizarro-new-deal",
+    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:02.000+00:00",
+    "updated_at": "2026-04-15T13:37:03.000+00:00",
     "primary_author": null,
     "authors": [
-      "A Survey"
+      "Adam Cohen"
     ],
     "topics": [
-      "Politics",
-      "Where Do We Go From Here?",
-      "Journalism",
+      "History",
+      "Repercussions",
       "Government Operations"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "Some advice for ordinary Americans concerned about the judgment of history",
-    "excerpt": "Some advice for ordinary Americans concerned about the judgment of history",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeoqviqrldabuac_johnhalpin__headerimage__trump100days_edited-png-auto-format-compress-1776259704726.jpg",
+    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
     "feature_image_alt": null,
-    "feature_image_credit": "UCG / Getty Images",
+    "feature_image_credit": "Vera Bock for the Works Progress Administration",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -15999,48 +16113,9 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 4185,
-    "reading_minutes": 18,
-    "id": "69a04c0ad4006a00010a404a"
-  },
-  {
-    "title": "Donald Trump vs. the Rule of Law, and New York City",
-    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
-    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Harry Siegel"
-    ],
-    "topics": [
-      "Politics",
-      "Repercussions",
-      "Corruption"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Anadolu / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1560,
+    "word_count": 1619,
     "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a404b"
+    "id": "69a04c0ad4006a00010a41d5"
   },
   {
     "title": "Trump’s Executive Orders Have Cities in the Crosshairs",
@@ -16082,32 +16157,33 @@
     "id": "69a04c0ad4006a00010a404c"
   },
   {
-    "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
-    "slug": "trumps-bizarro-new-deal",
-    "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
+    "title": "What You Can Do About Trump",
+    "slug": "what-you-can-do-about-trump",
+    "url": "https://www.vitalcitynyc.org/what-you-can-do-about-trump/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "updated_at": "2026-04-15T13:37:02.000+00:00",
     "primary_author": null,
     "authors": [
-      "Adam Cohen"
+      "A Survey"
     ],
     "topics": [
-      "History",
-      "Repercussions",
+      "Politics",
+      "Where Do We Go From Here?",
+      "Journalism",
       "Government Operations"
     ],
     "issues": [
       "trump-100-days-and-beyond"
     ],
     "issue_numbers": [],
-    "summary": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "excerpt": "Our latest president goes down in history for a destructive and destabilizing start.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abdt_piqrldabt0g_artists-of-the-new-deal-auto-format-compress-1776259704318.jpg",
+    "summary": "Some advice for ordinary Americans concerned about the judgment of history",
+    "excerpt": "Some advice for ordinary Americans concerned about the judgment of history",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abeoqviqrldabuac_johnhalpin__headerimage__trump100days_edited-png-auto-format-compress-1776259704726.jpg",
     "feature_image_alt": null,
-    "feature_image_credit": "Vera Bock for the Works Progress Administration",
+    "feature_image_credit": "UCG / Getty Images",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -16116,9 +16192,9 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1619,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a41d5"
+    "word_count": 4185,
+    "reading_minutes": 18,
+    "id": "69a04c0ad4006a00010a404a"
   },
   {
     "title": "A Real New York Mayoral Election",

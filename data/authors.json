@@ -1,7 +1,7 @@
 [
   {
     "name": "Vital City",
-    "post_count": 95,
+    "post_count": 96,
     "slugs": [
       "2025-a-look-back-most-read",
       "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -47,6 +47,7 @@
       "michael-lipetri-interview",
       "new-york-city-deputy-mayors-on-how-things-really-get-done",
       "new-york-citys-subways-moving-millions",
+      "nyc-coge-charter-reform-government-operations-fixes",
       "nyc-economy-data-story",
       "nyc-housing-permits-fast-track-construction-mamdani",
       "nyc-mamdani-coge-government-efficiency-ballot-reform-recommendations",
@@ -791,6 +792,21 @@
     "website": null
   },
   {
+    "name": "Marc A. Levin",
+    "post_count": 4,
+    "slugs": [
+      "how-to-get-smarter-about-fighting-crime",
+      "ice-impunity-police-law-enforcement-accountability",
+      "partisan-gerrymandering-cities-unexpected-benefit",
+      "the-case-for-optimism"
+    ],
+    "slug": "levin-marc-a",
+    "bio": "is chief policy counsel for the Council on Criminal Justice.",
+    "url": "https://www.vitalcitynyc.org/author/levin-marc-a/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Jake Berman",
     "post_count": 4,
     "slugs": [
@@ -802,21 +818,6 @@
     "slug": "berman-jake",
     "bio": "is a lawyer, cartographer, historian and the author of \"The Lost Subways of North America.\" Originally born in San Francisco, he now lives in Brooklyn. ",
     "url": "https://www.vitalcitynyc.org/author/berman-jake/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Anthony A. Braga",
-    "post_count": 4,
-    "slugs": [
-      "gun-violence-prevention-and-the-harm-of-omission",
-      "nypd-gang-database-shooting-reduction",
-      "underground-gun-markets-urban-violence",
-      "what-police-can-do-differently-to-save-lives"
-    ],
-    "slug": "braga-anthony-a",
-    "bio": "is the Jerry Lee Professor of Criminology at the University of Pennsylvania and the director of the university's Crime and Justice Policy Lab.",
-    "url": "https://www.vitalcitynyc.org/author/braga-anthony-a/",
     "twitter": null,
     "website": null
   },
@@ -1084,20 +1085,6 @@
     "website": null
   },
   {
-    "name": "Marc A. Levin",
-    "post_count": 3,
-    "slugs": [
-      "how-to-get-smarter-about-fighting-crime",
-      "partisan-gerrymandering-cities-unexpected-benefit",
-      "the-case-for-optimism"
-    ],
-    "slug": "levin-marc-a",
-    "bio": "is chief policy counsel for the Council on Criminal Justice.",
-    "url": "https://www.vitalcitynyc.org/author/levin-marc-a/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Eric Goldwyn",
     "post_count": 3,
     "slugs": [
@@ -1150,6 +1137,20 @@
     "slug": "chohlas-wood-alex",
     "bio": "is an assistant professor of computational social science at NYU Steinhardt. He also co-directs the Computational Policy Lab at Harvard Kennedy School and is the former director of analytics at the New York Police Department.",
     "url": "https://www.vitalcitynyc.org/author/chohlas-wood-alex/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Anthony A. Braga",
+    "post_count": 3,
+    "slugs": [
+      "gun-violence-prevention-and-the-harm-of-omission",
+      "underground-gun-markets-urban-violence",
+      "what-police-can-do-differently-to-save-lives"
+    ],
+    "slug": "braga-anthony-a",
+    "bio": "is the Jerry Lee Professor of Criminology at the University of Pennsylvania and the director of the university's Crime and Justice Policy Lab.",
+    "url": "https://www.vitalcitynyc.org/author/braga-anthony-a/",
     "twitter": null,
     "website": null
   },
@@ -2337,6 +2338,18 @@
     "website": null
   },
   {
+    "name": "Matthew Burton",
+    "post_count": 1,
+    "slugs": [
+      "mamdani-pit-crews-government-tech-problems"
+    ],
+    "slug": "matthew",
+    "bio": "is a veteran public sector technology executive. He has led and advised technology teams at the U.S. Treasury, U.S. Department of Education, Consumer Financial Protection Bureau, CIA, and the New York Attorney General’s office. ",
+    "url": "https://www.vitalcitynyc.org/author/matthew/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "David L. Ortega",
     "post_count": 1,
     "slugs": [
@@ -3153,18 +3166,6 @@
     "website": null
   },
   {
-    "name": "Christopher Winship",
-    "post_count": 1,
-    "slugs": [
-      "nypd-gang-database-shooting-reduction"
-    ],
-    "slug": "winship-christopher",
-    "bio": null,
-    "url": "https://www.vitalcitynyc.org/author/winship-christopher/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Adam Gelb",
     "post_count": 1,
     "slugs": [
@@ -3765,6 +3766,18 @@
     "website": null
   },
   {
+    "name": "Daniel Semenza",
+    "post_count": 1,
+    "slugs": [
+      "the-80-20-rule-of-gun-supply"
+    ],
+    "slug": "semenza-daniel",
+    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Brian DeLay",
     "post_count": 1,
     "slugs": [
@@ -3813,6 +3826,42 @@
     "website": null
   },
   {
+    "name": "Samantha J. Simon",
+    "post_count": 1,
+    "slugs": [
+      "the-good-gun-owner"
+    ],
+    "slug": "simon-samantha-j",
+    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Greg Lickenbrock",
+    "post_count": 1,
+    "slugs": [
+      "the-money-behind-mass-shootings"
+    ],
+    "slug": "lickenbrock-greg",
+    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Kate Daugherty",
+    "post_count": 1,
+    "slugs": [
+      "what-we-know-and-dont-know-about-guns"
+    ],
+    "slug": "daugherty-kate",
+    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+    "twitter": null,
+    "website": null
+  },
+  {
     "name": "Nina Vinik",
     "post_count": 1,
     "slugs": [
@@ -3857,54 +3906,6 @@
     "slug": "buckhanan-charles",
     "bio": "is a street outreach worker on Chicago’s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
     "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Daniel Semenza",
-    "post_count": 1,
-    "slugs": [
-      "the-80-20-rule-of-gun-supply"
-    ],
-    "slug": "semenza-daniel",
-    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Greg Lickenbrock",
-    "post_count": 1,
-    "slugs": [
-      "the-money-behind-mass-shootings"
-    ],
-    "slug": "lickenbrock-greg",
-    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Samantha J. Simon",
-    "post_count": 1,
-    "slugs": [
-      "the-good-gun-owner"
-    ],
-    "slug": "simon-samantha-j",
-    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Kate Daugherty",
-    "post_count": 1,
-    "slugs": [
-      "what-we-know-and-dont-know-about-guns"
-    ],
-    "slug": "daugherty-kate",
-    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
-    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
     "twitter": null,
     "website": null
   },
@@ -4257,18 +4258,6 @@
     "website": null
   },
   {
-    "name": "Meryl Chertoff",
-    "post_count": 1,
-    "slugs": [
-      "trumps-executive-orders-have-cities-in-the-crosshairs"
-    ],
-    "slug": "chertoff-meryl",
-    "bio": "is adjunct professor of law at Georgetown University Law Center.",
-    "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Adam Cohen",
     "post_count": 1,
     "slugs": [
@@ -4277,6 +4266,18 @@
     "slug": "cohen-adam",
     "bio": "is author of “Nothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
     "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Meryl Chertoff",
+    "post_count": 1,
+    "slugs": [
+      "trumps-executive-orders-have-cities-in-the-crosshairs"
+    ],
+    "slug": "chertoff-meryl",
+    "bio": "is adjunct professor of law at Georgetown University Law Center.",
+    "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
     "twitter": null,
     "website": null
   },
