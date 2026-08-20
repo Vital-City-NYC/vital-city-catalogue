@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-08-20T11:13:00.319527+00:00",
+    "generated_at": "2026-08-20T21:53:12.143879+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 893,
     "total_authors": 493,
@@ -11,27 +11,8 @@
       "2026-08-19"
     ],
     "first_run": false,
-    "new_article_count": 3,
-    "new_articles": [
-      {
-        "title": "13 Fixes for New York City Government That Go Beyond the Charter",
-        "url": "https://www.vitalcitynyc.org/nyc-coge-charter-reform-government-operations-fixes/",
-        "published_date": "2026-08-19",
-        "primary_author": null
-      },
-      {
-        "title": "Mamdani\u2019s PIT Crews: Government Innovation, or Innovation Theater?",
-        "url": "https://www.vitalcitynyc.org/mamdani-pit-crews-government-tech-problems/",
-        "published_date": "2026-08-19",
-        "primary_author": null
-      },
-      {
-        "title": "The Invisible Thread That Connects Cases of Excessive Force and Low Clearance Rates",
-        "url": "https://www.vitalcitynyc.org/ice-impunity-police-law-enforcement-accountability/",
-        "published_date": "2026-02-19",
-        "primary_author": null
-      }
-    ]
+    "new_article_count": 0,
+    "new_articles": []
   },
   "total_pieces": 893,
   "by_year": {
@@ -252,7 +233,7 @@
     ],
     [
       "Nonprofit / advocacy",
-      75
+      76
     ],
     [
       "Journalist / media",
@@ -280,7 +261,7 @@
     ],
     [
       "Unknown / no bio",
-      8
+      7
     ],
     [
       "Vital City (institutional)",
