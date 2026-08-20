@@ -11,7 +11,23 @@ question).
 
 Google Scholar does answer scripted exact-phrase queries, and it indexes the
 full text of papers, working papers and reports — which is precisely where a
-person's own email address ends up in print. So the sweep runs there.
+person's own email address ends up in print. So this sweep runs there.
+
+BUT THE BETTER METHOD IS THE BROWSER. Josh pointed out that Claude can drive
+his actual Chrome, where Google answers normally. From a google.com tab:
+
+    fetch("/search?q=" + encodeURIComponent('"' + email + '"'), {credentials:"include"})
+
+is same-origin, so a whole batch runs from one tool call. Two things matter:
+read ONLY the results region (#rso) — the page header echoes the query, and
+parsing the whole body makes every search look like a hit — and pace it, because
+Google starts serving "unusual traffic" at roughly 28 queries. Pause there
+rather than risk a block on his account; resume later.
+
+That method found, in one sitting: Martin F. Horn (former NYC Correction and
+Probation Commissioner), Daniel Pearlstein of Riders Alliance, Nathan Eagan,
+Kellie Leeson, Walter S. Topp, plus proof for three names that had only been
+inferred from an organisation's email convention.
 
 WHAT COUNTS AS A HIT
 The address appears in a document Scholar indexed. That is proof, not

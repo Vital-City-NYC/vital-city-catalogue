@@ -183,6 +183,81 @@ SEARCH_FINDINGS = [
            "pass, after Laura van der Lugt."),
 ]
 
+# ---------------------------------------------------------------- browser sweep
+# Josh: "you can drive my browser." He was right, and it changes everything.
+# Google refuses scripted queries from a server but answers normally in his own
+# Chrome. Driving it — same-origin fetches to /search from a google.com tab,
+# reading only the results region so the page's echo of the query does not
+# register as a hit — turns "unfindable" into a solved problem for a good share
+# of this list. Roughly 28 queries in, Google starts rate-limiting; the sweep
+# pauses there rather than risk a block on his account, and resumes later.
+#
+# Everything here is CONFIRMED in the strict sense: a page prints the address
+# next to the name. Three of these upgrade an earlier convention-based guess to
+# proof, which is the point.
+BROWSER_FINDINGS = [
+ dict(email="mfhorn626@yahoo.com", name="Martin F. Horn",
+      employer="John Jay College of Criminal Justice", role="Distinguished lecturer in corrections; executive director, New York State Sentencing Commission",
+      conf="confirmed", url="https://www.jjay.cuny.edu/faculty/martin-f-horn",
+      note="His CV, filed as an exhibit in Lucero-Gonzalez v. Kline, prints mfhorn626@yahoo.com above "
+           "an employment history beginning 'EXECUTIVE DIRECTOR, NEW YORK STATE UNIFIED COURT SYSTEM, "
+           "NEW YORK STATE SENTENCING'. He was Bloomberg's Commissioner of Correction AND Probation "
+           "simultaneously, 2002-2009, and Pennsylvania's Secretary of Corrections before that. Opens "
+           "90% of sends and clicks 30%. Given the Rikers work, one of the more consequential readers "
+           "on the list."),
+ dict(email="jmc@mccreightpartners.com", name="John A. McCreight",
+      employer="McCreight Partners", role="Founder and chairman",
+      conf="confirmed", url="https://mccreightpartners.com/",
+      note="UPGRADE from convention-guess to proof: the firm's own contact page and a 2020 PDF both "
+           "print 'John McCreight: jmc@mccreightpartners.com'. Opens 72%, clicks 61%."),
+ dict(email="jmascia@thetrace.org", name="Jennifer Mascia",
+      employer="The Trace", role="Senior news writer",
+      conf="confirmed", url="https://www.thetrace.org/2025/12/immigration-ice-shootings/",
+      note="UPGRADE: a Trace article says 'you can email senior news writer Jennifer Mascia at "
+           "jmascia@thetrace.org'."),
+ dict(email="dgilbert@vera.org", name="Daniela Gilbert",
+      employer="Vera Institute of Justice", role="Director, Redefining Public Safety",
+      conf="confirmed", url="https://www.vera.org/civilian-crisis-response-toolkit",
+      note="UPGRADE: Vera's Civilian Crisis Response toolkit says 'please contact Daniela Gilbert, "
+           "director, Redefining Public Safety, at dgilbert@vera.org'."),
+ dict(email="dudell@fordham.edu", name="David Udell",
+      employer="National Center for Access to Justice", role="Executive director",
+      conf="confirmed", url="https://ncaj.org/",
+      note="The NCAJ, housed at Fordham Law, is the top result for the address."),
+ dict(email="neagan4@gmail.com", name="Nathan Eagan",
+      employer="Colorado Coalition for Restorative Justice Practices", role="Co-chair, board of directors",
+      conf="confirmed", url="https://ccrjp.org/who-we-are",
+      note="The coalition's own Who We Are page lists 'Nathan Eagan, Co-Chair: neagan4@gmail.com'. "
+           "A consumer mailbox, findable in one search — exactly Josh's point."),
+ dict(email="kcleeson@gmail.com", name="Kellie Leeson",
+      employer="Refugee Self-Reliance Initiative", role="Independent consultant, initiative lead",
+      conf="confirmed", url="https://www.rsc.ox.ac.uk/people/kellie-leeson",
+      note="Oxford's Refugee Studies Centre profile prints KCLeeson@gmail.com."),
+ dict(email="wstopp11@gmail.com", name="Walter S. Topp",
+      employer="Independent — writer", role="Non-fiction and technical writer, Cleveland",
+      conf="confirmed", url="https://wstopp.com/",
+      note="His own site and its Facebook page carry the address. A former reporter, emergency "
+           "manager, naval officer and police officer."),
+ # -- found, but only in people-search aggregators. Recorded, deliberately not promoted.
+ dict(email="wjenett@gmail.com", name="", conf="broker-only",
+      url="", note="A people-search aggregator ties this to a Willoughby Jenett and shows a second "
+           "address at legal-aid.org, which would fit a Legal Aid Society lawyer. The only sources are "
+           "data brokers, which are often wrong and which I do not think should silently become the "
+           "provenance of a name in this database. Josh's call."),
+ dict(email="pcsarna1@yahoo.com", name="", conf="broker-only",
+      url="", note="Same: an aggregator gives Peter C. Sarna II in Palm Desert, California. Broker "
+           "source only."),
+ # -- organisational or shared addresses clarified by the sweep
+ dict(email="centerforadvancedprosecution@gmail.com", name="", employer="Center for Advanced Prosecution",
+      conf="organisation", url="https://www.repatriationgroup.org/contact",
+      note="Used as the contact address on Repatriation Group International's site. An organisational "
+           "mailbox, not a person."),
+ dict(email="sgreenfield04@gmail.com", name="", conf="searched",
+      url="https://www.merrickjc.org/",
+      note="Appears only as the Zelle payment address for Merrick Jewish Centre on Long Island. Tells "
+           "us the person handles payments there; does not give a name."),
+]
+
 # ---------------------------------------------------------------- consumer mailboxes
 # Josh's push-back, and he was right: a consumer domain is not the same as
 # unfindable. Two different things live in this cohort, and they deserve
@@ -288,7 +363,10 @@ def main():
             if e: by_email[e.strip().lower()] = r
 
     out = []
-    for f in FINDINGS + CONSUMER_FINDINGS + SEARCH_FINDINGS:
+    merged = {}
+    for f in FINDINGS + CONSUMER_FINDINGS + SEARCH_FINDINGS + BROWSER_FINDINGS:
+        merged[f["email"].lower()] = f      # a later, better-sourced finding supersedes an earlier one
+    for f in merged.values():
         r = by_email.get(f["email"].lower())
         if not r:
             print(f"  WARNING: {f['email']} is no longer in people.json — skipping")
