@@ -152,6 +152,79 @@ FINDINGS = [
       note="Employer is certain from the domain; the staff page did not surface a Severe. Recorded so the next pass skips it."),
 ]
 
+# ---------------------------------------------------------------- consumer mailboxes
+# Josh's push-back, and he was right: a consumer domain is not the same as
+# unfindable. Two different things live in this cohort, and they deserve
+# different treatment.
+#
+#   address-encoded  The address SPELLS a full name. Writing "Rachel Fine" for
+#                    rachelfine515@ is not an identity claim about a human being;
+#                    it is reading what the address already says, and it is
+#                    strictly better than the "Rachelfine" the guesser produces.
+#                    Safe to promote.
+#   likely           The address encodes a partial or truncated name AND exactly
+#                    one person in this publication's subject area fits it. A
+#                    real judgement call. Flagged, never auto-applied.
+#   organisation     Not a person at all. Should not carry a personal name.
+#   searched         Looked, found nothing that ties the address to a person.
+#
+# Exact-address searches were run on this cohort first. Consumer addresses
+# almost never appear in a public page, which is why the identifications below
+# lean on what the address spells rather than on a search hit.
+CONSUMER_FINDINGS = [
+ # -- address-encoded: safe, and a plain improvement on the current mangled form
+ dict(email="rachelfine515@gmail.com", name="Rachel Fine", conf="address-encoded",
+      note="First and surname both already in the database's own name vocabulary."),
+ dict(email="benwolf1132@gmail.com", name="Ben Wolf", conf="address-encoded",
+      note="Both parts known to the database. Could be short for Wolfson; Wolf is the literal reading."),
+ dict(email="jimpickman@gmail.com", name="Jim Pickman", conf="address-encoded", note=""),
+ dict(email="claraoshea5@gmail.com", name="Clara O'Shea", conf="address-encoded",
+      note="Apostrophe restored: 'oshea' is O'Shea."),
+ dict(email="caitlinflood453@gmail.com", name="Caitlin Flood", conf="address-encoded", note=""),
+ dict(email="jonmacone@yahoo.com", name="Jon Macone", conf="address-encoded", note=""),
+ dict(email="jessetowsen@gmail.com", name="Jesse Towsen", conf="address-encoded", note=""),
+ dict(email="sarahpcassel@gmail.com", name="Sarah P. Cassel", conf="address-encoded",
+      note="Middle initial between the names."),
+ dict(email="carlamariedavis@gmail.com", name="Carla Marie Davis", conf="address-encoded",
+      note="Three-part name; the naive splitter cannot see this one."),
+ dict(email="jimjohnsonemail@yahoo.com", name="Jim Johnson", conf="address-encoded",
+      note="The trailing 'email' is a suffix, not part of the surname."),
+ # -- likely: the judgement calls, for Josh not for the machine
+ dict(email="vgullap@gmail.com", name="Vaidya Gullapalli", conf="likely",
+      url="https://muckrack.com/vaidya-gullapalli",
+      note="'vgullap' is a truncation of v-gullapalli. She is a criminal justice journalist and "
+           "lawyer, formerly of the Bronx Defenders and the Office of the Appellate Defender in New "
+           "York, and wrote The Appeal's Daily Appeal — precisely this readership. The address itself "
+           "appears nowhere public, so this is inference, not proof."),
+ dict(email="clarawutsai@gmail.com", name="Clara Wu Tsai", conf="likely",
+      url="",
+      note="WORTH A HUMAN LOOK. The address spells a distinctive three-part name. If this is the "
+           "Clara Wu Tsai, she funds criminal justice reform heavily and is a significant prospect. "
+           "The address has no public footprint, so the identity is unconfirmed — do not treat as a "
+           "funder record until someone checks. 98% open rate since March 2022."),
+ dict(email="carlhamad@gmail.com", name="", conf="likely",
+      url="https://envisionfreedom.org/about-us/remembering-carl-hamad-lipscombe/",
+      note="HANDLE WITH CARE, DO NOT SOLICIT. Possibly Carl Hamad-Lipscombe, executive director of "
+           "Envision Freedom Fund, who died in 2024. If it is him the record should be suppressed, "
+           "not enriched. If there has been engagement since March 2024 it is someone else. Either "
+           "way a name should not be written in without checking."),
+ # -- organisations, not people
+ dict(email="coneygravesendtaskforce@yahoo.com", name="", employer="Coney Island / Gravesend community task force",
+      conf="organisation",
+      note="A shared organisational mailbox. Currently carries the personal name "
+           "'Coneygravesendtaskforce'. Should be flagged as an organisation so it never appears in a "
+           "personal salutation."),
+ dict(email="centerforadvancedprosecution@gmail.com", name="", employer="Center for Advanced Prosecution",
+      conf="organisation",
+      note="Same: an organisational mailbox carrying a personal name."),
+ # -- searched, nothing solid
+ dict(email="dpearlstein@gmail.com", name="", conf="searched",
+      note="Exact address returns nothing. Several D. Pearlsteins work in law and policy; none can be "
+           "tied to this address. 92% open, 46% click — the most engaged unnamed reader on the list."),
+ dict(email="meisenholdert@gmail.com", name="", conf="searched",
+      note="No Eisenholder/Eisenholdt found in New York policy or nonprofit records."),
+]
+
 # Domain -> proper organisation name, for records whose employer is a mangled
 # domain string. Applies beyond the individuals above.
 DOMAIN_FIX = {
@@ -187,7 +260,7 @@ def main():
             if e: by_email[e.strip().lower()] = r
 
     out = []
-    for f in FINDINGS:
+    for f in FINDINGS + CONSUMER_FINDINGS:
         r = by_email.get(f["email"].lower())
         if not r:
             print(f"  WARNING: {f['email']} is no longer in people.json — skipping")
@@ -198,21 +271,21 @@ def main():
             "current_employer": r.get("inst") or "",
             "name_changes": bool(f.get("name")) and (f["name"] != (r.get("n") or "")),
             "employer_changes": bool(f.get("employer")) and (f["employer"] != (r.get("inst") or "")),
-            "opens": r.get("eopen") or 0, "clicks": r.get("eclick") or 0,
+            "open_rate_pct": r.get("eopen") or 0, "click_rate_pct": r.get("eclick") or 0,
             "rating": r.get("erate") or 0, "donor": bool(r.get("don")),
         })
 
     (PRIV / "reader_enrichment.json").write_text(json.dumps(out, indent=1, ensure_ascii=False))
     cols = ["conf", "email", "current_name", "name", "current_employer", "employer", "role",
-            "opens", "clicks", "rating", "donor", "url", "note"]
+            "open_rate_pct", "click_rate_pct", "rating", "donor", "url", "note"]
     with open(PRIV / "reader_enrichment.csv", "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
         w.writeheader()
-        for row in sorted(out, key=lambda x: (x["conf"] != "confirmed", x["conf"], -x["clicks"])):
+        for row in sorted(out, key=lambda x: (x["conf"] != "confirmed", x["conf"], -x["click_rate_pct"])):
             w.writerow(row)
 
     # A ready-to-append block for name_overrides.csv, confirmed rows only.
-    promote = [o for o in out if o["conf"] == "confirmed" and o["name_changes"]]
+    promote = [o for o in out if o["conf"] in ("confirmed", "address-encoded") and o["name_changes"]]
     (PRIV / "reader_enrichment_promote.csv").write_text(
         "email,name\n" + "".join(f'{o["email"]},{o["name"]}\n' for o in promote))
 
@@ -222,11 +295,11 @@ def main():
     covered = {f["email"].lower() for f in FINDINGS}
     left = [r for r in need if not ({(e or "").lower() for e in (r.get("emails") or [])} & covered)]
     print(f"devoted readers: {len(dev)} | missing a name or employer: {len(need)}")
-    print(f"researched here: {len(out)} | confirmed: {sum(1 for o in out if o['conf']=='confirmed')}"
-          f" | high: {sum(1 for o in out if o['conf']=='high')}"
-          f" | org-only: {sum(1 for o in out if o['conf']=='org-only')}"
-          f" | unresolved: {sum(1 for o in out if o['conf']=='unresolved')}")
-    print(f"still unfilled: {len(left)} (mostly consumer mailboxes with no public footprint)")
+    from collections import Counter
+    tiers = Counter(o["conf"] for o in out)
+    print("researched here: %d | %s" % (len(out), " | ".join(f"{k}: {v}" for k, v in sorted(tiers.items()))))
+    print(f"still untouched: {len(left)} — initial+surname consumer addresses (dnocenti@, wjenett@, "
+          f"jek617@) that spell no full name and return nothing on an exact-address search")
     print(f"ready to promote into name_overrides.csv: {len(promote)}")
     print(f"wrote {PRIV/'reader_enrichment.csv'} and {PRIV/'reader_enrichment_promote.csv'}")
 
