@@ -1142,11 +1142,25 @@ def main():
         with open(overrides_path, newline="") as f:
             for row in csv.DictReader(f):
                 em = email_norm(row.get("email"))
+                if not em or em not in by_email:
+                    continue
+                rec = by_email[em]
                 fixed = (row.get("name") or "").strip()
-                if em and fixed and em in by_email:
-                    by_email[em]["n"] = fixed
-                    by_email[em]["ns"] = "given"
+                if fixed:
+                    rec["n"], rec["ns"] = fixed, "given"
                     overrides_applied += 1
+                # Optional columns, so researched employers and titles survive the
+                # nightly rebuild too. people_overrides.json cannot be used for
+                # this: the workflow overwrites that file with the Google Sheet
+                # every run, so anything written there locally is lost.
+                if (row.get("inst") or "").strip():
+                    rec["inst"] = row["inst"].strip()
+                if (row.get("role") or "").strip():
+                    rec["role"] = row["role"].strip()
+                # excl=1 marks someone who must never be solicited — sitting public
+                # officials, chiefly. The prospects build filters on it.
+                if (row.get("excl") or "").strip() in ("1", "y", "yes", "true"):
+                    rec["excl"] = 1
 
     # ---- consolidate duplicates: exact key, then nickname key (last) ----
     # Catches accents/middle initials (Synøve N. Andersen == Synove Andersen),
