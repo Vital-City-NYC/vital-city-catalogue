@@ -1355,6 +1355,29 @@ def main():
         "type_matrix": type_matrix,
     }
 
+    # ---- flag machines before anyone ranks readers by engagement -------------
+    # A 95%+ open rate paired with a 85%+ click rate is not an avid reader, it is
+    # a corporate email security gateway following every link in the message to
+    # scan it. Left unflagged these sit at the top of every "most engaged reader"
+    # list — the ranking silently measures spam filters. Role mailboxes
+    # (info@, support@) are excluded from personal engagement for the same
+    # reason: nobody in particular is reading them.
+    #
+    # This FLAGS, it never deletes: a gateway address still belongs to a real
+    # subscribing organisation. Anything ranking or soliciting on engagement
+    # should filter on `gw`.
+    ROLE_LOCAL = re.compile(r"^(info|support|office|admin|contact|sales|help|team|hello|"
+                            r"enquiries|inquiries|mail|noreply|no-reply|donotreply)\b", re.I)
+    gw_n = 0
+    for q in people:
+        local = (q.get("e") or "").split("@")[0]
+        gateway = (q.get("eopen") or 0) >= 95 and (q.get("eclick") or 0) >= 85
+        role = bool(ROLE_LOCAL.match(local))
+        q["gw"] = 1 if gateway else (2 if role else 0)   # 1 = scanner, 2 = role mailbox
+        if q["gw"]: gw_n += 1
+    print(f"flagged {gw_n} addresses as gateway/role (excluded from engagement ranking)",
+          file=__import__("sys").stderr)
+
     PRIV.mkdir(exist_ok=True)
     (PRIV / "people.json").write_text(json.dumps(people, ensure_ascii=False, separators=(",", ":")))
     (PRIV / "network_stats.json").write_text(json.dumps(stats, indent=2, ensure_ascii=False))
