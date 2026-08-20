@@ -68,6 +68,20 @@ MEDIA_DOMAINS = {
 
 # Curated email-domain -> institution names (high confidence).
 INST_DOMAINS = {
+    # Researched 2026-08-19 for the devoted-reader pass. Without these, the
+    # acronym-ish fallbacks below turn the domain string itself into a fake
+    # employer: "Ocbaacp", "Bcfny", "Appad", "Ceoworks", and osc.ny.gov -> "NY".
+    "ocbaacp.org": "Onondaga County Bar Association Assigned Counsel Program",
+    "bcfny.org": "Brooklyn Org (formerly Brooklyn Community Foundation)",
+    "appad.org": "Appellate Advocates",
+    "ceoworks.org": "Center for Employment Opportunities",
+    "osc.ny.gov": "Office of the New York State Comptroller",
+    "apdscorporate.com": "Orijin (formerly APDS)",
+    "lemosandcrane.co.uk": "Lemos&Crane",
+    "dpw.com": "Davis Polk & Wardwell",
+    "citizensunionfoundation.org": "Citizens Union Foundation",
+    "1235strategies.com": "1235 Strategies",
+    "mccreightpartners.com": "McCreight Partners",
     "nytimes.com": "The New York Times", "wsj.com": "The Wall Street Journal",
     "washingtonpost.com": "The Washington Post", "theatlantic.com": "The Atlantic",
     "newyorker.com": "The New Yorker", "nymag.com": "New York Magazine",
@@ -316,7 +330,7 @@ INST_DOMAINS = {
 }
 WEBMAIL = {"gmail.com","googlemail.com","yahoo.com","ymail.com","hotmail.com","outlook.com",
  "live.com","msn.com","aol.com","icloud.com","me.com","mac.com","proton.me","protonmail.com",
- "pm.me","gmx.com","fastmail.com","comcast.net","verizon.net","att.net","sbcglobal.net",
+ "pm.me","gmx.com","fastmail.com","comcast.net","verizon.net","att.net","sbcglobal.net","idt.net",
  "optimum.net","rcn.com","earthlink.net","mindspring.com","nyc.rr.com","mail.com","ms.com","aim.com",
  "yahoo.co.uk","hotmail.co.uk","yahoo.co.jp","yahoo.ca","yahoo.de","yahoo.es","yahoo.fr","yahoo.com.au",
  "web.de","gmx.de","gmx.net","bellsouth.net","optonline.net","rocketmail.com","cox.net","shaw.ca",
