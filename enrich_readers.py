@@ -152,6 +152,37 @@ FINDINGS = [
       note="Employer is certain from the domain; the staff page did not surface a Severe. Recorded so the next pass skips it."),
 ]
 
+# ---------------------------------------------------------------- found by exact-address search
+# Josh found dpearlstein@gmail.com on Google in one search and asked, fairly,
+# why I could not. Two reasons, both worth recording:
+#   1. My first query was "dpearlstein@gmail.com" OR "Pearlstein" New York
+#      criminal justice policy. The OR let the engine satisfy the query without
+#      ever matching the address. A bare quoted address is the only honest test.
+#   2. Even bare, my search tool's index does not contain the page Google
+#      returns first — a Sage journal article. Google, Bing, DuckDuckGo and
+#      Brave all refuse scripted queries or silently drop the exact-phrase
+#      constraint. Google Scholar does answer them, and indexes the full text of
+#      papers and reports, which is exactly where people print their own email.
+# find_reader_names.py runs that sweep. These are its confirmed results: the
+# address appears in a document the person wrote, which is proof, not inference.
+SEARCH_FINDINGS = [
+ dict(email="dpearlstein@gmail.com", name="Daniel Pearlstein",
+      employer="Riders Alliance", role="Policy and communications director",
+      conf="confirmed", url="https://journals.sagepub.com/doi/10.1177/1538513210366980",
+      note="His own paper prints the address: 'Sweeping Six Percent Philanthropy Away: The New Deal "
+           "in Sunnyside Gardens', Journal of Planning History 2010, under Benjamin N. Cardozo School "
+           "of Law. Now policy and communications director at Riders Alliance, the subway and bus "
+           "riders' organisation; previously chief of staff to a City Council land use chair. Opens "
+           "92% of sends and clicks 46% — the most engaged reader who had no name."),
+ dict(email="hfader@csg.org", name="Hallie Fader-Towe",
+      employer="Council of State Governments Justice Center", role="",
+      conf="confirmed", url="https://csgjusticecenter.org/people/hallie-fader-towe/",
+      note="Address appears in 'Just and Well: Rethinking How States Approach Competency to Stand "
+           "Trial' (CSG Justice Center, 2020), which she co-authored. Harvard JD, McKinsey before "
+           "CSG; works on courts and mental illness. Second CSG Justice Center reader found in this "
+           "pass, after Laura van der Lugt."),
+]
+
 # ---------------------------------------------------------------- consumer mailboxes
 # Josh's push-back, and he was right: a consumer domain is not the same as
 # unfindable. Two different things live in this cohort, and they deserve
@@ -218,9 +249,6 @@ CONSUMER_FINDINGS = [
       conf="organisation",
       note="Same: an organisational mailbox carrying a personal name."),
  # -- searched, nothing solid
- dict(email="dpearlstein@gmail.com", name="", conf="searched",
-      note="Exact address returns nothing. Several D. Pearlsteins work in law and policy; none can be "
-           "tied to this address. 92% open, 46% click — the most engaged unnamed reader on the list."),
  dict(email="meisenholdert@gmail.com", name="", conf="searched",
       note="No Eisenholder/Eisenholdt found in New York policy or nonprofit records."),
 ]
@@ -260,7 +288,7 @@ def main():
             if e: by_email[e.strip().lower()] = r
 
     out = []
-    for f in FINDINGS + CONSUMER_FINDINGS:
+    for f in FINDINGS + CONSUMER_FINDINGS + SEARCH_FINDINGS:
         r = by_email.get(f["email"].lower())
         if not r:
             print(f"  WARNING: {f['email']} is no longer in people.json — skipping")
@@ -298,8 +326,8 @@ def main():
     from collections import Counter
     tiers = Counter(o["conf"] for o in out)
     print("researched here: %d | %s" % (len(out), " | ".join(f"{k}: {v}" for k, v in sorted(tiers.items()))))
-    print(f"still untouched: {len(left)} — initial+surname consumer addresses (dnocenti@, wjenett@, "
-          f"jek617@) that spell no full name and return nothing on an exact-address search")
+    print(f"still open: {len(left)} — the exact-address sweep in find_reader_names.py is working "
+          f"through these; Google Scholar rate-limits after a few queries, so it resumes in rounds")
     print(f"ready to promote into name_overrides.csv: {len(promote)}")
     print(f"wrote {PRIV/'reader_enrichment.csv'} and {PRIV/'reader_enrichment_promote.csv'}")
 
