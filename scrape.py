@@ -36,9 +36,25 @@ JUNK_TAG_PREFIXES = ("hash-import-",)
 
 
 def fetch_json(url):
+    # The catalogue is ~900 posts = 18 sequential pages, so a single transient
+    # read timeout on any one of them used to kill the whole nightly refresh.
+    # Retry the transient cases (read timeouts, dropped connections, 429/5xx);
+    # a real error still raises so the job fails loudly rather than publishing
+    # a half-scraped catalogue.
     req = urllib.request.Request(url, headers={"User-Agent": "vital-city-catalogue/1.0"})
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        return json.load(resp)
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                return json.load(resp)
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 500, 502, 503, 504) and attempt < 3:
+                print(f"  HTTP {e.code}; retrying (attempt {attempt + 1})", file=sys.stderr)
+                time.sleep(5 * (attempt + 1)); continue
+            raise
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            if attempt == 3: raise
+            print(f"  network error ({e}); retrying (attempt {attempt + 1})", file=sys.stderr)
+            time.sleep(5 * (attempt + 1))
 
 
 def fetch_all_posts():
