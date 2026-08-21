@@ -3222,6 +3222,22 @@ def pull_voice_appearances():
                      "trace a brand-mention tracker can see.")}
 
 
+# Citations we know about that no search engine will hand us. Google News does
+# not index advocate.nyc.gov at all -- every query against that domain returns
+# zero -- so the Public Advocate building an official statement around a Vital
+# City report, the strongest single influence artifact anyone has found, was
+# undiscoverable by the automated channel no matter how the whitelist was
+# tuned. Seeding the URL fixes that without weakening anything: these are
+# fetched and checked by verify_citations() exactly like a searched result, so
+# a seeded item that stops naming us stops counting.
+#
+# Add a row when someone tells you about a citation the dashboard missed.
+SEED_CITATIONS = [
+    ("https://advocate.nyc.gov/press/nyc-public-advocate-responds-to-report-that-crime-rates-do-not-correlate-to-nypd-headcount",
+     "advocate.nyc.gov", "NYC Public Advocate", "gov"),
+]
+
+
 def resolve_gnews_url(stub_url, timeout=25):
     """Turn a news.google.com/rss/articles/CBMi... stub into the real URL.
 
@@ -3292,16 +3308,41 @@ def verify_citations(items, workers=12):
     if not items:
         return items
 
-    # "Vital City" as a proper noun: our own domain, or the phrase sitting next
-    # to the words people use when they mean the publication.
-    PROPER = re.compile(
-        r"vitalcitynyc"
-        r"|Vital\s+City(?:\s+(?:NYC|report|journal|analysis|study|data|magazine))"
-        r"|(?:journal|magazine|publication|report|analysis|study|website|outlet|"
-        r"site|nonprofit|think\s*tank)\s+(?:called\s+|named\s+)?Vital\s+City"
-        r"|(?:according\s+to|per|via|writing\s+in|published\s+(?:in|by)|"
-        r"cited\s+(?:in|by)|research\s+(?:from|by))\s+Vital\s+City",
-        re.I)
+    # Capitalisation is the signal, so this is deliberately CASE-SENSITIVE.
+    # An earlier version compiled these with re.I and threw that away, which
+    # cost accuracy in both directions: it accepted the Comptroller writing
+    # "ensure that vital City services can continue" (lowercase v -- the word
+    # doing its job, capital C only because City means the municipality), and
+    # it rejected Gothamist writing "an analysis by the civic group Vital City
+    # found" because "group" was not in a hand-listed set of nouns.
+    #
+    # The rule that actually separates them: our name is "Vital City" with both
+    # words capitalised. Generic usage is "a vital city", "our vital city",
+    # "vital city services". So take capitalised occurrences and subtract the
+    # generic shapes, rather than trying to enumerate every noun that can
+    # precede a publication's name.
+    PROPER   = re.compile(r"\bVital City\b")
+    # The determiner must sit directly before the phrase (allowing only an
+    # intensifier between). Letting any two words intervene wrongly swallowed
+    # "the civic group Vital City" and "the policy journal Vital City", where
+    # the determiner belongs to "group" and "journal", not to us.
+    GENERIC_BEFORE = re.compile(
+        r"\b(?:a|an|our|your|this|that|these|those|every|each|any|another|"
+        r"such|the)\s+(?:truly\s+|really\s+|very\s+|so\s+|especially\s+)?$", re.I)
+    GENERIC_AFTER  = re.compile(
+        r"^\s+(?:services?|agenc(?:y|ies)|employees?|workers?|staff|"
+        r"infrastructure|functions?|departments?|operations?|programs?|"
+        r"budgets?|centres?|centers?|streets?|blocks?|neighou?rhoods?)\b")
+
+    def names_us(text):
+        """True when "Vital City" appears as our name rather than as English."""
+        for m in PROPER.finditer(text):
+            before = text[max(0, m.start() - 60):m.start()]
+            after  = text[m.end():m.end() + 40]
+            if GENERIC_BEFORE.search(before) or GENERIC_AFTER.match(after):
+                continue
+            return True
+        return False
 
     def check(it):
         # Resolve first: fetching the Google News stub only ever reads Google's
@@ -3318,7 +3359,12 @@ def verify_citations(items, workers=12):
         text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", raw, flags=re.S | re.I)
         text = re.sub(r"<[^>]+>", " ", text)
         text = html_mod.unescape(re.sub(r"\s+", " ", text))
-        if PROPER.search(text) or "vitalcitynyc" in raw.lower():
+        if not it.get("title"):
+            tm = re.search(r"<title[^>]*>(.*?)</title>", raw, re.S | re.I)
+            if tm:
+                it["title"] = re.sub(r"\s+", " ", html_mod.unescape(
+                    re.sub(r"<[^>]+>", "", tm.group(1)))).strip()[:220]
+        if "vitalcitynyc" in raw.lower() or names_us(text):
             it["verified"] = True
             it["verify_note"] = ""
         elif re.search(r"vital\s+city", text, re.I):
@@ -3535,6 +3581,17 @@ def pull_news_mentions():
                 f"forward {len(media)} cached items from {str(cached.get('as_of',''))[:10]}")
         except Exception as e:
             log(f"  media cache read failed: {e}")
+    # Seeded citations join the searched ones before verification, so they are
+    # held to the same standard rather than trusted because we typed them in.
+    seen_urls = {i.get("url") for i in gov + repub}
+    for url, dom, label, kind in SEED_CITATIONS:
+        if url in seen_urls:
+            continue
+        row = {"title": "", "url": url, "source": label, "domain": dom,
+               "kind": kind, "match_shape": "seeded", "published": "",
+               "snippet": "", "is_url_share": False, "seeded": True}
+        (gov if kind == "gov" else repub).append(row)
+
     # Verify before assembling: Google's phrase match is too lenient to trust on
     # domains where "vital city" is ordinary English.
     gov   = verify_citations(gov)
