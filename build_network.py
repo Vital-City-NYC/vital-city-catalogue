@@ -1161,6 +1161,16 @@ def main():
                 # officials, chiefly. The prospects build filters on it.
                 if (row.get("excl") or "").strip() in ("1", "y", "yes", "true"):
                     rec["excl"] = 1
+                # seg: what kind of reader this is (senior-private, funder,
+                # nonprofit, academic, media, official, student, role, peer,
+                # staff). nyc: has a demonstrable New York link. Together with
+                # engagement these drive the "likely prospect" filter.
+                if (row.get("seg") or "").strip():
+                    rec["seg"] = row["seg"].strip()
+                if (row.get("nyc") or "").strip() in ("1", "y", "yes", "true"):
+                    rec["nyc"] = 1
+                if (row.get("oom") or "").strip() in ("1", "y", "yes", "true"):
+                    rec["oom"] = 1
 
     # ---- consolidate duplicates: exact key, then nickname key (last) ----
     # Catches accents/middle initials (Synøve N. Andersen == Synove Andersen),
@@ -1391,6 +1401,68 @@ def main():
         if q["gw"]: gw_n += 1
     print(f"flagged {gw_n} addresses as gateway/role (excluded from engagement ranking)",
           file=__import__("sys").stderr)
+
+    # ---- likely fundraising prospect ----------------------------------------
+    # A description of fit, never a wealth estimate — the research this rests on
+    # says so itself: "a partner at a four-person firm and a partner at Deloitte
+    # carry the same label."
+    #
+    # Three things have to be true at once: someone who could plausibly give
+    # (seniority, or a track record of giving here), a reason to care about THIS
+    # publication (a New York link, or they read it closely), and no reason they
+    # must not be asked. The exclusions are absolute and come first — a sitting
+    # official is never a prospect however senior, because government ethics
+    # rules restrict soliciting public servants.
+    # Seniority is the point. The research distinguishes "private-sector senior"
+    # from "private-sector other", and so must this: an estimator and a founder
+    # are both "private sector", and only one belongs on a prospect list.
+    CAPACITY_SEGS = {"senior-private", "funder"}
+    NEVER_ASK = {"official", "role", "staff", "student"}
+    prospects = 0
+    for q in people:
+        q["pros"] = 0
+        q["prosw"] = ""
+        if q.get("unsub") or q.get("gw") or q.get("excl"):
+            continue
+        seg = q.get("seg") or ""
+        if seg in NEVER_ASK:
+            continue
+        # Out of market with no New York link: a purchasing manager in Michigan
+        # reads this, which is flattering and not a prospect.
+        if q.get("oom") and not q.get("nyc"):
+            continue
+        # An open rate and a click rate within a couple of points of each other
+        # is the signature of a mail scanner clicking everything it opens. It can
+        # also be a genuine reader with a tiny denominator — three sends, three
+        # opens, three clicks — so this only withholds the prospect flag rather
+        # than declaring the address a machine.
+        o_, c_ = q.get("eopen") or 0, q.get("eclick") or 0
+        if c_ >= 40 and (o_ - c_) <= 3:
+            q["ratewarn"] = 1
+            continue
+        why, score = [], 0
+        if q.get("don"):                                   # already gave: the strongest signal there is
+            score += 3; why.append("donor")
+        if seg in CAPACITY_SEGS:
+            score += 2; why.append(seg)
+        elif seg == "private":
+            score += 1; why.append("private sector")       # not senior — a lead at best
+        elif seg in ("nonprofit", "academic", "media", "peer"):
+            score += 0                                     # worth knowing, rarely an individual gift
+        if q.get("nyc"):
+            score += 1; why.append("New York link")
+        if (q.get("erate") or 0) >= 4 or (q.get("eclick") or 0) >= 20:
+            score += 2; why.append("reads closely")
+        elif (q.get("eclick") or 0) > 0 or (q.get("eopen") or 0) >= 70:
+            score += 1; why.append("engaged")
+        if q.get("wiki"):
+            score += 1; why.append("notable")
+        if q.get("auth"):
+            score += 1; why.append("contributor")
+        q["pros"], q["prosw"] = score, ", ".join(why)
+        if score >= 4:
+            prospects += 1
+    print(f"likely fundraising prospects (score 4+): {prospects}", file=__import__("sys").stderr)
 
     PRIV.mkdir(exist_ok=True)
     (PRIV / "people.json").write_text(json.dumps(people, ensure_ascii=False, separators=(",", ":")))

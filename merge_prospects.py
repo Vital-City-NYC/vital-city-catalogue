@@ -46,6 +46,26 @@ ROLE_LOCAL = re.compile(r"^(info|support|office|admin|contact|sales|help|team|he
 OFFICIAL = re.compile(r"public official|do not solicit|sitting (judge|official)", re.I)
 
 
+def segment(r, flags):
+    """One word for what kind of reader this is, for the prospect filter.
+    Order matters: exclusions win over capacity, because a senior person who is
+    also a sitting official is still someone you must not solicit."""
+    f, sec = flags.upper(), (r.get("sector") or "").upper()
+    cap = (r.get("capacity_segment") or "").upper()
+    if "PUBLIC OFFICIAL" in f or "GOVERNMENT" in sec or "PUBLIC SECTOR" in cap: return "official"
+    if "ROLE ACCOUNT" in f or "ROLE ACCOUNT" in sec: return "role"
+    if "VITAL CITY STAFF" in f: return "staff"
+    if "STUDENT" in f or "STUDENT" in cap: return "student"
+    if "SENIOR PRIVATE SECTOR" in f or "PRIVATE-SECTOR SENIOR" in cap: return "senior-private"
+    if "FOUNDATION STAFF" in f or "FOUNDATION" in sec or "FOUNDATION" in cap: return "funder"
+    if "PEER PUBLISHER" in f: return "peer"
+    if "NONPROFIT" in f or "NONPROFIT" in sec or "NONPROFIT" in cap: return "nonprofit"
+    if "ACADEMIC" in f or "ACADEMIC" in sec or "ACADEMIC" in cap: return "academic"
+    if "MEDIA" in f or "MEDIA" in sec or "MEDIA" in cap: return "media"
+    if "PRIVATE" in f or "PRIVATE" in sec or "PRIVATE" in cap or "FOR-PROFIT" in sec: return "private"
+    return ""
+
+
 CAVEAT = re.compile(r"not confirmed|unconfirmed|possible same-pattern|no longer|thin|weak|"
                     r"reject|do not act|identity", re.I)
 
@@ -120,13 +140,17 @@ def main():
         name = real_name(r.get("name"))
         flags = r.get("flags") or ""
         official = bool(OFFICIAL.search(flags))
-        role = bool(ROLE_LOCAL.match(em.split("@")[0])) or "ROLE ACCOUNT" in (r.get("sector") or "").upper()
+        source_url = (r.get("source_url") or r.get("source") or "").strip()
+        role = (bool(ROLE_LOCAL.match(em.split("@")[0]))
+                or "ROLE ACCOUNT" in (r.get("sector") or "").upper()
+                or "ROLE ACCOUNT" in flags.upper())
 
         if role:
             skipped["role"] += 1
             # still worth marking so it never lands in an appeal
             row = out.get(em, {"email": em, "name": ""})
             row["excl"] = "1"
+            row["seg"] = "role"
             row.setdefault("inst", (r.get("org") or "").strip())
             out[em] = row
             continue
@@ -138,7 +162,15 @@ def main():
             # institutional identifications when the address itself corroborates
             # the name: the local part is built from it, and the domain is the
             # organisation named. Rows carrying their own doubt are excluded.
-            if not (conf == "MEDIUM" and pattern_corroborates(em, name, r.get("org")) 
+            # Their own limits section is the rule here: MEDIUM means a plausible
+            # match without the address being published, and a common name on a
+            # free mailbox is the weakest case in the whole file — "a Gmail
+            # reading David Solomon is far more likely to be one of the many
+            # other David Solomons". So a MEDIUM row is only taken when the
+            # address itself corroborates it, which by construction means a
+            # work domain, never a free mailbox.
+            if not (conf == "MEDIUM" and pattern_corroborates(em, name, r.get("org"))
+                    and r.get("domain_type") != "freemail"
                     and not CAVEAT.search(flags)):
                 skipped["medium"] += 1
                 continue
@@ -152,10 +184,22 @@ def main():
             row["role"] = r["title"].strip()
         if official:
             row["excl"] = "1"
+        seg = segment(r, flags)
+        if seg:
+            row["seg"] = seg
+        # NYC link matters more than sector for this publication's fundraising
+        if (r.get("nyc_link") or "").strip().upper() == "YES":
+            row["nyc"] = "1"
+        # Their "OUT OF MARKET" flag is a better signal than any rate heuristic
+        # for keeping a purchasing manager in Michigan off a New York
+        # publication's prospect list.
+        if "OUT OF MARKET" in flags.upper():
+            row["oom"] = "1"
         out[em] = row
         prov.append({"email": em, "name": name, "source": "outside review (Polar) 2026-08-20",
                      "confidence": conf, "org": r.get("org"), "title": r.get("title"),
-                     "flags": flags, "evidence": r.get("source") or ""})
+                     "sector": r.get("sector"),
+                     "flags": flags, "evidence": (r.get("notes") or "")[:300], "url": source_url})
 
     # ---- 2. this repo's own staff-page harvest
     hp = PRIV / "domain_harvest.json"
@@ -194,7 +238,7 @@ def main():
                 row["role"] = f["role"]
             out[em] = row
 
-    cols = ["email", "name", "inst", "role", "excl"]
+    cols = ["email", "name", "inst", "role", "excl", "seg", "nyc", "oom"]
     added = len(out) - len(existing)
     print(f"override rows: {len(existing)} -> {len(out)}  (+{added})")
     print(f"  from the review: {sum(1 for p in prov if p['source'].startswith('outside'))}")

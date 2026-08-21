@@ -368,7 +368,10 @@ def person_row(r, why):
             "dlast": (r.get("dlast") or "")[:10],
             "eopen": r.get("eopen") or 0, "eclick": r.get("eclick") or 0,
             "wiki": 1 if r.get("wiki") else 0,
-            "types": r.get("types") or [], "why": why}
+            "types": r.get("types") or [], "why": why,
+            "role": (r.get("role") or "").strip(), "seg": r.get("seg") or "",
+            "nyc": 1 if r.get("nyc") else 0, "pros": r.get("pros") or 0,
+            "prosw": r.get("prosw") or ""}
 
 
 def main():
@@ -480,6 +483,26 @@ def main():
             pr["inst"] = pr["inst"] or (row.get("employer") or "")
             principals.append(pr)
     principals.sort(key=lambda x: -x["eopen"])
+
+    # Newly identified by the August 2026 research passes: people who were an
+    # anonymous email handle until this month, who now have a name, a job and a
+    # reason to be on this page. Sitting officials, role mailboxes, students and
+    # Vital City's own staff are excluded upstream and can never appear here.
+    SEG_LABEL = {"senior-private": "Senior private sector", "private": "Private sector",
+                 "funder": "Foundation staff", "nonprofit": "Nonprofit leadership",
+                 "academic": "Academic", "media": "Media", "peer": "Peer publisher"}
+    researched = []
+    for r in sub:
+        if (r.get("pros") or 0) < 4 or r.get("don") or r.get("excl"):
+            continue
+        if (r.get("seg") or "") not in ("senior-private", "funder"):
+            continue
+        why = SEG_LABEL.get(r.get("seg"), "Identified")
+        if r.get("role"):
+            why = f"{r['role']}"
+        pr = person_row(r, why)
+        researched.append(pr)
+    researched.sort(key=lambda x: (-(x["eclick"] or 0), -(x["eopen"] or 0)))
 
     event = load_event(people)
 
@@ -672,6 +695,7 @@ def main():
                     "Confirm current sponsorship terms with FCNY before quoting them to a funder."},
         "tiers": {
             "advisors": advisors, "upgrade": upgrade, "second": second,
+            "researched": researched,
             "notables": notables, "principals": principals,
             "foundation_staff": fstaff, "lybunt": lybunt,
             "party": (event or {}).get("attended", [])},

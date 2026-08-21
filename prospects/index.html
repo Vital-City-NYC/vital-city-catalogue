@@ -231,6 +231,7 @@ function boot(d){
   const T=d.tiers||{};
   const tierDefs=[
     ["advisors","Advisors, never asked","Formal Vital City advisors with no recorded gift. The closest people to the project — first calls, or co-hosts for any event."],
+    ["researched","Newly identified","Readers who were an anonymous email handle until this month. Two research passes in August 2026 put names, employers and titles to 1,857 subscribers; these are the ones with plausible capacity who have never given. Every identification carries a public source. <b>Seniority is not capacity</b> — a partner at a four-person firm and a partner at Deloitte carry the same label — and a match on a personal address is weaker than one on a work address. Verify before asking."],
     ["upgrade","Upgrade candidates","Gave $500+ and still read closely. The ask is a level up, not a first gift."],
     ["second","The second gift","Gave once ($100–500), engagement still high. Only "+((d.topline||{}).repeat_pct||0)+"% of donors have ever given twice — this list is where that number moves."],
     ["notables","Notable, never asked","Wikipedia-matched public profiles reading regularly, no gift on record."],
@@ -241,7 +242,7 @@ function boot(d){
   const prow=p=>`<tr>
     <td>${p.wiki?'<span class="badge b-star">★</span>':""}<a href="${profileURL(p.e)}" target="_blank" rel="noopener" title="Open this person's full profile in the contact tool" style="color:inherit"><b>${esc(p.n)||'<span class="why">(no name)</span>'}</b></a>
         ${(p.types||[]).map(x=>`<span class="fit">${esc(x)}</span>`).join("")}
-        <div class="why">${esc(p.inst)}</div>
+        <div class="why">${p.role?esc(p.role)+(p.inst?", ":""):""}${esc(p.inst)}${p.nyc?' <span class="fit" title="Has a demonstrable New York link — the research pass recorded one">NYC</span>':""}</div>
         <div class="why"><a href="mailto:${esc(p.e)}">${esc(p.e)}</a></div></td>
     <td class="n">${p.damt?money(p.damt):"—"}</td>
     <td class="n">${p.dcnt||"—"}</td>
