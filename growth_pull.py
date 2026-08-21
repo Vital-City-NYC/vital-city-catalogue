@@ -3224,10 +3224,12 @@ def pull_voice_appearances():
 
 # Citations we know about that no search engine will hand us. Google News does
 # not index advocate.nyc.gov at all -- every query against that domain returns
-# zero -- so the Public Advocate building an official statement around a Vital
-# City report, the strongest single influence artifact anyone has found, was
+# zero -- so a Public Advocate statement responding to a Vital City report was
 # undiscoverable by the automated channel no matter how the whitelist was
-# tuned. Seeding the URL fixes that without weakening anything: these are
+# tuned. (Worth keeping in proportion: a press office reacting to a published
+# report is cheap evidence, and this channel is thinner than its rarity makes
+# it look. It is tracked because it is real, not because it is impressive.)
+# Seeding the URL fixes the blind spot without weakening anything: these are
 # fetched and checked by verify_citations() exactly like a searched result, so
 # a seeded item that stops naming us stops counting.
 #
