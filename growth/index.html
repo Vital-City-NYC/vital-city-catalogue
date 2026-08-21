@@ -865,8 +865,24 @@
 
     <aside class="brandwatch" id="brand">
       <h2>Media mentions <a href="about.html#whitelist" target="_blank" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-cerulean);text-decoration:none;margin-left:8px" title="See about.html → 'Editing the media whitelist'">edit whitelist ↗</a></h2>
-      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px" title="The dashboard runs a Google News query per whitelisted outlet for the exact phrase 'Vital City', for @vitalcitynyc, and for any vitalcitynyc.org URL share. To add or remove outlets, edit MENTION_OUTLETS in growth_pull.py — full instructions on the How it works page.">Third-party publications citing Vital City. Searches Google News for the exact phrase, the @ handle, and any vitalcitynyc.org URL share — inside a whitelist of 25 outlets (Gothamist, NYT, NY1, WNYC, Streetsblog, THE CITY, Politico, NY Daily News, NY Mag, City Journal, City &amp; State, W42ST, Real Deal, plus key Substacks, plus national: New Yorker, WaPo, Bloomberg, Guardian, Newsweek, Semafor, LinkedIn, X). <b>Limits to know:</b> WNYC audio segments aren't indexed by Google News (Gothamist co-publishes some WNYC content and catches those); paywalled stories that don't expose the phrase to crawlers will miss; podcast mentions miss entirely. To add an outlet, see the <a href="about.html#whitelist" target="_blank">whitelist editing guide</a>.</div>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px" title="The dashboard runs a Google News query per whitelisted outlet for the exact phrase 'Vital City', for @vitalcitynyc, and for any vitalcitynyc.org URL share. To add or remove outlets, edit MENTION_OUTLETS in growth_pull.py — full instructions on the How it works page.">Third-party publications citing Vital City. Searches Google News for the exact phrase, the @ handle, and any vitalcitynyc.org URL share — inside a whitelist of 32 outlets (Gothamist, NYT, NY1, WNYC, Streetsblog, THE CITY, Politico, NY Daily News, NY Mag, City Journal, City &amp; State, City Limits, Gotham Gazette, amNewYork, ABC7, SILive, W42ST, Real Deal, plus key Substacks, plus national: New Yorker, WaPo, Bloomberg, Guardian, Newsweek, Semafor, Fast Company, Law.com, Nieman Lab, LinkedIn, X). <b>Limits to know:</b> WNYC audio segments aren't indexed by Google News (Gothamist co-publishes some WNYC content and catches those); paywalled stories that don't expose the phrase to crawlers will miss; podcast mentions miss entirely (a podcast audit found appearances Google News never indexes). Government, academic and staff-appearance mentions are tracked separately below, because an outlet whitelist can&rsquo;t see them. To add an outlet, see the <a href="about.html#whitelist" target="_blank">whitelist editing guide</a>.</div>
       <ul class="feed" id="newsFeed"></ul>
+
+      <h2 style="margin-top:18px">Cited in government &amp; policy <span class="hint" style="font-weight:400">the mentions that move decisions</span></h2>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px" title="Searches nyc.gov, the City Council, the Public Advocate, the Comptroller, the state legislature and congress.gov for the exact phrase 'Vital City' and for vitalcitynyc.org links, plus 18 policy institutions that republish or cite our work.">Official statements, testimony and reports that cite Vital City, plus republications by policy institutions (Citizens Budget Commission, Niskanen, Center for an Urban Future, Brennan Center and others). A Public Advocate report citing our research is worth more than a passing news mention &mdash; this is the channel a press-only whitelist misses entirely.</div>
+      <ul class="feed" id="govFeed"></ul>
+
+      <h2 style="margin-top:18px">Academic citations <span class="hint" style="font-weight:400">Google Scholar, 2025&ndash;</span></h2>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px" title="Google Scholar, four queries, restricted to 2025 and later. Only hits that name vitalcitynyc.org are counted; phrase-only matches are listed separately because 'vital city' also appears generically in urban-planning writing.">Scholarship citing Vital City. <b>Confirmed</b> means the paper cites a vitalcitynyc.org URL. <b>To verify</b> means the phrase &ldquo;Vital City&rdquo; appeared but may be generic usage &mdash; check before quoting the number.</div>
+      <ul class="feed" id="scholarFeed"></ul>
+
+      <h2 style="margin-top:18px">Podcasts, radio &amp; video <span class="hint" style="font-weight:400" id="ledgerHint">hand-logged</span></h2>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px" title="Edit mentions_ledger.json in the repo to add an entry. Every row needs a date, outlet, program, URL and who appeared.">Google News does not index audio, so no whitelist &mdash; however long &mdash; will ever catch a podcast or radio appearance. These are logged by hand from the mentions audit and are the only list here that doesn&rsquo;t refresh itself. <b>Add one</b> by editing <code style="font-size:10.5px">mentions_ledger.json</code>.</div>
+      <ul class="feed" id="ledgerFeed"></ul>
+
+      <h2 style="margin-top:18px">Our voices elsewhere <span class="hint" style="font-weight:400">staff and editors quoted or published</span></h2>
+      <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px" title="Google News, one query per person, paired with 'Vital City'. Self-published vitalcitynyc.org items are excluded.">When our people are quoted, interviewed or published under someone else&rsquo;s masthead, Vital City travels with them. Not captured by an outlet whitelist, because the outlet is often one we don&rsquo;t track.</div>
+      <ul class="feed" id="voiceFeed"></ul>
 
       <h2 style="margin-top:18px">Social shares &amp; chatter</h2>
       <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px">X mentions of @VitalCityNYC + Reddit threads sharing VC articles.</div>
@@ -1364,13 +1380,94 @@ function boot(data){
   const socialItems = news.filter(it => it.kind === 'social');
   const pressStale = realPress.length && realPress.every(p=>p.stale);
 
+  // Link roundups are counted but tagged: they're real distribution, not a
+  // story about us, and left unmarked they made one outlet's daily headlines
+  // post look like our strongest coverage.
+  const roundups = realPress.filter(p => p.roundup).length;
   $("#newsFeed").innerHTML = realPress.length
-    ? (pressStale?`<li class="empty" style="color:var(--vc-charcoal)">Google News didn't respond on the last refresh — showing the most recent press mentions we have; this list updates as soon as the feed recovers.</li>`:'') + realPress.slice(0,80).map(p=>`<li>
-        <span class="src">${esc(p.source||p.domain||'web')}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+    ? (pressStale?`<li class="empty" style="color:var(--vc-charcoal)">Google News didn't respond on the last refresh — showing the most recent press mentions we have; this list updates as soon as the feed recovers.</li>`:'')
+      + (roundups?`<li class="empty" style="color:var(--vc-charcoal)" title="Daily link roundups are real distribution but not substantive coverage. They're kept in the list and tagged so the headline count isn't mistaken for that many stories about Vital City.">${realPress.length - roundups} substantive &middot; ${roundups} link roundups</li>`:'')
+      + realPress.slice(0,80).map(p=>`<li>
+        <span class="src">${esc(p.source||p.domain||'web')}${p.roundup?' &middot; <i title="Daily link roundup — real distribution, not a story about us">roundup</i>':''}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
         <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
         ${p.snippet?`<div class="snip">${esc(p.snippet)}</div>`:''}
       </li>`).join("")
     : '<li class="empty">No third-party press mentions in the current window.</li>';
+
+  // ----- Cited in government & policy — kinds 'gov' and 'republication'.
+  // Kept out of the press feed on purpose: a Public Advocate report citing our
+  // research is a different KIND of evidence than a news mention, and burying
+  // it in a list of 80 press hits hides the most valuable item we collect.
+  // Show ONLY verified items. Google's site:-scoped phrase match is lenient and
+  // "vital city" is ordinary English on exactly these domains — the first run of
+  // this channel returned 88 government hits led by the Homeless Services
+  // landing page and a Comptroller report saying "vital City services". Each
+  // item is now fetched and checked; the rejected count is shown rather than
+  // hidden, so the filter itself stays auditable.
+  const govAll   = news.filter(it => it.kind === 'gov' || it.kind === 'republication');
+  const govItems = govAll.filter(it => it.verified);
+  // Three states, not two. "Could not fetch" is not "rejected" — cbcny.org
+  // returns 403 to any script and ipk.nyu.edu fails the TLS handshake, so real
+  // republications by both are unverifiable rather than disproven. Counting
+  // them as rejects would understate the channel exactly as badly as counting
+  // the generic ones overstated it.
+  const govUnverifiable = govAll.filter(it => !it.verified &&
+    it.verify_note === 'page could not be fetched').length;
+  const govRejected = govAll.length - govItems.length - govUnverifiable;
+  $("#govFeed").innerHTML = govItems.length
+    ? ((govRejected||govUnverifiable)?`<li class="empty" style="color:var(--vc-charcoal)" title="Each candidate is fetched and checked for the phrase used as a proper noun, or for a vitalcitynyc.org link. Rejected ones say things like &quot;vital City services&quot; — the word city doing its job. Unverifiable ones blocked the fetch (cbcny.org returns 403 to any script; ipk.nyu.edu fails the TLS handshake), so they may well be real.">${govItems.length} verified &middot; ${govRejected} rejected as generic${govUnverifiable?` &middot; ${govUnverifiable} unverifiable (site blocked the check)`:''}</li>`:'')
+      + govItems.slice(0,40).map(p=>`<li>
+        <span class="src">${esc(p.source||p.domain||'web')}${p.kind==='gov'?' · <i title="Government body">official</i>':' · <i title="Policy institution republishing or citing our work">policy org</i>'}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+        <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
+        ${p.snippet?`<div class="snip">${esc(p.snippet)}</div>`:''}
+      </li>`).join("")
+    : `<li class="empty">No verified government or policy-institution citations${govRejected?` (${govRejected} rejected as generic uses of the phrase &ldquo;vital city&rdquo;)`:''}${govUnverifiable?`, and ${govUnverifiable} that blocked the check`:''}.</li>`;
+
+  // ----- Academic citations. Confirmed (cites a vitalcitynyc.org URL) sorts
+  // above unverified (matched the phrase only), and the two are labelled so
+  // nobody quotes the combined number as a citation count.
+  const sch = data.scholar_citations || {};
+  const cites = (sch.citations || []).slice().sort((a,b) =>
+    (a.confidence==='confirmed'?0:1) - (b.confidence==='confirmed'?0:1));
+  $("#scholarFeed").innerHTML = cites.length
+    ? `<li class="empty" style="color:var(--vc-charcoal)">${sch.confirmed||0} confirmed &middot; ${sch.unverified||0} to verify</li>`
+      + cites.slice(0,40).map(c=>`<li>
+        <span class="src">${c.confidence==='confirmed'?'<i title="Cites a vitalcitynyc.org URL" style="color:var(--vc-cerulean)">confirmed</i>':'<i title="Matched the phrase &quot;Vital City&quot; only — may be generic usage">to verify</i>'}</span><a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title)}</a>
+        ${c.authors?`<div class="snip">${esc(c.authors)}</div>`:''}
+      </li>`).join("")
+    : `<li class="empty">${sch.available===false?"Google Scholar rate-limited the last refresh — this list updates on the next run.":"No academic citations found in the current window."}</li>`;
+
+  // ----- Podcasts, radio & video — the hand-logged ledger. Deliberately shown
+  // as its own list with its audit date, so nobody mistakes a static file for
+  // a live feed: if the date is old, the list is old.
+  const led = data.mentions_ledger || {};
+  const ledItems = led.items || [];
+  if (led.last_audit) $("#ledgerHint").textContent =
+    `hand-logged \u00b7 last audited ${led.last_audit}`;
+  $("#ledgerFeed").innerHTML = ledItems.length
+    ? `<li class="empty" style="color:var(--vc-charcoal)">${led.appearances||0} appearances &middot; ${led.citations||0} on-the-record citations</li>`
+      + ledItems.slice(0,40).map(m=>`<li>
+        <span class="src">${esc(m.outlet||'')} &middot; <i title="${m.kind==='audio'?'Audio — not indexed by Google News':'Video — not indexed by Google News'}">${esc(m.kind||'')}</i>${m.role==='citation'?' &middot; <i title="Someone else cited Vital City on the record">cited</i>':''}</span><a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.program||'')}</a>
+        <span class="date">${esc(m.date||'')}</span>
+        <div class="snip"><b>${esc(m.who||'')}</b>${m.note?' — '+esc(m.note):''}</div>
+      </li>`).join("")
+    : '<li class="empty">Nothing logged yet — add entries to mentions_ledger.json.</li>';
+
+  // ----- Our voices elsewhere
+  // Grouped by person on the way in (people[].items[]); flattened here so the
+  // feed reads chronologically like every other list in this sidebar, with the
+  // person's name carried onto each row.
+  const va = data.voice_appearances || {};
+  const voices = (va.people || []).flatMap(pr =>
+    (pr.items || []).map(it => ({...it, person: pr.name, role: pr.role})))
+    .sort((a,b) => new Date(b.published||0) - new Date(a.published||0));
+  $("#voiceFeed").innerHTML = voices.length
+    ? `<li class="empty" style="color:var(--vc-charcoal)">${va.total||voices.length} appearances across ${(va.people||[]).filter(p=>p.count).length} people</li>`
+      + voices.slice(0,40).map(v=>`<li>
+        <span class="src" title="${esc(v.role||'')}">${esc(v.person||'')}${v.source?` &middot; ${esc(v.source)}`:''}</span><a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.title)}</a>
+        <span class="date">${esc(v.published?new Date(v.published).toISOString().slice(0,10):'')}</span>
+      </li>`).join("")
+    : '<li class="empty">No outside appearances in the current window.</li>';
 
   // ----- Social shares & chatter — kind='social' (X/LinkedIn/Bluesky/IG/
   // Reddit) plus the older Reddit press feed (mentions of "vital city" on

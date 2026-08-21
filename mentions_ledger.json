@@ -1,0 +1,37 @@
+{
+  "_comment": [
+    "Hand-logged mentions that no free feed can reach. Google News does not index",
+    "audio, so podcast, radio and video appearances are invisible to the",
+    "site:-scoped queries in growth_pull.py no matter how many outlets we",
+    "whitelist. The 21 Aug 2026 mentions audit found a dozen such appearances",
+    "already on the record and uncounted; seeding them here means the dashboard",
+    "reflects what is actually known rather than only what a crawler can find.",
+    "",
+    "Going forward, VC_VOICES in growth_pull.py catches new appearances",
+    "automatically wherever they produce a crawlable page. This file is for the",
+    "rest. To add an entry, copy a row and fill it in -- every field except",
+    "'note' is required, and 'url' must be a real link a reader can open.",
+    "Nothing here is inferred; each row came from the audit with a source URL.",
+    "",
+    "kind: 'audio' (podcast/radio) | 'video' (TV/YouTube/livestream)",
+    "role: 'appearance' (one of ours was on the show) | 'citation' (someone",
+    "      else cited Vital City on the record)"
+  ],
+  "last_audit": "2026-08-21",
+  "audit_window": ["2025-01-01", "2026-08-21"],
+  "items": [
+    {"date":"2025-02-03","outlet":"The New York Editorial Board","program":"Zohran Mamdani interview","url":"https://nyeditorialboard.substack.com/p/zohran-mamdani-interview-transcript","who":"Zohran Mamdani","kind":"audio","role":"citation","influence":"high","note":"Mamdani said he was \"quite taken\" by a Vital City piece analyzing decades of crime data, and called its clearance-rate analysis evidence of an \"immense crisis.\""},
+    {"date":"2025-02-03","outlet":"WNYC / The Brian Lehrer Show","program":"The State of Crime in the City","url":"https://www.wnycstudios.org/podcasts/bl/articles/the-state-of-crime-in-the-city","who":"Elizabeth Glazer","kind":"audio","role":"appearance","influence":"high","note":"Identified as founder of Vital City; discussed the crime-data report."},
+    {"date":"2025-03-17","outlet":"THE CITY / FAQ NYC","program":"A Plan to Make Subways Feel Safe Again","url":"https://www.thecity.nyc/2025/03/17/listen-a-plan-to-make-subways-feel-safe-again/","who":"Elizabeth Glazer","kind":"audio","role":"appearance","influence":"high","note":"Walked through the subway-safety memo: assaults have replaced robberies as the driver of underground violence."},
+    {"date":"2025-03-21","outlet":"Spectrum News NY1","program":"Inside City Hall","url":"https://ny1.com/nyc/all-boroughs/inside-city-hall/2025/03/21/city-vital-founder-on-reducing-violence-in-subway","who":"Elizabeth Glazer","kind":"video","role":"appearance","influence":"high","note":"NY1 said the report could shape the MTA's safety response."},
+    {"date":"2025-05-08","outlet":"Firewall with Bradley Tusk","program":"The Once and Future Greatness of New York City","url":"https://www.boomplay.com/episode/9540778","who":"Elizabeth Glazer","kind":"audio","role":"appearance","influence":"high","note":"On civic culture and getting big ideas into policymaking."},
+    {"date":"2025-09-08","outlet":"Columbia Journalism School","program":"Zohran Mamdani with Errol Louis: A Conversation on Public Safety","url":"https://journalism.columbia.edu/news/mayoral-forum-zohran-mamdani-sept-8","who":"Vital City (co-host)","kind":"video","role":"appearance","influence":"high","note":"Co-hosted with Columbia; the candidate's first extended public-safety interview."},
+    {"date":"2025-09-22","outlet":"The New York Editorial Board","program":"Bill de Blasio interview","url":"https://nyeditorialboard.substack.com/p/bill-de-blasio-interview-transcript","who":"Alyssa Katz","kind":"audio","role":"citation","influence":"high","note":"Called the new housing issue \"great\" and summarized its rent-freeze analysis."},
+    {"date":"2025-09-24","outlet":"Spectrum News NY1","program":"Inside City Hall","url":"https://ny1.com/nyc/all-boroughs/inside-city-hall/2025/09/24/new-report-shows-historic-lows-in-murders-and-shootings-in-nyc","who":"Jamie Rubin","kind":"video","role":"appearance","influence":"high","note":"On the housing series: Co-op City, design and supply, lessons from Jersey City and Tokyo."},
+    {"date":"2025-12-08","outlet":"The New York Editorial Board","program":"Patrick Gaspard on Obama, Mamdani and political capital","url":"https://nyeditorialboard.substack.com/p/patrick-gaspard-on-barack-obama-zohran","who":"Patrick Gaspard","kind":"audio","role":"citation","influence":"high","note":"Called Vital City an \"interesting experiment\" giving space to sharp, data-backed arguments."},
+    {"date":"2025-12-18","outlet":"Spectrum News NY1","program":"News All Day","url":"https://ny1.com/nyc/all-boroughs/news-all-day/2025/12/18/reporter-offers-blueprint-for-addressing-homelessness-in-the-city","who":"Elizabeth Glazer","kind":"video","role":"appearance","influence":"high","note":"On What To Do (and Not To Do) About People in Crisis on Streets and Subways."},
+    {"date":"2026-03-06","outlet":"Spectrum News NY1","program":"Inside City Hall","url":"https://ny1.com/nyc/all-boroughs/inside-city-hall/2026/03/06/new-report-shows-historic-lows-in-murders-and-shootings-in-nyc","who":"Elizabeth Glazer","kind":"video","role":"appearance","influence":"high","note":"NY1 called Vital City an urban-policy think tank; on The State of Crime in New York City: 2025 and Beyond."},
+    {"date":"2026-03-24","outlet":"NYC Open Data Week (YouTube)","program":"Exploring 30 Years of NYC Crime - and What Comes Next","url":"https://www.youtube.com/watch?v=ril0yCtsbmg","who":"Paul Reeping","kind":"video","role":"appearance","influence":"professional","note":"Demonstrated the Crime Data Explorer to a policy and data audience."},
+    {"date":"2026-06-17","outlet":"Center for Justice Innovation (YouTube)","program":"Co-Designing Community Justice","url":"https://www.youtube.com/watch?v=8_ui725E3MM","who":"Elizabeth Glazer","kind":"video","role":"appearance","influence":"professional","note":"With Deputy Mayor for Community Safety Renita Francois."}
+  ]
+}

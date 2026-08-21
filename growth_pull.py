@@ -2820,6 +2820,71 @@ MEDIA_OUTLETS = [
     ("bloomberg.com",          "Bloomberg"),
     ("theguardian.com",        "The Guardian"),
     ("newsweek.com",           "Newsweek"),
+    # ---- added 21 Aug 2026, from the mentions & influence audit ------------
+    # The audit found 60+ items the tracker structurally could not see. Its
+    # first finding was that the whitelist itself was the bottleneck: the New
+    # York Post alone had produced two items and was not on the list. These are
+    # the outlets it named, with the reason each was missing.
+    ("fastcompany.com",        "Fast Company"),        # ran a feature built on the subway-safety report
+    ("citylimits.org",         "City Limits"),          # quoted Glazer directly in a voter guide
+    ("amny.com",               "amNewYork"),
+    ("abc7ny.com",             "ABC7 New York"),        # covered the mayoral forum VC co-hosted
+    ("silive.com",             "SILive / Staten Island Advance"),
+    ("gothamgazette.com",      "Gotham Gazette"),
+    ("law.com",                "Law.com / NY Law Journal"),
+    ("thecityreporter.nyc",    "The City Reporter"),    # republishes the State of Crime report in full
+    ("niemanlab.org",          "Nieman Lab"),
+]
+
+# Government statements. The audit called the Public Advocate item "the single
+# best influence artifact in this report" — a citywide elected official adopting
+# a Vital City finding as the basis of an official statement — and the tracker
+# could not see it, because .gov press pages were not on the whitelist.
+GOV_DOMAINS = [
+    ("advocate.nyc.gov",       "NYC Public Advocate"),
+    ("council.nyc.gov",        "New York City Council"),
+    ("comptroller.nyc.gov",    "NYC Comptroller"),
+    ("nyc.gov",                "City of New York"),
+    ("governor.ny.gov",        "Governor of New York"),
+    ("osc.ny.gov",             "NY State Comptroller"),
+    ("manhattanda.org",        "Manhattan District Attorney"),
+]
+
+# Institutions that publish IN Vital City and then republish under their own
+# banner. Nine in twenty months, which the audit reads as organisations treating
+# it as an authoritative venue rather than as incidental pickup.
+REPUBLISHERS = [
+    ("cbcny.org",              "Citizens Budget Commission"),
+    ("niskanencenter.org",     "Niskanen Center"),
+    ("nycfuture.org",          "Center for an Urban Future"),
+    ("brennancenter.org",      "Brennan Center for Justice"),
+    ("ipk.nyu.edu",            "NYU Institute for Public Knowledge"),
+    ("steptwopolicy.org",      "Step Two Policy"),
+    ("steptwopolicyproject.substack.com", "Step Two Policy (Substack)"),
+    ("vera.org",               "Vera Institute of Justice"),
+    ("manhattan-institute.org","Manhattan Institute"),
+    ("urban.org",              "Urban Institute"),
+    ("futureofpolicing.blog",  "Future of Policing"),
+    ("gregberman.substack.com","Small Sanities (Berman)"),
+    ("benjaminschneider.substack.com", "The Urban Condition"),
+    ("nycpolitics101.substack.com",    "NYC Politics 101"),
+    ("citythatworks.substack.com",     "A City That Works"),
+    ("changinglanesnewsletter.com",    "Changing Lanes"),
+    ("nycuriosity.substack.com",       "NYCuriosity"),
+    ("normanoder.substack.com",        "Atlantic Yards Report"),
+]
+
+# The people, not the brand. Google News will never index audio, so the audit's
+# advice for podcasts is to track WHO appears rather than what is said: twelve-
+# plus appearances in the window went unrecorded because no one was searching
+# for the guests.
+VC_VOICES = [
+    ("Elizabeth Glazer", "founder and co-editor"),
+    ("Greg Berman",      "co-editor"),
+    ("Josh Greenman",    "managing editor"),
+    ("Paul Reeping",     "research director"),
+    ("Jamie Rubin",      "host, After Hours"),
+    ("Ted Alcorn",       "policy director"),
 ]
 SOCIAL_PLATFORMS = [
     ("x.com",            "X"),
@@ -2840,6 +2905,31 @@ JUNK_TITLE_PATTERNS = [
     r"^watch live\b",
     r"^live blog\b",
     r"^today'?s (top )?headlines?$",   # bare headline-roundup pages (no specifics)
+]
+
+# Link roundups are REAL distribution but not substantive engagement, and the
+# 21 Aug 2026 audit found they were quietly inflating the media count: most of
+# Streetsblog's 19 hits were daily "Headlines" posts, which made Streetsblog
+# look like our biggest champion when Gothamist and Politico actually lead on
+# substance. So these are tagged, not dropped — the dashboard shows the split
+# and lets you judge, which is the honest handling of a link that is genuinely
+# a mention and genuinely not a story about us.
+ROUNDUP_TITLE_PATTERNS = [
+    r"^(mon|tues|wednes|thurs|fri|satur|sun)day'?s headlines\b",  # Streetsblog daily
+    r"\bheadlines\b.*\bedition\b",
+    r"^(the )?(morning|afternoon|evening|daily|weekly) (links|roundup|digest|briefing)\b",
+    r"^links?:",
+    r"^what we'?re reading\b",
+]
+
+# Blog archive and pagination pages. "Month: July 2026" is not an article; it is
+# an index that happens to contain every post from that month, so the phrase
+# matches without anyone having written about us.
+ARCHIVE_TITLE_PATTERNS = [
+    r"^(month|year|day|category|tag|author|archives?)\s*[:|]",
+    r"^page \d+\b",
+    r"^archives?\b",
+    r"^(posts|articles) (from|by)\b",
 ]
 
 
@@ -2980,6 +3070,273 @@ def pull_linkedin_followers():
         return {"available": False, "reason": str(e)[:120]}
 
 
+def load_mentions_ledger():
+    """Hand-logged mentions from mentions_ledger.json.
+
+    Google News does not index audio, so podcast and radio appearances are
+    unreachable by every site:-scoped query in this file. The 21 Aug 2026
+    audit found a dozen already on the record and uncounted. This reads the
+    curated file so they show up; it is the one channel here that is not
+    automated, and the dashboard labels it as such.
+    """
+    fp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mentions_ledger.json")
+    if not os.path.exists(fp):
+        log("  mentions ledger: file missing")
+        return {"available": False, "items": []}
+    try:
+        with open(fp) as fh:
+            d = json.load(fh)
+    except Exception as e:
+        log(f"  mentions ledger: unreadable ({e})")
+        return {"available": False, "items": []}
+    items = sorted(d.get("items", []), key=lambda x: x.get("date", ""), reverse=True)
+    log(f"  mentions ledger: {len(items)} hand-logged "
+        f"(audited {d.get('last_audit', 'unknown')})")
+    return {"available": True, "items": items,
+            "last_audit": d.get("last_audit", ""),
+            "audit_window": d.get("audit_window", []),
+            "total": len(items),
+            "appearances": sum(1 for i in items if i.get("role") == "appearance"),
+            "citations": sum(1 for i in items if i.get("role") == "citation"),
+            "note": ("Logged by hand from the mentions audit. Audio and video are "
+                     "invisible to Google News, so these cannot be collected "
+                     "automatically -- edit mentions_ledger.json to add more.")}
+
+
+def pull_scholar_citations():
+    """Academic and law-review citations of Vital City.
+
+    The audit's first recommendation, and the one with the longest tail: five
+    citations were found — Yale Law Journal Forum, Emory, Fordham Urban Law
+    Journal, Springer/Palgrave, GMU Translational Criminology — and every one
+    arrived with no notification, because Google News does not index law reviews
+    or journals at all. Academic citation also lags two to four years, so the
+    2025-26 output will keep surfacing through 2029. This is the most durable
+    form of influence the organisation has and it was completely invisible.
+
+    Google Scholar answers scripted exact-phrase queries where the general
+    search engines refuse them. It rate-limits after a handful, so this runs a
+    small number of queries and treats a block as "come back tomorrow" rather
+    than as an error worth failing the build over.
+    """
+    import time as _t
+    UA_local = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
+    QUERIES = ['"vitalcitynyc.org"',
+               '"Vital City" "New York" crime',
+               '"Vital City" "New York" housing',
+               '"Vital City" Glazer']
+    out, seen = [], set()
+    blocked = False
+    for q in QUERIES:
+        url = "https://scholar.google.com/scholar?q=" + urllib.parse.quote(q) + "&as_ylo=2025"
+        try:
+            page = http_get(url, headers={"User-Agent": UA_local,
+                                          "Accept-Language": "en-US,en;q=0.9"}, timeout=30).decode("utf-8", "replace")
+        except Exception as e:
+            log(f"  scholar '{q}': {type(e).__name__}")
+            if getattr(e, "code", None) == 429:
+                blocked = True
+                break
+            continue
+        if "not a robot" in page or "unusual traffic" in page:
+            blocked = True
+            log("  scholar: rate-limited; will retry on the next run")
+            break
+        for blk in re.findall(r'<div class="gs_ri">(.*?)</div>\s*</div>', page, re.S):
+            tm = re.search(r'<h3 class="gs_rt".*?</h3>', blk, re.S)
+            if not tm:
+                continue
+            def _clean(x):
+                return re.sub(r"\s+", " ", html_mod.unescape(re.sub(r"<[^>]+>", "", x))).strip()
+            # lstrip() with a string strips CHARACTERS, not a prefix — it ate the
+            # T off every title beginning "The". Strip the tag properly.
+            title = re.sub(r"^(\[(PDF|HTML|BOOK|CITATION|B)\]\s*)+", "", _clean(tm.group(0))).strip()
+            am = re.search(r'<div class="gs_a">(.*?)</div>', blk, re.S)
+            sm = re.search(r'<div class="gs_rs">(.*?)</div>', blk, re.S)
+            lm = re.search(r'<h3 class="gs_rt".*?<a href="([^"]+)"', blk, re.S)
+            if not title or title in seen:
+                continue
+            seen.add(title)
+            # Only the domain query is self-verifying. "Vital City" as a phrase
+            # also appears in papers using it generically ("a vital city
+            # centre"), so phrase hits are surfaced as leads to check, never
+            # counted as citations.
+            snippet = _clean(sm.group(1))[:300] if sm else ""
+            confirmed = ("vitalcitynyc" in q
+                         or "vitalcitynyc.org" in (snippet + title).lower())
+            out.append({"title": title[:220],
+                        "authors": _clean(am.group(1))[:200] if am else "",
+                        "snippet": snippet,
+                        "url": html_mod.unescape(lm.group(1)) if lm else "",
+                        "query": q,
+                        "confidence": "confirmed" if confirmed else "unverified"})
+        _t.sleep(6)
+    conf = sum(1 for x in out if x["confidence"] == "confirmed")
+    log(f"  scholar citations: {len(out)} ({conf} confirmed by URL, {len(out)-conf} to verify)"
+        + (" (rate-limited partway)" if blocked else ""))
+    return {"available": bool(out) or not blocked, "citations": out,
+            "confirmed": conf, "unverified": len(out) - conf,
+            "rate_limited": blocked, "since_year": 2025,
+            "note": ("Law reviews and journals are not in Google News, so these never reach the "
+                     "press tracker. Citation lags publication by 2-4 years: 2025-26 pieces will "
+                     "keep appearing here through 2029.")}
+
+
+def pull_voice_appearances():
+    """Track the PEOPLE, not the brand.
+
+    Google News will never index audio, so a podcast appearance by a Vital City
+    editor leaves no trace a mention-tracker can find. The audit counted twelve-
+    plus such appearances in twenty months, none of them captured. Searching for
+    the staff member by name alongside the organisation is the workable proxy.
+    """
+    import time as _t
+    out = []
+    for name, role in VC_VOICES:
+        q = f'"{name}" "Vital City"'
+        url = (f"https://news.google.com/rss/search?q={urllib.parse.quote(q)}"
+               f"&hl=en-US&gl=US&ceid=US:en")
+        try:
+            root = ET.fromstring(http_get(url, timeout=25))
+        except Exception as e:
+            log(f"  voices '{name}': {type(e).__name__}")
+            continue
+        items = []
+        for it in root.iter("item"):
+            src = it.find("source")
+            source = (src.text if src is not None else "") or ""
+            link = (it.findtext("link") or "").strip()
+            if "vitalcitynyc.org" in link or re.search(r"vital\s*city", source, re.I):
+                continue            # our own site is not an appearance elsewhere
+            items.append({"title": (it.findtext("title") or "").strip()[:200],
+                          "url": link, "source": source,
+                          "published": (it.findtext("pubDate") or "").strip()})
+        out.append({"name": name, "role": role, "count": len(items), "items": items[:12]})
+        log(f"  voices: {name} -> {len(items)}")
+        _t.sleep(1.5)
+    return {"available": True, "people": out,
+            "total": sum(p["count"] for p in out),
+            "note": ("Appearances by Vital City's own editors and researchers, found by searching "
+                     "the person rather than the publication. Podcasts and broadcast leave no "
+                     "trace a brand-mention tracker can see.")}
+
+
+def resolve_gnews_url(stub_url, timeout=25):
+    """Turn a news.google.com/rss/articles/CBMi... stub into the real URL.
+
+    Google News RSS no longer puts the destination in the link -- the base64
+    payload used to contain it and no longer does, and the stub page is a JS
+    shell. Without the real URL a citation cannot be fetched, and without
+    fetching it cannot be checked, which is how 88 "government citations"
+    turned out to lead with the Homeless Services landing page.
+
+    Google's own resolver takes the per-article signature and timestamp printed
+    into the stub page, so: GET the stub, lift the tokens, POST them back.
+    Returns the original URL unchanged if anything goes wrong -- callers treat
+    an unresolved item as unverified, never as confirmed.
+
+    (DuckDuckGo returns real URLs directly and was tried first. It serves a
+    CAPTCHA after a handful of queries, so it is not usable unattended.)
+    """
+    if "news.google.com" not in stub_url:
+        return stub_url
+    try:
+        raw = http_get(stub_url, timeout=timeout)
+        if isinstance(raw, bytes):
+            raw = raw.decode("utf8", "replace")
+        aid = re.search(r'data-n-a-id="([^"]+)"', raw)
+        sg  = re.search(r'data-n-a-sg="([^"]+)"', raw)
+        ts  = re.search(r'data-n-a-ts="([^"]+)"', raw)
+        if not (aid and sg and ts):
+            return stub_url
+        inner = json.dumps(["garturlreq",
+                            [["X", "X", ["X", "X"], None, None, 1, 1, "US:en",
+                              None, 1, None, None, None, None, None, 0, 1],
+                             "X", "X", 1, [1, 1, 1], 1, 1, None, 0, 0, None, 0],
+                            aid.group(1), int(ts.group(1)), sg.group(1)])
+        body = urllib.parse.urlencode(
+            {"f.req": json.dumps([[["Fbv4je", inner, None, "generic"]]])}).encode()
+        req = urllib.request.Request(
+            "https://news.google.com/_/DotsSplashUi/data/batchexecute", data=body,
+            headers={"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                     "User-Agent": UA})
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            resp = r.read().decode("utf8", "replace")
+        hits = re.findall(r'https?://(?!news\.google)[^"\\\s]{12,300}', resp)
+        return hits[0] if hits else stub_url
+    except Exception:
+        return stub_url
+
+
+def verify_citations(items, workers=12):
+    """Fetch each gov/republication page and check it actually names us.
+
+    Google's site:-scoped phrase match is lenient, and "vital city" is ordinary
+    English in exactly the two places we now search: government pages say "vital
+    city services" and policy shops say "a vital city centre". The first run of
+    this channel returned 88 government hits, of which the top of the list
+    included the DHS landing page and "Partner with the Public Engagement Unit"
+    -- no one had written about us at all.
+
+    So every item is fetched and marked, never silently dropped:
+      verified=True   the page contains vitalcitynyc.org, or "Vital City" used
+                      as a proper noun (journal/report/analysis/according to)
+      verified=False  the phrase is there but generically, or we could not read
+                      the page -- surfaced separately, never counted
+
+    Failing to fetch marks an item unverified rather than removing it: a page we
+    could not read is not evidence of absence, and a 403 should not quietly
+    delete a real citation.
+    """
+    if not items:
+        return items
+
+    # "Vital City" as a proper noun: our own domain, or the phrase sitting next
+    # to the words people use when they mean the publication.
+    PROPER = re.compile(
+        r"vitalcitynyc"
+        r"|Vital\s+City(?:\s+(?:NYC|report|journal|analysis|study|data|magazine))"
+        r"|(?:journal|magazine|publication|report|analysis|study|website|outlet|"
+        r"site|nonprofit|think\s*tank)\s+(?:called\s+|named\s+)?Vital\s+City"
+        r"|(?:according\s+to|per|via|writing\s+in|published\s+(?:in|by)|"
+        r"cited\s+(?:in|by)|research\s+(?:from|by))\s+Vital\s+City",
+        re.I)
+
+    def check(it):
+        # Resolve first: fetching the Google News stub only ever reads Google's
+        # own interstitial, which contains neither the article nor our name.
+        it["resolved_url"] = resolve_gnews_url(it.get("url", ""))
+        try:
+            raw = http_get(it["resolved_url"], timeout=20)
+        except Exception:
+            it["verified"] = False
+            it["verify_note"] = "page could not be fetched"
+            return it
+        if isinstance(raw, bytes):
+            raw = raw.decode("utf8", "replace")
+        text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", raw, flags=re.S | re.I)
+        text = re.sub(r"<[^>]+>", " ", text)
+        text = html_mod.unescape(re.sub(r"\s+", " ", text))
+        if PROPER.search(text) or "vitalcitynyc" in raw.lower():
+            it["verified"] = True
+            it["verify_note"] = ""
+        elif re.search(r"vital\s+city", text, re.I):
+            it["verified"] = False
+            it["verify_note"] = "phrase present but used generically"
+        else:
+            it["verified"] = False
+            it["verify_note"] = "phrase not found on the page"
+        return it
+
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        items = list(ex.map(check, items))
+    ok = sum(1 for i in items if i.get("verified"))
+    log(f"  citation verification: {ok}/{len(items)} confirmed by page fetch")
+    return items
+
+
 def pull_news_mentions():
     """Search Google News RSS for Vital City references, scoped per outlet.
 
@@ -3012,6 +3369,16 @@ def pull_news_mentions():
     for d, label in MEDIA_OUTLETS:
         for s in MEDIA_SHAPES:
             targets.append((d, label, "media", s, None))
+    # Government statements and institutional republication get the same
+    # site:-scoped treatment as the press whitelist — that scoping is what makes
+    # any of these counts trustworthy, and it is why an unscoped phrase search
+    # is never used here.
+    for d, label in GOV_DOMAINS:
+        for shape in ('"Vital City"', "vitalcitynyc.org"):
+            targets.append((d, label, "gov", shape, None))
+    for d, label in REPUBLISHERS:
+        for shape in ('"Vital City"', "vitalcitynyc.org"):
+            targets.append((d, label, "republication", shape, None))
     for d, label in SOCIAL_PLATFORMS:
         # Brand-tag shape (no year split)
         targets.append((d, label, "social", "@vitalcitynyc", None))
@@ -3061,6 +3428,9 @@ def pull_news_mentions():
                 # blogs) — see JUNK_TITLE_PATTERNS above.
                 if kind == "media" and any(re.search(p, title, re.I) for p in JUNK_TITLE_PATTERNS):
                     continue
+                if kind in ("gov", "republication") and any(
+                        re.search(p, title, re.I) for p in ARCHIVE_TITLE_PATTERNS):
+                    continue
                 key = (domain, title.lower())
                 if key in seen: continue
                 seen.add(key)
@@ -3069,6 +3439,8 @@ def pull_news_mentions():
                     "snippet": snip, "domain": domain, "match_shape": shape,
                     "kind": kind,
                     "is_url_share": (shape == "vitalcitynyc.org"),
+                    "roundup": bool(kind == "media" and any(
+                        re.search(pt, title, re.I) for pt in ROUNDUP_TITLE_PATTERNS)),
                 })
             _t.sleep(0.15)   # polite pacing across many outlets × shapes
 
@@ -3095,8 +3467,14 @@ def pull_news_mentions():
         dt = _parse(it.get("published", ""))
         it["published_iso"] = dt.isoformat() if dt else ""
         it["_dt"] = dt
+    # Government citations and institutional republications are exempt from the
+    # 24-month press cutoff. Old press isn't actionable; a Public Advocate
+    # report citing our research is still the best influence artifact we have
+    # however long ago it was written, and there are few enough of them that
+    # keeping all of them costs nothing.
+    KEEP_ALL_AGES = ("social", "gov", "republication")
     out = [it for it in out
-           if it.get("_dt") and (it.get("kind") == "social" or it["_dt"] >= cutoff_press)]
+           if it.get("_dt") and (it.get("kind") in KEEP_ALL_AGES or it["_dt"] >= cutoff_press)]
 
     # Note on verification: Google's site-restricted exact-phrase query
     # ('"Vital City" site:DOMAIN') already requires the phrase to appear in
@@ -3114,7 +3492,15 @@ def pull_news_mentions():
     # article twice under two whitelist entries.
     titles_seen = set(); deduped = []
     for it in sorted(out, key=lambda x: x["_dt"], reverse=True):
-        key = (it["title"].lower()[:80],) if it.get("kind") == "media" \
+        # Media dedups on title alone (overlapping site: scopes return the same
+        # article twice); every other kind dedups per-domain, because the same
+        # headline republished by two institutions is two real signals.
+        # Media and gov dedup on title alone. For media, overlapping site: scopes
+        # return the same article twice; for gov, comptroller.nyc.gov IS a
+        # subdomain of nyc.gov, so every comptroller item arrived twice and was
+        # being counted twice. Social and republication stay per-domain, because
+        # the same headline republished by two institutions is two real signals.
+        key = (it["title"].lower()[:80],) if it.get("kind") in ("media", "gov") \
               else (it["domain"], it["title"].lower()[:80])
         if key in titles_seen: continue
         titles_seen.add(key); deduped.append(it)
@@ -3124,6 +3510,10 @@ def pull_news_mentions():
     # since URL shares are the headline social signal and we want depth.
     media  = [it for it in deduped if it.get("kind") == "media"][:200]
     social = [it for it in deduped if it.get("kind") == "social"][:1500]
+    # Uncapped on purpose: these two are rare and each one matters. If they ever
+    # grow large enough to need a cap, that is itself the good news.
+    gov    = [it for it in deduped if it.get("kind") == "gov"]
+    repub  = [it for it in deduped if it.get("kind") == "republication"]
     # Carry-forward cache. Google News RSS periodically 503s for a whole run from
     # CI IP ranges, which would otherwise blank the third-party-press card. Cache
     # the last good media pull; if this run scraped none, reuse the cache so a
@@ -3145,8 +3535,18 @@ def pull_news_mentions():
                 f"forward {len(media)} cached items from {str(cached.get('as_of',''))[:10]}")
         except Exception as e:
             log(f"  media cache read failed: {e}")
-    out    = media + social
-    log(f"  news mentions: {len(out)} items ({len(media)} media + {len(social)} social) across {len(set(i['domain'] for i in out))} outlets")
+    # Verify before assembling: Google's phrase match is too lenient to trust on
+    # domains where "vital city" is ordinary English.
+    gov   = verify_citations(gov)
+    repub = verify_citations(repub)
+    for it in gov + repub:
+        if it.get("resolved_url"):
+            it["url"] = it["resolved_url"]   # link to the source, not to Google
+    out    = media + social + gov + repub
+    log(f"  news mentions: {len(out)} items ({len(media)} media + {len(social)} social "
+        f"+ {len(gov)} gov [{sum(1 for i in gov if i.get('verified'))} verified] "
+        f"+ {len(repub)} republication [{sum(1 for i in repub if i.get('verified'))} verified]) "
+        f"across {len(set(i['domain'] for i in out))} outlets")
     return out
 
 
@@ -4157,6 +4557,12 @@ def main():
         "recent_unsubs": pull_recent_unsubs(21),
         "press":     pull_press(),
         "news_mentions": news_mentions,
+        # Two channels the audit showed a brand-mention tracker structurally
+        # cannot reach: law reviews (not in Google News at all) and podcasts
+        # (audio leaves no indexable trace).
+        "scholar_citations": pull_scholar_citations(),
+        "voice_appearances": pull_voice_appearances(),
+        "mentions_ledger": load_mentions_ledger(),
         "lifecycle":     lifecycle,
         "engagement_extras": engagement_extras,
         # Ghost's own Tinybird-backed site analytics (visitors, page views).
