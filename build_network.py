@@ -1153,6 +1153,13 @@ def main():
                 # nightly rebuild too. people_overrides.json cannot be used for
                 # this: the workflow overwrites that file with the Google Sheet
                 # every run, so anything written there locally is lost.
+                # An explicit first/last split, for names no heuristic can get
+                # right — "Philipp and Susanne von Türk" is one household, not a
+                # man surnamed "and Susanne von Türk".
+                if (row.get("fn") or "").strip():
+                    rec["fn"] = row["fn"].strip()
+                if (row.get("ln") or "").strip():
+                    rec["ln"] = row["ln"].strip()
                 if (row.get("inst") or "").strip():
                     rec["inst"] = row["inst"].strip()
                 if (row.get("role") or "").strip():

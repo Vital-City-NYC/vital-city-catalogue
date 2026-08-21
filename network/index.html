@@ -701,12 +701,19 @@ function nameParts(n){
   // Middle initials ("Aaron M. Pallas") and quoted/parenthesized nicknames
   // ("Willis “Gary” Dunkum") are dropped so the surname sorts correctly.
   if(!n) return {first:"",last:""};
-  const t=n.trim().split(/\s+/);
+  const t=n.trim().replace(/,/g," ").split(/\s+/).filter(Boolean);
+  if(!t.length) return {first:"",last:""};
   if(t.length===1) return {first:t[0],last:""};
   const isInitial=s=>/^[A-Za-z]\.?$/.test(s);
   const isNick=s=>/^[("'“‘]/.test(s)||/[)"'”’]$/.test(s);
-  let rest=t.slice(1).filter(s=>!isInitial(s)&&!isNick(s));
-  if(!rest.length) rest=t.slice(1).filter(s=>!isNick(s));
+  // A credential is not part of anyone's surname. "Leslie Abbey, Esq." sorts
+  // under Abbey, and a generational suffix rides along with the surname for
+  // display but must not BE it — "Roger G. Arrieux, Jr." is not a Mr Jr.
+  const isCred=s=>/^(esq|md|m\.d|phd|ph\.d|jd|j\.d|mba|cfa|cpa|rn|lcsw|lcsw-r|dds|edd|msw|mph|do|sjd|mpa|ma|ms|bs|dsw|psyd|dvm)\.?$/i.test(s);
+  const isGen=s=>/^(jr|sr|ii|iii|iv|v)\.?$/i.test(s);
+  let rest=t.slice(1).filter(s=>!isInitial(s)&&!isNick(s)&&!isCred(s)&&!isGen(s));
+  if(!rest.length) rest=t.slice(1).filter(s=>!isNick(s)&&!isCred(s)&&!isGen(s));
+  if(!rest.length) rest=t.slice(1).filter(s=>!isCred(s));
   if(!rest.length) rest=t.slice(1);
   return {first:t[0], last:rest.join(" ")};
 }
