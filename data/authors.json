@@ -107,7 +107,7 @@
   },
   {
     "name": "Elizabeth Glazer",
-    "post_count": 47,
+    "post_count": 48,
     "slugs": [
       "a-brief-history-of-the-3300-target",
       "a-rare-remedy-to-the-persistent-brutality-of-rikers",
@@ -1127,20 +1127,6 @@
     "website": null
   },
   {
-    "name": "Alex Chohlas-Wood",
-    "post_count": 3,
-    "slugs": [
-      "how-rare-is-crime-on-the-subway",
-      "how-to-deploy-ai-policing-nyc-nypd",
-      "underground-safer-than-the-surface"
-    ],
-    "slug": "chohlas-wood-alex",
-    "bio": "is an assistant professor of computational social science at NYU Steinhardt. He also co-directs the Computational Policy Lab at Harvard Kennedy School and is the former director of analytics at the New York Police Department.",
-    "url": "https://www.vitalcitynyc.org/author/chohlas-wood-alex/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Anthony A. Braga",
     "post_count": 3,
     "slugs": [
@@ -2100,6 +2086,19 @@
     "slug": "bailey-jason",
     "bio": "is a film critic and historian, and the author of six books. His work has appeared in The New York Times, Vanity Fair, Time, Bloomberg, Vulture, Rolling Stone, The Playlist, RogerEbert.com and more. ",
     "url": "https://www.vitalcitynyc.org/author/bailey-jason/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Alex Chohlas-Wood",
+    "post_count": 2,
+    "slugs": [
+      "how-rare-is-crime-on-the-subway",
+      "underground-safer-than-the-surface"
+    ],
+    "slug": "chohlas-wood-alex",
+    "bio": "is an assistant professor of computational social science at NYU Steinhardt. He also co-directs the Computational Policy Lab at Harvard Kennedy School and is the former director of analytics at the New York Police Department.",
+    "url": "https://www.vitalcitynyc.org/author/chohlas-wood-alex/",
     "twitter": null,
     "website": null
   },
@@ -3634,18 +3633,6 @@
     "website": null
   },
   {
-    "name": "Ned Resnikoff",
-    "post_count": 1,
-    "slugs": [
-      "california-dreaming"
-    ],
-    "slug": "resnikoff-ned",
-    "bio": "is an urban policy consultant and writer. He writes the newsletter Public Comment and is working on a book about cities with an expected publication date of Fall 2026.",
-    "url": "https://www.vitalcitynyc.org/author/resnikoff-ned/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Jonathan Tarleton",
     "post_count": 1,
     "slugs": [
@@ -3654,6 +3641,18 @@
     "slug": "tarleton-jonathan",
     "bio": "is a writer and urban planner. He previously served as chief researcher on urban projects and as editor-in-chief of the online magazine Urban Omnibus.",
     "url": "https://www.vitalcitynyc.org/author/tarleton-jonathan/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Ned Resnikoff",
+    "post_count": 1,
+    "slugs": [
+      "california-dreaming"
+    ],
+    "slug": "resnikoff-ned",
+    "bio": "is an urban policy consultant and writer. He writes the newsletter Public Comment and is working on a book about cities with an expected publication date of Fall 2026.",
+    "url": "https://www.vitalcitynyc.org/author/resnikoff-ned/",
     "twitter": null,
     "website": null
   },
@@ -3766,18 +3765,6 @@
     "website": null
   },
   {
-    "name": "Daniel Semenza",
-    "post_count": 1,
-    "slugs": [
-      "the-80-20-rule-of-gun-supply"
-    ],
-    "slug": "semenza-daniel",
-    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Brian DeLay",
     "post_count": 1,
     "slugs": [
@@ -3826,42 +3813,6 @@
     "website": null
   },
   {
-    "name": "Samantha J. Simon",
-    "post_count": 1,
-    "slugs": [
-      "the-good-gun-owner"
-    ],
-    "slug": "simon-samantha-j",
-    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Greg Lickenbrock",
-    "post_count": 1,
-    "slugs": [
-      "the-money-behind-mass-shootings"
-    ],
-    "slug": "lickenbrock-greg",
-    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
-    "twitter": null,
-    "website": null
-  },
-  {
-    "name": "Kate Daugherty",
-    "post_count": 1,
-    "slugs": [
-      "what-we-know-and-dont-know-about-guns"
-    ],
-    "slug": "daugherty-kate",
-    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
-    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Nina Vinik",
     "post_count": 1,
     "slugs": [
@@ -3870,6 +3821,18 @@
     "slug": "vinik-nina",
     "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
     "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Samantha J. Simon",
+    "post_count": 1,
+    "slugs": [
+      "the-good-gun-owner"
+    ],
+    "slug": "simon-samantha-j",
+    "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+    "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
     "twitter": null,
     "website": null
   },
@@ -3906,6 +3869,42 @@
     "slug": "buckhanan-charles",
     "bio": "is a street outreach worker on Chicago’s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
     "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Daniel Semenza",
+    "post_count": 1,
+    "slugs": [
+      "the-80-20-rule-of-gun-supply"
+    ],
+    "slug": "semenza-daniel",
+    "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+    "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Kate Daugherty",
+    "post_count": 1,
+    "slugs": [
+      "what-we-know-and-dont-know-about-guns"
+    ],
+    "slug": "daugherty-kate",
+    "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+    "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Greg Lickenbrock",
+    "post_count": 1,
+    "slugs": [
+      "the-money-behind-mass-shootings"
+    ],
+    "slug": "lickenbrock-greg",
+    "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+    "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
     "twitter": null,
     "website": null
   },
@@ -4246,18 +4245,6 @@
     "website": null
   },
   {
-    "name": "Richard Schragger",
-    "post_count": 1,
-    "slugs": [
-      "is-it-time-for-cities-to-go-it-alone"
-    ],
-    "slug": "schragger-richard",
-    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
-    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
-    "twitter": null,
-    "website": null
-  },
-  {
     "name": "Adam Cohen",
     "post_count": 1,
     "slugs": [
@@ -4278,6 +4265,18 @@
     "slug": "chertoff-meryl",
     "bio": "is adjunct professor of law at Georgetown University Law Center.",
     "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
+    "twitter": null,
+    "website": null
+  },
+  {
+    "name": "Richard Schragger",
+    "post_count": 1,
+    "slugs": [
+      "is-it-time-for-cities-to-go-it-alone"
+    ],
+    "slug": "schragger-richard",
+    "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
+    "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
     "twitter": null,
     "website": null
   },

@@ -1551,7 +1551,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2026-06-24",
     "published_at": "2026-06-24T16:59:32.000+00:00",
-    "updated_at": "2026-06-24T16:59:32.000+00:00",
+    "updated_at": "2026-08-24T21:19:02.000+00:00",
     "primary_author": null,
     "authors": [
       "Jamie Rubin"
@@ -1563,8 +1563,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "New York might be next in a growing line of states adopting millionaire taxes — and the same old fear comes with it: tax the rich too hard and they'll…",
-    "excerpt": "New York might be next in a growing line of states adopting millionaire taxes — and the same old fear comes with it: tax the rich too hard and they'll leave, taking their businesses and their tax revenue with them. Cristobal Young, an economic sociologist at Cornell, has spent over twenty years testing that fear against actual IRS data, going back to New Jersey's first millionaire tax fight in 2004. His finding, consistently: millionaires barely move at all, and when they do, it's rarely f",
+    "summary": "What a leading researcher has learned about what motivates the wealthiest residents to leave cities",
+    "excerpt": "What a leading researcher has learned about what motivates the wealthiest residents to leave cities",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-24T122517.565.png",
     "feature_image_alt": "Two women in large, fancy hats exit the Frederick Law Olmstead Luncheon at the Central Park Conservancy; one walks towards a car with her back to the camera, the other is shown in profile loo",
     "feature_image_credit": "Andrew Lichtenstein / Corbis / Getty Images",
@@ -2387,59 +2387,6 @@
     "id": "6a2825f0db63ad00019220d7"
   },
   {
-    "title": "Whither Wall Street?",
-    "slug": "wall-street-future-nyc",
-    "url": "https://www.vitalcitynyc.org/wall-street-future-nyc/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-06-10",
-    "published_at": "2026-06-10T16:07:00.000+00:00",
-    "updated_at": "2026-06-10T16:30:10.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Nicole Gelinas"
-    ],
-    "topics": [
-      "Economics",
-      "The Shape of the Economic Engine"
-    ],
-    "issues": [
-      "issue-16"
-    ],
-    "issue_numbers": [
-      16
-    ],
-    "summary": "New York can’t predict the future of its most lucrative industry, but it should pay more attention to the past.",
-    "excerpt": "New York can’t predict the future of its most lucrative industry, but it should pay more attention to the past.  ",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T133308.751.png",
-    "feature_image_alt": "The feet of a many in business slacks holding a rooster on a leash in Manhattan",
-    "feature_image_credit": "Mathias Wasik",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "29298823",
-          "src": "visualisation/29298823?1257272",
-          "url": "https://public.flourish.studio/visualisation/29298823/"
-        },
-        {
-          "id": "29298877",
-          "src": "visualisation/29298877?1257272",
-          "url": "https://public.flourish.studio/visualisation/29298877/"
-        }
-      ],
-      "iframes": [],
-      "counts": {
-        "flourish": 2
-      },
-      "total": 2
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2380,
-    "reading_minutes": 10,
-    "id": "6a284e73db63ad0001922260"
-  },
-  {
     "title": "New York City’s Job Growth Has a Quality Problem",
     "slug": "nyc-job-quality-problem",
     "url": "https://www.vitalcitynyc.org/nyc-job-quality-problem/",
@@ -2509,6 +2456,116 @@
     "word_count": 2002,
     "reading_minutes": 9,
     "id": "6a28518cdb63ad00019222b5"
+  },
+  {
+    "title": "Whither Wall Street?",
+    "slug": "wall-street-future-nyc",
+    "url": "https://www.vitalcitynyc.org/wall-street-future-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:07:00.000+00:00",
+    "updated_at": "2026-06-10T16:30:10.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Nicole Gelinas"
+    ],
+    "topics": [
+      "Economics",
+      "The Shape of the Economic Engine"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "New York can’t predict the future of its most lucrative industry, but it should pay more attention to the past.",
+    "excerpt": "New York can’t predict the future of its most lucrative industry, but it should pay more attention to the past.  ",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T133308.751.png",
+    "feature_image_alt": "The feet of a many in business slacks holding a rooster on a leash in Manhattan",
+    "feature_image_credit": "Mathias Wasik",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "29298823",
+          "src": "visualisation/29298823?1257272",
+          "url": "https://public.flourish.studio/visualisation/29298823/"
+        },
+        {
+          "id": "29298877",
+          "src": "visualisation/29298877?1257272",
+          "url": "https://public.flourish.studio/visualisation/29298877/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 2
+      },
+      "total": 2
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2380,
+    "reading_minutes": 10,
+    "id": "6a284e73db63ad0001922260"
+  },
+  {
+    "title": "A Bolder Development Strategy for a Crowded New York",
+    "slug": "nyc-joint-developments-public-land-housing",
+    "url": "https://www.vitalcitynyc.org/nyc-joint-developments-public-land-housing/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-06-10",
+    "published_at": "2026-06-10T16:05:00.000+00:00",
+    "updated_at": "2026-06-10T16:36:53.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Yonah Freemark"
+    ],
+    "topics": [
+      "Housing",
+      "More Money in More Pockets",
+      "Economics",
+      "City Planning"
+    ],
+    "issues": [
+      "issue-16"
+    ],
+    "issue_numbers": [
+      16
+    ],
+    "summary": "Build on, and build up, public facilities.",
+    "excerpt": "Build on, and build up, public facilities.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T131240.673.png",
+    "feature_image_alt": "Two men in business clothes look through the windows of a construction site",
+    "feature_image_credit": "Steven Davis",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "28980007",
+          "src": "visualisation/28980007?1257272",
+          "url": "https://public.flourish.studio/visualisation/28980007/"
+        }
+      ],
+      "iframes": [
+        {
+          "url": "https://vital-city.github.io/Freemark_Map/",
+          "host": "vital-city.github.io",
+          "kind": "vital city project"
+        }
+      ],
+      "counts": {
+        "flourish": 1,
+        "vital city project": 1
+      },
+      "total": 2
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1503,
+    "reading_minutes": 7,
+    "id": "6a28496ddb63ad00019221c3"
   },
   {
     "title": "Public Sector Unions vs. Mamdani’s Ambitions",
@@ -2612,63 +2669,6 @@
     "word_count": 2376,
     "reading_minutes": 10,
     "id": "6a286ccbdb63ad000192257a"
-  },
-  {
-    "title": "A Bolder Development Strategy for a Crowded New York",
-    "slug": "nyc-joint-developments-public-land-housing",
-    "url": "https://www.vitalcitynyc.org/nyc-joint-developments-public-land-housing/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-06-10",
-    "published_at": "2026-06-10T16:05:00.000+00:00",
-    "updated_at": "2026-06-10T16:36:53.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Yonah Freemark"
-    ],
-    "topics": [
-      "Housing",
-      "More Money in More Pockets",
-      "Economics",
-      "City Planning"
-    ],
-    "issues": [
-      "issue-16"
-    ],
-    "issue_numbers": [
-      16
-    ],
-    "summary": "Build on, and build up, public facilities.",
-    "excerpt": "Build on, and build up, public facilities.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/06/Cropping-Tool---2026-06-09T131240.673.png",
-    "feature_image_alt": "Two men in business clothes look through the windows of a construction site",
-    "feature_image_credit": "Steven Davis",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "28980007",
-          "src": "visualisation/28980007?1257272",
-          "url": "https://public.flourish.studio/visualisation/28980007/"
-        }
-      ],
-      "iframes": [
-        {
-          "url": "https://vital-city.github.io/Freemark_Map/",
-          "host": "vital-city.github.io",
-          "kind": "vital city project"
-        }
-      ],
-      "counts": {
-        "flourish": 1,
-        "vital city project": 1
-      },
-      "total": 2
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1503,
-    "reading_minutes": 7,
-    "id": "6a28496ddb63ad00019221c3"
   },
   {
     "title": "The Millionaire Exodus That Never Came",
@@ -3915,7 +3915,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2026-05-14",
     "published_at": "2026-05-14T15:33:14.000+00:00",
-    "updated_at": "2026-05-14T15:33:14.000+00:00",
+    "updated_at": "2026-08-24T21:19:49.000+00:00",
     "primary_author": null,
     "authors": [
       "Jamie Rubin"
@@ -3926,8 +3926,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "Joe McReynolds has two jobs.",
-    "excerpt": "Joe McReynolds has two jobs. By day, he's a national security analyst tracking Chinese information warfare. Nights and weekends, he's a Tokyo obsessive with a PhD in progress, a private digital library of hundreds of Japanese-language urban studies books, and a story about the time he frantically called his boss to manufacture an emergency just so he could fly to Tokyo and show Ezra Klein around. Jamie sits down with McReynolds to talk about what New York could actually learn from a city w",
+    "summary": "What the Japanese megacity teaches New York",
+    "excerpt": "What the Japanese megacity teaches New York",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/05/Cropping-Tool--91-.png",
     "feature_image_alt": "Night scene of Restaurant Almond at Roppongi Corner in Tokyo, lit in pink.",
     "feature_image_credit": "Burt Glinn / Magnum Photos",
@@ -6154,84 +6154,6 @@
     "id": "69a04c0ad4006a00010a42e4"
   },
   {
-    "title": "How To Deploy AI To Improve Policing in New York",
-    "slug": "how-to-deploy-ai-policing-nyc-nypd",
-    "url": "https://www.vitalcitynyc.org/how-to-deploy-ai-policing-nyc-nypd/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-02-19",
-    "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-04-15T13:36:26.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Alex Chohlas-Wood"
-    ],
-    "topics": [
-      "Artifical Intelligence",
-      "Police Reform",
-      "Where We’re Headed"
-    ],
-    "issues": [
-      "crime-looking-back-at-2025-and-ahead-to-2026"
-    ],
-    "issue_numbers": [],
-    "summary": "Powerful new technology has the potential to improve the City’s justice system, but to get it right, the NYPD has to address serious risks.",
-    "excerpt": "Powerful new technology has the potential to improve the City’s justice system, but to get it right, the NYPD has to address serious risks.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aypwfd0yxlcxvohv_gettyimages-107077426-auto-format-compress-1776259651032.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Jin Lee / Bloomberg / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 3331,
-    "reading_minutes": 14,
-    "id": "69a04c0ad4006a00010a42e5"
-  },
-  {
-    "title": "How Prevention Reduced Crime and How To Get More of It",
-    "slug": "how-prevention-reduced-crime-suggestions-analysis",
-    "url": "https://www.vitalcitynyc.org/how-prevention-reduced-crime-suggestions-analysis/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-02-19",
-    "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-06-23T14:01:03.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "John K. Roman"
-    ],
-    "topics": [
-      "Crime",
-      "Police Reform",
-      "Where We Are"
-    ],
-    "issues": [
-      "crime-looking-back-at-2025-and-ahead-to-2026"
-    ],
-    "issue_numbers": [],
-    "summary": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
-    "excerpt": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay-jhlwlo0xkeggt_nyc27760-auto-format-compress-1776260478549.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Alex Webb / Magnum Photos",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1897,
-    "reading_minutes": 8,
-    "id": "69a04c0ad4006a00010a42e3"
-  },
-  {
     "title": "The State of Crime in New York City: 2025 and Beyond",
     "slug": "crime-in-new-york-city-trends-statistics",
     "url": "https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/",
@@ -6440,6 +6362,84 @@
     "word_count": 2897,
     "reading_minutes": 13,
     "id": "69a04c0ad4006a00010a42df"
+  },
+  {
+    "title": "Does Mayor Mamdani Have a Public Safety Strategy?",
+    "slug": "mamdani-public-safety-strategy-nyc",
+    "url": "https://www.vitalcitynyc.org/mamdani-public-safety-strategy-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-02-19",
+    "published_at": "2026-02-19T17:00:54.000+00:00",
+    "updated_at": "2026-05-21T20:11:28.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Elizabeth Glazer"
+    ],
+    "topics": [
+      "Police Reform",
+      "Where We’re Headed",
+      "Crime"
+    ],
+    "issues": [
+      "crime-looking-back-at-2025-and-ahead-to-2026"
+    ],
+    "issue_numbers": [],
+    "summary": "It’s not an easy question to answer.",
+    "excerpt": "It’s not an easy question to answer.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/azsgrlwlo0xkemd0_par414809-auto-format-compress-1776259650841.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Paolo Pellegrin / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2251,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a42e1"
+  },
+  {
+    "title": "How Prevention Reduced Crime and How To Get More of It",
+    "slug": "how-prevention-reduced-crime-suggestions-analysis",
+    "url": "https://www.vitalcitynyc.org/how-prevention-reduced-crime-suggestions-analysis/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-02-19",
+    "published_at": "2026-02-19T17:00:54.000+00:00",
+    "updated_at": "2026-06-23T14:01:03.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "John K. Roman"
+    ],
+    "topics": [
+      "Crime",
+      "Police Reform",
+      "Where We Are"
+    ],
+    "issues": [
+      "crime-looking-back-at-2025-and-ahead-to-2026"
+    ],
+    "issue_numbers": [],
+    "summary": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
+    "excerpt": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay-jhlwlo0xkeggt_nyc27760-auto-format-compress-1776260478549.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Alex Webb / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1897,
+    "reading_minutes": 8,
+    "id": "69a04c0ad4006a00010a42e3"
   },
   {
     "title": "The Top Five Crime and Justice Stories of 2025",
@@ -7999,8 +7999,7 @@
     "topics": [
       "City Government",
       "State Government",
-      "Just Fix It",
-      "policy"
+      "Just Fix It"
     ],
     "issues": [
       "just-fix-it"
@@ -8114,8 +8113,7 @@
     "topics": [
       "Mental Health",
       "People in Crisis on Streets and Subways",
-      "Homelessness",
-      "policy"
+      "Homelessness"
     ],
     "issues": [
       "what-to-do-and-not-to-do"
@@ -8162,8 +8160,7 @@
     "topics": [
       "Subway Safety",
       "Crime",
-      "Subway Crime",
-      "policy"
+      "Subway Crime"
     ],
     "issues": [
       "what-to-do-and-not-to-do"
@@ -8195,54 +8192,6 @@
     "id": "69a04c0ad4006a00010a4283"
   },
   {
-    "title": "How the System Works (or Doesn’t)",
-    "slug": "how-the-system-works-for-people-in-crisis-on-streets-and-subways",
-    "url": "https://www.vitalcitynyc.org/how-the-system-works-for-people-in-crisis-on-streets-and-subways/",
-    "type": "policy",
-    "type_basis": "series:what-to-do-and-not-to-do",
-    "published_date": "2025-12-16",
-    "published_at": "2025-12-16T11:00:04.000+00:00",
-    "updated_at": "2026-08-17T16:39:57.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Vital City"
-    ],
-    "topics": [
-      "Homelessness",
-      "Mental Health",
-      "People in Crisis on Streets and Subways",
-      "policy"
-    ],
-    "issues": [
-      "what-to-do-and-not-to-do"
-    ],
-    "issue_numbers": [],
-    "summary": "This is one of three supporting documents connected to Vital City’s recommendations on serious mental illness and homelessness.",
-    "excerpt": "This is one of three supporting documents connected to Vital City’s recommendations on serious mental illness and homelessness.\n\n\nA profile of the population\n\nOn any given night, about 4,000 people are living on the street in New York City. That figure, drawn from a point-in-time count, understates the scale of the problem: Because people cycle in and out of unsheltered homelessness, the number of unique individuals affected over the course of a year is likely much higher.\n\nNew York isn’t alone",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/atxfjxnyclf9ohxz_20210707-dsc01101-auto-format-compress-1776259663766.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Melissa O'Shaughnessy",
-    "embeds": {
-      "flourish": [],
-      "iframes": [
-        {
-          "url": "https://drive.google.com/file/d/1tc0vOUB5vkV6ekkac-0_Fw5trNJQeAds/preview",
-          "host": "drive.google.com",
-          "kind": "document"
-        }
-      ],
-      "counts": {
-        "document": 1
-      },
-      "total": 1
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 14799,
-    "reading_minutes": 64,
-    "id": "69a04c0ad4006a00010a427e"
-  },
-  {
     "title": "Subway Safety: What the Data Show",
     "slug": "what-the-data-show-about-subway-safety",
     "url": "https://www.vitalcitynyc.org/what-the-data-show-about-subway-safety/",
@@ -8259,8 +8208,7 @@
     ],
     "topics": [
       "Subway Safety",
-      "data",
-      "policy"
+      "data"
     ],
     "issues": [
       "what-to-do-and-not-to-do"
@@ -8372,7 +8320,6 @@
     "topics": [
       "Homelessness",
       "People in Crisis on Streets and Subways",
-      "policy",
       "Mental Health"
     ],
     "issues": [
@@ -8457,6 +8404,53 @@
     "id": "69a04c0ad4006a00010a3fe2"
   },
   {
+    "title": "How the System Works (or Doesn’t)",
+    "slug": "how-the-system-works-for-people-in-crisis-on-streets-and-subways",
+    "url": "https://www.vitalcitynyc.org/how-the-system-works-for-people-in-crisis-on-streets-and-subways/",
+    "type": "policy",
+    "type_basis": "series:what-to-do-and-not-to-do",
+    "published_date": "2025-12-16",
+    "published_at": "2025-12-16T11:00:04.000+00:00",
+    "updated_at": "2026-08-17T16:39:57.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Homelessness",
+      "Mental Health",
+      "People in Crisis on Streets and Subways"
+    ],
+    "issues": [
+      "what-to-do-and-not-to-do"
+    ],
+    "issue_numbers": [],
+    "summary": "This is one of three supporting documents connected to Vital City’s recommendations on serious mental illness and homelessness.",
+    "excerpt": "This is one of three supporting documents connected to Vital City’s recommendations on serious mental illness and homelessness.\n\n\nA profile of the population\n\nOn any given night, about 4,000 people are living on the street in New York City. That figure, drawn from a point-in-time count, understates the scale of the problem: Because people cycle in and out of unsheltered homelessness, the number of unique individuals affected over the course of a year is likely much higher.\n\nNew York isn’t alone",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/atxfjxnyclf9ohxz_20210707-dsc01101-auto-format-compress-1776259663766.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Melissa O'Shaughnessy",
+    "embeds": {
+      "flourish": [],
+      "iframes": [
+        {
+          "url": "https://drive.google.com/file/d/1tc0vOUB5vkV6ekkac-0_Fw5trNJQeAds/preview",
+          "host": "drive.google.com",
+          "kind": "document"
+        }
+      ],
+      "counts": {
+        "document": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 14799,
+    "reading_minutes": 64,
+    "id": "69a04c0ad4006a00010a427e"
+  },
+  {
     "title": "Case Studies from Other Large Cities",
     "slug": "case-studies-from-large-cities-people-in-crisis-on-streets-and-subways",
     "url": "https://www.vitalcitynyc.org/case-studies-from-large-cities-people-in-crisis-on-streets-and-subways/",
@@ -8471,7 +8465,6 @@
     ],
     "topics": [
       "Homelessness",
-      "policy",
       "People in Crisis on Streets and Subways"
     ],
     "issues": [
@@ -8518,8 +8511,7 @@
       "Abdul Nasser Rad"
     ],
     "topics": [
-      "Safety",
-      "policy"
+      "Safety"
     ],
     "issues": [],
     "issue_numbers": [],
@@ -8682,8 +8674,7 @@
       "Howard Yaruss"
     ],
     "topics": [
-      "Transit",
-      "policy"
+      "Transit"
     ],
     "issues": [],
     "issue_numbers": [],
@@ -9047,7 +9038,6 @@
       "Charles Komanoff"
     ],
     "topics": [
-      "policy",
       "Environment"
     ],
     "issues": [],
@@ -9091,8 +9081,7 @@
       "Pedro Noguera"
     ],
     "topics": [
-      "Education",
-      "policy"
+      "Education"
     ],
     "issues": [],
     "issue_numbers": [],
@@ -10810,7 +10799,7 @@
     "type_basis": "default",
     "published_date": "2025-09-24",
     "published_at": "2025-09-24T12:25:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:45.000+00:00",
+    "updated_at": "2026-08-24T21:20:54.000+00:00",
     "primary_author": null,
     "authors": [
       "Josiah Bates"
@@ -10821,8 +10810,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "By the time the car began to slow, the officer already had his gun drawn.",
-    "excerpt": "By the time the car began to slow, the officer already had his gun drawn. \n\nOn August 31, 2017, 20-year-old Raheem Bryant saw a convertible idling near a gas station in Newark, New Jersey. He jumped in and drove off. The car was quickly reported stolen, and the police began a pursuit. \n\nMost of the responding officers followed department protocol: keep a safe distance, avoid escalation and wait for the vehicle to stop. Bryant wasn’t armed, and he wasn’t posing an immediate threat. The plan was t",
+    "summary": "The New Jersey city has made progress, but growing pains are real",
+    "excerpt": "The New Jersey city has made progress, but growing pains are real",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_anqlw55xunkb1elg_croppingtool-17-1776259679352.png",
     "feature_image_alt": null,
     "feature_image_credit": "Angus Mordant / Bloomberg / Getty Images",
@@ -10986,7 +10975,7 @@
     "type_basis": "default",
     "published_date": "2025-09-17",
     "published_at": "2025-09-17T16:03:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:46.000+00:00",
+    "updated_at": "2026-08-24T21:36:40.000+00:00",
     "primary_author": null,
     "authors": [
       "Anthony Flint"
@@ -11002,8 +10991,8 @@
     "issue_numbers": [
       14
     ],
-    "summary": "This year, the “abundance” message has been heard loud and clear.",
-    "excerpt": "This year, the “abundance” message has been heard loud and clear. Ezra Klein and Derek Thompson’s “Abundance,” Yoni Appelbaum’s “Stuck” and Mark Dunkelman’s “Why Nothing Works” all make the case that America has been way too fussy about the built environment, putting up barriers to all kinds of development, particularly housing.\n\nAnd with the accompanying call to loosen up and build more stuff — more multifamily housing, more density, more mixed-use, more infrastructure — one woman long consider",
+    "summary": "The abundance movement blames her for freezing neighborhoods in amber. A biographer says the real Jacobs believed cities must change.",
+    "excerpt": "The abundance movement blames her for freezing neighborhoods in amber. A biographer says the real Jacobs believed cities must change.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_amhbdmgnhvftpqgw_gettyimages-121113892-1776259678099.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Fred W. McDarrah / Getty Images",
@@ -11018,6 +11007,47 @@
     "word_count": 1673,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a42a4"
+  },
+  {
+    "title": "What Hangs in the Balance Sheets",
+    "slug": "what-hangs-in-the-balance-sheets",
+    "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-04-16T19:02:02.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "What We Can and Can't Afford",
+      "Economics",
+      "Government Operations"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Two New York City apartment buildings’ costs and revenue",
+    "excerpt": "Two New York City apartment buildings’ costs and revenue",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhfp2gnhvftpqhy_h_16282379-auto-format-compress-1776259678798.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Karsten Moran / The New York Times / Redux",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 3276,
+    "reading_minutes": 14,
+    "id": "69a04c0ad4006a00010a401a"
   },
   {
     "title": "Learning from Jersey City",
@@ -11455,47 +11485,6 @@
     "id": "69a04c0ad4006a00010a4280"
   },
   {
-    "title": "What Hangs in the Balance Sheets",
-    "slug": "what-hangs-in-the-balance-sheets",
-    "url": "https://www.vitalcitynyc.org/what-hangs-in-the-balance-sheets/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-16T19:02:02.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Vital City"
-    ],
-    "topics": [
-      "What We Can and Can't Afford",
-      "Economics",
-      "Government Operations"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Two New York City apartment buildings’ costs and revenue",
-    "excerpt": "Two New York City apartment buildings’ costs and revenue",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amhfp2gnhvftpqhy_h_16282379-auto-format-compress-1776259678798.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Karsten Moran / The New York Times / Redux",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 3276,
-    "reading_minutes": 14,
-    "id": "69a04c0ad4006a00010a401a"
-  },
-  {
     "title": "Local Democracy is Land-Use Policy",
     "slug": "local-democracy-is-land-use-policy",
     "url": "https://www.vitalcitynyc.org/local-democracy-is-land-use-policy/",
@@ -11576,6 +11565,46 @@
     "word_count": 2260,
     "reading_minutes": 10,
     "id": "69a04c0ad4006a00010a4210"
+  },
+  {
+    "title": "What Can We Learn from Social Housing?",
+    "slug": "when-government-built-homes-for-people",
+    "url": "https://www.vitalcitynyc.org/when-government-built-homes-for-people/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T15:50:00.000+00:00",
+    "updated_at": "2026-08-24T21:37:03.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Jonathan Tarleton"
+    ],
+    "topics": [
+      "Housing",
+      "Pouring the Foundation"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "New York once built middle-income housing at scale. The history of Mitchell-Lama holds lessons for everyone arguing about affordability now.",
+    "excerpt": "New York once built middle-income housing at scale. The history of Mitchell-Lama holds lessons for everyone arguing about affordability now.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_z1ixujbqstj98f0c_2rpfb9x_cropped-1776259681505.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Kenneth Grant / Alamy Stock Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2329,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a42a5"
   },
   {
     "title": "How Housing Supply and Design Intersect",
@@ -11669,46 +11698,6 @@
     "id": "69a04c0ad4006a00010a423c"
   },
   {
-    "title": "What Can We Learn from Social Housing?",
-    "slug": "when-government-built-homes-for-people",
-    "url": "https://www.vitalcitynyc.org/when-government-built-homes-for-people/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T15:50:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:47.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Jonathan Tarleton"
-    ],
-    "topics": [
-      "Housing",
-      "Pouring the Foundation"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Home is formative, and the particularities of home especially so.",
-    "excerpt": "Home is formative, and the particularities of home especially so. In her memoir “Just City: Growing Up on the Upper West Side When Housing Was a Human Right,” Jennifer Baum narrates the ways she and her family were shaped by their unique home: a Mitchell-Lama cooperative she was raised in as a child, that served her as a backstop and crash pad when a young adult, that provided a foundation when she became a mother and that still plays the role of touchstone. RNA House, which stretches its honey-",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_z1ixujbqstj98f0c_2rpfb9x_cropped-1776259681505.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Kenneth Grant / Alamy Stock Photo",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2329,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a42a5"
-  },
-  {
     "title": "The Promise of Floating Zoning",
     "slug": "the-promise-of-floating-zoning",
     "url": "https://www.vitalcitynyc.org/the-promise-of-floating-zoning/",
@@ -11716,7 +11705,7 @@
     "type_basis": "default",
     "published_date": "2025-09-17",
     "published_at": "2025-09-17T15:45:00.000+00:00",
-    "updated_at": "2026-04-15T13:42:32.000+00:00",
+    "updated_at": "2026-08-24T21:37:04.000+00:00",
     "primary_author": null,
     "authors": [
       "Kaley Pillinger"
@@ -11731,8 +11720,8 @@
     "issue_numbers": [
       14
     ],
-    "summary": "On the banks of Lake Erie in 1922, a small village abutting Cleveland, Ohio, passed a controversial law.",
-    "excerpt": "On the banks of Lake Erie in 1922, a small village abutting Cleveland, Ohio, passed a controversial law. Under the new ordinance, the village drew lines across its jurisdiction and, within the polygons those lines created, set requirements for the type of buildings that could be built in each.\n\nOne landowner, Ambler Realty, sued the village, claiming an infringement of its property rights. The U.S. Supreme Court ultimately ruled against Ambler, allowing a new form of urban policy: zoning.\n\nNew Y",
+    "summary": "A century of fixed-boundary zoning has calcified the city. A more flexible tool could help New York keep up with itself.",
+    "excerpt": "A century of fixed-boundary zoning has calcified the city. A more flexible tool could help New York keep up with itself.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_12_amhnhwgnhvftpqlc_gettyimages-2213813000-1776260479921.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "China News Service / Getty Images",
@@ -12209,23 +12198,21 @@
     "id": "69a04c0ad4006a00010a4262"
   },
   {
-    "title": "The 80/20 Rule of Gun Supply",
-    "slug": "the-80-20-rule-of-gun-supply",
-    "url": "https://www.vitalcitynyc.org/the-80-20-rule-of-gun-supply/",
+    "title": "Before the Trigger Is Pulled",
+    "slug": "before-the-trigger-is-pulled",
+    "url": "https://www.vitalcitynyc.org/before-the-trigger-is-pulled/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "updated_at": "2026-04-15T13:36:49.000+00:00",
     "primary_author": null,
     "authors": [
-      "Daniel Semenza"
+      "Jens Ludwig"
     ],
     "topics": [
       "Gun Violence",
-      "What Can Be Done?",
-      "Crime",
-      "History"
+      "What Can Be Done?"
     ],
     "issues": [
       "issue-13"
@@ -12233,22 +12220,35 @@
     "issue_numbers": [
       13
     ],
-    "summary": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
-    "excerpt": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambmuwgnhvfto1_k_gettyimages-94668620-auto-format-compress-1776259687304.jpg",
+    "summary": "The case for smarter deterrence",
+    "excerpt": "The case for smarter deterrence",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambq8ggnhvfto2ck_par112603-auto-format-compress-1776259685262.jpg",
     "feature_image_alt": null,
-    "feature_image_credit": "Andrew Burton / Bloomberg / Getty Images",
+    "feature_image_credit": "Alex Webb / Magnum Photos",
     "embeds": {
-      "flourish": [],
+      "flourish": [
+        {
+          "id": "24748665",
+          "src": "visualisation/24748665?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748665/"
+        },
+        {
+          "id": "24748637",
+          "src": "visualisation/24748637?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748637/"
+        }
+      ],
       "iframes": [],
-      "counts": {},
-      "total": 0
+      "counts": {
+        "flourish": 2
+      },
+      "total": 2
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2361,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a4020"
+    "word_count": 1404,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a401b"
   },
   {
     "title": "Gun Culture Then and Now",
@@ -12416,6 +12416,47 @@
     "id": "69a04c0ad4006a00010a420e"
   },
   {
+    "title": "Breaking Through With the Next Generation",
+    "slug": "breaking-through-with-the-next-generation-on-firearms",
+    "url": "https://www.vitalcitynyc.org/breaking-through-with-the-next-generation-on-firearms/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:51.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Nina Vinik"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Youth",
+      "What Can Be Done?"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "A new image of firearms is taking hold among younger Americans.",
+    "excerpt": "A new image of firearms is taking hold among younger Americans.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amb9y2gnhvfto2l__506651127239-auto-format-compress-1776259687255.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Tony Gutierrez / AP Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1635,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4024"
+  },
+  {
     "title": "The Good Gun Owner",
     "slug": "the-good-gun-owner",
     "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
@@ -12457,9 +12498,9 @@
     "id": "69a04c0ad4006a00010a401d"
   },
   {
-    "title": "The Money Behind Mass Shootings",
-    "slug": "the-money-behind-mass-shootings",
-    "url": "https://www.vitalcitynyc.org/the-money-behind-mass-shootings/",
+    "title": "How Modern Bullets Maximize Lethality",
+    "slug": "how-modern-bullets-maximize-lethality",
+    "url": "https://www.vitalcitynyc.org/how-modern-bullets-maximize-lethality/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
@@ -12467,12 +12508,13 @@
     "updated_at": "2026-04-15T13:36:50.000+00:00",
     "primary_author": null,
     "authors": [
-      "Greg Lickenbrock"
+      "Stephen Hargarten",
+      "Jennifer Tucker"
     ],
     "topics": [
       "Gun Violence",
       "Modern Evolution: Marketing and Profits",
-      "Economics"
+      "History"
     ],
     "issues": [
       "issue-13"
@@ -12480,11 +12522,60 @@
     "issue_numbers": [
       13
     ],
-    "summary": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
-    "excerpt": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama5awgnhvfto1yk_gettyimages-107596655-auto-format-compress-1776259686592.jpg",
+    "summary": "Tracking bullets with modern visualization techniques",
+    "excerpt": "Tracking bullets with modern visualization techniques",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama4a2gnhvfto1wt_gettyimages-919161012-auto-format-compress-1776259686608.jpg",
     "feature_image_alt": null,
-    "feature_image_credit": "The Washington Post / Getty Images",
+    "feature_image_credit": "Michele Eve Sandberg / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [
+        {
+          "url": "https://www.youtube.com/embed/1ZIgiTrg56w?si=P4kNReOc-whJKw1E",
+          "host": "www.youtube.com",
+          "kind": "video"
+        }
+      ],
+      "counts": {
+        "video": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1479,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a4211"
+  },
+  {
+    "title": "My Seven Guns: A Personal Inventory",
+    "slug": "my-seven-guns-a-personal-inventory",
+    "url": "https://www.vitalcitynyc.org/my-seven-guns-a-personal-inventory/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Charles Buckhanan"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Two Sides of the Gun: Stories of Possession and Victimization",
+      "Crime"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "One former gangbanger’s relationship with his firearms",
+    "excerpt": "One former gangbanger’s relationship with his firearms",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambk1wgnhvfto2vr_gettyimages-512389608-auto-format-compress-1776259686683.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Robert Abbott Sengstacke / Getty Images",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -12493,9 +12584,92 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2177,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a401f"
+    "word_count": 1315,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a4023"
+  },
+  {
+    "title": "Pointing a Firearm or Looking Down Its Barrel",
+    "slug": "pointing-a-firearm-or-looking-down-its-barrel",
+    "url": "https://www.vitalcitynyc.org/pointing-a-firearm-or-looking-down-its-barrel/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "A Survey"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Two Sides of the Gun: Stories of Possession and Victimization",
+      "Police Reform"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "A survey",
+    "excerpt": "A survey",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amblm2gnhvfto2wc_061219034503-auto-format-compress-1776259686722.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Bruce Winter / AP Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 4100,
+    "reading_minutes": 18,
+    "id": "69a04c0ad4006a00010a4022"
+  },
+  {
+    "title": "The 80/20 Rule of Gun Supply",
+    "slug": "the-80-20-rule-of-gun-supply",
+    "url": "https://www.vitalcitynyc.org/the-80-20-rule-of-gun-supply/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Daniel Semenza"
+    ],
+    "topics": [
+      "Gun Violence",
+      "What Can Be Done?",
+      "Crime",
+      "History"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
+    "excerpt": "Why focusing on the small fraction of problem dealers offers the clearest path to reducing violence",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambmuwgnhvfto1_k_gettyimages-94668620-auto-format-compress-1776259687304.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Andrew Burton / Bloomberg / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2361,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a4020"
   },
   {
     "title": "What We Know and Don’t Know About Guns",
@@ -12719,103 +12893,9 @@
     "id": "69a04c0ad4006a00010a401c"
   },
   {
-    "title": "Before the Trigger Is Pulled",
-    "slug": "before-the-trigger-is-pulled",
-    "url": "https://www.vitalcitynyc.org/before-the-trigger-is-pulled/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:49.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Jens Ludwig"
-    ],
-    "topics": [
-      "Gun Violence",
-      "What Can Be Done?"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "The case for smarter deterrence",
-    "excerpt": "The case for smarter deterrence",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambq8ggnhvfto2ck_par112603-auto-format-compress-1776259685262.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Alex Webb / Magnum Photos",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "24748665",
-          "src": "visualisation/24748665?1271209",
-          "url": "https://public.flourish.studio/visualisation/24748665/"
-        },
-        {
-          "id": "24748637",
-          "src": "visualisation/24748637?1271209",
-          "url": "https://public.flourish.studio/visualisation/24748637/"
-        }
-      ],
-      "iframes": [],
-      "counts": {
-        "flourish": 2
-      },
-      "total": 2
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1404,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a401b"
-  },
-  {
-    "title": "Breaking Through With the Next Generation",
-    "slug": "breaking-through-with-the-next-generation-on-firearms",
-    "url": "https://www.vitalcitynyc.org/breaking-through-with-the-next-generation-on-firearms/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:51.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Nina Vinik"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Youth",
-      "What Can Be Done?"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "A new image of firearms is taking hold among younger Americans.",
-    "excerpt": "A new image of firearms is taking hold among younger Americans.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amb9y2gnhvfto2l__506651127239-auto-format-compress-1776259687255.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Tony Gutierrez / AP Photo",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1635,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4024"
-  },
-  {
-    "title": "How Modern Bullets Maximize Lethality",
-    "slug": "how-modern-bullets-maximize-lethality",
-    "url": "https://www.vitalcitynyc.org/how-modern-bullets-maximize-lethality/",
+    "title": "The Money Behind Mass Shootings",
+    "slug": "the-money-behind-mass-shootings",
+    "url": "https://www.vitalcitynyc.org/the-money-behind-mass-shootings/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
@@ -12823,13 +12903,12 @@
     "updated_at": "2026-04-15T13:36:50.000+00:00",
     "primary_author": null,
     "authors": [
-      "Stephen Hargarten",
-      "Jennifer Tucker"
+      "Greg Lickenbrock"
     ],
     "topics": [
       "Gun Violence",
       "Modern Evolution: Marketing and Profits",
-      "History"
+      "Economics"
     ],
     "issues": [
       "issue-13"
@@ -12837,60 +12916,11 @@
     "issue_numbers": [
       13
     ],
-    "summary": "Tracking bullets with modern visualization techniques",
-    "excerpt": "Tracking bullets with modern visualization techniques",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama4a2gnhvfto1wt_gettyimages-919161012-auto-format-compress-1776259686608.jpg",
+    "summary": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
+    "excerpt": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama5awgnhvfto1yk_gettyimages-107596655-auto-format-compress-1776259686592.jpg",
     "feature_image_alt": null,
-    "feature_image_credit": "Michele Eve Sandberg / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [
-        {
-          "url": "https://www.youtube.com/embed/1ZIgiTrg56w?si=P4kNReOc-whJKw1E",
-          "host": "www.youtube.com",
-          "kind": "video"
-        }
-      ],
-      "counts": {
-        "video": 1
-      },
-      "total": 1
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1479,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a4211"
-  },
-  {
-    "title": "My Seven Guns: A Personal Inventory",
-    "slug": "my-seven-guns-a-personal-inventory",
-    "url": "https://www.vitalcitynyc.org/my-seven-guns-a-personal-inventory/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Charles Buckhanan"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Two Sides of the Gun: Stories of Possession and Victimization",
-      "Crime"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "One former gangbanger’s relationship with his firearms",
-    "excerpt": "One former gangbanger’s relationship with his firearms",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambk1wgnhvfto2vr_gettyimages-512389608-auto-format-compress-1776259686683.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Robert Abbott Sengstacke / Getty Images",
+    "feature_image_credit": "The Washington Post / Getty Images",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -12899,50 +12929,9 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1315,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a4023"
-  },
-  {
-    "title": "Pointing a Firearm or Looking Down Its Barrel",
-    "slug": "pointing-a-firearm-or-looking-down-its-barrel",
-    "url": "https://www.vitalcitynyc.org/pointing-a-firearm-or-looking-down-its-barrel/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "A Survey"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Two Sides of the Gun: Stories of Possession and Victimization",
-      "Police Reform"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "A survey",
-    "excerpt": "A survey",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amblm2gnhvfto2wc_061219034503-auto-format-compress-1776259686722.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Bruce Winter / AP Photo",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 4100,
-    "reading_minutes": 18,
-    "id": "69a04c0ad4006a00010a4022"
+    "word_count": 2177,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a401f"
   },
   {
     "title": "The Long Chain",
@@ -13116,7 +13105,7 @@
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:00:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:52.000+00:00",
+    "updated_at": "2026-08-24T21:37:05.000+00:00",
     "primary_author": null,
     "authors": [
       "Jack Rakove"
@@ -13132,8 +13121,8 @@
     "issue_numbers": [
       13
     ],
-    "summary": "“A well regulated Militia, being necessary to the security of a free State, the right of the people to keep and bear Arms, shall not be infringed.” For much…",
-    "excerpt": "“A well regulated Militia, being necessary to the security of a free State, the right of the people to keep and bear Arms, shall not be infringed.”\n\nFor much of the nation’s history, the Second Amendment was a neglected part of the Constitution, an obscure clause of little interest to jurists and scholars. It did make one notable appearance in United States v. Cruikshank (1876), a case involving the horrendous Colfax, Louisiana, massacre of 1873, when an armed white militia murdered scores of Af",
+    "summary": "For most of the nation’s history, the amendment was a constitutional afterthought. How it became the engine of the gun-rights revolution — and why history makes a poor guide",
+    "excerpt": "For most of the nation’s history, the amendment was a constitutional afterthought. How it became the engine of the gun-rights revolution — and why history makes a poor guide",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_12_ama0w2gnhvfto1t5_gettyimages-1241064323-1776259688407.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Patrick T. Fallon / Getty Images",
@@ -13198,7 +13187,7 @@
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T08:12:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:53.000+00:00",
+    "updated_at": "2026-08-24T21:37:05.000+00:00",
     "primary_author": null,
     "authors": [
       "Nick Suplina"
@@ -13214,8 +13203,8 @@
     "issue_numbers": [
       13
     ],
-    "summary": "At the Chicago World’s Columbian Exposition on July 12, 1893, the historian Frederick Jackson Turner presented a lecture to the American Historical…",
-    "excerpt": "At the Chicago World’s Columbian Exposition on July 12, 1893, the historian Frederick Jackson Turner presented a lecture to the American Historical Association titled “The Significance of the Frontier in American History.” It hardly mattered that the West was at that point barely “history” — the U.S. census had only declared the frontier “closed” three years prior. A unified American identity was a post-Civil War necessity, and Turner thought he had captured it. The taming of the West was the cr",
+    "summary": "The idea that guns won the West — and define the American character — was invented by admen.",
+    "excerpt": "The idea that guns won the West — and define the American character — was invented by admen.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_12_ama1ywgnhvfto1um_3bwe1ny-1776259688584.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "DPA Picture Alliance / Alamy Stock Photo",
@@ -13699,7 +13688,7 @@
     "type_basis": "default",
     "published_date": "2025-08-06",
     "published_at": "2025-08-06T12:38:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:54.000+00:00",
+    "updated_at": "2026-08-24T21:37:06.000+00:00",
     "primary_author": null,
     "authors": [
       "Scarlet Neath",
@@ -13714,8 +13703,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "Polling shows that public safety is among New York City voters’ top concerns.",
-    "excerpt": "Polling shows that public safety is among New York City voters’ top concerns. But it’s important to be specific when talking about the issue. Candidates in the recent Democratic mayoral primary focused mainly on quality-of-life issues — homelessness, mental illness, public drug use — and not on violent crime. There’s good reason for that: New York has seen a remarkable drop in murders, with the NYPD reporting shootings at an all-time low through the first half of the year. Of course, there is wo",
+    "summary": "Non-police responses to 911 calls are quietly proliferating across the country. Experience and research suggest New York should lean in.",
+    "excerpt": "Non-police responses to 911 calls are quietly proliferating across the country. Experience and research suggest New York should lean in.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_ajntuktt2npbz6lx_gettyimages-52312029-1776259691329.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Mario Tama / Getty Images",
@@ -14393,7 +14382,7 @@
     "type_basis": "default",
     "published_date": "2025-07-22",
     "published_at": "2025-07-22T15:55:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:56.000+00:00",
+    "updated_at": "2026-08-24T21:37:07.000+00:00",
     "primary_author": null,
     "authors": [
       "Jessica Katz"
@@ -14410,8 +14399,8 @@
     "issue_numbers": [
       14
     ],
-    "summary": "In July, the City’s Charter Revision Commission held its final vote on the ballot proposals to amend the City's charter.",
-    "excerpt": "In July, the City’s Charter Revision Commission held its final vote on the ballot proposals to amend the City's charter. In November, New Yorkers choosing their next mayor will also get to decide whether to vote “yes” or “no” to five separate ballot measures, four of which are designed to improve the process to create new housing. \n\nApproving these revisions is imperative.\n\nThe housing crisis in New York City should be treated like an emergency; vacancy rates are at an unthinkable 1.4%, which is",
+    "summary": "A former housing official on why November’s charter measures would finally ease the path for new homes in a city that treats building like a Sisyphean task",
+    "excerpt": "A former housing official on why November’s charter measures would finally ease the path for new homes in a city that treats building like a Sisyphean task",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_amhr1ggnhvftpqmg_nyc156195-1776259693867.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Alec Soth / Magnum Photos",
@@ -14673,7 +14662,7 @@
     "type_basis": "default",
     "published_date": "2025-07-02",
     "published_at": "2025-07-02T12:44:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:57.000+00:00",
+    "updated_at": "2026-08-24T21:37:07.000+00:00",
     "primary_author": null,
     "authors": [
       "Grace Rauh"
@@ -14684,8 +14673,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "This year’s primary election felt different — and for good reason.",
-    "excerpt": "This year’s primary election felt different — and for good reason. We saw the highest turnout since 1989, energized young voters, small-dollar donors driving competitive campaigns and a rejection of big-money politics. How did this happen? The Democratic primary winner Assemblyman Zohran Mamdani ran a remarkable campaign. And his campaign took full advantage of hard-won election reforms, including early voting, ranked-choice voting, and a strengthened public matching funds program that made it e",
+    "summary": "The highest primary turnout since 1989 was no accident. Early voting, ranked choice and matching funds made it happen — and the job isn’t finished.",
+    "excerpt": "The highest primary turnout since 1989 was no accident. Early voting, ranked choice and matching funds made it happen — and the job isn’t finished.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_agvyxhfc4bhwi-oz_gettyimages-155679613-1776259695246.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Scott Eells / Bloomberg / Getty Images",
@@ -14783,7 +14772,7 @@
     "type_basis": "default",
     "published_date": "2025-07-01",
     "published_at": "2025-07-01T12:48:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:58.000+00:00",
+    "updated_at": "2026-08-24T21:37:08.000+00:00",
     "primary_author": null,
     "authors": [
       "David R. Eichenthal"
@@ -14794,8 +14783,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "The 1972 film “The Candidate” ends with newly elected senator Bill McKay (Robert Redford) asking his campaign manager, “What do we do now?” Zohran Mamdani…",
-    "excerpt": "The 1972 film “The Candidate” ends with newly elected senator Bill McKay (Robert Redford) asking his campaign manager, “What do we do now?” \n\nZohran Mamdani has defied the odds and nearly every poll to win the Democratic primary. But he hasn’t won City Hall yet. He faces what could be a competitive election in November. A pre-primary general election poll showed him trailing Andrew Cuomo, who may still choose to run on a third-party line, as his father did in 1977. (Mario Cuomo lost to Ed Koch i",
+    "summary": "How the Democratic nominee can win in November — and be ready to govern on January 1",
+    "excerpt": "How the Democratic nominee can win in November — and be ready to govern on January 1",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_agq4chfc4bhwi7ln_h_16355884-1776259695404.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Jonah Rosenberg / The New York Times / Redux",
@@ -15620,7 +15609,7 @@
     "type_basis": "default",
     "published_date": "2025-05-15",
     "published_at": "2025-05-15T12:51:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:00.000+00:00",
+    "updated_at": "2026-08-24T21:37:09.000+00:00",
     "primary_author": null,
     "authors": [
       "Elizabeth Glazer"
@@ -15631,8 +15620,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "“Remediation manager” sounds more like a third-rank bureaucrat or elementary school reading specialist than a revolutionary figure.",
-    "excerpt": "“Remediation manager” sounds more like a third-rank bureaucrat or elementary school reading specialist than a revolutionary figure. But Judge Laura Taylor Swain’s order Tuesday kicking off the process to appoint such a manager marks a turning point in the horrific history of the city’s jails because of the potent powers of the position. For 10 years, Swain has overseen the federal consent decree that the City signed agreeing to address the then-unconstitutional levels of violence in the jails. B",
+    "summary": "“Remediation manager” sounds like a third-rank bureaucrat. The powers behind the title make it the last, best chance to fix the city’s jails.",
+    "excerpt": "“Remediation manager” sounds like a third-rank bureaucrat. The powers behind the title make it the last, best chance to fix the city’s jails.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_acy67ydwj-7ksljn_h_15077362-1776259700953.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Michael Kirby Smith / The New York Times / Redux",
@@ -16001,84 +15990,6 @@
     "id": "69a04c0ad4006a00010a4048"
   },
   {
-    "title": "Donald Trump vs. the Rule of Law, and New York City",
-    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
-    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Harry Siegel"
-    ],
-    "topics": [
-      "Politics",
-      "Repercussions",
-      "Corruption"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Anadolu / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1560,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a404b"
-  },
-  {
-    "title": "Is It Time for Cities to Go It Alone?",
-    "slug": "is-it-time-for-cities-to-go-it-alone",
-    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-04-29",
-    "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:02.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Richard Schragger"
-    ],
-    "topics": [
-      "Where Do We Go From Here?",
-      "City Government",
-      "Politics"
-    ],
-    "issues": [
-      "trump-100-days-and-beyond"
-    ],
-    "issue_numbers": [],
-    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Ben Fractenberg",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1697,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4049"
-  },
-  {
     "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days",
     "slug": "trumps-bizarro-new-deal",
     "url": "https://www.vitalcitynyc.org/trumps-bizarro-new-deal/",
@@ -16155,6 +16066,84 @@
     "word_count": 1313,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a404c"
+  },
+  {
+    "title": "Donald Trump vs. the Rule of Law, and New York City",
+    "slug": "donald-trump-vs-the-rule-of-law-and-new-york-city",
+    "url": "https://www.vitalcitynyc.org/donald-trump-vs-the-rule-of-law-and-new-york-city/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:02.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Harry Siegel"
+    ],
+    "topics": [
+      "Politics",
+      "Repercussions",
+      "Corruption"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "excerpt": "His second term is marked by seemingly bottomless hostility to the Constitution and to his hometown — but local leaders aren’t meeting the moment.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abefupiqrldabuxc_gettyimages-2200636545_edited-png-auto-format-compress-1776259704417.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Anadolu / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1560,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a404b"
+  },
+  {
+    "title": "Is It Time for Cities to Go It Alone?",
+    "slug": "is-it-time-for-cities-to-go-it-alone",
+    "url": "https://www.vitalcitynyc.org/is-it-time-for-cities-to-go-it-alone/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-04-29",
+    "published_at": "2025-04-29T19:35:30.000+00:00",
+    "updated_at": "2026-04-15T13:37:02.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Richard Schragger"
+    ],
+    "topics": [
+      "Where Do We Go From Here?",
+      "City Government",
+      "Politics"
+    ],
+    "issues": [
+      "trump-100-days-and-beyond"
+    ],
+    "issue_numbers": [],
+    "summary": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "excerpt": "Trump’s assault on local government should usher in a new era of self-sufficiency.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/abehhfiqrldabuxx_richardschragger__headerimage__trump100days_edited-png-auto-format-compress-1776259704514.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Ben Fractenberg",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1697,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4049"
   },
   {
     "title": "What You Can Do About Trump",
@@ -16436,7 +16425,7 @@
     "type_basis": "tag:event-notice",
     "published_date": "2025-04-15",
     "published_at": "2025-04-15T18:00:00.000+00:00",
-    "updated_at": "2026-01-22T11:18:23.000+00:00",
+    "updated_at": "2026-08-24T21:37:09.000+00:00",
     "primary_author": null,
     "authors": [
       "Jens Ludwig"
@@ -16447,8 +16436,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "What if everything we thought we knew about gun violence was wrong?",
-    "excerpt": "What if everything we thought we knew about gun violence was wrong? Vital City, NYU Wagner School, and the Institute for Public Knowledge are hosting a conversation between journalist Matthew Yglesias and University of Chicago behavioral economist Jens Ludwig exploring Ludwig’s new book, “Unforgiving Places: The Unexpected Origins of American Gun Violence.” Drawing on decades of research and immersive fieldwork in Chicago, Ludwig shows that most gun violence is the result of fleeting, emotionall",
+    "summary": "A conversation about “Unforgiving Places” — and why most shootings grow out of fleeting, emotionally charged moments, not the motives we assume",
+    "excerpt": "A conversation about “Unforgiving Places” — and why most shootings grow out of fleeting, emotionally charged moments, not the motives we assume",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -16597,7 +16586,7 @@
     "type_basis": "tag:event-notice",
     "published_date": "2025-04-07",
     "published_at": "2025-04-07T09:00:00.000+00:00",
-    "updated_at": "2026-01-19T10:25:30.000+00:00",
+    "updated_at": "2026-08-24T21:37:10.000+00:00",
     "primary_author": null,
     "authors": [
       "Errol Louis",
@@ -16609,8 +16598,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "This forum, co-hosted with the Craig Newmark Graduate School of Journalism at CUNY, focused on what’s actually happening with crime on the streets and…",
-    "excerpt": "This forum, co-hosted with the Craig Newmark Graduate School of Journalism at CUNY, focused on what’s actually happening with crime on the streets and subways, probing would-be mayors’ pragmatic plans to address New Yorkers’ concerns.\n\nThe panel featured candidates Adrienne Adams, Brad Lander, Jessica Ramos, Scott Stringer, Whitney Tilson and Jim Walden. The event was moderated by NY1 political anchor and Newmark J-School adjunct professor (and Vital City contributing writer) Errol Louis. He was",
+    "summary": "Six candidates for mayor field questions about crime, disorder and quality of life on the streets and subways",
+    "excerpt": "Six candidates for mayor field questions about crime, disorder and quality of life on the streets and subways",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -17098,7 +17087,7 @@
     "type_basis": "default",
     "published_date": "2025-03-04",
     "published_at": "2025-03-04T02:25:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:06.000+00:00",
+    "updated_at": "2026-08-24T21:37:10.000+00:00",
     "primary_author": null,
     "authors": [
       "Benjamin Soskis"
@@ -17114,8 +17103,8 @@
     "issue_numbers": [
       11
     ],
-    "summary": "Alexis de Tocqueville, the nation’s patron saint of the voluntary association, was not necessarily a fan of the American city.",
-    "excerpt": "Alexis de Tocqueville, the nation’s patron saint of the voluntary association, was not necessarily a fan of the American city. “I look upon the size of certain American cities and above all the nature of their inhabitants as a genuine danger threatening the future of the democratic republics of the New World,” the French nobleman wrote in “Democracy in America,” after his U.S. tour in the early 1830s. The danger lay in the fact that in these cities, Tocqueville wrote, “men cannot be prevented fr",
+    "summary": "From Tocqueville’s day to the Great Society, the associations that became modern nonprofits grew up with the American city — and helped govern it",
+    "excerpt": "From Tocqueville’s day to the Great Society, the associations that became modern nonprofits grew up with the American city — and helped govern it",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_z8zknbsahjwomets_lon15540_edited-1776259710735.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Martin Parr / Magnum Photos",
@@ -17759,7 +17748,7 @@
     "type_basis": "default",
     "published_date": "2025-03-03",
     "published_at": "2025-03-03T19:30:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:08.000+00:00",
+    "updated_at": "2026-08-24T21:37:11.000+00:00",
     "primary_author": null,
     "authors": [
       "Justine Olderman"
@@ -17775,8 +17764,8 @@
     "issue_numbers": [
       11
     ],
-    "summary": "It has been a year since I stepped down from being the executive director of The Bronx Defenders, a holistic public defender office that provides legal…",
-    "excerpt": "It has been a year since I stepped down from being the executive director of The Bronx Defenders, a holistic public defender office that provides legal representation, social service support and advocacy to low-income people. Leading the organization was so all-consuming that it was hard for me to imagine what life would be like once I left. The first few weeks were a little disorienting, but it helped that I soon found others who, like me, were struggling to adjust to life after leadership.\n\nAs",
+    "summary": "A former Bronx Defenders chief on why the staff revolts roiling mission-driven organizations may be evolution, not mutiny",
+    "excerpt": "A former Bronx Defenders chief on why the staff revolts roiling mission-driven organizations may be evolution, not mutiny",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_z8yzwrsahjwomeyv_gettyimages-459079308_edited-1776259714175.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Joe Raedle/Getty Images",
@@ -18043,7 +18032,7 @@
     "type_basis": "tag:event-notice",
     "published_date": "2025-02-25",
     "published_at": "2025-02-25T11:00:00.000+00:00",
-    "updated_at": "2026-01-19T10:25:47.000+00:00",
+    "updated_at": "2026-08-24T21:37:17.000+00:00",
     "primary_author": null,
     "authors": [
       "Jelani Cobb",
@@ -18056,8 +18045,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "Who is running the show?",
-    "excerpt": "Who is running the show? Can the mayor survive 2025? What happens next in the courts — and in the court of public opinion?\n\nIntroductory Remarks: Jelani Cobb, dean of the Columbia Journalism School\n\nModerator: Harry Siegel, editor at THE CITY and Vital City contributing writer\n\nPanelists: Jeffrey Toobin, contributing opinion writer for The New York Times\n\nDana Rubinstein, reporter at The New York Times\n\nDaniel Richman, the Paul J. Kellner Professor at Columbia Law School and former Assistant Uni",
+    "summary": "A panel on the fallout from the Justice Department’s move to drop the mayor’s case — and what it means for who is actually running the city",
+    "excerpt": "A panel on the fallout from the Justice Department’s move to drop the mayor’s case — and what it means for who is actually running the city",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -20520,7 +20509,7 @@
     "type_basis": "tag:event-notice",
     "published_date": "2024-12-10",
     "published_at": "2024-12-10T10:00:00.000+00:00",
-    "updated_at": "2026-01-19T08:51:41.000+00:00",
+    "updated_at": "2026-08-24T21:37:21.000+00:00",
     "primary_author": null,
     "authors": [
       "Jelani Cobb",
@@ -20533,8 +20522,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "With the landmark election of the first convicted felon as president and the indictment and ongoing federal investigations into New York City Mayor Eric…",
-    "excerpt": "With the landmark election of the first convicted felon as president and the indictment and ongoing federal investigations into New York City Mayor Eric Adams, it’s likely that political corruption allegations will continue to dominate headlines. What is the interplay between prosecutors who investigate public officials and reporters mining sources and public records in search of scoops? What has been the impact of an evolving local media landscape on the ability to sniff out corruption? And wha",
+    "summary": "Prosecutors and reporters both chase public corruption. A panel on their symbiotic, sometimes conflicting work — and how a shrinking local press changes it",
+    "excerpt": "Prosecutors and reporters both chase public corruption. A panel on their symbiotic, sometimes conflicting work — and how a shrinking local press changes it",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -21991,7 +21980,7 @@
     "type_basis": "title:conversation",
     "published_date": "2024-10-15",
     "published_at": "2024-10-15T10:00:00.000+00:00",
-    "updated_at": "2026-01-22T11:20:04.000+00:00",
+    "updated_at": "2026-08-24T21:37:21.000+00:00",
     "primary_author": null,
     "authors": [
       "Jelani Cobb",
@@ -22004,8 +21993,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "With the federal investigations ongoing, the steady drumbeat of Adams administration resignations and new criminal allegations have continued.",
-    "excerpt": "With the federal investigations ongoing, the steady drumbeat of Adams administration resignations and new criminal allegations have continued. Where is this headed? How strong is the government's case against the mayor? What does the United States Attorney’s promise that the “investigation continues” mean? What are the implications for governance? And what does recent history teach us about the severity of the corruption charges?\n\nIn a virtual panel, Vital City and Columbia Journalism School (CJ",
+    "summary": "How bad is it really and what comes next? Experts assess the federal case and its implications for governing New York. With full transcript.",
+    "excerpt": "How bad is it really and what comes next? Experts assess the federal case and its implications for governing New York. With full transcript.",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -22704,48 +22693,6 @@
     "id": "69a04c0ad4006a00010a41ec"
   },
   {
-    "title": "New Yorkers Share Stories About Riding the Rails",
-    "slug": "the-best-connection-i-ever-made",
-    "url": "https://www.vitalcitynyc.org/the-best-connection-i-ever-made/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2024-10-02",
-    "published_at": "2024-10-02T15:58:37.000+00:00",
-    "updated_at": "2026-04-15T13:37:25.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "A Survey"
-    ],
-    "topics": [
-      "culture",
-      "The Best Connection I Ever Made",
-      "Education",
-      "Government Operations"
-    ],
-    "issues": [
-      "issue-9"
-    ],
-    "issue_numbers": [
-      9
-    ],
-    "summary": "When a College is Also a Subway Station By Nicholas Dagen Bloom \"What makes your program unique?\" This question from a prospective urban planning student…",
-    "excerpt": "When a College is Also a Subway Station\n\nBy Nicholas Dagen Bloom\n\n\"What makes your program unique?\" This question from a prospective urban planning student gave me pause. Like all planning programs, we at Hunter College offer a mix of classes, professors, studios and social vision. However, none of these features, I have to admit, are truly unique to us. Half in jest, I told him that, as far as I knew, we were the only planning program in the nation with a subway station in the basement. That od",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ZvxOeLVsGrYSwQUW_Bedford_Avenue-2C_New_York-2C_United_States_-Unsplash-_cropped-1776259741239.jpg",
-    "feature_image_alt": "An image of a subway entrance with colourful graffiti style posters behind it on the wall",
-    "feature_image_credit": "Ellie Pritts / Wikimedia Commons",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 3198,
-    "reading_minutes": 14,
-    "id": "69a04c0ad4006a00010a40a8"
-  },
-  {
     "title": "Room for Improvement",
     "slug": "what-new-yorks-subway-system-can-learn-from-cities-around-the-world",
     "url": "https://www.vitalcitynyc.org/what-new-yorks-subway-system-can-learn-from-cities-around-the-world/",
@@ -22876,6 +22823,48 @@
     "word_count": 1712,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a40b5"
+  },
+  {
+    "title": "New Yorkers Share Stories About Riding the Rails",
+    "slug": "the-best-connection-i-ever-made",
+    "url": "https://www.vitalcitynyc.org/the-best-connection-i-ever-made/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2024-10-02",
+    "published_at": "2024-10-02T15:58:37.000+00:00",
+    "updated_at": "2026-08-24T21:37:22.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "A Survey"
+    ],
+    "topics": [
+      "culture",
+      "The Best Connection I Ever Made",
+      "Education",
+      "Government Operations"
+    ],
+    "issues": [
+      "issue-9"
+    ],
+    "issue_numbers": [
+      9
+    ],
+    "summary": "Commutes, chance encounters and connections underground: planners, officials and riders on what the subway means to them",
+    "excerpt": "Commutes, chance encounters and connections underground: planners, officials and riders on what the subway means to them",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ZvxOeLVsGrYSwQUW_Bedford_Avenue-2C_New_York-2C_United_States_-Unsplash-_cropped-1776259741239.jpg",
+    "feature_image_alt": "An image of a subway entrance with colourful graffiti style posters behind it on the wall",
+    "feature_image_credit": "Ellie Pritts / Wikimedia Commons",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 3198,
+    "reading_minutes": 14,
+    "id": "69a04c0ad4006a00010a40a8"
   },
   {
     "title": "Riding While Female",
@@ -23479,7 +23468,7 @@
     "type_basis": "default",
     "published_date": "2024-10-02",
     "published_at": "2024-10-02T15:20:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:27.000+00:00",
+    "updated_at": "2026-08-24T21:37:23.000+00:00",
     "primary_author": null,
     "authors": [
       "Greg Berman"
@@ -23495,8 +23484,8 @@
     "issue_numbers": [
       9
     ],
-    "summary": "For this edition, we take a break from poring over dusty intellectual journals and dense NBER papers to highlight a group of researchers and writers who are…",
-    "excerpt": "For this edition, we take a break from poring over dusty intellectual journals and dense NBER papers to highlight a group of researchers and writers who are attempting to break out of the academic ghetto. Specifically, we are featuring authors who are using a (relatively) new medium to communicate with the public: Substack. \n\nLike the blogosphere of old, the world of Substack contains multitudes. Recent years have seen thousands of writers migrate to the platform, which enables them to create su",
+    "summary": "Our research roundup goes off-campus, highlighting the Substack newsletters where Vital City contributors publish what mainstream outlets won’t",
+    "excerpt": "Our research roundup goes off-campus, highlighting the Substack newsletters where Vital City contributors publish what mainstream outlets won’t",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_zvrqrrvsgryswk1h_dj3keb_cropped-1776259742868.jpg",
     "feature_image_alt": "A hand holding a book is visible behind a subway platform column",
     "feature_image_credit": "Randy Duchaine / Alamy Stock Photo",
@@ -23520,7 +23509,7 @@
     "type_basis": "default",
     "published_date": "2024-09-24",
     "published_at": "2024-09-24T12:00:00.000+00:00",
-    "updated_at": "2026-01-19T09:05:17.000+00:00",
+    "updated_at": "2026-08-24T21:37:23.000+00:00",
     "primary_author": null,
     "authors": [
       "Jan Ransom",
@@ -23534,8 +23523,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "In a city that has long vaunted its accomplishments in making life better for its residents, its jails stand as a startling and unmitigated failure.",
-    "excerpt": "In a city that has long vaunted its accomplishments in making life better for its residents, its jails stand as a startling and unmitigated failure. Over the past three years, 33 people have died in the jails, and its past and present reveal one horrendous abuse after another, as a recent Gothamist investigative series on rape in the jails has detailed. \n\nReform efforts in the 1920s to move from the dark, crowded and unsanitary conditions of city jails to an island in the East River with space a",
+    "summary": "After 33 deaths in three years and decades of failed reform, a panel of leading experts on what it would actually take to change the jails",
+    "excerpt": "After 33 deaths in three years and decades of failed reform, a panel of leading experts on what it would actually take to change the jails",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -25239,7 +25228,7 @@
     "type_basis": "default",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T16:00:00.000+00:00",
-    "updated_at": "2026-08-17T17:44:35.000+00:00",
+    "updated_at": "2026-08-24T21:37:24.000+00:00",
     "primary_author": null,
     "authors": [
       "A Survey"
@@ -25256,8 +25245,8 @@
     "issue_numbers": [
       8
     ],
-    "summary": "It's All About the Values By Adem Bunkeddeko I have a bond and love for New York that is sometimes difficult to capture in words.",
-    "excerpt": "It's All About the Values\n\nBy Adem Bunkeddeko\n\nI have a bond and love for New York that is sometimes difficult to capture in words.\n\nI am the son of refugees who fled Uganda's civil war during the early 1980s in pursuit of sanctuary and a better life in the city. From the ashes of turmoil, my parents would plant seeds of hope in a rent-stabilized one-bedroom dwelling in Queens, which, notwithstanding being plagued with vermin, symbolized their American dream. They each worked two or three jobs t",
+    "summary": "Plenty of people threaten to leave New York. Contributors explain why they stay.",
+    "excerpt": "Plenty of people threaten to leave New York. Contributors explain why they stay.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/znnmk5bwfbowe0ri_vitalcity-issue8-survey1-auto-format-compress-1776259748354.jpg",
     "feature_image_alt": "A man walks on Fifth Aveneue with a homemade speed bike.",
     "feature_image_credit": "Thomas Hoepker / Magnum Photos",
@@ -25272,47 +25261,6 @@
     "word_count": 3011,
     "reading_minutes": 13,
     "id": "69a04c0ad4006a00010a40ca"
-  },
-  {
-    "title": "When Citizens Rescue Neighborhoods",
-    "slug": "when-citizens-rescue-neighborhoods",
-    "url": "https://www.vitalcitynyc.org/when-citizens-rescue-neighborhoods/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2024-06-26",
-    "published_at": "2024-06-26T15:55:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:35.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Eileen Markey"
-    ],
-    "topics": [
-      "What Makes a Great City Work?",
-      "Crime",
-      "Neighborhood Life"
-    ],
-    "issues": [
-      "issue-8"
-    ],
-    "issue_numbers": [
-      8
-    ],
-    "summary": "Nothing demonstrates the magnetic pull of a doom loop — or the power to reverse it — like the Bronx in the 1970s.",
-    "excerpt": "Nothing demonstrates the magnetic pull of a doom loop — or the power to reverse it — like the Bronx in the 1970s. By the end of that decade, the borough had become a byword for disaster. The Bronx’s decline had taken a few steps: redlining and deindustrialization, highway building and white flight, dramatic cutbacks to fire service even as incidents and intensity of fires climbed, a sclerotic political machine. \n\nIf faith in the idea of the city faltered in the postwar years, and just about died",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_11_znmyljbwfbowe0gr_vitalcity-issue8-eileenmarkey1-1776259748372.jpg",
-    "feature_image_alt": "Residents of a Bronx apartment building look out at the street from their fire escapes",
-    "feature_image_credit": "David Dee Delgado / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1625,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a429d"
   },
   {
     "title": "Office Conversions, Easier Said Than Done",
@@ -25363,6 +25311,47 @@
     "word_count": 1447,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a40ce"
+  },
+  {
+    "title": "When Citizens Rescue Neighborhoods",
+    "slug": "when-citizens-rescue-neighborhoods",
+    "url": "https://www.vitalcitynyc.org/when-citizens-rescue-neighborhoods/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2024-06-26",
+    "published_at": "2024-06-26T15:55:00.000+00:00",
+    "updated_at": "2026-08-24T21:37:25.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Eileen Markey"
+    ],
+    "topics": [
+      "What Makes a Great City Work?",
+      "Crime",
+      "Neighborhood Life"
+    ],
+    "issues": [
+      "issue-8"
+    ],
+    "issue_numbers": [
+      8
+    ],
+    "summary": "The Bronx of the 1970s was the nation’s symbol of urban collapse. Its rebirth was forced by the people who refused to leave.",
+    "excerpt": "The Bronx of the 1970s was the nation’s symbol of urban collapse. Its rebirth was forced by the people who refused to leave.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_11_znmyljbwfbowe0gr_vitalcity-issue8-eileenmarkey1-1776259748372.jpg",
+    "feature_image_alt": "Residents of a Bronx apartment building look out at the street from their fire escapes",
+    "feature_image_credit": "David Dee Delgado / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1625,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a429d"
   },
   {
     "title": "How to Make the Five Boroughs Better for Parents and Children",
@@ -25788,7 +25777,7 @@
     "type_basis": "tag:event-notice",
     "published_date": "2024-06-17",
     "published_at": "2024-06-17T13:00:00.000+00:00",
-    "updated_at": "2026-01-19T09:11:40.000+00:00",
+    "updated_at": "2026-08-24T21:37:25.000+00:00",
     "primary_author": null,
     "authors": [
       "Nancy La Vigne"
@@ -25799,8 +25788,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "Data and evidence are increasingly used to inform and shape policymaking.",
-    "excerpt": "Data and evidence are increasingly used to inform and shape policymaking. But does that mean we are actually creating more effective policies? A debate is roiling research, science, and policy circles about the value and role of evidence in crafting policies meant to solve U.S. society’s most pressing issues.\n\nThis virtual panel discussion features leading researchers and experts, who explore the when, where, why, and how of evidence and data in crafting effective federal policy. This discussion",
+    "summary": "A panel of leading researchers and writers on the when, where, why and how of evidence in crafting policy that works",
+    "excerpt": "A panel of leading researchers and writers on the when, where, why and how of evidence in crafting policy that works",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -26079,7 +26068,7 @@
     "type_basis": "default",
     "published_date": "2024-05-30",
     "published_at": "2024-05-30T12:59:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:54.000+00:00",
+    "updated_at": "2026-08-24T21:37:26.000+00:00",
     "primary_author": null,
     "authors": [
       "Tim Tompkins"
@@ -26090,8 +26079,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "How safe people feel in a city’s subways, streets, parks and public spaces determines whether they feel city government is in control or out of control.",
-    "excerpt": "How safe people feel in a city’s subways, streets, parks and public spaces determines whether they feel city government is in control or out of control.\n\nMore than three decades ago James Carville’s comment, “it’s the economy, stupid,” helped propel Bill Clinton’s presidential campaign to victory. The same focus is essential for any politician and policymaker who wants to be elected in any major city. The experience of being in a public space, or a quasi-public space like a subway or the elevato",
+    "summary": "How safe people feel in public space — above all the subway — determines whether they believe the city is in control",
+    "excerpt": "How safe people feel in public space — above all the subway — determines whether they believe the city is in control",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_zlifkkwthyxtt75d_mg1136318copy-1776259752195.jpg",
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -26324,7 +26313,7 @@
     "type_basis": "default",
     "published_date": "2024-05-01",
     "published_at": "2024-05-01T13:10:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:55.000+00:00",
+    "updated_at": "2026-08-24T21:37:26.000+00:00",
     "primary_author": null,
     "authors": [
       "Sam Schwartz"
@@ -26338,8 +26327,8 @@
       "congestion-pricing"
     ],
     "issue_numbers": [],
-    "summary": "The MTA, after five years of study, numerous public meetings and 4,000 pages of an Environmental Assessment document, is finally poised to implement…",
-    "excerpt": "The MTA, after five years of study, numerous public meetings and 4,000 pages of an Environmental Assessment document, is finally poised to implement congestion pricing — a plan to reduce traffic by charging cars to enter the central business district. Those who are protesting the plan by insisting that the review was inadequate should remember: Environmental studies that widen highways, take private property and displace thousands are typically just a few hundred pages long. \n\nThe MTA got the zo",
+    "summary": "The MTA got the zone and the price right. Now come the ghost plates, toll shoppers and other hazards on the road to congestion pricing.",
+    "excerpt": "The MTA got the zone and the price right. Now come the ghost plates, toll shoppers and other hazards on the road to congestion pricing.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_11_zje4lkmtzajocdhg_congestionpricing-schwartz-1776259753452.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Ferdinando Scianna / Magnum Photos",
@@ -26560,7 +26549,7 @@
     "type_basis": "default",
     "published_date": "2024-05-01",
     "published_at": "2024-05-01T12:55:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:56.000+00:00",
+    "updated_at": "2026-08-24T21:37:27.000+00:00",
     "primary_author": null,
     "authors": [
       "Howard Yaruss"
@@ -26573,8 +26562,8 @@
       "congestion-pricing"
     ],
     "issue_numbers": [],
-    "summary": "Years of political maneuvering, legislation, environmental reviews, community forums, expert analysis and planning sessions have finally brought us to a…",
-    "excerpt": "Years of political maneuvering, legislation, environmental reviews, community forums, expert analysis and planning sessions have finally brought us to a point where congestion pricing is on the brink of being implemented. Many view the resolution of the inevitable lawsuits that seem to follow almost anything the government does as the final hurdle for charging $15 to drive in Manhattan below 61st Street.\n\nBut the ultimate hurdle to the successful implementation of congestion pricing, or any inno",
+    "summary": "Most New Yorkers oppose congestion pricing. Without immediate, visible benefits and real enforcement, the program may not survive its skeptics.",
+    "excerpt": "Most New Yorkers oppose congestion pricing. Without immediate, visible benefits and real enforcement, the program may not survive its skeptics.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_zje6u0mtzajocdhd_congestionpricing-yaruss-1776259754839.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "PG / Magnum Photos",
@@ -26715,7 +26704,7 @@
     "type_basis": "default",
     "published_date": "2024-04-30",
     "published_at": "2024-04-30T13:02:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:56.000+00:00",
+    "updated_at": "2026-08-24T21:37:28.000+00:00",
     "primary_author": null,
     "authors": [
       "Ross Barkan"
@@ -26726,8 +26715,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "Few seem happy with the historic deal on housing that came out of Albany last week.",
-    "excerpt": "Few seem happy with the historic deal on housing that came out of Albany last week. Included as part of a $237 billion state budget that arrived several weeks late, the grand bargain ropes together new tenant protections and a new developer tax break among other reforms — all adding up to a package that alienated real estate interests and progressive activists alike. Democratic socialist lawmakers voted against the budget and the Real Estate Board of New York (REBNY), one of the state’s most pow",
+    "summary": "Nobody loves Albany’s housing package. But “good cause” protections establish a principle that will be hard to roll back.",
+    "excerpt": "Nobody loves Albany’s housing package. But “good cause” protections establish a principle that will be hard to roll back.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_zjetz0mtzajocdcg_nyc29655copy-1776259755068.jpg",
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -26895,7 +26884,7 @@
     "type_basis": "default",
     "published_date": "2024-04-10",
     "published_at": "2024-04-10T13:05:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:57.000+00:00",
+    "updated_at": "2026-08-24T21:37:28.000+00:00",
     "primary_author": null,
     "authors": [
       "Hana Schank"
@@ -26907,8 +26896,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "Mayor Adams promised New Yorkers he would be the city’s most tech-savvy mayor, but his decision to build a MyCity portal tipped off civic technologists…",
-    "excerpt": "Mayor Adams promised New Yorkers he would be the city’s most tech-savvy mayor, but his decision to build a MyCity portal tipped off civic technologists early that supposed tech savviness doesn’t necessarily translate into tech capability. MyCity aims to put all City services in a single place, with a single login — an admirable vision of a future that never will, and never can be, given the reality of the City’s current technical capabilities. Not only does Adams’ plan trap the city’s few techni",
+    "summary": "The MyCity portal chases a $17 million fantasy while basic systems fail. The City should fix what parents and students actually use first.",
+    "excerpt": "The MyCity portal chases a $17 million fantasy while basic systems fail. The City should fix what parents and students actually use first.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_zhwl-djcgu4jztir_2dcd81acopy-1776259755807.jpg",
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -26932,7 +26921,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:15:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:57.000+00:00",
+    "updated_at": "2026-08-24T21:37:29.000+00:00",
     "primary_author": null,
     "authors": [
       "Philip J. Cook",
@@ -26949,8 +26938,8 @@
     "issue_numbers": [
       7
     ],
-    "summary": "Are incremental policy change and its handmaiden, technocratic social science, doomed to failure?",
-    "excerpt": "Are incremental policy change and its handmaiden, technocratic social science, doomed to failure? In these hyperpolarized times, there’s a growing view that the quality of life can’t be improved by modest policy interventions that are limited with respect to scope and scale. In this view, interventions need to be bold and broad, or the status quo will inevitably reassert itself. \n\nOf course, the evidence base for “bold and broad” interventions is often nonexistent, so what is really being advoca",
+    "summary": "Modest, well-tested reforms have made the world better again and again. Betting everything on bold leaps into the unknown has not.",
+    "excerpt": "Modest, well-tested reforms have made the world better again and again. Betting everything on bold leaps into the unknown has not.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_zggbpmcyqofdyeqe_vitalcity-issue7-philipj-cookandjensludwig-1776259756212.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Chien-Chi Chang / Magnum Photos",
@@ -27015,7 +27004,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:10:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:57.000+00:00",
+    "updated_at": "2026-08-24T21:37:29.000+00:00",
     "primary_author": null,
     "authors": [
       "Jonathan Rauch"
@@ -27031,8 +27020,8 @@
     "issue_numbers": [
       7
     ],
-    "summary": "If, as F.",
-    "excerpt": "If, as F. Scott Fitzgerald famously said, the test of a first-rate intelligence is the ability to hold two opposing views in mind at the same time, then Megan Stevenson’s article calls for some first-rate thinking. We should react to it with two kinds of humility, each pulling against the other. We need to be humble about the power of social programs to alter behavior. But we should also be humble about the power of hard data to test social programs.\n\nStevenson gathers randomized controlled tria",
+    "summary": "Randomized trials suggest nothing works. Maybe the interventions are flawed — or maybe the measurement is.",
+    "excerpt": "Randomized trials suggest nothing works. Maybe the interventions are flawed — or maybe the measurement is.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_zggw7scyqofdyeoj_vitalcity-issue7-jonathanrauch1-1776259756217.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Alex Majoli / Magnum Photos",
@@ -27220,7 +27209,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:03:00.000+00:00",
-    "updated_at": "2026-05-04T20:06:07.000+00:00",
+    "updated_at": "2026-08-24T21:37:30.000+00:00",
     "primary_author": null,
     "authors": [
       "Sherry Glied"
@@ -27235,8 +27224,8 @@
     "issue_numbers": [
       7
     ],
-    "summary": "Most randomized controlled trial (RCT) evaluations of new criminal justice interventions find that they don’t do much at all, and even interventions…",
-    "excerpt": "Most randomized controlled trial (RCT) evaluations of new criminal justice interventions find that they don’t do much at all, and even interventions initially identified as promising rarely succeed when they’re tested again by different investigators or in other settings.\n\nThat’s what Megan Stevenson asserts in her essay “Cause, Effect, and the Structure of the Social World,” nicely articulating a skepticism many have long harbored about supposedly “evidence-based” public policy.\n\nThat core clai",
+    "summary": "Null results don’t mean the social world can’t be changed — most drug trials fail too. The real error is expecting otherwise.",
+    "excerpt": "Null results don’t mean the social world can’t be changed — most drug trials fail too. The real error is expecting otherwise.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_zggyeccyqofdyeoq_vitalcity-issue7-sherryglied1-1776259756741.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Cristina de Middel / Magnum Photos",
@@ -27758,7 +27747,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:00:00.000+00:00",
-    "updated_at": "2026-04-15T13:38:00.000+00:00",
+    "updated_at": "2026-08-24T21:37:31.000+00:00",
     "primary_author": null,
     "authors": [
       "Elizabeth Glazer"
@@ -27774,8 +27763,8 @@
     "issue_numbers": [
       7
     ],
-    "summary": "Why isn’t the strength of evidence supporting an idea the very first thing a policymaker looks at when deciding what direction to take?",
-    "excerpt": "Why isn’t the strength of evidence supporting an idea the very first thing a policymaker looks at when deciding what direction to take? There are so many reasons, but here are a few. \n\nKnowledge is one: People making decisions often don’t know what the latest ideas, or even the most established ideas, from the academy are. Lights reduce crime, summer youth employment reduces mortality, for example. \n\nTiming is another: Policy moves fast, research moves slowly. Policy is often formed in the flash",
+    "summary": "Evidence rarely drives decisions — crisis, timing and politics do. The story of how streetlights came to public housing shows what it takes.",
+    "excerpt": "Evidence rarely drives decisions — crisis, timing and politics do. The story of how streetlights came to public housing shows what it takes.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_zgqta8t2uucvboe6_vitalcity-issue7-elizabethglazer1-1776259758619.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Alex Webb / Magnum Photos",
@@ -27839,7 +27828,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T15:57:00.000+00:00",
-    "updated_at": "2026-05-04T20:04:45.000+00:00",
+    "updated_at": "2026-08-24T21:37:31.000+00:00",
     "primary_author": null,
     "authors": [
       "Anna Harvey"
@@ -27854,8 +27843,8 @@
     "issue_numbers": [
       7
     ],
-    "summary": "Many in the policy community consider evidence from randomized controlled trials (RCTs) to be the “gold standard” for evaluating the causal effects of…",
-    "excerpt": "Many in the policy community consider evidence from randomized controlled trials (RCTs) to be the “gold standard” for evaluating the causal effects of programs and policies. RCT designs, wherein the researcher randomizes subjects’ participation in a program or policy, have some obvious advantages for isolating causal effects. But RCTs are not possible in many settings. They are particularly rare in criminal justice settings because of ethical and legal obstacles to randomizing the treatment of c",
+    "summary": "Randomized trials aren’t the only rigorous evidence. Quasi-experimental studies show plenty of criminal justice reforms actually work.",
+    "excerpt": "Randomized trials aren’t the only rigorous evidence. Quasi-experimental studies show plenty of criminal justice reforms actually work.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/imgi_10_zggsamcyqofdyemd_vitalcity-issue7-annaharvey1-1776259758487.jpg",
     "feature_image_alt": null,
     "feature_image_credit": "Jean Gaumy / Magnum Photos",
@@ -28112,42 +28101,6 @@
     "word_count": 3,
     "reading_minutes": 1,
     "id": "69a04c0ad4006a00010a428b"
-  },
-  {
-    "title": "A Jail Population of 3,700 or Lower is Achievable: Technical Appendix",
-    "slug": "michael-rempel-technical-appendix",
-    "url": "https://www.vitalcitynyc.org/michael-rempel-technical-appendix/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2024-03-12",
-    "published_at": "2024-03-12T17:00:00.000+00:00",
-    "updated_at": "2026-04-15T13:38:01.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Michael Rempel"
-    ],
-    "topics": [
-      "Jails",
-      "Incarceration"
-    ],
-    "issues": [],
-    "issue_numbers": [],
-    "summary": "This appendix documents the underlying assumptions and limitations behind projected jail population reductions published in Vital City.",
-    "excerpt": "This appendix documents the underlying assumptions and limitations behind projected jail population reductions published in Vital City.\n\nEstablishing a Baseline\n\nFirst, it is necessary to assume a jail population that would exist in the absence of policy reforms. For the current article, people were deducted from the average daily jail population of 6,200 in the second half of January 2024 — including 5,250 people held in pretrial detention. However, the proper starting point could significantly",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/zetw53uurf2g3ohe_par130058copy-auto-format-compress-1776259760410.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": null,
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 3018,
-    "reading_minutes": 13,
-    "id": "69a04c0ad4006a00010a40e9"
   },
   {
     "title": "Who Winds Up in Jail and Why",
@@ -28833,6 +28786,42 @@
     "word_count": 4580,
     "reading_minutes": 20,
     "id": "69a04c0ad4006a00010a41fd"
+  },
+  {
+    "title": "A Jail Population of 3,700 or Lower is Achievable: Technical Appendix",
+    "slug": "michael-rempel-technical-appendix",
+    "url": "https://www.vitalcitynyc.org/michael-rempel-technical-appendix/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2024-03-12",
+    "published_at": "2024-03-12T17:00:00.000+00:00",
+    "updated_at": "2026-08-24T21:37:32.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Michael Rempel"
+    ],
+    "topics": [
+      "Jails",
+      "Incarceration"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "The assumptions, data sources and limitations behind our projection of how far the city’s jail population can fall",
+    "excerpt": "The assumptions, data sources and limitations behind our projection of how far the city’s jail population can fall",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/zetw53uurf2g3ohe_par130058copy-auto-format-compress-1776259760410.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": null,
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 3018,
+    "reading_minutes": 13,
+    "id": "69a04c0ad4006a00010a40e9"
   },
   {
     "title": "A Jail Population of 3,700 or Lower is Achievable",
@@ -29702,7 +29691,7 @@
     "type_basis": "tag:event-notice",
     "published_date": "2024-02-22",
     "published_at": "2024-02-22T12:30:00.000+00:00",
-    "updated_at": "2026-01-19T10:09:37.000+00:00",
+    "updated_at": "2026-08-24T21:37:32.000+00:00",
     "primary_author": null,
     "authors": [
       "Errol Louis"
@@ -29713,8 +29702,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "Vital City and the Craig Newmark Graduate School of Journalism at CUNY are hosting an in-depth conversation on New York’s rocky rollout of legal cannabis —…",
-    "excerpt": "Vital City and the Craig Newmark Graduate School of Journalism at CUNY are hosting an in-depth conversation on New York’s rocky rollout of legal cannabis — examining what policies and practices are needed to create a viable market moving forward.\n\nThe panel discussion will include:\n\n- Errol Louis, NY1 Political Anchor, Host of Inside City Hall, Vital City Contributing Writer and Newmark J-School Local Accountability Reporting Program professor (moderator)\n\n- Rosalind Adams, reporter at THE CITY",
+    "summary": "A panel on New York’s rocky rollout of legal cannabis — and what it would take to build a market that works",
+    "excerpt": "A panel on New York’s rocky rollout of legal cannabis — and what it would take to build a market that works",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -31330,7 +31319,7 @@
     "type_basis": "curated:event-proceedings",
     "published_date": "2023-11-21",
     "published_at": "2023-11-21T20:41:04.000+00:00",
-    "updated_at": "2026-04-15T13:38:10.000+00:00",
+    "updated_at": "2026-08-24T21:37:33.000+00:00",
     "primary_author": null,
     "authors": [
       "Vital City"
@@ -31341,8 +31330,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "So, it's been almost two hours and I know we're all ready to go.",
-    "excerpt": "So, it's been almost two hours and I know we're all ready to go. I just want to say a couple of high level things before I thank all the participants. I say this knowing that for the participants, and for the people who are viewing this, there's a mix of folks who are experts, who live in this world and have strong positions one way or another, and folks who are tuning in because they're interested and these are important issues.\n\nTwo of the things we've tried to do in these two panels through o",
+    "summary": "Closing thoughts from our forum on the jails: transparency, the powers of a receiver and why none of it is separable from closing Rikers",
+    "excerpt": "Closing thoughts from our forum on the jails: transparency, the powers of a receiver and why none of it is separable from closing Rikers",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/efafdf4f-ef49-4d7d-88c8-231da675ac2f_solid-color-image--282-29-1776259769996.png",
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -31510,7 +31499,7 @@
     "type_basis": "curated:event-proceedings",
     "published_date": "2023-11-20",
     "published_at": "2023-11-20T21:22:57.000+00:00",
-    "updated_at": "2026-04-15T13:38:11.000+00:00",
+    "updated_at": "2026-08-24T21:37:34.000+00:00",
     "primary_author": null,
     "authors": [
       "Elizabeth Glazer"
@@ -31521,8 +31510,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "Thank you so much, Errol, and thank you to both of our amazing panels and our speakers.",
-    "excerpt": "Thank you so much, Errol, and thank you to both of our amazing panels and our speakers. It's really been incredibly informative at a crucial time for us. I'm just going to do a really quick CliffsNotes wrap-up. I think the one thing that really became clear is we know that this receivership is an awesome power one to be used sparingly and as a last resort. And the question, is that where we are now with Rikers, with violence spiking to rates that we haven't seen in decades, as Michael pointed ou",
+    "summary": "After five consent decrees, eight mayors and 24 commissioners, the closing question: is something structurally broken that only a receiver can fix?",
+    "excerpt": "After five consent decrees, eight mayors and 24 commissioners, the closing question: is something structurally broken that only a receiver can fix?",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/efafdf4f-ef49-4d7d-88c8-231da675ac2f_solid-color-image--282-29-1776259769996.png",
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -31537,42 +31526,6 @@
     "word_count": 838,
     "reading_minutes": 4,
     "id": "69a04c0ad4006a00010a4124"
-  },
-  {
-    "title": "Fixing New York City's Jails: A Federal Receiver? (Opening Remarks)",
-    "slug": "fixing-new-york-citys-jails-a-federal-receiver-opening",
-    "url": "https://www.vitalcitynyc.org/fixing-new-york-citys-jails-a-federal-receiver-opening/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2023-11-20",
-    "published_at": "2023-11-20T20:59:28.000+00:00",
-    "updated_at": "2026-01-08T06:58:29.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Vincent Schiraldi"
-    ],
-    "topics": [
-      "Jails",
-      "Social Science"
-    ],
-    "issues": [],
-    "issue_numbers": [],
-    "summary": "Good afternoon, everyone.",
-    "excerpt": "Good afternoon, everyone. Thank you for coming today. My name's Vinnie Shiraldi, senior research scientist for the Columbia School of Social Work and senior fellow at the Columbia Justice Lab. I'd like to welcome you to today's forum on behalf of the Lab, the School of Social Work and co-sponsors, the Columbia Law School, CUNY's Institute for State and Local Governance, and Vital City.\n\nBefore I go any further, I'd like to observe a moment of silence on behalf of correctional officer Edward Roma",
-    "feature_image": null,
-    "feature_image_alt": null,
-    "feature_image_credit": null,
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1608,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4126"
   },
   {
     "title": "How Could Cook County’s Experience Apply to the New York City Jails",
@@ -31613,42 +31566,6 @@
     "id": "69a04c0ad4006a00010a4125"
   },
   {
-    "title": "Fixing New York City's Jails: A Federal Receiver? (Remarks on Receivership)",
-    "slug": "fixing-new-york-citys-jails-a-federal-receiver-remarks",
-    "url": "https://www.vitalcitynyc.org/fixing-new-york-citys-jails-a-federal-receiver-remarks/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2023-11-20",
-    "published_at": "2023-11-20T20:59:28.000+00:00",
-    "updated_at": "2026-04-15T13:38:11.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Sara Norman"
-    ],
-    "topics": [
-      "Jails",
-      "Federal Government"
-    ],
-    "issues": [],
-    "issue_numbers": [],
-    "summary": "Thank you very much.",
-    "excerpt": "Thank you very much. I've been asked, as Vinnie said, to provide a basic introduction to how receivers can work and how they have worked in California. The concept of a receivership is hundreds of years old. It was first implemented in the chancery courts in England as early as the 16th century in the context of business litigation.\n\nSo when a corporation was failing and was in, say, bankruptcy proceedings in court, courts would sometimes appoint a receiver to manage the affairs of the corporati",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/efafdf4f-ef49-4d7d-88c8-231da675ac2f_solid-color-image--282-29-1776259769996.png",
-    "feature_image_alt": null,
-    "feature_image_credit": null,
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2056,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a4127"
-  },
-  {
     "title": "The Cook County Story",
     "slug": "fixing-new-york-citys-jails-a-federal-receiver-panel-one",
     "url": "https://www.vitalcitynyc.org/fixing-new-york-citys-jails-a-federal-receiver-panel-one/",
@@ -31683,6 +31600,78 @@
     "word_count": 6861,
     "reading_minutes": 30,
     "id": "69a04c0ad4006a00010a428d"
+  },
+  {
+    "title": "Fixing New York City's Jails: A Federal Receiver? (Opening Remarks)",
+    "slug": "fixing-new-york-citys-jails-a-federal-receiver-opening",
+    "url": "https://www.vitalcitynyc.org/fixing-new-york-citys-jails-a-federal-receiver-opening/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2023-11-20",
+    "published_at": "2023-11-20T20:59:28.000+00:00",
+    "updated_at": "2026-08-24T21:37:34.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Vincent Schiraldi"
+    ],
+    "topics": [
+      "Jails",
+      "Social Science"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "Opening remarks from our forum on receivership: the state of Rikers and why the usual remedies have run out",
+    "excerpt": "Opening remarks from our forum on receivership: the state of Rikers and why the usual remedies have run out",
+    "feature_image": null,
+    "feature_image_alt": null,
+    "feature_image_credit": null,
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1608,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4126"
+  },
+  {
+    "title": "Fixing New York City's Jails: A Federal Receiver? (Remarks on Receivership)",
+    "slug": "fixing-new-york-citys-jails-a-federal-receiver-remarks",
+    "url": "https://www.vitalcitynyc.org/fixing-new-york-citys-jails-a-federal-receiver-remarks/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2023-11-20",
+    "published_at": "2023-11-20T20:59:28.000+00:00",
+    "updated_at": "2026-08-24T21:37:35.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Sara Norman"
+    ],
+    "topics": [
+      "Jails",
+      "Federal Government"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "What a receiver is, where the remedy comes from and how a court takeover transformed medical care in California’s prisons",
+    "excerpt": "What a receiver is, where the remedy comes from and how a court takeover transformed medical care in California’s prisons",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/efafdf4f-ef49-4d7d-88c8-231da675ac2f_solid-color-image--282-29-1776259769996.png",
+    "feature_image_alt": null,
+    "feature_image_credit": null,
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2056,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a4127"
   },
   {
     "title": "Unraveling the Threads of America’s Gun Culture",
@@ -32921,7 +32910,7 @@
     "type_basis": "default",
     "published_date": "2023-08-02",
     "published_at": "2023-08-02T12:00:00.000+00:00",
-    "updated_at": "2026-01-22T11:22:31.000+00:00",
+    "updated_at": "2026-08-24T21:37:36.000+00:00",
     "primary_author": null,
     "authors": [
       "Elizabeth Glazer",
@@ -32942,8 +32931,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "From escalating rates of violence, to a willful suppression of information by the Department of Correction (DOC), New York City’s jails are nothing short of…",
-    "excerpt": "From escalating rates of violence, to a willful suppression of information by the Department of Correction (DOC), New York City’s jails are nothing short of a humanitarian crisis. Are we past the point of no return? With the federal monitor overseeing Rikers recently recommending that the Adams administration and DOC be held in contempt, and the United States Attorney now joining the calls for a receiver, the city is at a pivotal point about the future of NYC’s jails, and whether it is time for",
+    "summary": "With the federal monitor recommending contempt and calls for a receiver growing, experts ask whether a new power must govern the jails",
+    "excerpt": "With the federal monitor recommending contempt and calls for a receiver growing, experts ask whether a new power must govern the jails",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -37092,47 +37081,6 @@
     "id": "69a04c0ad4006a00010a4188"
   },
   {
-    "title": "When Police Become Our Government",
-    "slug": "police-become-government",
-    "url": "https://www.vitalcitynyc.org/police-become-government/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2022-10-25",
-    "published_at": "2022-10-25T04:53:05.000+00:00",
-    "updated_at": "2026-04-15T13:38:28.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Elizabeth Glazer"
-    ],
-    "topics": [
-      "Police Reform",
-      "Government Operations",
-      "Where We’ve Been"
-    ],
-    "issues": [
-      "issue-2"
-    ],
-    "issue_numbers": [
-      2
-    ],
-    "summary": "What should police do?",
-    "excerpt": "What should police do? Solving crimes, not running community centers, is the direct route to reducing crime and improving trust.\n\nOn a cold day in February 2020, the civilian commissioners of a half dozen New York City agencies gathered in the Jack Maple CompStat Center at the New York Police Department headquarters. These were not the usual suspects summoned to this storied room. The CompStat \"room,\" a triple-height hall, with tables set up in a U-formation oriented toward giant TV screens, cou",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/17962e65-4937-415c-a3d2-85656a08cbe5_jefbjy-auto-compress-format-1776259799351.jpg",
-    "feature_image_alt": null,
-    "feature_image_credit": "Stacy Walsh",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1530,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4189"
-  },
-  {
     "title": "Tables and Chairs",
     "slug": "tables-and-chairs",
     "url": "https://www.vitalcitynyc.org/tables-and-chairs/",
@@ -37706,6 +37654,47 @@
     "id": "69a04c0ad4006a00010a4290"
   },
   {
+    "title": "When Police Become Our Government",
+    "slug": "police-become-government",
+    "url": "https://www.vitalcitynyc.org/police-become-government/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2022-10-25",
+    "published_at": "2022-10-25T04:53:05.000+00:00",
+    "updated_at": "2026-08-24T21:37:37.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Elizabeth Glazer"
+    ],
+    "topics": [
+      "Police Reform",
+      "Government Operations",
+      "Where We’ve Been"
+    ],
+    "issues": [
+      "issue-2"
+    ],
+    "issue_numbers": [
+      2
+    ],
+    "summary": "The NYPD has become the first responder to nearly everything. Solving crimes — not running community centers — is what builds safety and trust.",
+    "excerpt": "The NYPD has become the first responder to nearly everything. Solving crimes — not running community centers — is what builds safety and trust.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/17962e65-4937-415c-a3d2-85656a08cbe5_jefbjy-auto-compress-format-1776259799351.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Stacy Walsh",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1530,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4189"
+  },
+  {
     "title": "The Unwritten Rules",
     "slug": "the-unwritten-rules",
     "url": "https://www.vitalcitynyc.org/the-unwritten-rules/",
@@ -37754,7 +37743,7 @@
     "type_basis": "tag:event-notice",
     "published_date": "2022-10-13",
     "published_at": "2022-10-13T12:30:00.000+00:00",
-    "updated_at": "2026-04-15T13:38:30.000+00:00",
+    "updated_at": "2026-08-24T21:37:36.000+00:00",
     "primary_author": null,
     "authors": [
       "Vital City"
@@ -37766,8 +37755,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "Join us on Thursday, 10/13 at 12:30 pm for a virtual forum on How to End the Crises on Rikers Island.",
-    "excerpt": "Join us on Thursday, 10/13 at 12:30 pm for a virtual forum on How to End the Crises on Rikers Island. For seven years, a federal judge and monitor have tried to implement the terms of a consent decree intended to address unconstitutional levels of violence. Since then, violence has skyrocketed. In March, the monitor issued a report questioning whether the DOC had either the capacity or the will to improve conditions.\n\nAhead of the November court conference where the City’s progress will be asses",
+    "summary": "A forum on what’s driving dysfunction in the jails, who has the power to fix it and how data can hold the city to account",
+    "excerpt": "A forum on what’s driving dysfunction in the jails, who has the power to fix it and how data can hold the city to account",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,
@@ -37981,7 +37970,7 @@
     "type_basis": "default",
     "published_date": "2022-05-19",
     "published_at": "2022-05-19T12:30:00.000+00:00",
-    "updated_at": "2026-01-19T10:24:53.000+00:00",
+    "updated_at": "2026-08-24T21:37:37.000+00:00",
     "primary_author": null,
     "authors": [
       "Elizabeth Glazer",
@@ -37996,8 +37985,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "The federal monitor overseeing Rikers Island recently concluded that city jails are “trapped in a state of persistent dysfunctionality” with “imminent risk…",
-    "excerpt": "The federal monitor overseeing Rikers Island recently concluded that city jails are “trapped in a state of persistent dysfunctionality” with “imminent risk of harm to incarcerated individuals and staff.” This has led numerous knowledgeable city leaders to call for a receivership to bring a sense of urgency to improve safety at city jails for staff and incarcerated people alike. The U.S. Attorney for the Southern District of New York intimated that, if conditions did not improve soon, he might mo",
+    "summary": "Could a court takeover succeed where consent decrees have failed? Lessons from Cook County’s receivership, with a New York response panel",
+    "excerpt": "Could a court takeover succeed where consent decrees have failed? Lessons from Cook County’s receivership, with a New York response panel",
     "feature_image": null,
     "feature_image_alt": null,
     "feature_image_credit": null,

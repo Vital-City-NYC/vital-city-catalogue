@@ -515,7 +515,7 @@
     "top_topics": [
       [
         "Crime",
-        9
+        10
       ],
       [
         "Where We Are",
@@ -544,10 +544,6 @@
     "display_name": "What To Do And Not To Do",
     "top_topics": [
       [
-        "policy",
-        6
-      ],
-      [
         "People in Crisis on Streets and Subways",
         4
       ],
@@ -562,6 +558,10 @@
       [
         "Subway Safety",
         2
+      ],
+      [
+        "Crime",
+        1
       ]
     ]
   },
@@ -650,7 +650,7 @@
         2
       ],
       [
-        "Corruption",
+        "History",
         1
       ]
     ]
