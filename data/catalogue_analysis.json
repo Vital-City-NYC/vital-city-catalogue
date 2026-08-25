@@ -1,27 +1,40 @@
 {
   "meta": {
-    "generated_at": "2026-08-25T11:12:54.165162+00:00",
+    "generated_at": "2026-08-25T23:10:32.984922+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 893,
-    "total_authors": 493,
+    "total_posts": 894,
+    "total_authors": 494,
     "total_issues": 29,
     "total_topics": 213,
     "date_range": [
       "2021-09-15",
-      "2026-08-19"
+      "2026-08-25"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 2,
+    "new_articles": [
+      {
+        "title": "The State of Crime in New York City, Midyear 2026: The Detailed Picture",
+        "url": "https://www.vitalcitynyc.org/nyc-crime-midyear-2026-felony-assaults-rape-murder/",
+        "published_date": "2026-08-25",
+        "primary_author": null
+      },
+      {
+        "title": "Gang Databases Are Crucial to Shooting Reduction Efforts",
+        "url": "https://www.vitalcitynyc.org/nypd-gang-database-shooting-reduction/",
+        "published_date": "2026-02-19",
+        "primary_author": null
+      }
+    ]
   },
-  "total_pieces": 893,
+  "total_pieces": 894,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 181
+    "2026": 182
   },
   "by_month": {
     "2021-09": 1,
@@ -77,7 +90,7 @@
     "2026-05": 23,
     "2026-06": 44,
     "2026-07": 22,
-    "2026-08": 11
+    "2026-08": 12
   },
   "by_type": [
     [
@@ -90,7 +103,7 @@
     ],
     [
       "data analysis",
-      48
+      49
     ],
     [
       "podcast",
@@ -135,11 +148,11 @@
       111
     ],
     [
-      "Housing",
-      79
+      "Justice",
+      81
     ],
     [
-      "Justice",
+      "Housing",
       79
     ],
     [
@@ -152,7 +165,7 @@
     ],
     [
       "Police Reform",
-      56
+      55
     ],
     [
       "Politics",
@@ -219,7 +232,7 @@
   "by_credential_pieces": [
     [
       "Unknown / no bio",
-      893
+      894
     ]
   ],
   "by_credential_authors": [
@@ -261,7 +274,7 @@
     ],
     [
       "Unknown / no bio",
-      7
+      8
     ],
     [
       "Vital City (institutional)",
@@ -278,8 +291,8 @@
     "City Government",
     "Government Operations",
     "City Planning",
-    "Housing",
     "Justice",
+    "Housing",
     "culture"
   ],
   "topic_by_year": {
@@ -317,18 +330,18 @@
       "2025": 39,
       "2026": 17
     },
-    "Housing": {
-      "2023": 5,
-      "2024": 11,
-      "2025": 37,
-      "2026": 26
-    },
     "Justice": {
       "2022": 4,
       "2023": 26,
       "2024": 27,
       "2025": 13,
-      "2026": 9
+      "2026": 11
+    },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 37,
+      "2026": 26
     },
     "culture": {
       "2022": 4,
@@ -339,14 +352,14 @@
     }
   },
   "wc_stats": {
-    "n": 883,
+    "n": 884,
     "median": 1618,
-    "mean": 1894,
-    "p90": 2838,
+    "mean": 1895,
+    "p90": 2841,
     "max": 30332,
     "p10": 907,
     "p25": 1269,
-    "p75": 2137,
+    "p75": 2140,
     "p95": 3848,
     "no_count": 10,
     "core_1000_2499": 647,
@@ -372,7 +385,7 @@
     ],
     [
       "3,000-4,999",
-      53
+      54
     ],
     [
       "5,000+",
@@ -416,12 +429,12 @@
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 161
+        "n": 162
       },
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 107
+        "n": 106
       },
       {
         "floor": 2000,
@@ -446,7 +459,7 @@
       {
         "floor": 3000,
         "label": "3,000",
-        "n": 11
+        "n": 12
       },
       {
         "floor": 3250,
@@ -495,16 +508,16 @@
     },
     {
       "year": "2026",
-      "n": 176,
-      "p25": 1253,
-      "median": 1687,
-      "p75": 2386,
+      "n": 177,
+      "p25": 1258,
+      "median": 1690,
+      "p75": 2393,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 759,
-    "2": 105,
+    "1": 758,
+    "2": 107,
     "3": 26,
     "4": 1,
     "8": 1,
@@ -513,7 +526,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 96,
+      "posts": 97,
       "credential": "Vital City (institutional)"
     },
     {
@@ -587,17 +600,17 @@
       "credential": "Government / public official"
     },
     {
+      "name": "Paul Reeping",
+      "posts": 8,
+      "credential": "Think tank / research institute"
+    },
+    {
       "name": "Bradley Tusk",
       "posts": 8,
       "credential": "Business / private sector"
     },
     {
       "name": "John K. Roman",
-      "posts": 8,
-      "credential": "Think tank / research institute"
-    },
-    {
-      "name": "Paul Reeping",
       "posts": 7,
       "credential": "Think tank / research institute"
     },
@@ -662,34 +675,34 @@
       },
       {
         "year": "2026",
-        "weeks": 33.0,
-        "pieces": 181,
+        "weeks": 33.9,
+        "pieces": 182,
         "outside_issues": 131,
-        "per_week_all": 5.48,
-        "per_week_outside_issues": 3.97,
+        "per_week_all": 5.38,
+        "per_week_outside_issues": 3.87,
         "partial": true
       }
     ],
-    "total_weeks": 257.0,
+    "total_weeks": 257.9,
     "all_time_per_week": 3.47,
-    "all_time_per_week_outside_issues": 1.6,
+    "all_time_per_week_outside_issues": 1.59,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.97,
-    "current_per_week_all": 5.48,
+    "current_per_week_outside_issues": 3.87,
+    "current_per_week_all": 5.38,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 482,
-      "published_away_from_drop": 62,
-      "share_of_issue_pieces": 12.9,
-      "current_year_strict": 3.97,
-      "current_year_loose": 4.15,
-      "all_time_strict": 1.6,
+      "issue_tagged_pieces": 483,
+      "published_away_from_drop": 63,
+      "share_of_issue_pieces": 13.0,
+      "current_year_strict": 3.87,
+      "current_year_loose": 4.05,
+      "all_time_strict": 1.59,
       "all_time_loose": 1.84,
       "all_time_all": 3.47
     }
   },
   "rhythm": {
-    "n_dated": 893,
+    "n_dated": 894,
     "by_weekday": [
       {
         "day": "Mon",
@@ -698,13 +711,13 @@
       },
       {
         "day": "Tue",
-        "pieces": 158,
-        "share": 17.7
+        "pieces": 159,
+        "share": 17.8
       },
       {
         "day": "Wed",
         "pieces": 431,
-        "share": 48.3
+        "share": 48.2
       },
       {
         "day": "Thu",
@@ -728,8 +741,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 48.3,
-    "midweek_share": 85.4,
+    "top_day_share": 48.2,
+    "midweek_share": 85.5,
     "weekend_pieces": 17,
     "by_month": [
       {
@@ -784,9 +797,9 @@
       {
         "month": "August",
         "abbr": "Aug",
-        "pieces": 36,
+        "pieces": 37,
         "occurrences": 5,
-        "per_occurrence": 7.2
+        "per_occurrence": 7.4
       },
       {
         "month": "September",
