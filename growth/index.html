@@ -799,6 +799,7 @@
         <div class="chartwrap"><svg class="chart" id="engagedChart" viewBox="0 0 800 220" preserveAspectRatio="none"></svg></div>
         <div class="legend">
           <span><span class="sw" style="background:var(--vc-cerulean)"></span>Readers per send (opened)</span>
+          <span><span class="sw" style="background:var(--vc-orange)"></span>Clicked through to the site</span>
           <span><span class="sw" style="background:var(--vc-charcoal);opacity:.5"></span>Subscribers reached (delivered)</span>
         </div>
         <div id="engagedInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
@@ -2043,6 +2044,7 @@ function renderEngagedTrend(camps){
     const m=c.sent.slice(0,7);
     (byMonth[m]=byMonth[m]||[]).push({
       openers:Math.round(c.delivered*(c.open_pct||0)/100),
+      clickers:Math.round(c.delivered*(c.click_pct||0)/100),
       delivered:c.delivered});
   });
   // Primary full-list sends only. From Feb 2026 the list also runs resends to
@@ -2061,6 +2063,7 @@ function renderEngagedTrend(camps){
     const a=byMonth[m];
     return {m, n:a.length,
       openers:Math.round(a.reduce((s,x)=>s+x.openers,0)/a.length),
+      clickers:Math.round(a.reduce((s,x)=>s+x.clickers,0)/a.length),
       delivered:Math.round(a.reduce((s,x)=>s+x.delivered,0)/a.length)};
   });
   const W=800,H=220,padL=44,padR=14,padT=14,padB=30;
@@ -2081,22 +2084,26 @@ function renderEngagedTrend(camps){
   });
   const dPts=rows.map((r,i)=>`${x(i)},${y(r.delivered)}`).join(" ");
   html+=`<polyline points="${dPts}" fill="none" stroke="#707175" stroke-width="1.2" opacity=".55"/>`;
+  const cPts=rows.map((r,i)=>`${x(i)},${y(r.clickers)}`).join(" ");
+  html+=`<polyline points="${cPts}" fill="none" stroke="#ff7c53" stroke-width="1.5"/>`;
   const oPts=rows.map((r,i)=>`${x(i)},${y(r.openers)}`).join(" ");
   html+=`<polyline points="${oPts}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
   rows.forEach((r,i)=>{
-    html+=`<circle cx="${x(i)}" cy="${y(r.openers)}" r="2.5" fill="#217ebe"><title>${r.m}: ~${fmtN(r.openers)} readers per send · ${fmtN(r.delivered)} delivered · ${r.n} send${r.n>1?"s":""}</title></circle>`;
+    html+=`<circle cx="${x(i)}" cy="${y(r.openers)}" r="2.5" fill="#217ebe"><title>${r.m}: ~${fmtN(r.openers)} opened · ~${fmtN(r.clickers)} clicked · ${fmtN(r.delivered)} delivered · ${r.n} send${r.n>1?"s":""}</title></circle>`;
   });
   svg.innerHTML=html;
   attachChartHover(svg, padT, innerH, rows.map((r,i)=>({
     x:x(i), y:y(r.openers),
-    html:`<b>${r.m}</b><br>~${fmtN(r.openers)} readers per send<br>${fmtN(r.delivered)} delivered · ${r.n} send${r.n>1?"s":""}`
+    html:`<b>${r.m}</b><br>~${fmtN(r.openers)} opened · ~${fmtN(r.clickers)} clicked<br>${fmtN(r.delivered)} delivered · ${r.n} send${r.n>1?"s":""}`
   })));
   // Insight: latest 6 full months vs the same 6 months a year earlier.
   if(rows.length>=18){
     const rec=rows.slice(-6), prior=rows.slice(-18,-12);
     const avg=a=>a.reduce((s,r)=>s+r.openers,0)/a.length;
     const ra=avg(rec), pa=avg(prior), d=pa?((ra-pa)/pa)*100:0;
-    $("#engagedInsight").innerHTML=`Readers per send, last 6 months: <b>~${fmtN(Math.round(ra))}</b> &middot; same months last year: ~${fmtN(Math.round(pa))} &middot; <b>${d>=0?"+":""}${d.toFixed(0)}%</b> year over year. First month on record (${rows[0].m}): ~${fmtN(rows[0].openers)} readers per send.`;
+    const avgC=a=>a.reduce((s,r)=>s+r.clickers,0)/a.length;
+    const rc=avgC(rec), pc=avgC(prior), dc=pc?((rc-pc)/pc)*100:0;
+    $("#engagedInsight").innerHTML=`Readers per send, last 6 months: <b>~${fmtN(Math.round(ra))}</b> opened (${d>=0?"+":""}${d.toFixed(0)}% year over year) &middot; <b>~${fmtN(Math.round(rc))}</b> clicked through (${dc>=0?"+":""}${dc.toFixed(0)}%). First month on record (${rows[0].m}): ~${fmtN(rows[0].openers)} opened, ~${fmtN(rows[0].clickers)} clicked. Clicks are the cleaner signal &mdash; Apple Mail&rsquo;s privacy loads inflate opens but not clicks &mdash; though not a pure one: corporate security gateways follow links too, and this list&rsquo;s own audit found gateway addresses with near-100% click rates.`;
   }
 }
 
