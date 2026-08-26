@@ -794,6 +794,17 @@
         <div id="sendInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
       </div>
 
+      <div class="card" id="engagedTrend">
+        <h2>Engaged readers over time <span class="hint">monthly, since March 2022 · readers per send = delivered &times; unique open rate · full-list sends only (resends and welcome drips excluded)</span></h2>
+        <div class="chartwrap"><svg class="chart" id="engagedChart" viewBox="0 0 800 220" preserveAspectRatio="none"></svg></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--vc-cerulean)"></span>Readers per send (opened)</span>
+          <span><span class="sw" style="background:var(--vc-charcoal);opacity:.5"></span>Subscribers reached (delivered)</span>
+        </div>
+        <div id="engagedInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
+        <div class="flagnote" style="margin-top:10px"><b>Read the shape, not the level:</b> "opened" is Mailchimp's unique-open count, inflated industry-wide by Apple Mail privacy loads and corporate mail scanners. The inflation is roughly steady over time, so the trend is trustworthy even though the absolute count runs high. Campaign-level rates, so the 2026 A/B-test reporting gap that broke per-member opens does not affect this chart.</div>
+      </div>
+
       <div class="card" id="campaigns">
         <h2>Recent newsletter sends <span class="hint">most recent 12 · click subject to open in Mailchimp</span></h2>
         <div id="campTbl"></div>
@@ -1173,6 +1184,7 @@ function boot(data){
   // ----- Newsletter performance (open/click + YoY)
   renderPerf(mc);
   renderSendChart(mc.campaigns || []);
+  renderEngagedTrend(mc.campaigns || []);
   renderYTD(mc, mc.signup_windows || {});
   renderSocial(data.x_profile || {}, data.instagram || {}, data.news_mentions || [], data.linkedin || {}, data.bluesky || {});
   renderXFollowers(data);
@@ -2016,6 +2028,76 @@ function interpretInsight(metric, deltaPct, ctx){
     return ` Total opens up YoY even with a lower per-email open rate = list grew + you sent more. More eyeballs reached on net, which is what matters editorially.`;
   }
   return "";
+}
+
+function renderEngagedTrend(camps){
+  const svg=$("#engagedChart");
+  if(!camps||!camps.length){svg.innerHTML='<text x="400" y="110" text-anchor="middle" fill="#888">No campaign data</text>';return;}
+  // Monthly averages. Multiple sends land in most months, and averaging per
+  // send (rather than summing) keeps a 3-send month comparable to a 5-send
+  // month -- the question is how many people read an issue, not how much
+  // total email went out.
+  const byMonth={};
+  camps.forEach(c=>{
+    if(!c.sent||!c.delivered) return;
+    const m=c.sent.slice(0,7);
+    (byMonth[m]=byMonth[m]||[]).push({
+      openers:Math.round(c.delivered*(c.open_pct||0)/100),
+      delivered:c.delivered});
+  });
+  // Primary full-list sends only. From Feb 2026 the list also runs resends to
+  // non-openers (~2k) and welcome-series drips (under 200), and averaging
+  // those with the ~10.5k main sends craters the month -- the first draft of
+  // this chart showed a dramatic 2026 collapse that was entirely this
+  // artifact. A send counts if it reached at least 60% of the month's
+  // biggest send.
+  Object.keys(byMonth).forEach(m=>{
+    const max=Math.max(...byMonth[m].map(x=>x.delivered));
+    byMonth[m]=byMonth[m].filter(x=>x.delivered>=max*0.6);
+  });
+  const months=Object.keys(byMonth).sort();
+  if(months.length<2){svg.innerHTML='<text x="400" y="110" text-anchor="middle" fill="#888">Not enough history</text>';return;}
+  const rows=months.map(m=>{
+    const a=byMonth[m];
+    return {m, n:a.length,
+      openers:Math.round(a.reduce((s,x)=>s+x.openers,0)/a.length),
+      delivered:Math.round(a.reduce((s,x)=>s+x.delivered,0)/a.length)};
+  });
+  const W=800,H=220,padL=44,padR=14,padT=14,padB=30;
+  const innerW=W-padL-padR, innerH=H-padT-padB;
+  const yMax=Math.max(...rows.map(r=>r.delivered))*1.06;   // zero baseline, always
+  const x=i=>padL+(i/(rows.length-1))*innerW;
+  const y=v=>padT+innerH-(v/yMax)*innerH;
+  let html="";
+  const step=Math.pow(10,Math.floor(Math.log10(yMax/4)));
+  const tick=Math.ceil(yMax/4/step)*step;
+  for(let t=0;t<=yMax;t+=tick){
+    html+=`<line x1="${padL}" x2="${W-padR}" y1="${y(t)}" y2="${y(t)}" stroke="#ddd" stroke-width="1"/>`;
+    html+=`<text x="${padL-6}" y="${y(t)+3}" text-anchor="end" font-size="10" fill="#888">${fmtN(t)}</text>`;
+  }
+  const janes=rows.map((r,i)=>({r,i})).filter(o=>o.r.m.endsWith("-01")||o.i===0||o.i===rows.length-1);
+  janes.forEach(o=>{
+    html+=`<text x="${x(o.i)}" y="${H-14}" text-anchor="middle" font-size="9" fill="#888">${o.r.m.endsWith("-01")?o.r.m.slice(0,4):o.r.m.slice(2).replace("-","/")}</text>`;
+  });
+  const dPts=rows.map((r,i)=>`${x(i)},${y(r.delivered)}`).join(" ");
+  html+=`<polyline points="${dPts}" fill="none" stroke="#707175" stroke-width="1.2" opacity=".55"/>`;
+  const oPts=rows.map((r,i)=>`${x(i)},${y(r.openers)}`).join(" ");
+  html+=`<polyline points="${oPts}" fill="none" stroke="#217ebe" stroke-width="2"/>`;
+  rows.forEach((r,i)=>{
+    html+=`<circle cx="${x(i)}" cy="${y(r.openers)}" r="2.5" fill="#217ebe"><title>${r.m}: ~${fmtN(r.openers)} readers per send · ${fmtN(r.delivered)} delivered · ${r.n} send${r.n>1?"s":""}</title></circle>`;
+  });
+  svg.innerHTML=html;
+  attachChartHover(svg, padT, innerH, rows.map((r,i)=>({
+    x:x(i), y:y(r.openers),
+    html:`<b>${r.m}</b><br>~${fmtN(r.openers)} readers per send<br>${fmtN(r.delivered)} delivered · ${r.n} send${r.n>1?"s":""}`
+  })));
+  // Insight: latest 6 full months vs the same 6 months a year earlier.
+  if(rows.length>=18){
+    const rec=rows.slice(-6), prior=rows.slice(-18,-12);
+    const avg=a=>a.reduce((s,r)=>s+r.openers,0)/a.length;
+    const ra=avg(rec), pa=avg(prior), d=pa?((ra-pa)/pa)*100:0;
+    $("#engagedInsight").innerHTML=`Readers per send, last 6 months: <b>~${fmtN(Math.round(ra))}</b> &middot; same months last year: ~${fmtN(Math.round(pa))} &middot; <b>${d>=0?"+":""}${d.toFixed(0)}%</b> year over year. First month on record (${rows[0].m}): ~${fmtN(rows[0].openers)} readers per send.`;
+  }
 }
 
 function renderSendChart(camps){
