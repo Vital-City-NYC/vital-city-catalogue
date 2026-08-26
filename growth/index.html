@@ -570,7 +570,8 @@
           <li><b>Who reads matters more than how many.</b> Vital City exists to move policy, so a few hundred mayors, commissioners, council staffers, funders and reporters reading closely can count for more than tens of thousands of casual visitors.</li>
         </ul>
       </div>
-      <div class="sechead-title" id="sec-glance" style="margin:24px 0 12px">At a glance</div>
+      <div class="sechead-title" id="sec-glance" style="margin:24px 0 4px">At a glance</div>
+      <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">Two numbers matter most on this whole page: net list change and money raised. Everything below explains why they moved.</div>
       <div class="kpis" id="kpis"></div>
 
       <div class="card" id="askAI">
@@ -663,7 +664,7 @@
 
       <div class="sechead" id="sec-growth">
         <div class="sechead-title">Growing the list</div>
-        <div class="sechead-sub">The number one question: is the newsletter growing, and where is that growth coming from?</div>
+        <div class="sechead-sub">Is the newsletter growing, and where from? Watch net list change and readers per send — list size can be flattered by imports and bots, but engaged readers can't. Signup sources tell you what's working; the unsubscribe cards tell you what it costs.</div>
       </div>
 
       <div class="card" id="growthChart">
@@ -731,7 +732,7 @@
 
       <div class="sechead" id="sec-health">
         <div class="sechead-title">List health</div>
-        <div class="sechead-sub">Maintenance metrics: engagement quality and lifecycle. Worth a periodic look, not a daily one.</div>
+        <div class="sechead-sub">Maintenance metrics, worth a periodic look rather than a daily one. The star ratings here are Apple-Mail-skewed; the corrected who-really-reads view lives under Donors &amp; influence.</div>
       </div>
 
       <div class="card" id="quality">
@@ -746,7 +747,7 @@
 
       <div class="sechead" id="sec-donors">
         <div class="sechead-title">Donors &amp; influence</div>
-        <div class="sechead-sub">Cultivation: who gives, who matters and whether the people who shape New York City are reading.</div>
+        <div class="sechead-sub">Who gives, and whether the people who shape New York City are reading. Unique donors and recurring revenue matter more than the raised total — one large gift can mask a thin pipeline.</div>
       </div>
 
       <div class="card" id="fundraising">
@@ -780,9 +781,14 @@
         <div id="engagementExtrasBody"></div>
       </div>
 
-      <div class="sechead" id="sec-content">
+      <div class="card" id="xfollowers">
+        <h2>Who follows Vital City on X <span class="hint" id="xfHint">point-in-time snapshot · not live</span></h2>
+        <div id="xfollowersBody"></div>
+      </div>
+
+          <div class="sechead" id="sec-content">
         <div class="sechead-title">The content engine</div>
-        <div class="sechead-sub">What we publish and send, and how each piece performs — the machine that drives the two sections above.</div>
+        <div class="sechead-sub">What we publish and how each send lands — the machine driving the sections above. Click rate is the number to trust; open rates are inflated industry-wide and only comparable to themselves over time.</div>
       </div>
 
       <div class="card" id="catShape" title="A census of everything Vital City has published, independent of how it performed: what it was about, what job it did, who wrote it and how long it ran.&#10;&#10;Why it matters: Every other panel in this section measures how a piece did. This one measures what we chose to make. Coverage drift, a narrowing house form and a contributor bench that turns over are editorial facts that no performance metric will surface.&#10;&#10;Source: the Ghost content catalogue, recomputed on each daily refresh.">
@@ -811,7 +817,7 @@
       </div>
 
       <div class="card" id="campaignsTrend">
-        <h2>Send-by-send open &amp; click rate <span class="hint">last 20 sends, oldest → newest · one point = one send (A/B tests counted once)</span></h2>
+        <h2>Send-by-send performance <span class="hint">last 20 sends charted and tabled · one point = one send (A/B tests counted once)</span></h2>
         <div class="chartwrap"><svg class="chart" id="sendChart" viewBox="0 0 800 200" preserveAspectRatio="none"></svg></div>
         <div class="legend">
           <span><span class="sw" style="background:var(--vc-cerulean)"></span>Open rate</span>
@@ -819,10 +825,7 @@
           <span><span class="sw" style="background:var(--vc-charcoal);opacity:.5"></span>20-send rolling average</span>
         </div>
         <div id="sendInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
-      </div>
-
-      <div class="card" id="campaigns">
-        <h2>Recent newsletter sends <span class="hint">most recent 12 · click subject to open in Mailchimp</span></h2>
+        <h2 style="margin-top:18px;border-top:1px solid var(--vc-cloud);padding-top:14px">The sends themselves <span class="hint">same data as the chart · click a subject to open it in Mailchimp</span></h2>
         <div id="campTbl"></div>
       </div>
 
@@ -833,7 +836,7 @@
 
       <div class="sechead" id="sec-reach">
         <div class="sechead-title">Reach &amp; traffic</div>
-        <div class="sechead-sub">Distribution signals — directional only. Followers and visits matter when they convert into subscribers and donors above.</div>
+        <div class="sechead-sub">Distribution signals — directional only. A follower or a visit counts when it converts into a subscriber or donor upstream, so read this section as weather, not scoreboard.</div>
       </div>
 
       <div class="card" id="trafficCard">
@@ -868,12 +871,7 @@
         <div id="urlShares" style="margin-top:18px"></div>
       </div>
 
-      <div class="card" id="xfollowers">
-        <h2>Who follows Vital City on X <span class="hint" id="xfHint">point-in-time snapshot · not live</span></h2>
-        <div id="xfollowersBody"></div>
-      </div>
-
-    </main>
+</main>
 
     <aside class="brandwatch" id="brand">
       <h2>Media mentions <a href="about.html#whitelist" target="_blank" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-cerulean);text-decoration:none;margin-left:8px" title="See about.html → 'Editing the media whitelist'">edit whitelist ↗</a></h2>
@@ -4735,7 +4733,10 @@ function renderLifecycle(lc){
   const host = $("#lifecycleBody");
   if(!host) return;
   if(!lc.available){
-    host.innerHTML = `<div style="font-size:12.5px;color:var(--vc-charcoal);padding:8px 0">Lifecycle analysis isn't available yet. (${esc(lc.reason||'pipeline must run with MAU/AAU sets')})</div>`;
+    // An empty card is dashboard weight with no information: hide the whole
+    // card until the pipeline produces MAU/AAU sets, rather than showing a
+    // shell that says it has nothing.
+    const card=document.getElementById("lifecycle"); if(card) card.style.display="none";
     return;
   }
   const cohorts = lc.cohort_retention || [];
