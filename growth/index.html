@@ -556,9 +556,9 @@
         <a href="#bigPicture">The long view</a>
         <a href="#audienceQuality">Who's reading</a>
         <a href="#sec-growth">Growing the list</a>
+        <a href="#sec-health">List health</a>
         <a href="#sec-donors">Donors &amp; influence</a>
         <a href="#sec-content">The content engine</a>
-        <a href="#sec-health">List health</a>
         <a href="#sec-reach">Reach &amp; traffic</a>
       </nav>
       <div class="readnote">
@@ -685,6 +685,18 @@
         <div id="growthInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.55"></div>
       </div>
 
+      <div class="card" id="engagedTrend">
+        <h2>Engaged readers over time <span class="hint">monthly, since March 2022 · readers per send = delivered &times; unique open rate · full-list sends only (resends and welcome drips excluded)</span></h2>
+        <div class="chartwrap"><svg class="chart" id="engagedChart" viewBox="0 0 800 220" preserveAspectRatio="none"></svg></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--vc-cerulean)"></span>Readers per send (opened)</span>
+          <span><span class="sw" style="background:var(--vc-orange)"></span>Clicked through to the site</span>
+          <span><span class="sw" style="background:var(--vc-charcoal);opacity:.5"></span>Subscribers reached (delivered)</span>
+        </div>
+        <div id="engagedInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
+        <div class="flagnote" style="margin-top:10px"><b>Read the shape, not the level:</b> "opened" is Mailchimp's unique-open count, inflated industry-wide by Apple Mail privacy loads and corporate mail scanners. The inflation is roughly steady over time, so the trend is trustworthy even though the absolute count runs high. Campaign-level rates, so the 2026 A/B-test reporting gap that broke per-member opens does not affect this chart.</div>
+      </div>
+
       <div class="card" id="acquisition">
         <h2>Where newsletter signups come from <span class="hint" id="acqHint"></span></h2>
         <div id="acqBody"></div>
@@ -715,6 +727,21 @@
       <div class="card" id="ytd">
         <h2>Year-to-date · 2026 vs 2025 <span class="hint">where the comparison is fair</span></h2>
         <div id="ytdBody"></div>
+      </div>
+
+      <div class="sechead" id="sec-health">
+        <div class="sechead-title">List health</div>
+        <div class="sechead-sub">Maintenance metrics: engagement quality and lifecycle. Worth a periodic look, not a daily one.</div>
+      </div>
+
+      <div class="card" id="quality">
+        <h2>Subscriber quality <span class="hint">based on Mailchimp engagement</span></h2>
+        <div id="qualityBody"></div>
+      </div>
+
+      <div class="card" id="lifecycle">
+        <h2>Subscriber lifecycle <span class="hint">are new signups sticking? who's drifting? who's gone but salvageable?</span></h2>
+        <div id="lifecycleBody"></div>
       </div>
 
       <div class="sechead" id="sec-donors">
@@ -794,18 +821,6 @@
         <div id="sendInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
       </div>
 
-      <div class="card" id="engagedTrend">
-        <h2>Engaged readers over time <span class="hint">monthly, since March 2022 · readers per send = delivered &times; unique open rate · full-list sends only (resends and welcome drips excluded)</span></h2>
-        <div class="chartwrap"><svg class="chart" id="engagedChart" viewBox="0 0 800 220" preserveAspectRatio="none"></svg></div>
-        <div class="legend">
-          <span><span class="sw" style="background:var(--vc-cerulean)"></span>Readers per send (opened)</span>
-          <span><span class="sw" style="background:var(--vc-orange)"></span>Clicked through to the site</span>
-          <span><span class="sw" style="background:var(--vc-charcoal);opacity:.5"></span>Subscribers reached (delivered)</span>
-        </div>
-        <div id="engagedInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
-        <div class="flagnote" style="margin-top:10px"><b>Read the shape, not the level:</b> "opened" is Mailchimp's unique-open count, inflated industry-wide by Apple Mail privacy loads and corporate mail scanners. The inflation is roughly steady over time, so the trend is trustworthy even though the absolute count runs high. Campaign-level rates, so the 2026 A/B-test reporting gap that broke per-member opens does not affect this chart.</div>
-      </div>
-
       <div class="card" id="campaigns">
         <h2>Recent newsletter sends <span class="hint">most recent 12 · click subject to open in Mailchimp</span></h2>
         <div id="campTbl"></div>
@@ -814,21 +829,6 @@
       <div class="card" id="abTests">
         <h2>A/B subject-line tests <span class="hint">which subject won, and the patterns</span></h2>
         <div id="abTestsBody"></div>
-      </div>
-
-      <div class="sechead" id="sec-health">
-        <div class="sechead-title">List health</div>
-        <div class="sechead-sub">Maintenance metrics: engagement quality and lifecycle. Worth a periodic look, not a daily one.</div>
-      </div>
-
-      <div class="card" id="quality">
-        <h2>Subscriber quality <span class="hint">based on Mailchimp engagement</span></h2>
-        <div id="qualityBody"></div>
-      </div>
-
-      <div class="card" id="lifecycle">
-        <h2>Subscriber lifecycle <span class="hint">are new signups sticking? who's drifting? who's gone but salvageable?</span></h2>
-        <div id="lifecycleBody"></div>
       </div>
 
       <div class="sechead" id="sec-reach">
