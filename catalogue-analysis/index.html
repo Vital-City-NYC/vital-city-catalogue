@@ -83,7 +83,7 @@
   <div class="sub">Every piece Vital City has published on vitalcitynyc.org &mdash; <b>what it was about, what job it did, who wrote it and how long it ran</b>. Built from the same Ghost content pull that powers the searchable <a href="../">catalogue</a>.</div>
 </header>
 <nav class="secnav">
-  <a href="#shape">The shape</a><a href="#rhythm">Rhythm</a><a href="#subject">Subject</a><a href="#shift">How it moved</a>
+  <a href="#shape">The shape</a><a href="#rhythm">Rhythm</a><a href="#subject">Subject</a><a href="#subtopics">One level down</a><a href="#shift">How it moved</a>
   <a href="#arc">The job</a>
   <a href="#length">Length</a><a href="#mayors">Headlines</a><a href="#treatment">Data treatment</a>
   <a href="#credentials">Who writes</a><a href="#bench">Who writes what</a>
@@ -302,6 +302,7 @@ function rangebar(rows,{w=null,max=null}={}){
 }
 
 function build(D,S){
+  window.__S=S;   // subtopic helpers below read the same subject-analysis JSON
   const total=D.total_pieces;
   document.getElementById("stamp").textContent="Data pull: "+(D.meta.generated_at||"").slice(0,10);
   // KPIs
@@ -358,6 +359,15 @@ function build(D,S){
     ${hbar(S.beats.map(b=>({k:b.beat,v:b.pieces,c:BEATCO[b.beat]||"#217ebe",pct:Math.round(b.share)})))}
     <div class="insight">City Hall and crime are the two poles of the catalogue, and the only beats above 20%. Below them sits a real second tier &mdash; the built city, courts, the economy, housing, transportation &mdash; and then a long tail where whole domains of city life are covered a handful of times a year: climate at ${S.beats.find(b=>b.beat.startsWith("Climate")).share}%, homelessness at ${S.beats.find(b=>b.beat.startsWith("Homelessness")).share}%, education and youth at ${S.beats.find(b=>b.beat.startsWith("Education")).share}%. The pairings tell the same story: crime travels with courts and policing, housing with land use, City Hall with the budget &mdash; but almost no piece connects the economy to criminal justice, or climate to housing, adjacencies the city itself is full of.</div>
     <div class="src">Source: Ghost topic tags, sorted in <code>analyze_subjects.py</code>. "History" is kept as its own beat rather than folded into culture &mdash; it is applied as a lens across every other beat, and ${S.history_only_pieces} of its ${S.beats.find(b=>b.beat.startsWith("History")).pieces} pieces carry no other cultural tag.</div></div>`;
+
+  // 1b. Subtopics: one level below the beat. Rendered as per-beat blocks with
+  // proportional bars; "General / mixed" is drawn hollow and last, because it
+  // is the honest remainder of a keyword classifier, not a subject.
+  html+=`<div class="card" id="subtopics"><h2>What the pieces are about, one level down</h2>
+    <div class="hint">Tags stop at beat level ("Housing"), so this layer is classified from each piece's title and summary plus its fine-grained tags, matched against hand-written keyword rules in <code>analyze_subjects.py</code> &mdash; broad beat-defining tags are excluded from matching so a piece can't classify itself. Pieces no rule matches land in the hollow "general" bar: that is rule coverage, reported per beat, not hidden.</div>
+    <div id="subtopicBlocks"></div>
+    <div class="insight">The two poles of the catalogue break apart differently. Crime is genuinely plural: gun violence is its largest strand (${st1('Crime & violence','Gun violence & shootings')} pieces), but disorder and quality of life (${st1('Crime & violence','Disorder & quality of life')}), subway crime (${st1('Crime & violence','Subway & transit crime')}) and the trend data all sustain bodies of work of their own. City government is not plural in the same way &mdash; ${st1('City government & governance','Mayoral power & leadership')} of its ${beatN('City government & governance')} pieces orbit the mayoralty itself, with the machinery below the mayor (agencies, appointments, the charter, the civil service) splitting the remainder. Elsewhere the imbalances are the finding: within courts, corruption and public integrity (${st1('Courts & prosecution','Corruption & public integrity')} pieces) now outweighs bail, juvenile justice and case delay combined; within land use, the journal writes far more about the public realm and neighborhood change than about any specific megaproject; and Rikers &mdash; ${st1('Jails & incarceration','Rikers & closure')} pieces &mdash; is nearly half of everything written about jails.</div>
+    <div class="src">Classifier and every keyword rule: <code>analyze_subjects.py</code>, section SUBTOPICS. A piece in several beats is classified once per beat. Rules matched ${Math.round(S.subtopics.reduce((a,r)=>a+r.pieces*r.classified_pct/100,0)/S.subtopics.reduce((a,r)=>a+r.pieces,0)*100)}% of piece-beat pairs overall; per-beat coverage is printed on each block.</div></div>`;
 
   // 2. The whole trajectory story in one chart (was 22 sparklines).
   const bs=S.beat_shift, bsb=bs.beats, cjb=S.criminal_justice_cluster;
@@ -448,6 +458,7 @@ function build(D,S){
     <div class="src">Primary byline only; "Vital City" counts as one byline. Source: <code>analyze_subjects.py</code>.</div></div>`;
 
   document.getElementById("app").innerHTML=html;
+  renderSubtopicBlocks();
 
   // credential toggle
   const cc=document.getElementById("credChart");
@@ -462,6 +473,29 @@ function build(D,S){
 // Debounced, and only when the width actually moved, so scrolling on mobile
 // (which fires resize as the URL bar hides) does not thrash.
 let DATA=null, lastW=0;
+function st1(beat, name){
+  const b=((window.__S||{}).subtopics||[]).find(r=>r.beat===beat); if(!b) return "?";
+  const c=b.subtopics.find(x=>x.name===name); return c?c.n:"?";
+}
+function beatN(beat){ const b=((window.__S||{}).subtopics||[]).find(r=>r.beat===beat); return b?b.pieces:"?"; }
+function renderSubtopicBlocks(){
+  const S=window.__S||{};
+  const host=document.getElementById("subtopicBlocks"); if(!host||!S.subtopics) return;
+  host.innerHTML=S.subtopics.map(row=>{
+    const subs=row.subtopics.filter(x=>x.name!=="General / mixed");
+    const gen=row.subtopics.find(x=>x.name==="General / mixed");
+    const max=Math.max(...row.subtopics.map(x=>x.n));
+    const bar=x=>`<div style="display:grid;grid-template-columns:230px 1fr 40px;gap:8px;align-items:center;margin:2px 0;font-size:12px">
+      <div style="text-align:right;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${(x.examples||[]).map(e=>e.replace(/"/g,'&quot;')).join('\n')||x.name}">${x.name}</div>
+      <div style="background:#eee;height:11px"><div style="height:11px;width:${x.n/max*100}%;background:${x.name==='General / mixed'?'transparent':'#217ebe'};border:${x.name==='General / mixed'?'1px dashed #999':'none'};box-sizing:border-box"></div></div>
+      <div style="font-variant-numeric:tabular-nums;font-weight:600">${x.n}</div></div>`;
+    return `<div style="margin:16px 0 4px">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#333">${row.beat}
+        <span style="font-weight:400;text-transform:none;color:#888">&nbsp;· ${row.pieces} pieces · rules matched ${row.classified_pct}%</span></div>
+      ${subs.map(bar).join("")}${gen?bar(gen):""}
+    </div>`;
+  }).join("");
+}
 function renderAll(){
   if(!DATA) return;
   build(DATA[0], DATA[1]);

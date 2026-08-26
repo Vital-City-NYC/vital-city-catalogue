@@ -38,7 +38,7 @@ BEATS = {
   "Policing": ["Police Reform", "Police-Community Relations", "Street Lighting"],
   "Courts & prosecution": ["Justice", "Criminal Justice", "Prosecution", "Law", "Corruption"],
   "Jails & incarceration": [
-    "Jails", "Incarceration", "Incarceration Stories", "Corrections",
+    "Jails", "Rikers", "Incarceration", "Incarceration Stories", "Corrections",
     "Projecting the Size of the Jail Population — More than Math"],
   "Housing": ["Housing", "Rent regulation", "rent", "Public Housing"],
   "Land use & the built city": [
@@ -174,6 +174,20 @@ unaccounted = sorted(t for t in all_topics if t not in SUBJECT_BEAT and t not in
 if unaccounted:
     raise SystemExit("Topics not sorted into a bucket:\n  " + "\n  ".join(unaccounted))
 
+# A catalogue refresh nulled `primary_author` on every piece (the authors list
+# survived), which collapsed all byline analysis onto one None byline and
+# crashed the analysis page reading top3[1]. Derive the byline: first credited
+# author that isn't the institutional "Vital City" account, falling back to it
+# when it is the only credit.
+def byline(r):
+    if r.get("primary_author"):
+        return r["primary_author"]
+    auths = r.get("authors") or []
+    for a in auths:
+        if a and a != "Vital City":
+            return a
+    return auths[0] if auths else None
+
 def beats_of(rec):
     return {SUBJECT_BEAT[norm(t)] for t in (rec.get("topics") or []) if norm(t) in SUBJECT_BEAT}
 
@@ -200,7 +214,7 @@ for r in CAT:
         beat_words.setdefault(b, []).append(r.get("word_count") or 0)
         beat_types.setdefault(b, collections.Counter())[r.get("type")] += 1
         beat_years.setdefault(b, collections.Counter())[year(r)] += 1
-        beat_bylines.setdefault(b, collections.Counter())[r.get("primary_author")] += 1
+        beat_bylines.setdefault(b, collections.Counter())[byline(r)] += 1
     for a in sorted(bs):
         for b in sorted(bs):
             if a < b: cooc[(a, b)] += 1
@@ -364,7 +378,7 @@ headline_signal_test = {
 }
 
 # --- How much of the bench is one-and-done ---------------------------------
-prim = collections.Counter(r.get("primary_author") for r in CAT)
+prim = collections.Counter(byline(r) for r in CAT)
 once_only = sum(1 for a, c in prim.items() if c == 1)
 
 out = {
@@ -481,3 +495,232 @@ print(f"\nBENCH: {len(prim)} primary bylines, {once_only} wrote once "
 print(f"\nPieces with no subject tag at all: {len(untagged)}")
 for u in untagged[:12]:
     print(f"  {u['date']}  [{u['type']}]  {u['title'][:58]}  topics={u['topics']}")
+
+# ============================================================================
+# SUBTOPICS — one level below the beat.
+# The tags stop at beat level ("Housing"), so this layer is classified from
+# text: normalized tags + title + summary, matched against per-beat keyword
+# rules, first match wins (rules are ordered specific -> broad within a beat).
+# A piece can sit in several beats and gets one subtopic per beat it is in.
+# Unmatched pieces land in "General / mixed" -- reported, never hidden, so the
+# rule coverage is auditable. Keyword rules are the curation; edit them here.
+# ============================================================================
+SUBTOPICS = {
+ "Crime & violence": [
+  ("Subway & transit crime", [r"subway (crime|safety|violence)", r"transit.*(crime|safety)", r"\bunderground\b.*crime", r"fare evasion"]),
+  ("Gun violence & shootings", [r"\bguns?\b", r"shoot", r"firearm", r"gun violence"]),
+  ("Domestic & intimate-partner violence", [r"domestic violence", r"intimate.partner", r"family violence"]),
+  ("Hate crimes & bias", [r"hate crime", r"bias attack", r"antisemit"]),
+  ("Disorder & quality of life", [r"disorder", r"quality.of.life", r"broken windows", r"shoplift", r"retail theft", r"open.air", r"chaos", r"lawless"]),
+  ("Murders & major felonies", [r"murder", r"homicide", r"felony", r"\brape\b", r"assault", r"robber", r"burglar", r"grand larceny"]),
+  ("Crime trends & the data", [r"state of crime", r"crime (data|trends?|rates?|stats|numbers|drop|decline|wave)", r"compstat", r"clearance", r"crime in new york"]),
+  ("Victims & survivors", [r"victim", r"survivor"]),
+ ],
+ "Policing": [
+  ("Street lighting", [r"light(ing)?\b", r"dark"]),
+  ("Staffing, budget & overtime", [r"headcount", r"staffing", r"overtime", r"recruit", r"attrition", r"more cops", r"police (budget|pay)"]),
+  ("Accountability & misconduct", [r"misconduct", r"accountab", r"ccrb", r"oversight", r"discipline", r"lawsuit", r"qualified immunity"]),
+  ("Strategy & deployment", [r"deployment", r"hot.?spot", r"precinct", r"patrol", r"strategy", r"community policing", r"neighborhood policing", r"surge"]),
+  ("Reform & the future of policing", [r"police reform", r"reimagin", r"defund", r"future of polic"]),
+  ("Community safety & non-police response", [r"community safety", r"non-?police", r"civilian", r"alternative", r"b-heard", r"911", r"outreach", r"prevention"]),
+  ("The NYPD on the street", [r"\bcops?\b", r"nypd", r"officers?", r"\bforce\b", r"drones?"]),
+ ],
+ "Courts & prosecution": [
+  ("Bail & pretrial", [r"\bbail\b", r"pretrial", r"remand"]),
+  ("Juvenile justice", [r"juvenile", r"raise the age"]),
+  ("Fines, fees & debt", [r"fees and fines", r"\bfines?\b", r"court debt"]),
+  ("Gangs & gun prosecution", [r"\bgangs?\b"]),
+  ("Evidence & what works", [r"evidence", r"research", r"risk assessment", r"what works", r"randomized"]),
+  ("Prosecutors & DAs", [r"prosecut", r"district attorney", r"\bda\b", r"bragg"]),
+  ("Case processing & delay", [r"case (processing|delay|backlog)", r"speedy trial", r"court (delay|backlog)", r"timely"]),
+  ("Corruption & public integrity", [r"corrupt", r"ethics", r"indict", r"bribe", r"integrity"]),
+  ("Courts & judges", [r"court", r"judge", r"judicial", r"jury"]),
+  ("The law itself", [r"\blaw\b", r"statute", r"legal"]),
+ ],
+ "Jails & incarceration": [
+  ("Rikers & closure", [r"rikers", r"borough.based", r"close.*jail", r"jail.*clos"]),
+  ("Deaths & conditions in custody", [r"death", r"died", r"solitary", r"conditions", r"violence in", r"stabbing", r"slashing"]),
+  ("Jail population & who is held", [r"population", r"who is (in|held)", r"census", r"how many"]),
+  ("Receivership & oversight", [r"receiver", r"monitor", r"nunez", r"federal", r"oversight"]),
+  ("Reentry & second chances", [r"reentry", r"re-entry", r"second chance", r"parole", r"probation", r"release", r"coming home"]),
+ ],
+ "Housing": [
+  ("Rent regulation & the freeze", [r"rent (freeze|regulat|stabiliz|guidelines|control)", r"freez\w* the rent", r"control rents", r"rgb\b"]),
+  ("The pied-à-terre surcharge", [r"pied", r"surcharge"]),
+  ("Supply, zoning & building more", [r"supply", r"zoning", r"upzon", r"city of yes", r"build", r"abundance", r"development", r"production", r"permits?", r"construction", r"seqra", r"environmental review", r"scaffold"]),
+  ("Public housing & NYCHA", [r"nycha", r"public housing"]),
+  ("Affordability & subsidy", [r"afford", r"voucher", r"subsid", r"mitchell.lama", r"421-?a", r"485-?x", r"lihtc", r"tax credit"]),
+  ("Homeownership & landlords", [r"homeowner", r"landlord", r"co-?op", r"condo", r"deed"]),
+  ("Design & what we build", [r"design", r"architect", r"modular", r"basement", r"sro", r"single.room"]),
+  ("Living here: renters & buildings", [r"apartment", r"tenant", r"radiator", r"steam heat", r"landlord", r"super\b", r"lease"]),
+ ],
+ "Land use & the built city": [
+  ("Parks & public space", [r"\bparks?\b", r"public space", r"plaza", r"playground", r"open space"]),
+  ("Streets & the public realm", [r"street", r"sidewalk", r"scaffold", r"shed", r"public realm", r"trash", r"outdoor dining"]),
+  ("Big projects & megadevelopment", [r"penn station", r"willets", r"atlantic yards", r"sunnyside", r"megaproject", r"stadium", r"casino", r"build big", r"development strategy", r"public facilities"]),
+  ("Lessons from other cities", [r"tokyo", r"london", r"paris", r"nantes", r"guadalajara", r"chicago", r"newark", r"jersey", r"lessons from", r"other cities", r"around the world"]),
+  ("Neighborhood change", [r"neighborhood", r"gentrif", r"displacement"]),
+  ("Architecture & design", [r"architect", r"design", r"ornament", r"beauty", r"ugly"]),
+  ("Planning & process", [r"ulurp", r"planning", r"land use", r"environmental review", r"seqra", r"ceqr", r"community board"]),
+ ],
+ "Transportation": [
+  ("Congestion pricing", [r"congestion"]),
+  ("Buses", [r"\bbus(es)?\b"]),
+  ("Subway service & the system", [r"subway", r"\btrains?\b", r"mta", r"transit"]),
+  ("Streets, bikes & micromobility", [r"\bbikes?\b", r"e-?bike", r"scooter", r"pedestrian", r"traffic", r"speed", r"crash", r"vision zero", r"deliverista"]),
+  ("Accessibility", [r"elevator", r"accessib", r"disabilit"]),
+ ],
+ "City government & governance": [
+  ("Charter revision & structure", [r"charter", r"revision commission"]),
+  ("COGE & government efficiency", [r"coge", r"efficiency commission", r"government efficiency"]),
+  ("Appointments & personnel", [r"appoint", r"commissioner", r"deputy mayor", r"transition", r"cabinet", r"who.s who", r"comings and goings", r"hire"]),
+  ("The civil service & workforce", [r"civil service", r"workforce", r"city workers", r"municipal employees", r"vacanc"]),
+  ("Agency operations & delivery", [r"procurement", r"contract", r"permit", r"process", r"delivery", r"operations", r"customer service", r"technology in government", r"digital", r"311", r"bureaucra", r"city services", r"\bagency\b", r"department of", r"innovation", r"childcare", r"sidewalk", r"noise", r"\brain\b", r"snow", r"fix"]),
+  ("Mayoral power & leadership", [r"mamdani", r"\badams\b", r"mayor", r"leadership", r"executive", r"city hall", r"administration"]),
+  ("Council, comptroller & the rest", [r"council", r"comptroller", r"public advocate", r"borough president"]),
+ ],
+ "Money, budgets & the economy": [
+  ("The city budget & fiscal health", [r"budget", r"fiscal", r"deficit", r"reserves", r"pension", r"debt"]),
+  ("Jobs, wages & labor", [r"\bjobs?\b", r"wage", r"labor", r"union", r"worker", r"employment"]),
+  ("Cost of living & prices", [r"price", r"grocer", r"cost of living", r"childcare cost", r"inflation", r"supermarket"]),
+  ("Small business & storefronts", [r"small business", r"storefront", r"restaurant", r"retail", r"vendor"]),
+  ("The economic engine", [r"econom", r"growth", r"industr", r"tourism", r"tax base", r"finance", r"wall street"]),
+ ],
+ "Politics & elections": [
+  ("The 2025 mayoral race", [r"primary", r"candidate", r"mayoral (race|election)", r"campaign", r"cuomo", r"sliwa", r"adams.*(run|race|reelect)", r"ranked.choice"]),
+  ("Mamdani: from win to City Hall", [r"mamdani"]),
+  ("Voters & coalitions", [r"voters?", r"coalition", r"turnout", r"electorate", r"who voted"]),
+  ("Elections & how we vote", [r"election", r"ballot", r"board of elections", r"voting"]),
+  ("Trump & the city", [r"trump", r"national guard", r"authoritarian", r"federal"]),
+  ("The political landscape", [r"politic", r"left", r"right", r"progressive", r"democrat", r"republican", r"tabloid"]),
+ ],
+ "State, federal & beyond NYC": [
+  ("Albany & the state", [r"albany", r"state (budget|legislature|government)", r"hochul", r"governor"]),
+  ("Washington & the feds", [r"federal", r"trump", r"congress", r"washington", r"white house"]),
+  ("Immigration & migrants", [r"immigra", r"migrant", r"asylum", r"ice\b", r"deport"]),
+  ("Other cities & the world", [r"chicago", r"tokyo", r"london", r"paris", r"jersey", r"other cities", r"abroad"]),
+ ],
+ "Health, mental health & drugs": [
+  ("Mental illness & crisis response", [r"mental", r"crisis", r"involuntary", r"psychiatric", r"b-heard"]),
+  ("Overdose & opioids", [r"overdose", r"opioid", r"fentanyl", r"heroin", r"harm reduction", r"prevention center"]),
+  ("Cannabis, alcohol & vice", [r"cannabis", r"marijuana", r"weed", r"alcohol", r"smoke shop", r"gambling"]),
+  ("Drugs & drug policy", [r"\bdrugs?\b", r"substance"]),
+  ("Health care & hospitals", [r"hospital", r"health care", r"healthcare", r"medicaid", r"insurance", r"maternal"]),
+ ],
+ "Homelessness & social services": [
+  ("Street homelessness & encampments", [r"street homeless", r"encampment", r"unsheltered", r"sleeping on"]),
+  ("Shelters & the system", [r"shelter", r"right to housing", r"dhs\b"]),
+  ("Child welfare", [r"child welfare", r"\bacs\b", r"foster"]),
+  ("Poverty & the safety net", [r"poverty", r"benefit", r"cash", r"snap\b", r"safety net", r"welfare"]),
+  ("Homelessness, broadly", [r"homeless"]),
+ ],
+ "Education & youth": [
+  ("K-12 schools", [r"school", r"k-?12", r"doe\b", r"class size", r"curriculum", r"literacy", r"enrollment"]),
+  ("Higher education", [r"cuny", r"college", r"university"]),
+  ("Youth programs & summer jobs", [r"youth", r"syep", r"summer job", r"after.?school"]),
+  ("Childcare & early childhood", [r"child.?care", r"pre-?k", r"3-?k", r"early childhood"]),
+ ],
+ "Climate, environment & sanitation": [
+  ("Flooding & resilience", [r"flood", r"storm", r"resilien", r"sea level", r"climate adapt"]),
+  ("Trash, rats & sanitation", [r"trash", r"garbage", r"\brats?\b", r"sanitation", r"containeriz", r"compost"]),
+  ("Energy & emissions", [r"energy", r"solar", r"emissions", r"local law 97", r"electrif"]),
+  ("Heat & environment", [r"heat", r"air quality", r"environment", r"trees", r"green"]),
+ ],
+ "Technology": [
+  ("Robotaxis & autonomous vehicles", [r"waymo", r"driverless", r"robotaxi", r"autonomous", r"ride.?hail"]),
+  ("AI & the city", [r"\bai\b", r"artificial intelligence", r"algorithm", r"chatbot"]),
+  ("Government technology", [r"gov(ernment)? tech", r"digital", r"data", r"moderniz", r"\bapp\b", r"drone", r"permit", r"technology (transformation|in government)", r"tech to work"]),
+  ("Tech industry & society", [r"tech (industry|sector|compan)", r"startup", r"crypto", r"social media", r"manufactur", r"industrial"]),
+ ],
+ "Race, gender & inequality": [
+  ("Race & the city", [r"race", r"racial", r"black", r"latino", r"asian"]),
+  ("Gender & women", [r"gender", r"women", r"maternal"]),
+  ("Inequality & class", [r"inequal", r"class", r"rich", r"poor", r"middle class"]),
+ ],
+ "History & the long view": [
+  ("Crime & justice history", [r"crime", r"police", r"prison", r"jail", r"gang"]),
+  ("Built-city history", [r"build", r"architect", r"bridge", r"subway", r"infrastructure", r"robert moses", r"jane jacobs"]),
+  ("Political history", [r"mayor", r"tammany", r"koch", r"dinkins", r"giuliani", r"bloomberg", r"la guardia", r"lindsay"]),
+  ("The fiscal crisis & the 1970s", [r"1970s", r"fiscal crisis", r"drop dead", r"default"]),
+  ("Social & cultural history", [r"immigrant", r"culture", r"music", r"neighborhood", r"1980s"]),
+ ],
+ "Culture & city life": [
+  ("Books & ideas", [r"\bbook\b", r"review", r"origins of", r"a conversation with", r"author"]),
+  ("Monuments & public memory", [r"monument", r"statue", r"memorial", r"public memory"]),
+  ("Arts & institutions", [r"museum", r"theater", r"broadway", r"arts", r"music", r"film", r"opera", r"librar"]),
+  ("Food & drink", [r"food", r"restaurant", r"pizza", r"bagel", r"coffee", r"drink"]),
+  ("Sports", [r"sports", r"knicks", r"yankees", r"mets", r"marathon", r"stadium"]),
+  ("Faith & community", [r"church", r"faith", r"religio", r"synagogue", r"mosque"]),
+  ("City life & its rituals", [r"city life", r"summer", r"holiday", r"street life", r"nightlife", r"love letter"]),
+ ],
+ "Media & journalism": [
+  ("Local news & its crisis", [r"local (news|journalism)", r"news desert", r"press corps"]),
+  ("The Times, the tabloids & the papers", [r"new york times", r"tabloid", r"paper of record", r"newspaper", r"daily news", r"post\b"]),
+  ("Events & public conversations", [r"columbia", r"\bevent\b", r"talks", r"conversation with", r"forum"]),
+  ("Media & the city", [r"media", r"journalis", r"coverage", r"press"]),
+ ],
+ "Civil society & philanthropy": [
+  ("Nonprofits & their economics", [r"nonprofit", r"human services", r"contract"]),
+  ("Philanthropy & foundations", [r"philanthrop", r"foundation", r"donor", r"giving"]),
+  ("Organizing & civic life", [r"organiz", r"civic", r"volunteer", r"community group", r"mutual aid"]),
+ ],
+}
+
+import re as _re
+SUB_COMPILED = {b: [(name, [_re.compile(p, _re.I) for p in pats]) for name, pats in subs]
+                for b, subs in SUBTOPICS.items()}
+
+# Tags carry real sub-beat signal ("Subway Crime", "Rikers", "Charter
+# Revision" are finer than their beats) -- but the BROAD tags that define beat
+# membership must not re-enter the haystack, or classification is circular:
+# the tag "City Planning" matched the "Planning & process" rule and swallowed
+# half the built-city beat; "Government Operations" did the same to agency
+# operations. Titles alone are too thin (coverage fell to 12-40%), so the rule
+# is: title + summary + tags, minus this list of beat-head tags.
+GENERIC_TAGS = {
+    "City Government", "Government Operations", "Governance", "Mayoralty",
+    "City Planning", "Urban Planning", "Urbanism", "Place",
+    "Crime", "Justice", "Criminal Justice", "Law", "Safety", "Community Safety",
+    "Crime Stories", "Police Reform", "Housing", "History", "Historical Lessons",
+    "culture", "Politics", "Economics", "Technology", "Transit", "Transportation",
+    "Infrastructure", "Public Health", "Health", "Education", "Jails",
+    "Incarceration", "Corrections", "Journalism", "Media",
+}
+def subtopic_of(rec, beat):
+    fine_tags = [t for t in (rec.get("topics") or []) if norm(t) not in GENERIC_TAGS]
+    text = " ".join([rec.get("title") or "", rec.get("summary") or "",
+                     " ".join(fine_tags)])
+    for name, pats in SUB_COMPILED.get(beat, []):
+        if any(p.search(text) for p in pats):
+            return name
+    return "General / mixed"
+
+sub_agg = {}
+for r in CAT:
+    for b in beats_of(r):
+        st = subtopic_of(r, b)
+        cell = sub_agg.setdefault(b, {}).setdefault(st, {"n": 0, "examples": []})
+        cell["n"] += 1
+        if len(cell["examples"]) < 3 and (r.get("published_date") or "") >= "2025-06":
+            cell["examples"].append(r["title"])
+
+subtopics_out = []
+for b, _ in sorted(BEATS.items(), key=lambda kv: -beat_n.get(kv[0], 0)):
+    cells = sub_agg.get(b, {})
+    total = sum(c["n"] for c in cells.values())
+    if not total: continue
+    gen = cells.get("General / mixed", {}).get("n", 0)
+    subs = [{"name": n, "n": c["n"], "share": round(c["n"]/total*100, 1),
+             "examples": c["examples"]}
+            for n, c in sorted(cells.items(), key=lambda kv: -kv[1]["n"])]
+    subtopics_out.append({"beat": b, "pieces": total, "classified_pct": round((total-gen)/total*100),
+                          "subtopics": subs})
+data_extra = {"subtopics": subtopics_out}
+
+# merge into the existing output file
+_out = json.load(open(ROOT / "data/subject_analysis.json"))
+_out.update(data_extra)
+json.dump(_out, open(ROOT / "data/subject_analysis.json", "w"), ensure_ascii=False, indent=1)
+print("\nSubtopic coverage (share of pieces matched by a rule, per beat):")
+for row in subtopics_out:
+    print(f"  {row['classified_pct']:>3}%  {row['beat']} ({row['pieces']})")
