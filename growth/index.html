@@ -1028,6 +1028,30 @@ function boot(data){
 
   const total=mc.total_subscribers||0;
   const netNew30=subs30-unsubs30;
+
+  // A single prior-30-day window is a noisy yardstick -- one viral piece or a
+  // slow news cycle swings it by half. The trailing-12-month norm answers the
+  // better question: is this month unusual? Norm = average signups per 30 days
+  // across the trailing 365 days, current window excluded so it can't grade
+  // itself.
+  function norm30(days, field){
+    // The feed is zero-filled before real data starts (Feb 2026 for this
+    // list) -- averaging those fake zeros in produced a norm of 61/30d and a
+    // flattering +145%, when the real norm is ~150. Trim the leading dead
+    // zone first: history begins at the first day with any activity at all.
+    // Trim per FIELD, not per row: unsubs and opens go back two years, but
+    // signup tracking only starts Feb 2026, so a row can be live for other
+    // fields while this one is still zero-filled. The any-field version of
+    // this check trimmed nothing and quietly reproduced the 61/30d bug.
+    let start=0;
+    while(start<days.length && !(days[start][field]>0)) start++;
+    const hist = days.slice(start, Math.max(start, days.length-30)).slice(-365);
+    if (hist.length < 90) return null;   // under 3 months of real history is not a norm
+    const tot = hist.reduce((s,r)=>s+(r[field]||0),0);
+    return {val: tot/hist.length*30, months: Math.round(hist.length/30)};
+  }
+  const da = mc.daily_activity||[];
+  const subsNorm = norm30(da,"subs");
   const unsubRate30=total?(unsubs30/total*100):0;
 
   // Cross-category banner — newsletter, website, fundraising and social.
@@ -1043,8 +1067,17 @@ function boot(data){
     // --- Newsletter ---
     {lbl:"Subscribers",num:fmtN(total),delta:`net ${fmtDelta(netNew30)} in 30d`,cls:deltaClass(netNew30),hero:true,
      tip:"Unique people on the Mailchimp list right now — each individual counted once, even if signed up under multiple emails.\n\nWhy it matters: The newsletter list is Vital City's core owned audience and the organization's number-one growth goal. Every other metric on this page ultimately serves growing and engaging it.\n\nSource: Mailchimp for unsubscribes, Ghost for signups, reconciled weekly."},
-    {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)}${pctChg(subs30,subsPrev30)} vs prior 30d`,flag:"noisy window",cls:deltaClass(subs30-subsPrev30),
-     tip:"New subscribers in the last 30 days vs the 30 days before.\n\nWhy it matters: This is the live pulse of list growth. Sustained month-over-month gains are the clearest sign the top of the funnel is working; a sustained decline is the earliest warning that acquisition needs attention.\n\nSource: merged Ghost+Mailchimp dataset (signups land in Ghost first, reconciled to Mailchimp weekly)."},
+    (function(){
+      if (subsNorm!=null){
+        const d=subs30-subsNorm.val;
+        return {lbl:"New signups · 30d",num:fmtN(subs30),
+          delta:`${fmtDelta(Math.round(d))}${pctChg(subs30,subsNorm.val)} vs ${subsNorm.months}-mo norm (~${fmtN(Math.round(subsNorm.val))}/30d)`,
+          cls:deltaClass(d),
+          tip:`New subscribers in the last 30 days, against the norm: the average 30-day signup total across the trailing ${subsNorm.months} months of real data (current window excluded; the feed is zero-filled before Feb 2026 and those dead days are not counted). Prior 30 days for reference: ${fmtN(subsPrev30)}.\n\nWhy the norm and not last month: a single prior window is noisy -- one strong piece swings it by half. The norm says whether this month is unusual.\n\nSource: merged Ghost+Mailchimp dataset (signups land in Ghost first, reconciled to Mailchimp weekly).`};
+      }
+      return {lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)}${pctChg(subs30,subsPrev30)} vs prior 30d`,flag:"noisy window",cls:deltaClass(subs30-subsPrev30),
+       tip:"New subscribers in the last 30 days vs the 30 days before.\n\nSource: merged Ghost+Mailchimp dataset."};
+    })(),
     (function(){
       const m=mc.mau||{}, n=m.active_users;
       // Mailchimp doesn't report per-member opens for A/B (variate) sends — it
@@ -1109,12 +1142,23 @@ function boot(data){
       const gt = data.ghost_traffic || {};
       const n = gt.available ? gt.visitors_30d : (ga4.mau!=null ? ga4.mau : null);
       const vp = gt.available ? gt.visitors_prev_30d : null;
-      const chg = (vp!=null) ? `${fmtDelta(n-vp)}${pctChg(n,vp)} vs prior 30d · ` : "";
+      // Norm from Ghost's own weekly series -- avg visitors per 30 days over
+      // the full completed weeks on record. Ghost history only starts
+      // 2026-03, so the label says how many months the norm actually covers
+      // rather than borrowing GA4 numbers counted a different way.
+      let vNorm=null, vMonths=0;
+      const ser=(gt.traffic_series||[]).filter(w=>!w.partial);
+      if (ser.length>=13){
+        const tot=ser.reduce((s,w)=>s+(w.visitors||0),0);
+        vNorm=tot/ser.length/7*30; vMonths=Math.round(ser.length*7/30);
+      }
+      const chg = (vNorm!=null) ? `${fmtDelta(Math.round(n-vNorm))}${pctChg(n,vNorm)} vs ${vMonths}-mo norm · `
+                : (vp!=null) ? `${fmtDelta(n-vp)}${pctChg(n,vp)} vs prior 30d · ` : "";
       const sub = gt.available ? `${chg}${fmtN(gt.pageviews_30d||0)} page views` :
                   (ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs Ghost staff token ↗ · free");
       return {lbl:"Website visitors · 30d", num: n!=null ? fmtN(n) : "—", delta: sub,
-              flag: (vp!=null) ? "noisy window" : "",
-              cls: (vp!=null) ? deltaClass(n-vp) : (n!=null ? "flat" : "na"),
+              flag: (vNorm!=null) ? "" : ((vp!=null) ? "noisy window" : ""),
+              cls: (vNorm!=null) ? deltaClass(n-vNorm) : ((vp!=null) ? deltaClass(n-vp) : (n!=null ? "flat" : "na")),
               tip:"Unique visitors to vitalcitynyc.org in the last 30 days, from Ghost's own analytics (same numbers as the admin Analytics tab).\n\nWhy it matters: This is the top of the funnel — the pool of people who could become subscribers and donors. Read it against New signups to see how well the site converts attention into list growth; a big gap is a conversion opportunity.\n\nSource: Ghost's own analytics. Caveat: Ghost and Google Analytics 4 count visitors differently — bot filtering, what counts as a 'visit', time zones and consent all differ — so this won't exactly match the GA4-based 1-year tile, or any other tool. Treat traffic numbers as directional, not exact head counts."};
     })(),
     (function(){
