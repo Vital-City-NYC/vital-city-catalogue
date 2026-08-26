@@ -84,7 +84,7 @@
      grow the list → donors & influence → content engine → list health → reach) */
   .secnav{position:sticky;top:0;z-index:30;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);
           margin:0 0 18px;padding:8px 2px;display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}
-  .secnav-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--vc-charcoal)}
+  .secnav-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--vc-charcoal);white-space:nowrap}
   .secnav a{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;
             color:var(--vc-cerulean);text-decoration:none;white-space:nowrap}
   .secnav a:hover{text-decoration:underline}
@@ -552,14 +552,14 @@
       <nav class="secnav" id="jumpNav" aria-label="Dashboard sections">
         <span class="secnav-lbl">Jump to:</span>
         <a href="#sec-glance">At a glance</a>
-        <a href="#rangeReport">Custom reports</a>
-        <a href="#bigPicture">The long view</a>
+        <a href="#rangeReport">Reports</a>
+        <a href="#bigPicture">Long view</a>
         <a href="#audienceQuality">Who's reading</a>
         <a href="#sec-growth">Growing the list</a>
         <a href="#sec-health">List health</a>
-        <a href="#sec-donors">Donors &amp; influence</a>
-        <a href="#sec-content">The content engine</a>
-        <a href="#sec-reach">Reach &amp; traffic</a>
+        <a href="#sec-donors">Donors</a>
+        <a href="#sec-content">Content</a>
+        <a href="#sec-reach">Reach</a>
       </nav>
       <div class="readnote">
         <div class="readnote-h">How to read this</div>
@@ -583,7 +583,7 @@
         <h2>Last 7 days <span class="hint" id="weekPulseHint"></span></h2>
         <div class="perfgrid" id="weekPulseGrid"></div>
         <div id="weekPulseTop" style="margin-top:14px"></div>
-        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">Each tile shows the rolling last 7 days with the change vs the 7 days before it. For unsubscribes, down is good (shown green). Underlined numbers (signups, unsubscribes, gifts) are clickable — see exactly who. Social-follower change isn't included — we don't capture daily follower counts, so a 7-day delta there would be guesswork.</div>
+        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">Each tile shows the rolling last 7 days against a typical week — the average 7-day total over the trailing year of real data (falling back to the prior 7 days where no history series exists). For unsubscribes, down is good (shown green). Underlined numbers (signups, unsubscribes, gifts) are clickable — see exactly who. Social-follower change isn't included — we don't capture daily follower counts, so a 7-day delta there would be guesswork.</div>
       </div>
 
       <div class="card" id="rangeReport">
@@ -5009,6 +5009,58 @@ function renderWeekPulse(data){
   const cur=win(curStart,curEnd), prev=win(prevStart,prevEnd);
   cur.net=cur.signups-cur.unsubs; prev.net=prev.signups-prev.unsubs;
 
+  // A typical week, not last week. The prior-7-days comparison has the same
+  // flaw the 30-day tiles had: one strong week makes a normal week read as a
+  // collapse (-35% here). The norm is the average 7-day total over trailing
+  // real history -- per-field leading-zero trim, current week excluded --
+  // capped at 365 days. Fields whose history is a series get a norm; the
+  // rest keep the prior-week comparison.
+  function norm7(rows,dateKey,valKey){
+    const seq=(rows||[]).filter(r=>r[dateKey]).slice()
+      .sort((a,b)=>String(a[dateKey]).localeCompare(String(b[dateKey])));
+    let start=0;
+    while(start<seq.length && !((+seq[start][valKey]||0)>0)) start++;
+    const hist=seq.slice(start).filter(r=>String(r[dateKey]).slice(0,10)<curStart).slice(-365);
+    if(hist.length<28) return null;              // under 4 real weeks is not a norm
+    const days=(new Date(String(hist[hist.length-1][dateKey]).slice(0,10))-new Date(String(hist[0][dateKey]).slice(0,10)))/86400000+1;
+    if(days<28) return null;
+    const tot=hist.reduce((s,r)=>s+(+r[valKey]||0),0);
+    return {val:tot/days*7, months:Math.round(days/30)};
+  }
+  // Fundraising is lumpy -- one launch campaign dominates the mean, so the
+  // "average week" reads ~$2,500 and every quiet week shows as -100%. The
+  // median week is the honest "typical week" for campaign-driven series.
+  function median7(rows,dateKey,valKey){
+    const seq=(rows||[]).filter(r=>r[dateKey]&&String(r[dateKey]).slice(0,10)<curStart)
+      .sort((a,b)=>String(a[dateKey]).localeCompare(String(b[dateKey])));
+    let start=0;
+    while(start<seq.length && !((+seq[start][valKey]||0)>0)) start++;
+    const hist=seq.slice(start).slice(-365);
+    if(hist.length<28) return null;
+    const wk={};
+    hist.forEach(r=>{const d=new Date(String(r[dateKey]).slice(0,10)+"T00:00:00Z");
+      const k=Math.floor(d.getTime()/(7*86400000)); wk[k]=(wk[k]||0)+(+r[valKey]||0);});
+    const vals=Object.values(wk).sort((a,b)=>a-b);
+    if(vals.length<4) return null;
+    const mid=vals.length>>1;
+    const med=vals.length%2?vals[mid]:(vals[mid-1]+vals[mid])/2;
+    return {val:med, months:Math.round(hist.length/30), median:true};
+  }
+  const norms={
+    signups: norm7(act,"d","subs"),
+    unsubs:  norm7(act,"d","unsubs"),
+    raised:  median7(db.daily_series,"d","amt"),
+    gifts:   median7(db.daily_series,"d","gifts"),
+    visitors:(function(){
+      // weekly series, completed weeks only, already 7-day totals
+      const ser=((gt.traffic_series)||[]).filter(w=>!w.partial && w.wk<curStart);
+      if(ser.length<4) return null;
+      return {val:ser.reduce((s,w)=>s+(w.visitors||0),0)/ser.length, months:Math.round(ser.length*7/30)};
+    })(),
+  };
+  if(norms.signups&&norms.unsubs)
+    norms.net={val:norms.signups.val-norms.unsubs.val, months:norms.signups.months};
+
   // Build tiles. goodDown=true means a DECREASE is the good outcome (unsubs).
   const fmtMoney=v=>"$"+fmtN(Math.round(v));
   const TILES=[
@@ -5041,14 +5093,18 @@ function renderWeekPulse(data){
   const clickable={signups:1,unsubs:1,gifts:1};
 
   const cells=TILES.map(t=>{
-    const now=cur[t.k]||0, was=prev[t.k]||0, d=now-was;
+    const now=cur[t.k]||0, was=prev[t.k]||0;
+    const nm7=norms[t.k];
+    const base = nm7 ? nm7.val : was;
+    const baseLbl = nm7 ? `vs ${nm7.months}-mo ${nm7.median?"median wk":"norm"} (~${t.fmt===fmtMoney?fmtMoney(nm7.val):fmtN(Math.round(nm7.val))}/wk)` : "vs prior 7d";
+    const d=now-base;
     let cls="flat", dtxt;
-    if(d===0){ dtxt="no change vs prior 7d"; }
+    if(Math.abs(d)<0.5){ dtxt=`typical week ${baseLbl}`; }
     else {
       const up=d>0, good = t.neutral ? null : (t.goodDown ? !up : up);
       cls = good===null ? "flat" : (good ? "up" : "down");
-      const dv = t.fmt===fmtMoney ? fmtMoney(Math.abs(d)) : fmtN(Math.abs(d));
-      dtxt=`${up?"▲":"▼"} ${dv}${pctChg(now,was)} vs prior 7d`;
+      const dv = t.fmt===fmtMoney ? fmtMoney(Math.abs(d)) : fmtN(Math.round(Math.abs(d)));
+      dtxt=`${up?"▲":"▼"} ${dv}${pctChg(now,base)} ${baseLbl}`;
     }
     const nm=clickable[t.k] && window._weekNames[t.k];
     const canClick = nm && nm.list.length>0 && nm.list.length<=CLICK_MAX;
