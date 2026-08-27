@@ -529,10 +529,19 @@ function build(D,S){
 
   // 7. Who writes, with the prolific list folded in as text rather than a second chart.
   const credRows=D.by_credential_pieces.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999",pct:Math.round(c[1]/total*100)}));
-  const credAuthRows=D.by_credential_authors.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999"}));
+  // Percentages on BOTH views, against their own denominator: comparing the
+  // two is the entire point of the toggle, and a bare count on one side made
+  // that impossible ("219 · 24%" against a naked "154").
+  const credAuthTotal=D.by_credential_authors.reduce((a,c)=>a+c[1],0)||1;
+  const credAuthRows=D.by_credential_authors.map(c=>({k:c[0],v:c[1],c:CO[c[0]]||"#999",
+    pct:Math.round(c[1]/credAuthTotal*100)}));
   html+=`<div class="card" id="credentials"><h2>Who writes for Vital City</h2>
-    <div class="hint">Primary author's professional background. <span class="toggle" id="credTog"><button data-m="pieces" class="on">By pieces</button><button data-m="authors">By distinct authors</button></span></div>
+    <div class="hint">The professional background of each piece's lead author. Two different questions, so the toggle changes what is being counted &mdash; not how it is displayed.<br>
+      <b>Counting articles</b> asks: of the ${nf(total)} pieces published, what was the writer's background? A frequent contributor is counted once per piece, so this is weighted toward whoever writes most.<br>
+      <b>Counting people</b> asks: of the ${nf(D.by_credential_authors.reduce((a,c)=>a+c[1],0))} people who have written for the journal, what are their backgrounds? Everyone counts once, whether they wrote one piece or forty.
+      <span class="toggle" id="credTog"><button data-m="pieces" class="on">Counting articles</button><button data-m="authors">Counting people</button></span></div>
     <div id="credChart">${hbar(credRows)}</div>
+    <div class="insight" style="border-left-color:#999"><b>Why the two views differ.</b> The gap is the house voice. Counting articles, the institutional &ldquo;Vital City&rdquo; byline and a handful of staff writers carry ${Math.round((D.by_credential_pieces.find(c=>c[0]==="Vital City (institutional)")||[0,0])[1]/total*100)}% of the catalogue on their own; counting people, that same byline is a single name among hundreds. So the article view shows what the journal publishes, and the people view shows who it recruits. Where a background is large in one and small in the other, that is a group either writing repeatedly or appearing once each.</div>
     <div class="insight">Academics are the largest single group of bylines &mdash; about a quarter of all pieces &mdash; but the mix is deliberately broad: former public officials, journalists, nonprofit and advocacy voices, think-tank researchers, lawyers and private-sector leaders all appear in numbers. It reads like a policy journal that pulls scholars and practitioners onto the same pages. The most prolific contributors, after the institutional "Vital City" byline: ${D.prolific.filter(p=>p.name!=="Vital City").slice(0,8).map(p=>`<b>${esc(p.name)}</b> (${p.posts})`).join(", ")}.</div>
     <div class="src">Single label per piece, applied to the primary author by an automated bio reading (see <a href="#method">how we did this</a>). Approximate &mdash; many contributors hold several credentials at once.</div></div>`;
 
