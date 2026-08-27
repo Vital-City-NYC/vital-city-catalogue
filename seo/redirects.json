@@ -1,0 +1,22 @@
+[
+  {
+    "from": "^/articles/how-zohhran-mamdani-could-succeed-as-mayor/?$",
+    "to": "/how-zohran-mamdani-could-succeed-as-mayor/",
+    "permanent": true
+  },
+  {
+    "from": "^/articles/nypd-crime-strategy-questions-michael-lipetri/?$",
+    "to": "/the-nypds-2025-strategy-a-conversation-with-michael-lipetri/",
+    "permanent": true
+  },
+  {
+    "from": "^/articles/nyc-department-of-investigation-madani/?$",
+    "to": "/nyc-department-of-investigation-mamdani/",
+    "permanent": true
+  },
+  {
+    "from": "^/articles/(.*)$",
+    "to": "/$1",
+    "permanent": true
+  }
+]
