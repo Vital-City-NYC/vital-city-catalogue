@@ -2363,9 +2363,36 @@ def pull_search_console():
                               "piece": attributed(q)})
             topic.sort(key=lambda x: -x["impressions"])
             topic_searches = topic[:40]
+            # Searches about AI itself, kept as their own rollup. The topic list
+            # is capped at 40 by impressions and is dominated by the mayoralty,
+            # so AI queries never surfaced in it even when they existed. Matched
+            # on whole words: a substring test counts "aid", "said" and "chair".
+            _AI = re.compile(r"\b(a\.?i\.?|artificial intelligence|chatgpt|openai|"
+                             r"llm|large language model|machine learning|algorithmic|"
+                             r"algorithm|automation|chatbot)\b", re.I)
+            ai_rows = [{"query": r["keys"][0], "clicks": int(r.get("clicks", 0)),
+                        "impressions": int(r.get("impressions", 0)),
+                        "ctr": round((r.get("ctr") or 0) * 100, 1),
+                        "position": round(r.get("position") or 0, 1)}
+                       for r in yrows if _AI.search(r["keys"][0])]
+            ai_rows.sort(key=lambda x: -x["impressions"])
+            ai_clicks = sum(r["clicks"] for r in ai_rows)
+            ai_impr   = sum(r["impressions"] for r in ai_rows)
+            all_clicks = sum(int(r.get("clicks", 0)) for r in yrows) or 1
+            all_impr   = sum(int(r.get("impressions", 0)) for r in yrows) or 1
+            ai_searches = {"queries": ai_rows[:40], "n_queries": len(ai_rows),
+                           "clicks": ai_clicks, "impressions": ai_impr,
+                           "pct_clicks": round(ai_clicks / all_clicks * 100, 2),
+                           "pct_impressions": round(ai_impr / all_impr * 100, 2),
+                           "since": ytd_start}
+            log(f"  search console: AI-related searches — {ai_clicks:,} clicks, "
+                f"{ai_impr:,} impressions across {len(ai_rows)} queries "
+                f"({ai_searches['pct_clicks']}% of clicks)")
             log(f"  search console: {len(topic_searches)} top NYC politics/policy searches YTD (from {len(yrows)} queries since {ytd_start})")
         except Exception as e:
             log(f"  search console: top-searches pull failed ({e})")
+            ai_searches = {"queries": [], "n_queries": 0, "clicks": 0, "impressions": 0,
+                           "pct_clicks": 0, "pct_impressions": 0, "since": ytd_start}
             topic_searches = []
 
         # Channels beyond web search. Discover has no query dimension by design
@@ -2403,6 +2430,7 @@ def pull_search_console():
                 "windows": windows, "windows_avail": WINDOWS,
                 "totals": default["totals"], "top_queries": default["top_queries"], "as_of": end,
                 "topic_searches": topic_searches, "topic_search_start": ytd_start,
+                "ai_searches": ai_searches,
                 "channels": channels, "channels_window_start": d90}
     except Exception as e:
         log(f"  search console pull failed: {e}")
@@ -2598,7 +2626,11 @@ def pull_ghost_traffic():
             prev_src = sources_map(today - timedelta(days=60), today - timedelta(days=30))
             srcs = [{"source": n, "visits": v, "prev": prev_src.get(n, 0)}
                     for n, v in sorted(cur_src.items(), key=lambda kv: -kv[1]) if v > 0]
-            out["top_sources_30d"] = srcs[:10]
+            # 40, not 10: AI assistants (ChatGPT, Perplexity, Copilot, Gemini)
+            # send small but fast-growing referral volumes that sat just below
+            # a ten-row cut, so the question "how much traffic comes from AI
+            # tools" could not be answered from the stored data at all.
+            out["top_sources_30d"] = srcs[:40]
         except Exception as e:
             log(f"  ghost top sources failed: {e}")
             out["top_sources_30d"] = []
