@@ -1,0 +1,13 @@
+# Ghost also accepts YAML for redirects, and it validates differently from the
+# JSON uploader — worth trying when the JSON upload is refused.
+#
+# Structure: a "301:" block (permanent, which is what passes ranking credit to
+# the new URL) whose keys are patterns and values are destinations.
+#
+# The three specific renames come first. Ghost applies rules in order, so if the
+# catch-all ran first these would be sent to slugs that do not exist.
+301:
+  /articles/how-zohhran-mamdani-could-succeed-as-mayor: /how-zohran-mamdani-could-succeed-as-mayor/
+  /articles/nypd-crime-strategy-questions-michael-lipetri: /the-nypds-2025-strategy-a-conversation-with-michael-lipetri/
+  /articles/nyc-department-of-investigation-madani: /nyc-department-of-investigation-mamdani/
+  /articles/(.*): /$1
