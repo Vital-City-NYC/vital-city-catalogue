@@ -85,7 +85,31 @@ for a in CAT:
     for t in (a.get("topics") or []): by_topic[t] += 1
 
 # 4. Author credential — by PRIMARY author of each piece (single byline unit)
-by_cred = collections.Counter(cred_of.get(a.get("primary_author"), "Unknown / no bio") for a in CAT)
+# A catalogue refresh nulled `primary_author` on every piece while the authors
+# list survived (analyze_subjects.py hit the same thing and documents it). The
+# by-pieces credential chart keyed on that field, so every piece classified as
+# "Unknown / no bio" and the chart rendered a single 897-wide 100% bar --
+# technically a successful run, informationally nothing. Ghost's primary author
+# is the first credited author, so derive it that way, and keep the
+# institutional "Vital City" byline as itself rather than skipping to the next
+# name: those 97 pieces are a real category on this chart.
+def primary_of(piece):
+    if piece.get("primary_author"):
+        return piece["primary_author"]
+    auths = piece.get("authors") or []
+    return auths[0] if auths else None
+
+by_cred = collections.Counter(cred_of.get(primary_of(a), "Unknown / no bio") for a in CAT)
+
+# Fail loudly rather than shipping an empty chart. If nearly everything lands in
+# the unknown bucket the join has broken again, and a silent 100%-unknown bar is
+# worse than a crash because it looks like an answer.
+_unknown = by_cred.get("Unknown / no bio", 0)
+if CAT and _unknown / len(CAT) > 0.9:
+    raise SystemExit(
+        f"Author-credential join is broken: {_unknown} of {len(CAT)} pieces have no "
+        f"credential. Check that catalogue.json pieces carry `authors` and that "
+        f"authors.json names match.")
 cred_author_count = collections.Counter(cred_of.values())  # distinct authors
 
 # 5. Topic mix over time — top-8 topics by year (share of that year's pieces)
