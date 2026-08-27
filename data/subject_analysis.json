@@ -1,5 +1,5 @@
 {
- "generated_from": "2026-08-27T00:12:16.742392+00:00",
+ "generated_from": "2026-08-27T14:47:28.658410+00:00",
  "total_pieces": 897,
  "n_topics_normalized": 206,
  "topic_bucket_sizes": {
@@ -1735,17 +1735,17 @@
     "change": -0.7
    },
    {
-    "beat": "Culture & city life",
-    "pieces": 95,
-    "early": 14.5,
-    "late": 8.5,
-    "change": -6.0
-   },
-   {
     "beat": "History & the long view",
     "pieces": 145,
     "early": 20.0,
     "late": 14.0,
+    "change": -6.0
+   },
+   {
+    "beat": "Culture & city life",
+    "pieces": 95,
+    "early": 14.5,
+    "late": 8.5,
     "change": -6.0
    },
    {
