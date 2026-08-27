@@ -24,14 +24,25 @@ That is what Apple News, Flipboard and every feed reader display under the
 publication name. It reads as a fragment because it is one — it looks like a
 tagline that lost its first half.
 
-The site's own description, on the same pages, is correct:
+**This is very likely a settings change, not a theme change.** A standard Ghost
+theme emits `{{@site.description}}` here, which is the **Site description**
+field in Ghost under Settings → General. If that field currently reads
+"/ new ideas", editing it fixes the feed immediately and nothing needs to be
+deployed. Check there first.
 
-    New York City News, Policy Analysis, Data & Urban Affairs
+The agreed wording is:
 
-**What to do:** make the feed's `<description>` use the site description that
-Ghost already holds, the same value the homepage emits as its meta description.
-In a standard Ghost theme that is `{{@site.description}}`. If the theme is
-building the string by hand, that is where the fragment is coming from.
+    Pragmatic ideas to solve cities' hardest problems.
+
+Note that the homepage's meta description is a different string ("New York City
+News, Policy Analysis, Data & Urban Affairs"), so the two are being set in
+different places. That is fine — the meta description is tuned for search
+results, the feed description is what a reader sees under the publication name
+in Apple News. They do not have to match, but neither should be a fragment.
+
+If the Site description field is already correct and the feed still says
+"/ new ideas", then the theme is building the string by hand and it is a theme
+change after all.
 
 ## 2. The feed does not declare a language
 
