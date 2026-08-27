@@ -1,11 +1,11 @@
 [
   {
     "name": "Crime",
-    "post_count": 146
+    "post_count": 145
   },
   {
     "name": "History",
-    "post_count": 141
+    "post_count": 142
   },
   {
     "name": "City Government",
@@ -29,11 +29,15 @@
   },
   {
     "name": "culture",
-    "post_count": 75
+    "post_count": 76
   },
   {
     "name": "Gun Violence",
     "post_count": 66
+  },
+  {
+    "name": "Economics",
+    "post_count": 55
   },
   {
     "name": "Police Reform",
@@ -42,10 +46,6 @@
   {
     "name": "Politics",
     "post_count": 55
-  },
-  {
-    "name": "Economics",
-    "post_count": 54
   },
   {
     "name": "Jails",
@@ -164,6 +164,10 @@
     "post_count": 13
   },
   {
+    "name": "Labor",
+    "post_count": 12
+  },
+  {
     "name": "Events",
     "post_count": 12
   },
@@ -174,10 +178,6 @@
   {
     "name": "What to Do Now",
     "post_count": 12
-  },
-  {
-    "name": "Labor",
-    "post_count": 11
   },
   {
     "name": "Climate Change",
@@ -228,6 +228,10 @@
     "post_count": 9
   },
   {
+    "name": "Artifical Intelligence",
+    "post_count": 8
+  },
+  {
     "name": "More Money in More Pockets",
     "post_count": 8
   },
@@ -256,7 +260,7 @@
     "post_count": 8
   },
   {
-    "name": "Artifical Intelligence",
+    "name": "Book Review",
     "post_count": 7
   },
   {
@@ -289,10 +293,6 @@
   },
   {
     "name": "Film & TV",
-    "post_count": 6
-  },
-  {
-    "name": "Book Review",
     "post_count": 6
   },
   {
@@ -356,6 +356,10 @@
     "post_count": 6
   },
   {
+    "name": "Elections",
+    "post_count": 5
+  },
+  {
     "name": "Parks",
     "post_count": 5
   },
@@ -401,10 +405,6 @@
   },
   {
     "name": "The $2 Trillion Question",
-    "post_count": 4
-  },
-  {
-    "name": "Elections",
     "post_count": 4
   },
   {
@@ -788,10 +788,6 @@
     "post_count": 1
   },
   {
-    "name": "My Substance Story",
-    "post_count": 1
-  },
-  {
     "name": "Health",
     "post_count": 1
   },
@@ -800,15 +796,19 @@
     "post_count": 1
   },
   {
+    "name": "My Substance Story",
+    "post_count": 1
+  },
+  {
     "name": "What Else Can Be Done",
     "post_count": 1
   },
   {
-    "name": "Libraries",
+    "name": "Social Science.",
     "post_count": 1
   },
   {
-    "name": "Social Science.",
+    "name": "Libraries",
     "post_count": 1
   },
   {
@@ -832,11 +832,11 @@
     "post_count": 1
   },
   {
-    "name": "The Long View",
+    "name": "Sweating the Small Stuff",
     "post_count": 1
   },
   {
-    "name": "Sweating the Small Stuff",
+    "name": "The Long View",
     "post_count": 1
   },
   {

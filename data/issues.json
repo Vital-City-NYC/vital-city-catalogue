@@ -192,7 +192,7 @@
         10
       ],
       [
-        "culture",
+        "Transit",
         8
       ],
       [
@@ -200,7 +200,7 @@
         8
       ],
       [
-        "Transit",
+        "culture",
         8
       ],
       [
@@ -346,7 +346,7 @@
         3
       ],
       [
-        "History",
+        "Setting the Stage",
         3
       ],
       [
@@ -354,7 +354,7 @@
         3
       ],
       [
-        "Setting the Stage",
+        "History",
         3
       ]
     ]
@@ -368,10 +368,6 @@
     "display_name": "Issue 3",
     "top_topics": [
       [
-        "History",
-        6
-      ],
-      [
         "Building Blocks",
         6
       ],
@@ -380,11 +376,15 @@
         6
       ],
       [
+        "History",
+        6
+      ],
+      [
         "Setting the Stage",
         5
       ],
       [
-        "Crime",
+        "Social Science",
         4
       ]
     ]
@@ -545,7 +545,7 @@
     "top_topics": [
       [
         "Crime",
-        9
+        8
       ],
       [
         "Where We Are",
@@ -634,11 +634,11 @@
     "display_name": "Trump 100 Days And Beyond",
     "top_topics": [
       [
-        "Repercussions",
+        "Government Operations",
         4
       ],
       [
-        "Government Operations",
+        "Repercussions",
         4
       ],
       [
@@ -650,7 +650,7 @@
         2
       ],
       [
-        "History",
+        "City Planning",
         1
       ]
     ]

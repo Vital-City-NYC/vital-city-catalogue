@@ -1,27 +1,52 @@
 {
   "meta": {
-    "generated_at": "2026-08-26T11:14:03.372078+00:00",
+    "generated_at": "2026-08-27T00:12:16.742392+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 894,
-    "total_authors": 494,
+    "total_posts": 897,
+    "total_authors": 496,
     "total_issues": 29,
     "total_topics": 213,
     "date_range": [
       "2021-09-15",
-      "2026-08-25"
+      "2026-08-26"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 4,
+    "new_articles": [
+      {
+        "title": "Time to Take on Small Business Insurance Premiums",
+        "url": "https://www.vitalcitynyc.org/small-business-insurance-reform-nyc/",
+        "published_date": "2026-08-26",
+        "primary_author": null
+      },
+      {
+        "title": "Pragmatic Philanthropy: Appreciating Nathan Straus",
+        "url": "https://www.vitalcitynyc.org/nathan-straus-philanthropy-andrew-fisher-book-review/",
+        "published_date": "2026-08-26",
+        "primary_author": null
+      },
+      {
+        "title": "Will New York City Ever Get Open Primaries?",
+        "url": "https://www.vitalcitynyc.org/why-nyc-needs-open-primaries-elections/",
+        "published_date": "2026-08-26",
+        "primary_author": null
+      },
+      {
+        "title": "How To Deploy AI To Improve Policing in New York",
+        "url": "https://www.vitalcitynyc.org/how-to-deploy-ai-policing-nyc-nypd/",
+        "published_date": "2026-02-19",
+        "primary_author": null
+      }
+    ]
   },
-  "total_pieces": 894,
+  "total_pieces": 897,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 182
+    "2026": 185
   },
   "by_month": {
     "2021-09": 1,
@@ -77,12 +102,12 @@
     "2026-05": 23,
     "2026-06": 44,
     "2026-07": 22,
-    "2026-08": 12
+    "2026-08": 15
   },
   "by_type": [
     [
       "opinion/commentary",
-      721
+      723
     ],
     [
       "q&a",
@@ -106,7 +131,7 @@
     ],
     [
       "book review",
-      6
+      7
     ],
     [
       "map/tool",
@@ -116,11 +141,11 @@
   "by_topic_top25": [
     [
       "Crime",
-      146
+      145
     ],
     [
       "History",
-      141
+      142
     ],
     [
       "City Government",
@@ -144,11 +169,15 @@
     ],
     [
       "culture",
-      75
+      76
     ],
     [
       "Gun Violence",
       66
+    ],
+    [
+      "Economics",
+      55
     ],
     [
       "Police Reform",
@@ -157,10 +186,6 @@
     [
       "Politics",
       55
-    ],
-    [
-      "Economics",
-      54
     ],
     [
       "Jails",
@@ -219,7 +244,7 @@
   "by_credential_pieces": [
     [
       "Unknown / no bio",
-      894
+      897
     ]
   ],
   "by_credential_authors": [
@@ -229,7 +254,7 @@
     ],
     [
       "Other / unclassified",
-      105
+      106
     ],
     [
       "Nonprofit / advocacy",
@@ -249,7 +274,7 @@
     ],
     [
       "Business / private sector",
-      21
+      22
     ],
     [
       "Legal practitioner",
@@ -288,14 +313,14 @@
       "2023": 37,
       "2024": 38,
       "2025": 31,
-      "2026": 22
+      "2026": 21
     },
     "History": {
       "2022": 12,
       "2023": 28,
       "2024": 38,
       "2025": 52,
-      "2026": 11
+      "2026": 12
     },
     "City Government": {
       "2023": 4,
@@ -335,21 +360,21 @@
       "2023": 19,
       "2024": 26,
       "2025": 18,
-      "2026": 8
+      "2026": 9
     }
   },
   "wc_stats": {
-    "n": 884,
+    "n": 887,
     "median": 1618,
-    "mean": 1895,
+    "mean": 1894,
     "p90": 2841,
     "max": 30332,
-    "p10": 907,
+    "p10": 908,
     "p25": 1269,
-    "p75": 2140,
-    "p95": 3848,
+    "p75": 2137,
+    "p95": 3846,
     "no_count": 10,
-    "core_1000_2499": 647,
+    "core_1000_2499": 650,
     "under_500": 43,
     "over_5000": 24
   },
@@ -364,15 +389,15 @@
     ],
     [
       "1,000-1,999",
-      515
+      518
     ],
     [
       "2,000-2,999",
-      187
+      186
     ],
     [
       "3,000-4,999",
-      54
+      55
     ],
     [
       "5,000+",
@@ -396,27 +421,27 @@
       {
         "floor": 500,
         "label": "500",
-        "n": 15
+        "n": 14
       },
       {
         "floor": 750,
         "label": "750",
-        "n": 46
+        "n": 47
       },
       {
         "floor": 1000,
         "label": "1,000",
-        "n": 107
+        "n": 108
       },
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 140
+        "n": 139
       },
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 162
+        "n": 165
       },
       {
         "floor": 1750,
@@ -436,7 +461,7 @@
       {
         "floor": 2500,
         "label": "2,500",
-        "n": 34
+        "n": 33
       },
       {
         "floor": 2750,
@@ -446,7 +471,7 @@
       {
         "floor": 3000,
         "label": "3,000",
-        "n": 12
+        "n": 13
       },
       {
         "floor": 3250,
@@ -466,14 +491,14 @@
       "n": 46,
       "p25": 1272,
       "median": 1570,
-      "p75": 2109,
+      "p75": 2106,
       "max": 4828
     },
     {
       "year": "2023",
       "n": 148,
-      "p25": 1297,
-      "median": 1616,
+      "p25": 1299,
+      "median": 1615,
       "p75": 2113,
       "max": 30332
     },
@@ -489,22 +514,22 @@
       "year": "2025",
       "n": 287,
       "p25": 1292,
-      "median": 1635,
+      "median": 1634,
       "p75": 2105,
-      "max": 14799
+      "max": 14800
     },
     {
       "year": "2026",
-      "n": 177,
-      "p25": 1258,
-      "median": 1690,
-      "p75": 2393,
+      "n": 180,
+      "p25": 1253,
+      "median": 1662,
+      "p75": 2395,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 758,
-    "2": 107,
+    "1": 760,
+    "2": 108,
     "3": 26,
     "4": 1,
     "8": 1,
@@ -518,7 +543,7 @@
     },
     {
       "name": "Elizabeth Glazer",
-      "posts": 48,
+      "posts": 47,
       "credential": "Government / public official"
     },
     {
@@ -662,34 +687,34 @@
       },
       {
         "year": "2026",
-        "weeks": 33.9,
-        "pieces": 182,
-        "outside_issues": 131,
-        "per_week_all": 5.38,
-        "per_week_outside_issues": 3.87,
+        "weeks": 34.0,
+        "pieces": 185,
+        "outside_issues": 134,
+        "per_week_all": 5.44,
+        "per_week_outside_issues": 3.94,
         "partial": true
       }
     ],
-    "total_weeks": 257.9,
-    "all_time_per_week": 3.47,
-    "all_time_per_week_outside_issues": 1.59,
+    "total_weeks": 258.0,
+    "all_time_per_week": 3.48,
+    "all_time_per_week_outside_issues": 1.6,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.87,
-    "current_per_week_all": 5.38,
+    "current_per_week_outside_issues": 3.94,
+    "current_per_week_all": 5.44,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 483,
       "published_away_from_drop": 63,
       "share_of_issue_pieces": 13.0,
-      "current_year_strict": 3.87,
-      "current_year_loose": 4.05,
-      "all_time_strict": 1.59,
-      "all_time_loose": 1.84,
-      "all_time_all": 3.47
+      "current_year_strict": 3.94,
+      "current_year_loose": 4.12,
+      "all_time_strict": 1.6,
+      "all_time_loose": 1.85,
+      "all_time_all": 3.48
     }
   },
   "rhythm": {
-    "n_dated": 894,
+    "n_dated": 897,
     "by_weekday": [
       {
         "day": "Mon",
@@ -699,17 +724,17 @@
       {
         "day": "Tue",
         "pieces": 159,
-        "share": 17.8
+        "share": 17.7
       },
       {
         "day": "Wed",
-        "pieces": 431,
-        "share": 48.2
+        "pieces": 434,
+        "share": 48.4
       },
       {
         "day": "Thu",
         "pieces": 174,
-        "share": 19.5
+        "share": 19.4
       },
       {
         "day": "Fri",
@@ -728,7 +753,7 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 48.2,
+    "top_day_share": 48.4,
     "midweek_share": 85.5,
     "weekend_pieces": 17,
     "by_month": [
@@ -784,9 +809,9 @@
       {
         "month": "August",
         "abbr": "Aug",
-        "pieces": 37,
+        "pieces": 40,
         "occurrences": 5,
-        "per_occurrence": 7.4
+        "per_occurrence": 8.0
       },
       {
         "month": "September",
