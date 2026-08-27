@@ -425,6 +425,27 @@ function build(D,S){
         <tbody>${rows.map(t=>`<tr><td>${esc(t)}</td><td>${(pc[t]||0).toFixed(1)}%</td>${cell(tr[t],pc[t])}${cell(sg[t],pc[t])}</tr>`).join("")}</tbody>
       </table></div>
       <div class="insight">Publishing volume and audience are close to unrelated. <b>Mamdani</b> is ${(pc["Mamdani"]||0).toFixed(1)}% of the catalogue and ${(tr["Mamdani"]||0).toFixed(0)}% of readers; <b>Mayoralty</b> is ${(pc["Mayoralty"]||0).toFixed(1)}% of pieces and ${(tr["Mayoralty"]||0).toFixed(0)}% of readers. Both are small bodies of work carrying enormous traffic, almost all of it search arriving on a handful of explainers. The mirror image is the journal's core: <b>Crime</b> is ${(pc["Crime"]||0).toFixed(0)}% of everything published and ${(tr["Crime"]||0).toFixed(0)}% of readers, <b>History</b> ${(pc["History"]||0).toFixed(0)}% and ${(tr["History"]||0).toFixed(0)}%, <b>Government Operations</b> ${(pc["Government Operations"]||0).toFixed(0)}% and ${(tr["Government Operations"]||0).toFixed(0)}%. The subjects Vital City writes most about are not the ones that bring people in.<br><br>Readers and subscribers also want different things. <b>Housing</b> (${(tr["Housing"]||0).toFixed(0)}% of readers, ${(sg["Housing"]||0).toFixed(0)}% of signups), <b>Economics</b> (${(tr["Economics"]||0).toFixed(0)}% and ${(sg["Economics"]||0).toFixed(0)}%) and <b>City Planning</b> (${(tr["City Planning"]||0).toFixed(0)}% and ${(sg["City Planning"]||0).toFixed(0)}%) convert better than they read; the mayoral-politics cluster converts worse. A piece that draws a crowd and a piece that recruits a subscriber are not the same piece.</div>
+      ${(function(){
+        const H=REACH.history||{}; const yrs=Object.keys(H).sort();
+        if(yrs.length<2) return "";
+        // Union of each year's top subjects, so a subject that mattered in one
+        // year and vanished in another still shows its own collapse.
+        const keep=[];
+        yrs.forEach(y=>(H[y].rows||[]).slice(0,6).forEach(r=>{if(!keep.includes(r.topic))keep.push(r.topic);}));
+        const at=(y,t)=>{const r=(H[y].rows||[]).find(x=>x.topic===t);return r?r.pct:0;};
+        const ord=keep.sort((a,b)=>at(yrs[yrs.length-1],b)-at(yrs[yrs.length-1],a)).slice(0,10);
+        const conc = yrs.map(y=>`${y}: ${H[y].top1_share}%`).join(", ");
+        return `<h3 style="font-size:13px;margin:22px 0 4px">How the reader mix moved, and how little of it is stable</h3>
+        <div class="hint">${esc(REACH.history_note||"")} Read this table knowing it is dominated by single pieces: the most-read article alone accounts for ${conc} of each year's measured views. Every subject tag on that one piece inherits its whole audience, which is why 2024 shows History, Safety and Crime all near half &mdash; they are the three tags on one crime explainer.</div>
+        <div class="reachwrap"><table class="reach">
+          <thead><tr><th>Subject</th>${yrs.map(y=>`<th>${y}</th>`).join("")}${yrs.map(y=>`<th>${y} ex&#8209;top</th>`).join("")}</tr></thead>
+          <tbody>${ord.map(t=>{
+            const ex=(y)=>{const h=H[y].ex_top1; if(!h) return null; const r=(h.rows||[]).find(x=>x.topic===t); return r?r.pct:0;};
+            return `<tr><td>${esc(t)}</td>${yrs.map(y=>{const v=at(y,t);return `<td>${v?v.toFixed(0)+"%":"&mdash;"}</td>`;}).join("")}${yrs.map(y=>{const v=ex(y);return `<td style="color:var(--vc-charcoal)">${v==null?"&mdash;":(v?v.toFixed(0)+"%":"&mdash;")}</td>`;}).join("")}</tr>`;
+          }).join("")}</tbody>
+        </table></div>
+        <div class="insight">The right-hand columns drop each year's single most-read piece, and they are the honest read. With it included, 2024 looks like a history-and-crime audience; without it, History falls from ${at("2024","History").toFixed(0)}% to ${(H["2024"].ex_top1.rows.find(r=>r.topic==="History")||{pct:0}).pct.toFixed(0)}% and the year has no dominant subject at all. What actually happened is narrower than a shift in taste: <b>one evergreen explainer</b>, &ldquo;20 Strategies for Reducing Crime in Cities,&rdquo; was the most-read piece in both 2024 and 2025 &mdash; ${H["2024"].top1_share}% and ${H["2025"].top1_share}% of measured views &mdash; and in 2026 a Mamdani piece took its place.<br><br>What survives the correction is real but smaller: City Government rises from ${(H["2024"].ex_top1.rows.find(r=>r.topic==="City Government")||{pct:0}).pct.toFixed(0)}% of readers in 2024 to ${(H["2026"].ex_top1.rows.find(r=>r.topic==="City Government")||{pct:0}).pct.toFixed(0)}% in 2026 even with the top piece removed, and housing arrives as a genuine second pillar. The mayoralty did move the audience. It did not move it as far as the raw table suggests.</div>`;
+      })()}
       <div class="src">${REACH.traffic.matched.toLocaleString()} of ${REACH.traffic.total.toLocaleString()} visits and ${REACH.signups.matched.toLocaleString()} of ${REACH.signups.total.toLocaleString()} article signups matched to a tagged piece; the remainder landed on the homepage, a tag page or a URL with no catalogue entry. ${esc(REACH.share_basis||"")} Green marks a subject earning at least half again its share of the catalogue; red marks one earning under 60% of it. Built by <code>build_catalogue_reach.py</code> from the growth pull.</div></div>`;
   }
 

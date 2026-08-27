@@ -62,8 +62,64 @@ def main():
                 pieces[t] = pieces.get(t, 0) + 1
     n_pieces = len(items)
 
+    # ---- Historical reader mix, from GA4 --------------------------------
+    # Ghost analytics start 2026-03-01, but GA4 tracked the previous site and
+    # holds per-article rows per calendar year. Joining those to the same
+    # subject tags is the only way to see whether the audience's interests
+    # moved -- and they did, sharply. Coverage is GA4's per-year page list
+    # (top rows by views above a 100-view floor), so these are shares among a
+    # year's most-read pieces, not all traffic; the row count is reported so
+    # the basis is visible rather than implied.
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("gp", ROOT / "growth_pull.py")
+    gp = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(gp)
+        tmap = gp.catalogue_topic_map()
+    except Exception as e:
+        print(f"  note: could not load topic map for history ({e})")
+        tmap = {}
+    history = {}
+    for yr, rows in sorted(((g.get("ga4") or {}).get("engagement_by_year") or {}).items()):
+        counts = {}
+        for r in rows:
+            sl = (r.get("path") or "").rstrip("/").rsplit("/", 1)[-1].lower()
+            if sl:
+                counts[sl] = counts.get(sl, 0) + int(r.get("views") or 0)
+        if not counts or not tmap:
+            continue
+        res = gp.by_topic(counts, tmap, f"GA4 {yr}")
+        res["pages"] = len(rows)
+        # Concentration, reported rather than buried. These year rows are far
+        # more fragile than a percentage table looks: in 2024 a single evergreen
+        # explainer ("20 Strategies for Reducing Crime in Cities") is 43% of all
+        # measured views, so every subject tag on that one piece -- Safety,
+        # Crime AND History -- reads as a ~50% audience share. Without this
+        # figure the table invites a claim about what readers wanted, when the
+        # honest claim is about which one or two pieces broke through.
+        ordered = sorted(rows, key=lambda r: -int(r.get("views") or 0))
+        tot = sum(int(r.get("views") or 0) for r in ordered) or 1
+        res["top1_share"] = round(int(ordered[0].get("views") or 0) / tot * 100, 1)
+        res["top1_title"] = ordered[0].get("title") or ""
+        res["top3_share"] = round(sum(int(r.get("views") or 0) for r in ordered[:3]) / tot * 100, 1)
+        # Same mix with the year's dominant piece removed, so a reader can see
+        # how much of the shape survives it.
+        rest = {}
+        for r in ordered[1:]:
+            sl = (r.get("path") or "").rstrip("/").rsplit("/", 1)[-1].lower()
+            if sl:
+                rest[sl] = rest.get(sl, 0) + int(r.get("views") or 0)
+        res["ex_top1"] = gp.by_topic(rest, tmap, f"GA4 {yr} ex-top1") if rest else None
+        history[yr] = res
+
     out = {
         "generated_from": "private/growth.json",
+        "history": history,
+        "history_note": ("Per-article reader mix by calendar year from Google Analytics, "
+                         "which tracked the site before Ghost analytics began on "
+                         "2026-03-01. Each year covers GA4's per-year page list above a "
+                         "100-view floor, so these are shares among that year's most-read "
+                         "pieces rather than all traffic."),
         "window": {
             "traffic_start": gt.get("history_start"),
             "signups_start": sa.get("coverage_start"),

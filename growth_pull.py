@@ -1778,13 +1778,20 @@ def _ga4_piece_index(prop, token, bench=None):
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d")}
 
 
-def _ga4_engagement(prop, token, days=90, min_views=50, limit=60, start_date=None, end_date="today"):
+def _ga4_engagement(prop, token, days=90, min_views=50, limit=300, start_date=None, end_date="today"):
     """Per-article engagement time — a read-depth proxy GA4 measures (the
     seconds a reader's tab is actually focused on the page) and Ghost can't.
     Per piece: views, avg engaged seconds/view (userEngagementDuration /
     views), and total engaged seconds (audience-weighted). Filtered to
     articles with enough views to be non-noisy; enough rows for a scatter.
-    Pass start_date (YYYY-MM-DD) for an absolute window, else last `days`."""
+    Pass start_date (YYYY-MM-DD) for an absolute window, else last `days`.
+
+    `limit` is 300 (the API request already asks for 300 rows) rather than the
+    old 60. The leaderboards only ever display a dozen, but these rows are also
+    joined to catalogue subjects to show which topics earn readers, and a top-60
+    cut biases that badly toward whatever a year's few blockbusters were about.
+    GA4 is the ONLY per-article history before Ghost analytics begin in March
+    2026, so this is the sole way to see how the audience's interests moved."""
     body = {
         "dateRanges": [{"startDate": start_date or f"{days}daysAgo", "endDate": end_date}],
         "dimensions": [{"name": "pagePath"}],
