@@ -2547,13 +2547,29 @@ def pull_ghost_traffic():
         cur30  = pages_map(today - timedelta(days=30), today)
         prev30p = pages_map(today - timedelta(days=60), today - timedelta(days=30))
         cur7   = pages_map(today - timedelta(days=7), today)
+        # Topic rollups from the FULL page map, not the top-12 slice: the API
+        # already returns 300 rows per window, so this costs no extra call.
+        # Window note: Ghost analytics only begins 2026-03-01 -- everything
+        # before that lived in Google Analytics, which is not connected, so
+        # these shares describe 2026 and cannot be extended backwards.
+        tmap = catalogue_topic_map()
+        def slug_counts(pmap):
+            out_ = {}
+            for path, v in pmap.items():
+                if not is_article(path): continue
+                sl = path.strip("/").rsplit("/", 1)[-1].lower()
+                if sl: out_[sl] = out_.get(sl, 0) + v
+            return out_
+        out["traffic_by_topic_30d"] = by_topic(slug_counts(cur30), tmap, "visits 30d")
         out["top_pages_30d"] = build_pages(cur30, prev30p, 12)
         out["top_pages_7d"]  = build_pages(cur7, {}, 8)   # 7d list (week pulse) — no delta
         # All-time leaders since the Ghost handoff (history_start onward).
         hs = out.get("history_start")
         if hs:
-            out["top_pages_since_launch"] = build_pages(pages_map(hs, today), {}, 15)
+            since_map = pages_map(hs, today)
+            out["top_pages_since_launch"] = build_pages(since_map, {}, 15)
             out["top_pages_since"] = hs
+            out["traffic_by_topic_since"] = by_topic(slug_counts(since_map), tmap, "visits since launch")
         else:
             out["top_pages_since_launch"] = []
         # Where the site's traffic comes from (referrer sources): this 30d vs prior 30d.
@@ -2589,6 +2605,74 @@ def pull_ghost_traffic():
         return out
 
 
+def catalogue_topic_map():
+    """slug -> (topics, title) from data/catalogue.json.
+
+    Vital City tags a piece with several topics, and the tag vocabulary mixes
+    three different things: real subjects, issue-section rubrics ("Setting the
+    Stage") and format labels ("Q&A"). Only subjects describe what a piece is
+    ABOUT, so the rubric and format buckets computed by analyze_subjects.py are
+    excluded here -- counting them would report that Vital City's biggest
+    coverage area is opening an issue.
+    """
+    try:
+        cat = json.loads((ROOT / "data" / "catalogue.json").read_text())
+    except Exception as e:
+        log(f"  catalogue topic map: unreadable ({e})")
+        return {}
+    items = cat if isinstance(cat, list) else (cat.get("items") or cat.get("posts") or [])
+    skip = set()
+    try:
+        sa = json.loads((ROOT / "data" / "subject_analysis.json").read_text())
+        # analyze_subjects.py names these buckets "rubrics_listed" (issue
+        # section headers) and "meta_listed" (format labels like "Book Review").
+        # Getting these key names wrong fails silently -- the skip set comes
+        # back empty and formats show up as if they were subjects.
+        for key in ("rubrics_listed", "meta_listed"):
+            v = sa.get(key)
+            if isinstance(v, list):
+                skip |= {(x.get("tag") if isinstance(x, dict) else str(x)).lower().strip()
+                         for x in v}
+    except Exception:
+        pass   # no subject analysis yet: fall back to every tag
+    out = {}
+    for c in items:
+        sl = (c.get("slug") or "").strip().lower()
+        if not sl: continue
+        tops = [t for t in (c.get("topics") or [])
+                if isinstance(t, str) and t.lower().strip() not in skip]
+        out[sl] = (tops, c.get("title") or sl)
+    return out
+
+
+def by_topic(counts, topic_map, label):
+    """Aggregate {slug: n} into per-topic totals and shares.
+
+    A piece carries several subjects, so its readers are credited to each of
+    them -- shares therefore sum above 100%, and the note says so rather than
+    dividing a reader into fractions and implying a precision the tagging
+    cannot support. `matched` is the honest coverage figure: how much of the
+    measured total could be tied to a tagged piece at all.
+    """
+    tot = sum(counts.values())
+    per, matched, untagged = {}, 0, 0
+    for slug, n in counts.items():
+        ent = topic_map.get(slug)
+        if not ent:
+            continue
+        matched += n
+        if not ent[0]:
+            untagged += n
+            continue
+        for t in ent[0]:
+            per[t] = per.get(t, 0) + n
+    rows = [{"topic": t, "n": n, "pct": round(n / matched * 100, 1) if matched else 0}
+            for t, n in sorted(per.items(), key=lambda kv: -kv[1])]
+    log(f"  {label} by topic: {len(rows)} topics, {matched:,} of {tot:,} matched to a piece")
+    return {"rows": rows, "total": tot, "matched": matched, "untagged": untagged,
+            "unmatched": tot - matched}
+
+
 def pull_ghost_signup_attribution(days_back=180):
     """REAL per-post signup attribution from Ghost's member-events feed.
     Each signup_event carries the exact page the person signed up on plus
@@ -2606,6 +2690,7 @@ def pull_ghost_signup_attribution(days_back=180):
     by_source = {}         # referrer_source -> count (Direct, Google, newsletter, LinkedIn, etc.)
     by_medium = {}         # referrer_medium -> count (search, email, social, etc.)
     by_landing = {}        # attribution.type (post|page|url) -> count (where they signed up)
+    signup_slugs = {}      # article slug -> signups it landed, for the topic rollup
     by_email  = {}         # email -> {source, medium, landing_url, ts} (for channel-LTV join)
     recent = []            # last-21d signups w/ name+email+date for the click-through list
     recent_cut = (datetime.now(timezone.utc) - timedelta(days=21)).isoformat()
@@ -2666,6 +2751,13 @@ def pull_ghost_signup_attribution(days_back=180):
             by_medium[med] = by_medium.get(med, 0) + 1
             ltype = (att.get("type") or "unknown")
             by_landing[ltype] = by_landing.get(ltype, 0) + 1
+            # Landing slug, for the by-topic rollup. Only post landings can be
+            # tied to a piece; homepage and tag signups have no subject.
+            if ltype == "post":
+                _u = (att.get("url") or "").rstrip("/")
+                if _u:
+                    signup_slugs[_u.rsplit("/", 1)[-1].lower()] = \
+                        signup_slugs.get(_u.rsplit("/", 1)[-1].lower(), 0) + 1
             # Per-email source map (for channel-LTV join with donor data).
             # First-touch attribution: if a user re-signs up later, keep the
             # earliest recorded source.
@@ -2718,6 +2810,7 @@ def pull_ghost_signup_attribution(days_back=180):
         "by_source":      [{"src": s, "n": n} for s, n in sorted(by_source.items(), key=lambda kv: -kv[1])],
         "by_medium":      [{"med": m, "n": n} for m, n in sorted(by_medium.items(), key=lambda kv: -kv[1])],
         "by_landing":     [{"type": t, "n": n} for t, n in sorted(by_landing.items(), key=lambda kv: -kv[1])],
+        "by_topic":       by_topic(signup_slugs, catalogue_topic_map(), "signups"),
         "window_days":    days_back,
         "recent_signups": sorted(recent, key=lambda r: r["date"], reverse=True),
         "_by_email":      by_email,   # internal — used for channel-LTV join, stripped before JSON write
@@ -4629,6 +4722,11 @@ def main():
             "by_source":      signup_attr.get("by_source") or [],
             "by_medium":      signup_attr.get("by_medium") or [],
             "by_landing":     signup_attr.get("by_landing") or [],
+            # NOTE: this block is an explicit allowlist, so a field added to
+            # pull_ghost_signup_attribution()'s return value does NOT appear
+            # here until it is named. by_topic was computed correctly and
+            # dropped silently on the first run for exactly that reason.
+            "by_topic":       signup_attr.get("by_topic") or {},
             "recent_signups": signup_attr.get("recent_signups") or [],
         },
         # Recent unsubscribers (email + date, names where Mailchimp has them)
@@ -4759,6 +4857,30 @@ def main():
     except Exception as e:
         log(f"  piece index enrichment failed: {e}")
 
+    # ---- Never let a missing credential erase good data -------------------
+    # Every credential-gated section emits {"available": false, "reason": ...}
+    # when its key is absent. Writing that over a previously good block turns a
+    # LOCAL environment gap into published data loss: the GA4 keys live in
+    # GitHub secrets, so a laptop run that skipped them silently blanked the
+    # year-long traffic tiles for everyone until the next CI run repaired them.
+    # A stub is "we could not look", never "there is nothing there", so the
+    # last good block is carried forward and flagged stale instead.
+    if OUT.exists():
+        try:
+            prev = json.loads(OUT.read_text())
+        except Exception:
+            prev = {}
+        for key, cur in list(out.items()):
+            if not (isinstance(cur, dict) and cur.get("available") is False):
+                continue
+            old_block = prev.get(key)
+            if isinstance(old_block, dict) and old_block.get("available"):
+                carried = dict(old_block)
+                carried["stale"] = True
+                carried["stale_reason"] = cur.get("reason") or "credential unavailable this run"
+                out[key] = carried
+                log(f"  {key}: unavailable this run — carried forward the last good pull "
+                    f"({carried['stale_reason']})")
     OUT.write_text(json.dumps(out, indent=2))
     size_kb = OUT.stat().st_size // 1024
     mc = out["mailchimp"]; gh = out["ghost"]

@@ -146,6 +146,21 @@ jobs:
             echo "no private/growth.json to encrypt — skipping"
           fi
 
+      # The catalogue-analysis page is gated like the other dashboards: it reads
+      # an encrypted bundle, not the plaintext data/*.json. Both steps must run
+      # after the growth pull, because the reach section joins per-article
+      # traffic and signups to the catalogue's subject tags.
+      - name: Build and encrypt the catalogue-analysis bundle
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: |
+          if [ -s private/growth.json ]; then
+            python3 build_catalogue_reach.py || echo "WARNING: reach build failed; page will hide the reach section"
+          else
+            echo "no growth.json — skipping reach build"
+          fi
+          python3 encrypt_catalogue_analysis.py
+
       - name: Build fundraising-prospects intelligence
         env:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
@@ -165,7 +180,7 @@ jobs:
           fi
           git config user.name "Vital City Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data network/data.enc growth/data.enc prospects/data.enc 2>/dev/null || true
+          git add data network/data.enc growth/data.enc prospects/data.enc catalogue-analysis/data.enc 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "no changes to publish"
           else

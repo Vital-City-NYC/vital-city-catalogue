@@ -73,9 +73,51 @@
   .aipop.open{display:block}
   .aipop b{color:#fff}
   .loading{padding:40px;text-align:center;color:var(--vc-charcoal)}
+
+/* ---- passphrase gate (same scheme as the growth, contacts and prospects
+   dashboards: AES-256-GCM payload, PBKDF2-SHA256, shared passphrase). The
+   data file is encrypted, not merely hidden behind this prompt -- a gate in
+   front of public JSON is decoration, since the JSON can be fetched directly. */
+.gate{position:fixed;inset:0;background:var(--vc-paper,#f7f7f4);z-index:9999;display:flex;
+  align-items:center;justify-content:center;padding:24px}
+.gatebox{max-width:420px;width:100%;background:#fff;border:1px solid #ddd;padding:26px 24px}
+.gatebox .wm{font-weight:900;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#050507}
+.gatebox h1{font-size:22px;font-weight:900;margin:12px 0 8px;letter-spacing:-.01em}
+.gatebox p{font-size:13.5px;color:#707175;margin:0 0 16px;line-height:1.5}
+.gatebox input{width:100%;padding:10px 12px;border:1px solid #050507;font:inherit;font-size:14px;
+  border-radius:0;outline:none;margin-bottom:10px;box-sizing:border-box}
+.gatebox input:focus{box-shadow:inset 0 0 0 2px #217ebe}
+.gatebox button{width:100%;padding:10px 12px;border:1px solid #050507;background:#050507;color:#fff;
+  font:inherit;font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.gateerr{color:#c0325a;font-size:12.5px;min-height:18px;margin-top:8px}
+.conf{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#707175;font-weight:700;margin-top:14px}
+
+  /* Reach table: what we publish vs what earns readers and signups. */
+  table.reach{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  table.reach th{text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:.07em;
+    color:var(--vc-charcoal);font-weight:700;border-bottom:1px solid var(--vc-black);padding:0 0 6px 10px}
+  table.reach th:first-child{text-align:left;padding-left:0}
+  table.reach td{padding:6px 0 6px 10px;border-bottom:1px solid #eee;text-align:right;
+    font-variant-numeric:tabular-nums}
+  table.reach td:first-child{text-align:left;padding-left:0}
+  table.reach td.gap-up{color:#2e7d32;font-weight:700}
+  table.reach td.gap-dn{color:#b3325a}
+  .reachwrap{overflow-x:auto}
 </style>
 </head>
 <body>
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>The catalogue, analyzed</h1>
+    <p>What the catalogue adds up to &mdash; subject, format, contributors, length, and which subjects earn readers and signups. Enter the shared passphrase to view.</p>
+    <input id="pw" type="password" placeholder="passphrase" autocomplete="current-password">
+    <button id="unlock">Unlock</button>
+    <div class="gateerr" id="err"></div>
+    <div class="conf">Confidential &middot; internal use only</div>
+  </div>
+</div>
+
 <div class="confbar"><span>Vital City &middot; internal analysis</span><span id="stamp"></span></div>
 <header class="mast">
   <div class="wm">Vital City</div>
@@ -360,6 +402,32 @@ function build(D,S){
     <div class="insight">City Hall and crime are the two poles of the catalogue, and the only beats above 20%. Below them sits a real second tier &mdash; the built city, courts, the economy, housing, transportation &mdash; and then a long tail where whole domains of city life are covered a handful of times a year: climate at ${S.beats.find(b=>b.beat.startsWith("Climate")).share}%, homelessness at ${S.beats.find(b=>b.beat.startsWith("Homelessness")).share}%, education and youth at ${S.beats.find(b=>b.beat.startsWith("Education")).share}%. The pairings tell the same story: crime travels with courts and policing, housing with land use, City Hall with the budget &mdash; but almost no piece connects the economy to criminal justice, or climate to housing, adjacencies the city itself is full of.</div>
     <div class="src">Source: Ghost topic tags, sorted in <code>analyze_subjects.py</code>. "History" is kept as its own beat rather than folded into culture &mdash; it is applied as a lens across every other beat, and ${S.history_only_pieces} of its ${S.beats.find(b=>b.beat.startsWith("History")).pieces} pieces carry no other cultural tag.</div></div>`;
 
+  // 1a-bis. Reach: what we publish against what earns readers and signups.
+  // Hidden entirely when no reach payload is bundled (the catalogue refresh
+  // can run without a growth pull), rather than drawing an empty frame.
+  if(REACH && REACH.traffic && REACH.traffic.rows && REACH.traffic.rows.length){
+    const pc={}, tr={}, sg={};
+    (REACH.pieces_by_topic||[]).forEach(r=>pc[r.topic]=r.pct_of_catalogue);
+    (REACH.traffic.rows||[]).forEach(r=>tr[r.topic]=r.pct);
+    (REACH.signups.rows||[]).forEach(r=>sg[r.topic]=r.pct);
+    const rows=Object.keys(tr).filter(t=>(pc[t]||0)>0)
+      .sort((a,b)=>tr[b]-tr[a]).slice(0,18);
+    const cell=(v,base)=>{
+      if(v==null) return '<td>&mdash;</td>';
+      const cls = base && v>=base*1.5 ? "gap-up" : (base && v<=base*0.6 ? "gap-dn" : "");
+      return `<td class="${cls}">${v.toFixed(1)}%</td>`;
+    };
+    const w=REACH.window||{};
+    html+=`<div class="card" id="reach"><h2>What earns readers, and what earns subscribers</h2>
+      <div class="hint">Every article visit and every newsletter signup that landed on an article, credited to that piece's subjects. Traffic from ${esc(w.traffic_start||"?")}, signups from ${esc(w.signups_start||"?")} &mdash; Ghost's analytics begin then, and the earlier traffic sits in Google Analytics, which is not joined per article. So this is 2026, not the whole catalogue's life.</div>
+      <div class="reachwrap"><table class="reach">
+        <thead><tr><th>Subject</th><th>% of pieces</th><th>% of readers</th><th>% of signups</th></tr></thead>
+        <tbody>${rows.map(t=>`<tr><td>${esc(t)}</td><td>${(pc[t]||0).toFixed(1)}%</td>${cell(tr[t],pc[t])}${cell(sg[t],pc[t])}</tr>`).join("")}</tbody>
+      </table></div>
+      <div class="insight">Publishing volume and audience are close to unrelated. <b>Mamdani</b> is ${(pc["Mamdani"]||0).toFixed(1)}% of the catalogue and ${(tr["Mamdani"]||0).toFixed(0)}% of readers; <b>Mayoralty</b> is ${(pc["Mayoralty"]||0).toFixed(1)}% of pieces and ${(tr["Mayoralty"]||0).toFixed(0)}% of readers. Both are small bodies of work carrying enormous traffic, almost all of it search arriving on a handful of explainers. The mirror image is the journal's core: <b>Crime</b> is ${(pc["Crime"]||0).toFixed(0)}% of everything published and ${(tr["Crime"]||0).toFixed(0)}% of readers, <b>History</b> ${(pc["History"]||0).toFixed(0)}% and ${(tr["History"]||0).toFixed(0)}%, <b>Government Operations</b> ${(pc["Government Operations"]||0).toFixed(0)}% and ${(tr["Government Operations"]||0).toFixed(0)}%. The subjects Vital City writes most about are not the ones that bring people in.<br><br>Readers and subscribers also want different things. <b>Housing</b> (${(tr["Housing"]||0).toFixed(0)}% of readers, ${(sg["Housing"]||0).toFixed(0)}% of signups), <b>Economics</b> (${(tr["Economics"]||0).toFixed(0)}% and ${(sg["Economics"]||0).toFixed(0)}%) and <b>City Planning</b> (${(tr["City Planning"]||0).toFixed(0)}% and ${(sg["City Planning"]||0).toFixed(0)}%) convert better than they read; the mayoral-politics cluster converts worse. A piece that draws a crowd and a piece that recruits a subscriber are not the same piece.</div>
+      <div class="src">${REACH.traffic.matched.toLocaleString()} of ${REACH.traffic.total.toLocaleString()} visits and ${REACH.signups.matched.toLocaleString()} of ${REACH.signups.total.toLocaleString()} article signups matched to a tagged piece; the remainder landed on the homepage, a tag page or a URL with no catalogue entry. ${esc(REACH.share_basis||"")} Green marks a subject earning at least half again its share of the catalogue; red marks one earning under 60% of it. Built by <code>build_catalogue_reach.py</code> from the growth pull.</div></div>`;
+  }
+
   // 1b. Subtopics: one level below the beat. Rendered as per-beat blocks with
   // proportional bars; "General / mixed" is drawn hollow and last, because it
   // is the honest remainder of a keyword classifier, not a subject.
@@ -472,6 +540,7 @@ function build(D,S){
 // Charts are sized in real pixels, so a width change means they must be rebuilt.
 // Debounced, and only when the width actually moved, so scrolling on mobile
 // (which fires resize as the URL bar hides) does not thrash.
+let REACH=null;
 let DATA=null, lastW=0;
 function st1(beat, name){
   const b=((window.__S||{}).subtopics||[]).find(r=>r.beat===beat); if(!b) return "?";
@@ -533,11 +602,45 @@ addEventListener("scroll", poke, {passive:true});
 addEventListener("pointerdown", poke, {passive:true});
 addEventListener("pageshow", scheduleReflow);
 
-Promise.all([
-  fetch("../data/catalogue_analysis.json?cb="+Date.now()).then(r=>r.json()),
-  fetch("../data/subject_analysis.json?cb="+Date.now()).then(r=>r.json()),
-]).then(d=>{ DATA=d; renderAll(); })
- .catch(e=>{document.getElementById("app").innerHTML='<div class="loading">Could not load catalogue data. Run <code>python3 analyze_catalogue.py</code> first.</div>';console.error(e);});
+const PASSKEY="vc_net_pass";           // shared with the other dashboards
+const PASS_TTL_DAYS=90;
+function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+PASS_TTL_DAYS*864e5}));}catch(e){}}
+function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;
+  if(r[0]!=="{")return r;const o=JSON.parse(r);
+  if(o&&o.pass&&o.exp&&o.exp>Date.now())return o.pass;
+  localStorage.removeItem(PASSKEY);return null;}catch(e){return null;}}
+function clearPass(){try{localStorage.removeItem(PASSKEY);}catch(e){}}
+function b64d(x){const b=atob(x),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},
+    km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+async function unlock(fromStore){
+  const errEl=document.getElementById("err"); errEl.textContent="";
+  const pass=fromStore || document.getElementById("pw").value.trim();
+  if(!pass){errEl.textContent="Enter the passphrase.";return;}
+  try{
+    const blob=await fetch("data.enc?cb="+Date.now(),{cache:"no-cache"}).then(r=>r.json());
+    const payload=await decryptBlob(pass,blob);
+    savePass(pass);
+    document.getElementById("gate").style.display="none";
+    DATA=[payload.catalogue, payload.subjects];
+    REACH=payload.reach||null;
+    renderAll();
+  }catch(e){
+    console.error(e);
+    errEl.textContent="Wrong passphrase, or data unavailable.";
+    if(fromStore){clearPass(); document.getElementById("gate").style.display="";}
+  }
+}
+document.getElementById("unlock").addEventListener("click",()=>unlock(false));
+document.getElementById("pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false);});
+(async function(){const p=loadPass(); if(p){ await unlock(p); } })()
+ ;
+function _loadError(e){document.getElementById("app").innerHTML='<div class="loading">Could not load catalogue data. Run <code>python3 analyze_catalogue.py</code> then <code>python3 encrypt_catalogue_analysis.py</code>.</div>';console.error(e);}
 </script>
 </body>
 </html>
