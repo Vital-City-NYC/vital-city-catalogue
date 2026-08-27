@@ -1909,22 +1909,63 @@ function renderGrowthChart(mc){
 function renderPerf(mc){
   const w=(mc.windows)||{};
   const ytd=w.ytd||{}, prior=w.prior_ytd||{}, l30=w.last_30||{}, yoy30=w.yoy_30||{};
+
+  // ---- Comparators for the rate tiles -------------------------------------
+  // Year-to-date against last year's year-to-date is the wrong test for a
+  // metric that trends. Open rate ran 62% in Jan 2025, fell to 29% by October
+  // as the bot-signup flood diluted the list, and has climbed back to 47.8%.
+  // Averaging across that curve gives 34.2%, a figure that describes no month
+  // that ever happened, and comparing it to a mean of the OTHER half of the
+  // curve reports "down 28%" while the rate is in fact rising fast.
+  //
+  // So: the number is the last 90 days, and the comparator is the trailing
+  // 12-month norm (those 90 days excluded, so a window cannot grade itself).
+  // Direction over the last two quarters is shown alongside, because for a
+  // trending series the direction IS the finding.
+  const monthly = (mc.monthly_campaigns||[]).filter(r=>(r.recipients||0)>0);
+  const wavg=(rows,f)=>{
+    const t=rows.reduce((s,r)=>s+(r.recipients||0),0);
+    return t? rows.reduce((s,r)=>s+(r[f]||0)*(r.recipients||0),0)/t : null;
+  };
+  const q0 = monthly.slice(-3);        // most recent 3 months
+  const q1 = monthly.slice(-6,-3);     // the 3 before that
+  const norm = monthly.slice(-15,-3);  // 12 months, ending where q0 starts
+  const cmp=(f)=>{
+    if(q0.length<2 || norm.length<6) return null;
+    const now=wavg(q0,f), base=wavg(norm,f), prev=wavg(q1,f);
+    if(now==null||base==null) return null;
+    return {now, base, prev, months:norm.length,
+            d: base? ((now-base)/base)*100 : 0,
+            trend: (prev!=null && prev) ? ((now-prev)/prev)*100 : null};
+  };
+  const oc=cmp("open_pct"), cc=cmp("click_pct");
+  const trendTxt=(c)=> c && c.trend!=null
+    ? ` · ${c.trend>=0?"rising":"falling"} ${Math.abs(c.trend).toFixed(0)}% vs the prior quarter`
+    : "";
   const dOpenYtd  = pctDelta(ytd.open_pct,  prior.open_pct);
   const dClickYtd = pctDelta(ytd.click_pct, prior.click_pct);
   const dSendsYtd = pctDelta(ytd.sends,     prior.sends);
   const dOpen30   = yoy30.sends ? pctDelta(l30.open_pct,  yoy30.open_pct)  : null;
   const dClick30  = yoy30.sends ? pctDelta(l30.click_pct, yoy30.click_pct) : null;
   const cells=[
-    {lbl:"Open rate · YTD", n:(ytd.open_pct||0)+"%",
+    (oc ? {lbl:"Open rate · last 90d", n:oc.now.toFixed(1)+"%",
+      d:`${fmtPctDelta(oc.d)} vs ${oc.months}-mo norm (~${oc.base.toFixed(1)}%)${trendTxt(oc)}`,
+      cls:deltaPctClass(oc.d,true),
+      tip:`Recipient-weighted open rate over the last 90 days, against the average of the trailing ${oc.months} months (those 90 days excluded so the window can't grade itself). Year to date is ${ytd.open_pct||0}%; the same window last year was ${prior.open_pct||0}%.\n\nWhy the norm and not last year: this metric trends hard. It ran 62% in early 2025, fell to 29% by October as bot signups diluted the list, and has climbed back since. A year-to-date average sits in the middle of that curve and describes no month that ever happened — comparing two such averages reports a decline while the rate is rising.\n\nRead the level with care in both directions: Apple Mail's privacy auto-opens inflate it, while roughly 2,400 never-opening bot accounts still on the list depress it (bot-adjusted it is about 42.6%). Click-to-open below is the cut that survives both. Benchmark: nonprofit email averages ~28-29% (M+R Benchmarks 2025).`}
+        : {lbl:"Open rate · YTD", n:(ytd.open_pct||0)+"%",
       d:fmtPctDelta(dOpenYtd)+" vs YTD '25", cls:deltaPctClass(dOpenYtd,true),
-      tip:"Year-to-date open rate, recipient-weighted across every send.\n\nWhy it matters: The first gate of engagement — did the subject line earn the open? Watch the trend rather than the level: Apple Mail's privacy auto-opens have inflated everyone's open rate since 2021, so it reads softer than it looks (click-to-open is the honest cut). Benchmark: nonprofit email open rates average ~28-29% (M+R Benchmarks 2025) — VC runs above that."+interpretInsight("open_rate", dOpenYtd)},
-    {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
+      tip:"Year-to-date open rate, recipient-weighted. (Not enough monthly history yet for the trailing-norm comparison.)"}),
+    (cc ? {lbl:"Click rate · last 90d", n:cc.now.toFixed(1)+"%",
+      d:`${fmtPctDelta(cc.d)} vs ${cc.months}-mo norm (~${cc.base.toFixed(1)}%)${trendTxt(cc)}`,
+      cls:deltaPctClass(cc.d,true),
+      tip:`Recipient-weighted click rate over the last 90 days, against the trailing ${cc.months}-month average. Year to date is ${ytd.click_pct||0}%; the same window last year was ${prior.click_pct||0}%.\n\nWhy it matters: the honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens. Same caveat as the open rate on the composition side: the never-opening accounts don't click either, so the raw level runs low. Benchmark: nonprofit email averages ~3.3% (M+R Benchmarks 2025).`}
+        : {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
       d:fmtPctDelta(dClickYtd)+" vs YTD '25", cls:deltaPctClass(dClickYtd,true),
-      tip:"Year-to-date click rate, recipient-weighted across every send.\n\nWhy it matters: The honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens, so this is the truest read on whether content is landing. If one performance number deserves your attention, it's this one. Benchmark: nonprofit email click rates average ~3.3% (M+R Benchmarks 2025) — VC runs about average."+interpretInsight("click_rate", dClickYtd)},
+      tip:"Year-to-date click rate, recipient-weighted across every send.\n\nWhy it matters: The honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens, so this is the truest read on whether content is landing. If one performance number deserves your attention, it's this one."+interpretInsight("click_rate", dClickYtd)}),
     {lbl:"Click-to-open · YTD", n:(ytd.ctor_pct||0)+"%",
-      d:`${fmtPctDelta(pctDelta(ytd.ctor_pct, prior.ctor_pct))} vs YTD '25 · of openers, % who clicked`,
+      d:`${fmtPctDelta(pctDelta(ytd.ctor_pct, prior.ctor_pct))} vs YTD '25 · the comparable one`,
       cls:deltaPctClass(pctDelta(ytd.ctor_pct, prior.ctor_pct), true),
-      tip:"Click-to-Open Ratio (CTOR) = clicks ÷ opens. THE quality signal in the post-Apple-Mail-privacy era: 'of the people who actually opened the email, what % engaged with it enough to click something?' Healthy editorial newsletters typically run 8-18% CTOR. Above 18% means subjects + content are well-aligned with audience interest. This number doesn't get inflated by Apple's privacy auto-opens the way the raw open rate does, so it's the honest read on content quality."},
+      tip:"Click-to-Open Ratio (CTOR) = clicks ÷ opens. THE quality signal in the post-Apple-Mail-privacy era: 'of the people who actually opened the email, what % engaged with it enough to click something?' Healthy editorial newsletters typically run 8-18% CTOR. Above 18% means subjects + content are well-aligned with audience interest. This number doesn't get inflated by Apple's privacy auto-opens the way the raw open rate does, so it's the honest read on content quality.\n\nIt is also the one rate whose year-over-year comparison is trustworthy: both its numerator and its denominator are drawn from people who opened, so a list stuffed with accounts that never open cannot move it. Open rate and click rate both fell year over year partly because the list changed; CTOR falling from 16.0% to 11.6% is a real decline in how many readers act on what they read."},
     {lbl:"Sends · YTD", n:fmtN(ytd.sends||0),
       d:fmtPctDelta(dSendsYtd)+" vs YTD '25", cls:deltaPctClass(dSendsYtd,true),
       tip:"Total newsletter sends so far this year vs the same period last year. Includes automations and manual sends.\n\nWhy it matters: Publishing cadence. More sends mean more reach and more signup touchpoints — but read it alongside unsubscribes and click rate to be sure volume isn't fatiguing the list rather than serving it."+interpretInsight("sends", dSendsYtd)},
