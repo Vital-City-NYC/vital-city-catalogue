@@ -275,9 +275,10 @@ published growth-dashboard payload.
 - Google Analytics counts browsers, not people. Someone reading on a phone and a laptop counts twice,
   so visitor figures are directional rather than a headcount.
 - 54% of signups carry no usable attribution source.
-- The 30-day active-subscriber measure is currently unavailable: Mailchimp does not report per-member
-  opens for A/B split-test sends, and every recent newsletter was an A/B test. Total clicks is used
-  as the engagement measure instead.
+- 30-day active subscribers: Mailchimp's parent campaign reports no per-member opens for A/B
+  split tests, but the hidden child sends carry them, and since Aug. 26, 2026 the pipeline reads
+  the children — so this measure is populated again. Reports generated before that date used
+  total clicks as a stand-in.
 - 2026 is a year in progress. Year-over-year comparisons use the same calendar window on both sides.
 
 ---

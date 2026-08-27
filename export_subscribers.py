@@ -27,8 +27,11 @@ TWO THINGS THAT WOULD OTHERWISE MISLEAD
                 denominator — three sends, three opens, three clicks. Treat as
                 unresolved rather than as fact.
 
-Also note: Mailchimp does not report per-member opens for A/B split sends, and
-recent sends have been split tests, so these are last-year figures.
+Note on A/B sends: Mailchimp's parent campaign reports no per-member
+opens for split tests, but the hidden child sends carry them; since
+Aug 26 2026 the pipeline reads the children, so per-member activity is
+complete again. Data refreshed before that date understates recent
+activity for anyone whose only opens were on split-test sends.
 
     python3 export_subscribers.py
     python3 export_subscribers.py --include-unsubscribed

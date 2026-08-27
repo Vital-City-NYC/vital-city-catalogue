@@ -51,6 +51,42 @@ def mailchimp_key():
     return f.read_text().strip() if f.exists() else ""
 
 
+def variate_children(cid, key, dc, on_error=None):
+    """The report IDs that actually hold an A/B campaign's data.
+
+    An A/B (variate) campaign is secretly four campaigns: the parent, two
+    test-variant sends and a winner send. Every per-member and per-link report
+    on the PARENT comes back empty -- open-details, click-details, sent-to
+    (all open_counts zero), email-activity (activity arrays empty), even
+    /unsubscribed. The same reports on the hidden children carry everything;
+    verified live on the Aug 20 2026 send, where the parent reported zero
+    members and the children held 4,301 open records, 42 clicked links and 7
+    unsubscribes. Mailchimp has to know -- picking a winner requires it -- it
+    just files the knowledge under IDs the UI never shows.
+
+    Returns [] for a non-variate campaign or on failure, so callers can fall
+    back to the parent id unchanged."""
+    try:
+        vs = mc_get(f"/campaigns/{cid}?fields=variate_settings,type", key, dc)
+    except Exception as e:
+        if on_error: on_error(f"variate-children {cid}: {e}")
+        return []
+    v = vs.get("variate_settings") or {}
+    kids = [x.get("id") for x in (v.get("combinations") or []) if x.get("id")]
+    if v.get("winning_campaign_id"):
+        kids.append(v["winning_campaign_id"])
+    return kids
+
+
+def report_ids(camp_id, camp_type, key, dc, on_error=None):
+    """The IDs to query reports on: the campaign itself, or -- for an A/B
+    send -- its children, falling back to the parent if they can't be read."""
+    if camp_type == "variate":
+        kids = variate_children(camp_id, key, dc, on_error)
+        return kids or [camp_id]
+    return [camp_id]
+
+
 def mc_get(path, key, dc):
     url = f"https://{dc}.api.mailchimp.com/3.0{path}"
     auth = base64.b64encode(f"anystring:{key}".encode()).decode()
@@ -345,11 +381,17 @@ def pull_mailchimp():
                       if e.get("sent")][:CLICK_SENDS]
             by_slug, n_ok = {}, 0
             for e in recent:
-                try:
-                    det = mc_get(f"/reports/{e['id']}/click-details?count=1000"
-                                 f"&fields=urls_clicked.url,urls_clicked.total_clicks,"
-                                 f"urls_clicked.unique_clicks", key, dc).get("urls_clicked", [])
-                except Exception:
+                # A/B parents report zero clicked links; the children hold them
+                # (see variate_children). Merge across the child sends.
+                det = []
+                for rid in report_ids(e["id"], e.get("type"), key, dc):
+                    try:
+                        det += mc_get(f"/reports/{rid}/click-details?count=1000"
+                                      f"&fields=urls_clicked.url,urls_clicked.total_clicks,"
+                                      f"urls_clicked.unique_clicks", key, dc).get("urls_clicked", [])
+                    except Exception:
+                        continue
+                if not det:
                     continue
                 n_ok += 1
                 for u in det:
@@ -388,11 +430,15 @@ def pull_mailchimp():
                 if (e.get("sent") or "") < _cut or not e.get("unsubs"):
                     continue
                 kind = e.get("kind", "other")
-                try:
-                    us = mc_get(f"/reports/{e['id']}/unsubscribed?count=200"
-                                f"&fields=unsubscribes.reason", key, dc).get("unsubscribes", [])
-                except Exception:
-                    continue
+                # A/B parents report an unsub COUNT but an empty unsub LIST;
+                # the reasons live on the child sends (see variate_children).
+                us = []
+                for rid in report_ids(e["id"], e.get("type"), key, dc):
+                    try:
+                        us += mc_get(f"/reports/{rid}/unsubscribed?count=200"
+                                     f"&fields=unsubscribes.reason", key, dc).get("unsubscribes", [])
+                    except Exception:
+                        continue
                 for u in us:
                     raw = (u.get("reason") or "").strip()
                     raw_by_kind[kind][raw or NONE] += 1
@@ -518,46 +564,9 @@ def pull_mailchimp():
     # opened at least one regular (non-A/B) send in the window.
     # Cost: one extra API call per campaign + ~1 per 1000 openers (pagination).
     # ~30-90 calls for the year — under a minute.
-    def _union_openers(days_back):
-        since_iso = (datetime.now(timezone.utc) - timedelta(days=days_back)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
-        url = (f"/campaigns?status=sent&list_id={list_id}"
-               f"&since_send_time={urllib.parse.quote(since_iso)}"
-               f"&count=500&sort_field=send_time&sort_dir=DESC"
-               f"&fields=campaigns.id,campaigns.type,campaigns.send_time")
-        try:
-            cs = mc_get(url, key, dc).get("campaigns", [])
-        except Exception as e:
-            log(f"  active-users campaign list failed ({days_back}d): {e}"); return None
-        regulars = [c for c in cs if c.get("type") == "regular"]
-        variate  = [c for c in cs if c.get("type") == "variate"]
-        openers = set()
-        fail = 0
-        for c in regulars:
-            cid = c["id"]; offset = 0
-            while True:
-                try:
-                    page = mc_get(
-                        f"/reports/{cid}/open-details?count=1000&offset={offset}"
-                        f"&fields=members.email_address,total_items",
-                        key, dc)
-                except Exception as e:
-                    fail += 1; log(f"  open-details fail {cid}@{offset}: {e}"); break
-                for m in page.get("members", []):
-                    em = (m.get("email_address") or "").lower().strip()
-                    if em: openers.add(em)
-                total = int(page.get("total_items") or 0)
-                offset += 1000
-                if offset >= total: break
-        return {
-            "active_users":           len(openers),
-            "regulars_counted":       len(regulars),
-            "variate_excluded":       len(variate),
-            "campaigns_in_window":    len(cs),
-            "failed_fetches":         fail,
-        }
-
-    # The _union_openers function returns just a count; for lifecycle analysis
-    # we need the actual opener SET to cross-reference against signup dates.
+    # (A count-only _union_openers predecessor lived here; it was never
+    # called and still excluded A/B sends, so it was removed when the child-
+    # send fix landed rather than left as a trap.)
     # Re-issue the pulls but capture the sets too (re-uses Mailchimp data we
     # already paid the API cost for; about doubles AAU pull time, but worth
     # it since lifecycle is the single highest-leverage analysis).
@@ -674,19 +683,30 @@ def pull_mailchimp():
         for c in usable:
             cid, ctype = c["id"], c.get("type")
             want_diag = (ctype == "variate" and not diag_done)
-            got = _open_details(cid, diag=want_diag)
-            if got is None or not got:
-                # open-details errored, or returned nothing (always the case for
-                # an A/B parent). sent-to carries per-member open_count and is
-                # the one that actually works there; email-activity is a last
-                # resort only.
-                got = _sent_to(cid, diag=want_diag)
+            if ctype == "variate":
+                # Go straight to the children -- the parent's open-details is
+                # always empty, and sent-to/email-activity on the parent return
+                # recipients with all activity zeroed.
+                got = set()
+                kids = variate_children(cid, key, dc, problems.append)
+                for kid in kids:
+                    kg = _open_details(kid)
+                    if kg: got |= kg
                 if got:
-                    problems.append(f"{cid} ({ctype}): recovered {len(got)} via sent-to")
+                    problems.append(f"{cid} (variate): {len(got)} openers via {len(kids)} child sends")
                 else:
-                    got = _email_activity(cid, diag=want_diag)
-                    if got: problems.append(f"{cid} ({ctype}): recovered {len(got)} via email-activity")
+                    got = _sent_to(cid, diag=want_diag) or _email_activity(cid, diag=want_diag)
+                    if got: problems.append(f"{cid} (variate): recovered {len(got)} via parent fallback")
                 if want_diag: diag_done = True
+            else:
+                got = _open_details(cid, diag=want_diag)
+                if got is None or not got:
+                    got = _sent_to(cid, diag=want_diag)
+                    if got:
+                        problems.append(f"{cid} ({ctype}): recovered {len(got)} via sent-to")
+                    else:
+                        got = _email_activity(cid, diag=want_diag)
+                        if got: problems.append(f"{cid} ({ctype}): recovered {len(got)} via email-activity")
             if not got:
                 problems.append(f"{cid} ({ctype}, sent {c.get('send_time','?')[:10]}): 0 openers")
             openers |= got

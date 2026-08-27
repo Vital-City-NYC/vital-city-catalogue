@@ -30,8 +30,11 @@ WHAT THE COLUMNS ARE FOR
                           searched it and found nothing defensible.
 
 CAVEAT ON THE ENGAGEMENT FIGURES
-Mailchimp does not report per-member opens for A/B split sends, and recent
-sends have all been split tests, so these are last-year figures, not last-30-day.
+Note on A/B sends: Mailchimp's parent campaign reports no per-member
+opens for split tests, but the hidden child sends carry them; since
+Aug 26 2026 the pipeline reads the children, so per-member activity is
+complete again. Data refreshed before that date understates recent
+activity for anyone whose only opens were on split-test sends.
 
     python3 export_unnamed.py                    # tiers A-C
     python3 export_unnamed.py --tiers ABCD       # everything

@@ -1096,13 +1096,12 @@ function boot(data){
     })(),
     (function(){
       const m=mc.mau||{}, n=m.active_users;
-      // Mailchimp doesn't report per-member opens for A/B (variate) sends — it
-      // returns the recipients with every open_count at 0. When the whole window
-      // is A/B sends the deduped union comes back empty, and printing "0" reads
-      // as "nobody opened" rather than "we can't see who". Fall back to an
-      // explicit floor from the aggregate open rate, which IS reported: the
-      // biggest single send's unique openers is a guaranteed lower bound on the
-      // 30-day union.
+      // The A/B parent's per-member reports are empty, but since Aug 2026 the
+      // pipeline reads the hidden child sends, which carry the real opens — so
+      // active_users is normally exact now. This floor fallback fires only if
+      // the count comes back 0 anyway (a regression or an API failure): the
+      // biggest single send's unique openers is a guaranteed lower bound, and
+      // showing a labeled floor beats printing a false zero.
       const recentSends=(mc.campaigns||[]).filter(c=>c.sent && c.sent>=daysAgo(29) && (c.sent_to||0)>0);
       const floor=recentSends.length?Math.max(...recentSends.map(c=>Math.round((c.open_pct||0)/100*c.sent_to))):0;
       if(!n && floor){
@@ -4792,13 +4791,16 @@ function renderBigPicture(data){
 function renderLifecycle(lc){
   const host = $("#lifecycleBody");
   if(!host) return;
+  const card=document.getElementById("lifecycle");
   if(!lc.available){
-    // An empty card is dashboard weight with no information: hide the whole
-    // card until the pipeline produces MAU/AAU sets, rather than showing a
-    // shell that says it has nothing.
-    const card=document.getElementById("lifecycle"); if(card) card.style.display="none";
+    // An empty card is dashboard weight with no information: hide it until
+    // the pipeline produces MAU/AAU sets -- but only if nothing has rendered.
+    // Renders can arrive in any order across data vintages, and a late call
+    // with empty data must never erase a good render that already happened.
+    if(card && !host.innerHTML.trim()) card.style.display="none";
     return;
   }
+  if(card) card.style.display="";
   const cohorts = lc.cohort_retention || [];
   const act = lc.activation_30d || {};
   const sunset = lc.sunset_candidates || {count:0,sample:[]};
