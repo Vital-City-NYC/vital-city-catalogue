@@ -4904,11 +4904,54 @@ def main():
     # year-long traffic tiles for everyone until the next CI run repaired them.
     # A stub is "we could not look", never "there is nothing there", so the
     # last good block is carried forward and flagged stale instead.
+    # The fallback source matters. Reading only the local plaintext file fails
+    # the second time: once a run without credentials has written a stub there,
+    # the next run finds a stub to carry forward and the good block is gone for
+    # good. The PUBLISHED payload is the real last-known-good state, so fall
+    # back to decrypting it whenever the local copy has nothing usable. That is
+    # how search_console came to be blank on the live dashboard while this
+    # guard was in place and doing exactly what it was written to do.
+    def _published():
+        enc = ROOT / "growth" / "data.enc"
+        if not enc.exists():
+            return {}
+        try:
+            import base64
+            from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+            from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+            from cryptography.hazmat.primitives import hashes
+            pw = os.environ.get("VC_NETWORK_PASS")
+            if not pw:
+                f = PRIV / ".netpass"
+                pw = f.read_text().strip() if f.exists() else ""
+            if not pw:
+                return {}
+            b = json.loads(enc.read_text())
+            k = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32,
+                           salt=base64.b64decode(b["salt"]),
+                           iterations=b["iters"]).derive(pw.encode())
+            return json.loads(AESGCM(k).decrypt(base64.b64decode(b["iv"]),
+                                                base64.b64decode(b["ct"]), None))
+        except Exception as e:
+            log(f"  carry-forward: could not read the published payload ({e})")
+            return {}
+
     if OUT.exists():
         try:
             prev = json.loads(OUT.read_text())
         except Exception:
             prev = {}
+        _pub = None
+        for key, cur in list(out.items()):
+            if isinstance(cur, dict) and cur.get("available") is False:
+                good = prev.get(key)
+                if not (isinstance(good, dict) and good.get("available")):
+                    if _pub is None:
+                        _pub = _published()
+                    pub_block = _pub.get(key)
+                    if isinstance(pub_block, dict) and pub_block.get("available"):
+                        prev[key] = pub_block
+                        log(f"  {key}: local copy was already blank — recovered from the published payload")
         for key, cur in list(out.items()):
             if not (isinstance(cur, dict) and cur.get("available") is False):
                 continue
