@@ -22,6 +22,21 @@ rename — so they are listed individually.
 `redirects.json` in this folder. In Ghost: **Settings → Labs → Redirects →
 Upload redirects JSON**. It takes effect immediately, no rebuild.
 
+**Two things Ghost is fussy about**, both of which broke the first attempt with
+"Something went wrong while loading redirects":
+
+1. **The file must be named exactly `redirects.json`.** Ghost rejects other
+   filenames, even with valid contents.
+2. **`from` must begin with a slash, not a regex anchor.** Ghost's own
+   documented example is `{"from": "/post/[0-9]+/(.*)", "to": "/$1"}`. An
+   anchored `^/articles/(.*)$` is valid regular-expression syntax and still
+   gets refused. The file here uses the documented shape.
+
+If it still refuses, the fallback is the older format Ghost also accepts — a
+plain object of from/to pairs, which loses the ability to mark them permanent:
+
+    {"/articles/(.*)": "/$1"}
+
 Order matters. Ghost applies rules top to bottom, so the three specific
 renames come first; otherwise the wildcard would forward them to a slug that
 does not exist and they would still 404.
