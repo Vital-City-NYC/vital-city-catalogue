@@ -1,5 +1,25 @@
 [
   {
+    "from": "/rss",
+    "to": "/commentary/rss/",
+    "permanent": true
+  },
+  {
+    "from": "/feed",
+    "to": "/commentary/rss/",
+    "permanent": true
+  },
+  {
+    "from": "/feed/rss",
+    "to": "/commentary/rss/",
+    "permanent": true
+  },
+  {
+    "from": "/atom.xml",
+    "to": "/commentary/rss/",
+    "permanent": true
+  },
+  {
     "from": "/articles/how-zohhran-mamdani-could-succeed-as-mayor",
     "to": "/how-zohran-mamdani-could-succeed-as-mayor/",
     "permanent": true
