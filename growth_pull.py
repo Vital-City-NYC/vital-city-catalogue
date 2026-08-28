@@ -367,6 +367,15 @@ def pull_mailchimp():
             }
             entry["kind"] = _campaign_kind(entry)  # appeal | newsletter | other
             camp_out.append(entry)
+        # Sort by send date ourselves rather than trusting the API's ordering.
+        # The request asks for sort_field=send_time&sort_dir=DESC, and Mailchimp
+        # honours it only partly: the live payload came back newest-first for 68
+        # campaigns (2026-08-27 down to 2025-12-17) and then jumped to 2022-03-02
+        # and ran oldest-first for the remaining 200. Every consumer here assumes
+        # newest-first -- the send-by-send chart takes the first 20 and reverses
+        # them, the table slices the first 12 -- so the dashboard showed a
+        # December 2025 send followed by three from 2022.
+        camp_out.sort(key=lambda e: e.get("sent") or "", reverse=True)
         out["campaigns"] = camp_out
 
         # ---- Per-LINK clicks: which piece in each send actually got clicked.

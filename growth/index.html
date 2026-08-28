@@ -1283,7 +1283,11 @@ function boot(data){
   gotoCardFromHash();        // if the URL has #cardId, expand + scroll to it
 
   // ----- Campaigns table (collapsible — show 5, expand for the rest)
-  const camp=mc.campaigns||[];
+  // Sorted defensively: the payload is sorted upstream now, but this table
+  // slices the first N and a mis-ordered array silently shows the wrong sends
+  // rather than failing, which is how a 2022 campaign came to sit under a 2025
+  // one on the live dashboard.
+  const camp=(mc.campaigns||[]).slice().sort((a,b)=>String(b.sent||"").localeCompare(String(a.sent||"")));
   if(camp.length){
     const SHOW=5;
     const mkRow = (c) => {
