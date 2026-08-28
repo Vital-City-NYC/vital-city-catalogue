@@ -16,10 +16,20 @@ The feed is at `https://www.vitalcitynyc.org/commentary/rss/`. Redirects from
 "/ new ideas", a fragment. It now reads "Pragmatic ideas to solve cities'
 hardest problems." That one was a Ghost settings field.
 
-**Everything below needs the theme.** Each item was checked against the site's
-settings first; none of the four can be changed from the Ghost admin. The
-evidence is in the section at the end, so this can be handed over without the
-recipient re-checking.
+**All four items below are Ghost's stock RSS defaults**, not errors anyone
+introduced. None can be changed from the Ghost admin, and none can be fixed by
+editing an existing theme file, because Ghost generates RSS in core. They are
+fixed together by adding one custom feed template — see "Who can fix these" for
+the mechanism and the evidence, so this can be handed over without the
+recipient re-deriving it.
+
+**Not on this list, deliberately:** the site's article schema uses
+`@type: Article` rather than `NewsArticle`. That was raised and withdrawn.
+Google treats Article, NewsArticle and BlogPosting as interchangeable for
+article rich results, Google News eligibility does not depend on structured
+data at all, and Apple News does not read JSON-LD in any case — it ingests RSS
+or Apple News Format. The existing markup is complete and correct; changing it
+would gain nothing.
 
 ---
 
@@ -64,51 +74,75 @@ with the posts-per-page setting the feed inherits. **25–50 would be better.**
 
 ---
 
-## What can be fixed without the theme, and what cannot
+## Who can fix these, and how — read this before assigning the work
 
-Checked directly against the site's settings on 27 August. **None of the four
-items above can be fixed from the Ghost admin.** The evidence, so nobody has to
-re-litigate it:
+Corrected 27 August after a second review caught an error in an earlier version
+of this note.
 
-| Item | Settings-fixable? | Why |
-|---|---|---|
-| 1. `<language>` | **No** | Ghost's publication language is already set to `en`. The feed still omits the element, which means the feed template is ignoring it. |
-| 2. Favicon as logo | **No** | Ghost holds a correct 1267 × 265 logo *and* a 201 × 201 icon. The feed publishes the icon. Which one it uses is decided in the template. |
-| 3. `<copyright>` | **No** | Not a Ghost setting at all. |
-| 4. Item count | **No** | This Ghost version exposes no posts-per-page setting to change. |
+**The feed is stock Ghost output, not a customised template.** The wire format
+carries `<generator>Ghost 6.61</generator>`, an atom self-link, `<ttl>`, and
+GUIDs that are Ghost ObjectIds with `isPermaLink="false"`. Stock Ghost omits
+`<language>` and `<copyright>`, uses the site *icon* as the channel image, and
+caps the feed at 15 items. **All four open items are Ghost's defaults**, not
+mistakes anyone made.
 
-The site description was fixable that way, which is why it is worth checking
-first — but it was the exception, not the pattern.
+What *is* customised is the feed's path. `/commentary/rss/` comes from a
+collection defined in `routes.yaml`, which is also why `/rss/` returned 404
+until the redirects were added.
 
-### What this tells us about the feed
+This matters because it changes the fix. **Ghost generates RSS in core. There
+is no `rss.hbs` in a theme that can be edited to change it**, so an earlier
+version of this note was wrong to say the file already exists and just needs
+four small edits.
 
-The publication language is set correctly and the feed still does not declare
-it. Ghost's built-in feed emits `<language>` from that setting automatically.
-So **this feed is already a custom template**, not Ghost's default — someone
-has written it, and it omits language, copyright and the logo.
+### The actual fix: one piece of work, not four
 
-That is good news for the work: the file to change already exists in the theme.
-Nobody has to add a new route or a new feed. The four fixes are edits to a file
-that is already there.
+Ghost's own tutorial for a [custom RSS feed](https://ghost.org/tutorials/custom-rss-feed/)
+is the supported route, and it has two parts:
 
-### Ghost's own tutorials
+1. **A route in `routes.yaml`** naming a template and an XML content type.
+   Uploadable from **Settings → Labs → Routes** with no deploy.
+2. **A new template file** in the theme that emits the XML.
 
-The custom RSS and Google News sitemap guides are the right mechanism, and both
-are two-part: a `routes.yaml` entry, which an administrator *can* upload under
-**Settings → Labs → Routes**, and a template file that must sit in the theme.
-`routes.yaml` alone changes none of the four items — the template is where all
-of them are set. Given the feed is already custom, the route almost certainly
-exists too, so only the template needs touching.
+The template is where `<language>`, `<copyright>`, the logo URL and the item
+count all get set — so **items 1 through 4 are a single change, not four
+separate requests**. Whoever does it writes one file.
 
-### One thing that is admin-editable, and worth knowing
+**It does require theme access.** But it is a documented, self-contained
+addition — a new template file, no redesign, nothing existing modified. It is
+not a proxy, an edge worker, or a rebuild of the feed pipeline.
 
-**Settings → Code injection** takes arbitrary markup into every page's `<head>`
-without any theme access. It currently holds 921 characters and no structured
-data. That will not help this feed — code injection cannot reach RSS — but it
-is the lever for a separate item raised elsewhere: articles identify themselves
-to Google as generic `Article` where Google News prefers `NewsArticle`. That
-one can be addressed from the admin, and it is worth doing while the theme
-question is unresolved.
+**One caution on the path.** The collection already auto-generates
+`/commentary/rss/`, and the site's `<head>` link and the `/rss/` redirects all
+point there. The custom route should serve that same path rather than adding a
+second feed somewhere else — two live feeds is how aggregators end up
+subscribed to the wrong one.
+
+### The logo needs no new artwork
+
+Ghost already holds both images: a **1267 × 265 logo** and a **201 × 201 icon**.
+Stock RSS uses the icon. The custom template should point at the logo.
+
+### Nothing here is fixable from the Ghost admin
+
+Each was checked against live settings. Publication language is already set to
+`en` and stock Ghost's RSS does not emit it; copyright is not a Ghost setting;
+this Ghost version exposes no posts-per-page control; and the channel image is
+chosen by Ghost's RSS generator. The site description was fixable that way, but
+it was the exception.
+
+## Priority, if only some of this gets done
+
+1. **Item 4, the 15-item cap.** The one that genuinely limits what a new
+   aggregator sees when it first reads the feed.
+2. **Item 1, `<language>`.** One line, and feed validators flag its absence.
+3. **Item 3, `<copyright>`.** One line.
+4. **Item 2, the channel logo.** Lowest. Every *item* already carries a real
+   Ghost-hosted image in `media:content` plus full text in `content:encoded`,
+   which is what aggregators actually key off. The channel favicon is cosmetic
+   next to that.
+
+Since all four come from the same template, doing one means doing all four.
 
 ---
 
