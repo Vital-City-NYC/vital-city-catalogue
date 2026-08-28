@@ -14,9 +14,12 @@ The feed is at `https://www.vitalcitynyc.org/commentary/rss/`. Redirects from
 
 **Already fixed, 27 August:** the channel description previously read
 "/ new ideas", a fragment. It now reads "Pragmatic ideas to solve cities'
-hardest problems." That turned out to be the **Site description** field under
-Settings → General, not a theme change — worth checking settings first for
-anything below that looks similar.
+hardest problems." That one was a Ghost settings field.
+
+**Everything below needs the theme.** Each item was checked against the site's
+settings first; none of the four can be changed from the Ghost admin. The
+evidence is in the section at the end, so this can be handed over without the
+recipient re-checking.
 
 ---
 
@@ -61,68 +64,51 @@ with the posts-per-page setting the feed inherits. **25–50 would be better.**
 
 ---
 
-## Can Ghost's own tutorials do this without touching the theme?
+## What can be fixed without the theme, and what cannot
 
-Ghost publishes two relevant guides — a custom RSS feed, and a Google News
-sitemap. Both are the right mechanism for everything above. **Neither is purely
-a settings change**, so the short answer is: they fix all four items, but they
-still need one file added to the theme.
+Checked directly against the site's settings on 27 August. **None of the four
+items above can be fixed from the Ghost admin.** The evidence, so nobody has to
+re-litigate it:
 
-Both work the same way, in two parts:
+| Item | Settings-fixable? | Why |
+|---|---|---|
+| 1. `<language>` | **No** | Ghost's publication language is already set to `en`. The feed still omits the element, which means the feed template is ignoring it. |
+| 2. Favicon as logo | **No** | Ghost holds a correct 1267 × 265 logo *and* a 201 × 201 icon. The feed publishes the icon. Which one it uses is decided in the template. |
+| 3. `<copyright>` | **No** | Not a Ghost setting at all. |
+| 4. Item count | **No** | This Ghost version exposes no posts-per-page setting to change. |
 
-1. **A route**, added to `routes.yaml`. This part is self-serve — Ghost accepts
-   a `routes.yaml` upload under **Settings → Labs → Routes**, no deploy needed.
-2. **A template file** (`custom-rss.hbs` or similar) that produces the XML.
-   This part has to live inside the theme.
+The site description was fixable that way, which is why it is worth checking
+first — but it was the exception, not the pattern.
 
-So `routes.yaml` alone will not do it. The template is where `<language>`,
-`<copyright>`, the logo URL and the item count are actually set.
+### What this tells us about the feed
 
-**You do not necessarily need the original theme developers.** Ghost lets an
-administrator download the active theme as a zip, and upload a modified one,
-entirely through the admin interface: **Settings → Design → Theme → Download**,
-then re-upload the edited zip. If you download it, the template can be written
-for you and dropped in — no development environment required.
+The publication language is set correctly and the feed still does not declare
+it. Ghost's built-in feed emits `<language>` from that setting automatically.
+So **this feed is already a custom template**, not Ghost's default — someone
+has written it, and it omits language, copyright and the logo.
 
-### What a custom feed would fix
+That is good news for the work: the file to change already exists in the theme.
+Nobody has to add a new route or a new feed. The four fixes are edits to a file
+that is already there.
 
-| Item above | Fixed by a custom feed? |
-|---|---|
-| 1. Missing `<language>` | Yes — one line in the template |
-| 2. Favicon as logo | Yes — and see below, the right image already exists |
-| 3. Missing `<copyright>` | Yes — one line |
-| 4. Only 15 items | Yes — the template sets its own limit |
+### Ghost's own tutorials
 
-### The logo is already in Ghost
+The custom RSS and Google News sitemap guides are the right mechanism, and both
+are two-part: a `routes.yaml` entry, which an administrator *can* upload under
+**Settings → Labs → Routes**, and a template file that must sit in the theme.
+`routes.yaml` alone changes none of the four items — the template is where all
+of them are set. Given the feed is already custom, the route almost certainly
+exists too, so only the template needs touching.
 
-Worth knowing before anyone commissions artwork. Ghost holds two images:
+### One thing that is admin-editable, and worth knowing
 
-- **Logo — 1267 × 265 PNG.** A proper wordmark. This is the one the feed should use.
-- **Icon — 201 × 201 PNG.** The browser tab favicon.
-
-The feed currently publishes the icon. That is Ghost's default behaviour for
-RSS, not an error in the theme — Ghost's built-in feed uses the site icon. A
-custom feed template can point at the logo instead, which is why item 2 needs
-no new asset.
-
-### One caution about the route
-
-The feed is currently at `/commentary/rss/`, and that URL is what the site
-declares in its `<head>` and what the `/rss/` redirect points to. If a custom
-feed is published at a *new* path, three things must move together: the route,
-the `<link rel="alternate">` tag in the theme, and the redirects. Simplest is
-to have the custom template serve the existing path rather than introduce a
-second feed — two live feeds is how aggregators end up subscribed to the wrong
-one.
-
-### The Google News sitemap
-
-Separate from all of the above and worth doing only if you are pursuing Google
-News specifically. Ghost already publishes a complete standard sitemap (898
-article URLs, correct and current), which is what ordinary Google indexing
-uses. A Google News sitemap is a different, narrower file covering only the
-last 48 hours of articles. It is not a prerequisite for being indexed, and it
-is the lowest-priority item on this page.
+**Settings → Code injection** takes arbitrary markup into every page's `<head>`
+without any theme access. It currently holds 921 characters and no structured
+data. That will not help this feed — code injection cannot reach RSS — but it
+is the lever for a separate item raised elsewhere: articles identify themselves
+to Google as generic `Article` where Google News prefers `NewsArticle`. That
+one can be addressed from the admin, and it is worth doing while the theme
+question is unresolved.
 
 ---
 
