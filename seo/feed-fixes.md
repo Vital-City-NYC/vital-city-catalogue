@@ -37,11 +37,14 @@ publication logo, and no `<width>`/`<height>` are declared alongside it.
 Apple News wants a proper channel logo and will render this one poorly. Even
 within the RSS spec, the `<image>` element is meant to be a publication logo.
 
-**What to do:** point `<image><url>` at a real logo asset and declare its
-dimensions. Note that Apple News' own logo requirements are set in the
-publisher tool during the application, not in the feed, and they change — take
-the exact sizes from Apple's form. The feed's job is simply to stop advertising
-a favicon.
+**What to do:** point `<image><url>` at the logo Ghost already holds — a
+1267 × 265 PNG, set under Settings → General as the site Logo — rather than the
+201 × 201 icon, and declare the dimensions. No new artwork is needed. See the
+section below on custom feeds for the mechanism.
+
+Apple News' own logo requirements are set in its publisher tool during the
+application, not in the feed, and they change — take the exact sizes from
+Apple's form. The feed's job is simply to stop advertising a favicon.
 
 ## 3. Missing publisher metadata
 
@@ -55,6 +58,71 @@ Fifteen is enough to be accepted, but a new aggregator only ever sees what is
 in the feed at the moment it first reads it, so a longer feed gives a better
 first impression and back-fills more history on day one. Ghost controls this
 with the posts-per-page setting the feed inherits. **25–50 would be better.**
+
+---
+
+## Can Ghost's own tutorials do this without touching the theme?
+
+Ghost publishes two relevant guides — a custom RSS feed, and a Google News
+sitemap. Both are the right mechanism for everything above. **Neither is purely
+a settings change**, so the short answer is: they fix all four items, but they
+still need one file added to the theme.
+
+Both work the same way, in two parts:
+
+1. **A route**, added to `routes.yaml`. This part is self-serve — Ghost accepts
+   a `routes.yaml` upload under **Settings → Labs → Routes**, no deploy needed.
+2. **A template file** (`custom-rss.hbs` or similar) that produces the XML.
+   This part has to live inside the theme.
+
+So `routes.yaml` alone will not do it. The template is where `<language>`,
+`<copyright>`, the logo URL and the item count are actually set.
+
+**You do not necessarily need the original theme developers.** Ghost lets an
+administrator download the active theme as a zip, and upload a modified one,
+entirely through the admin interface: **Settings → Design → Theme → Download**,
+then re-upload the edited zip. If you download it, the template can be written
+for you and dropped in — no development environment required.
+
+### What a custom feed would fix
+
+| Item above | Fixed by a custom feed? |
+|---|---|
+| 1. Missing `<language>` | Yes — one line in the template |
+| 2. Favicon as logo | Yes — and see below, the right image already exists |
+| 3. Missing `<copyright>` | Yes — one line |
+| 4. Only 15 items | Yes — the template sets its own limit |
+
+### The logo is already in Ghost
+
+Worth knowing before anyone commissions artwork. Ghost holds two images:
+
+- **Logo — 1267 × 265 PNG.** A proper wordmark. This is the one the feed should use.
+- **Icon — 201 × 201 PNG.** The browser tab favicon.
+
+The feed currently publishes the icon. That is Ghost's default behaviour for
+RSS, not an error in the theme — Ghost's built-in feed uses the site icon. A
+custom feed template can point at the logo instead, which is why item 2 needs
+no new asset.
+
+### One caution about the route
+
+The feed is currently at `/commentary/rss/`, and that URL is what the site
+declares in its `<head>` and what the `/rss/` redirect points to. If a custom
+feed is published at a *new* path, three things must move together: the route,
+the `<link rel="alternate">` tag in the theme, and the redirects. Simplest is
+to have the custom template serve the existing path rather than introduce a
+second feed — two live feeds is how aggregators end up subscribed to the wrong
+one.
+
+### The Google News sitemap
+
+Separate from all of the above and worth doing only if you are pursuing Google
+News specifically. Ghost already publishes a complete standard sitemap (898
+article URLs, correct and current), which is what ordinary Google indexing
+uses. A Google News sitemap is a different, narrower file covering only the
+last 48 hours of articles. It is not a prerequisite for being indexed, and it
+is the lowest-priority item on this page.
 
 ---
 
