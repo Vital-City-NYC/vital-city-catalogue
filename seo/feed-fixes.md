@@ -112,11 +112,38 @@ separate requests**. Whoever does it writes one file.
 addition — a new template file, no redesign, nothing existing modified. It is
 not a proxy, an edge worker, or a rebuild of the feed pipeline.
 
-**One caution on the path.** The collection already auto-generates
-`/commentary/rss/`, and the site's `<head>` link and the `/rss/` redirects all
-point there. The custom route should serve that same path rather than adding a
-second feed somewhere else — two live feeds is how aggregators end up
-subscribed to the wrong one.
+**The path is the risky part — test it before pointing the live URL at it.**
+
+`/commentary/rss/` is currently produced *automatically* by the commentary
+collection, not by a route. A custom route would want to own the same URL, so
+the two collide. Ghost matches routes before collections, so the route should
+win, but this is the part to prove rather than assume, because **both failure
+modes are silent**:
+
+- The stock feed keeps being served and the new template looks like it did
+  nothing.
+- Or the path 404s and **every existing subscriber breaks at once**.
+
+Ghost collections are reported to take an `rss: false` flag that switches off
+the built-in feed, which exists precisely for this collision. I could not
+confirm that flag in the routing documentation I was able to read, so treat it
+as a lead to check rather than a settled answer.
+
+**Build it on a throwaway path first** — `/feed-test/rss/` — confirm the output,
+and only then move it onto `/commentary/rss/`. The site's `<head>` link and the
+`/rss/`, `/feed/` and `/atom.xml` redirects all point at that path, so it is the
+one URL that must not break.
+
+**Two notes for whoever writes the template:**
+
+- **The 15-item cap is fixed in this same file.** It is a property of Ghost's
+  default feed, not a site setting, so a custom template simply chooses the
+  number — the route's limit, or `{{#get "posts" limit="50"}}` in the template.
+  Item 4 is a number in the file you are already adding, not a separate problem.
+- **Escaping is the likely regression.** A custom feed is hand-written markup,
+  so wrap post content in CDATA and validate the output. Escaping bugs produce a
+  feed that parses for some readers and not others, which is far harder to
+  notice than a feed that fails outright.
 
 ### The logo needs no new artwork
 
