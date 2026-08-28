@@ -1,27 +1,34 @@
 {
   "meta": {
-    "generated_at": "2026-08-27T14:47:28.658410+00:00",
+    "generated_at": "2026-08-28T01:45:19.240807+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 897,
+    "total_posts": 898,
     "total_authors": 496,
     "total_issues": 29,
     "total_topics": 213,
     "date_range": [
       "2021-09-15",
-      "2026-08-26"
+      "2026-08-27"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 1,
+    "new_articles": [
+      {
+        "title": "Mamdani\u2019s Childcare Strategy Should Focus on Equity",
+        "url": "https://www.vitalcitynyc.org/mamdani-universal-childcare-equity/",
+        "published_date": "2026-08-27",
+        "primary_author": null
+      }
+    ]
   },
-  "total_pieces": 897,
+  "total_pieces": 898,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 185
+    "2026": 186
   },
   "by_month": {
     "2021-09": 1,
@@ -77,12 +84,12 @@
     "2026-05": 23,
     "2026-06": 44,
     "2026-07": 22,
-    "2026-08": 15
+    "2026-08": 16
   },
   "by_type": [
     [
       "opinion/commentary",
-      723
+      724
     ],
     [
       "q&a",
@@ -120,11 +127,11 @@
     ],
     [
       "History",
-      142
+      143
     ],
     [
       "City Government",
-      139
+      140
     ],
     [
       "Government Operations",
@@ -155,12 +162,12 @@
       55
     ],
     [
-      "Police Reform",
+      "Politics",
       55
     ],
     [
-      "Politics",
-      55
+      "Police Reform",
+      54
     ],
     [
       "Jails",
@@ -184,7 +191,7 @@
     ],
     [
       "Education",
-      30
+      31
     ],
     [
       "data",
@@ -219,7 +226,7 @@
   "by_credential_pieces": [
     [
       "Academic",
-      219
+      220
     ],
     [
       "Nonprofit / advocacy",
@@ -338,14 +345,14 @@
       "2022": 12,
       "2023": 28,
       "2024": 38,
-      "2025": 52,
+      "2025": 53,
       "2026": 12
     },
     "City Government": {
       "2023": 4,
       "2024": 20,
       "2025": 54,
-      "2026": 61
+      "2026": 62
     },
     "Government Operations": {
       "2022": 1,
@@ -383,17 +390,17 @@
     }
   },
   "wc_stats": {
-    "n": 887,
-    "median": 1618,
+    "n": 888,
+    "median": 1616,
     "mean": 1894,
     "p90": 2841,
     "max": 30332,
     "p10": 908,
-    "p25": 1269,
+    "p25": 1268,
     "p75": 2137,
     "p95": 3846,
     "no_count": 10,
-    "core_1000_2499": 650,
+    "core_1000_2499": 651,
     "under_500": 43,
     "over_5000": 24
   },
@@ -408,7 +415,7 @@
     ],
     [
       "1,000-1,999",
-      518
+      519
     ],
     [
       "2,000-2,999",
@@ -450,7 +457,7 @@
       {
         "floor": 1000,
         "label": "1,000",
-        "n": 108
+        "n": 109
       },
       {
         "floor": 1250,
@@ -539,16 +546,16 @@
     },
     {
       "year": "2026",
-      "n": 180,
-      "p25": 1253,
-      "median": 1662,
-      "p75": 2395,
+      "n": 181,
+      "p25": 1236,
+      "median": 1639,
+      "p75": 2393,
       "max": 7139
     }
   ],
   "by_nauthors": {
     "1": 760,
-    "2": 108,
+    "2": 109,
     "3": 26,
     "4": 1,
     "8": 1,
@@ -706,34 +713,34 @@
       },
       {
         "year": "2026",
-        "weeks": 34.0,
-        "pieces": 185,
-        "outside_issues": 134,
-        "per_week_all": 5.44,
-        "per_week_outside_issues": 3.94,
+        "weeks": 34.1,
+        "pieces": 186,
+        "outside_issues": 135,
+        "per_week_all": 5.45,
+        "per_week_outside_issues": 3.95,
         "partial": true
       }
     ],
-    "total_weeks": 258.0,
+    "total_weeks": 258.1,
     "all_time_per_week": 3.48,
-    "all_time_per_week_outside_issues": 1.6,
+    "all_time_per_week_outside_issues": 1.61,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.94,
-    "current_per_week_all": 5.44,
+    "current_per_week_outside_issues": 3.95,
+    "current_per_week_all": 5.45,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 483,
       "published_away_from_drop": 63,
       "share_of_issue_pieces": 13.0,
-      "current_year_strict": 3.94,
-      "current_year_loose": 4.12,
-      "all_time_strict": 1.6,
+      "current_year_strict": 3.95,
+      "current_year_loose": 4.13,
+      "all_time_strict": 1.61,
       "all_time_loose": 1.85,
       "all_time_all": 3.48
     }
   },
   "rhythm": {
-    "n_dated": 897,
+    "n_dated": 898,
     "by_weekday": [
       {
         "day": "Mon",
@@ -748,12 +755,12 @@
       {
         "day": "Wed",
         "pieces": 434,
-        "share": 48.4
+        "share": 48.3
       },
       {
         "day": "Thu",
-        "pieces": 174,
-        "share": 19.4
+        "pieces": 175,
+        "share": 19.5
       },
       {
         "day": "Fri",
@@ -772,7 +779,7 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 48.4,
+    "top_day_share": 48.3,
     "midweek_share": 85.5,
     "weekend_pieces": 17,
     "by_month": [
@@ -828,9 +835,9 @@
       {
         "month": "August",
         "abbr": "Aug",
-        "pieces": 40,
+        "pieces": 41,
         "occurrences": 5,
-        "per_occurrence": 8.0
+        "per_occurrence": 8.2
       },
       {
         "month": "September",
