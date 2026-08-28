@@ -1,0 +1,50 @@
+routes:
+  /signup/: 
+    template: signup
+    # data: page.signup # When active data will be taken from the  "/signup/" page
+  /signin/: 
+    template: signin
+    # data: page.signin # When active data will be taken from the  "/signin/" page
+  /account/: 
+    template: account 
+    # data: page.account # When active data will be taken from the  "/account/" page
+  /membership/:
+    template: membership
+    # data: page.membership # When active data will be taken from the  "/membership/" page
+  /recommendations/:
+    template: recommend
+    # data: page.recommendations # When active data will be taken from the  "/recommendations/" page
+  
+  # Homepage
+  /:
+    template: home
+  /authors/: 
+    template: authors
+    # data: page.authors # When active data will be taken from the  "/authors/" page
+  /tags/:
+    template: tags
+    # data: page.tags # When active data will be taken from the  "/tags/" page
+  /archive/: 
+    controller: channel
+    template: archive
+    # data: page.archive # When active data will be taken from the  "/archive/" page
+  /editors-picks/: 
+    controller: channel
+    template: editors-picks
+    filter: tag:hash-editors-picks
+    # data: page.editors-picks # When active data will be taken from the  "/editors-picks/" page
+  /commentary/: 
+    controller: channel
+    template: commentary
+    filter: tag:-policy
+    data: page.commentary # When active data will be taken from the  "/commentary/" page
+
+collections:
+  /commentary/:
+    permalink: /{slug}/
+    template: commentary
+    filter: tag:-policy
+  
+taxonomies:
+  tag: /tag/{slug}/
+  author: /author/{slug}/

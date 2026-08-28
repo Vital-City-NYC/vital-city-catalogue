@@ -50,9 +50,18 @@ publication logo, and no `<width>`/`<height>` are declared alongside it.
 Apple News wants a proper channel logo and will render this one poorly. Even
 within the RSS spec, the `<image>` element is meant to be a publication logo.
 
-**What to do:** point `<image><url>` at the logo Ghost already holds — a
-1267 × 265 PNG, set under Settings → General as the site Logo — rather than the
-201 × 201 icon, and declare the dimensions. No new artwork is needed. See the
+**Two separate facts, easily confused:** the artwork already exists — Ghost
+holds a 1267 × 265 logo under Settings → General, so nobody needs to design
+anything. But *which* image the feed uses is decided inside Ghost's RSS
+generator, which always reaches for the site icon. The asset being present does
+not make this fixable from settings.
+
+**What to do:** in the custom template, point `<image><url>` at the site logo
+rather than the icon, and declare the dimensions.
+
+(Replacing the *icon* with the logo would make the stock feed serve it, and is
+a bad trade: Ghost's icon must be square, so a wordmark would be cropped or
+rejected, and it would change the browser tab icon everywhere.) See the
 section below on custom feeds for the mechanism.
 
 Apple News' own logo requirements are set in its publisher tool during the
@@ -149,6 +158,18 @@ one URL that must not break.
 
 Ghost already holds both images: a **1267 × 265 logo** and a **201 × 201 icon**.
 Stock RSS uses the icon. The custom template should point at the logo.
+
+### Tested and ruled out, 27 August — please do not retry
+
+The `/commentary/` collection was given `limit: 30` in `routes.yaml` and the
+change was uploaded and confirmed live. **The feed stayed at 15 items.** Ghost's
+feed generator ignores the collection's limit; that setting governs page size
+on the site only. The routes file was rolled back afterwards and the live
+configuration is unchanged.
+
+That was the last admin-side possibility for the item count. It is recorded here
+so the theme team can see the settings options were exhausted rather than
+skipped.
 
 ### Nothing here is fixable from the Ghost admin
 
