@@ -1,6 +1,6 @@
 {
- "generated_from": "2026-09-01T11:18:33.626368+00:00",
- "total_pieces": 898,
+ "generated_from": "2026-09-01T23:11:57.928980+00:00",
+ "total_pieces": 899,
  "n_topics_normalized": 206,
  "topic_bucket_sizes": {
   "subjects": 136,
@@ -9,7 +9,7 @@
  },
  "topic_bucket_piece_volume": {
   "subject_tag_applications": 1995,
-  "meta_tag_applications": 196,
+  "meta_tag_applications": 195,
   "rubric_tag_applications": 292
  },
  "rubrics_listed": [
@@ -90,13 +90,13 @@
  "beats": [
   {
    "beat": "City government & governance",
-   "pieces": 258,
-   "share": 28.7,
-   "median_words": 1572,
+   "pieces": 259,
+   "share": 28.8,
+   "median_words": 1564,
    "types": [
     [
      "opinion/commentary",
-     209
+     210
     ],
     [
      "q&a",
@@ -128,14 +128,14 @@
     "2023": 18,
     "2024": 58,
     "2025": 109,
-    "2026": 72
+    "2026": 73
    }
   },
   {
    "beat": "Crime & violence",
    "pieces": 237,
    "share": 26.4,
-   "median_words": 1635,
+   "median_words": 1639,
    "types": [
     [
      "opinion/commentary",
@@ -143,11 +143,11 @@
     ],
     [
      "data analysis",
-     30
+     29
     ],
     [
      "q&a",
-     13
+     14
     ],
     [
      "something else",
@@ -215,13 +215,13 @@
   },
   {
    "beat": "History & the long view",
-   "pieces": 146,
-   "share": 16.3,
-   "median_words": 1650,
+   "pieces": 144,
+   "share": 16.0,
+   "median_words": 1653,
    "types": [
     [
      "opinion/commentary",
-     132
+     130
     ],
     [
      "q&a",
@@ -244,15 +244,15 @@
     "2022": 12,
     "2023": 28,
     "2024": 39,
-    "2025": 55,
+    "2025": 53,
     "2026": 12
    }
   },
   {
    "beat": "Courts & prosecution",
-   "pieces": 114,
-   "share": 12.7,
-   "median_words": 1621,
+   "pieces": 113,
+   "share": 12.6,
+   "median_words": 1611,
    "types": [
     [
      "opinion/commentary",
@@ -260,7 +260,7 @@
     ],
     [
      "data analysis",
-     13
+     12
     ],
     [
      "q&a",
@@ -284,18 +284,18 @@
     "2023": 29,
     "2024": 39,
     "2025": 29,
-    "2026": 12
+    "2026": 11
    }
   },
   {
    "beat": "Culture & city life",
-   "pieces": 94,
-   "share": 10.5,
-   "median_words": 1599,
+   "pieces": 96,
+   "share": 10.7,
+   "median_words": 1600,
    "types": [
     [
      "opinion/commentary",
-     84
+     86
     ],
     [
      "book review",
@@ -318,7 +318,7 @@
     "2022": 5,
     "2023": 24,
     "2024": 26,
-    "2025": 25,
+    "2025": 27,
     "2026": 14
    }
   },
@@ -358,13 +358,13 @@
   },
   {
    "beat": "Housing",
-   "pieces": 80,
-   "share": 8.9,
-   "median_words": 1820,
+   "pieces": 81,
+   "share": 9.0,
+   "median_words": 1817,
    "types": [
     [
      "opinion/commentary",
-     68
+     69
     ],
     [
      "podcast",
@@ -388,7 +388,7 @@
     "2023": 5,
     "2024": 11,
     "2025": 37,
-    "2026": 26
+    "2026": 27
    }
   },
   {
@@ -426,54 +426,18 @@
    }
   },
   {
-   "beat": "Jails & incarceration",
-   "pieces": 69,
-   "share": 7.7,
-   "median_words": 1702,
-   "types": [
-    [
-     "opinion/commentary",
-     51
-    ],
-    [
-     "data analysis",
-     10
-    ],
-    [
-     "q&a",
-     6
-    ],
-    [
-     "book review",
-     1
-    ],
-    [
-     "something else",
-     1
-    ]
-   ],
-   "by_year": {
-    "2021": 1,
-    "2022": 7,
-    "2023": 15,
-    "2024": 34,
-    "2025": 5,
-    "2026": 7
-   }
-  },
-  {
    "beat": "Policing",
-   "pieces": 68,
-   "share": 7.6,
-   "median_words": 1773,
+   "pieces": 71,
+   "share": 7.9,
+   "median_words": 1782,
    "types": [
     [
      "opinion/commentary",
-     48
+     50
     ],
     [
      "q&a",
-     8
+     9
     ],
     [
      "map/tool",
@@ -496,8 +460,44 @@
     "2022": 8,
     "2023": 18,
     "2024": 10,
-    "2025": 9,
-    "2026": 23
+    "2025": 11,
+    "2026": 24
+   }
+  },
+  {
+   "beat": "Jails & incarceration",
+   "pieces": 68,
+   "share": 7.6,
+   "median_words": 1684,
+   "types": [
+    [
+     "opinion/commentary",
+     51
+    ],
+    [
+     "data analysis",
+     9
+    ],
+    [
+     "q&a",
+     6
+    ],
+    [
+     "book review",
+     1
+    ],
+    [
+     "something else",
+     1
+    ]
+   ],
+   "by_year": {
+    "2021": 1,
+    "2022": 7,
+    "2023": 15,
+    "2024": 34,
+    "2025": 5,
+    "2026": 6
    }
   },
   {
@@ -759,13 +759,13 @@
   },
   {
    "beat": "Civil society & philanthropy",
-   "pieces": 17,
-   "share": 1.9,
-   "median_words": 1572,
+   "pieces": 16,
+   "share": 1.8,
+   "median_words": 1560,
    "types": [
     [
      "opinion/commentary",
-     16
+     15
     ],
     [
      "q&a",
@@ -776,7 +776,7 @@
     "2022": 2,
     "2023": 3,
     "2024": 1,
-    "2025": 11
+    "2025": 10
    }
   }
  ],
@@ -794,11 +794,11 @@
   {
    "a": "Courts & prosecution",
    "b": "Crime & violence",
-   "pieces": 39
+   "pieces": 38
   },
   {
    "a": "Crime & violence",
-   "b": "History & the long view",
+   "b": "Policing",
    "pieces": 38
   },
   {
@@ -808,8 +808,8 @@
   },
   {
    "a": "Crime & violence",
-   "b": "Policing",
-   "pieces": 35
+   "b": "History & the long view",
+   "pieces": 36
   },
   {
    "a": "City government & governance",
@@ -829,7 +829,7 @@
   {
    "a": "City government & governance",
    "b": "Housing",
-   "pieces": 25
+   "pieces": 26
   },
   {
    "a": "City government & governance",
@@ -837,14 +837,14 @@
    "pieces": 25
   },
   {
-   "a": "Courts & prosecution",
-   "b": "Jails & incarceration",
-   "pieces": 23
-  },
-  {
    "a": "City government & governance",
    "b": "Courts & prosecution",
    "pieces": 23
+  },
+  {
+   "a": "Courts & prosecution",
+   "b": "Jails & incarceration",
+   "pieces": 22
   },
   {
    "a": "City government & governance",
@@ -867,14 +867,14 @@
    "pieces": 17
   },
   {
+   "a": "Crime & violence",
+   "b": "Culture & city life",
+   "pieces": 17
+  },
+  {
    "a": "Culture & city life",
    "b": "Land use & the built city",
    "pieces": 16
-  },
-  {
-   "a": "Crime & violence",
-   "b": "Culture & city life",
-   "pieces": 15
   },
   {
    "a": "Housing",
@@ -906,10 +906,10 @@
   },
   {
    "beat": "Jails & incarceration",
-   "pieces": 69,
+   "pieces": 68,
    "distinct_bylines": 31,
-   "top5_share": 58.0,
-   "vital_city_share": 20.3,
+   "top5_share": 57.4,
+   "vital_city_share": 19.1,
    "top3": [
     {
      "name": "Elizabeth Glazer",
@@ -917,7 +917,7 @@
     },
     {
      "name": "Vital City",
-     "pieces": 14
+     "pieces": 13
     },
     {
      "name": "Vincent Schiraldi",
@@ -948,14 +948,14 @@
   },
   {
    "beat": "Policing",
-   "pieces": 68,
-   "distinct_bylines": 32,
-   "top5_share": 48.5,
-   "vital_city_share": 20.6,
+   "pieces": 71,
+   "distinct_bylines": 33,
+   "top5_share": 47.9,
+   "vital_city_share": 21.1,
    "top3": [
     {
      "name": "Vital City",
-     "pieces": 14
+     "pieces": 15
     },
     {
      "name": "Brandon del Pozo",
@@ -990,9 +990,9 @@
   },
   {
    "beat": "Civil society & philanthropy",
-   "pieces": 17,
-   "distinct_bylines": 16,
-   "top5_share": 35.3,
+   "pieces": 16,
+   "distinct_bylines": 15,
+   "top5_share": 37.5,
    "vital_city_share": 0.0,
    "top3": [
     {
@@ -1004,7 +1004,7 @@
      "pieces": 1
     },
     {
-     "name": "Brian DeLay",
+     "name": "Jack Rakove",
      "pieces": 1
     }
    ]
@@ -1053,14 +1053,14 @@
   },
   {
    "beat": "Courts & prosecution",
-   "pieces": 114,
+   "pieces": 113,
    "distinct_bylines": 72,
-   "top5_share": 31.6,
-   "vital_city_share": 14.9,
+   "top5_share": 31.0,
+   "vital_city_share": 14.2,
    "top3": [
     {
      "name": "Vital City",
-     "pieces": 17
+     "pieces": 16
     },
     {
      "name": "Elizabeth Glazer",
@@ -1075,7 +1075,7 @@
   {
    "beat": "Crime & violence",
    "pieces": 237,
-   "distinct_bylines": 116,
+   "distinct_bylines": 115,
    "top5_share": 29.5,
    "vital_city_share": 12.7,
    "top3": [
@@ -1115,27 +1115,6 @@
    ]
   },
   {
-   "beat": "Culture & city life",
-   "pieces": 94,
-   "distinct_bylines": 60,
-   "top5_share": 28.7,
-   "vital_city_share": 3.2,
-   "top3": [
-    {
-     "name": "Greg Berman",
-     "pieces": 9
-    },
-    {
-     "name": "Vishaan Chakrabarti",
-     "pieces": 7
-    },
-    {
-     "name": "A Survey",
-     "pieces": 4
-    }
-   ]
-  },
-  {
    "beat": "Race, gender & inequality",
    "pieces": 28,
    "distinct_bylines": 25,
@@ -1153,6 +1132,27 @@
     {
      "name": "Eli Dvorkin",
      "pieces": 1
+    }
+   ]
+  },
+  {
+   "beat": "Culture & city life",
+   "pieces": 96,
+   "distinct_bylines": 61,
+   "top5_share": 28.1,
+   "vital_city_share": 3.1,
+   "top3": [
+    {
+     "name": "Greg Berman",
+     "pieces": 9
+    },
+    {
+     "name": "Vishaan Chakrabarti",
+     "pieces": 7
+    },
+    {
+     "name": "A Survey",
+     "pieces": 4
     }
    ]
   },
@@ -1221,9 +1221,9 @@
   },
   {
    "beat": "City government & governance",
-   "pieces": 258,
-   "distinct_bylines": 160,
-   "top5_share": 24.8,
+   "pieces": 259,
+   "distinct_bylines": 161,
+   "top5_share": 24.7,
    "vital_city_share": 8.9,
    "top3": [
     {
@@ -1242,10 +1242,10 @@
   },
   {
    "beat": "Housing",
-   "pieces": 80,
-   "distinct_bylines": 59,
-   "top5_share": 23.8,
-   "vital_city_share": 5.0,
+   "pieces": 81,
+   "distinct_bylines": 60,
+   "top5_share": 23.5,
+   "vital_city_share": 4.9,
    "top3": [
     {
      "name": "Jamie Rubin",
@@ -1305,10 +1305,10 @@
   },
   {
    "beat": "History & the long view",
-   "pieces": 146,
-   "distinct_bylines": 108,
-   "top5_share": 16.4,
-   "vital_city_share": 4.1,
+   "pieces": 144,
+   "distinct_bylines": 106,
+   "top5_share": 16.7,
+   "vital_city_share": 4.2,
    "top3": [
     {
      "name": "Vital City",
@@ -1328,21 +1328,21 @@
  "history_lens_reach": [
   {
    "beat": "Culture & city life",
-   "pieces": 94,
+   "pieces": 96,
    "with_history": 41,
-   "share": 43.6
-  },
-  {
-   "beat": "Civil society & philanthropy",
-   "pieces": 17,
-   "with_history": 4,
-   "share": 23.5
+   "share": 42.7
   },
   {
    "beat": "Race, gender & inequality",
    "pieces": 28,
    "with_history": 6,
    "share": 21.4
+  },
+  {
+   "beat": "Civil society & philanthropy",
+   "pieces": 16,
+   "with_history": 3,
+   "share": 18.8
   },
   {
    "beat": "Land use & the built city",
@@ -1353,8 +1353,8 @@
   {
    "beat": "Crime & violence",
    "pieces": 237,
-   "with_history": 38,
-   "share": 16.0
+   "with_history": 36,
+   "share": 15.2
   },
   {
    "beat": "Media & journalism",
@@ -1376,15 +1376,15 @@
   },
   {
    "beat": "Housing",
-   "pieces": 80,
+   "pieces": 81,
    "with_history": 8,
-   "share": 10.0
+   "share": 9.9
   },
   {
    "beat": "Courts & prosecution",
-   "pieces": 114,
+   "pieces": 113,
    "with_history": 11,
-   "share": 9.6
+   "share": 9.7
   },
   {
    "beat": "Climate, environment & sanitation",
@@ -1394,15 +1394,15 @@
   },
   {
    "beat": "City government & governance",
-   "pieces": 258,
+   "pieces": 259,
    "with_history": 20,
-   "share": 7.8
+   "share": 7.7
   },
   {
    "beat": "Jails & incarceration",
-   "pieces": 69,
+   "pieces": 68,
    "with_history": 5,
-   "share": 7.2
+   "share": 7.4
   },
   {
    "beat": "Homelessness & social services",
@@ -1418,9 +1418,9 @@
   },
   {
    "beat": "Policing",
-   "pieces": 68,
+   "pieces": 71,
    "with_history": 3,
-   "share": 4.4
+   "share": 4.2
   },
   {
    "beat": "Politics & elections",
@@ -1484,15 +1484,15 @@
    },
    "2026": {
     "cj": 49,
-    "total": 186,
-    "share": 26.3
+    "total": 187,
+    "share": 26.2
    }
   }
  },
  "beats_per_piece": {
   "0": 16,
   "1": 199,
-  "2": 551,
+  "2": 552,
   "3": 114,
   "4": 15,
   "5": 3
@@ -1513,13 +1513,13 @@
    },
    {
     "stance": "Diagnosing what's broken",
-    "pieces": 58,
-    "share_of_rubriced": 19.9
+    "pieces": 57,
+    "share_of_rubriced": 19.6
    },
    {
     "stance": "Looking ahead",
-    "pieces": 20,
-    "share_of_rubriced": 6.9
+    "pieces": 21,
+    "share_of_rubriced": 7.2
    },
    {
     "stance": "Looking back",
@@ -1604,8 +1604,8 @@
  },
  "curation": {
   "in_curated_issue": 483,
-  "share": 53.8,
-  "standalone": 415,
+  "share": 53.7,
+  "standalone": 416,
   "n_issues_and_series": 29,
   "named_series_top": [
    {
@@ -1669,14 +1669,14 @@
    "2026"
   ],
   "early_pieces": 200,
-  "late_pieces": 473,
+  "late_pieces": 474,
   "beats": [
    {
     "beat": "City government & governance",
-    "pieces": 258,
+    "pieces": 259,
     "early": 9.5,
-    "late": 38.3,
-    "change": 28.8
+    "late": 38.4,
+    "change": 28.9
    },
    {
     "beat": "Politics & elections",
@@ -1687,10 +1687,10 @@
    },
    {
     "beat": "Housing",
-    "pieces": 80,
+    "pieces": 81,
     "early": 3.0,
-    "late": 13.3,
-    "change": 10.3
+    "late": 13.5,
+    "change": 10.5
    },
    {
     "beat": "Money, budgets & the economy",
@@ -1731,43 +1731,43 @@
     "beat": "Land use & the built city",
     "pieces": 156,
     "early": 18.5,
-    "late": 17.8,
-    "change": -0.7
-   },
-   {
-    "beat": "History & the long view",
-    "pieces": 146,
-    "early": 20.0,
-    "late": 14.2,
-    "change": -5.8
+    "late": 17.7,
+    "change": -0.8
    },
    {
     "beat": "Policing",
-    "pieces": 68,
+    "pieces": 71,
     "early": 13.0,
-    "late": 6.8,
-    "change": -6.2
+    "late": 7.4,
+    "change": -5.6
    },
    {
     "beat": "Culture & city life",
-    "pieces": 94,
+    "pieces": 96,
     "early": 14.5,
-    "late": 8.2,
+    "late": 8.6,
+    "change": -5.9
+   },
+   {
+    "beat": "History & the long view",
+    "pieces": 144,
+    "early": 20.0,
+    "late": 13.7,
     "change": -6.3
    },
    {
     "beat": "Courts & prosecution",
-    "pieces": 114,
+    "pieces": 113,
     "early": 17.0,
-    "late": 8.7,
-    "change": -8.3
+    "late": 8.4,
+    "change": -8.6
    },
    {
     "beat": "Jails & incarceration",
-    "pieces": 69,
+    "pieces": 68,
     "early": 11.5,
-    "late": 2.5,
-    "change": -9.0
+    "late": 2.3,
+    "change": -9.2
    },
    {
     "beat": "Health, mental health & drugs",
@@ -1780,8 +1780,8 @@
     "beat": "Crime & violence",
     "pieces": 237,
     "early": 40.0,
-    "late": 19.5,
-    "change": -20.5
+    "late": 19.4,
+    "change": -20.6
    }
   ]
  },
@@ -2252,8 +2252,8 @@
   },
   {
    "word": "crime",
-   "headlines": 47,
-   "share": 5.2
+   "headlines": 46,
+   "share": 5.1
   },
   {
    "word": "jail",
@@ -2263,12 +2263,12 @@
   {
    "word": "mayor",
    "headlines": 31,
-   "share": 3.5
+   "share": 3.4
   },
   {
    "word": "conversation",
-   "headlines": 26,
-   "share": 2.9
+   "headlines": 27,
+   "share": 3.0
   },
   {
    "word": "public",
@@ -2286,11 +2286,6 @@
    "share": 2.2
   },
   {
-   "word": "state",
-   "headlines": 18,
-   "share": 2.0
-  },
-  {
    "word": "safety",
    "headlines": 18,
    "share": 2.0
@@ -2304,6 +2299,11 @@
    "word": "adams",
    "headlines": 18,
    "share": 2.0
+  },
+  {
+   "word": "state",
+   "headlines": 17,
+   "share": 1.9
   },
   {
    "word": "zohran",
@@ -2346,12 +2346,12 @@
    "share": 1.6
   },
   {
-   "word": "pricing",
-   "headlines": 13,
-   "share": 1.4
+   "word": "gun",
+   "headlines": 14,
+   "share": 1.6
   },
   {
-   "word": "gun",
+   "word": "pricing",
    "headlines": 13,
    "share": 1.4
   },
@@ -2406,14 +2406,14 @@
    "share": 1.1
   },
   {
-   "word": "editors",
+   "word": "good",
    "headlines": 10,
    "share": 1.1
   },
   {
-   "word": "beyond",
-   "headlines": 9,
-   "share": 1.0
+   "word": "editors",
+   "headlines": 10,
+   "share": 1.1
   },
   {
    "word": "needs",
@@ -2448,21 +2448,21 @@
  ],
  "headline_signal_test": {
   "argument_pieces": 786,
-  "excluded_non_argument": 112,
-  "base_rate_data_analysis": 6.2,
-  "base_rate_opinion": 93.8,
+  "excluded_non_argument": 113,
+  "base_rate_data_analysis": 6.1,
+  "base_rate_opinion": 93.9,
   "rows": [
    {
     "signal": "analysis signal",
-    "headlines": 47,
-    "share_of_argument": 6.0,
-    "pct_data_analysis": 51.1,
+    "headlines": 46,
+    "share_of_argument": 5.9,
+    "pct_data_analysis": 50.0,
     "lift_vs_base": 8.2
    },
    {
     "signal": "opinion signal",
-    "headlines": 72,
-    "share_of_argument": 9.2,
+    "headlines": 73,
+    "share_of_argument": 9.3,
     "pct_data_analysis": 1.4,
     "lift_vs_base": 0.2
    },
@@ -2471,7 +2471,7 @@
     "headlines": 3,
     "share_of_argument": 0.4,
     "pct_data_analysis": 33.3,
-    "lift_vs_base": 5.3
+    "lift_vs_base": 5.5
    },
    {
     "signal": "no signal",
@@ -2498,11 +2498,11 @@
   }
  },
  "bench": {
-  "primary_bylines": 417,
-  "wrote_once": 290,
-  "wrote_once_share": 69.5
+  "primary_bylines": 416,
+  "wrote_once": 287,
+  "wrote_once_share": 69.0
  },
- "history_only_pieces": 105,
+ "history_only_pieces": 103,
  "pieces_with_no_subject_tag": {
   "count": 16,
   "examples": [
@@ -2642,13 +2642,13 @@
  "subtopics": [
   {
    "beat": "City government & governance",
-   "pieces": 258,
+   "pieces": 259,
    "classified_pct": 59,
    "subtopics": [
     {
      "name": "General / mixed",
      "n": 106,
-     "share": 41.1,
+     "share": 40.9,
      "examples": [
       "A Smarter Way To Roll Out the Pied-à-Terre Surcharge",
       "When Rent Regulation Makes Sense",
@@ -2658,7 +2658,7 @@
     {
      "name": "Mayoral power & leadership",
      "n": 97,
-     "share": 37.6,
+     "share": 37.5,
      "examples": [
       "Zohran Mamdani's Promise and the Reality of Supermarket Prices",
       "Appreciate Mamdani’s Housing Achievement",
@@ -2668,7 +2668,7 @@
     {
      "name": "Agency operations & delivery",
      "n": 27,
-     "share": 10.5,
+     "share": 10.4,
      "examples": [
       "Mamdani’s Childcare Strategy Should Focus on Equity",
       "Mamdani’s PIT Crews: Government Innovation, or Innovation Theater?",
@@ -2678,7 +2678,7 @@
     {
      "name": "Charter revision & structure",
      "n": 11,
-     "share": 4.3,
+     "share": 4.2,
      "examples": [
       "13 Fixes for New York City Government That Go Beyond the Charter",
       "What Mamdani's Efficiency Commission Got Right — and Where it Fell Short",
@@ -2696,6 +2696,14 @@
      ]
     },
     {
+     "name": "Council, comptroller & the rest",
+     "n": 4,
+     "share": 1.5,
+     "examples": [
+      "Why the City Council Must Confirm John Mangin"
+     ]
+    },
+    {
      "name": "The civil service & workforce",
      "n": 3,
      "share": 1.2,
@@ -2703,12 +2711,6 @@
       "The Other Side of Affordability",
       "New York’s Civil Service System vs. Public Sector Progress"
      ]
-    },
-    {
-     "name": "Council, comptroller & the rest",
-     "n": 3,
-     "share": 1.2,
-     "examples": []
     },
     {
      "name": "COGE & government efficiency",
@@ -2737,12 +2739,12 @@
     },
     {
      "name": "Gun violence & shootings",
-     "n": 71,
-     "share": 30.0,
+     "n": 72,
+     "share": 30.4,
      "examples": [
+      "The NYPD’s Crime-Reduction Strategy: Chief of Department Michael LiPetri in Conversation",
       "New York City’s Crime Puzzle",
-      "How Criminals Get Their Guns",
-      "The Growth of the Firearm Industry"
+      "How Criminals Get Their Guns"
      ]
     },
     {
@@ -2767,12 +2769,12 @@
     },
     {
      "name": "Crime trends & the data",
-     "n": 13,
-     "share": 5.5,
+     "n": 12,
+     "share": 5.1,
      "examples": [
       "Reality Check: Why Do New York City’s Crime Numbers Change?",
       "The State of Crime in New York City: 2025 and Beyond",
-      "The State of Crime in New York City: 2025 and Beyond"
+      "Reality Check: Has Youth Crime in New York Risen After Raise the Age?"
      ]
     },
     {
@@ -2882,12 +2884,12 @@
   },
   {
    "beat": "History & the long view",
-   "pieces": 146,
+   "pieces": 144,
    "classified_pct": 44,
    "subtopics": [
     {
      "name": "General / mixed",
-     "n": 82,
+     "n": 81,
      "share": 56.2,
      "examples": [
       "Pragmatic Philanthropy: Appreciating Nathan Straus",
@@ -2898,7 +2900,7 @@
     {
      "name": "Crime & justice history",
      "n": 25,
-     "share": 17.1,
+     "share": 17.4,
      "examples": [
       "What is the Future of ‘Renewable Rikers’ Island?",
       "The Case Against Futility",
@@ -2908,7 +2910,7 @@
     {
      "name": "Built-city history",
      "n": 16,
-     "share": 11.0,
+     "share": 11.1,
      "examples": [
       "Time to Build Big Again",
       "New York’s Wooden Water Tanks: A Perfect Fusion of Form and Function",
@@ -2918,7 +2920,7 @@
     {
      "name": "Political history",
      "n": 14,
-     "share": 9.6,
+     "share": 9.7,
      "examples": [
       "Charter Revision Politics: A Primer",
       "Mamdani’s Victory, and Memories of Dinkins’",
@@ -2927,12 +2929,12 @@
     },
     {
      "name": "Social & cultural history",
-     "n": 7,
-     "share": 4.8,
+     "n": 6,
+     "share": 4.2,
      "examples": [
       "What New York Can Learn from the NIMBYs of the 19th Century",
       "A City of Winners and Losers: New York in the 1980s",
-      "Gun Culture Then and Now"
+      "New York City's Catholic Church at a Crossroads"
      ]
     },
     {
@@ -2947,23 +2949,23 @@
   },
   {
    "beat": "Courts & prosecution",
-   "pieces": 114,
-   "classified_pct": 57,
+   "pieces": 113,
+   "classified_pct": 58,
    "subtopics": [
     {
      "name": "General / mixed",
-     "n": 49,
-     "share": 43.0,
+     "n": 48,
+     "share": 42.5,
      "examples": [
       "The State of Crime in New York City, Midyear 2026: The Detailed Picture",
       "The Voting Rights Act in New York City",
-      "The State of Crime in New York City: 2025 and Beyond"
+      "The Top Five Crime and Justice Stories of 2025"
      ]
     },
     {
      "name": "Corruption & public integrity",
      "n": 17,
-     "share": 14.9,
+     "share": 15.0,
      "examples": [
       "Adams’ Abdication Has New York City at Trump’s Mercy"
      ]
@@ -2971,7 +2973,7 @@
     {
      "name": "Prosecutors & DAs",
      "n": 14,
-     "share": 12.3,
+     "share": 12.4,
      "examples": [
       "Reality Check: How Safe are Manhattan (and Brooklyn)?"
      ]
@@ -2979,7 +2981,7 @@
     {
      "name": "Evidence & what works",
      "n": 13,
-     "share": 11.4,
+     "share": 11.5,
      "examples": [
       "Criminal Risk Assessment and the Character Trap",
       "Evidence Over Intuition"
@@ -2988,7 +2990,7 @@
     {
      "name": "Courts & judges",
      "n": 9,
-     "share": 7.9,
+     "share": 8.0,
      "examples": []
     },
     {
@@ -3040,13 +3042,13 @@
   },
   {
    "beat": "Culture & city life",
-   "pieces": 94,
-   "classified_pct": 46,
+   "pieces": 96,
+   "classified_pct": 45,
    "subtopics": [
     {
      "name": "General / mixed",
-     "n": 51,
-     "share": 54.3,
+     "n": 53,
+     "share": 55.2,
      "examples": [
       "Borrow and Steal: The Art of Reinvention in Nantes",
       "New York's Nameless Knights",
@@ -3056,7 +3058,7 @@
     {
      "name": "Arts & institutions",
      "n": 18,
-     "share": 19.1,
+     "share": 18.8,
      "examples": [
       "How to Survive in New York City, According to Spider-Man",
       "A Diamond, a Mayor and a Citywide Lesson Plan"
@@ -3065,7 +3067,7 @@
     {
      "name": "Books & ideas",
      "n": 10,
-     "share": 10.6,
+     "share": 10.4,
      "examples": [
       "Pragmatic Philanthropy: Appreciating Nathan Straus",
       "A Sweeping Critique of America's Justice System",
@@ -3075,7 +3077,7 @@
     {
      "name": "Sports",
      "n": 6,
-     "share": 6.4,
+     "share": 6.2,
      "examples": [
       "New York is the Town and the Team is the Knicks",
       "Why This Knicks Championship Means So Much",
@@ -3085,7 +3087,7 @@
     {
      "name": "City life & its rituals",
      "n": 4,
-     "share": 4.3,
+     "share": 4.2,
      "examples": [
       "The Urban Optimist’s Holiday Gift Guide"
      ]
@@ -3110,7 +3112,7 @@
     {
      "name": "Monuments & public memory",
      "n": 1,
-     "share": 1.1,
+     "share": 1.0,
      "examples": [
       "No City for Old Monuments?"
      ]
@@ -3182,13 +3184,13 @@
   },
   {
    "beat": "Housing",
-   "pieces": 80,
-   "classified_pct": 70,
+   "pieces": 81,
+   "classified_pct": 69,
    "subtopics": [
     {
      "name": "Supply, zoning & building more",
      "n": 32,
-     "share": 40.0,
+     "share": 39.5,
      "examples": [
       "Appreciate Mamdani’s Housing Achievement",
       "The Road to Producing More Housing Passes Through Meaningful Local Zoning Reforms",
@@ -3197,18 +3199,18 @@
     },
     {
      "name": "General / mixed",
-     "n": 24,
-     "share": 30.0,
+     "n": 25,
+     "share": 30.9,
      "examples": [
+      "Why the City Council Must Confirm John Mangin",
       "The Prosperity Equation",
-      "Why It Takes Four New Housing Units to Get One Person Off the Street",
-      "Dan Garodnick on What Comes After Yes"
+      "Why It Takes Four New Housing Units to Get One Person Off the Street"
      ]
     },
     {
      "name": "Affordability & subsidy",
      "n": 7,
-     "share": 8.8,
+     "share": 8.6,
      "examples": [
       "The Big Hole in Mamdani’s Housing Plan",
       "Mamdani’s Affordability Dilemma: The Challenge of Making New York City Housing Less Expensive",
@@ -3218,7 +3220,7 @@
     {
      "name": "Rent regulation & the freeze",
      "n": 7,
-     "share": 8.8,
+     "share": 8.6,
      "examples": [
       "When Rent Regulation Makes Sense",
       "After the Rent Freeze: What Happens to New York City’s Regulated Housing Stock Now and in the Future",
@@ -3228,7 +3230,7 @@
     {
      "name": "Living here: renters & buildings",
      "n": 4,
-     "share": 5.0,
+     "share": 4.9,
      "examples": [
       "Why Your Pre-War Radiator Runs Hot, Clangs at 3 a.m. and is Painted Silver",
       "It's a Jungle Out There",
@@ -3316,59 +3318,14 @@
    ]
   },
   {
-   "beat": "Jails & incarceration",
-   "pieces": 69,
-   "classified_pct": 64,
-   "subtopics": [
-    {
-     "name": "General / mixed",
-     "n": 25,
-     "share": 36.2,
-     "examples": [
-      "A Sweeping Critique of America's Justice System",
-      "The Unlikely Tool That Could Transform Second-Chance Hiring",
-      "The State of Crime in New York City: 2025 and Beyond"
-     ]
-    },
-    {
-     "name": "Rikers & closure",
-     "n": 24,
-     "share": 34.8,
-     "examples": [
-      "What Rikers’ Receiver Should Do Now",
-      "Stanley Richards on the Past, Present and Future of Rikers Island",
-      "The Rikers Receivership Risk — and Opportunity"
-     ]
-    },
-    {
-     "name": "Receivership & oversight",
-     "n": 8,
-     "share": 11.6,
-     "examples": []
-    },
-    {
-     "name": "Deaths & conditions in custody",
-     "n": 6,
-     "share": 8.7,
-     "examples": []
-    },
-    {
-     "name": "Jail population & who is held",
-     "n": 6,
-     "share": 8.7,
-     "examples": []
-    }
-   ]
-  },
-  {
    "beat": "Policing",
-   "pieces": 68,
-   "classified_pct": 69,
+   "pieces": 71,
+   "classified_pct": 70,
    "subtopics": [
     {
      "name": "General / mixed",
      "n": 21,
-     "share": 30.9,
+     "share": 29.6,
      "examples": [
       "A Sweeping Critique of America's Justice System",
       "New Mexico: Surprising Proving Ground for Two Big Mamdani Ideas?",
@@ -3377,8 +3334,8 @@
     },
     {
      "name": "The NYPD on the street",
-     "n": 19,
-     "share": 27.9,
+     "n": 21,
+     "share": 29.6,
      "examples": [
       "Cities Aren’t Putting Police Officers Where They’re Needed Most",
       "The Knicks, the Hooligans and the Cops",
@@ -3388,7 +3345,7 @@
     {
      "name": "Community safety & non-police response",
      "n": 10,
-     "share": 14.7,
+     "share": 14.1,
      "examples": [
       "For Inspiration on Mayor Mamdani’s Vision for Community Safety, Look to Newark",
       "Modern Community Safety Includes More than Police",
@@ -3398,7 +3355,7 @@
     {
      "name": "Street lighting",
      "n": 9,
-     "share": 13.2,
+     "share": 12.7,
      "examples": [
       "The Big Picture",
       "How to Get It Done",
@@ -3407,18 +3364,18 @@
     },
     {
      "name": "Strategy & deployment",
-     "n": 6,
-     "share": 8.8,
+     "n": 7,
+     "share": 9.9,
      "examples": [
       "Did NYPD's Zone Strategy Cause Crime to Drop?",
-      "Does Mayor Mamdani Have a Public Safety Strategy?",
-      "What ICE’s Recklessness Teaches Us About Real Policing"
+      "The NYPD’s Crime-Reduction Strategy: Chief of Department Michael LiPetri in Conversation",
+      "Does Mayor Mamdani Have a Public Safety Strategy?"
      ]
     },
     {
      "name": "Accountability & misconduct",
      "n": 1,
-     "share": 1.5,
+     "share": 1.4,
      "examples": [
       "Use AI to Analyze Bodyworn Camera Footage"
      ]
@@ -3426,7 +3383,7 @@
     {
      "name": "Staffing, budget & overtime",
      "n": 1,
-     "share": 1.5,
+     "share": 1.4,
      "examples": [
       "Reality Check: Does the NYPD Need To Hire More Cops?"
      ]
@@ -3434,7 +3391,52 @@
     {
      "name": "Reform & the future of policing",
      "n": 1,
-     "share": 1.5,
+     "share": 1.4,
+     "examples": []
+    }
+   ]
+  },
+  {
+   "beat": "Jails & incarceration",
+   "pieces": 68,
+   "classified_pct": 65,
+   "subtopics": [
+    {
+     "name": "General / mixed",
+     "n": 24,
+     "share": 35.3,
+     "examples": [
+      "A Sweeping Critique of America's Justice System",
+      "The Unlikely Tool That Could Transform Second-Chance Hiring",
+      "The State of Crime in New York City: 2025 and Beyond"
+     ]
+    },
+    {
+     "name": "Rikers & closure",
+     "n": 24,
+     "share": 35.3,
+     "examples": [
+      "What Rikers’ Receiver Should Do Now",
+      "Stanley Richards on the Past, Present and Future of Rikers Island",
+      "The Rikers Receivership Risk — and Opportunity"
+     ]
+    },
+    {
+     "name": "Receivership & oversight",
+     "n": 8,
+     "share": 11.8,
+     "examples": []
+    },
+    {
+     "name": "Deaths & conditions in custody",
+     "n": 6,
+     "share": 8.8,
+     "examples": []
+    },
+    {
+     "name": "Jail population & who is held",
+     "n": 6,
+     "share": 8.8,
      "examples": []
     }
    ]
@@ -3891,32 +3893,32 @@
   },
   {
    "beat": "Civil society & philanthropy",
-   "pieces": 17,
-   "classified_pct": 71,
+   "pieces": 16,
+   "classified_pct": 69,
    "subtopics": [
     {
      "name": "Nonprofits & their economics",
      "n": 7,
-     "share": 41.2,
+     "share": 43.8,
      "examples": [
       "Trump vs. Civil Society"
      ]
     },
     {
-     "name": "Philanthropy & foundations",
-     "n": 5,
-     "share": 29.4,
-     "examples": [
-      "Gun Culture Then and Now",
-      "A Brief Biography of the Second Amendment",
-      "One Nation Under Guns"
-     ]
-    },
-    {
      "name": "General / mixed",
      "n": 5,
-     "share": 29.4,
+     "share": 31.2,
      "examples": []
+    },
+    {
+     "name": "Philanthropy & foundations",
+     "n": 4,
+     "share": 25.0,
+     "examples": [
+      "A Brief Biography of the Second Amendment",
+      "One Nation Under Guns",
+      "Forging Firearm Folklore"
+     ]
     }
    ]
   }

@@ -1,5 +1,41 @@
 [
   {
+    "title": "Why the City Council Must Confirm John Mangin",
+    "slug": "john-mangin-bsa-chair-nyc-city-council",
+    "url": "https://www.vitalcitynyc.org/john-mangin-bsa-chair-nyc-city-council/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-09-01",
+    "published_at": "2026-09-01T13:23:25.000+00:00",
+    "updated_at": "2026-09-01T13:33:55.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Daniel Garodnick"
+    ],
+    "topics": [
+      "City Government",
+      "Housing"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "The nominee to lead the Board of Standards and Appeals is the right fit for the challenge ahead.",
+    "excerpt": "The nominee to lead the Board of Standards and Appeals is the right fit for the challenge ahead.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-01T091718.839.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Mark Lennihan / AP Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 794,
+    "reading_minutes": 3,
+    "id": "6a95df3633d0d80001c52fc7"
+  },
+  {
     "title": "Mamdani’s Childcare Strategy Should Focus on Equity",
     "slug": "mamdani-universal-childcare-equity",
     "url": "https://www.vitalcitynyc.org/mamdani-universal-childcare-equity/",
@@ -6336,214 +6372,43 @@
     "id": "69a04c0ad4006a00010a42dd"
   },
   {
-    "title": "The State of Crime in New York City: 2025 and Beyond",
-    "slug": "crime-in-new-york-city-trends-statistics",
-    "url": "https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/",
-    "type": "data analysis",
-    "type_basis": "tag:data-stories",
+    "title": "The NYPD’s Crime-Reduction Strategy: Chief of Department Michael LiPetri in Conversation",
+    "slug": "nypd-crime-strategy-questions-michael-lipetri",
+    "url": "https://www.vitalcitynyc.org/nypd-crime-strategy-questions-michael-lipetri/",
+    "type": "q&a",
+    "type_basis": "title:conversation",
     "published_date": "2026-02-19",
     "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-08-26T20:11:27.000+00:00",
+    "updated_at": "2026-04-15T13:36:25.000+00:00",
     "primary_author": null,
     "authors": [
       "Vital City"
     ],
     "topics": [
       "Crime",
-      "Incarceration",
-      "Justice",
-      "Where We Are",
-      "Crime Stories",
-      "Data Stories"
+      "Where We’re Headed",
+      "Police Reform"
     ],
     "issues": [
       "crime-looking-back-at-2025-and-ahead-to-2026"
     ],
     "issue_numbers": [],
-    "summary": "What happened in 2025 and what it bodes for 2026",
-    "excerpt": "What happened in 2025 and what it bodes for 2026",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/azyuesfobigegixz_copyofcroppingtool-png-auto-format-compress-1776259649997.jpg",
-    "feature_image_alt": "A checkerboard table in blue and black scattered with fallen leaves",
-    "feature_image_credit": "Melissa O'Shaughnessy",
+    "summary": "Gun violence is way down; assaults and other forms of violence are not. What’s next?",
+    "excerpt": "Gun violence is way down; assaults and other forms of violence are not. What’s next?",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/aypv_d0yxlcxvohp_mathias-wasik-nyc-004-auto-format-compress-1776259650474.jpg",
+    "feature_image_alt": "A police officer looks back over his shoulder near a blue barrier at night",
+    "feature_image_credit": "Mathias Wasik",
     "embeds": {
-      "flourish": [
-        {
-          "id": "26985192",
-          "src": "visualisation/26985192?1271209",
-          "url": "https://public.flourish.studio/visualisation/26985192/"
-        },
-        {
-          "id": "27572522",
-          "src": "visualisation/27572522?1271209",
-          "url": "https://public.flourish.studio/visualisation/27572522/"
-        },
-        {
-          "id": "26769061",
-          "src": "visualisation/26769061?1271209",
-          "url": "https://public.flourish.studio/visualisation/26769061/"
-        },
-        {
-          "id": "26768975",
-          "src": "visualisation/26768975?1271209",
-          "url": "https://public.flourish.studio/visualisation/26768975/"
-        },
-        {
-          "id": "26942014",
-          "src": "visualisation/26942014?1271209",
-          "url": "https://public.flourish.studio/visualisation/26942014/"
-        },
-        {
-          "id": "26955266",
-          "src": "visualisation/26955266?1271209",
-          "url": "https://public.flourish.studio/visualisation/26955266/"
-        },
-        {
-          "id": "26966401",
-          "src": "visualisation/26966401?1271209",
-          "url": "https://public.flourish.studio/visualisation/26966401/"
-        },
-        {
-          "id": "27513317",
-          "src": "visualisation/27513317?1271209",
-          "url": "https://public.flourish.studio/visualisation/27513317/"
-        },
-        {
-          "id": "27695732",
-          "src": "visualisation/27695732?1271209",
-          "url": "https://public.flourish.studio/visualisation/27695732/"
-        },
-        {
-          "id": "26984895",
-          "src": "visualisation/26984895?1271209",
-          "url": "https://public.flourish.studio/visualisation/26984895/"
-        },
-        {
-          "id": "27514899",
-          "src": "visualisation/27514899?1271209",
-          "url": "https://public.flourish.studio/visualisation/27514899/"
-        },
-        {
-          "id": "27514132",
-          "src": "visualisation/27514132?1271209",
-          "url": "https://public.flourish.studio/visualisation/27514132/"
-        },
-        {
-          "id": "27517413",
-          "src": "visualisation/27517413?1271209",
-          "url": "https://public.flourish.studio/visualisation/27517413/"
-        },
-        {
-          "id": "27637936",
-          "src": "visualisation/27637936?1271209",
-          "url": "https://public.flourish.studio/visualisation/27637936/"
-        },
-        {
-          "id": "26956155",
-          "src": "visualisation/26956155?1271209",
-          "url": "https://public.flourish.studio/visualisation/26956155/"
-        },
-        {
-          "id": "27518027",
-          "src": "visualisation/27518027?1271209",
-          "url": "https://public.flourish.studio/visualisation/27518027/"
-        },
-        {
-          "id": "27607918",
-          "src": "visualisation/27607918?1271209",
-          "url": "https://public.flourish.studio/visualisation/27607918/"
-        },
-        {
-          "id": "3584921",
-          "src": "story/3584921?1271209",
-          "url": "https://public.flourish.studio/story/3584921/"
-        },
-        {
-          "id": "27696978",
-          "src": "visualisation/27696978?1271209",
-          "url": "https://public.flourish.studio/visualisation/27696978/"
-        },
-        {
-          "id": "27681605",
-          "src": "visualisation/27681605?1271209",
-          "url": "https://public.flourish.studio/visualisation/27681605/"
-        },
-        {
-          "id": "26966966",
-          "src": "visualisation/26966966?1271209",
-          "url": "https://public.flourish.studio/visualisation/26966966/"
-        },
-        {
-          "id": "27591529",
-          "src": "visualisation/27591529?1271209",
-          "url": "https://public.flourish.studio/visualisation/27591529/"
-        },
-        {
-          "id": "22163700",
-          "src": "visualisation/22163700?1271209",
-          "url": "https://public.flourish.studio/visualisation/22163700/"
-        },
-        {
-          "id": "27590425",
-          "src": "visualisation/27590425?1271209",
-          "url": "https://public.flourish.studio/visualisation/27590425/"
-        },
-        {
-          "id": "27628953",
-          "src": "visualisation/27628953?1271209",
-          "url": "https://public.flourish.studio/visualisation/27628953/"
-        },
-        {
-          "id": "27682211",
-          "src": "visualisation/27682211?1271209",
-          "url": "https://public.flourish.studio/visualisation/27682211/"
-        },
-        {
-          "id": "27196814",
-          "src": "visualisation/27196814?1271209",
-          "url": "https://public.flourish.studio/visualisation/27196814/"
-        },
-        {
-          "id": "27196283",
-          "src": "visualisation/27196283?1271209",
-          "url": "https://public.flourish.studio/visualisation/27196283/"
-        },
-        {
-          "id": "3578021",
-          "src": "story/3578021?1271209",
-          "url": "https://public.flourish.studio/story/3578021/"
-        },
-        {
-          "id": "27605793",
-          "src": "visualisation/27605793?1271209",
-          "url": "https://public.flourish.studio/visualisation/27605793/"
-        },
-        {
-          "id": "27605819",
-          "src": "visualisation/27605819?1271209",
-          "url": "https://public.flourish.studio/visualisation/27605819/"
-        },
-        {
-          "id": "27647243",
-          "src": "visualisation/27647243?1271209",
-          "url": "https://public.flourish.studio/visualisation/27647243/"
-        },
-        {
-          "id": "27647329",
-          "src": "visualisation/27647329?1271209",
-          "url": "https://public.flourish.studio/visualisation/27647329/"
-        }
-      ],
+      "flourish": [],
       "iframes": [],
-      "counts": {
-        "flourish": 33
-      },
-      "total": 33
+      "counts": {},
+      "total": 0
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2897,
-    "reading_minutes": 13,
-    "id": "69a04c0ad4006a00010a42df"
+    "word_count": 1451,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a42e8"
   },
   {
     "title": "How To Deploy AI To Improve Policing in New York",
@@ -11730,47 +11595,6 @@
     "id": "69a04c0ad4006a00010a4013"
   },
   {
-    "title": "A Housing Agenda for the Next Mayor",
-    "slug": "a-housing-agenda-for-the-next-mayor",
-    "url": "https://www.vitalcitynyc.org/a-housing-agenda-for-the-next-mayor/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-17",
-    "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-08-26T18:36:13.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Jamie Rubin"
-    ],
-    "topics": [
-      "Housing",
-      "If I Had a Hammer...",
-      "City Government"
-    ],
-    "issues": [
-      "issue-14"
-    ],
-    "issue_numbers": [
-      14
-    ],
-    "summary": "Five ways the next administration can help provide an affordable place to live for every New Yorker",
-    "excerpt": "Five ways the next administration can help provide an affordable place to live for every New Yorker",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amq6oggnhvftpu35_croppingtool-7--png-auto-format-compress-1776259680515.jpg",
-    "feature_image_alt": "Golden sculpted figures climb across a building’s fire escape and windows",
-    "feature_image_credit": "Bill Tompkins / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2104,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a421c"
-  },
-  {
     "title": "The Rent Is Too Damn High (But Also Too Low)",
     "slug": "the-rent-is-too-damn-high-but-also-too-low",
     "url": "https://www.vitalcitynyc.org/the-rent-is-too-damn-high-but-also-too-low/",
@@ -11810,6 +11634,47 @@
     "word_count": 2162,
     "reading_minutes": 9,
     "id": "69a04c0ad4006a00010a4218"
+  },
+  {
+    "title": "A Housing Agenda for the Next Mayor",
+    "slug": "a-housing-agenda-for-the-next-mayor",
+    "url": "https://www.vitalcitynyc.org/a-housing-agenda-for-the-next-mayor/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-17",
+    "published_at": "2025-09-17T16:00:15.000+00:00",
+    "updated_at": "2026-08-26T18:36:13.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Jamie Rubin"
+    ],
+    "topics": [
+      "Housing",
+      "If I Had a Hammer...",
+      "City Government"
+    ],
+    "issues": [
+      "issue-14"
+    ],
+    "issue_numbers": [
+      14
+    ],
+    "summary": "Five ways the next administration can help provide an affordable place to live for every New Yorker",
+    "excerpt": "Five ways the next administration can help provide an affordable place to live for every New Yorker",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amq6oggnhvftpu35_croppingtool-7--png-auto-format-compress-1776259680515.jpg",
+    "feature_image_alt": "Golden sculpted figures climb across a building’s fire escape and windows",
+    "feature_image_credit": "Bill Tompkins / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2104,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a421c"
   },
   {
     "title": "Local Democracy is Land-Use Policy",
@@ -12525,62 +12390,20 @@
     "id": "69a04c0ad4006a00010a4262"
   },
   {
-    "title": "The Money Behind Mass Shootings",
-    "slug": "the-money-behind-mass-shootings",
-    "url": "https://www.vitalcitynyc.org/the-money-behind-mass-shootings/",
+    "title": "Before the Trigger Is Pulled",
+    "slug": "before-the-trigger-is-pulled",
+    "url": "https://www.vitalcitynyc.org/before-the-trigger-is-pulled/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "updated_at": "2026-08-26T18:36:19.000+00:00",
     "primary_author": null,
     "authors": [
-      "Greg Lickenbrock"
+      "Jens Ludwig"
     ],
     "topics": [
       "Gun Violence",
-      "Modern Evolution: Marketing and Profits",
-      "Economics"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
-    "excerpt": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama5awgnhvfto1yk_gettyimages-107596655-auto-format-compress-1776259686592.jpg",
-    "feature_image_alt": "Silhouettes of armed tactical officers decorate a wall at a gun trade show",
-    "feature_image_credit": "The Washington Post / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2177,
-    "reading_minutes": 9,
-    "id": "69a04c0ad4006a00010a401f"
-  },
-  {
-    "title": "Breaking Through With the Next Generation",
-    "slug": "breaking-through-with-the-next-generation-on-firearms",
-    "url": "https://www.vitalcitynyc.org/breaking-through-with-the-next-generation-on-firearms/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:51.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Nina Vinik"
-    ],
-    "topics": [
-      "Gun Violence",
-      "Youth",
       "What Can Be Done?"
     ],
     "issues": [
@@ -12589,22 +12412,35 @@
     "issue_numbers": [
       13
     ],
-    "summary": "A new image of firearms is taking hold among younger Americans.",
-    "excerpt": "A new image of firearms is taking hold among younger Americans.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amb9y2gnhvfto2l__506651127239-auto-format-compress-1776259687255.jpg",
-    "feature_image_alt": "A young man’s T-shirt shows a rifle and reads Come and Take It",
-    "feature_image_credit": "Tony Gutierrez / AP Photo",
+    "summary": "The case for smarter deterrence",
+    "excerpt": "The case for smarter deterrence",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambq8ggnhvfto2ck_par112603-auto-format-compress-1776259685262.jpg",
+    "feature_image_alt": "A woman walks past a comic-style mural of a gunman shouting 'Eat Lead’",
+    "feature_image_credit": "Alex Webb / Magnum Photos",
     "embeds": {
-      "flourish": [],
+      "flourish": [
+        {
+          "id": "24748665",
+          "src": "visualisation/24748665?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748665/"
+        },
+        {
+          "id": "24748637",
+          "src": "visualisation/24748637?1271209",
+          "url": "https://public.flourish.studio/visualisation/24748637/"
+        }
+      ],
       "iframes": [],
-      "counts": {},
-      "total": 0
+      "counts": {
+        "flourish": 2
+      },
+      "total": 2
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1635,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4024"
+    "word_count": 1405,
+    "reading_minutes": 6,
+    "id": "69a04c0ad4006a00010a401b"
   },
   {
     "title": "Pointing a Firearm or Looking Down Its Barrel",
@@ -12730,6 +12566,47 @@
     "id": "69a04c0ad4006a00010a401c"
   },
   {
+    "title": "The Money Behind Mass Shootings",
+    "slug": "the-money-behind-mass-shootings",
+    "url": "https://www.vitalcitynyc.org/the-money-behind-mass-shootings/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:50.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Greg Lickenbrock"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Modern Evolution: Marketing and Profits",
+      "Economics"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
+    "excerpt": "The gun industry turned the AR-15 into its most profitable creation, and we’re all paying the price.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama5awgnhvfto1yk_gettyimages-107596655-auto-format-compress-1776259686592.jpg",
+    "feature_image_alt": "Silhouettes of armed tactical officers decorate a wall at a gun trade show",
+    "feature_image_credit": "The Washington Post / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2177,
+    "reading_minutes": 9,
+    "id": "69a04c0ad4006a00010a401f"
+  },
+  {
     "title": "The 80/20 Rule of Gun Supply",
     "slug": "the-80-20-rule-of-gun-supply",
     "url": "https://www.vitalcitynyc.org/the-80-20-rule-of-gun-supply/",
@@ -12822,51 +12699,9 @@
     "id": "69a04c0ad4006a00010a4211"
   },
   {
-    "title": "The Case Against Futility",
-    "slug": "the-case-against-futility-in-gun-regulation",
-    "url": "https://www.vitalcitynyc.org/the-case-against-futility-in-gun-regulation/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-08-26T18:36:16.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Philip J. Cook",
-      "Rosanna Smart"
-    ],
-    "topics": [
-      "Gun Violence",
-      "What Can Be Done?",
-      "History"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "Why making guns slightly harder to get reduces their use in violent crime",
-    "excerpt": "Why making guns slightly harder to get reduces their use in violent crime",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amblpwgnhvfto1-f_97010301562-auto-format-compress-1776259687438.jpg",
-    "feature_image_alt": "Three children’s feet in sandals stand around spilled bullet casings",
-    "feature_image_credit": "Gregory Smith / AP Photo",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 2468,
-    "reading_minutes": 11,
-    "id": "69a04c0ad4006a00010a4219"
-  },
-  {
-    "title": "Guns, My Family and Me",
-    "slug": "guns-my-family-and-me",
-    "url": "https://www.vitalcitynyc.org/guns-my-family-and-me/",
+    "title": "Breaking Through With the Next Generation",
+    "slug": "breaking-through-with-the-next-generation-on-firearms",
+    "url": "https://www.vitalcitynyc.org/breaking-through-with-the-next-generation-on-firearms/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
@@ -12874,53 +12709,12 @@
     "updated_at": "2026-04-15T13:36:51.000+00:00",
     "primary_author": null,
     "authors": [
-      "Theodore Roosevelt IV"
-    ],
-    "topics": [
-      "History",
-      "Two Sides of the Gun: Stories of Possession and Victimization",
-      "Gun Violence"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "The 26th president’s great-grandson reflects on hunting, history and politics.",
-    "excerpt": "The 26th president’s great-grandson reflects on hunting, history and politics.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amb9tggnhvfto2mm_gettyimages-81632070-auto-format-compress-1776259687538.jpg",
-    "feature_image_alt": "A man examines an antique rifle and revolver on display",
-    "feature_image_credit": "Gabriel Bouys / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1341,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a420e"
-  },
-  {
-    "title": "Licensed to Kill",
-    "slug": "licensed-to-kill-concealed-carry-training-course",
-    "url": "https://www.vitalcitynyc.org/licensed-to-kill-concealed-carry-training-course/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:51.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Chris Marvin"
+      "Nina Vinik"
     ],
     "topics": [
       "Gun Violence",
-      "Modern Evolution: Marketing and Profits",
-      "Crime"
+      "Youth",
+      "What Can Be Done?"
     ],
     "issues": [
       "issue-13"
@@ -12928,11 +12722,11 @@
     "issue_numbers": [
       13
     ],
-    "summary": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
-    "excerpt": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6iwgnhvfto1y1_gettyimages-1246074845-auto-format-compress-1776259688484.jpg",
-    "feature_image_alt": "A hand fires a pistol toward paper targets on a snowy range",
-    "feature_image_credit": "Natalie Behring / Getty Images",
+    "summary": "A new image of firearms is taking hold among younger Americans.",
+    "excerpt": "A new image of firearms is taking hold among younger Americans.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amb9y2gnhvfto2l__506651127239-auto-format-compress-1776259687255.jpg",
+    "feature_image_alt": "A young man’s T-shirt shows a rifle and reads Come and Take It",
+    "feature_image_credit": "Tony Gutierrez / AP Photo",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -12941,9 +12735,9 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2392,
-    "reading_minutes": 10,
-    "id": "69a04c0ad4006a00010a4217"
+    "word_count": 1635,
+    "reading_minutes": 7,
+    "id": "69a04c0ad4006a00010a4024"
   },
   {
     "title": "What We Know and Don’t Know About Guns",
@@ -13085,6 +12879,130 @@
     "id": "69a04c0ad4006a00010a401e"
   },
   {
+    "title": "The Case Against Futility",
+    "slug": "the-case-against-futility-in-gun-regulation",
+    "url": "https://www.vitalcitynyc.org/the-case-against-futility-in-gun-regulation/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-08-26T18:36:16.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Philip J. Cook",
+      "Rosanna Smart"
+    ],
+    "topics": [
+      "Gun Violence",
+      "What Can Be Done?",
+      "History"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "Why making guns slightly harder to get reduces their use in violent crime",
+    "excerpt": "Why making guns slightly harder to get reduces their use in violent crime",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amblpwgnhvfto1-f_97010301562-auto-format-compress-1776259687438.jpg",
+    "feature_image_alt": "Three children’s feet in sandals stand around spilled bullet casings",
+    "feature_image_credit": "Gregory Smith / AP Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2468,
+    "reading_minutes": 11,
+    "id": "69a04c0ad4006a00010a4219"
+  },
+  {
+    "title": "The Good Gun Owner",
+    "slug": "the-good-gun-owner",
+    "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-08-26T18:36:17.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Samantha J. Simon"
+    ],
+    "topics": [
+      "Police Reform",
+      "Modern Evolution: Marketing and Profits",
+      "Gun Violence"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "excerpt": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6omgnhvfto1zu_gettyimages-51135991-auto-format-compress-1776259687678.jpg",
+    "feature_image_alt": "An armed police officer stands guard on a busy Wall Street sidewalk",
+    "feature_image_credit": "Spencer Platt / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2291,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a401d"
+  },
+  {
+    "title": "Licensed to Kill",
+    "slug": "licensed-to-kill-concealed-carry-training-course",
+    "url": "https://www.vitalcitynyc.org/licensed-to-kill-concealed-carry-training-course/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2025-09-10",
+    "published_at": "2025-09-10T16:34:41.000+00:00",
+    "updated_at": "2026-04-15T13:36:51.000+00:00",
+    "primary_author": null,
+    "authors": [
+      "Chris Marvin"
+    ],
+    "topics": [
+      "Gun Violence",
+      "Modern Evolution: Marketing and Profits",
+      "Crime"
+    ],
+    "issues": [
+      "issue-13"
+    ],
+    "issue_numbers": [
+      13
+    ],
+    "summary": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
+    "excerpt": "A concealed-carry training course in Texas highlights everything wrong with gun ownership today.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6iwgnhvfto1y1_gettyimages-1246074845-auto-format-compress-1776259688484.jpg",
+    "feature_image_alt": "A hand fires a pistol toward paper targets on a snowy range",
+    "feature_image_credit": "Natalie Behring / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2392,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a4217"
+  },
+  {
     "title": "My Seven Guns: A Personal Inventory",
     "slug": "my-seven-guns-a-personal-inventory",
     "url": "https://www.vitalcitynyc.org/my-seven-guns-a-personal-inventory/",
@@ -13126,22 +13044,22 @@
     "id": "69a04c0ad4006a00010a4023"
   },
   {
-    "title": "Gun Culture Then and Now",
-    "slug": "gun-culture-then-and-now",
-    "url": "https://www.vitalcitynyc.org/gun-culture-then-and-now/",
+    "title": "The Good Gun Owner",
+    "slug": "the-good-gun-owner",
+    "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
     "type": "opinion/commentary",
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:51.000+00:00",
+    "updated_at": "2026-08-26T18:36:17.000+00:00",
     "primary_author": null,
     "authors": [
-      "Brian DeLay"
+      "Samantha J. Simon"
     ],
     "topics": [
-      "History",
-      "Gun Violence",
-      "Foundations: The Wild West and the Nation"
+      "Police Reform",
+      "Modern Evolution: Marketing and Profits",
+      "Gun Violence"
     ],
     "issues": [
       "issue-13"
@@ -13149,11 +13067,11 @@
     "issue_numbers": [
       13
     ],
-    "summary": "Firearm ownership meant something very different when the United States was founded.",
-    "excerpt": "Firearm ownership meant something very different when the United States was founded.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/amaz0wgnhvfto1tj_nyc6884-auto-format-compress-1776259688184.jpg",
-    "feature_image_alt": "A Civil War reenactor stands in a field as children play behind him",
-    "feature_image_credit": "Paul Fusco / Magnum Photos",
+    "summary": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "excerpt": "How police officers reconcile fear of firearms with unwavering support for the Second Amendment",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ama6omgnhvfto1zu_gettyimages-51135991-auto-format-compress-1776259687678.jpg",
+    "feature_image_alt": "An armed police officer stands guard on a busy Wall Street sidewalk",
+    "feature_image_credit": "Spencer Platt / Getty Images",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -13162,62 +13080,9 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1600,
-    "reading_minutes": 7,
-    "id": "69a04c0ad4006a00010a4246"
-  },
-  {
-    "title": "Before the Trigger Is Pulled",
-    "slug": "before-the-trigger-is-pulled",
-    "url": "https://www.vitalcitynyc.org/before-the-trigger-is-pulled/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2025-09-10",
-    "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-08-26T18:36:19.000+00:00",
-    "primary_author": null,
-    "authors": [
-      "Jens Ludwig"
-    ],
-    "topics": [
-      "Gun Violence",
-      "What Can Be Done?"
-    ],
-    "issues": [
-      "issue-13"
-    ],
-    "issue_numbers": [
-      13
-    ],
-    "summary": "The case for smarter deterrence",
-    "excerpt": "The case for smarter deterrence",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ambq8ggnhvfto2ck_par112603-auto-format-compress-1776259685262.jpg",
-    "feature_image_alt": "A woman walks past a comic-style mural of a gunman shouting 'Eat Lead’",
-    "feature_image_credit": "Alex Webb / Magnum Photos",
-    "embeds": {
-      "flourish": [
-        {
-          "id": "24748665",
-          "src": "visualisation/24748665?1271209",
-          "url": "https://public.flourish.studio/visualisation/24748665/"
-        },
-        {
-          "id": "24748637",
-          "src": "visualisation/24748637?1271209",
-          "url": "https://public.flourish.studio/visualisation/24748637/"
-        }
-      ],
-      "iframes": [],
-      "counts": {
-        "flourish": 2
-      },
-      "total": 2
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1405,
-    "reading_minutes": 6,
-    "id": "69a04c0ad4006a00010a401b"
+    "word_count": 2291,
+    "reading_minutes": 10,
+    "id": "69a04c0ad4006a00010a401d"
   },
   {
     "title": "The Case Against Futility",

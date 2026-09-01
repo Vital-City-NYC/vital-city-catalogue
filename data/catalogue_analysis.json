@@ -1,27 +1,52 @@
 {
   "meta": {
-    "generated_at": "2026-09-01T11:18:33.626368+00:00",
+    "generated_at": "2026-09-01T23:11:57.928980+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 898,
-    "total_authors": 496,
+    "total_posts": 899,
+    "total_authors": 495,
     "total_issues": 29,
     "total_topics": 213,
     "date_range": [
       "2021-09-15",
-      "2026-08-27"
+      "2026-09-01"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 4,
+    "new_articles": [
+      {
+        "title": "Why the City Council Must Confirm John Mangin",
+        "url": "https://www.vitalcitynyc.org/john-mangin-bsa-chair-nyc-city-council/",
+        "published_date": "2026-09-01",
+        "primary_author": null
+      },
+      {
+        "title": "The NYPD\u2019s Crime-Reduction Strategy: Chief of Department Michael LiPetri in Conversation",
+        "url": "https://www.vitalcitynyc.org/nypd-crime-strategy-questions-michael-lipetri/",
+        "published_date": "2026-02-19",
+        "primary_author": null
+      },
+      {
+        "title": "The Good Gun Owner",
+        "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      },
+      {
+        "title": "The Good Gun Owner",
+        "url": "https://www.vitalcitynyc.org/the-good-gun-owner/",
+        "published_date": "2025-09-10",
+        "primary_author": null
+      }
+    ]
   },
-  "total_pieces": 898,
+  "total_pieces": 899,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 225,
     "2025": 287,
-    "2026": 186
+    "2026": 187
   },
   "by_month": {
     "2021-09": 1,
@@ -77,20 +102,21 @@
     "2026-05": 23,
     "2026-06": 44,
     "2026-07": 22,
-    "2026-08": 16
+    "2026-08": 16,
+    "2026-09": 1
   },
   "by_type": [
     [
       "opinion/commentary",
-      724
+      725
     ],
     [
       "q&a",
-      57
+      58
     ],
     [
       "data analysis",
-      49
+      48
     ],
     [
       "podcast",
@@ -119,12 +145,12 @@
       145
     ],
     [
-      "History",
-      143
+      "City Government",
+      141
     ],
     [
-      "City Government",
-      140
+      "History",
+      141
     ],
     [
       "Government Operations",
@@ -135,12 +161,12 @@
       111
     ],
     [
-      "Justice",
-      81
+      "Housing",
+      80
     ],
     [
-      "Housing",
-      79
+      "Justice",
+      80
     ],
     [
       "culture",
@@ -151,16 +177,16 @@
       66
     ],
     [
+      "Police Reform",
+      57
+    ],
+    [
       "Economics",
       55
     ],
     [
       "Politics",
       55
-    ],
-    [
-      "Police Reform",
-      54
     ],
     [
       "Jails",
@@ -207,23 +233,23 @@
       26
     ],
     [
-      "Incarceration",
+      "interview",
       24
     ],
     [
-      "interview",
-      24
+      "Infrastructure",
+      23
     ]
   ],
   "n_topics_total": 213,
   "by_credential_pieces": [
     [
       "Academic",
-      220
+      222
     ],
     [
       "Nonprofit / advocacy",
-      111
+      112
     ],
     [
       "Journalist / media",
@@ -235,7 +261,7 @@
     ],
     [
       "Other / unclassified",
-      93
+      91
     ],
     [
       "Government / public official",
@@ -269,11 +295,11 @@
   "by_credential_authors": [
     [
       "Academic",
-      154
+      155
     ],
     [
       "Other / unclassified",
-      106
+      104
     ],
     [
       "Nonprofit / advocacy",
@@ -318,12 +344,12 @@
   ],
   "top_topics_for_stack": [
     "Crime",
-    "History",
     "City Government",
+    "History",
     "Government Operations",
     "City Planning",
-    "Justice",
     "Housing",
+    "Justice",
     "culture"
   ],
   "topic_by_year": {
@@ -334,18 +360,18 @@
       "2025": 31,
       "2026": 21
     },
-    "History": {
-      "2022": 12,
-      "2023": 28,
-      "2024": 38,
-      "2025": 53,
-      "2026": 12
-    },
     "City Government": {
       "2023": 4,
       "2024": 20,
       "2025": 54,
-      "2026": 62
+      "2026": 63
+    },
+    "History": {
+      "2022": 12,
+      "2023": 28,
+      "2024": 38,
+      "2025": 51,
+      "2026": 12
     },
     "Government Operations": {
       "2022": 1,
@@ -361,18 +387,18 @@
       "2025": 39,
       "2026": 17
     },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 37,
+      "2026": 27
+    },
     "Justice": {
       "2022": 4,
       "2023": 26,
       "2024": 27,
       "2025": 13,
-      "2026": 11
-    },
-    "Housing": {
-      "2023": 5,
-      "2024": 11,
-      "2025": 37,
-      "2026": 26
+      "2026": 10
     },
     "culture": {
       "2022": 4,
@@ -383,17 +409,17 @@
     }
   },
   "wc_stats": {
-    "n": 888,
-    "median": 1616,
-    "mean": 1894,
-    "p90": 2841,
+    "n": 889,
+    "median": 1618,
+    "mean": 1893,
+    "p90": 2840,
     "max": 30332,
-    "p10": 908,
-    "p25": 1268,
-    "p75": 2137,
+    "p10": 906,
+    "p25": 1266,
+    "p75": 2139,
     "p95": 3846,
     "no_count": 10,
-    "core_1000_2499": 651,
+    "core_1000_2499": 652,
     "under_500": 43,
     "over_5000": 24
   },
@@ -404,15 +430,15 @@
     ],
     [
       "500-999",
-      61
+      62
     ],
     [
       "1,000-1,999",
-      519
+      518
     ],
     [
       "2,000-2,999",
-      186
+      187
     ],
     [
       "3,000-4,999",
@@ -445,7 +471,7 @@
       {
         "floor": 750,
         "label": "750",
-        "n": 47
+        "n": 48
       },
       {
         "floor": 1000,
@@ -460,7 +486,7 @@
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 165
+        "n": 164
       },
       {
         "floor": 1750,
@@ -475,7 +501,7 @@
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 65
+        "n": 67
       },
       {
         "floor": 2500,
@@ -485,7 +511,7 @@
       {
         "floor": 2750,
         "label": "2,750",
-        "n": 21
+        "n": 20
       },
       {
         "floor": 3000,
@@ -533,21 +559,21 @@
       "year": "2025",
       "n": 287,
       "p25": 1292,
-      "median": 1634,
-      "p75": 2105,
+      "median": 1649,
+      "p75": 2122,
       "max": 14800
     },
     {
       "year": "2026",
-      "n": 181,
-      "p25": 1236,
-      "median": 1639,
-      "p75": 2393,
+      "n": 182,
+      "p25": 1221,
+      "median": 1631,
+      "p75": 2383,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 760,
+    "1": 761,
     "2": 109,
     "3": 26,
     "4": 1,
@@ -706,34 +732,34 @@
       },
       {
         "year": "2026",
-        "weeks": 34.1,
-        "pieces": 186,
-        "outside_issues": 135,
-        "per_week_all": 5.45,
-        "per_week_outside_issues": 3.95,
+        "weeks": 34.9,
+        "pieces": 187,
+        "outside_issues": 136,
+        "per_week_all": 5.36,
+        "per_week_outside_issues": 3.9,
         "partial": true
       }
     ],
-    "total_weeks": 258.1,
-    "all_time_per_week": 3.48,
+    "total_weeks": 258.9,
+    "all_time_per_week": 3.47,
     "all_time_per_week_outside_issues": 1.61,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.95,
-    "current_per_week_all": 5.45,
+    "current_per_week_outside_issues": 3.9,
+    "current_per_week_all": 5.36,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 483,
       "published_away_from_drop": 63,
       "share_of_issue_pieces": 13.0,
-      "current_year_strict": 3.95,
-      "current_year_loose": 4.13,
+      "current_year_strict": 3.9,
+      "current_year_loose": 4.07,
       "all_time_strict": 1.61,
       "all_time_loose": 1.85,
-      "all_time_all": 3.48
+      "all_time_all": 3.47
     }
   },
   "rhythm": {
-    "n_dated": 898,
+    "n_dated": 899,
     "by_weekday": [
       {
         "day": "Mon",
@@ -742,8 +768,8 @@
       },
       {
         "day": "Tue",
-        "pieces": 159,
-        "share": 17.7
+        "pieces": 160,
+        "share": 17.8
       },
       {
         "day": "Wed",
@@ -835,9 +861,9 @@
       {
         "month": "September",
         "abbr": "Sep",
-        "pieces": 95,
-        "occurrences": 5,
-        "per_occurrence": 19.0
+        "pieces": 96,
+        "occurrences": 6,
+        "per_occurrence": 16.0
       },
       {
         "month": "October",
