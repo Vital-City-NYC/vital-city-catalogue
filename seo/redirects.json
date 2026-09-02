@@ -1,41 +1,41 @@
 [
   {
-    "from": "/rss",
+    "from": "^/rss/?$",
     "to": "/commentary/rss/",
     "permanent": true
   },
   {
-    "from": "/feed",
+    "from": "^/feed/?$",
     "to": "/commentary/rss/",
     "permanent": true
   },
   {
-    "from": "/feed/rss",
+    "from": "^/feed/rss/?$",
     "to": "/commentary/rss/",
     "permanent": true
   },
   {
-    "from": "/atom.xml",
+    "from": "^/atom\\.xml$",
     "to": "/commentary/rss/",
     "permanent": true
   },
   {
-    "from": "/articles/how-zohhran-mamdani-could-succeed-as-mayor",
+    "from": "^/articles/how-zohhran-mamdani-could-succeed-as-mayor/?$",
     "to": "/how-zohran-mamdani-could-succeed-as-mayor/",
     "permanent": true
   },
   {
-    "from": "/articles/nypd-crime-strategy-questions-michael-lipetri",
+    "from": "^/articles/nypd-crime-strategy-questions-michael-lipetri/?$",
     "to": "/the-nypds-2025-strategy-a-conversation-with-michael-lipetri/",
     "permanent": true
   },
   {
-    "from": "/articles/nyc-department-of-investigation-madani",
+    "from": "^/articles/nyc-department-of-investigation-madani/?$",
     "to": "/nyc-department-of-investigation-mamdani/",
     "permanent": true
   },
   {
-    "from": "/articles/(.*)",
+    "from": "^/articles/(.*)$",
     "to": "/$1",
     "permanent": true
   }
