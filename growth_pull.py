@@ -2812,7 +2812,12 @@ def pull_ghost_signup_attribution(days_back=180):
             mem = d.get("member") or {}
             mem_em = ((mem.get("email") or "")).lower().strip()
             if mem_em and mem_em not in by_email:
-                by_email[mem_em] = {"source": src, "medium": med, "type": ltype, "ts": ts}
+                # landing URL kept per person: it is the only way to ask "who
+                # signed up on a piece about X" for anyone older than the
+                # 21-day recent_signups window, which the event-invite work
+                # needs. Stripped before the public JSON write like the rest.
+                by_email[mem_em] = {"source": src, "medium": med, "type": ltype, "ts": ts,
+                                    "landing_url": (att.get("url") or ""), "landing_title": (att.get("title") or "")}
             post_url = (att.get("url") or "").rstrip("/")
             if not post_url: continue
             r = by_url.setdefault(post_url, {
