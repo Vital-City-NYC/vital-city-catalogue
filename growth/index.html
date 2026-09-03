@@ -580,10 +580,14 @@
       </div>
 
       <div class="card" id="weekPulse" style="display:none">
-        <h2>Last 7 days <span class="hint" id="weekPulseHint"></span></h2>
+        <h2><span id="weekPulseTitle">Last 7 days</span>
+          <span id="pulseWin" style="display:inline-flex;gap:5px;margin-left:10px;vertical-align:2px">
+            <button class="winbtn on" data-w="7">7 days</button><button class="winbtn" data-w="30">30 days</button><button class="winbtn" data-w="90">90 days</button><button class="winbtn" data-w="ytd">Year to date</button>
+          </span>
+          <span class="hint" id="weekPulseHint"></span></h2>
         <div class="perfgrid" id="weekPulseGrid"></div>
         <div id="weekPulseTop" style="margin-top:14px"></div>
-        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5">Each tile shows the rolling last 7 days against a typical week — the average 7-day total over the trailing year of real data (falling back to the prior 7 days where no history series exists). For unsubscribes, down is good (shown green). Underlined numbers (signups, unsubscribes, gifts) are clickable — see exactly who. Social-follower change isn't included — we don't capture daily follower counts, so a 7-day delta there would be guesswork.</div>
+        <div id="weekPulseNote" style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
       </div>
 
       <div class="card" id="rangeReport">
@@ -1231,6 +1235,15 @@ function boot(data){
 
   // ----- Last 7 days rolling scorecard (weekly pulse, all categories)
   renderWeekPulse(data);
+  (function(){
+    const bar=$("#pulseWin"); if(!bar || bar._wired) return; bar._wired=true;
+    bar.addEventListener("click", e=>{
+      const b=e.target.closest("button[data-w]"); if(!b) return;
+      [...bar.querySelectorAll("button")].forEach(x=>x.classList.toggle("on", x===b));
+      const w=b.dataset.w;
+      renderWeekPulse(renderWeekPulse._data||data, w==="ytd"?"ytd":Number(w));
+    });
+  })();
   setupRangeReport(data);
 
   // ----- Trend chart (hand-rolled SVG)
@@ -5027,8 +5040,11 @@ function renderUrlShares(news){
     </div>`;
 }
 
-function renderWeekPulse(data){
+function renderWeekPulse(data, span){
   const card=$("#weekPulse"); if(!card) return;
+  span = span || renderWeekPulse._win || 7;
+  renderWeekPulse._win = span;
+  renderWeekPulse._data = data;
   const mc=data.mailchimp||{}, db=data.donorbox||{}, gh=data.ghost||{}, gt=data.ghost_traffic||{};
   const act=mc.daily_activity||[];
   if(!act.length){ card.style.display="none"; return; }
@@ -5036,13 +5052,25 @@ function renderWeekPulse(data){
   // so a not-yet-populated "today" can't understate the week.
   const maxDate=act.map(r=>r.d).filter(Boolean).sort().pop();
   const shift=(iso,days)=>{ const d=new Date(iso+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()+days); return d.toISOString().slice(0,10); };
-  const curStart=shift(maxDate,-6), curEnd=maxDate;
-  const prevStart=shift(maxDate,-13), prevEnd=shift(maxDate,-7);
+  // Window length in days. "ytd" runs from 1 January of the latest year we
+  // have data for, so it lengthens through the year; the fixed windows are
+  // rolling. The comparison window is always the same length immediately
+  // before, so a 30-day figure is never compared against a 7-day one.
+  const N = (span==="ytd")
+    ? (Math.round((Date.parse(maxDate+"T00:00:00Z") - Date.parse(maxDate.slice(0,4)+"-01-01T00:00:00Z"))/86400000) + 1)
+    : Number(span);
+  const curStart = (span==="ytd") ? maxDate.slice(0,4)+"-01-01" : shift(maxDate,-(N-1));
+  const curEnd   = maxDate;
+  const prevStart=shift(curStart,-N), prevEnd=shift(curStart,-1);
   const inRange=(iso,a,b)=> iso && iso.slice(0,10)>=a && iso.slice(0,10)<=b;
   // sum a numeric field over a date-keyed series within [a,b]
   const sumField=(rows,dateKey,valKey,a,b)=> (rows||[]).reduce((s,r)=> inRange(r[dateKey],a,b)? s+(+r[valKey]||0):s, 0);
   const countWhere=(rows,dateKey,a,b,pred)=> (rows||[]).reduce((s,r)=> (inRange((pred?pred(r):r[dateKey]),a,b)? s+1:s), 0);
 
+  const firstOfSafe=(rows,key)=>{
+    const ds=(rows||[]).map(r=>String(r[key]||"").slice(0,10)).filter(Boolean).sort();
+    return ds.length?ds[0]:null;
+  };
   const win=(a,b)=>({
     signups:  sumField(act,"d","subs",a,b),
     unsubs:   sumField(act,"d","unsubs",a,b),
@@ -5051,8 +5079,32 @@ function renderWeekPulse(data){
     raised:   sumField(db.daily_series,"d","amt",a,b),
     gifts:    sumField(db.daily_series,"d","gifts",a,b),
     articles: countWhere(gh.posts,"published",a,b,p=>p.published),
-    visitors: sumField(gt.kpi_rows_30d,"date","visits",a,b),
+    visitors: (function(){
+      const daily = firstOfSafe(gt.kpi_rows_30d,"date");
+      if (daily && a >= daily) return sumField(gt.kpi_rows_30d,"date","visits",a,b);
+      // Beyond the daily rows, sum completed weeks that fall inside the window.
+      const ws=(gt.traffic_series||[]).filter(w=>!w.partial && w.wk>=a && w.wk<=b);
+      return ws.length ? ws.reduce((s,w)=>s+(w.visitors||0),0) : null;
+    })(),
   });
+  // Coverage. Each series starts somewhere, and a window reaching back past
+  // that start would silently undercount: article counts only go back ~90 days
+  // and daily visitor rows only 31, so a year-to-date "new articles" figure
+  // built from them would look like a collapse in publishing. Where the window
+  // outruns the data the tile shows "—" and says why, rather than a number
+  // that is wrong in a plausible direction.
+  const firstOf=(rows,key)=>{
+    const ds=(rows||[]).map(r=>String(r[key]||"").slice(0,10)).filter(Boolean).sort();
+    return ds.length?ds[0]:null;
+  };
+  const covers={
+    signups:  firstOf(act,"d"),
+    visitors: firstOf(gt.kpi_rows_30d,"date"),
+    articles: firstOf(gh.posts,"published"),
+    money:    firstOf(db.daily_series,"d"),
+  };
+  // Visitors have a second, coarser source: weekly rows going back further.
+  const weekFirst = firstOf(gt.traffic_series,"wk");
   const cur=win(curStart,curEnd), prev=win(prevStart,prevEnd);
   cur.net=cur.signups-cur.unsubs; prev.net=prev.signups-prev.unsubs;
 
@@ -5062,7 +5114,7 @@ function renderWeekPulse(data){
   // real history -- per-field leading-zero trim, current week excluded --
   // capped at 365 days. Fields whose history is a series get a norm; the
   // rest keep the prior-week comparison.
-  function norm7(rows,dateKey,valKey){
+  function normN(rows,dateKey,valKey){
     const seq=(rows||[]).filter(r=>r[dateKey]).slice()
       .sort((a,b)=>String(a[dateKey]).localeCompare(String(b[dateKey])));
     let start=0;
@@ -5072,12 +5124,12 @@ function renderWeekPulse(data){
     const days=(new Date(String(hist[hist.length-1][dateKey]).slice(0,10))-new Date(String(hist[0][dateKey]).slice(0,10)))/86400000+1;
     if(days<28) return null;
     const tot=hist.reduce((s,r)=>s+(+r[valKey]||0),0);
-    return {val:tot/days*7, months:Math.round(days/30)};
+    return {val:tot/days*N, months:Math.round(days/30)};
   }
   // Fundraising is lumpy -- one launch campaign dominates the mean, so the
   // "average week" reads ~$2,500 and every quiet week shows as -100%. The
   // median week is the honest "typical week" for campaign-driven series.
-  function median7(rows,dateKey,valKey){
+  function medianN(rows,dateKey,valKey){
     const seq=(rows||[]).filter(r=>r[dateKey]&&String(r[dateKey]).slice(0,10)<curStart)
       .sort((a,b)=>String(a[dateKey]).localeCompare(String(b[dateKey])));
     let start=0;
@@ -5086,7 +5138,7 @@ function renderWeekPulse(data){
     if(hist.length<28) return null;
     const wk={};
     hist.forEach(r=>{const d=new Date(String(r[dateKey]).slice(0,10)+"T00:00:00Z");
-      const k=Math.floor(d.getTime()/(7*86400000)); wk[k]=(wk[k]||0)+(+r[valKey]||0);});
+      const k=Math.floor(d.getTime()/(N*86400000)); wk[k]=(wk[k]||0)+(+r[valKey]||0);});
     const vals=Object.values(wk).sort((a,b)=>a-b);
     if(vals.length<4) return null;
     const mid=vals.length>>1;
@@ -5094,15 +5146,17 @@ function renderWeekPulse(data){
     return {val:med, months:Math.round(hist.length/30), median:true};
   }
   const norms={
-    signups: norm7(act,"d","subs"),
-    unsubs:  norm7(act,"d","unsubs"),
-    raised:  median7(db.daily_series,"d","amt"),
-    gifts:   median7(db.daily_series,"d","gifts"),
+    signups: normN(act,"d","subs"),
+    unsubs:  normN(act,"d","unsubs"),
+    raised:  medianN(db.daily_series,"d","amt"),
+    gifts:   medianN(db.daily_series,"d","gifts"),
     visitors:(function(){
       // weekly series, completed weeks only, already 7-day totals
       const ser=((gt.traffic_series)||[]).filter(w=>!w.partial && w.wk<curStart);
       if(ser.length<4) return null;
-      return {val:ser.reduce((s,w)=>s+(w.visitors||0),0)/ser.length, months:Math.round(ser.length*7/30)};
+      // weekly rows -> per-day -> scaled to this window
+      const perDay=ser.reduce((s,w)=>s+(w.visitors||0),0)/(ser.length*7);
+      return {val:perDay*N, months:Math.round(ser.length*7/30)};
     })(),
   };
   if(norms.signups&&norms.unsubs)
@@ -5139,14 +5193,51 @@ function renderWeekPulse(data){
   const CLICK_MAX=200;   // safety; weekly counts are far below this
   const clickable={signups:1,unsubs:1,gifts:1};
 
+  const LIMIT={visitors:"visitors", articles:"articles", raised:"money", gifts:"money"};
   const cells=TILES.map(t=>{
+    // Does this window reach back before the series begins?
+    const lim=LIMIT[t.k];
+    let short=null;
+    if(lim==="visitors"){ const w0=weekFirst||covers.visitors; if(w0 && curStart<w0) short=w0; }
+    else if(lim && covers[lim] && curStart<covers[lim]) short=covers[lim];
+    if(short || cur[t.k]===null){
+      const from=short||covers[lim]||"";
+      return `<div class="perfcell"><div class="pl">${esc(t.lbl)}</div><div class="pn" style="color:var(--vc-charcoal)">&mdash;</div>`+
+             `<div class="pd flat" title="This window starts before the data does, so a number here would undercount.">no data before ${esc(from)}</div></div>`;
+    }
     const now=cur[t.k]||0, was=prev[t.k]||0;
     const nm7=norms[t.k];
+    // When there is no norm we fall back to the previous window — but that is
+    // only meaningful if the previous window has real data in it. The signup
+    // feed is zero-filled before Feb 2026, so a year-to-date tile compared
+    // against "the 246 days before" was reporting +890 against a stretch that
+    // records nothing. Suppress the comparison instead of inventing a rise.
+    const FIELD={signups:"subs",unsubs:"unsubs",net:"subs"}[t.k];
+    let priorEmpty=false;
+    if(!nm7 && FIELD){
+      const real=(act||[]).filter(r=>(+r[FIELD]||0)>0).map(r=>r.d).sort()[0];
+      if(real && prevStart<real) priorEmpty=true;
+    }
+    // Money has the same trap from the other direction: Donorbox history
+    // begins Nov 2025, so a year-to-date comparison was measuring 2026 against
+    // a stub of 2025 that happened to contain the year-end campaign, and
+    // reported an 82% collapse. A partial prior window is not a comparison.
+    if(!nm7 && (t.k==="raised"||t.k==="gifts") && covers.money && prevStart<covers.money) priorEmpty=true;
+    if(priorEmpty){
+      const numHtml0 = t.fmt(cur[t.k]||0);
+      return `<div class="perfcell"><div class="pl">${esc(t.lbl)}</div><div class="pn">${numHtml0}</div>`+
+             `<div class="pd flat" title="The comparison window predates this data, so there is nothing to compare against.">no comparable earlier period</div></div>`;
+    }
     const base = nm7 ? nm7.val : was;
-    const baseLbl = nm7 ? `vs ${nm7.months}-mo ${nm7.median?"median wk":"norm"} (~${t.fmt===fmtMoney?fmtMoney(nm7.val):fmtN(Math.round(nm7.val))}/wk)` : "vs prior 7d";
+    // Label the unit this window actually measures. Saying "/wk" beside a
+    // 90-day total is how a normal quarter read as +9,485%.
+    const unit = (span==="ytd") ? `${N}d` : `${N}d`;
+    const baseLbl = nm7
+      ? `vs ${nm7.months}-mo ${nm7.median?"median":"norm"} (~${t.fmt===fmtMoney?fmtMoney(nm7.val):fmtN(Math.round(nm7.val))}/${unit})`
+      : `vs prior ${N} days`;
     const d=now-base;
     let cls="flat", dtxt;
-    if(Math.abs(d)<0.5){ dtxt=`typical week ${baseLbl}`; }
+    if(Math.abs(d)<0.5){ dtxt=`typical ${(span==="ytd")?"stretch":N+"-day stretch"} ${baseLbl}`; }
     else {
       const up=d>0, good = t.neutral ? null : (t.goodDown ? !up : up);
       cls = good===null ? "flat" : (good ? "up" : "down");
@@ -5170,8 +5261,25 @@ function renderWeekPulse(data){
   const lbl=(txt,sub)=>`<div style="font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 6px">${txt} <span style="font-weight:400;text-transform:none;letter-spacing:0">· ${sub}</span></div>`;
   const olist=(rows)=>`<ol class="wptop">${rows.map(p=>`<li><span class="wptop-t">${esc(p.t)}</span><span class="wptop-v">${esc(p.v)}</span></li>`).join("")}</ol>`;
   // (a) views
-  const tp=(gt.top_pages_7d||[]).slice(0,5).map(p=>({t:p.title, v:fmtN(p.visits)+" views"}));
+  // Ghost gives us a 7-day list, a 30-day list, and a since-March list. There
+  // is no 90-day or year-to-date list, so those windows borrow the since-March
+  // one and the heading says so rather than implying it matches the window.
+  let tpSrc=gt.top_pages_7d||[], tpLbl="by site visits, excluding the homepage";
+  if(span===30){ tpSrc=gt.top_pages_30d||[]; }
+  else if(span===90||span==="ytd"){
+    tpSrc=gt.top_pages_since_launch||gt.top_pages_30d||[];
+    tpLbl=`by site visits since ${esc(gt.top_pages_since||"launch")} — Ghost has no list matching this window`;
+  }
+  const tp=tpSrc.slice(0,5).map(p=>({t:p.title, v:fmtN(p.visits)+" views"}));
   // (b) signups driven, grouped from this week's recent_signups by landing piece
+  // The per-signup rows behind this list are a capped recent feed, not the full
+  // history, so beyond about three weeks it undercounts. Say so instead of
+  // presenting a partial count as a ranking.
+  const sgFirst=(sg||[]).map(r=>String(r.date||"").slice(0,10)).filter(Boolean).sort()[0]||null;
+  const convShort = sgFirst && curStart < sgFirst;
+  const convLbl = convShort
+    ? `by newsletter signups they drove — only complete back to ${esc(sgFirst)}, so this is a floor`
+    : "by newsletter signups they drove in this window";
   const conv={};
   (sg||[]).filter(r=>inWin(r.date)).forEach(r=>{
     if(r.landing_type!=="post" || !r.landing_url) return;   // only article landings
@@ -5182,12 +5290,24 @@ function renderWeekPulse(data){
     .map(p=>({t:p.t, v:p.n+" signup"+(p.n===1?"":"s")}));
   if(tpEl){
     let html="";
-    if(tp.length) html += lbl("Top pieces this week","by site visits, excluding the homepage") + olist(tp);
+    if(tp.length) html += lbl(span===7?"Top pieces this week":"Top pieces", tpLbl) + olist(tp);
     if(convTop.length) html += `<div style="margin-top:14px"></div>` +
-      lbl("Most subscriber-converting pieces","by newsletter signups they drove this week") + olist(convTop);
+      lbl("Most subscriber-converting pieces", convLbl) + olist(convTop);
     tpEl.innerHTML = html;
   }
-  const h=$("#weekPulseHint"); if(h) h.textContent=`rolling · ${curStart} → ${curEnd}, vs the 7 days before`;
+  const LBL={7:"Last 7 days",30:"Last 30 days",90:"Last 90 days",ytd:"Year to date"};
+  const tt=$("#weekPulseTitle"); if(tt) tt.textContent=LBL[span]||`Last ${span} days`;
+  const h=$("#weekPulseHint");
+  if(h) h.textContent = (span==="ytd")
+    ? `${curStart} → ${curEnd} (${N} days), vs the ${N} days before`
+    : `rolling · ${curStart} → ${curEnd}, vs the ${N} days before`;
+  const nEl=$("#weekPulseNote");
+  if(nEl) nEl.innerHTML = `Each tile shows the ${(span==="ytd")?"year so far":"rolling last "+N+" days"} against a typical `+
+    `${N}-day stretch — the average over the trailing year of real data, this window excluded, falling back to the ` +
+    `prior ${N} days where no history exists. Fundraising uses the median rather than the mean, because giving is lumpy ` +
+    `and one campaign would otherwise set the bar. For unsubscribes, down is good (shown green). Underlined numbers are ` +
+    `clickable — see exactly who. A tile reading &ldquo;—&rdquo; means this window starts before that data does. ` +
+    `Social-follower change isn't included: we don't capture daily follower counts, so a delta there would be guesswork.`;
   card.style.display="";
 }
 
