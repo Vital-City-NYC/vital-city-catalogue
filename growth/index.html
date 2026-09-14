@@ -6854,7 +6854,9 @@ function setupCardTools(){
       b.addEventListener("click",e=>{ e.stopPropagation(); fn(b); }); return b; };
     tools.appendChild(mk("🔗 link","Copy a shareable link to this card", b=>copyCardLink(card.id,b)));
     tools.appendChild(mk("⧉ copy","Copy this card's content (text + tables) to paste into an email", b=>copyCardContent(card.id,b)));
-    tools.appendChild(mk("⤓ PDF","Export just this card as a PDF", ()=>exportCard(card.id)));
+    // A card with its own report or download buttons keeps those; the small
+    // "print this card" button would only duplicate them.
+    if(!card.querySelector(".btn-rpt, #pulseRpt")) tools.appendChild(mk("⤓ PDF","Export just this card as a PDF", ()=>exportCard(card.id)));
     card.appendChild(tools);
   });
 }
