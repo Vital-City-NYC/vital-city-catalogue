@@ -159,8 +159,9 @@
   .ki-read{font-size:11.5px;line-height:1.4;color:var(--vc-charcoal)}
   .ki-also,.ki-marks{font-size:11.5px;line-height:1.5;margin-top:10px;color:var(--vc-charcoal)}
   .ki-notes{margin-top:10px;font-size:11.5px;line-height:1.5}.ki-notes p{margin:4px 0}.ki-notes summary{cursor:pointer;font-weight:700}
-  .ki-stay{margin-top:12px;font-size:12px;line-height:1.5}.ki-stay table{border-collapse:collapse;margin-top:4px}.ki-stay td,.ki-stay th{padding:3px 12px 3px 0;text-align:left;border-bottom:1px solid var(--vc-cloud);font-variant-numeric:tabular-nums}
+  .ki-stay{margin-top:12px;font-size:12px;line-height:1.5}.ki-stay table{border-collapse:collapse;margin-top:4px}.ki-stay td,.ki-stay th{padding:3px 12px 3px 0;text-align:left;border-bottom:1px solid var(--vc-cloud)}.ki-stay td:not(:first-child){font-variant-numeric:tabular-nums}
   .ki-fine{font-size:10.5px;color:var(--vc-charcoal);margin-top:4px}
+  .ki-paper{display:none}   /* the row layout is for paper; see the print block and KI_ROWS_CSS */
   .ki-who{font-size:12px;line-height:1.5;margin:4px 0 10px}.ki-whohd{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin-bottom:3px}
   .sc-intro{font-size:12.5px;line-height:1.5;margin:0 0 10px}
   .sc-sum{font-size:12.5px;line-height:1.55;margin:0 0 6px;padding:9px 12px;background:var(--vc-paper2,#eeeeec)}
@@ -228,6 +229,26 @@
     main .card { break-inside: avoid; box-shadow:none !important; border:1px solid #d9d9d6 !important; margin:10px 0; }
     .sechead { break-after: avoid; break-inside: avoid; }
     .kpi, .perfcell, table.tbl tr { break-inside: avoid; }
+    /* Key indicators on paper: one row per measure instead of the tile grid,
+       and the card may run across pages (each row stays whole). */
+    #scorecard { break-inside: auto; }
+    #scorecard .ki-grid { display:none !important; }
+    #scorecard .ki-paper { display:block !important; }
+    #scorecard .ki-lede { display:none; }   /* the column headings say what is compared */
+    body.print-one .mast { padding-top:0; margin-top:0; }
+    #scorecard .ki-sum { font-size:10.5px; line-height:1.4; padding:6px 9px; margin-bottom:6px; }
+    #scorecard .ki-row { padding:4px 0 3px; }
+    #scorecard .ki-stay, #scorecard .ki-notes { font-size:10px; }
+    #scorecard details.ki-notes summary { display:none; }
+    #scorecard details.ki-notes::before { content:"Notes and sources"; display:block; font-weight:700; margin:10px 0 2px; }
+    /* "Export this card": nothing but the masthead title and the one card */
+    body.print-one .layout > *:not(:has(.print-target)),
+    body.print-one main > *:not(.print-target):not(:has(.print-target)),
+    body.print-one .toolnav, body.print-one #subline, body.print-one .confbar { display:none !important; }
+    body.print-one .mast { padding:0; margin:0 0 4px; }
+    body.print-one .mast h1 { font-size:20px; margin:0 0 2px; }
+    body.print-one main .card { margin-top:4px; padding:10px 14px 8px; }
+    body.print-one #scorecard h2 { margin-bottom:4px; }
     /* condense tables on paper; cap the long "Recent newsletter sends" list */
     table.tbl { font-size:8.5px; }
     table.tbl th, table.tbl td { padding:2px 6px !important; line-height:1.3; }
@@ -5574,7 +5595,7 @@ function scAdd(ym,k){const [y,m]=ym.split("-").map(Number); return new Date(Date
 function scName(ym,noYear){const [y,m]=ym.split("-").map(Number); return noYear? SC_MON[m-1] : `${SC_MON[m-1]} ${y}`;}
 function scList(a){return a.length>1? a.slice(0,-1).join(", ")+" and "+a[a.length-1] : (a[0]||"");}
 function scSecs(v){ v=Math.round(v||0); const m=Math.floor(v/60), s=v%60; return m?`${m}m ${String(s).padStart(2,"0")}s`:`${s}s`; }
-const SC_LEGEND="In each line, the blue band marks the latest three months and the grey band the months they are compared with. Lines start at zero; gaps are months left out, with the reason in the notes. Dotted lines mark the months of the dated events listed under the tiles.";
+const SC_LEGEND="In each line, the blue band marks the latest three months and the grey band the months they are compared with. Lines start at zero; gaps are months left out, with the reason in the notes. Dotted lines mark the months of the dated events listed below them.";
 
 function scorecardModel(data){
   const mc=data.mailchimp||{}, ga4=data.ga4||{}, db=data.donorbox||{}, gh=data.ghost||{};
@@ -5776,6 +5797,37 @@ function kiTileHTML(x, w, marks, h, noRead){
     ${readTxt?`<div class="ki-read">${esc(readTxt)}</div>`:""}
   </div>`;
 }
+// Paper layout: one row per measure, so the numbers, the trend lines and the
+// comparisons line up in columns down the page. Used by every print path
+// (the card's PDF button, the full-dashboard print and the report pages);
+// the tile grid stays for the screen.
+const KI_ROWS_CSS='.ki-rows{border-top:2px solid #050507;margin-top:4px}'
+  +'.ki-rh,.ki-row{display:grid;grid-template-columns:1.1fr 1.45fr 1.45fr 1.95fr;gap:10px;align-items:start}'
+  +'.ki-rh{font-size:7.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:#707175;padding:4px 0 3px;border-bottom:1px solid #050507}'
+  +'.ki-row{padding:5px 0 4px;border-bottom:1px solid #d9d9d6;break-inside:avoid;page-break-inside:avoid}'
+  +'.ki-row .ki-name{font-size:8px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;line-height:1.2;color:#050507}'
+  +'.ki-row .ki-num{font-family:Georgia,"Times New Roman",serif;font-size:21px;font-weight:700;line-height:1.05;margin-top:2px;color:#050507}'
+  +'.ki-row .ki-unit{font-size:8px;color:#707175;line-height:1.3;margin-top:1px}'
+  +'.ki-row .ki-cmp{font-size:9.5px;font-weight:700;line-height:1.3;color:#050507}.ki-row .ki-cmp.good{color:#3d7a35}.ki-row .ki-cmp.watch{color:#a0432d}'
+  +'.ki-row .ki-tr{font-size:8.5px;font-weight:400;color:#505050;margin-top:3px;line-height:1.3}'
+  +'.ki-row .ki-spark{color:#050507}.ki-row .ki-spark svg{width:100%;height:auto;display:block}.ki-row .sc-axis{display:flex;justify-content:space-between;font-size:7.5px;color:#707175;margin-top:1px}'
+  +'.ki-row .ki-wait{font-size:8.5px;color:#707175;line-height:1.3}'
+  +'.ki-row .ki-std{font-size:8.5px;line-height:1.3;background:#f7f7f4;border-left:2px solid #217ebe;padding:3px 6px;margin:0;color:#050507}.ki-row .ki-std.own{border-left-color:#c9c9c6;color:#505050}'
+  +'.ki-paper .ki-also,.ki-paper .ki-marks{font-size:8.5px;line-height:1.4;margin-top:6px;color:#505050}.ki-also,.ki-marks{break-inside:avoid}';
+document.head.insertAdjacentHTML("beforeend",`<style>${KI_ROWS_CSS}</style>`);
+function kiRowsHTML(sc, w, marks, h){
+  const row=x=>{
+    const spark=x.waiting?"":scSpark(x,w,h||36,marks);
+    const own=!x.stdText||/no (reliable |published )?(public )?standard/i.test(x.stdText);
+    return `<div class="ki-row">
+      <div><div class="ki-name">${esc(x.name)}</div><div class="ki-num">${esc(scNowText(x))}</div><div class="ki-unit">${esc(x.unitLine)}</div></div>
+      <div class="ki-cmp ${x.tone}">${esc(x.cmpShort)}${x.trendText?`<div class="ki-tr">${esc(x.trendText)}</div>`:""}</div>
+      <div class="ki-spark">${spark?spark+`<div class="sc-axis"><span>${esc(scName(x.firstMonth))}</span><span>${esc(scName(x.nowMonth))}</span></div>`:`<div class="ki-wait">${esc(x.waiting||"Not enough months yet.")}</div>`}</div>
+      <div class="ki-std${own?" own":""}">${esc(x.stdText||"No published standard; compared with Vital City's own recent average.")}</div>
+    </div>`;
+  };
+  return `<div class="ki-rows"><div class="ki-rh"><div>Measure · latest month</div><div>Latest three months, against the months before</div><div>Last 24 months · blue = latest three, grey = compared with</div><div>Industry standard, or context</div></div>${sc.measures.map(row).join("")}</div>`;
+}
 // Do new subscribers stay? Ghost-era signups by how they arrived, matched to
 // the contacts database (engagement_extras.channel_ltv, built nightly).
 const KI_SRC={"AcademicOutreach":"University outreach emails","ReengagementCampaign":"Re-engagement campaign","(unknown)":"Unknown",
@@ -5795,12 +5847,13 @@ function kiStayHTML(data){
     <div class="ki-fine">Event registrations are added to the list outside Ghost, so they aren't in this table yet.</div></div>`;
 }
 function kiBodyHTML(sc, w, opts){
-  opts=opts||{};
+  opts=opts||{}; opts.layout=opts.layout||"both";   // "grid" (screen tiles), "rows" (paper) or both, with CSS picking one
   const marks=sc.marks||[];
   const notes=sc.measures.map(x=>`<p><b>${esc(x.name)}.</b> ${esc(x.def)} ${esc(x.baseText||"")} ${esc(x.note||"")}</p>`).join("")+`<p>${esc(SC_LEGEND)}</p>`;
   return (opts.noLede?"":`<p class="ki-lede">${esc(sc.lede)}</p>`)+
     (sc.summary.length?`<div class="ki-sum">${sc.summary.map(esc).join("<br>")}</div>`:"")+
-    `<div class="ki-grid">${sc.measures.map(x=>kiTileHTML(x,w,marks,opts.sparkH,opts.noRead)).join("")}</div>`+
+    (opts.layout==="rows"?"":`<div class="ki-grid">${sc.measures.map(x=>kiTileHTML(x,w,marks,opts.sparkH,opts.noRead)).join("")}</div>`)+
+    (opts.layout==="grid"?"":`<div class="ki-paper">${kiRowsHTML(sc,210,marks,36)}</div>`)+
     (sc.also?`<div class="ki-also">${esc(sc.also)}</div>`:"")+
     (marks.length?`<div class="ki-marks"><b>Dotted lines mark:</b> ${marks.map(k=>`${esc(k.when)}: ${esc(k.label)}`).join(" · ")}</div>`:"")+
     (opts.stay||"")+
@@ -6023,7 +6076,7 @@ function pulseReportMD(m){
 function pulseReportHTML(m){
   const cls=c=>c==="up"?"up":c==="down"?"down":"";
   let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">As of ${esc(m.asof)} · data refreshed ${esc(m.generated)}</p>`;
-  if(m.scorecard) b+=`<h2>Key indicators</h2>`+kiBodyHTML(m.scorecard,168,{noNotes:true,sparkH:28,noRead:true,noLede:true})+`<div class="pb"></div>`;
+  if(m.scorecard) b+=`<h2>Key indicators</h2>`+kiBodyHTML(m.scorecard,210,{layout:"rows",noNotes:true,noLede:true})+`<div class="pb"></div>`;
   m.windows.forEach(w=>{
     b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.curStart)} → ${esc(w.curEnd)} · ${w.N} days · vs the ${w.N} days before</span></h2>`;
     b+=`<table>`+w.tiles.map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
@@ -6053,7 +6106,7 @@ function pulseReportHTML(m){
     +'ol{padding-left:20px;margin:4px 0;font-size:12.5px}ol li{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px solid #eee}ol li .v{white-space:nowrap;color:#707175;font-variant-numeric:tabular-nums}'
     +'.ins{list-style:none;padding:0;margin:4px 0;font-size:12.5px}.ins li{padding:4px 0 4px 20px;position:relative;border-bottom:1px solid #eee}.ins .m{position:absolute;left:2px;font-weight:700}.ins .good .m,.ins li.good .m{color:#3d7a35}.ins li.watch .m{color:#a0432d}.ins li.neutral .m{color:#707175}'
     +'.ki-lede{font-size:10.5px;color:#333;margin:2px 0 5px;line-height:1.4}.ki-sum{font-size:11px;line-height:1.45;margin:0 0 7px;padding:6px 9px;background:#f1f1ef;font-weight:700}'
-    +'.ki-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid #ddd;border-left:1px solid #ddd}.ki-tile{background:#fff;padding:6px 8px;break-inside:avoid;border-right:1px solid #ddd;border-bottom:1px solid #ddd}'
+    +KI_ROWS_CSS
     +'.ki-name{font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:800}.ki-top{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;margin:1px 0}.ki-num{font-family:Georgia,serif;font-size:19px;font-weight:700;line-height:1}.ki-unit{font-size:8px;color:#707175}'
     +'.ki-cmp{font-size:9px;font-weight:700;line-height:1.28}.ki-cmp.good{color:#3d7a35}.ki-cmp.watch{color:#a0432d}.ki-std{font-size:8px;line-height:1.3;background:#f7f7f4;border-left:2px solid #217ebe;padding:2px 5px;margin:2px 0}'
     +'.ki-spark{color:#050507}.ki-spark svg{width:100%;height:auto;display:block}.ki-spark .sc-axis{font-size:7.5px}.ki-read{font-size:8.5px;color:#555;line-height:1.28}.ki-also,.ki-marks{font-size:9.5px;color:#555;margin-top:6px;line-height:1.4}'
@@ -6887,8 +6940,10 @@ function exportCard(id){
   card.classList.remove("ccol");
   if(st.hidden) card.style.display="";
   const ct=card.querySelector("#campToggle"); if(ct&&ct.dataset.open!=="1"){ ct.click(); st.camp=true; }
+  const dets=[...card.querySelectorAll("details:not([open])")]; dets.forEach(d=>d.open=true);
   card.classList.add("print-target"); body.classList.add("print-one");
   const restore=()=>{
+    dets.forEach(d=>d.open=false);
     if(st.dark) root.classList.add("dark");
     if(st.ccol) card.classList.add("ccol");
     if(st.hidden) card.style.display="none";
