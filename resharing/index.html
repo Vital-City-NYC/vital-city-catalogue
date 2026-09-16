@@ -14,10 +14,12 @@
     --vc-magenta:#e7466d; --vc-paper2:#eeeeec; --vc-plum:#7a5ea6; --vc-gold:#d9a441;
     --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
   }
-  html.dark{
-    --vc-paper:#111113; --vc-white:#191a1d; --vc-black:#f2f2ef; --vc-charcoal:#9b9ca0;
-    --vc-cloud:#2e2f33; --vc-paper2:#202124; --vc-cerulean:#5aa9e6; --vc-orange:#ff9973;
-  }
+  /* Growth's dark tokens verbatim. This page had its own slightly different set
+     -- a cooler paper, a brighter cerulean -- which is exactly the drift the
+     suite pass is meant to remove. If these change, they change in growth first. */
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1c1d23}
+  html.dark body{background:var(--vc-paper);color:var(--vc-black)}
+  html.dark .gatebox{box-shadow:none}
   *{box-sizing:border-box}
   body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
   a{color:var(--vc-cerulean)}
@@ -37,8 +39,18 @@
   header.mast{border-bottom:1px solid var(--vc-black);padding:16px 30px 16px;background:var(--vc-white);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px}
   header.mast h1{font-weight:900;font-size:28px;margin:0 0 2px;letter-spacing:-.01em}
   header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:760px}
-  .hnav{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;display:flex;gap:14px;flex-wrap:wrap}
-  .hnav a{color:var(--vc-cerulean);text-decoration:none}
+  /* House convention: page utilities go in .mastlinks, which toolkit.js moves to
+     the right end of the toolkit bar and re-tags .vckit-utils. Deliberately not
+     growth's absolute positioning -- that is for a masthead corner, and this
+     element does not stay in the masthead. */
+  .mastlinks{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .mastlinks a{color:var(--vc-cerulean);text-decoration:none;white-space:nowrap}
+  .mastlinks a:hover{text-decoration:underline}
+  /* Matches the calendar's jump-to-today treatment, so the same gesture looks
+     the same in both places. */
+  .flash{animation:flashin 1.6s ease-out}
+  @keyframes flashin{0%{background:var(--vc-paper2)}60%{background:var(--vc-paper2)}100%{background:var(--vc-white)}}
+  @media (prefers-reduced-motion:reduce){.flash{animation:none;outline:2px solid var(--vc-black);outline-offset:2px}}
   .jump{position:sticky;top:0;z-index:40;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:8px 30px;display:flex;gap:15px;flex-wrap:wrap;font-size:11px}
   .jump a{color:var(--vc-charcoal);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
   .jump a:hover{color:var(--vc-cerulean)}
@@ -95,7 +107,7 @@
     <h1>Resharing calendar</h1>
     <div class="sub">Pieces from the archive worth posting again, matched to what the city is actually doing. Dates come from <a href="https://vitalcity-nyc.github.io/nyc-policy-calendar/">the New York City calendar</a>; the picks and the argument for each are hand-written.</div>
   </div>
-  <nav class="hnav"><a href="#" id="themeToggle">🌙 Dark mode</a><a href="#" id="lock">Lock</a></nav>
+  <nav class="mastlinks"><a href="#" id="todayBtn" title="Jump to the next thing worth posting — today's, or the next one after it">Today</a><a href="#" id="themeToggle">🌙 Dark mode</a><a href="#" id="lock">Lock</a></nav>
 </header>
 <nav class="jump">
   <a href="#next">What's coming</a><a href="#seasons">Seasons</a><a href="#hooks">When news breaks</a>
@@ -134,7 +146,21 @@ async function unlock(fromStore){
 $("#unlock").addEventListener("click",()=>unlock(false));
 $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
 (async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
+/* Same gesture as the calendar's Today button: land on today if there is
+   something today, otherwise on the next dated thing. Falls back to the top of
+   "What's coming" when the window is empty, rather than doing nothing and
+   looking broken. */
+function jumpToToday(){
+  const today=new Date().toISOString().slice(0,10);
+  const dated=[...document.querySelectorAll(".entry[data-post-on]")];
+  const target=dated.find(el=>el.dataset.postOn>=today)||dated[0]||document.querySelector("#next");
+  if(!target) return;
+  target.scrollIntoView({behavior:"smooth",block:"center"});
+  target.classList.remove("flash"); void target.offsetWidth; target.classList.add("flash");
+}
+
 document.addEventListener("click",e=>{
+  if(e.target.id==="todayBtn"){e.preventDefault();jumpToToday();return}
   if(e.target.id==="lock"){e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()}
   if(e.target.id==="themeToggle"){e.preventDefault();const d=document.documentElement.classList.toggle("dark");
     try{localStorage.setItem("vc_theme",d?"dark":"light")}catch{}}
@@ -188,7 +214,8 @@ function entry(r){
   const offset = r.post_offset_reason ? `<div class="angle" style="color:var(--vc-charcoal)">${esc(r.post_offset_reason)}</div>` : "";
   const words = r.kind==="suggested" && r.picks[0] && r.picks[0].matched_words
     ? `<div class="alt">Matched on: ${esc(r.picks[0].matched_words.join(", "))}. Nobody has reviewed this pairing.</div>` : "";
-  return `<div class="entry ${cls}">${head}${ev}${picks}${why}${offset}${alsoLine(r.also,r.also_note)}${words}</div>`;
+  const stamp = r.post_on ? ` data-post-on="${esc(r.post_on)}"` : "";
+  return `<div class="entry ${cls}"${stamp}>${head}${ev}${picks}${why}${offset}${alsoLine(r.also,r.also_note)}${words}</div>`;
 }
 
 function boot(d){
