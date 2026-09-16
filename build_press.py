@@ -88,6 +88,41 @@ def decrypt_blob(blob: dict, passphrase: str) -> bytes:
     d = lambda x: base64.b64decode(x)
     return AESGCM(_key(passphrase, d(blob["salt"]), blob["iters"])).decrypt(d(blob["iv"]), d(blob["ct"]), None)
 
+def person_case(name):
+    """"JENIFEER PORTER GORE" -> "Jenifeer Porter Gore", keeping McX, O'X and
+    hyphenated surnames intact."""
+    def word(w):
+        parts = re.split(r"([-'\u2019])", w.lower())
+        out = "".join(x.capitalize() if x not in "-'\u2019" else x for x in parts)
+        return re.sub(r"^Mc([a-z])", lambda m: "Mc" + m.group(1).upper(), out)
+    return " ".join(word(w) for w in name.split())
+
+def clean_person_name(name, has_byline):
+    """A byline or a masthead line only becomes a person if it looks like one.
+
+    Two words at least, no digits, no @: that drops CMS logins ("edavis",
+    "mgross170") and the address somebody typed into a byline field. All-caps
+    names are real on some bylines -- the Amsterdam News sets them that way --
+    so they are re-cased, but an all-caps line lifted off a masthead with no
+    byline behind it is a section heading ("SCHOOL CLOSINGS", "BETTER GET
+    BAQUERO"), not a reporter."""
+    if not name:
+        return None
+    n = re.sub(r"\s+", " ", name).strip(" .,;:|")
+    if "@" in n or re.search(r"\d", n):
+        return None
+    words = [w for w in re.findall(r"[A-Za-z\u00c0-\u024f'\u2019\-]+", n) if len(w.strip("'-\u2019")) >= 2]
+    if len(words) < 2:
+        return None
+    letters = re.sub(r"[^A-Za-z\u00c0-\u024f]", "", n)
+    if letters.isupper():
+        if not has_byline:
+            return None
+        n = person_case(n)
+    elif letters.islower():
+        n = person_case(n)
+    return n
+
 def loose_name(name):
     """First and last name only. "John K. Roman" on his newsletter and "John
     Roman" on the press list are one person; so are "Charles Fain Lehman" and
@@ -705,6 +740,9 @@ def main():
             # Checked against every outlet in the registry, not just this feed's:
             # The City Reporter co-publishes the FAQ NYC podcast, so "FAQ NYC"
             # arrives as a byline on somebody else's feed.
+            a = clean_person_name(a, has_byline=True)
+            if not a:
+                continue
             ma = merge_name(a)
             if (ma in all_outlet_names or NOT_A_PERSON.match(a.strip())
                     or (len(ma) >= 5 and any(n.startswith(ma) for n in all_outlet_names))):
@@ -779,6 +817,13 @@ def main():
     for r in mast:
         if r.get("outlet") not in registry:
             continue                          # a masthead from an outlet no longer in the map
+        cleaned = clean_person_name(r["name"], has_byline=merge_name(r["name"]) in people)
+        if not cleaned:
+            continue
+        r = dict(r, name=cleaned)
+        mn = merge_name(cleaned)
+        if mn in all_outlet_names or (len(mn) >= 5 and any(n.startswith(mn) for n in all_outlet_names)):
+            continue
         k = merge_name(r["name"])
         # mastheads list desks as if they were people: Customer Service, Our Staff
         if len(k) < 5 or NOT_A_PERSON.match(r["name"].strip()):
