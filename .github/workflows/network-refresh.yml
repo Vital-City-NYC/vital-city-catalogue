@@ -218,7 +218,14 @@ jobs:
           fi
           git config user.name "Vital City Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data network/data.enc growth/data.enc prospects/data.enc catalogue-analysis/data.enc resharing/data.enc press/data.enc 2>/dev/null || true
+          # One path at a time. A single `git add` over the whole list aborts on
+          # the first path that does not exist yet (a tool whose build was
+          # skipped), staging NOTHING — which is how the rotation rebuild on
+          # 2026-09-16 re-encrypted every payload and then published none of them.
+          git add data 2>/dev/null || true
+          for f in network/data.enc growth/data.enc prospects/data.enc catalogue-analysis/data.enc resharing/data.enc press/data.enc; do
+            [ -e "$f" ] && git add "$f"
+          done
           if git diff --cached --quiet; then
             echo "no changes to publish"
           else

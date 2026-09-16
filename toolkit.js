@@ -28,9 +28,8 @@
       blurb: "Funder and donor prospecting." },
     { id: "resharing",  label: "Resharing",  path: "resharing/",         gated: true,
       blurb: "Which archive piece to post, and when — bound to the calendar's real dates." },
-    // enable when press/ lands
-    // { id: "press",   label: "Press",      path: "press/",             gated: true,
-    //   blurb: "Who covers what in New York City: reporters, beats and how to reach them." },
+    { id: "press",      label: "Press",      path: "press/",             gated: true,
+      blurb: "Who covers New York City government: reporters, the beats their own bylines prove, and how to reach them." },
     { id: "calendar",   label: "Calendar",   gated: false,
       href: "https://vitalcity-nyc.github.io/nyc-policy-calendar/",
       blurb: "The New York City calendar: hearings, budget dates, anniversaries, books, city life." }
