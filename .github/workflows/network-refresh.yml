@@ -30,7 +30,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install --quiet cryptography openpyxl
+        run: pip install --quiet cryptography openpyxl feedparser beautifulsoup4   # feedparser + bs4: the press-map harvest
 
       - name: Restore secrets + decrypt source bundle
         env:
@@ -199,6 +199,7 @@ jobs:
       # Non-fatal for the same reason; the harvest must fail loud on an empty
       # result so a broken feed never publishes an empty map.
       - name: Build and encrypt the press map
+        timeout-minutes: 25   # a full harvest runs 11-13 minutes of network wait across ~90 outlets
         env:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
         run: |
