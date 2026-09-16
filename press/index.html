@@ -430,20 +430,24 @@ const REACH_WEIGHT={3:3,2:2,1:1};
    more than two from any one outlet, and room held for television and radio so
    the list is not fifteen print reporters when a producer is the better call. */
 const SHORTLIST=15, PER_OUTLET=2, HOLD={tv:2,radio:2};
+/* What the outlet actually is, from the registry: "Print" only where there is
+   a print edition. The Trace is online, not "print & online". Podcasts share
+   the radio slots in the shortlist, since they are pitched the same way. */
 function mediumOf(p){
-  const t=(OUT[p.outlet]||{}).type||"";
-  if(/^tv/.test(t)) return "tv";
-  if(/^radio|podcast/.test(t)) return "radio";
-  return "print";
+  const o=OUT[p.outlet]||{};
+  if(o.medium) return o.medium;
+  const t=o.type||"";
+  return /^tv/.test(t)?"tv":/^radio/.test(t)?"radio":/podcast/.test(t)?"podcast":"online";
 }
-const MEDIUM_LABEL={tv:"TV",radio:"Radio",print:"Print & online"};
+const MEDIUM_LABEL={tv:"TV",radio:"Radio",podcast:"Podcast",print:"Print",online:"Online"};
+const slotOf=p=>{ const m=mediumOf(p); return m==="podcast"?"radio":m; };
 function shortlist(ranked){          // ranked: [{p,score,...}] best first, all eligible
   const picked=[], perOutlet={}, seen=new Set();
   const take=r=>{ const o=r.p.outlet||r.p.outlet_text||r.p.id;
     if(seen.has(r.p.id)||(perOutlet[o]||0)>=PER_OUTLET||picked.length>=SHORTLIST) return false;
     picked.push(r); seen.add(r.p.id); perOutlet[o]=(perOutlet[o]||0)+1; return true; };
   for(const [m,n] of Object.entries(HOLD)){          // hold the broadcast slots first
-    let got=0; for(const r of ranked){ if(got>=n) break; if(mediumOf(r.p)===m && take(r)) got++; }
+    let got=0; for(const r of ranked){ if(got>=n) break; if(slotOf(r.p)===m && take(r)) got++; }
   }
   for(const r of ranked){ if(picked.length>=SHORTLIST) break; take(r); }
   picked.sort((a,b)=>b.score-a.score);
@@ -461,7 +465,7 @@ function compactTable(rows, cols){   // everyone below the line: one line each
       <td class="selcol">${box(r.p)}</td>
       <td${r.p.vc&&r.p.vc.person?' style="font-weight:800"':''}>${esc(r.p.name)}${r.p.vc&&r.p.vc.person?' <span class="badge vc">VC</span>':''}</td>
       <td>${esc(outletName(r.p))} <span style="color:var(--vc-charcoal);font-size:11px">${MEDIUM_LABEL[mediumOf(r.p)]}</span></td>
-      <td>${r.clips}${(r.example)?` <a href="${esc(r.example.url)}" target="_blank" rel="noopener" style="font-size:11px">latest &rsaquo;</a>`:""}</td>
+      <td>${r.clipsLabel||r.clips}${(r.example)?` <a href="${esc(r.example.url)}" target="_blank" rel="noopener" style="font-size:11px">latest &rsaquo;</a>`:""}</td>
       <td>${r.p.email?`<a href="mailto:${esc(r.p.email)}">${esc(r.p.email)}</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td>
     </tr>`).join("")+`</tbody></table>`;
 }
@@ -505,7 +509,7 @@ function card(r,i){
       ${p.story_count>3?`<br><span class="more" data-all="${esc(p.id)}">all ${p.story_count} harvested stories &rsaquo;</span>`:""}
     </div>`:""}
     <div class="contact">
-      ${p.email?`<span class="em"><a href="mailto:${esc(p.email)}">${esc(p.email)}</a></span>
+      ${p.email?`<span class="em"><a href="mailto:${esc(p.email)}">${esc(p.email)}</a></span>${p.email_note?` <span style="color:var(--vc-gold);font-size:11px;font-weight:700" title="Found on a page from a masthead this reporter no longer seems to file for">${esc(p.email_note)}</span>`:""}
          ${p.email_source_url?`<a href="${esc(p.email_source_url)}" target="_blank" rel="noopener" style="font-size:10.5px" title="${esc(p.email_evidence||"")}">where this came from</a>`:""}`
        :((OUT[p.outlet]?.tips||"").includes("@")
           ? `<span style="color:var(--vc-charcoal)">no personal address published &middot; desk:</span> <a href="mailto:${esc(OUT[p.outlet].tips)}">${esc(OUT[p.outlet].tips)}</a>`
@@ -570,11 +574,22 @@ function renderBeats(){
 }
 function showBeat(bid){
   if(!bid){ $("#beatOut").innerHTML=""; return; }
-  const rows=DATA.people.filter(p=>(p.beats||[]).some(b=>b.id===bid&&b.count>=MIN_CLIPS))
-    .map(p=>({p,b:p.beats.find(b=>b.id===bid)}))
-    .sort((x,y)=>y.b.count*REACH_WEIGHT[sizeOf(y.p)]-x.b.count*REACH_WEIGHT[sizeOf(x.p)]);
-  const ranked=rows.map(r=>({p:r.p, score:r.b.count*REACH_WEIGHT[sizeOf(r.p)], clips:r.b.count,
-                              example:(r.b.examples||[])[0]}));
+  // Crime beats and government beats share their reporters. A crime-statistics
+  // pitch belongs with the Post's and the Times's crime reporters even when few
+  // of their stories are about data, so those beats rank on the whole group and
+  // show both counts. Every other beat stands alone.
+  const pr=(BEATS[bid]||{}).priority, grp=pr===1?"crime":pr===2?"government":null;
+  const GROUP_LABEL={crime:"on crime and justice",government:"on city and state government"};
+  const onBeat=p=>((p.beats||[]).find(b=>b.id===bid)||{count:0});
+  const inGroup=p=>grp?((p.groups||{})[grp]||0):0;
+  const rows=DATA.people.filter(p=>onBeat(p).count>=MIN_CLIPS || (grp && inGroup(p)>=MIN_CLIPS*2 && onBeat(p).count>=1) || (grp && inGroup(p)>=6))
+    .map(p=>({p,b:onBeat(p)}));
+  const ranked=rows.map(r=>{
+    const g=inGroup(r.p), base=grp?Math.max(g, r.b.count):r.b.count;
+    return {p:r.p, score:(base + r.b.count)*REACH_WEIGHT[sizeOf(r.p)], clips:r.b.count,
+            clipsLabel: grp?`${r.b.count} on this beat &middot; ${g} ${GROUP_LABEL[grp]}`:null,
+            example:(r.b.examples||[])[0]||((r.p.stories||[])[0])};
+  }).sort((a,b)=>b.score-a.score);
   const {top, rest:restMajor}=shortlist(ranked.filter(r=>tierOf(r.p)===1));
   const rest=[...restMajor, ...ranked.filter(r=>tierOf(r.p)!==1)].sort((a,b)=>b.score-a.score);
   $("#beatOut").innerHTML = rows.length
@@ -794,7 +809,7 @@ function exportCsv(){
   const rows=selectedPeople().map(p=>{
     const v=p.vc||{}, last=(p.stories||[])[0]||{};
     return [p.name, outletName(p), (p.also_at||[]).map(o=>OUT[o]?.name||o).join("; "), p.title||"",
-      p.email||"", p.email_source_url||"", ((OUT[p.outlet]||{}).tips||"").includes("@")?OUT[p.outlet].tips:"",
+      p.email||"", (p.email_source_url||"")+(p.email_note?` (${p.email_note})`:""), ((OUT[p.outlet]||{}).tips||"").includes("@")?OUT[p.outlet].tips:"",
       (p.beats||[]).filter(b=>b.count>=MIN_CLIPS).slice(0,4).map(b=>`${b.label} (${b.count})`).join("; "),
       last.title||"", last.url||"", p.author_page||p.staff_page||"", p.x?("@"+p.x):"", p.bluesky||"",
       [v.press_list?"press list":"", v.cited_vc?"has cited Vital City":""].filter(Boolean).join("; ")];

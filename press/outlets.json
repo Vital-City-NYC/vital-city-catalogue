@@ -13,7 +13,8 @@
   "feed_note": "no public RSS",
   "tagline": "Cities, transport and urban policy",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "online"
  },
  {
   "id": "crains",
@@ -29,7 +30,8 @@
   "feed_note": "site feed + staff page 403 automated clients",
   "tagline": "Business, real estate and city policy",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "print"
  },
  {
   "id": "wsj",
@@ -44,7 +46,8 @@
   "tips": null,
   "tagline": "Business & policy",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "print"
  },
  {
   "id": "gay-city-news",
@@ -59,7 +62,8 @@
   "tips": null,
   "tagline": "LGBTQ New York, politics and health",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "el-diario",
@@ -74,7 +78,8 @@
   "tips": null,
   "tagline": "Spanish-language NYC news",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "print"
  },
  {
   "id": "amsterdam-news",
@@ -90,7 +95,8 @@
   "tagline": "NYC's leading Black newspaper since 1909",
   "tier": 1,
   "ci_blocked": true,
-  "size": 2
+  "size": 2,
+  "medium": "print"
  },
  {
   "id": "jewish-week",
@@ -105,7 +111,8 @@
   "tips": null,
   "tagline": "Jewish New York",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "forward",
@@ -121,7 +128,8 @@
   "note": "403s automated clients",
   "tagline": "Jewish American news and politics",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "haitian-times",
@@ -137,7 +145,8 @@
   "tagline": "Haitian New York",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "astoria-post",
@@ -152,7 +161,8 @@
   "tips": null,
   "tagline": "Astoria neighborhood news",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "bklyner",
@@ -167,7 +177,8 @@
   "tips": null,
   "tagline": "Brooklyn neighborhood reporting",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "bronx-times",
@@ -182,7 +193,8 @@
   "tips": null,
   "tagline": "Bronx weekly",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "brooklyn-eagle",
@@ -198,7 +210,8 @@
   "feed_note": "site 403s automated clients",
   "tagline": "Brooklyn borough news",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "bushwick-daily",
@@ -213,7 +226,8 @@
   "tips": null,
   "tagline": "Bushwick neighborhood news",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "chelsea-community",
@@ -228,7 +242,8 @@
   "tips": null,
   "tagline": "Chelsea neighborhood news",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "greenpointers",
@@ -243,7 +258,8 @@
   "tips": null,
   "tagline": "Greenpoint and north Brooklyn",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "kings-county-politics",
@@ -259,7 +275,8 @@
   "feed_note": "site feed 404s; Google News site: query",
   "tagline": "Brooklyn political clubhouse coverage",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "mott-haven-herald",
@@ -274,7 +291,8 @@
   "tips": null,
   "tagline": "South Bronx community paper",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "norwood-news",
@@ -289,7 +307,8 @@
   "tips": null,
   "tagline": "Northwest Bronx community paper",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "patch-nyc",
@@ -305,7 +324,8 @@
   "feed_note": "no public RSS; Google News site: query",
   "tagline": "Neighborhood briefs across the city",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "qns",
@@ -320,7 +340,8 @@
   "tips": null,
   "tagline": "Queens weekly",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "queens-chronicle",
@@ -336,7 +357,8 @@
   "tagline": "Queens weekly",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "queens-eagle",
@@ -352,7 +374,8 @@
   "feed_note": "Squarespace RSS path not public",
   "tagline": "Queens courts, politics and neighborhoods",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "queens-post",
@@ -367,7 +390,8 @@
   "tips": null,
   "tagline": "Western Queens neighborhood news",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "straus-news",
@@ -383,7 +407,8 @@
   "feed_note": "no public RSS; Google News site: query",
   "tagline": "Manhattan weeklies and the civil service paper",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "sunnyside-post",
@@ -398,7 +423,8 @@
   "tips": null,
   "tagline": "Sunnyside and Woodside neighborhood news",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "brooklyn-paper",
@@ -413,7 +439,8 @@
   "tips": null,
   "tagline": "Brooklyn weekly",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "riverdale-press",
@@ -429,7 +456,8 @@
   "feed_note": "site 403s automated clients",
   "tagline": "Northwest Bronx weekly",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "village-sun",
@@ -444,7 +472,8 @@
   "tips": null,
   "tagline": "Downtown Manhattan",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "w42st",
@@ -460,7 +489,8 @@
   "tagline": "Hell's Kitchen and Midtown West",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "daily-news",
@@ -476,7 +506,8 @@
   "feed_note": "site feed 403s automated clients (Cloudflare)",
   "tagline": "New York's hometown paper",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "print"
  },
  {
   "id": "ny-post",
@@ -487,12 +518,29 @@
   "staff_url": "https://nypost.com/columnists/",
   "rss": [
    "https://nypost.com/feed/",
-   "https://nypost.com/metro/feed/"
+   "https://nypost.com/metro/feed/",
+   "https://nypost.com/tag/nypd/feed/",
+   "https://nypost.com/tag/crime/feed/",
+   "https://nypost.com/tag/shootings/feed/",
+   "https://nypost.com/tag/courts/feed/",
+   "https://nypost.com/tag/rikers-island/feed/",
+   "https://nypost.com/tag/zohran-mamdani/feed/",
+   "https://nypost.com/tag/albany/feed/",
+   "https://nypost.com/tag/kathy-hochul/feed/",
+   "https://nypost.com/tag/mta/feed/",
+   "https://nypost.com/tag/housing/feed/",
+   "https://nypost.com/tag/migrants/feed/",
+   "https://nypost.com/tag/nycha/feed/",
+   "https://nypost.com/tag/budgets/feed/",
+   "https://nypost.com/tag/new-york-city/feed/",
+   "https://nypost.com/tag/brooklyn/feed/",
+   "https://nypost.com/tag/queens/feed/"
   ],
   "tips": "tips@nypost.com",
   "tagline": "Tabloid with reach",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "print"
  },
  {
   "id": "newsday",
@@ -508,7 +556,8 @@
   "feed_note": "no public RSS found",
   "tagline": "Long Island's daily, with city coverage",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "print"
  },
  {
   "id": "silive",
@@ -524,7 +573,8 @@
   "note": "403s automated clients",
   "tagline": "Staten Island's daily",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "print"
  },
  {
   "id": "guardian-us",
@@ -539,7 +589,8 @@
   "tips": null,
   "tagline": "US desk with New York coverage",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "nytimes",
@@ -555,7 +606,8 @@
   "tips": "https://www.nytimes.com/tips",
   "tagline": "Metro section",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "print"
  },
  {
   "id": "times-union",
@@ -571,7 +623,8 @@
   "feed_note": "no public RSS; Google News site: query, scoped to state politics",
   "tagline": "Albany daily; the state government beat",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "print"
  },
  {
   "id": "amny",
@@ -586,7 +639,8 @@
   "tips": "editorial@amny.com",
   "tagline": "Metro daily",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "print"
  },
  {
   "id": "nymag",
@@ -602,7 +656,8 @@
   "tips": null,
   "tagline": "City life, politics & culture",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "print"
  },
  {
   "id": "new-yorker",
@@ -617,7 +672,8 @@
   "tips": "tips@newyorker.com",
   "tagline": "Longform & essays",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "print"
  },
  {
   "id": "city-journal",
@@ -633,7 +689,8 @@
   "feed_note": "no public RSS; Google News site: query used instead",
   "tagline": "Manhattan Institute urban policy",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "abundance-ny",
@@ -650,7 +707,8 @@
   "tagline": "Building more in New York",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "atlantic-yards",
@@ -666,7 +724,8 @@
   "tagline": "Norman Oder on Atlantic Yards and Pacific Park",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "changing-lanes",
@@ -681,7 +740,8 @@
   "tips": null,
   "tagline": "Streets and transportation policy",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "external-processing",
@@ -698,7 +758,8 @@
   "tagline": "A criminologist on crime data and fear",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "market-urbanism",
@@ -714,7 +775,8 @@
   "feed_note": "land use and housing supply economics",
   "tagline": "Land use and housing supply economics",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "maximum-ny",
@@ -729,7 +791,8 @@
   "tips": null,
   "tagline": "Pro-growth NYC housing & development",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "metro-mosaic",
@@ -745,7 +808,8 @@
   "tagline": "NYC housing & urban policy analysis",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "nyc-policy-forum",
@@ -762,7 +826,8 @@
   "tagline": "Expert policy debate & commentary",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "nyc-politics-101",
@@ -778,7 +843,8 @@
   "tagline": "State & local policy education",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "nycuriosity",
@@ -795,7 +861,8 @@
   "tagline": "NYC civic engagement & community boards",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "pedestrian-observations",
@@ -811,7 +878,8 @@
   "feed_note": "transit construction costs and network design",
   "tagline": "Transit construction costs and network design",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "political-currents",
@@ -826,7 +894,8 @@
   "tips": null,
   "tagline": "Ross Barkan on NYC politics & culture",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "sidewalk-chorus",
@@ -842,7 +911,8 @@
   "feed_note": "neighborhoods and urban life; last posted early 2026",
   "tagline": "NYC neighborhoods & urban life",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "step-two-policy",
@@ -859,7 +929,8 @@
   "tagline": "Behavioral health and human services in New York",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "bigger-apple",
@@ -874,7 +945,8 @@
   "tips": null,
   "tagline": "Manhattan Institute weekly NYC policy brief",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "ny-editorial-board",
@@ -890,7 +962,8 @@
   "tagline": "NYC interviews & commentary",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "urban-condition",
@@ -907,7 +980,8 @@
   "tagline": "Cities and housing, published irregularly",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "bolts",
@@ -922,7 +996,8 @@
   "tips": null,
   "tagline": "Criminal justice & local democracy",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "chalkbeat",
@@ -938,7 +1013,8 @@
   "feed_filter": "/newyork/",
   "tagline": "Education reporting",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "city-limits",
@@ -953,7 +1029,8 @@
   "tips": null,
   "tagline": "Nonprofit policy journalism since 1976",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "documented",
@@ -969,7 +1046,8 @@
   "note": "team page 403s automated clients",
   "tagline": "Immigration in New York",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "epicenter",
@@ -985,7 +1063,8 @@
   "tagline": "Community-first reporting, immigrant New York",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "gotham-gazette",
@@ -1001,7 +1080,8 @@
   "feed_note": "site RSS returns 500; Google News site: query used instead",
   "tagline": "Nonpartisan NYC government & policy",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "gothamist",
@@ -1016,7 +1096,8 @@
   "tips": "tips@gothamist.com",
   "tagline": "WNYC-backed local news",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "online"
  },
  {
   "id": "hell-gate",
@@ -1031,7 +1112,8 @@
   "tips": "tips@hellgatenyc.com",
   "tagline": "Worker-owned NYC journalism",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "ny-focus",
@@ -1046,7 +1128,8 @@
   "tips": null,
   "tagline": "State politics & accountability",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "propublica",
@@ -1061,7 +1144,8 @@
   "tips": null,
   "tagline": "Nonprofit investigations",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "streetsblog",
@@ -1076,7 +1160,8 @@
   "tips": null,
   "tagline": "Transit & street safety policy",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "the74",
@@ -1091,7 +1176,8 @@
   "tips": null,
   "tagline": "National education newsroom with New York coverage",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "the-appeal",
@@ -1106,7 +1192,8 @@
   "tips": null,
   "tagline": "Criminal justice, from the defense side",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "city-reporter",
@@ -1122,7 +1209,8 @@
   "tagline": "Nonprofit investigative newsroom, the former THE CITY",
   "tier": 1,
   "ci_blocked": true,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "indypendent",
@@ -1138,7 +1226,8 @@
   "tagline": "Left-wing city monthly",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "the-markup",
@@ -1154,7 +1243,8 @@
   "feed_note": "algorithmic accountability; the New York work runs through CalMatters now",
   "tagline": "Tech & algorithmic accountability",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "marshall-project",
@@ -1170,7 +1260,8 @@
   "tagline": "Criminal justice journalism",
   "tier": 1,
   "size": 2,
-  "ci_blocked": true
+  "ci_blocked": true,
+  "medium": "online"
  },
  {
   "id": "the-trace",
@@ -1185,7 +1276,8 @@
   "tips": null,
   "tagline": "Gun violence reporting",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "online"
  },
  {
   "id": "faq-nyc",
@@ -1200,7 +1292,8 @@
   "tips": null,
   "tagline": "NYC politics, argued weekly",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "firewall",
@@ -1218,7 +1311,8 @@
   "feed_note": "NYC politics and campaigns",
   "tagline": "Bradley Tusk on campaigns and city politics",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "max-politics",
@@ -1233,7 +1327,8 @@
   "tips": null,
   "tagline": "Nonpartisan NYC government & policy",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "odd-lots",
@@ -1249,7 +1344,8 @@
   "feed_note": "Bloomberg; housing supply, construction costs, state capacity",
   "tagline": "Bloomberg on construction costs and state capacity",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "plain-english",
@@ -1267,7 +1363,8 @@
   "feed_note": "abundance, housing and state capacity",
   "tagline": "Abundance, housing and state capacity",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "probable-causation",
@@ -1285,7 +1382,8 @@
   "feed_note": "the economics of crime and justice research",
   "tagline": "The economics of crime and justice research",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "reducing-crime",
@@ -1303,7 +1401,8 @@
   "feed_note": "policing research and practice",
   "tagline": "Policing research and practice",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "statecraft",
@@ -1322,7 +1421,8 @@
   "tagline": "How government actually gets things done",
   "tier": 2,
   "ci_blocked": true,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "talking-headways",
@@ -1338,7 +1438,8 @@
   "feed_note": "transportation planning",
   "tagline": "Transportation planning, from Streetsblog",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "ezra-klein",
@@ -1356,7 +1457,8 @@
   "feed_note": "New York Times Opinion; abundance and governance",
   "tagline": "Metro section",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "war-on-cars",
@@ -1372,7 +1474,8 @@
   "feed_note": "streets and car culture, made in Brooklyn",
   "tagline": "Brooklyn-made, streets and car culture",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "you-decide",
@@ -1390,7 +1493,8 @@
   "feed_note": "NYC politics interviews",
   "tagline": "Errol Louis interviews the people who run the city",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "podcast"
  },
  {
   "id": "1010wins",
@@ -1405,7 +1509,8 @@
   "tips": null,
   "tagline": "All-news radio",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "radio"
  },
  {
   "id": "wbai",
@@ -1420,7 +1525,8 @@
   "tips": null,
   "tagline": "Listener-supported community radio",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "radio"
  },
  {
   "id": "wnyc",
@@ -1436,7 +1542,8 @@
   "feed_note": "site RSS retired; Gothamist feed carries most WNYC newsroom copy",
   "tagline": "Public radio news",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "radio"
  },
  {
   "id": "brian-lehrer",
@@ -1451,7 +1558,8 @@
   "tips": "bltips@wnyc.org",
   "tagline": "Public radio news",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "radio"
  },
  {
   "id": "nylj",
@@ -1466,7 +1574,8 @@
   "tips": null,
   "tagline": "Courts and the legal profession",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "city-state",
@@ -1481,7 +1590,8 @@
   "tips": null,
   "tagline": "NY government & politics",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "print"
  },
  {
   "id": "jewish-insider",
@@ -1496,7 +1606,8 @@
   "tips": "editor@jewishinsider.com",
   "tagline": "Jewish politics and NYC campaign coverage",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "politico-ny",
@@ -1512,7 +1623,8 @@
   "note": "403s automated clients",
   "tagline": "Albany & City Hall insider",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "online"
  },
  {
   "id": "politicsny",
@@ -1527,7 +1639,8 @@
   "tips": null,
   "tagline": "Schneps politics vertical, city and borough campaigns",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "online"
  },
  {
   "id": "chief-leader",
@@ -1543,7 +1656,8 @@
   "feed_note": "civil service and municipal labor; Google News site: query",
   "tagline": "Civil service and municipal labor, since 1897",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "commercial-observer",
@@ -1558,7 +1672,8 @@
   "tips": null,
   "tagline": "Commercial real estate and finance",
   "tier": 2,
-  "size": 1
+  "size": 1,
+  "medium": "print"
  },
  {
   "id": "therealdeal",
@@ -1574,7 +1689,8 @@
   "tagline": "Real estate trade",
   "tier": 1,
   "ci_blocked": true,
-  "size": 2
+  "size": 2,
+  "medium": "print"
  },
  {
   "id": "cbsny",
@@ -1590,7 +1706,8 @@
   "feed_note": "no working section RSS",
   "tagline": "Local TV news",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "tv"
  },
  {
   "id": "fox5",
@@ -1605,7 +1722,8 @@
   "tips": null,
   "tagline": "Channel 5 news",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "tv"
  },
  {
   "id": "state-of-politics",
@@ -1621,7 +1739,8 @@
   "feed_note": "no public RSS; Google News site: query",
   "tagline": "Spectrum's Albany politics desk",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "tv"
  },
  {
   "id": "news12",
@@ -1636,7 +1755,8 @@
   "tips": null,
   "tagline": "Borough cable news",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "tv"
  },
  {
   "id": "pix11",
@@ -1652,7 +1772,8 @@
   "feed_note": "staff page 403s automated clients",
   "tagline": "Channel 11 news",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "tv"
  },
  {
   "id": "ny1",
@@ -1668,7 +1789,8 @@
   "feed_note": "no public RSS",
   "tagline": "Cable news for the city",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "tv"
  },
  {
   "id": "wabc",
@@ -1683,7 +1805,8 @@
   "tips": null,
   "tagline": "Local TV news",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "tv"
  },
  {
   "id": "wnbc",
@@ -1693,12 +1816,24 @@
   "site": "https://www.nbcnewyork.com",
   "staff_url": "https://www.nbcnewyork.com/about-us/",
   "rss": [
-   "https://www.nbcnewyork.com/?rss=y"
+   "https://www.nbcnewyork.com/?rss=y",
+   "https://www.nbcnewyork.com/news/local/?rss=y",
+   "https://www.nbcnewyork.com/news/politics/?rss=y",
+   "https://www.nbcnewyork.com/news/local/crime-and-courts/?rss=y",
+   "https://www.nbcnewyork.com/tag/nypd/?rss=y",
+   "https://www.nbcnewyork.com/tag/shootings/?rss=y",
+   "https://www.nbcnewyork.com/tag/rikers-island/?rss=y",
+   "https://www.nbcnewyork.com/tag/zohran-mamdani/?rss=y",
+   "https://www.nbcnewyork.com/tag/kathy-hochul/?rss=y",
+   "https://www.nbcnewyork.com/tag/mta/?rss=y",
+   "https://www.nbcnewyork.com/tag/housing/?rss=y",
+   "https://www.nbcnewyork.com/tag/nyc-schools/?rss=y"
   ],
   "tips": null,
   "tagline": "Channel 4 news",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "tv"
  },
  {
   "id": "telemundo47",
@@ -1713,7 +1848,8 @@
   "tips": null,
   "tagline": "Spanish-language TV news",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "tv"
  },
  {
   "id": "univision41",
@@ -1728,7 +1864,8 @@
   "tips": null,
   "tagline": "Spanish-language TV news",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "medium": "tv"
  },
  {
   "id": "ap-ny",
@@ -1743,6 +1880,7 @@
   "tips": null,
   "tagline": "Wire coverage of the city and the state",
   "tier": 1,
-  "size": 3
+  "size": 3,
+  "medium": "online"
  }
 ]

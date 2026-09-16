@@ -721,6 +721,36 @@ def main():
             if from_cache:
                 print(f"  {len(from_cache)} outlets filled from the Mac harvest of {hcache['as_of'][:10]}")
 
+    # ---- a rolling six months of stories ----------------------------------
+    # The outlets with the biggest audiences have the shallowest feeds: the Times
+    # hands over its last 21 metro stories and blocks its article pages, Gothamist
+    # its last 40. A single build sees a week of them, so almost no one there
+    # reaches two clips on a beat. Every build now keeps what it saw, public
+    # fields only, and adds it to the next; coverage accumulates instead of
+    # resetting. On CI the file rides in the Actions cache, not the repository.
+    HIST = PRIV / "press_story_history.json"
+    if not args.cache_only:
+        try:
+            hist = json.load(open(HIST)) if HIST.exists() else {}
+        except Exception:
+            hist = {}
+        today = datetime.now(timezone.utc).date().isoformat()
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=183)).isoformat()
+        live_urls = set()
+        for it in (rss_items + wp_items):
+            u = it.get("url")
+            if not u or not it.get("authors"):
+                continue
+            live_urls.add(u)
+            hist[u] = {k: it.get(k) for k in ("outlet", "title", "url", "date", "authors", "tags")}
+            hist[u]["summary"] = (it.get("summary") or "")[:300]
+            hist[u]["seen"] = hist.get(u, {}).get("seen") or today
+        hist = {u: v for u, v in hist.items() if (v.get("date") or v.get("seen") or "") >= cutoff[:10]}
+        json.dump(hist, open(HIST, "w"))
+        older = [v for u, v in hist.items() if u not in live_urls]
+        print(f"  story history: {len(hist)} stories kept, {len(older)} of them from earlier builds")
+        wp_items = wp_items + older
+
     stories = [s for s in (rss_items + wp_items) if s.get("authors")]
     if not stories:
         sys.exit("FATAL: harvest produced no bylined stories — refusing to write an empty press.json")
@@ -784,6 +814,12 @@ def main():
             if len(p["name"]) < len(a):
                 p["name"] = a
             p["outlet_counts"][oid] += 1
+            # the last date seen at each masthead, counted before syndicated
+            # copies are merged away, so amNewYork still counts as current for
+            # a reporter whose stories also run in the Astoria Post
+            if s_.get("date"):
+                lb = p.setdefault("last_by_outlet", {})
+                lb[oid] = max(lb.get(oid, ""), s_["date"][:10])
             tk = title_key(s_.get("title"))
             if tk and tk in p["titles"]:
                 continue                      # same story, another masthead
@@ -794,19 +830,32 @@ def main():
                                                                    " ".join(s_.get("tags") or [])])}
 
     # beats and vocabulary, computed once per person over their deduped file
+    # Beats in the same group share reporters: a crime-statistics pitch belongs
+    # with the Post's crime reporters even when few of their stories are about
+    # data. Each person also gets a count of distinct stories across the crime
+    # group (priority 1) and the city-and-state government group (priority 2).
+    GROUPS = {"crime": {b for b, v in beats.items() if v["priority"] == 1},
+              "government": {b for b, v in beats.items() if v["priority"] == 2}}
     for p in people.values():
         p["beat_hits"] = collections.Counter()
         p["beat_examples"] = collections.defaultdict(list)
         p["terms"] = collections.Counter()
+        p["group_hits"] = collections.Counter()
         for st in p["stories"].values():
             blob = st.pop("blob", "")
+            hit_groups = set()
             for bid, b in beats.items():
                 matched = [lbl for pat, lbl in b["pats"] if pat.search(blob)]
                 if matched:
+                    for g, members in GROUPS.items():
+                        if bid in members:
+                            hit_groups.add(g)
                     p["beat_hits"][bid] += 1
                     if len(p["beat_examples"][bid]) < 3 and st.get("url"):
                         p["beat_examples"][bid].append({"title": st.get("title"), "url": st.get("url"),
                                                         "date": st.get("date"), "matched": matched[:4]})
+            for g in hit_groups:
+                p["group_hits"][g] += 1
             for t in terms_of(blob):
                 p["terms"][t] += 1
 
@@ -870,17 +919,32 @@ def main():
     for k, p in people.items():
         p["id"] = k
         p["outlet"] = (p["outlet_counts"].most_common(1)[0][0] if p["outlet_counts"] else None)
+        # Where someone works now is where they last filed. Six months of
+        # history means a reporter who moved -- Ethan Corey, from The Appeal to
+        # New York Focus -- has both mastheads on file; only the ones they have
+        # filed for within four months of their latest story count as current.
+        dated = sorted((s_ for s_ in p["stories"].values() if s_.get("date")),
+                       key=lambda s_: s_["date"], reverse=True)
+        if dated:
+            latest = dated[0]["date"][:10]
+            window = (datetime.fromisoformat(latest) - timedelta(days=120)).date().isoformat()
+            lb = p.get("last_by_outlet") or {}
+            p["recent_outlets"] = [o for o, d_ in sorted(lb.items(), key=lambda kv: kv[1], reverse=True) if d_ >= window] \
+                or list(dict.fromkeys(s_["outlet"] for s_ in dated if s_["date"][:10] >= window))
+            p["outlet"] = dated[0]["outlet"]
+        else:
+            p["recent_outlets"] = list(p["outlet_counts"])
         # A City & State address beats one stray Hell Gate freelance piece when
         # deciding which masthead to put under someone's name.
         em = (p.get("email") or "")
-        if "@" in em:
+        if "@" in em and not dated:
             edom = em.split("@")[1]
             for oid in p["outlet_counts"]:
                 od = dom_by_outlet.get(oid, "")
                 if od and (edom.endswith(od) or od.endswith(edom)):
                     p["outlet"] = oid
                     break
-        p["also_at"] = [o for o, _ in p["outlet_counts"].most_common()[1:]]
+        p["also_at"] = [o for o, _ in p["outlet_counts"].most_common() if o != p["outlet"]]
         p["stories"] = sorted(p["stories"].values(), key=lambda s: s.get("date") or "", reverse=True)
 
     # ---- byline blocks and author pages, one fetch each
@@ -1099,6 +1163,7 @@ def main():
             "title": tidy_title(p.get("title")), "bio": p.get("bio"),
             "email": p.get("email"), "email_source_url": p.get("email_source_url"),
             "email_evidence": (p.get("email_evidence") or "")[:130] or None,
+            "recent_outlets": p.get("recent_outlets") or None,
             "x": p.get("x"), "bluesky": p.get("bluesky"),
             "author_page": p.get("author_page"), "staff_page": p.get("staff_page"),
             "story_count": total, "latest": max(dates) if dates else None,
@@ -1109,6 +1174,7 @@ def main():
                       for b, c in ranked if c >= 2],   # one story on a subject is not a beat
             "stories": uniq[:12],
             "terms": dict(sorted(p["terms"].items(), key=lambda kv: -kv[1])[:35]),
+            "groups": {g: n for g, n in (p.get("group_hits") or {}).items() if n},
             "vc": flags or None,
         }
         # press-list people who never appeared in a harvest still belong in the map
@@ -1184,7 +1250,8 @@ def main():
         # best tier across every masthead they file for: a Schneps reporter
         # whose primary paper is the Astoria Post but who also files for amNY
         # counts as major media
-        tiers = [tier_of.get(o, 2) for o in [p.get("outlet"), *(p.get("also_at") or [])] if o]
+        current = p.get("recent_outlets") or [p.get("outlet"), *(p.get("also_at") or [])]
+        tiers = [tier_of.get(o, 2) for o in [p.get("outlet"), *current] if o]
         if not tiers and p.get("outlet_text"):
             ot = norm(p["outlet_text"])
             tiers = [o.get("tier", 2) for o in outlets
@@ -1194,10 +1261,18 @@ def main():
         # under the Astoria Post, inside the major-outlets group, reads as a
         # mistake; lead with the masthead that earned the tier.
         if p.get("outlet") and tier_of.get(p["outlet"], 2) != p["tier"]:
-            best = next(o for o in (p.get("also_at") or []) if tier_of.get(o, 2) == p["tier"])
-            p["also_at"] = [p["outlet"]] + [o for o in p["also_at"] if o != best]
+            best = next(o for o in current if tier_of.get(o, 2) == p["tier"])
+            p["also_at"] = [p["outlet"]] + [o for o in (p.get("also_at") or []) if o != best]
             p["outlet"] = best
             p["scope"] = next((o.get("scope") for o in outlets if o["id"] == best), p.get("scope"))
+        # An address from a masthead they no longer file for may be dead.
+        em = (p.get("email") or "").lower()
+        if "@" in em and "press_source" not in (p.get("email_source_url") or ""):
+            edom = em.split("@", 1)[1]
+            owner = next((o for o in [p.get("outlet"), *(p.get("also_at") or [])]
+                          if o and dom_of.get(o) and (edom.endswith(dom_of[o]) or dom_of[o].endswith(edom))), None)
+            if owner and owner not in (p.get("recent_outlets") or [owner]):
+                p["email_note"] = f"address from {next((x['name'] for x in outlets if x['id'] == owner), owner)}, where they no longer seem to file"
         kept.append(p)
     out_people = kept
     report["dropped_non_press"] = dropped
