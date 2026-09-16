@@ -177,6 +177,37 @@ jobs:
             echo "source data missing — skipping prospects build"
           fi
 
+      # The resharing calendar joins the fresh catalogue to the New York City
+      # calendar's dated events and ranks by lifetime views, so it runs after
+      # the catalogue refresh and the growth pull. Non-fatal: a failure leaves
+      # the page stale. Traffic falls back to the stored GA4 block when the key
+      # is absent and the page says so.
+      - name: Build and encrypt the resharing calendar
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_CREDS_JSON:  ${{ secrets.GA4_CREDS_JSON }}
+        run: |
+          if [ -f build_resharing.py ]; then
+            python3 build_resharing.py && python3 encrypt_resharing.py || echo "WARNING: resharing build failed; the resharing page will be stale"
+          else
+            echo "no build_resharing.py yet — skipping"
+          fi
+
+      # The press map harvests bylines from New York City outlets and joins them
+      # to the press list, the contributors and the outlets that cite Vital City.
+      # Non-fatal for the same reason; the harvest must fail loud on an empty
+      # result so a broken feed never publishes an empty map.
+      - name: Build and encrypt the press map
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: |
+          if [ -f build_press.py ]; then
+            python3 build_press.py && python3 encrypt_press.py || echo "WARNING: press build failed; the press page will be stale"
+          else
+            echo "no build_press.py yet — skipping"
+          fi
+
       - name: Commit & push if changed
         run: |
           # Defense-in-depth: never commit a missing/tiny encrypted file (real one is ~6 MB).
@@ -186,7 +217,7 @@ jobs:
           fi
           git config user.name "Vital City Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data network/data.enc growth/data.enc prospects/data.enc catalogue-analysis/data.enc 2>/dev/null || true
+          git add data network/data.enc growth/data.enc prospects/data.enc catalogue-analysis/data.enc resharing/data.enc press/data.enc 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "no changes to publish"
           else
