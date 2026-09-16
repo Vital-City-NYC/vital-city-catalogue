@@ -1010,7 +1010,7 @@ def main():
             "beats": [{"id": b, "label": beats[b]["label"], "priority": beats[b]["priority"],
                        "count": c, "share": round(c / total, 3) if total else 0,
                        "examples": p["beat_examples"][b]}
-                      for b, c in ranked if c >= 2 or total < 4],
+                      for b, c in ranked if c >= 2],   # one story on a subject is not a beat
             "stories": uniq[:12],
             "terms": dict(sorted(p["terms"].items(), key=lambda kv: -kv[1])[:35]),
             "vc": flags or None,

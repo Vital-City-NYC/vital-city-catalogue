@@ -334,38 +334,47 @@ function readQuery(raw){
    beat coverage (how many stories on this subject) and term overlap (the exact
    words of the query turning up in their headlines). */
 function rank(q){
+  // Order is clips on the topic times the reach of the outlet. Clips are the
+  // stories that matched the beat the query hit hardest; a beat the query only
+  // brushed counts in proportion. Word overlap only breaks ties.
   const out=[];
-  const bkeys=Object.keys(q.beats);
+  const maxN=Math.max(0,...Object.values(q.beats).map(h=>h.n));
   const nameQ=q.text.toLowerCase().trim();
+  const wordRe=q.words.length?new RegExp("\\b("+q.words.map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")s?\\b","i"):null;
   for(const p of DATA.people){
-    let beatScore=0, termScore=0, why=[];
     if(nameQ.length>3 && p.name.toLowerCase().includes(nameQ)){
-      out.push({p,score:999,why:[{kind:"name",label:"name match",score:999}],beatScore:0,termScore:0});
+      out.push({p,score:1e9,clips:p.story_count||0,above:true,why:[{kind:"name",label:"name match"}]});
       continue;
     }
+    let clips=0, weighted=0, top=null, why=[];
     for(const b of (p.beats||[])){
-      const h=q.beats[b.id]; if(!h) continue;
-      const w=Math.min(h.n,4);
-      const s=w*(2.2*Math.sqrt(b.count)+6*b.share);
-      beatScore+=s;
-      why.push({kind:"beat",label:b.label,count:b.count,share:b.share,examples:b.examples,score:s});
+      const h=q.beats[b.id]; if(!h||b.count<MIN_CLIPS) continue;
+      const w=b.count*(h.n/maxN);
+      why.push({kind:"beat",label:b.label,count:b.count,share:b.share,examples:b.examples,score:w});
+      if(w>weighted){ weighted=w; clips=b.count; top=b; }
     }
+    if(!Object.keys(q.beats).length && wordRe){
+      // no beat vocabulary matched: count headlines that use the words
+      const hits=(p.stories||[]).filter(s=>wordRe.test(s.title||""));
+      clips=weighted=hits.length;
+      if(hits.length) why.push({kind:"beat",label:"headlines using these words",count:hits.length,share:0,examples:hits.slice(0,2),score:hits.length});
+    }
+    let tieBreak=0;
     for(const w of q.words){
       const c=(p.terms||{})[w]||(p.terms||{})[w.replace(/s$/,"")]||0;
-      if(c){ const s=2.6*Math.min(c,6); termScore+=s; why.push({kind:"term",label:w,count:c,score:s}); }
+      if(c){ tieBreak+=Math.min(c,6); why.push({kind:"term",label:w,count:c,score:0}); }
     }
-    let score=beatScore+termScore;
-    if(!score) continue;
+    if(!clips) continue;
+    let score=weighted*REACH_WEIGHT[sizeOf(p)];
     if(!p.active) score*=0.55;                       // may have moved on
-    // The point of this map is New York City reporters. National writers who
-    // touch the city stay in, one rung down, rather than topping a City Hall
-    // search because they are prolific about cities in general.
-    if(p.scope==="national+metro") score*=0.6;
+    if(p.scope==="national+metro") score*=0.6;       // New York City reporters first
     if(q.fromUrl && p.outlet && DATA_DOM[p.outlet]===q.fromUrl.host) score*=0.75;  // they already have it
+    score+=tieBreak/1000;
     why.sort((a,b)=>b.score-a.score);
-    out.push({p,score,why,beatScore,termScore});
+    const above = tierOf(p)===1 && clips>=MIN_CLIPS;
+    out.push({p,score,clips,above,why});
   }
-  out.sort((a,b)=>b.score-a.score||b.p.story_count-a.p.story_count);
+  out.sort((a,b)=>b.score-a.score||b.clips-a.clips);
   return out;
 }
 let DATA_DOM={};
@@ -382,6 +391,52 @@ function filtered(list){
 }
 
 const tierOf=p=>p.tier||2;
+/* One story on a subject is an assignment, not a beat. Nothing counts as
+   coverage below this, anywhere on the page. */
+const MIN_CLIPS=2;
+/* Reach: 3 for the outlets with the largest New York audiences, 2 for the rest
+   of the major outlets, 1 for everyone else. Falls back to the tier on a
+   payload built before size existed. */
+function sizeOf(p){
+  const os=[p.outlet,...(p.also_at||[])].filter(Boolean).map(o=>OUT[o]).filter(Boolean);
+  const s=os.map(o=>o.size||(o.tier===1?2:1));
+  return s.length?Math.max(...s):(tierOf(p)===1?2:1);
+}
+const REACH_WEIGHT={3:3,2:2,1:1};
+
+/* ---------- the shortlist ----------
+   Above the line is meant to be read, not skimmed: fifteen people at most, no
+   more than two from any one outlet, and room held for television and radio so
+   the list is not fifteen print reporters when a producer is the better call. */
+const SHORTLIST=15, PER_OUTLET=2, HOLD={tv:2,radio:2};
+function mediumOf(p){
+  const t=(OUT[p.outlet]||{}).type||"";
+  if(/^tv/.test(t)) return "tv";
+  if(/^radio|podcast/.test(t)) return "radio";
+  return "print";
+}
+const MEDIUM_LABEL={tv:"TV",radio:"Radio",print:"Print & online"};
+function shortlist(ranked){          // ranked: [{p,score,...}] best first, all eligible
+  const picked=[], perOutlet={}, seen=new Set();
+  const take=r=>{ const o=r.p.outlet||r.p.outlet_text||r.p.id;
+    if(seen.has(r.p.id)||(perOutlet[o]||0)>=PER_OUTLET||picked.length>=SHORTLIST) return false;
+    picked.push(r); seen.add(r.p.id); perOutlet[o]=(perOutlet[o]||0)+1; return true; };
+  for(const [m,n] of Object.entries(HOLD)){          // hold the broadcast slots first
+    let got=0; for(const r of ranked){ if(got>=n) break; if(mediumOf(r.p)===m && take(r)) got++; }
+  }
+  for(const r of ranked){ if(picked.length>=SHORTLIST) break; take(r); }
+  picked.sort((a,b)=>b.score-a.score);
+  return {top:picked, rest:ranked.filter(r=>!seen.has(r.p.id))};
+}
+function compactTable(rows, cols){   // everyone below the line: one line each
+  return `<table><thead><tr><th>Name</th><th>Outlet</th><th>${cols}</th><th>Address</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr>
+      <td${r.p.vc&&r.p.vc.person?' style="font-weight:800"':''}>${esc(r.p.name)}${r.p.vc&&r.p.vc.person?' <span class="badge vc">VC</span>':''}</td>
+      <td>${esc(outletName(r.p))} <span style="color:var(--vc-charcoal);font-size:11px">${MEDIUM_LABEL[mediumOf(r.p)]}</span></td>
+      <td>${r.clips}${(r.example)?` <a href="${esc(r.example.url)}" target="_blank" rel="noopener" style="font-size:11px">latest &rsaquo;</a>`:""}</td>
+      <td>${r.p.email?`<a href="mailto:${esc(r.p.email)}">${esc(r.p.email)}</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+    </tr>`).join("")+`</tbody></table>`;
+}
 const TIER_LABEL={1:"Major outlets",2:"Smaller outlets, newsletters and independents"};
 function tierSplit(list){ return [list.filter(r=>tierOf(r.p||r)===1), list.filter(r=>tierOf(r.p||r)!==1)]; }
 function outletName(p){ return p.outlet ? (OUT[p.outlet]?.name||p.outlet) : (p.outlet_text||"—"); }
@@ -398,7 +453,7 @@ function vcBadges(p){
 
 function card(r,i){
   const p=r.p;
-  const beats=(r.why||[]).filter(w=>w.kind==="beat").slice(0,3);
+  const beats=(r.why||[]).filter(w=>w.kind==="beat"&&w.count>=MIN_CLIPS).slice(0,3);
   const terms=(r.why||[]).filter(w=>w.kind==="term").slice(0,6);
   const ex=beats.flatMap(b=>(b.examples||[]).slice(0,1)).slice(0,2);
   const stories=(p.stories||[]).slice(0,3);
@@ -408,7 +463,7 @@ function card(r,i){
         <span class="nm">${esc(p.name)}</span>
         <span class="role"> &middot; <b>${esc(outletName(p))}</b>${(p.also_at||[]).length?` <span style="color:var(--vc-charcoal)">+ ${p.also_at.map(o=>esc(OUT[o]?.name||o)).join(", ")}</span>`:""}${p.title?" &middot; "+esc(p.title):""}</span>
       </div>
-      ${r.score?`<span class="sc">score ${r.score.toFixed(0)}</span>`:""}
+      ${r.clips!=null?`<span class="sc">${MEDIUM_LABEL[mediumOf(p)]} &middot; ${r.clips} clip${r.clips===1?"":"s"} on this</span>`:""}
     </div>
     ${vcBadges(p)?`<div style="margin-top:5px">${vcBadges(p)}</div>`:""}
     ${p.bio?`<div class="role" style="margin-top:5px">${esc(p.bio)}</div>`:""}
@@ -442,18 +497,32 @@ function runQuery(){
   const all=rank(q);
   const majorOnly=$("#fMajor").checked;
   LAST=filtered(all).filter(r=>!majorOnly||tierOf(r.p)===1);
-  const [t1,t2]=tierSplit(LAST);
+  const eligible=LAST.filter(r=>r.clips>=MIN_CLIPS&&tierOf(r.p)===1);
+  const {top, rest:restMajor}=shortlist(eligible);
+  const rest=[...restMajor, ...LAST.filter(r=>r.clips>=MIN_CLIPS&&tierOf(r.p)!==1)]
+    .sort((a,b)=>b.score-a.score);
+  rest.forEach(r=>{ const w=(r.why||[]).find(x=>x.kind==="beat"); r.example=w&&w.examples&&w.examples[0]; });
+  const single=LAST.filter(r=>r.clips<MIN_CLIPS);
   const bl=Object.values(q.beats).sort((a,b)=>b.n-a.n||a.priority-b.priority);
-  $("#readout").innerHTML = `Read as: ${bl.length?bl.slice(0,5).map(b=>`<b>${esc(b.label)}</b> <span title="matched: ${esc(b.matched.join(", "))}">(${b.n} term${b.n>1?"s":""})</span>`).join(" &middot; "):"<b>no beat vocabulary matched</b> — ranking on word overlap alone"}${q.fromUrl?` &middot; link read as a headline from <b>${esc(q.fromUrl.host)}</b>${q.fromUrl.slug?`: &ldquo;${esc(q.fromUrl.slug)}&rdquo;`:" (no words in the path — paste the headline instead)"}`:""}<br>
-    ${all.length} reporters have evidence on this · <b>${t1.length}</b> at major outlets, ${t2.length} elsewhere.`;
+  const mix=["print","tv","radio"].map(m=>[m,top.filter(r=>mediumOf(r.p)===m).length]).filter(x=>x[1]).map(([m,n])=>`${n} ${MEDIUM_LABEL[m]}`).join(", ");
+  $("#readout").innerHTML = `Read as: ${bl.length?bl.slice(0,5).map(b=>`<b>${esc(b.label)}</b> <span title="matched: ${esc(b.matched.join(", "))}">(${b.n} term${b.n>1?"s":""})</span>`).join(" &middot; "):"<b>no beat vocabulary matched</b> — counting headlines that use your words"}${q.fromUrl?` &middot; link read as a headline from <b>${esc(q.fromUrl.host)}</b>${q.fromUrl.slug?`: &ldquo;${esc(q.fromUrl.slug)}&rdquo;`:" (no words in the path — paste the headline instead)"}`:""}<br>
+    The shortlist is the ${top.length} strongest targets at major outlets${mix?` (${mix})`:""}: clips on this topic times the size of the outlet, at most two per outlet. ${rest.length} more below, ${single.length} with a single clip.`;
   if(!LAST.length){
     $("#results").innerHTML=`<div class="empty">Nobody in the map has filed on this. Try fewer words, or turn off the filters above.</div>`;
     return;
   }
   $("#results").innerHTML =
-      (t1.length ? `<div class="tierdiv" style="margin-top:0"><b>${TIER_LABEL[1]}</b> &middot; ${t1.length}</div>`+t1.slice(0,30).map(card).join("")
-                 : `<div class="empty">No one at a major outlet has filed on this.</div>`)
-    + (t2.length ? `<div class="tierdiv">${TIER_LABEL[2]} &middot; ${t2.length}</div>`+t2.slice(0,15).map(card).join("") : "");
+      `<div class="tierdiv" style="margin-top:0"><b>Shortlist</b> &middot; ${top.length} target${top.length===1?"":"s"}</div>`
+    + (top.length ? top.map(card).join("")
+                  : `<div class="empty">No one at a major outlet has filed on this more than once. The people below have.</div>`)
+    + (rest.length ? `<div class="tierdiv">Below the line &middot; ${rest.length} more with two or more clips</div>`
+        + `<div id="restOut">${compactTable(rest.slice(0,25),"Clips on this")}</div>`
+        + (rest.length>25?`<span class="more" id="showRest">all ${rest.length} &rsaquo;</span>`:"") : "")
+    + (single.length ? `<div class="tierdiv">A single clip &middot; ${single.length} <span class="more" id="showSingle">show them &rsaquo;</span></div><div id="singleOut"></div>` : "");
+  const sr=$("#showRest");
+  if(sr) sr.addEventListener("click",()=>{ $("#restOut").innerHTML=compactTable(rest,"Clips on this"); sr.remove(); });
+  const ss=$("#showSingle");
+  if(ss) ss.addEventListener("click",()=>{ single.forEach(r=>{ const w=(r.why||[]).find(x=>x.kind==="beat"); r.example=w&&w.examples&&w.examples[0]; }); $("#singleOut").innerHTML=compactTable(single.slice(0,60),"Clips on this"); ss.remove(); });
 }
 
 /* ---------- browse ---------- */
@@ -470,21 +539,21 @@ function renderBeats(){
 }
 function showBeat(bid){
   if(!bid){ $("#beatOut").innerHTML=""; return; }
-  const rows=DATA.people.filter(p=>(p.beats||[]).some(b=>b.id===bid))
+  const rows=DATA.people.filter(p=>(p.beats||[]).some(b=>b.id===bid&&b.count>=MIN_CLIPS))
     .map(p=>({p,b:p.beats.find(b=>b.id===bid)}))
-    .sort((x,y)=>tierOf(x.p)-tierOf(y.p)||y.b.count-x.b.count);
-  const bt1=rows.filter(r=>tierOf(r.p)===1).slice(0,45), bt2=rows.filter(r=>tierOf(r.p)!==1).slice(0,20);
-  const beatRow=r=>`<tr>
-      <td${r.p.vc&&r.p.vc.person?' style="font-weight:800"':''}>${esc(r.p.name)}${r.p.vc&&r.p.vc.person?' <span class="badge vc">VC</span>':''}${r.p.title?`<div style="color:var(--vc-charcoal);font-size:11px">${esc(r.p.title)}</div>`:''}</td>
-      <td>${esc(outletName(r.p))}</td>
-      <td>${r.b.count}${(r.b.examples||[]).length?` <a href="${esc(r.b.examples[0].url)}" target="_blank" rel="noopener" style="font-size:11px">example &rsaquo;</a>`:""}</td>
-      <td>${Math.round(r.b.share*100)}%</td>
-      <td>${r.p.email?`<a href="mailto:${esc(r.p.email)}">${esc(r.p.email)}</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td>
-    </tr>`;
-  $("#beatOut").innerHTML = rows.length? `<table><thead><tr><th>Reporter</th><th>Outlet</th><th>Stories on this beat</th><th>Share of their file</th><th>Address</th></tr></thead><tbody>`
-    + (bt1.length?`<tr class="tierrow"><td colspan="5">${TIER_LABEL[1]}</td></tr>`+bt1.map(beatRow).join(""):"")
-    + (bt2.length?`<tr class="tierrow"><td colspan="5">${TIER_LABEL[2]}</td></tr>`+bt2.map(beatRow).join(""):"")
-    + `</tbody></table>` : `<div class="empty">No harvested stories matched this beat.</div>`;
+    .sort((x,y)=>y.b.count*REACH_WEIGHT[sizeOf(y.p)]-x.b.count*REACH_WEIGHT[sizeOf(x.p)]);
+  const ranked=rows.map(r=>({p:r.p, score:r.b.count*REACH_WEIGHT[sizeOf(r.p)], clips:r.b.count,
+                              example:(r.b.examples||[])[0]}));
+  const {top, rest:restMajor}=shortlist(ranked.filter(r=>tierOf(r.p)===1));
+  const rest=[...restMajor, ...ranked.filter(r=>tierOf(r.p)!==1)].sort((a,b)=>b.score-a.score);
+  $("#beatOut").innerHTML = rows.length
+    ? `<div class="tierdiv" style="margin-top:12px"><b>Shortlist</b> &middot; ${top.length} &middot; stories on this beat times the size of the outlet, at most two per outlet</div>`
+      + compactTable(top,"Stories on this beat")
+      + (rest.length?`<div class="tierdiv">Below the line &middot; ${rest.length}</div><div id="beatRest">${compactTable(rest.slice(0,20),"Stories on this beat")}</div>`
+          +(rest.length>20?`<span class="more" id="beatMore">all ${rest.length} &rsaquo;</span>`:""):"")
+    : `<div class="empty">No one has filed two or more stories on this beat.</div>`;
+  const bm=$("#beatMore");
+  if(bm) bm.addEventListener("click",()=>{ $("#beatRest").innerHTML=compactTable(rest,"Stories on this beat"); bm.remove(); });
 }
 /* ---------- the directory: search everyone by name, outlet, title or beat ---------- */
 let DSHOWN=150;
@@ -511,7 +580,7 @@ function dirMatches(){
   return DATA.people.filter(p=>{
     if(oid && p.outlet!==oid && !(p.also_at||[]).includes(oid)) return false;
     if(ty){ const os=[p.outlet,...(p.also_at||[])].map(o=>OUT[o]?.type); if(!os.includes(ty)) return false; }
-    if(bid && !(p.beats||[]).some(b=>b.id===bid)) return false;
+    if(bid && !(p.beats||[]).some(b=>b.id===bid&&b.count>=MIN_CLIPS)) return false;
     if(sc==="national+metro" && p.scope!=="national+metro") return false;
     if(sc==="nyc" && p.scope==="national+metro") return false;
     if(em && !p.email) return false;
@@ -531,7 +600,7 @@ function dirMatches(){
     if(tierOf(a)!==tierOf(b)) return tierOf(a)-tierOf(b);   // major outlets first, always
     const nat=p=>p.scope==="national+metro"?1:0;
     if(nat(a)!==nat(b)) return nat(a)-nat(b);
-    const cnt=p=>bid?((p.beats||[]).find(x=>x.id===bid)||{}).count||0:p.story_count;
+    const cnt=p=>(bid?((p.beats||[]).find(x=>x.id===bid)||{}).count||0:p.story_count)*REACH_WEIGHT[sizeOf(p)];
     return cnt(b)-cnt(a) || a.name.localeCompare(b.name);
   });
 }
@@ -543,7 +612,7 @@ function renderDirectory(){
       <td${p.vc&&p.vc.person?' style="font-weight:800"':''}>${esc(p.name)}${p.vc&&p.vc.person?' <span class="badge vc">VC</span>':''}</td>
       <td>${esc(outletName(p))}${(p.also_at||[]).length?`<div style="color:var(--vc-charcoal);font-size:11px">also ${p.also_at.map(o=>esc(OUT[o]?.name||o)).join(", ")}</div>`:""}</td>
       <td style="color:var(--vc-charcoal)">${esc(p.title||"—")}</td>
-      <td>${(p.beats||[]).slice(0,3).map(b=>`${esc(b.label.toLowerCase())} <b>${b.count}</b>`).join("<br>")||'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+      <td>${(p.beats||[]).filter(b=>b.count>=MIN_CLIPS).slice(0,3).map(b=>`${esc(b.label.toLowerCase())} <b>${b.count}</b>`).join("<br>")||'<span style="color:var(--vc-charcoal)">—</span>'}</td>
       <td>${p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td>
       <td>${p.author_page?`<a href="${esc(p.author_page)}" target="_blank" rel="noopener">archive</a>`:(p.stories||[]).length?`<a href="${esc(p.stories[0].url)}" target="_blank" rel="noopener">latest</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td>
     </tr>`).join("")+`</tbody></table>`:`<div class="empty">Nobody matches those filters.</div>`;
@@ -561,7 +630,7 @@ function renderKnown(){
        <td style="font-weight:800">${esc(p.name)}${p.title?`<div style="color:var(--vc-charcoal);font-size:11px;font-weight:400">${esc(p.title)}</div>`:""}</td>
        <td>${esc(outletName(p))}</td>
        <td>${how.join(" &middot; ")}</td>
-       <td>${(p.beats||[]).slice(0,3).map(b=>esc(b.label.toLowerCase())+" ("+b.count+")").join(", ")||`<span style="color:var(--vc-charcoal)">${p.story_count?"no beat matched":"nothing harvested"}</span>`}</td>
+       <td>${(p.beats||[]).filter(b=>b.count>=MIN_CLIPS).slice(0,3).map(b=>esc(b.label.toLowerCase())+" ("+b.count+")").join(", ")||`<span style="color:var(--vc-charcoal)">${p.story_count?"no beat matched":"nothing harvested"}</span>`}</td>
        <td>${p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td></tr>`;
    }).join("")+`</tbody></table>`:`<div class="empty">No Vital City contacts flagged in this build — check that private/press_source.csv was readable.</div>`;
 }
