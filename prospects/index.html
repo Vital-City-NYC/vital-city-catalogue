@@ -67,6 +67,28 @@
   .vrow{padding:2px 0}
   .vrow .exp{float:none;text-decoration:none;text-align:center;padding:3px 6px}
   .vname{font-weight:700}
+  .editlink{font-size:10.5px;font-weight:700;color:var(--vc-cerulean);cursor:pointer;margin-left:6px;white-space:nowrap}
+  .editlink:hover{text-decoration:underline}
+  .addrow{margin:6px 0 2px}
+  .addrow .editlink{margin-left:0;font-size:11.5px}
+  .edstamp{font-size:9.5px;color:var(--vc-charcoal);margin-left:6px}
+  .pnote{font-size:11.5px;margin-top:3px;padding-left:6px;border-left:2px solid var(--vc-gold)}
+  #pedit{position:fixed;inset:0;background:rgba(5,5,7,.45);z-index:600;display:none;align-items:flex-start;justify-content:center;padding:60px 16px;overflow:auto}
+  #pedit.on{display:flex}
+  #pedit .box{background:var(--vc-white);border:1px solid var(--vc-black);box-shadow:7px 7px 0 rgba(5,5,7,.14);width:100%;max-width:560px;padding:22px 24px}
+  #pedit h3{margin:0 0 4px;font-size:18px;font-weight:900}
+  #pedit .sub{font-size:12px;color:var(--vc-charcoal);margin-bottom:12px}
+  #pedit label{display:block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--vc-charcoal);margin:10px 0 3px}
+  #pedit input[type=text],#pedit input[type=date],#pedit select,#pedit textarea{width:100%;font:inherit;font-size:14px;padding:7px 9px;border:1px solid var(--vc-cloud);background:var(--vc-paper);color:var(--vc-black)}
+  #pedit textarea{min-height:92px;resize:vertical}
+  #pedit .chk{display:flex;gap:7px;align-items:center;font-size:13px;margin-top:10px;text-transform:none;letter-spacing:0;font-weight:400;color:var(--vc-black)}
+  #pedit .btns{display:flex;gap:10px;margin-top:18px;align-items:center;flex-wrap:wrap}
+  #pedit button{font:inherit;font-weight:800;font-size:12px;padding:9px 16px;border:0;cursor:pointer;background:var(--vc-black);color:var(--vc-white)}
+  #pedit button.ghost{background:transparent;color:var(--vc-black);border:1px solid var(--vc-cloud)}
+  #pedit button.danger{background:transparent;color:#c8102e;border:1px solid #c8102e;margin-left:auto}
+  #pedit .msg{font-size:12px;color:var(--vc-charcoal)}
+  html.dark #pedit button{background:var(--vc-cerulean);color:#fff}
+  html.dark #pedit button.ghost{background:transparent;color:var(--vc-black)}
   .exp{background:var(--vc-white);border:1px solid var(--vc-cloud);border-radius:4px;padding:4px 10px;font-size:10.5px;font-weight:700;cursor:pointer;font-family:inherit;float:right}
   .deckcta{display:flex;align-items:center;gap:14px;background:var(--vc-paper2);border:1px solid var(--vc-cloud);padding:12px 14px;margin:2px 0 16px;flex-wrap:wrap}
   .deckbtn{background:var(--vc-black);color:#fff;font-weight:900;font-size:14px;padding:11px 18px;text-decoration:none;border-radius:4px;white-space:nowrap}
@@ -215,7 +237,185 @@ function csv(rows,cols,fname){
   a.download=fname; a.click(); URL.revokeObjectURL(a.href);
 }
 
+let RAW=null;
+/* ---------- editing ----------
+   Saves go to the same Google-Sheet store the contact tool uses, through the
+   same Apps Script, under prospect:* keys the contact build ignores. The
+   nightly build reads them and folds them in. Until then this device keeps its
+   own copy so the editor sees the change at once; a copy older than the build
+   it is looking at is dropped, because the build already has it. */
+const BACKEND_URL="https://script.google.com/macros/s/AKfycbw-lsFo3rHWZX3BnL0mEOo1kgRGqcsznH8WC3e5bcEu95zuwMG7NSCYpazP2Z4z7w3hPQ/exec";
+const SHEET_URL="https://docs.google.com/spreadsheets/d/1XmLmlVsZOElAcj-0X-hFCnSes66tRLf3vY3ndbdkZSM/edit";
+const EDKEY="vc_prospect_edits";
+const SECTIONS={current:{current:true,lead:false,cat:null},warm:{current:false,lead:false,cat:null},
+  abundance:{current:false,lead:true,cat:"abundance"},journalism:{current:false,lead:true,cat:"journalism"},other:{current:false,lead:true,cat:null}};
+const SECTION_LABEL={current:"Current funder",warm:"Warm door (reads us, not yet a funder)",abundance:"Abundance and state capacity lead",journalism:"Journalism funder lead",other:"Other lead"};
+const slug=s=>(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+function localEdits(){ try{return JSON.parse(localStorage.getItem(EDKEY)||"{}")}catch(e){return {}} }
+function saveLocal(key,o){ const all=localEdits(); all[key]=o; try{localStorage.setItem(EDKEY,JSON.stringify(all))}catch(e){} }
+function sectionOf(f){ return f.current?"current":!f.lead?"warm":f.cat==="abundance"?"abundance":f.cat==="journalism"?"journalism":"other"; }
+function withLocalEdits(d){
+  const built=d.built_at||d.generated_at||"";
+  const ed=localEdits(), fresh={};
+  for(const [k,v] of Object.entries(ed)){ if((v.at||"")>built) fresh[k]=v; }
+  try{ localStorage.setItem(EDKEY,JSON.stringify(fresh)); }catch(e){}
+  const pick=kind=>Object.fromEntries(Object.entries(fresh).filter(([k])=>k.startsWith("prospect:"+kind+":")).map(([k,v])=>[k.split(":").slice(2).join(":"),v]));
+  const F=pick("funder"), P=pick("pipeline"), R=pick("person");
+  // A payload built before rows carried keys still works: the key is the same
+  // slug of the name the build would have made.
+  (d.funders||[]).forEach(f=>{ f.key=f.key||slug(f.name); });
+  (d.pipeline||[]).forEach(r=>{ r.key=r.key||slug(r.name); });
+  d.funders=(d.funders||[]).filter(f=>!(F[f.key]&&F[f.key].hidden)).map(f=>{
+    const e=F[f.key]; if(!e) return f;
+    ["name","domain","focus","note"].forEach(k=>{ if(typeof e[k]==="string"&&e[k].trim()) f[k]=e[k].trim(); });
+    if(Array.isArray(e.fit)) f.fit=e.fit;
+    if(SECTIONS[e.section]) Object.assign(f,SECTIONS[e.section]);
+    if("pursuit" in e) f.pursuit=!!e.pursuit;
+    if((e.grantees_who||"").trim()) f.grantees={who:e.grantees_who.trim(),src:(e.grantees_src||"added on this page").trim()};
+    f.edited=(e.at||"").slice(0,10); return f;
+  });
+  for(const [k,e] of Object.entries(F)){
+    if(!e.add||e.hidden||(d.funders||[]).some(f=>f.key===k)) continue;
+    d.funders.push(Object.assign({key:k,name:e.name,domain:e.domain||"",focus:e.focus||"",fit:e.fit||[],note:e.note||"",pursuit:!!e.pursuit,
+      readers:0,engaged:0,donors:0,names:[],edited:(e.at||"").slice(0,10),
+      grantees:(e.grantees_who||"").trim()?{who:e.grantees_who.trim(),src:(e.grantees_src||"added on this page").trim()}:null},SECTIONS[e.section]||SECTIONS.other));
+  }
+  d.pipeline=(d.pipeline||[]).filter(r=>!(P[r.key]&&P[r.key].hidden)).map(r=>{
+    const e=P[r.key]; if(!e) return r;
+    ["name","date","note"].forEach(k=>{ if(typeof e[k]==="string"&&e[k].trim()) r[k]=e[k].trim(); });
+    r.edited=(e.at||"").slice(0,10); return r;
+  });
+  for(const [k,e] of Object.entries(P)){
+    if(!e.add||e.hidden||d.pipeline.some(r=>r.key===k)) continue;
+    d.pipeline.push({key:k,name:e.name,date:e.date||"",note:e.note||"",edited:(e.at||"").slice(0,10)});
+  }
+  d.pipeline.sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  for(const t of Object.keys(d.tiers||{})){
+    d.tiers[t]=(d.tiers[t]||[]).filter(r=>!(R[(r.e||"").toLowerCase()]||{}).hidden)
+      .map(r=>{ const e=R[(r.e||"").toLowerCase()]; if(e&&"note" in e) r.pnote=e.note; return r; });
+  }
+  return d;
+}
+function pushEdit(key,override){
+  override.at=new Date().toISOString();
+  saveLocal(key,override);
+  try{
+    fetch(BACKEND_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({pass:loadPass()||"",key,override})}).catch(()=>{});
+  }catch(e){}
+  boot(RAW);
+  flashMsg("Saved. You see it now; everyone else sees it after the next rebuild (7am or 7pm).");
+}
+function flashMsg(t){ let m=document.getElementById("editToast"); if(!m){ m=document.createElement("div"); m.id="editToast";
+  m.style.cssText="position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--vc-black);color:var(--vc-white);padding:10px 16px;font-size:12.5px;z-index:700";
+  document.body.appendChild(m);} m.textContent=t; m.style.display="block"; clearTimeout(m._t); m._t=setTimeout(()=>m.style.display="none",4200); }
+function field(label,html){ return `<label>${label}</label>${html}`; }
+const val=v=>esc(v==null?"":v);
+function openEditor(title,sub,body,onSave,onRemove){
+  let m=document.getElementById("pedit");
+  if(!m){ m=document.createElement("div"); m.id="pedit"; document.body.appendChild(m);
+    m.addEventListener("click",e=>{ if(e.target===m) m.classList.remove("on"); }); }
+  m.innerHTML=`<div class="box"><h3>${title}</h3><div class="sub">${sub}</div><form>${body}
+    <div class="btns"><button type="submit">Save</button><button type="button" class="ghost" data-x>Cancel</button>
+    ${onRemove?`<button type="button" class="danger" data-rm>Remove from the page</button>`:""}</div></form></div>`;
+  const form=m.querySelector("form");
+  form.addEventListener("submit",e=>{ e.preventDefault(); const fd=Object.fromEntries(new FormData(form).entries());
+    fd._checked=[...form.querySelectorAll("input[type=checkbox]")].reduce((o,c)=>(o[c.name]=c.checked,o),{});
+    if(onSave(fd)!==false) m.classList.remove("on"); });
+  m.querySelector("[data-x]").onclick=()=>m.classList.remove("on");
+  const rm=m.querySelector("[data-rm]");
+  if(rm) rm.onclick=()=>{ if(confirm("Remove this from the page for everyone? It can be restored from the shared edit sheet.")){ onRemove(); m.classList.remove("on"); } };
+  m.classList.add("on");
+  setTimeout(()=>{ const i=form.querySelector("input,textarea"); if(i) i.focus(); },30);
+}
+function editFunder(f, section){
+  const isNew=!f;
+  f=f||{name:"",domain:"",focus:"",fit:[],note:"",pursuit:false};
+  const sec=isNew?section:sectionOf(f);
+  openEditor(isNew?"Add a funder":"Edit "+esc(f.name),
+    isNew?"It appears in the section you choose. Reader counts fill in at the next rebuild, matched on the website address.":"Changes apply to everyone after the next rebuild.",
+    field("Name",`<input type="text" name="name" value="${val(f.name)}" required>`)
+    +field("Section",`<select name="section">${Object.entries(SECTION_LABEL).map(([k,l])=>`<option value="${k}"${k===sec?" selected":""}>${l}</option>`).join("")}</select>`)
+    +field("Website (the part after www., used to find their staff among readers)",`<input type="text" name="domain" value="${val(f.domain)}" placeholder="e.g. revsonfoundation.org">`)
+    +field("What they fund",`<input type="text" name="focus" value="${val(f.focus)}">`)
+    +field("Beat fit (separate with commas)",`<input type="text" name="fit" value="${val((f.fit||[]).join(", "))}">`)
+    +field("Note",`<textarea name="note">${val(f.note)}</textarea>`)
+    +field("Who they fund, if known",`<textarea name="grantees_who" style="min-height:56px">${val(f.grantees&&f.grantees.who)}</textarea>`)
+    +field("Source for that",`<input type="text" name="grantees_src" value="${val(f.grantees&&f.grantees.src)}">`)
+    +`<label class="chk"><input type="checkbox" name="pursuit"${f.pursuit?" checked":""}> In active pursuit</label>`,
+    fd=>{
+      if(!fd.name.trim()){ alert("A funder needs a name."); return false; }
+      const key=isNew?slug(fd.name):f.key;
+      if(isNew && (RAW.funders||[]).some(x=>x.key===key)){ alert("That funder is already on the page. Use its Edit link instead."); return false; }
+      pushEdit("prospect:funder:"+key,{add:isNew||undefined,name:fd.name.trim(),section:fd.section,domain:fd.domain.trim().toLowerCase().replace(/^https?:\/\//,"").replace(/^www\./,"").replace(/\/.*$/,""),
+        focus:fd.focus.trim(),fit:fd.fit.split(",").map(x=>x.trim()).filter(Boolean),note:fd.note.trim(),
+        grantees_who:fd.grantees_who.trim(),grantees_src:fd.grantees_src.trim(),pursuit:fd._checked.pursuit});
+    },
+    isNew?null:()=>pushEdit("prospect:funder:"+f.key,{hidden:true,name:f.name}));
+}
+function editPipeline(r){
+  const isNew=!r; r=r||{name:"",date:new Date().toISOString().slice(0,10),note:""};
+  openEditor(isNew?"Add a funder conversation":"Edit "+esc(r.name),
+    "A neutral summary of what was discussed, dated to the most recent contact. This page is shared, so leave out quotes and anything a funder said in confidence.",
+    field("Who",`<input type="text" name="name" value="${val(r.name)}" required>`)
+    +field("Date of the latest contact",`<input type="date" name="date" value="${val(r.date)}">`)
+    +field("Subject",`<textarea name="note">${val(r.note)}</textarea>`),
+    fd=>{
+      if(!fd.name.trim()){ alert("A conversation needs a name."); return false; }
+      const key=isNew?slug(fd.name):r.key;
+      pushEdit("prospect:pipeline:"+key,{add:isNew||undefined,name:fd.name.trim(),date:fd.date,note:fd.note.trim()});
+    },
+    isNew?null:()=>pushEdit("prospect:pipeline:"+r.key,{hidden:true,name:r.name}));
+}
+function editPerson(email,name){
+  const cur=((RAW.tiers&&Object.values(RAW.tiers).flat())||[]).find(p=>(p.e||"").toLowerCase()===email)||{};
+  const local=localEdits()["prospect:person:"+email]||{};
+  openEditor("Note on "+esc(name||email),
+    "For names, employer or contact details, use their profile in the contact tool. This note only shows on the prospects page.",
+    field("Note",`<textarea name="note">${val(local.note!=null?local.note:cur.pnote)}</textarea>`),
+    fd=>pushEdit("prospect:person:"+email,{note:fd.note.trim(),name}),
+    ()=>pushEdit("prospect:person:"+email,{hidden:true,name}));
+}
+/* Commentary boxes: hand-written analysis that goes stale when the lists
+   change, so it is editable too. Plain text, **double asterisks** for bold. */
+function textToHtml(t){ return esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>"); }
+function htmlToText(el){
+  const c=el.cloneNode(true); c.querySelectorAll(".editlink,.edstamp").forEach(x=>x.remove());
+  c.querySelectorAll("b,strong").forEach(b=>b.replaceWith("**"+b.textContent+"**"));
+  c.querySelectorAll("br").forEach(b=>b.replaceWith("\n"));
+  return c.textContent.replace(/[ \t]+/g," ").trim();
+}
+function applyTextEdits(d){
+  const built=d.built_at||d.generated_at||"";
+  const texts=Object.assign({}, d.texts||{});
+  for(const [k,v] of Object.entries(localEdits())) if(k.startsWith("prospect:text:")&&(v.at||"")>built) texts[k.slice(14)]=v;
+  document.querySelectorAll("[data-tid]").forEach(el=>{
+    const e=texts[el.dataset.tid];
+    if(e&&typeof e.text==="string") el.innerHTML=textToHtml(e.text)+(e.at?`<span class="edstamp">edited ${esc(e.at.slice(0,10))}</span>`:"");
+    el.insertAdjacentHTML("beforeend",` <span class="editlink" data-tedit="${el.dataset.tid}" title="Rewrite this commentary">Edit</span>`);
+  });
+}
+function editText(tid){
+  const el=document.querySelector(`[data-tid="${tid}"]`); if(!el) return;
+  openEditor("Edit this commentary",
+    "Plain text. Put **double asterisks** around words to make them bold. This is analysis, so update it when the lists above change.",
+    field("Text",`<textarea name="text" style="min-height:160px">${val(htmlToText(el))}</textarea>`),
+    fd=>pushEdit("prospect:text:"+tid,{text:fd.text.trim()}));
+}
+document.addEventListener("click",e=>{
+  const t=e.target.closest(".editlink"); if(!t||!RAW) return;
+  if(t.dataset.tedit){ editText(t.dataset.tedit); return; }
+  const d=withLocalEdits(JSON.parse(JSON.stringify(RAW)));
+  if(t.dataset.fkey!=null) editFunder((d.funders||[]).find(f=>f.key===t.dataset.fkey));
+  else if(t.dataset.pipekey!=null) editPipeline((d.pipeline||[]).find(r=>r.key===t.dataset.pipekey));
+  else if(t.dataset.pkey!=null) editPerson(t.dataset.pkey,t.dataset.pname);
+  else if(t.dataset.add==="funder") editFunder(null,t.dataset.section);
+  else if(t.dataset.add==="pipeline") editPipeline(null);
+});
+
 function boot(d){
+  if(!RAW) RAW=d;
+  d=withLocalEdits(JSON.parse(JSON.stringify(RAW)));
   $("#stamp").textContent="built "+(d.generated_at||"");
   const t=d.topline||{};
   $("#kpis").innerHTML=[
@@ -233,7 +433,7 @@ function boot(d){
   const journo=(d.funders||[]).filter(f=>f.lead&&f.cat==="journalism");
   const other=(d.funders||[]).filter(f=>f.lead&&!f.cat);
   const frow=f=>`<tr>
-    <td>${f.current?'<span class="badge b-warm">CURRENT</span> ':""}${f.pursuit?'<span class="badge" style="background:var(--vc-magenta);color:#fff">IN PURSUIT</span> ':""}<b>${esc(f.name)}</b><div class="why">${esc(f.focus)}</div>
+    <td>${f.current?'<span class="badge b-warm">CURRENT</span> ':""}${f.pursuit?'<span class="badge" style="background:var(--vc-magenta);color:#fff">IN PURSUIT</span> ':""}<b>${esc(f.name)}</b> <span class="editlink" data-fkey="${esc(f.key||"")}" title="Change this funder's section, note, focus or website, or remove it">Edit</span>${f.edited?`<span class="edstamp" title="Changed on the page">edited ${esc(f.edited)}</span>`:""}<div class="why">${esc(f.focus)}</div>
         <div>${(f.fit||[]).map(x=>`<span class="fit">${esc(x)}</span>`).join("")}</div></td>
     <td class="n">${f.readers||"—"}</td><td class="n">${f.engaged||"—"}</td><td class="n">${f.donors||"—"}</td>
     <td style="max-width:220px">${f.names&&f.names.length?esc(f.names.join(", ")):'<span class="why">—</span>'}</td>
@@ -254,7 +454,8 @@ function boot(d){
     <td>${p.wiki?'<span class="badge b-star">★</span>':""}<a href="${profileURL(p.e)}" target="_blank" rel="noopener" title="Open this person's full profile in the contact tool" style="color:inherit"><b>${esc(p.n)||'<span class="why">(no name)</span>'}</b></a>
         ${(p.types||[]).map(x=>`<span class="fit">${esc(x)}</span>`).join("")}
         <div class="why">${p.role?esc(p.role)+(p.inst?", ":""):""}${esc(p.inst)}${p.nyc?' <span class="fit" title="Has a demonstrable New York link — the research pass recorded one">NYC</span>':""}</div>
-        <div class="why"><a href="mailto:${esc(p.e)}">${esc(p.e)}</a></div></td>
+        <div class="why"><a href="mailto:${esc(p.e)}">${esc(p.e)}</a> <span class="editlink" data-pkey="${esc((p.e||"").toLowerCase())}" data-pname="${esc(p.n||"")}" title="Add a note, or take this person off the prospect lists">Note or remove</span></div>
+        ${p.pnote?`<div class="pnote">${esc(p.pnote)}</div>`:""}</td>
     <td class="n">${p.damt?money(p.damt):"—"}</td>
     <td class="n">${p.dcnt||"—"}</td>
     <td class="n">${p.dlast||"—"}</td>
@@ -289,44 +490,46 @@ function boot(d){
     <div id="factsBody"></div>
     <div style="margin-top:14px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700">Published pieces by topic since January ${new Date().getFullYear()-1}</div>
     <div class="beats" style="margin-top:6px">${(d.beats||[]).map(([t,n])=>`<span class="beat"><b>${n}</b> ${esc(t)}</span>`).join("")}</div>
-    <div class="ins">Match the pitch to the funder: criminal-justice output for Arnold, Guggenheim, MacArthur and Tow; housing, city-government and economy for the abundance funders &mdash; that trio is the abundance-agenda evidence base; the NYC civic beats for Revson, Kaplan and the community funders. The journalism frame is the weakest pitch Vital City can make &mdash; the analysis is the product. And the new positioning language does something the old one did not: <b>&ldquo;press the case for putting them into practice&rdquo;</b> is an advocacy claim, backed by the receipts above &mdash; which widens the field from research funders to policy-<i>advocacy</i> funders, where most abundance money sits.</div>
+    <div data-tid="pitch-match" class="ins">Match the pitch to the funder: criminal-justice output for Arnold, Guggenheim, MacArthur and Tow; housing, city-government and economy for the abundance funders &mdash; that trio is the abundance-agenda evidence base; the NYC civic beats for Revson, Kaplan and the community funders. The journalism frame is the weakest pitch Vital City can make &mdash; the analysis is the product. And the new positioning language does something the old one did not: <b>&ldquo;press the case for putting them into practice&rdquo;</b> is an advocacy claim, backed by the receipts above &mdash; which widens the field from research funders to policy-<i>advocacy</i> funders, where most abundance money sits.</div>
     <div class="src">${esc((d.funder_facts||{}).benchmark_note||"")}</div>
   </div>
 
   <div class="card" id="grants">
+    <div class="ins edithelp"><b>This page is editable.</b> Use <b>Edit</b> next to any funder or conversation, or the <b>+ Add</b> links under each table. You see a change at once; everyone else sees it after the next rebuild, at 7am and 7pm. Every change is also written to the <a href="${SHEET_URL}" target="_blank" rel="noopener">shared edit sheet</a>, which records who changed what and when. Reader counts for a newly added funder fill in at the next rebuild.</div>
     <h2>Current funders &mdash; renew and grow</h2>
     <div class="hint">The eight institutions named on <a href="https://www.vitalcitynyc.org/about/" target="_blank" rel="noopener">vitalcitynyc.org/about</a> (read Aug 2026), with what the subscriber file shows about each relationship. Reader counts are floors.</div>
     <table class="tbl"><thead><tr><th>Funder &middot; focus &middot; beat fit</th><th>Readers</th><th>Engaged</th><th>Donors</th><th>Who</th><th>Note</th></tr></thead>
-    <tbody>${current.map(frow).join("")}</tbody></table>
-    <div class="ins">Renewals are the cheapest money in fundraising. Arnold (12 readers, a byline) and Guggenheim (staff who donate personally) are deep relationships with obvious expansion cases; Achelis &amp; Bodman, Public Welfare and Teagle fund without a single staff reader on file &mdash; worth asking who the program officer is and getting them on the list.</div>
+    <tbody>${current.map(frow).join("")}</tbody></table><div class="addrow"><span class="editlink" data-add="funder" data-section="current">+ Add a current funder</span></div>
+    <div data-tid="renewals" class="ins">Renewals are the cheapest money in fundraising. Arnold (12 readers, a byline) and Guggenheim (staff who donate personally) are deep relationships with obvious expansion cases; Achelis &amp; Bodman, Public Welfare and Teagle fund without a single staff reader on file &mdash; worth asking who the program officer is and getting them on the list.</div>
 
     <h2 style="margin-top:26px">Funder conversations on record</h2>
     <div class="hint">Subject matter of funder conversations found in an Aug 2026 review, each dated to the most recent record. This is not a status board &mdash; where any of these stands today is not something this page can know.</div>
     <table class="tbl"><thead><tr><th>Who</th><th>Last record</th><th>Subject</th></tr></thead>
     <tbody>${(d.pipeline||[]).map(p=>`<tr>
-      <td><b>${esc(p.name)}</b></td>
+      <td><b>${esc(p.name)}</b> <span class="editlink" data-pipekey="${esc(p.key||"")}" title="Update the date or the note, or remove this row">Edit</span>${p.edited?`<span class="edstamp">edited ${esc(p.edited)}</span>`:""}</td>
       <td class="n">${esc(p.date)}</td>
       <td style="max-width:420px">${esc(p.note)}</td></tr>`).join("")}</tbody></table>
-    <div class="ins warn"><b>Two things this table surfaces.</b> The William T. Grant contact dates to March 2025 with no later record found &mdash; a funder-initiated approach is rare enough to be worth a look. And the Sahm education-funder maps are a target list with no pitch attached to it yet.</div>
+    <div class="addrow"><span class="editlink" data-add="pipeline">+ Add a funder conversation</span></div>
+    <div data-tid="conversations" class="ins warn"><b>Two things this table surfaces.</b> The William T. Grant contact dates to March 2025 with no later record found &mdash; a funder-initiated approach is rare enough to be worth a look. And the Sahm education-funder maps are a target list with no pitch attached to it yet.</div>
 
     <h2 style="margin-top:26px">Warm doors &mdash; readers, not yet funders</h2>
     <div class="hint">Foundations whose staff already read Vital City but which do not appear on the about page as funders.</div>
     <table class="tbl"><thead><tr><th>Funder &middot; focus &middot; beat fit</th><th>Readers</th><th>Engaged</th><th>Donors</th><th>Who</th><th>Note</th></tr></thead>
-    <tbody>${warm.map(frow).join("")}</tbody></table>
-    <div class="ins">Bloomberg Philanthropies (seven readers including Bloomberg Associates staff), Robin Hood (an advisor on the masthead), Clark and MacArthur all read without funding &mdash; these are the true prospects among institutions, and the ask starts from demonstrated attention rather than cold outreach.</div>
+    <tbody>${warm.map(frow).join("")}</tbody></table><div class="addrow"><span class="editlink" data-add="funder" data-section="warm">+ Add a warm door</span></div>
+    <div data-tid="warm" class="ins">Bloomberg Philanthropies (seven readers including Bloomberg Associates staff), Robin Hood (an advisor on the masthead), Clark and MacArthur all read without funding &mdash; these are the true prospects among institutions, and the ask starts from demonstrated attention rather than cold outreach.</div>
 
     <h2 style="margin-top:26px">Abundance &amp; state capacity &mdash; the active hunt</h2>
     <div class="hint">Vital City is commentary, policy analysis and data analysis &mdash; not a newsroom. This is the funder space where that profile is central rather than off-center, and where pursuit is currently focused.</div>
     <table class="tbl"><thead><tr><th>Funder &middot; focus &middot; beat fit</th><th>Readers</th><th>Engaged</th><th>Donors</th><th>Who</th><th>Note</th></tr></thead>
-    <tbody>${abund.map(frow).join("")}</tbody></table>
-    <div class="ins">The pitch shape that fits this space: <b>policy explainers, analysis and recommendations</b> &mdash; what would it take to build, permit, staff and run New York City better &mdash; backed by the housing, city-government and economy output in the next card. Lead with the work product, not the publication.</div>
+    <tbody>${abund.map(frow).join("")}</tbody></table><div class="addrow"><span class="editlink" data-add="funder" data-section="abundance">+ Add an abundance or state-capacity funder</span></div>
+    <div data-tid="abundance" class="ins">The pitch shape that fits this space: <b>policy explainers, analysis and recommendations</b> &mdash; what would it take to build, permit, staff and run New York City better &mdash; backed by the housing, city-government and economy output in the next card. Lead with the work product, not the publication.</div>
 
     <h2 style="margin-top:26px">Journalism funders &mdash; off-center, pursue selectively</h2>
     <div class="hint">Big pools, but built for news gathering. A commentary-and-analysis journal is off-profile for most of them; the wedge, where one exists, is the data-journalism output or the civic-information frame.</div>
     <table class="tbl"><thead><tr><th>Funder &middot; focus &middot; beat fit</th><th>Readers</th><th>Engaged</th><th>Donors</th><th>Who</th><th>Note</th></tr></thead>
-    <tbody>${journo.concat(other).map(frow).join("")}</tbody></table>
-    <div class="ins warn"><b>These are leads to verify, not research.</b> Programs, deadlines and eligibility change; several of these funders work by invitation. Check the funder's own site and current filings before anyone spends time on an approach, and nothing on this page should be pasted into an application.</div>
-    <div class="ins"><b>Grant readiness:</b> Vital City is a 501(c)(3) project via fiscal sponsorship by the <b>Fund for the City of New York</b> (EIN 13-2612524). Applications and checks route through the sponsor &mdash; confirm current terms with FCNY before quoting them to a funder.</div>
+    <tbody>${journo.concat(other).map(frow).join("")}</tbody></table><div class="addrow"><span class="editlink" data-add="funder" data-section="journalism">+ Add a journalism funder</span></div>
+    <div data-tid="verify" class="ins warn"><b>These are leads to verify, not research.</b> Programs, deadlines and eligibility change; several of these funders work by invitation. Check the funder's own site and current filings before anyone spends time on an approach, and nothing on this page should be pasted into an application.</div>
+    <div data-tid="readiness" class="ins"><b>Grant readiness:</b> Vital City is a 501(c)(3) project via fiscal sponsorship by the <b>Fund for the City of New York</b> (EIN 13-2612524). Applications and checks route through the sponsor &mdash; confirm current terms with FCNY before quoting them to a funder.</div>
   </div>
 
   <div class="card" id="people">
@@ -414,6 +617,7 @@ function boot(d){
     renderTier(b.dataset.t);
   }));
   renderTier("advisors");
+  applyTextEdits(d);
 
   // Every card is directly shareable. The copy button hands out the URL; the
   // hash scroll must run AFTER render, because on a gated page the browser's

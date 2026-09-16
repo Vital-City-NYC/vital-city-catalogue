@@ -459,7 +459,103 @@ def person_row(r, why):
             "prosw": r.get("prosw") or ""}
 
 
+# ---------------------------------------------------------------------------
+# Edits made on the prospects page.
+#
+# The funders and the pipeline above are the starting values. The page's Edit
+# and Add buttons save changes to the same Google-Sheet store the contacts tool
+# writes to, and the workflow downloads that store to private/people_overrides.json
+# before this build runs. Prospect edits live under their own keys, which the
+# contacts build ignores because they match no person:
+#   prospect:funder:<key>    name, domain, focus, fit, note, section, pursuit,
+#                            grantees_who, grantees_src, hidden, add
+#   prospect:pipeline:<key>  name, date, note, hidden, add
+#   prospect:person:<email>  note, hidden
+# <key> is a slug of the name the row was created with, so renaming a funder on
+# the page does not orphan its edits.
+# ---------------------------------------------------------------------------
+OVERRIDES = ROOT / "private" / "people_overrides.json"
+SECTIONS = {"current": dict(current=True, lead=False, cat=None),
+            "warm": dict(current=False, lead=False, cat=None),
+            "abundance": dict(current=False, lead=True, cat="abundance"),
+            "journalism": dict(current=False, lead=True, cat="journalism"),
+            "other": dict(current=False, lead=True, cat=None)}
+
+def row_key(name):
+    return re.sub(r"[^a-z0-9]+", "-", (name or "").lower()).strip("-")
+
+def apply_page_edits(funders, pipeline, grantees):
+    ov = load(OVERRIDES) or {}
+    fed, ped, pers = {}, {}, {}
+    for k, v in ov.items():
+        if not isinstance(v, dict) or not k.startswith("prospect:"):
+            continue
+        kind, _, key = k[len("prospect:"):].partition(":")
+        {"funder": fed, "pipeline": ped, "person": pers}.get(kind, {})[key] = v
+    log = {"funders": 0, "pipeline": 0, "people": len(pers)}
+
+    out_f, seen = [], set()
+    for f in funders:
+        f = dict(f, key=row_key(f["name"]))
+        e = fed.get(f["key"])
+        seen.add(f["key"])
+        if e:
+            log["funders"] += 1
+            if e.get("hidden"):
+                continue
+            for fld in ("name", "domain", "focus", "note"):
+                if isinstance(e.get(fld), str) and e[fld].strip():
+                    f[fld] = e[fld].strip()
+            if isinstance(e.get("fit"), list):
+                f["fit"] = [x for x in e["fit"] if x]
+            if e.get("section") in SECTIONS:
+                f.update(SECTIONS[e["section"]])
+            if "pursuit" in e:
+                f["pursuit"] = bool(e["pursuit"])
+            if (e.get("grantees_who") or "").strip():
+                grantees[f["name"]] = {"who": e["grantees_who"].strip(), "src": (e.get("grantees_src") or "added on the prospects page").strip()}
+            f["edited"] = (e.get("at") or "")[:10]
+        out_f.append(f)
+    for key, e in fed.items():
+        if key in seen or not e.get("add") or e.get("hidden") or not (e.get("name") or "").strip():
+            continue
+        f = {"key": key, "name": e["name"].strip(), "domain": (e.get("domain") or "").strip().lower(),
+             "focus": (e.get("focus") or "").strip(), "fit": [x for x in (e.get("fit") or []) if x],
+             "note": (e.get("note") or "").strip(), "pursuit": bool(e.get("pursuit")),
+             "edited": (e.get("at") or "")[:10], "added": True}
+        f.update(SECTIONS.get(e.get("section"), SECTIONS["other"]))
+        if (e.get("grantees_who") or "").strip():
+            grantees[f["name"]] = {"who": e["grantees_who"].strip(), "src": (e.get("grantees_src") or "added on the prospects page").strip()}
+        out_f.append(f); log["funders"] += 1
+
+    out_p, seen = [], set()
+    for r in pipeline:
+        r = dict(r, key=row_key(r["name"]))
+        e = ped.get(r["key"]); seen.add(r["key"])
+        if e:
+            log["pipeline"] += 1
+            if e.get("hidden"):
+                continue
+            for fld in ("name", "date", "note"):
+                if isinstance(e.get(fld), str) and e[fld].strip():
+                    r[fld] = e[fld].strip()
+            r["edited"] = (e.get("at") or "")[:10]
+        out_p.append(r)
+    for key, e in ped.items():
+        if key in seen or not e.get("add") or e.get("hidden") or not (e.get("name") or "").strip():
+            continue
+        out_p.append({"key": key, "name": e["name"].strip(), "date": (e.get("date") or "").strip(),
+                      "note": (e.get("note") or "").strip(), "edited": (e.get("at") or "")[:10], "added": True})
+        log["pipeline"] += 1
+    out_p.sort(key=lambda r: r.get("date") or "", reverse=True)
+    return out_f, out_p, grantees, pers, log
+
+
 def main():
+    global FUNDERS, PIPELINE, GRANTEES
+    FUNDERS, PIPELINE, GRANTEES, PERSON_EDITS, EDIT_LOG = apply_page_edits(FUNDERS, PIPELINE, dict(GRANTEES))
+    print(f"prospects page edits applied: {EDIT_LOG['funders']} funder, {EDIT_LOG['pipeline']} pipeline, "
+          f"{EDIT_LOG['people']} person", file=__import__('sys').stderr)
     people = load(PEOPLE) or []
     growth = load(GROWTH) or {}
     cat = load(CAT) or []
@@ -513,6 +609,7 @@ def main():
         ppl = by_funder.get(f["name"], [])
         engaged = [r for r in ppl if (r.get("eopen") or 0) >= 50]
         funders_out.append({
+            "key": f["key"], "domain": f.get("domain", ""), "edited": f.get("edited"),
             "name": f["name"], "focus": f["focus"], "fit": f["fit"], "note": f["note"],
             "lead": bool(f.get("lead")), "cat": f.get("cat"), "pursuit": bool(f.get("pursuit")),
             "current": bool(f.get("current")),
@@ -880,12 +977,20 @@ def main():
             "ein": "13-2612524", "status": "501(c)(3) via fiscal sponsorship",
             "note": "Grant applications and checks route through the fiscal sponsor. "
                     "Confirm current sponsorship terms with FCNY before quoting them to a funder."},
-        "tiers": {
+        "tiers": (lambda tiers: {k: [dict(r, pnote=(PERSON_EDITS.get((r.get("e") or "").lower()) or {}).get("note") or "")
+                                    for r in v if not (PERSON_EDITS.get((r.get("e") or "").lower()) or {}).get("hidden")]
+                                for k, v in tiers.items()})({
             "advisors": advisors, "upgrade": upgrade, "second": second,
             "researched": researched,
             "notables": notables, "principals": principals,
             "foundation_staff": fstaff, "lybunt": lybunt,
-            "party": (event or {}).get("attended", [])},
+            "party": (event or {}).get("attended", [])}),
+        "built_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+        "edit_log": EDIT_LOG,
+        # commentary rewritten on the page, by box id
+        "texts": {k[len("prospect:text:"):]: {"text": v.get("text", ""), "at": v.get("at", "")}
+                  for k, v in (load(OVERRIDES) or {}).items()
+                  if k.startswith("prospect:text:") and isinstance(v, dict) and isinstance(v.get("text"), str)},
         "event": event,
         "counts": {"subscribers": len(sub), "donors": len(donors)},
     }
