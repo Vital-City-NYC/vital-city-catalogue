@@ -1198,20 +1198,6 @@
   "website": null
  },
  {
-  "name": "Marcos F. Soler",
-  "post_count": 3,
-  "slugs": [
-   "crime-on-the-ground-and-how-its-experienced",
-   "new-york-city-gun-violence-down-major-crime-high",
-   "the-truth-about-shootings-in-new-york-city"
-  ],
-  "slug": "soler-marcos-f",
-  "bio": "is the executive director of the Center for Ethics and the Rule of Law at the University of Pennsylvania, and he previously served as deputy secretary for public safety for the New York governor.",
-  "url": "https://www.vitalcitynyc.org/author/soler-marcos-f/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Alex Chohlas-Wood",
   "post_count": 3,
   "slugs": [
@@ -1222,6 +1208,20 @@
   "slug": "chohlas-wood-alex",
   "bio": "is an assistant professor of computational social science at NYU Steinhardt. He also co-directs the Computational Policy Lab at Harvard Kennedy School and is the former director of analytics at the New York Police Department.",
   "url": "https://www.vitalcitynyc.org/author/chohlas-wood-alex/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Marcos F. Soler",
+  "post_count": 3,
+  "slugs": [
+   "crime-on-the-ground-and-how-its-experienced",
+   "new-york-city-gun-violence-down-major-crime-high",
+   "the-truth-about-shootings-in-new-york-city"
+  ],
+  "slug": "soler-marcos-f",
+  "bio": "is the executive director of the Center for Ethics and the Rule of Law at the University of Pennsylvania, and he previously served as deputy secretary for public safety for the New York governor.",
+  "url": "https://www.vitalcitynyc.org/author/soler-marcos-f/",
   "twitter": null,
   "website": null
  },
@@ -4053,38 +4053,26 @@
   "website": null
  },
  {
-  "name": "Chris Marvin",
+  "name": "Greg Lickenbrock",
   "post_count": 1,
   "slugs": [
-   "licensed-to-kill-concealed-carry-training-course"
+   "the-money-behind-mass-shootings"
   ],
-  "slug": "marvin-chris",
-  "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
-  "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
+  "slug": "lickenbrock-greg",
+  "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+  "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
   "twitter": null,
   "website": null
  },
  {
-  "name": "Theodore Roosevelt IV",
+  "name": "Daniel Semenza",
   "post_count": 1,
   "slugs": [
-   "guns-my-family-and-me"
+   "the-80-20-rule-of-gun-supply"
   ],
-  "slug": "roosevelt-theodore-iv",
-  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Nina Vinik",
-  "post_count": 1,
-  "slugs": [
-   "breaking-through-with-the-next-generation-on-firearms"
-  ],
-  "slug": "vinik-nina",
-  "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
-  "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
+  "slug": "semenza-daniel",
+  "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+  "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
   "twitter": null,
   "website": null
  },
@@ -4113,31 +4101,7 @@
   "website": null
  },
  {
-  "name": "Daniel Semenza",
-  "post_count": 1,
-  "slugs": [
-   "the-80-20-rule-of-gun-supply"
-  ],
-  "slug": "semenza-daniel",
-  "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-  "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Greg Lickenbrock",
-  "post_count": 1,
-  "slugs": [
-   "the-money-behind-mass-shootings"
-  ],
-  "slug": "lickenbrock-greg",
-  "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-  "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Charles Buckhanan",
+  "name": "Nina Vinik",
   "post_count": 1,
   "slugs": [
    "my-seven-guns-a-personal-inventory"
@@ -4157,6 +4121,30 @@
   "slug": "daugherty-kate",
   "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
   "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Samantha J. Simon",
+  "post_count": 1,
+  "slugs": [
+   "the-good-gun-owner"
+  ],
+  "slug": "simon-samantha-j",
+  "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+  "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Charles Buckhanan",
+  "post_count": 1,
+  "slugs": [
+   "my-seven-guns-a-personal-inventory"
+  ],
+  "slug": "buckhanan-charles",
+  "bio": "is a street outreach worker on Chicago\u2019s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
+  "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
   "twitter": null,
   "website": null
  },
