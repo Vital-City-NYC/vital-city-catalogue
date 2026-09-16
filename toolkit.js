@@ -15,19 +15,17 @@
 (function () {
   "use strict";
 
+  // Not listed: catalogue-analysis (reached from the catalogue page itself) and
+  // growth/live (a phone app, not a desk tool).
   var TOOLS = [
     { id: "catalogue",  label: "Catalogue",  path: "",                   gated: false,
       blurb: "Every piece published on vitalcitynyc.org, searchable by author, topic, issue and date." },
-    { id: "analysis",   label: "Analyzed",   path: "catalogue-analysis/", gated: true,
-      blurb: "What the catalogue adds up to: subject, format, contributors, length." },
     { id: "growth",     label: "Growth",     path: "growth/",            gated: true,
       blurb: "Audience, signups, sends and traffic." },
     { id: "contacts",   label: "Contacts",   path: "network/",           gated: true,
       blurb: "The people database: contributors, press, funders, members, donors." },
     { id: "prospects",  label: "Prospects",  path: "prospects/",         gated: true,
       blurb: "Funder and donor prospecting." },
-    { id: "live",       label: "Live",       path: "growth/live/",       gated: true,
-      blurb: "The site right now: today, this week, 28 days. Installable on a phone." },
     { id: "resharing",  label: "Resharing",  path: "resharing/",         gated: true,
       blurb: "Which archive piece to post, and when — bound to the calendar's real dates." },
     // enable when press/ lands
@@ -66,7 +64,7 @@
     TOOLS.forEach(function (t) {
       var here = t.id === current;
       var a = document.createElement(here ? "span" : "a");
-      a.className = "vckit-link" + (here ? " here" : "") + (t.href ? " ext" : "");
+      a.className = "vckit-link" + (here ? " here" : "");
       if (!here) { a.href = t.href || (root + t.path); }
       if (here) { a.setAttribute("aria-current", "page"); }
       // Six of the eight tools are gated, so a dot on each said almost nothing
