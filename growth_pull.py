@@ -2740,7 +2740,7 @@ def pull_ghost_traffic():
             return out_
         out["traffic_by_topic_30d"] = by_topic(slug_counts(cur30), tmap, "visits 30d")
         out["top_pages_30d"] = build_pages(cur30, prev30p, 12)
-        out["top_pages_7d"]  = build_pages(cur7, {}, 8)   # 7d list (week pulse) — no delta
+        out["top_pages_7d"]  = build_pages(cur7, {}, 12)  # 7d list (week pulse shows ten) — no delta
         # All-time leaders since the Ghost handoff (history_start onward).
         hs = out.get("history_start")
         if hs:
