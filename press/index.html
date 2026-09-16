@@ -627,10 +627,11 @@ function renderMethod(){
    <h3>Outlets that refuse the nightly build</h3>
    <p>The map rebuilds every night on GitHub's servers, and nineteen outlets refuse those servers outright: every Substack
    newsletter, a hosting company that several nonprofit newsrooms share (The City Reporter, Epicenter, the Amsterdam News,
-   the Haitian Times, W42ST, the Queens Chronicle), and The Real Deal. Their headlines, bylines and profile links are
-   harvested on a Mac instead and committed as a public file, and the outlet table marks them with the date. Addresses
-   never travel that way, because that file sits in a public repository, so reporters at those outlets can be missing an
-   address here that the outlet does publish.</p>
+   the Haitian Times, W42ST, the Queens Chronicle), and The Real Deal. Once a week a Mac visits them instead. Their
+   headlines, bylines and profile links travel as a public file, and the outlet table marks those outlets with the date.
+   The addresses found there travel separately, locked with the toolkit passphrase, because the repository is public. The
+   Mac only locks them after proving its passphrase opens a payload this nightly build itself encrypted, so a stale key
+   cannot slip through; and if the file ever fails to open here, only those addresses go missing and the build says so.</p>
    <h3>Major outlets first</h3>
    <p>Every list on this page puts ${DATA.outlets.filter(o=>o.tier===1).length} major outlets ahead of everything else, under a
    rule: the dailies and wires, broadcast, the major digital and nonprofit newsrooms, the politics trade, the big magazines and

@@ -25,7 +25,7 @@ Nothing is ever inferred from a pattern.
 Dependencies beyond the standard library: feedparser, beautifulsoup4. Fetching
 is done with curl, so no requests dependency.
 """
-import argparse, collections, csv, html as H, json, re, subprocess, sys, unicodedata
+import argparse, collections, csv, html as H, json, os, re, subprocess, sys, unicodedata
 import concurrent.futures as cf
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -67,6 +67,26 @@ def person_key(name, outlet):
 def merge_name(name):
     """Loose key for matching a reporter across sources (press list, VC authors)."""
     return re.sub(r"[^a-z]", "", norm(name))
+
+def _key(passphrase, salt, iters):
+    from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+    from cryptography.hazmat.primitives import hashes
+    return PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=iters).derive(passphrase.encode())
+
+def encrypt_blob(data: bytes, passphrase: str) -> dict:
+    """AES-256-GCM, PBKDF2-SHA256 600k: the scheme every toolkit payload uses."""
+    import base64, secrets
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+    salt, iv = secrets.token_bytes(16), secrets.token_bytes(12)
+    ct = AESGCM(_key(passphrase, salt, 600_000)).encrypt(iv, data, None)
+    b = lambda x: base64.b64encode(x).decode()
+    return {"v": 1, "kdf": "PBKDF2-SHA256", "iters": 600_000, "salt": b(salt), "iv": b(iv), "ct": b(ct)}
+
+def decrypt_blob(blob: dict, passphrase: str) -> bytes:
+    import base64
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+    d = lambda x: base64.b64decode(x)
+    return AESGCM(_key(passphrase, d(blob["salt"]), blob["iters"])).decrypt(d(blob["iv"]), d(blob["ct"]), None)
 
 def loose_name(name):
     """First and last name only. "John K. Roman" on his newsletter and "John
@@ -843,6 +863,38 @@ def main():
         json.dump(out, open(HCACHE, "w"), indent=1, ensure_ascii=False)
         print(f"wrote {HCACHE} · {sum(len(v) for v in items.values())} stories from {len(items)} outlets · "
               f"{len(profiles)} profiles")
+
+        # The addresses at these outlets cannot go in that public file, so they
+        # are locked with the toolkit passphrase and CI unlocks them at build
+        # time. The passphrase is taken only from VC_NETWORK_PASS -- never from
+        # private/.netpass, which is how a stale key got published before -- and
+        # it must first open press/data.enc, a payload CI itself encrypted. If
+        # it cannot, this passphrase is not the live one and nothing is written.
+        contacts = {}
+        for p in people.values():
+            if p.get("email"):
+                contacts[loose_name(p["name"])] = {
+                    "name": p["name"], "email": p["email"],
+                    "email_source_url": p.get("email_source_url"),
+                    "email_evidence": p.get("email_evidence")}
+        passphrase = (os.environ.get("VC_NETWORK_PASS") or "").strip()
+        live = PRESS / "data.enc"
+        if not passphrase:
+            print("  addresses NOT locked: VC_NETWORK_PASS is not set")
+            return
+        if not live.exists():
+            print("  addresses NOT locked: press/data.enc is missing, so the passphrase cannot be checked")
+            return
+        try:
+            decrypt_blob(json.load(open(live)), passphrase)
+        except Exception:
+            print("  addresses NOT locked: this passphrase does not open the live press/data.enc, "
+                  "so it is not the one CI uses. Nothing written.")
+            return
+        blob = encrypt_blob(json.dumps({"as_of": out["as_of"], "contacts": contacts}).encode(), passphrase)
+        json.dump(blob, open(PRESS / "blocked_contacts.enc", "w"))
+        print(f"  locked {len(contacts)} addresses into press/blocked_contacts.enc "
+              f"(passphrase checked against the live payload first)")
         return
 
     # profiles for people at outlets the runner could not read
@@ -852,6 +904,29 @@ def main():
             for f in ("author_page", "bio", "x", "bluesky"):
                 if prof.get(f) and not p.get(f):
                     p[f] = prof[f]
+
+    # addresses at outlets the runner could not read, locked on the Mac
+    bce = PRESS / "blocked_contacts.enc"
+    if bce.exists():
+        passphrase = (os.environ.get("VC_NETWORK_PASS") or "").strip()
+        try:
+            bc = json.loads(decrypt_blob(json.load(open(bce)), passphrase))
+            age = (datetime.now(timezone.utc) - datetime.fromisoformat(bc["as_of"])).days
+            if age > 30:
+                raise ValueError(f"{age} days old")
+            added = 0
+            for p in people.values():
+                c = bc["contacts"].get(loose_name(p["name"]))
+                if c and not p.get("email") and pairs_with_email(p["name"], c["email"]):
+                    p["email"] = c["email"]
+                    p["email_source_url"] = c.get("email_source_url")
+                    p["email_evidence"] = c.get("email_evidence")
+                    added += 1
+            print(f"  {added} addresses added from the Mac's locked file of {bc['as_of'][:10]}")
+        except Exception as e:
+            msg = f"blocked_contacts.enc not used ({type(e).__name__}: {e}); addresses at outlets that refuse CI will be missing"
+            print("  WARNING: " + msg)
+            report["notes"].append(msg)
 
     # ---- Vital City relationship layer
     vc = load_vc_layer()
