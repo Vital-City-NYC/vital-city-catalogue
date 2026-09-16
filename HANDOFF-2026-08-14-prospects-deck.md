@@ -2,7 +2,7 @@
 
 Continues HANDOFF-2026-08-04-session.md (reconciler design, growth-dashboard work).
 Repo: vitalcity-nyc/vital-city-catalogue · push as **vitalcity-nyc** (`gh auth switch`).
-Passphrase for all gated tools: in Keychain `vc-network-pass` (= `VitalCity2026!?`).
+Passphrase for all gated tools: in Keychain `vc-network-pass`, or `private/.netpass` locally. Not written down here -- this repo is public.
 
 ## 0. What exists now — the four-tool suite
 
