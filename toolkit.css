@@ -78,15 +78,6 @@
   cursor: default;
 }
 
-/* A tool that lives in another repo. The arrow says "you are leaving this
-   site", which matters when everything else here is one hop away. */
-.vckit-link.ext::after {
-  content: "\2197";
-  font-size: 10px;
-  font-weight: 600;
-  margin-left: 3px;
-  opacity: .6;
-}
 
 html.dark .vckit { border-bottom-color: var(--vc-cloud, #3a3c43); }
 html.dark .vckit-link.here { color: var(--vc-black, #e8e8e5); border-bottom-color: var(--vc-cerulean, #217ebe); }
