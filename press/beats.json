@@ -864,19 +864,16 @@
     "newsroom*",
     "journalis*",
     "press freedom",
-    "layoff*",
-    "local news",
     "public radio",
-    "broadcast*",
     "FOIL",
     "freedom of information",
     "records request*",
     "misinformation",
-    "social media",
     "podcast*",
     "newspaper*"
    ],
-   "priority": 3
+   "priority": 3,
+   "_note": "Deliberately narrow. Section names like 'local news' and ordinary words like 'social media' matched most of the city's crime copy."
   },
   "food": {
    "label": "Food, restaurants and street vending",

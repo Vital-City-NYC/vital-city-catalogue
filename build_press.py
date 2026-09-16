@@ -606,6 +606,16 @@ def main():
     def title_key(t):
         return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", norm(t or ""))).strip()[:70]
 
+    # Wire credits and CMS service accounts arrive looking exactly like bylines.
+    # "Associated Press" was the Daily News's most prolific reporter, and
+    # "PubSubHub User" its fourth.
+    NOT_A_PERSON = re.compile(
+        r"^(the )?(associated press|ap|reuters|bloomberg|tribune( news service| content agency)?|"
+        r"wire( services?)?|newsroom|editorial board|the editors?|"
+        r"[\w .\-]*\b(user|bot|admin|api|rest|feed|cms|syndicat\w*|services?|agent|contributor|"
+        r"staff|reports?|newsroom|editors)\b[\w .\-]*)$",
+        re.I)
+
     people = {}
     all_outlet_names = set()
     for o in outlets:
@@ -623,7 +633,7 @@ def main():
             # Checked against every outlet in the registry, not just this feed's:
             # The City Reporter co-publishes the FAQ NYC podcast, so "FAQ NYC"
             # arrives as a byline on somebody else's feed.
-            if merge_name(a) in all_outlet_names:
+            if merge_name(a) in all_outlet_names or NOT_A_PERSON.match(a.strip()):
                 continue
             k = merge_name(a)
             if len(k) < 5:
@@ -694,7 +704,8 @@ def main():
     # mastheads: titles and addresses, onto the same person
     for r in mast:
         k = merge_name(r["name"])
-        if len(k) < 5:
+        # mastheads list desks as if they were people: Customer Service, Our Staff
+        if len(k) < 5 or NOT_A_PERSON.match(r["name"].strip()):
             continue
         p = people.setdefault(k, {"key": k, "name": r["name"], "outlet_counts": collections.Counter(),
                                   "stories": {}, "titles": set(), "beat_hits": collections.Counter(),

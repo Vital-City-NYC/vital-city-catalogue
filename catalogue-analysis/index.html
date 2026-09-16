@@ -20,8 +20,8 @@
   .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
   header.mast{border-bottom:1px solid var(--vc-black);padding:24px 30px 18px;background:var(--vc-white)}
   header.mast .wm{font-weight:900;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
-  header.mast h1{font-weight:900;font-size:30px;margin:8px 0 4px;letter-spacing:-.01em}
-  header.mast .sub{font-size:13.5px;color:var(--vc-charcoal);max-width:820px}
+  header.mast h1{font-weight:900;font-size:26px;margin:6px 0 2px;letter-spacing:-.01em}
+  header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:780px}
   header.mast .sub b{color:var(--vc-black)}
   .wrap{max-width:1060px;margin:0 auto;padding:22px 30px 60px}
   .secnav{position:sticky;top:0;z-index:30;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:9px 30px;display:flex;gap:16px;flex-wrap:wrap;font-size:11px}
@@ -80,7 +80,7 @@
    front of public JSON is decoration, since the JSON can be fetched directly. */
 .gate{position:fixed;inset:0;background:var(--vc-paper,#f7f7f4);z-index:9999;display:flex;
   align-items:center;justify-content:center;padding:24px}
-.gatebox{max-width:420px;width:100%;background:#fff;border:1px solid #ddd;padding:26px 24px}
+.gatebox{max-width:440px;width:92%;background:var(--vc-white);border:1px solid var(--vc-black);padding:34px;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
 .gatebox .wm{font-weight:900;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#050507}
 .gatebox h1{font-size:22px;font-weight:900;margin:12px 0 8px;letter-spacing:-.01em}
 .gatebox p{font-size:13.5px;color:#707175;margin:0 0 16px;line-height:1.5}
@@ -103,7 +103,25 @@
   table.reach td.gap-up{color:#2e7d32;font-weight:700}
   table.reach td.gap-dn{color:#b3325a}
   .reachwrap{overflow-x:auto}
+
+  /* ── Dark mode ──────────────────────────────────────────────
+     Token overrides only, the same four lines the contacts and growth tools
+     use, driven by html.dark from localStorage "vc_theme" rather than a media
+     query — the toolkit has a manual toggle and one login-wide preference. */
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1d1e21}
+  html.dark body{background:var(--vc-paper);color:var(--vc-black)}
+  html.dark input,html.dark select,html.dark textarea{background:#212329!important;color:var(--vc-black)!important;border-color:var(--vc-cloud)!important}
+  html.dark .confbar{background:#0b0b0d;color:#cfcfcf}
+  html.dark a{color:#6fb3e8}
+  html.dark .gatebox{box-shadow:7px 7px 0 rgba(0,0,0,.45)}
+  html.dark .gatebox button{background:var(--vc-cerulean)}
+  header.mast{position:relative}
+  .mastlinks{position:absolute;right:30px;top:20px;display:flex;align-items:center;gap:14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .mastlinks a{color:var(--vc-cerulean);text-decoration:none;white-space:nowrap;cursor:pointer}
+  .mastlinks a:hover{text-decoration:underline}
+  @media(max-width:700px){.mastlinks{position:static;right:auto;top:auto;flex-wrap:wrap;gap:10px 14px;margin:0 0 10px}}
 </style>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
 <link rel="stylesheet" href="../toolkit.css">
 <script src="../toolkit.js" data-tool="analysis" defer></script>
 </head>
@@ -123,6 +141,10 @@
 <div class="confbar"><span>Vital City &middot; internal analysis</span><span id="stamp"></span></div>
 <div data-toolkit-nav></div>
 <header class="mast">
+  <div class="mastlinks">
+    <a href="../" title="Back to the searchable catalogue this analysis is built from.">The catalogue</a>
+    <a href="#" id="themeToggle" title="Switch between light and dark color themes. Your choice is remembered on this device and shared with the other Vital City tools.">🌙 Dark mode</a>
+  </div>
   <h1>The catalogue, analyzed</h1>
   <div class="sub">Every piece Vital City has published on vitalcitynyc.org &mdash; <b>what it was about, what job it did, who wrote it and how long it ran</b>. Built from the same Ghost content pull that powers the searchable <a href="../">catalogue</a>.</div>
 </header>
@@ -673,6 +695,31 @@ document.getElementById("pw").addEventListener("keydown",e=>{if(e.key==="Enter")
 (async function(){const p=loadPass(); if(p){ await unlock(p); } })()
  ;
 function _loadError(e){document.getElementById("app").innerHTML='<div class="loading">Could not load catalogue data. Run <code>python3 analyze_catalogue.py</code> then <code>python3 encrypt_catalogue_analysis.py</code>.</div>';console.error(e);}
+</script>
+<script>
+/* Theme: html.dark from localStorage "vc_theme", shared across the toolkit, so
+   a choice made on any tool follows you to the rest. */
+function applyTheme(t){
+  document.documentElement.classList.toggle("dark", t==="dark");
+  var b=document.querySelector("#themeToggle");
+  if(b) b.textContent = t==="dark" ? "\u2600\uFE0F Light mode" : "\uD83C\uDF19 Dark mode";
+}
+(function(){
+  var t=null;
+  try{ t=localStorage.getItem("vc_theme"); }catch(e){}
+  if(!t) t=(window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light";
+  applyTheme(t);
+  document.addEventListener("DOMContentLoaded",function(){
+    applyTheme(document.documentElement.classList.contains("dark")?"dark":"light");
+    var b=document.querySelector("#themeToggle");
+    if(b) b.addEventListener("click",function(e){
+      e.preventDefault();
+      var n=document.documentElement.classList.contains("dark")?"light":"dark";
+      try{ localStorage.setItem("vc_theme",n); }catch(e2){}
+      applyTheme(n);
+    });
+  });
+})();
 </script>
 </body>
 </html>

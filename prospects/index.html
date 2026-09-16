@@ -17,7 +17,7 @@
   a{color:var(--vc-cerulean)}
   /* gate */
   .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500}
-  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px 38px;max-width:420px;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px;max-width:440px;width:92%;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
   .gatebox .wm{font-weight:900;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
   .gatebox h1{font-size:24px;font-weight:900;margin:10px 0 6px}
   .gatebox p{font-size:13px;color:var(--vc-charcoal);margin:0 0 16px}
@@ -26,11 +26,11 @@
   .gateerr{color:#c8102e;font-size:12.5px;min-height:18px;margin-top:8px}
   .gatebox .conf{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);margin-top:14px}
   /* chrome */
-  .confbar{background:#7a1f2b;color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
   header.mast{border-bottom:1px solid var(--vc-black);padding:22px 30px 16px;background:var(--vc-white);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px}
   header.mast .wm{font-weight:900;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
-  header.mast h1{font-weight:900;font-size:28px;margin:6px 0 2px;letter-spacing:-.01em}
-  header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:760px}
+  header.mast h1{font-weight:900;font-size:26px;margin:6px 0 2px;letter-spacing:-.01em}
+  header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:780px}
   .hnav{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;display:flex;gap:14px;flex-wrap:wrap}
   .hnav a{color:var(--vc-cerulean);text-decoration:none}
   .jump{position:sticky;top:0;z-index:40;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:8px 30px;display:flex;gap:15px;flex-wrap:wrap;font-size:11px}
@@ -110,7 +110,7 @@
   @media(max-width:760px){.fitTiles,.prodgrid{grid-template-columns:1fr};.twocol{grid-template-columns:1fr};.rcp{flex-direction:column;gap:2px}}
   @media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}}
   @media(max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)};.wrap{padding:16px 14px 50px}}
-  html.dark{--vc-paper:#17181c;--vc-white:#212329;--vc-black:#e8e8e5;--vc-charcoal:#a2a5ad;--vc-cloud:#3a3d45;--vc-paper2:#2b2d34}
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1d1e21}
   html.dark .gatebox,html.dark .card{box-shadow:none}
   html.dark .b-lead{background:#3a3d45;color:#c9ccd2}
   /* Cross-tool switcher — identical on every page so it reads as one suite */
@@ -121,7 +121,13 @@
   .toolnav a:hover{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
   .toolnav a.here{background:var(--vc-black);color:var(--vc-white);cursor:default;pointer-events:none}
   html.dark .toolnav a.here{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  header.mast{position:relative}
+  .mastlinks{position:absolute;right:30px;top:20px;display:flex;align-items:center;gap:14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .mastlinks a{color:var(--vc-cerulean);text-decoration:none;white-space:nowrap;cursor:pointer}
+  .mastlinks a:hover{text-decoration:underline}
+  @media(max-width:700px){.mastlinks{position:static;right:auto;top:auto;flex-wrap:wrap;gap:10px 14px;margin:0 0 10px}}
 </style>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
 <link rel="stylesheet" href="../toolkit.css">
 <script src="../toolkit.js" data-tool="prospects" defer></script>
 </head>
@@ -144,10 +150,14 @@
 <div data-toolkit-nav></div>
 <header class="mast">
   <div>
+    <div class="mastlinks">
+      <a href="#method" title="How these prospects were ranked, and what the Donorbox-only caveat means for every figure on the page.">How it works</a>
+      <a href="#" id="themeToggle" title="Switch between light and dark color themes. Your choice is remembered on this device and shared with the other Vital City tools.">🌙 Dark mode</a>
+      <a href="#" id="lock" title="You stay logged in on this device for 90 days, and the same login covers the other Vital City tools. Lock forgets the saved passphrase now.">Lock</a>
+    </div>
     <h1>Fundraising prospects</h1>
     <div class="sub">Who might fund a platform for ideas about civic life &mdash; commentary, data made intelligible, and evidence-based policy pressed into practice. Institutions and individuals, ranked by the evidence in our own data; leads are labelled as leads.</div>
   </div>
-  <nav class="hnav"><a href="#" id="lock">Lock</a></nav>
 </header>
 <nav class="jump">
   <a href="#fit">What we can show funders</a><a href="#grants">Grant landscape</a>
@@ -421,6 +431,31 @@ function boot(d){
     if(t) setTimeout(()=>t.scrollIntoView({block:"start"}),80);
   }
 }
+</script>
+<script>
+/* Theme: html.dark from localStorage "vc_theme", shared across the toolkit, so
+   a choice made on any tool follows you to the rest. */
+function applyTheme(t){
+  document.documentElement.classList.toggle("dark", t==="dark");
+  var b=document.querySelector("#themeToggle");
+  if(b) b.textContent = t==="dark" ? "\u2600\uFE0F Light mode" : "\uD83C\uDF19 Dark mode";
+}
+(function(){
+  var t=null;
+  try{ t=localStorage.getItem("vc_theme"); }catch(e){}
+  if(!t) t=(window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light";
+  applyTheme(t);
+  document.addEventListener("DOMContentLoaded",function(){
+    applyTheme(document.documentElement.classList.contains("dark")?"dark":"light");
+    var b=document.querySelector("#themeToggle");
+    if(b) b.addEventListener("click",function(e){
+      e.preventDefault();
+      var n=document.documentElement.classList.contains("dark")?"light":"dark";
+      try{ localStorage.setItem("vc_theme",n); }catch(e2){}
+      applyTheme(n);
+    });
+  });
+})();
 </script>
 </body>
 </html>
