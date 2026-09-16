@@ -162,6 +162,8 @@ jobs:
         run: |
           if [ -s private/growth.json ]; then
             python3 build_catalogue_reach.py || echo "WARNING: reach build failed; page will hide the reach section"
+            # the catalogue's Readers column, encrypted; signed-in viewers only
+            python3 build_readership.py || echo "WARNING: readership build failed; the catalogue's Readers column will be stale"
           else
             echo "no growth.json — skipping reach build"
           fi

@@ -239,6 +239,13 @@
 
   .credit{cursor:pointer}
   .credit:hover{color:var(--vc-cerulean,#217ebe);text-decoration:underline}
+  .readcell { white-space: nowrap; text-align: right; }
+  .readcell .rv { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .readcell .rt { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; }
+  .rt-standout { color: var(--vc-green); } .rt-strong { color: var(--vc-cerulean); }
+  .rt-typical { color: var(--vc-charcoal); } .rt-quiet { color: var(--vc-charcoal); opacity: .7; }
+  .rt-new { color: var(--vc-charcoal); font-weight: 600; text-transform: none; letter-spacing: 0; }
+  .rq { color: var(--vc-charcoal); }
 </style>
 <link rel="stylesheet" href="toolkit.css">
 <script src="toolkit.js" data-tool="catalogue" defer></script>
@@ -248,6 +255,7 @@
 <header class="masthead">
   <div class="mastlinks">
     <a href="catalogue-analysis/" title="What the catalogue adds up to: subject, format, contributors, length">The catalogue, analyzed</a>
+    <a href="#" id="readersToggle" title="Add a Readers column: lifetime views, and how each piece's first 30 days compared with every other piece's. Needs the shared toolkit passphrase; the public never sees it.">Show readership</a>
     <a href="#" id="themeToggle" title="Switch between light and dark color themes. Your choice is remembered on this device.">🌙 Dark mode</a>
   </div>
   <h1>Content catalogue</h1>
@@ -291,6 +299,7 @@
       <th data-k="topics">Topics <span class="arrow"></span></th>
       <th data-k="issues">Issue <span class="arrow"></span></th>
       <th data-k="word_count">Words <span class="arrow"></span></th>
+      <th data-k="views" class="readcol" hidden title="Lifetime page views from Google Analytics. The tier compares the piece's first 30 days with every other piece's first 30 days, so older pieces are not favored for their age. Pieces older than that data are compared with pieces from the same year.">Readers <span class="arrow"></span></th>
     </tr></thead>
     <tbody id="rows"><tr><td colspan="7" class="loading">Loading catalogue…</td></tr></tbody>
   </table>
@@ -354,6 +363,9 @@ async function load() {
     if (resp.ok) { AUTHOR_CATS = await resp.json(); HAS_CRM = Object.keys(AUTHOR_CATS).length > 0; }
   } catch (e) { /* no CRM available — public mode */ }
   buildStats(); buildFilters(); bind(); applyURLParams(); render();
+  // Already signed in to the toolkit on this device: show the column without asking.
+  showReaders(false);
+  $("#readersToggle").addEventListener("click", e=>{ e.preventDefault(); if(!READERS) showReaders(true); });
 }
 
 // Deep-link support: ?author=<name> (and optional ?q=) preselects a filter, so
@@ -486,12 +498,58 @@ function filtered() {
   });
 }
 
+/* ---------- readership (signed-in only) ----------
+   Traffic is internal, so it ships encrypted with the toolkit passphrase and
+   this column only exists for someone who has it. Same login as every other
+   tool: signed in anywhere in the toolkit on this device, signed in here. */
+let READERS=null;
+const TIER_LABEL={standout:"Standout",strong:"Strong",typical:"Typical",quiet:"Quiet"};
+function slugOf(url){ return String(url||"").split("?")[0].replace(/\/+$/,"").split("/").pop().toLowerCase(); }
+function readersCell(r){
+  const x=READERS[slugOf(r.url)];
+  if(!x) return `<span class="rq">—</span>`;
+  const n=x.v.toLocaleString();
+  if(!x.t) return `<div class="rv">${n}</div><div class="rt rt-new" title="Published less than 30 days before the data was pulled">too new to tier</div>`;
+  const how=x.b==="debut"?`first 30 days: ${Number(x.v30||0).toLocaleString()} views, compared with every piece's first 30 days`
+                          :"compared on lifetime views with pieces published the same year (no first-month data this far back)";
+  return `<div class="rv">${n}</div><div class="rt rt-${x.t}" title="${how}">${TIER_LABEL[x.t]}${x.b==="year"?" for its year":""}</div>`;
+}
+function b64dCat(s){ const b=atob(s), u=new Uint8Array(b.length); for(let i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; }
+async function decryptCat(pass, blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64dCat(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:b64dCat(blob.iv)},key,b64dCat(blob.ct))));
+}
+const SHARED_PASSKEY="vc_net_pass";
+function sharedPass(){ try{ const r=localStorage.getItem(SHARED_PASSKEY); if(!r) return null; if(r[0]!=="{") return r;
+  const o=JSON.parse(r); return (o&&o.pass&&o.exp>Date.now())?o.pass:null; }catch(e){ return null; } }
+function saveSharedPass(p){ try{ localStorage.setItem(SHARED_PASSKEY,JSON.stringify({pass:p,exp:Date.now()+90*864e5})); }catch(e){} }
+async function showReaders(interactive){
+  let blob;
+  try{ blob=await fetch("data/readership.enc",{cache:"no-cache"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }); }
+  catch(e){ if(interactive) alert("Readership data isn't available yet."); return false; }
+  let pass=sharedPass();
+  for(let attempt=0; attempt<2; attempt++){
+    if(!pass){ if(!interactive) return false; pass=prompt("Toolkit passphrase (the same one the growth dashboard uses):"); if(!pass) return false; }
+    try{
+      const d=await decryptCat(pass.trim(), blob);
+      READERS=d.pieces; saveSharedPass(pass.trim());
+      DATA.forEach(r=>{ const x=READERS[slugOf(r.url)]; r.views=x?x.v:null; });
+      document.querySelectorAll(".readcol").forEach(th=>th.hidden=false);
+      const t=$("#readersToggle"); t.textContent="Readers as of "+String(d.as_of).slice(0,10); t.style.pointerEvents="none";
+      render(); return true;
+    }catch(e){ pass=null; if(!interactive) return false; alert("That passphrase didn't open the readership data."); }
+  }
+  return false;
+}
+
 function sortRows(rows) {
   const k = sortKey;
   return rows.sort((a, b) => {
     let va, vb;
     if (k === "topics" || k === "issues") { va=(a[k]||[]).join(" "); vb=(b[k]||[]).join(" "); }
     else if (k === "embed_count") { va=(a.embeds&&a.embeds.total)||0; vb=(b.embeds&&b.embeds.total)||0; }
+    else if (k === "views") { va=a.views==null?-1:a.views; vb=b.views==null?-1:b.views; }
     else { va = a[k]; vb = b[k]; }
     if (va == null) va = ""; if (vb == null) vb = "";
     if (typeof va === "number") return (va - vb) * sortDir;
@@ -559,6 +617,7 @@ function render() {
       <td>${(r.topics||[]).map(t=>`<span class="pill" data-topic="${esc(t)}">${esc(t)}</span>`).join("")}</td>
       <td>${(r.issues||[]).map(n=>`<span class="pill issue" data-issue="${esc(n)}">${esc(issueLabel(n))}</span>`).join("")}</td>
       <td class="words">${r.word_count?.toLocaleString()||""}</td>
+      ${READERS?`<td class="readcell">${readersCell(r)}</td>`:""}
     </tr>`).join("");
 }
 
