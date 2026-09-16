@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Vital City — resharing calendar</title>
+<link rel="stylesheet" href="../toolkit.css">
+<script src="../toolkit.js" data-tool="resharing" defer></script>
+<style>
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-green:#57aa4a; --vc-orange:#ff7c53; --vc-cerulean:#217ebe;
+    --vc-magenta:#e7466d; --vc-paper2:#eeeeec; --vc-plum:#7a5ea6; --vc-gold:#d9a441;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+  }
+  html.dark{
+    --vc-paper:#111113; --vc-white:#191a1d; --vc-black:#f2f2ef; --vc-charcoal:#9b9ca0;
+    --vc-cloud:#2e2f33; --vc-paper2:#202124; --vc-cerulean:#5aa9e6; --vc-orange:#ff9973;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--vc-cerulean)}
+  /* gate */
+  .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px 38px;max-width:420px;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gatebox .wm{font-weight:900;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+  .gatebox h1{font-size:24px;font-weight:900;margin:10px 0 6px}
+  .gatebox p{font-size:13px;color:var(--vc-charcoal);margin:0 0 16px}
+  .gatebox input{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--vc-black);margin-bottom:10px}
+  .gatebox button{width:100%;background:var(--vc-black);color:#fff;border:0;padding:11px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
+  .gateerr{color:#c8102e;font-size:12.5px;min-height:18px;margin-top:8px}
+  .gatebox .conf{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);margin-top:14px}
+  /* chrome */
+  .confbar{background:#7a1f2b;color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  [data-toolkit-nav]{padding:0 30px;background:var(--vc-white)}
+  header.mast{border-bottom:1px solid var(--vc-black);padding:16px 30px 16px;background:var(--vc-white);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px}
+  header.mast h1{font-weight:900;font-size:28px;margin:0 0 2px;letter-spacing:-.01em}
+  header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:760px}
+  .hnav{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;display:flex;gap:14px;flex-wrap:wrap}
+  .hnav a{color:var(--vc-cerulean);text-decoration:none}
+  .jump{position:sticky;top:0;z-index:40;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:8px 30px;display:flex;gap:15px;flex-wrap:wrap;font-size:11px}
+  .jump a{color:var(--vc-charcoal);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .jump a:hover{color:var(--vc-cerulean)}
+  .wrap{max-width:1080px;margin:0 auto;padding:22px 30px 70px}
+  h2{font-size:19px;font-weight:900;margin:34px 0 4px;letter-spacing:-.01em;border-bottom:1.5px solid var(--vc-black);padding-bottom:6px}
+  h2:first-of-type{margin-top:6px}
+  .lede{font-size:13px;color:var(--vc-charcoal);margin:0 0 14px;max-width:74ch}
+  /* an entry */
+  .entry{background:var(--vc-white);border:1px solid var(--vc-cloud);border-left:3px solid var(--vc-cerulean);padding:12px 15px;margin:0 0 9px}
+  .entry.hook{border-left-color:var(--vc-orange)}
+  .entry.suggested{border-left-color:var(--vc-charcoal);border-left-style:dashed}
+  .entry.season{border-left-color:var(--vc-plum)}
+  .when{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:var(--vc-charcoal);margin-bottom:5px;display:flex;gap:9px;flex-wrap:wrap;align-items:baseline}
+  .when .d{color:var(--vc-black)}
+  .ev{font-size:12.5px;color:var(--vc-charcoal);margin-bottom:5px}
+  .ev b{color:var(--vc-black);font-weight:700}
+  .pick{font-size:15.5px;font-weight:700;line-height:1.3;margin-bottom:2px}
+  .meta{font-size:11px;color:var(--vc-charcoal);font-variant-numeric:tabular-nums}
+  .angle{font-size:13px;margin-top:6px;max-width:78ch}
+  .alt{font-size:12px;color:var(--vc-charcoal);margin-top:5px;padding-top:5px;border-top:1px solid var(--vc-cloud)}
+  .tag{display:inline-block;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;
+       padding:2px 7px;border-radius:9px;border:1px solid var(--vc-cloud);color:var(--vc-charcoal);background:var(--vc-paper2)}
+  .tag.warn{border-color:var(--vc-orange);color:var(--vc-orange)}
+  .tag.wait{border-color:var(--vc-magenta);color:var(--vc-magenta)}
+  table.tbl{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 4px}
+  table.tbl th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:800;padding:6px 10px 6px 0;border-bottom:1px solid var(--vc-black)}
+  table.tbl td{padding:7px 10px 7px 0;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
+  .note{border:1px solid var(--vc-cloud);background:var(--vc-white);padding:12px 15px;font-size:11.5px;color:var(--vc-charcoal);margin-top:16px}
+  .note b{color:var(--vc-black)}
+  .stale{border-left:3px solid var(--vc-orange)}
+  .loading{color:var(--vc-charcoal);padding:22px 0}
+  @media(max-width:640px){.wrap,header.mast,.confbar,.jump,[data-toolkit-nav]{padding-left:16px;padding-right:16px}header.mast h1{font-size:23px}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>Resharing calendar</h1>
+    <p>Which piece from the archive to post, and when — bound to the dates on the New York City calendar. Enter the shared passphrase.</p>
+    <input id="pw" type="password" placeholder="passphrase" autocomplete="current-password">
+    <button id="unlock">Unlock</button>
+    <div class="gateerr" id="err"></div>
+    <div class="conf">Confidential · contains readership data · internal editorial use</div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+<div class="confbar"><span>Confidential &middot; internal editorial planning</span><span id="stamp"></span></div>
+<div data-toolkit-nav></div>
+<header class="mast">
+  <div>
+    <h1>Resharing calendar</h1>
+    <div class="sub">Pieces from the archive worth posting again, matched to what the city is actually doing. Dates come from <a href="https://vitalcity-nyc.github.io/nyc-policy-calendar/">the New York City calendar</a>; the picks and the argument for each are hand-written.</div>
+  </div>
+  <nav class="hnav"><a href="#" id="themeToggle">🌙 Dark mode</a><a href="#" id="lock">Lock</a></nav>
+</header>
+<nav class="jump">
+  <a href="#next">What's coming</a><a href="#seasons">Seasons</a><a href="#hooks">When news breaks</a>
+  <a href="#gaps">Gaps</a><a href="#always">Always on</a><a href="#method">Method</a>
+</nav>
+
+<div class="wrap">
+  <div id="body"><div class="loading">Loading&hellip;</div></div>
+</div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const PASSKEY="vc_net_pass", TTL=90*24*3600*1000;
+function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+TTL}))}catch{}}
+function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
+  const o=JSON.parse(r);if(o&&o.pass&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null}catch{return null}}
+(function(){const t=localStorage.getItem("vc_theme");if(t==="dark")document.documentElement.classList.add("dark")})();
+function b64d(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+async function unlock(fromStore){
+  $("#err").textContent="";
+  const pass=$("#pw").value.trim(); if(!pass){$("#err").textContent="Enter the passphrase.";return}
+  try{
+    const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
+    const data=await decryptBlob(pass,blob);
+    savePass(pass); $("#gate").style.display="none"; $("#app").style.display="";
+    boot(data);
+  }catch(e){console.error(e);$("#err").textContent="Wrong passphrase, or data unavailable.";if(fromStore)try{localStorage.removeItem(PASSKEY)}catch{}}
+}
+$("#unlock").addEventListener("click",()=>unlock(false));
+$("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
+(async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
+document.addEventListener("click",e=>{
+  if(e.target.id==="lock"){e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()}
+  if(e.target.id==="themeToggle"){e.preventDefault();const d=document.documentElement.classList.toggle("dark");
+    try{localStorage.setItem("vc_theme",d?"dark":"light")}catch{}}
+});
+
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const N=n=>n==null?null:n.toLocaleString("en-US");
+const DAY=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function fmt(iso){const [y,m,d]=iso.split("-").map(Number);const dt=new Date(Date.UTC(y,m-1,d));
+  return DAY[dt.getUTCDay()]+", "+MON[m-1]+" "+d;}
+function until(iso){const [y,m,d]=iso.split("-").map(Number);
+  const t=Date.UTC(y,m-1,d), n=new Date(); const now=Date.UTC(n.getFullYear(),n.getMonth(),n.getDate());
+  const days=Math.round((t-now)/86400000);
+  return days<=0?"today":days===1?"tomorrow":days<14?days+" days":days<60?Math.round(days/7)+" weeks":Math.round(days/30)+" months";}
+
+/* One piece, with its readership if we have any. A piece with no figure is not
+   necessarily unread -- Google Analytics keeps a ranked top-pages list rather
+   than every page -- so the absence is left blank rather than shown as zero. */
+function pieceLine(p){
+  const title = p.url ? `<a href="${esc(p.url)}">${esc(p.title)}</a>` : esc(p.title);
+  const bits = [];
+  if(p.published) bits.push(MON[+p.published.slice(5,7)-1]+" "+p.published.slice(0,4));
+  if(p.views) bits.push(N(p.views)+" views");
+  if(p.missing) bits.push("not found in the catalogue");
+  return `<div class="pick">${title}</div>${bits.length?`<div class="meta">${esc(bits.join(" · "))}</div>`:""}`;
+}
+function alsoLine(list,note){
+  if(!list||!list.length) return "";
+  const links = list.map(p=>p.url?`<a href="${esc(p.url)}">${esc(p.title)}</a>${p.views?` (${N(p.views)} views)`:""}`:esc(p.title)).join(" · ");
+  return `<div class="alt">Also: ${links}</div>`;
+}
+
+function entry(r){
+  const cls = r.kind==="hook"?"hook":r.kind==="suggested"?"suggested":r.kind==="season"?"season":"";
+  const tags = [];
+  if(r.kind==="suggested") tags.push('<span class="tag warn">unreviewed match</span>');
+  if(r.kind==="hook") tags.push('<span class="tag">hook, scheduled</span>');
+  if(r.post_on && r.date && r.post_on!==r.date) tags.push('<span class="tag wait">post the day after</span>');
+  const head = r.kind==="season"
+    ? `<div class="when"><span class="d">${esc(r.label)}</span>${r.active_now?'<span class="tag">open now</span>':""}</div>`
+    : `<div class="when"><span class="d">${fmt(r.post_on)}</span><span>${esc(until(r.post_on))}</span>${tags.join("")}</div>`;
+  let ev = "";
+  if(r.event){
+    const src = r.event.sourceUrl ? `<a href="${esc(r.event.sourceUrl)}">${esc(r.event.title)}</a>` : esc(r.event.title);
+    const extra = (r.alongside||[]).length ? ` <span>+ ${r.alongside.length} more the same week</span>` : "";
+    ev = `<div class="ev"><b>${src}</b>${r.event.note?" · "+esc(r.event.note):""}${extra}</div>`;
+  }
+  const picks = (r.picks||[]).map(pieceLine).join('<div style="height:6px"></div>');
+  const why = r.why ? `<div class="angle">${esc(r.why)}</div>` : "";
+  const offset = r.post_offset_reason ? `<div class="angle" style="color:var(--vc-charcoal)">${esc(r.post_offset_reason)}</div>` : "";
+  const words = r.kind==="suggested" && r.picks[0] && r.picks[0].matched_words
+    ? `<div class="alt">Matched on: ${esc(r.picks[0].matched_words.join(", "))}. Nobody has reviewed this pairing.</div>` : "";
+  return `<div class="entry ${cls}">${head}${ev}${picks}${why}${offset}${alsoLine(r.also,r.also_note)}${words}</div>`;
+}
+
+function boot(d){
+  $("#stamp").textContent = "Built "+d.as_of_date;
+  const t = d.traffic || {}, cal = d.calendar || {};
+  const out = [];
+
+  out.push(`<h2 id="next">What's coming</h2>`);
+  out.push(`<p class="lede">The next ${d.horizon_days} days. Every line is a dated event from the New York City calendar that one of these pieces answers. Say why you're posting it — an old link with no framing reads as filler.</p>`);
+  out.push(d.upcoming.length ? d.upcoming.map(entry).join("") :
+    `<div class="entry"><div class="angle">Nothing in the window clears the bar. That is a real answer, not a failure — routine committee business is filtered out on purpose.</div></div>`);
+
+  if(d.seasonal && d.seasonal.length){
+    out.push(`<h2 id="seasons">Seasons</h2>`);
+    out.push(`<p class="lede">Moments the calendar has no single event for. Year-end giving is a month, not a date; these are carried as the seasons they are rather than pinned to whatever happened to fall in the window.</p>`);
+    out.push(d.seasonal.map(entry).join(""));
+  }
+
+  out.push(`<h2 id="hooks">When news breaks</h2>`);
+  out.push(`<p class="lede">Things that happen without warning, and what to have ready. Where the calendar already knows of something that looks like a trigger, it is listed under the hook.</p>`);
+  out.push(d.hooks.map(h=>{
+    const sched = (h.scheduled||[]).length
+      ? `<div class="alt">On the calendar: ${h.scheduled.map(s=>esc(fmt(s.date))+" — "+esc(s.title)).join(" · ")}</div>` : "";
+    const wait = h.wait_days ? '<span class="tag wait">wait a day</span>' : "";
+    return `<div class="entry hook"><div class="when"><span class="d">${esc(h.label)}</span>${wait}</div>`
+         + (h.picks||[]).map(pieceLine).join('<div style="height:6px"></div>')
+         + (h.why?`<div class="angle">${esc(h.why)}</div>`:"")
+         + (h.wait_reason?`<div class="angle" style="color:var(--vc-charcoal)">${esc(h.wait_reason)}</div>`:"")
+         + alsoLine(h.also,h.also_note) + sched + `</div>`;
+  }).join(""));
+
+  out.push(`<h2 id="gaps">Gaps</h2>`);
+  out.push(`<p class="lede">Dated moments the calendar scores as major or marquee that the archive has no piece for. This is a commissioning list. Nothing here has been filled with a weak match.</p>`);
+  out.push(d.gaps.length ? `<table class="tbl"><thead><tr><th>Date</th><th>Moment</th><th>Strand</th></tr></thead><tbody>`
+    + d.gaps.map(g=>`<tr><td>${esc(fmt(g.date))}</td><td>${esc(g.title)}</td><td>${esc(g.strand||"")}</td></tr>`).join("")
+    + `</tbody></table>` : `<p class="lede">No unanswered major moments in the window.</p>`);
+
+  out.push(`<h2 id="always">Always on</h2>`);
+  out.push(`<p class="lede">The archive's strongest performers. There is no reason to ration these.</p>`);
+  out.push(d.always_on.map(p=>`<div class="entry">${pieceLine(p)}</div>`).join(""));
+
+  out.push(`<h2 id="method">Method</h2>`);
+  out.push(`<div class="note${t.stale?" stale":""}">
+    <b>Where this comes from.</b> ${N(d.catalogue.total_pieces)} published pieces, of which ${N(d.catalogue.evergreen_pieces)} are ${esc(d.catalogue.evergreen_definition)}.
+    Dates come from the New York City calendar (${esc(cal.events_total)} events, rebuilt ${esc((cal.generated||"").slice(0,10))}${cal.from_local_clone?", read from a local clone rather than the live feed":""}); events scoring below ${d.min_significance} are left out, as is routine committee business.
+    <br><br>
+    <b>Readership.</b> Per-article views come from Google Analytics, measured to <b>${esc(t.as_of||"an unknown date")}</b>${t.stale?` — and these figures are <b>carried forward, not current</b> (${esc(t.stale_reason||"the live pull was unavailable")})`:""}.
+    ${N(t.measured_of_evergreen)} of the ${N(d.catalogue.evergreen_pieces)} older pieces have a measured figure. Analytics keeps a ranked top-pages list rather than every page, so a piece showing no figure is not necessarily unread.
+    <br><br>
+    <b>What the machine did and did not choose.</b> The pairings and the argument under each are hand-written and carried from the seed file; the build only joins them to dates and ranks them. Entries marked <span class="tag warn">unreviewed match</span> are the exception — those are keyword matches nobody has checked, and they are labelled rather than hidden. Matching is word-boundary on event titles only: an earlier version searched venue lines and scoring notes, and put the rodent-control piece against the Mayor's Management Report.
+    <br><br>
+    <b>A gap is reported, not filled.</b> A major moment with no piece behind it is listed as a gap rather than given the least-bad match.
+  </div>`);
+
+  $("#body").innerHTML = out.join("");
+}
+</script>
+</body>
+</html>

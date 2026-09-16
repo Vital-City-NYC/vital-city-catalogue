@@ -1,0 +1,781 @@
+{
+ "_comment": "Editorial seed for the resharing tool, carried over from the artifact published 2026-09-03. The picks and the 'why' copy are hand-written judgement and are the part a machine must not regenerate. `match` binds a moment to real dated events from the NYC calendar; `signals` lets a hook light up when a scheduled event looks like its trigger. Edit this file to change the calendar; the build only joins and ranks.",
+ "source_artifact": "https://claude.ai/artifact/JfzD8dqVERTuGvYUe4mbpu",
+ "entries": [
+  {
+   "kind": "moment",
+   "label": "Early January · the year opens at City Hall",
+   "picks": [
+    {
+     "slug": "new-york-city-deputy-mayors-on-how-things-really-get-done",
+     "title": "How Things Really Get Done"
+    }
+   ],
+   "why": "Why now: January is when an administration's promises meet its first budget and its first crisis. Four people who have actually run the building saying what that feels like is the most useful thing Vital City can put in front of a new year.",
+   "also": [
+    {
+     "slug": "zohran-mamdanis-real-world-constraints",
+     "title": "Zohran Mamdani's Real-World Constraints"
+    }
+   ],
+   "also_note": "Also: Zohran Mamdani's Real-World Constraints (13,075 views)  -  the limits of mayoral power, which every January tests.",
+   "match": {
+    "window": [
+     "01-01",
+     "01-10"
+    ],
+    "strands": [
+     "cityhall"
+    ],
+    "keywords": [
+     "inauguration",
+     "term begins",
+     "City Hall"
+    ]
+   },
+   "id": "moment-00"
+  },
+  {
+   "kind": "moment",
+   "label": "Mid-January · State of the City season",
+   "picks": [
+    {
+     "slug": "new-yorks-housing-crisis-self-inflicted-and-solvable",
+     "title": "New York's Housing Crisis: Self-Inflicted and Solvable"
+    }
+   ],
+   "why": "Why now: every State of the City promises housing. This is the piece that says what would actually have to be true for the promise to work, and it reads as a scorecard against whatever the mayor announces.",
+   "also": [],
+   "also_note": "",
+   "match": {
+    "window": [
+     "01-10",
+     "02-05"
+    ],
+    "strands": [
+     "cityhall"
+    ],
+    "keywords": [
+     "State of the City"
+    ]
+   },
+   "id": "moment-01"
+  },
+  {
+   "kind": "moment",
+   "label": "February · Black History Month",
+   "picks": [
+    {
+     "slug": "the-stains-of-redlining",
+     "title": "The Stains of Redlining"
+    },
+    {
+     "slug": "the-drug-war-race-and-reality",
+     "title": "The Drug War: Race and Reality"
+    }
+   ],
+   "why": "Why now: both are history pieces that explain a present-day condition rather than commemorating a past one  -  redlining's effect on today's map, and what Charlie Rangel's rise says about Black New York and drug policy. That is the version of the month worth posting.",
+   "also": [
+    {
+     "slug": "elijah-anderson-interview",
+     "title": "The Fault Lines of Race and Place"
+    }
+   ],
+   "also_note": "Also: The Fault Lines of Race and Place (3,950 views), a conversation with Elijah Anderson on Black people and white spaces.",
+   "match": {
+    "window": [
+     "02-01",
+     "02-28"
+    ],
+    "strands": [
+     "anniversary"
+    ],
+    "keywords": [
+     "Black History"
+    ]
+   },
+   "id": "moment-02"
+  },
+  {
+   "kind": "moment",
+   "label": "Late April · the executive budget lands",
+   "picks": [
+    {
+     "slug": "why-are-new-york-transit-expenses-so-high-history-of-politics",
+     "title": "The Cost Containment Conundrum"
+    }
+   ],
+   "why": "Why now: budget week produces a torrent of numbers and very little explanation of why the numbers are what they are. This is the explanation, and it is reusable every April.",
+   "also": [
+    {
+     "slug": "tough-budget-choices-ahead-for-zohran-mamdani",
+     "title": "Tough Budget Choices Ahead"
+    },
+    {
+     "slug": "zohran-mamdani-and-andrew-cuomo-arent-as-different-as-you-might-think",
+     "title": "Mamdani and Cuomo Aren't as Different as You Might Think"
+    }
+   ],
+   "also_note": "Also: Tough Budget Choices Ahead (574 views), and Mamdani and Cuomo Aren't as Different as You Might Think (7,789 views) on the fiscal constraints neither side wants to discuss.",
+   "match": {
+    "window": [
+     "04-15",
+     "05-10"
+    ],
+    "strands": [
+     "budget"
+    ],
+    "keywords": [
+     "executive budget"
+    ]
+   },
+   "id": "moment-03"
+  },
+  {
+   "kind": "moment",
+   "label": "June · the Rent Guidelines Board votes",
+   "picks": [
+    {
+     "slug": "the-rent-is-too-damn-high-but-also-too-low",
+     "title": "The Rent Is Too Damn High (But Also Too Low)"
+    }
+   ],
+   "why": "Why now: the RGB vote is the one night a year when rent regulation is front-page news and the coverage is almost entirely two-sided shouting. A piece arguing that rents are simultaneously too high for tenants and too low to maintain buildings is the contrarian post of that week, every year.",
+   "also": [
+    {
+     "slug": "when-government-built-homes-for-people",
+     "title": "What Can We Learn from Social Housing?"
+    },
+    {
+     "slug": "the-property-tax-cannot-stand",
+     "title": "The Property Tax Cannot Stand"
+    }
+   ],
+   "also_note": "Also: What Can We Learn from Social Housing? (536 views) on Mitchell-Lama, and The Property Tax Cannot Stand (505 views).",
+   "match": {
+    "window": [
+     "06-01",
+     "06-30"
+    ],
+    "strands": [
+     "housing"
+    ],
+    "keywords": [
+     "Rent Guidelines"
+    ]
+   },
+   "id": "moment-04"
+  },
+  {
+   "kind": "moment",
+   "label": "Late June · primary day",
+   "picks": [
+    {
+     "slug": "zohran-mamdani-talks-public-safety",
+     "title": "Zohran Mamdani Talks Public Safety"
+    },
+    {
+     "slug": "curtis-sliwa-talks-public-safety",
+     "title": "Curtis Sliwa Talks Public Safety"
+    }
+   ],
+   "why": "Why now: candidates in their own words, at length, hosted by Vital City. These are the archive's best proof that the journal convenes rather than just comments  -  worth reposting as a pair whenever an election is live.",
+   "also": [],
+   "also_note": "",
+   "match": {
+    "window": [
+     "06-15",
+     "07-01"
+    ],
+    "strands": [
+     "democracy"
+    ],
+    "keywords": [
+     "primary"
+    ]
+   },
+   "id": "moment-05"
+  },
+  {
+   "kind": "moment",
+   "label": "Independence Day week · civic ideals",
+   "picks": [
+    {
+     "slug": "alexis-de-tocqueville-and-the-art-of-association",
+     "title": "Alexis de Tocqueville and the Art of Association"
+    }
+   ],
+   "why": "Why now: the holiday invites a civic-ideals post and most of them are empty. This one has an argument.",
+   "also": [],
+   "also_note": "",
+   "match": {
+    "window": [
+     "06-30",
+     "07-07"
+    ],
+    "strands": [
+     "holidays"
+    ],
+    "keywords": [
+     "Independence Day",
+     "Fourth of July"
+    ]
+   },
+   "id": "moment-06"
+  },
+  {
+   "kind": "moment",
+   "label": "July and August · the summer violence story",
+   "picks": [
+    {
+     "slug": "does-nothing-stop-a-bullet-like-a-job",
+     "title": "Does Nothing Stop a Bullet Like a Job?"
+    }
+   ],
+   "why": "Why now: every July brings a wave of \"summer of violence\" coverage and a call for summer jobs as the answer. This is the piece that examines whether that actually works, and it is the most reusable counter-programming in the archive.",
+   "also": [
+    {
+     "slug": "the-truth-about-youth-crime-rates-in-nyc",
+     "title": "Are the Kids All Right? The Truth About Youth Crime in NYC"
+    },
+    {
+     "slug": "whats-behind-baltimores-drastic-reduction-in-violence",
+     "title": "What's Behind Baltimore's Drastic Reduction in Violence"
+    }
+   ],
+   "also_note": "Also: Are the Kids All Right? The Truth About Youth Crime in NYC (3,111 views) and What's Behind Baltimore's Drastic Reduction in Violence (3,122 views).",
+   "match": {
+    "window": [
+     "07-01",
+     "08-31"
+    ],
+    "strands": [
+     "justice"
+    ],
+    "keywords": []
+   },
+   "id": "moment-07"
+  },
+  {
+   "kind": "moment",
+   "label": "Late August · the last summer weekend",
+   "picks": [
+    {
+     "slug": "summer-city-memories",
+     "title": "Burned in My Memory: Lin-Manuel Miranda, Dwight Gooden and Others on Summer"
+    }
+   ],
+   "why": "Why now: the one genuinely warm piece on this list. Labor Day weekend is when a civic publication is allowed to be affectionate about the city, and this is the piece for it.",
+   "also": [],
+   "also_note": "",
+   "match": {
+    "window": [
+     "08-25",
+     "09-08"
+    ],
+    "strands": [
+     "holidays"
+    ],
+    "keywords": [
+     "Labor Day"
+    ]
+   },
+   "id": "moment-08"
+  },
+  {
+   "kind": "moment",
+   "label": "September 11 · the anniversary",
+   "picks": [
+    {
+     "slug": "a-nation-and-city-less-secure",
+     "title": "A Nation and City Less Secure"
+    }
+   ],
+   "why": "Why now: an argument about present-day preparedness rather than commemoration, which is both more useful and less likely to read as opportunism. Post it on the 12th, not the 11th  -  the anniversary itself belongs to remembrance, and a policy argument lands badly in that feed.",
+   "also": [],
+   "also_note": "",
+   "match": {
+    "window": [
+     "09-09",
+     "09-13"
+    ],
+    "strands": [
+     "anniversary"
+    ],
+    "keywords": [
+     "9/11",
+     "September 11",
+     "World Trade Center"
+    ],
+    "post_offset_days": 1,
+    "offset_reason": "The anniversary itself belongs to remembrance; a policy argument lands badly in that feed."
+   },
+   "id": "moment-09"
+  },
+  {
+   "kind": "moment",
+   "label": "October · the year's crime picture takes shape",
+   "picks": [
+    {
+     "slug": "twenty-strategies-for-reducing-crime-in-cities",
+     "title": "20 Strategies for Reducing Crime in Cities"
+    }
+   ],
+   "why": "Why now: autumn is when the year's crime numbers get argued about. This is the piece that reframes the argument, and it is by a wide margin the most-read thing Vital City has ever published.",
+   "also": [
+    {
+     "slug": "reality-check-how-safe-are-manhattan-and-brooklyn",
+     "title": "Reality Check: How Safe Are Manhattan and Brooklyn?"
+    }
+   ],
+   "also_note": "Also: Reality Check: How Safe Are Manhattan and Brooklyn? (794 views)  -  the Reality Check format is built for this moment.",
+   "match": {
+    "window": [
+     "10-01",
+     "10-31"
+    ],
+    "strands": [
+     "justice"
+    ],
+    "keywords": []
+   },
+   "id": "moment-10"
+  },
+  {
+   "kind": "moment",
+   "label": "Early November · Election Day",
+   "picks": [
+    {
+     "slug": "the-failures-of-urban-governance",
+     "title": "The Failures of Urban Governance"
+    }
+   ],
+   "why": "Why now: the argument that competence is itself a political position. It reads as freshly on any election night as it did on the one it was written for.",
+   "also": [
+    {
+     "slug": "mamdanis-victory-and-memories-of-dinkins",
+     "title": "Mamdani's Victory, and Memories of Dinkins'"
+    }
+   ],
+   "also_note": "Also: Mamdani's Victory, and Memories of Dinkins' (498 views), on what happens to a new coalition once it has to govern.",
+   "match": {
+    "window": [
+     "11-01",
+     "11-10"
+    ],
+    "strands": [
+     "democracy"
+    ],
+    "keywords": [
+     "Election Day",
+     "general election"
+    ]
+   },
+   "id": "moment-11"
+  },
+  {
+   "kind": "moment",
+   "label": "Thanksgiving week · food and affordability",
+   "picks": [
+    {
+     "slug": "government-is-already-in-the-grocery-business",
+     "title": "Guess What? Government Is Already in the Grocery Business"
+    }
+   ],
+   "why": "Why now: the week the cost of a meal is a national story. A piece pointing out that government already subsidises groceries at enormous scale is the useful intervention in that conversation.",
+   "also": [],
+   "also_note": "",
+   "match": {
+    "window": [
+     "11-20",
+     "11-30"
+    ],
+    "strands": [
+     "holidays"
+    ],
+    "keywords": [
+     "Thanksgiving"
+    ]
+   },
+   "id": "moment-12"
+  },
+  {
+   "kind": "moment",
+   "label": "December · year-end giving",
+   "picks": [
+    {
+     "slug": "alexis-de-tocqueville-and-the-art-of-association",
+     "title": "Alexis de Tocqueville and the Art of Association"
+    },
+    {
+     "slug": "the-enduring-power-of-poverty-pimps",
+     "title": "The Enduring Power of 'Poverty Pimps'"
+    }
+   ],
+   "why": "Why now: the month the nonprofit sector asks for money is the right month to publish seriously about what the nonprofit sector is for  -  and, in the second piece, about its failures. Posting the critical one alongside the appreciative one is more persuasive than either alone.",
+   "also": [],
+   "also_note": "",
+   "match": {
+    "window": [
+     "12-01",
+     "12-24"
+    ],
+    "strands": [],
+    "keywords": []
+   },
+   "id": "moment-13"
+  },
+  {
+   "kind": "moment",
+   "label": "Between Christmas and New Year · the long view",
+   "picks": [
+    {
+     "slug": "history-of-opioids-in-new-york-city",
+     "title": "When Gotham Was Heroin's Capital"
+    },
+    {
+     "slug": "the-evolution-of-flatbush",
+     "title": "The Long View: The Evolution of Flatbush"
+    }
+   ],
+   "why": "Why now: the quietest news week of the year is when long historical pieces travel furthest, because there is nothing else in the feed. Both are among the archive's strongest performers and neither is tied to a news cycle.",
+   "also": [],
+   "also_note": "",
+   "match": {
+    "window": [
+     "12-26",
+     "01-02"
+    ],
+    "strands": [],
+    "keywords": []
+   },
+   "id": "moment-14"
+  },
+  {
+   "kind": "hook",
+   "label": "A subway attack, or a shoving death",
+   "picks": [
+    {
+     "slug": "what-to-do-about-people-struggling-with-serious-mental-illness-on-the-subway-nyc",
+     "title": "Psychosis Under Fluorescent Lights"
+    }
+   ],
+   "why": "Why this one: it is the piece that treats the person on the platform as a policy problem with known answers, rather than as a symbol. Wait a day. Posting analysis into the first hours of a violent incident reads as using it.",
+   "also": [
+    {
+     "slug": "fix-the-subway-not-society",
+     "title": "Fix the Subway, Not Society"
+    },
+    {
+     "slug": "daniel-penny-jordan-neely-and-all-of-us-in-between",
+     "title": "Daniel Penny, Jordan Neely and All of Us In Between"
+    }
+   ],
+   "also_note": "Also: Fix the Subway, Not Society (1,759 views) and Daniel Penny, Jordan Neely and All of Us In Between (8,107 views)  -  the latter only when the story is specifically about bystanders and culpability.",
+   "signals": [
+    "subway",
+    "platform",
+    "mental illness",
+    "psychosis",
+    "transit"
+   ],
+   "id": "hook-00",
+   "wait_days": 1,
+   "wait_reason": "Posting analysis into the first hours of a violent incident reads as using it."
+  },
+  {
+   "kind": "hook",
+   "label": "A mass shooting, or a spike in gun violence",
+   "picks": [
+    {
+     "slug": "whats-behind-baltimores-drastic-reduction-in-violence",
+     "title": "What's Behind Baltimore's Drastic Reduction in Violence"
+    }
+   ],
+   "why": "Why this one: the constructive post. When the feed is despair, the piece explaining how another city actually reversed its trajectory is the one that gets shared by people who want somewhere to put the feeling.",
+   "also": [
+    {
+     "slug": "what-we-know-and-dont-know-about-guns",
+     "title": "What We Know and Don't Know About Guns"
+    },
+    {
+     "slug": "a-better-conversation-on-guns",
+     "title": "A Better Conversation on Guns"
+    }
+   ],
+   "also_note": "Also: What We Know and Don't Know About Guns (792 views) for the data-corrective angle, and A Better Conversation on Guns (801 views).",
+   "signals": [
+    "shooting",
+    "gun",
+    "firearm",
+    "violence"
+   ],
+   "id": "hook-01"
+  },
+  {
+   "kind": "hook",
+   "label": "A Rikers death, or a receivership ruling",
+   "picks": [
+    {
+     "slug": "fifty-years-of-injustice-at-rikers",
+     "title": "Fifty Years of Injustice at Rikers"
+    }
+   ],
+   "why": "Why this one: Rikers news always arrives as an isolated outrage. The half-century frame is what converts it into a story about why nothing changes.",
+   "also": [
+    {
+     "slug": "holding-rikers-officers-accountable-an-almost-impossible-task",
+     "title": "Holding Rikers Officers Accountable"
+    },
+    {
+     "slug": "want-smaller-jails-unstick-criminal-proceedings",
+     "title": "Want Smaller Jails? Unstick Criminal Proceedings"
+    }
+   ],
+   "also_note": "Also: Holding Rikers Officers Accountable (501 views) and Want Smaller Jails? Unstick Criminal Proceedings (680 views), which is the piece for court-backlog news.",
+   "signals": [
+    "Rikers",
+    "Nunez",
+    "receiver",
+    "jail",
+    "Correction"
+   ],
+   "id": "hook-02"
+  },
+  {
+   "kind": "hook",
+   "label": "A homelessness sweep, or an involuntary-removal policy",
+   "picks": [
+    {
+     "slug": "why-cant-we-solve-the-homelessness-crisis-in-new-york-city",
+     "title": "Why Can't We Solve the Homelessness Crisis in New York City?"
+    }
+   ],
+   "why": "Why this one: firsthand reporting rather than position-taking, which survives contact with a story where everyone already has a position.",
+   "also": [
+    {
+     "slug": "people-with-serious-mental-illness-need-housing-not-jail",
+     "title": "People With Serious Mental Illness Need Housing, Not Jail"
+    },
+    {
+     "slug": "mamdani-department-of-community-safety-where-theory-meets-practice",
+     "title": "A Department of Community Safety: Theory Meets Practice"
+    }
+   ],
+   "also_note": "Also: People With Serious Mental Illness Need Housing, Not Jail (521 views) and A Department of Community Safety: Theory Meets Practice (2,338 views).",
+   "signals": [
+    "homeless",
+    "shelter",
+    "involuntary removal",
+    "encampment"
+   ],
+   "id": "hook-03"
+  },
+  {
+   "kind": "hook",
+   "label": "A corruption indictment, at any level",
+   "picks": [
+    {
+     "slug": "eric-adams-scandals-in-context",
+     "title": "Eric Adams' Scandals, In Historical Context"
+    }
+   ],
+   "why": "Why this one: the historical frame is the durable part  -  it works for whoever is indicted next, which is the test of a genuinely evergreen piece.",
+   "also": [
+    {
+     "slug": "whats-missing-in-the-case-against-eric-adams",
+     "title": "What's Missing in the Case Against Eric Adams"
+    },
+    {
+     "slug": "when-the-cure-for-corruption-is-worse-than-the-disease",
+     "title": "When the Cure Is Worse Than the Disease"
+    }
+   ],
+   "also_note": "Also: What's Missing in the Case Against Eric Adams (2,642 views), when the news is specifically about the strength of a case, and When the Cure Is Worse Than the Disease (606 views) on the cost of anti-corruption rules.",
+   "signals": [
+    "indict",
+    "corruption",
+    "bribery",
+    "ethics",
+    "conflicts of interest"
+   ],
+   "id": "hook-04"
+  },
+  {
+   "kind": "hook",
+   "label": "A congestion pricing or tolling fight",
+   "picks": [
+    {
+     "slug": "congestion-pricing-an-explainer",
+     "title": "Congestion Pricing: An Explainer"
+    }
+   ],
+   "why": "Why this one: the explainer is the most-linkable object in a fight where most people are arguing about something they cannot quite describe.",
+   "also": [
+    {
+     "slug": "was-kathy-hochuls-congestion-pricing-calculation-good-or-bad-politics",
+     "title": "Was Kathy Hochul's Congestion Move Good or Bad Politics?"
+    },
+    {
+     "slug": "congestion-pricing-across-america",
+     "title": "Congestion Pricing Across America"
+    }
+   ],
+   "also_note": "Also: Was Kathy Hochul's Congestion Move Good or Bad Politics? (1,969 views) for the political angle, and Congestion Pricing Across America (502 views) when another city takes it up.",
+   "signals": [
+    "congestion pricing",
+    "toll",
+    "Metropolitan Transportation Authority"
+   ],
+   "id": "hook-05"
+  },
+  {
+   "kind": "hook",
+   "label": "An overdose report, or a fight over a prevention center",
+   "picks": [
+    {
+     "slug": "history-of-opioids-in-new-york-city",
+     "title": "When Gotham Was Heroin's Capital"
+    }
+   ],
+   "why": "Why this one: a strong performer that reframes today's crisis as the latest chapter rather than an unprecedented one.",
+   "also": [
+    {
+     "slug": "on-overdose-prevention-centers-listen-to-community-complaints",
+     "title": "On Overdose Prevention Centers, Listen to Community Complaints"
+    }
+   ],
+   "also_note": "Also: On Overdose Prevention Centers, Listen to Community Complaints (720 views)  -  the piece for the specific siting fight, and unusual in taking neighbourhood objections seriously.",
+   "signals": [
+    "overdose",
+    "opioid",
+    "prevention center",
+    "fentanyl"
+   ],
+   "id": "hook-06"
+  },
+  {
+   "kind": "hook",
+   "label": "A rat story, or a sanitation initiative",
+   "picks": [
+    {
+     "slug": "rat-control-in-urban-environments",
+     "title": "To Beat Rats, Follow the Science"
+    }
+   ],
+   "why": "Why this one: the second-most-read piece in the archive, on a subject the city generates news about several times a year. It is the single most reliably reusable thing on this list after the crime strategies piece.",
+   "also": [],
+   "also_note": "",
+   "signals": [
+    "rat",
+    "rodent",
+    "sanitation",
+    "trash",
+    "containeriz"
+   ],
+   "id": "hook-07"
+  },
+  {
+   "kind": "hook",
+   "label": "A police-staffing or NYPD-oversight debate",
+   "picks": [
+    {
+     "slug": "what-new-yorkers-should-know-about-nypd-staffing",
+     "title": "Reality Check: Does the NYPD Need To Hire More Cops?"
+    }
+   ],
+   "why": "Why this one: it is the piece a citywide elected official built a press statement around. That is unusual provenance and worth saying when you post it.",
+   "also": [
+    {
+     "slug": "the-false-promise-of-police-crackdowns-in-new-york-city-roosevelt-island-queens-corridor",
+     "title": "The False Promise of Police Crackdowns in New York City"
+    }
+   ],
+   "also_note": "Also: The False Promise of Police Crackdowns in New York City (871 views) whenever a surge or crackdown is announced.",
+   "signals": [
+    "NYPD",
+    "police",
+    "CCRB",
+    "staffing"
+   ],
+   "id": "hook-08"
+  },
+  {
+   "kind": "hook",
+   "label": "A zoning fight, or a NIMBY flashpoint",
+   "picks": [
+    {
+     "slug": "the-misunderstood-urban-nimby",
+     "title": "The Misunderstood Urban NIMBY"
+    }
+   ],
+   "why": "Why this one: it refuses the easy side of an argument everyone else is having tribally, which is the kind of post that gets quoted rather than merely liked.",
+   "also": [
+    {
+     "slug": "jane-jacobs-and-the-quest-for-goldilocks-density",
+     "title": "Jane Jacobs and the Quest for Goldilocks Density"
+    },
+    {
+     "slug": "why-it-costs-so-much-to-build-in-new-york-city",
+     "title": "Why It Costs So Much To Build in New York City"
+    }
+   ],
+   "also_note": "Also: Jane Jacobs and the Quest for Goldilocks Density (1,479 views) and Why It Costs So Much To Build in New York City (1,568 views).",
+   "signals": [
+    "zoning",
+    "rezoning",
+    "City of Yes",
+    "land use",
+    "ULURP",
+    "City Planning"
+   ],
+   "id": "hook-09"
+  },
+  {
+   "kind": "hook",
+   "label": "Federal action against the city",
+   "picks": [
+    {
+     "slug": "what-came-after-1975-new-york-fiscal-crisis",
+     "title": "What Came After 'Drop Dead'"
+    }
+   ],
+   "why": "Why this one: the precedent piece for any story about the city's relationship with Washington, and it improves as that relationship worsens.",
+   "also": [
+    {
+     "slug": "a-nation-and-city-less-secure",
+     "title": "A Nation and City Less Secure"
+    }
+   ],
+   "also_note": "Also: A Nation and City Less Secure (3,548 views) on the dismantling of federal agencies.",
+   "signals": [
+    "federal",
+    "Washington",
+    "shutdown",
+    "immigration",
+    "National Guard"
+   ],
+   "id": "hook-10"
+  },
+  {
+   "kind": "hook",
+   "label": "Retail theft, or a \"disorder\" news cycle",
+   "picks": [
+    {
+     "slug": "what-can-we-do-about-shoplifting-a-new-urban-plague",
+     "title": "The Stubbornness of Sticky Fingers"
+    }
+   ],
+   "why": "Why this one: retail theft cycles reliably and is usually covered without any evidence at all.",
+   "also": [],
+   "also_note": "",
+   "signals": [
+    "shoplifting",
+    "retail theft",
+    "disorder",
+    "quality of life"
+   ],
+   "id": "hook-11"
+  }
+ ]
+}
