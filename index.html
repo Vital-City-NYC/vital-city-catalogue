@@ -221,13 +221,6 @@
   .credit{display:block;font-size:10px;color:var(--vc-charcoal);line-height:1.35;margin-top:2px}
   .nocred{color:var(--vc-cloud)}
   /* Cross-tool switcher — identical on every page so it reads as one suite */
-  .toolnav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0 2px}
-  .toolnav .tlab{font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:var(--vc-charcoal);margin-right:3px}
-  .toolnav a{padding:5px 13px;border:1.5px solid var(--vc-black);border-radius:16px;font-size:12px;font-weight:800;
-             text-decoration:none;color:var(--vc-black);background:var(--vc-white);letter-spacing:.01em}
-  .toolnav a:hover{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
-  .toolnav a.here{background:var(--vc-black);color:var(--vc-white);cursor:default;pointer-events:none}
-  html.dark .toolnav a.here{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
 
   #embpop{position:absolute;z-index:120;background:var(--vc-white,#fff);border:1px solid var(--vc-black,#050507);
           box-shadow:5px 5px 0 rgba(5,5,7,.12);padding:12px 14px;max-width:340px;font-size:12px}
@@ -235,6 +228,15 @@
   #embpop .epLinks a{display:block;color:var(--vc-cerulean,#217ebe);padding:2px 0;text-decoration:underline;word-break:break-all}
   #embpop .epFilter{margin-top:9px;background:var(--vc-black,#050507);color:#fff;border:0;padding:5px 9px;
           font-size:10px;font-weight:700;cursor:pointer;font-family:inherit}
+  /* Dark mode. Same token overrides and the same "vc_theme" key as the contact
+     tool and the growth dashboard, so a choice made in one tool holds in all. */
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2}
+  html.dark body{background:var(--vc-paper);color:var(--vc-black)}
+  html.dark input,html.dark select,html.dark textarea{background:#212329!important;color:var(--vc-black)!important;border-color:var(--vc-cloud)!important}
+  html.dark .masthead{background:var(--vc-paper)}
+  html.dark #embpop{box-shadow:5px 5px 0 rgba(0,0,0,.4)}
+  html.dark .clear{background:var(--vc-black);color:var(--vc-paper)}   /* the solid button reads as a hole in the page otherwise */
+
   .credit{cursor:pointer}
   .credit:hover{color:var(--vc-cerulean,#217ebe);text-decoration:underline}
 </style>
@@ -246,6 +248,7 @@
 <header class="masthead">
   <div class="mastlinks">
     <a href="catalogue-analysis/" title="What the catalogue adds up to: subject, format, contributors, length">The catalogue, analyzed</a>
+    <a href="#" id="themeToggle" title="Switch between light and dark color themes. Your choice is remembered on this device.">🌙 Dark mode</a>
   </div>
   <h1>Content catalogue</h1>
   <div class="sub">Every article published on vitalcitynyc.org, searchable by author, topic, issue and date. For what it all adds up to, see <a href="catalogue-analysis/" style="color:var(--vc-cerulean);text-decoration:underline">the catalogue, analyzed</a>.</div>
@@ -297,6 +300,18 @@
 
 <script>
 const $ = s => document.querySelector(s);
+
+// ---- Theme (light/dark) ----
+function applyTheme(t){ document.documentElement.classList.toggle("dark", t==="dark");
+  const b=$("#themeToggle"); if(b) b.textContent = t==="dark" ? "☀️ Light mode" : "🌙 Dark mode"; }
+(function(){ const t=localStorage.getItem("vc_theme") || ((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light"); applyTheme(t); })();
+document.addEventListener("DOMContentLoaded", ()=>{
+  const b=$("#themeToggle"); if(!b) return;
+  applyTheme(document.documentElement.classList.contains("dark")?"dark":"light");
+  b.addEventListener("click", e=>{ e.preventDefault();
+    const t=document.documentElement.classList.contains("dark")?"light":"dark";
+    localStorage.setItem("vc_theme",t); applyTheme(t); });
+});
 let DATA = [], META = {}, ISSUES = [];
 let AUTHOR_CATS = {};        // {author name -> {categories, topics, institution}} — local-only CRM layer
 let HAS_CRM = false;
