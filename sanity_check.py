@@ -15,6 +15,7 @@ encrypt_people.py). If there's no prior data.enc or it can't be decrypted
 (first run, rotated passphrase), we pass with a notice rather than block.
 """
 import base64, json, os, sys
+from datetime import datetime, timezone
 from pathlib import Path
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -35,15 +36,51 @@ def derive(pw, salt, iters):
                       iterations=iters).derive(pw.encode())
 
 
+# A run that cannot read its baseline falls back to the floor check alone, which
+# is the right call during a passphrase rotation and the wrong call twice in a
+# row: an unreadable baseline that never clears means the guard against a gutted
+# publish is simply off. The outcome of each run is recorded here (data/ is
+# committed by the nightly job, so it survives the runner) and a second
+# consecutive blind run aborts.
+BLIND = ROOT / "data" / "sanity_baseline.json"
+
+
+def note_blind(reason):
+    """Record a run that had no baseline; abort if the previous one had none either."""
+    prior = {}
+    try:
+        prior = json.loads(BLIND.read_text())
+    except Exception:
+        pass
+    if prior.get("blind"):
+        sys.exit(f"ABORT: no readable baseline two runs running ({reason}; last time: "
+                 f"{prior.get('reason', 'unknown')} on {prior.get('when', 'an earlier run')}). "
+                 f"During a passphrase rotation this clears by itself on the next run; if it has not, "
+                 f"the published payload and VC_NETWORK_PASS disagree and nothing is checking for a "
+                 f"gutted dataset. Refusing to publish.")
+    BLIND.parent.mkdir(parents=True, exist_ok=True)
+    BLIND.write_text(json.dumps({"blind": True, "reason": reason,
+                                 "when": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")}, indent=2) + "\n")
+
+
+def note_compared():
+    """Record a run that did compare against a baseline, clearing any blind streak."""
+    BLIND.parent.mkdir(parents=True, exist_ok=True)
+    BLIND.write_text(json.dumps({"blind": False,
+                                 "when": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")}, indent=2) + "\n")
+
+
 def prev_counts():
     """Decrypt the currently published data.enc and count people/members/donors.
     Returns None if there's no readable baseline (don't block on that)."""
     if not ENC.exists():
         print("sanity_check: no prior network/data.enc — first publish, skipping comparison.")
+        note_blind("no prior network/data.enc")
         return None
     pw = os.environ.get("VC_NETWORK_PASS")
     if not pw:
         print("sanity_check: VC_NETWORK_PASS not set — cannot read baseline, skipping comparison.")
+        note_blind("VC_NETWORK_PASS not set")
         return None
     try:
         blob = json.loads(ENC.read_text())
@@ -53,6 +90,7 @@ def prev_counts():
         people = json.loads(plain)
     except Exception as e:
         print(f"sanity_check: could not decrypt prior data.enc ({e}); skipping comparison.")
+        note_blind("could not decrypt the published payload")
         return None
     return {
         "total_people": len(people),
@@ -79,6 +117,7 @@ def main():
     if prev is None:
         print("sanity_check: PASS (no baseline to compare; floor check passed).")
         return
+    note_compared()
 
     print(f"sanity_check: last publish — people={prev['total_people']:,} "
           f"members={prev['members']:,} donors={prev['donors']:,}")
