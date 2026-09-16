@@ -126,4 +126,17 @@ html.dark .vckit-link.here { color: var(--vc-black, #e8e8e5); border-bottom-colo
   .vckit-vc, .vckit-tk { font-size: 10.5px; letter-spacing: .11em; }
 }
 
+/* Eight tabs stop fitting on one line well before phone width. The list is a
+   horizontal scroller with its scrollbar hidden, so the overflow was invisible:
+   "Calendar" was cut in half with nothing on screen to say it could be scrolled,
+   and nudging the strip sideways slid the wordmark under the left edge and took
+   its gutter with it. Wrap to a second row instead -- a tab nobody can see is a
+   tab that does not exist. The single-line masthead rule is kept above this
+   width, where it fits honestly. */
+@media (max-width: 880px) {
+  .vckit { flex-wrap: wrap; row-gap: 0; }
+  .vckit-list { flex-wrap: wrap; overflow-x: visible; row-gap: 2px; }
+  .vckit-mark { padding-bottom: 6px; }
+}
+
 @media print { .vckit { display: none !important; } }
