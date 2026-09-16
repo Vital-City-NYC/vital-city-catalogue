@@ -675,7 +675,11 @@ def main():
     # "Associated Press" was the Daily News's most prolific reporter, and
     # "PubSubHub User" its fourth.
     NOT_A_PERSON = re.compile(
-        r"^(the )?(associated press|ap|reuters|bloomberg|tribune( news service| content agency)?|"
+        # "Vital City" is ours and is never a reporter. It is named here rather than
+        # left to the outlet-name check, because Vital City is not an outlet in
+        # the map -- and The City Reporter bylines the pieces it republishes from us
+        # as "Vital City", which walked in as a bold, cited-us reporter.
+        r"^(the )?(vital city( nyc)?|associated press|ap|reuters|bloomberg|tribune( news service| content agency)?|"
         r"wire( services?)?|newsroom|[\w .\-]*editorial board|the editors?|"
         r"[\w .\-]*\b(user|bot|admin|api|rest|feed|cms|syndicat\w*|services?|agent|contributor|"
         r"staff|reports?|newsroom|editors)\b[\w .\-]*)$",
