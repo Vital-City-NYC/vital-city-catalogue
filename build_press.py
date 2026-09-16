@@ -827,6 +827,10 @@ def main():
             p["titles"].add(tk)
             p["stories"][s_.get("url") or tk] = {"title": s_.get("title"), "url": s_.get("url"),
                                                  "date": s_.get("date"), "outlet": oid,
+                                                 # an opinion piece, by the outlet's own tags or its address
+                                                 "op": bool(re.search(r"/(opinion|opinions|op-ed|oped|commentary|editorials?|letters)/", s_.get("url") or "", re.I)
+                                                            or any(re.fullmatch(r"(opinion|op-?eds?|commentary|guest (essay|opinion|column)|letters?( to the editor)?|editorials?|perspective|viewpoint)",
+                                                                                (t or "").strip(), re.I) for t in (s_.get("tags") or []))),
                                                  "blob": " ".join([s_.get("title") or "", s_.get("summary") or "",
                                                                    " ".join(s_.get("tags") or [])])}
 
@@ -1188,7 +1192,9 @@ def main():
                        "count": c, "share": round(c / total, 3) if total else 0,
                        "examples": p["beat_examples"][b]}
                       for b, c in ranked if c >= 2 or (c >= 1 and p["outlet"] in PINNED)],   # one story is not a beat -- except at the Times, whose feed is too shallow for two
-            "stories": uniq[:12],
+            "stories": [{k: v for k, v in s_.items() if k != "op"} for s_ in uniq[:12]],
+            # kept whole for the press test below; trimmed when written out
+            "_ops": [bool(s_.get("op")) for s_ in uniq],
             "terms": dict(sorted(p["terms"].items(), key=lambda kv: -kv[1])[:35]),
             "groups": {g: n for g, n in (p.get("group_hits") or {}).items() if n},
             "vc": flags or None,
@@ -1249,16 +1255,31 @@ def main():
             return "three or more bylines"
         return None
 
+    def staff_evidence(p):
+        v = p.get("vc") or {}
+        if v.get("press_list"):
+            return True
+        em = (p.get("email") or "").lower()
+        if "@" in em and "press_source" not in (p.get("email_source_url") or ""):
+            edom = em.split("@", 1)[1]
+            if any(edom.endswith(d) or d.endswith(edom) for d in outlet_domains(p)):
+                return True
+        t = p.get("title") or ""
+        return bool(t) and not re.search(r"contribut|fellow|guest|visiting|former", t, re.I)
+
     kept, dropped = [], []
     for p in out_people:
         mk = merge_name(p["name"])
         why = None
         if loose_name(p["name"]) in vc["authors"] and not press_evidence(p):
             why = "Vital City contributor with no evidence of being press"
-        elif (p.get("stories") and p.get("story_count", 0) <= 2
-              and all(OPINION.search(s_.get("url") or "") for s_ in p["stories"])
-              and not press_evidence(p)):
-            why = "opinion bylines only"
+        elif p.get("_ops") and all(p["_ops"]) and not staff_evidence(p):
+            # Steven Fulop, former mayor of Jersey City, wrote one Daily News op-ed
+            # and was listed as a Daily News reporter. Someone whose every story is
+            # opinion is a guest writer unless something shows they are staff; a
+            # pile of op-eds is not that evidence, so byline counts do not count here.
+            why = "opinion pieces only, and nothing showing they are staff"
+        p.pop("_ops", None)
         if why:
             dropped.append({"name": p["name"], "outlet": p.get("outlet"), "reason": why,
                             "stories": p.get("story_count", 0)})
