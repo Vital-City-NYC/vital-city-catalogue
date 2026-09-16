@@ -226,6 +226,14 @@ jobs:
           for f in network/data.enc growth/data.enc prospects/data.enc catalogue-analysis/data.enc resharing/data.enc press/data.enc; do
             [ -e "$f" ] && git add "$f"
           done
+          # encrypt_people.py runs every time and rewrites network/data.enc with a
+          # fresh salt and IV, so the ciphertext always differs. Nothing staged
+          # therefore means the staging itself failed, not that nothing changed.
+          if git diff --cached --quiet && [ -e network/data.enc ]; then
+            echo "ERROR: network/data.enc was re-encrypted but nothing was staged — the publish step is broken, not idle."
+            git status --porcelain | head -20
+            exit 1
+          fi
           if git diff --cached --quiet; then
             echo "no changes to publish"
           else
