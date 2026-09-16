@@ -84,6 +84,10 @@
   .badge.no{color:var(--vc-charcoal);border-color:var(--vc-cloud)}
   .more{font-size:11.5px;color:var(--vc-cerulean);cursor:pointer;font-weight:700}
   .empty{font-size:12.5px;color:var(--vc-charcoal);padding:12px 0}
+  /* Major outlets lead every list; everything else sits under this rule. */
+  .tierdiv{margin:22px 0 10px;padding-top:8px;border-top:1.5px solid var(--vc-black);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal)}
+  .tierdiv b{color:var(--vc-black)}
+  tr.tierrow td{padding:14px 8px 6px;border-bottom:1.5px solid var(--vc-black);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);background:var(--vc-paper)}
   /* rail */
   aside h2{margin-top:18px}
   aside h2:first-child{margin-top:0}
@@ -174,6 +178,7 @@
         <label><input type="checkbox" id="fActive" checked> Only people who filed in the last 60 days</label>
         <label><input type="checkbox" id="fVC"> Only people Vital City already knows</label>
         <label><input type="checkbox" id="fDiv" checked> Spread across outlets</label>
+        <label><input type="checkbox" id="fMajor"> Major outlets only</label>
       </div>
       <div class="readout" id="readout"></div>
     </div>
@@ -203,6 +208,7 @@
       <label><input type="checkbox" id="dEmail"> has an address</label>
       <label><input type="checkbox" id="dActive"> filed in 60 days</label>
       <label><input type="checkbox" id="dVC"> we know them</label>
+      <label><input type="checkbox" id="dMajor"> major outlets only</label>
     </div>
     <div class="readout" id="dCount"></div>
     <div id="dirOut"></div>
@@ -211,7 +217,7 @@
 
   <section class="sect" id="known">
     <h2>People Vital City already knows</h2>
-    <div class="note">The curated press list, Vital City contributors, and anyone whose story matched a logged Vital City mention. These are the names set in bold everywhere else on the page. Some have no harvested byline &mdash; they are on the list, not in a feed &mdash; so this is the only place they appear.</div>
+    <div class="note">The curated press list, and anyone whose story matched a logged Vital City mention. Having written for Vital City does not put anyone here. These are the names set in bold everywhere else on the page. Some have no harvested byline &mdash; they are on the list, not in a feed &mdash; so this is the only place they appear.</div>
     <div id="knownOut"></div>
   </section>
 
@@ -375,6 +381,9 @@ function filtered(list){
   return l;
 }
 
+const tierOf=p=>p.tier||2;
+const TIER_LABEL={1:"Major outlets",2:"Smaller outlets, newsletters and independents"};
+function tierSplit(list){ return [list.filter(r=>tierOf(r.p||r)===1), list.filter(r=>tierOf(r.p||r)!==1)]; }
 function outletName(p){ return p.outlet ? (OUT[p.outlet]?.name||p.outlet) : (p.outlet_text||"—"); }
 function fmtDate(d){ return d? String(d).slice(0,10) : ""; }
 
@@ -382,7 +391,6 @@ function vcBadges(p){
   const v=p.vc; if(!v) return "";
   let out=[];
   if(v.press_list) out.push(`<span class="badge vc" title="On the curated Vital City press list${v.press_list.outlet?" — "+esc(v.press_list.outlet):""}">Vital City press list</span>`);
-  if(v.vc_author) out.push(`<span class="badge au" title="Has published under a Vital City byline">Vital City contributor</span>`);
   if(v.cited_vc) out.push(`<a class="badge ct" href="${esc(v.cited_vc.url)}" target="_blank" rel="noopener" title="A story of theirs matches a logged Vital City mention — they have cited us by name">Has cited Vital City</a>`);
   if(!v.cited_vc && v.outlet_cites_vc) out.push(`<span class="badge no" title="Their outlet has cited Vital City ${v.outlet_cites_vc} times in the logged window — the outlet, not necessarily this reporter">Outlet cites us · ${v.outlet_cites_vc}</span>`);
   return out.join(" ");
@@ -432,12 +440,20 @@ function runQuery(){
   if(!raw){ $("#results").innerHTML=""; $("#readout").innerHTML=""; return; }
   const q=readQuery(raw);
   const all=rank(q);
-  LAST=filtered(all);
+  const majorOnly=$("#fMajor").checked;
+  LAST=filtered(all).filter(r=>!majorOnly||tierOf(r.p)===1);
+  const [t1,t2]=tierSplit(LAST);
   const bl=Object.values(q.beats).sort((a,b)=>b.n-a.n||a.priority-b.priority);
   $("#readout").innerHTML = `Read as: ${bl.length?bl.slice(0,5).map(b=>`<b>${esc(b.label)}</b> <span title="matched: ${esc(b.matched.join(", "))}">(${b.n} term${b.n>1?"s":""})</span>`).join(" &middot; "):"<b>no beat vocabulary matched</b> — ranking on word overlap alone"}${q.fromUrl?` &middot; link read as a headline from <b>${esc(q.fromUrl.host)}</b>${q.fromUrl.slug?`: &ldquo;${esc(q.fromUrl.slug)}&rdquo;`:" (no words in the path — paste the headline instead)"}`:""}<br>
-    ${all.length} reporters have evidence on this; showing ${Math.min(LAST.length,40)}${LAST.length>40?` of ${LAST.length} after filters`:""}.`;
-  $("#results").innerHTML = LAST.length ? LAST.slice(0,40).map(card).join("")
-    : `<div class="empty">Nobody in the map has filed on this. Try fewer words, or turn off the filters above.</div>`;
+    ${all.length} reporters have evidence on this · <b>${t1.length}</b> at major outlets, ${t2.length} elsewhere.`;
+  if(!LAST.length){
+    $("#results").innerHTML=`<div class="empty">Nobody in the map has filed on this. Try fewer words, or turn off the filters above.</div>`;
+    return;
+  }
+  $("#results").innerHTML =
+      (t1.length ? `<div class="tierdiv" style="margin-top:0"><b>${TIER_LABEL[1]}</b> &middot; ${t1.length}</div>`+t1.slice(0,30).map(card).join("")
+                 : `<div class="empty">No one at a major outlet has filed on this.</div>`)
+    + (t2.length ? `<div class="tierdiv">${TIER_LABEL[2]} &middot; ${t2.length}</div>`+t2.slice(0,15).map(card).join("") : "");
 }
 
 /* ---------- browse ---------- */
@@ -456,15 +472,19 @@ function showBeat(bid){
   if(!bid){ $("#beatOut").innerHTML=""; return; }
   const rows=DATA.people.filter(p=>(p.beats||[]).some(b=>b.id===bid))
     .map(p=>({p,b:p.beats.find(b=>b.id===bid)}))
-    .sort((x,y)=>y.b.count-x.b.count).slice(0,60);
-  $("#beatOut").innerHTML = rows.length? `<table><thead><tr><th>Reporter</th><th>Outlet</th><th>Stories on this beat</th><th>Share of their file</th><th>Address</th></tr></thead><tbody>`+
-    rows.map(r=>`<tr>
+    .sort((x,y)=>tierOf(x.p)-tierOf(y.p)||y.b.count-x.b.count);
+  const bt1=rows.filter(r=>tierOf(r.p)===1).slice(0,45), bt2=rows.filter(r=>tierOf(r.p)!==1).slice(0,20);
+  const beatRow=r=>`<tr>
       <td${r.p.vc&&r.p.vc.person?' style="font-weight:800"':''}>${esc(r.p.name)}${r.p.vc&&r.p.vc.person?' <span class="badge vc">VC</span>':''}${r.p.title?`<div style="color:var(--vc-charcoal);font-size:11px">${esc(r.p.title)}</div>`:''}</td>
       <td>${esc(outletName(r.p))}</td>
       <td>${r.b.count}${(r.b.examples||[]).length?` <a href="${esc(r.b.examples[0].url)}" target="_blank" rel="noopener" style="font-size:11px">example &rsaquo;</a>`:""}</td>
       <td>${Math.round(r.b.share*100)}%</td>
       <td>${r.p.email?`<a href="mailto:${esc(r.p.email)}">${esc(r.p.email)}</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td>
-    </tr>`).join("")+`</tbody></table>` : `<div class="empty">No harvested stories matched this beat.</div>`;
+    </tr>`;
+  $("#beatOut").innerHTML = rows.length? `<table><thead><tr><th>Reporter</th><th>Outlet</th><th>Stories on this beat</th><th>Share of their file</th><th>Address</th></tr></thead><tbody>`
+    + (bt1.length?`<tr class="tierrow"><td colspan="5">${TIER_LABEL[1]}</td></tr>`+bt1.map(beatRow).join(""):"")
+    + (bt2.length?`<tr class="tierrow"><td colspan="5">${TIER_LABEL[2]}</td></tr>`+bt2.map(beatRow).join(""):"")
+    + `</tbody></table>` : `<div class="empty">No harvested stories matched this beat.</div>`;
 }
 /* ---------- the directory: search everyone by name, outlet, title or beat ---------- */
 let DSHOWN=150;
@@ -479,7 +499,7 @@ function initDirectory(){
   fillSelect($("#dType"),types,"Any kind of outlet");
   const bs=Object.entries(BEATS).sort((a,b)=>a[1].priority-b[1].priority||a[1].label.localeCompare(b[1].label)).map(([k,v])=>[k,v.label]);
   fillSelect($("#dBeat"),bs,"Any beat");
-  ["dq","dOutlet","dType","dBeat","dScope","dEmail","dActive","dVC"].forEach(id=>
+  ["dq","dOutlet","dType","dBeat","dScope","dEmail","dActive","dVC","dMajor"].forEach(id=>
     $("#"+id).addEventListener(id==="dq"?"input":"change",()=>{DSHOWN=150;renderDirectory();}));
   $("#dMore").addEventListener("click",()=>{DSHOWN+=300;renderDirectory();});
   renderDirectory();
@@ -497,6 +517,7 @@ function dirMatches(){
     if(em && !p.email) return false;
     if(ac && !p.active) return false;
     if(vc && !(p.vc&&p.vc.person)) return false;
+    if($("#dMajor").checked && tierOf(p)!==1) return false;
     if(q){
       const hay=[p.name,p.title,p.bio,p.email,outletName(p),...(p.also_at||[]).map(o=>OUT[o]?.name||""),
                  ...(p.beats||[]).map(b=>b.label)].join(" ").toLowerCase();
@@ -507,6 +528,7 @@ function dirMatches(){
   // question -- otherwise a prolific national housing blog outranks every
   // housing reporter in the city.
   }).sort((a,b)=>{
+    if(tierOf(a)!==tierOf(b)) return tierOf(a)-tierOf(b);   // major outlets first, always
     const nat=p=>p.scope==="national+metro"?1:0;
     if(nat(a)!==nat(b)) return nat(a)-nat(b);
     const cnt=p=>bid?((p.beats||[]).find(x=>x.id===bid)||{}).count||0:p.story_count;
@@ -517,7 +539,7 @@ function renderDirectory(){
   const rows=dirMatches();
   $("#dCount").innerHTML=`<b>${rows.length}</b> of ${DATA.people.length} people${rows.length>DSHOWN?` · showing the first ${DSHOWN}`:""}`;
   $("#dirOut").innerHTML=rows.length?`<table><thead><tr><th>Name</th><th>Outlet</th><th>Title</th><th>Beats, by stories filed</th><th>Address</th><th>Work</th></tr></thead><tbody>`+
-    rows.slice(0,DSHOWN).map(p=>`<tr>
+    rows.slice(0,DSHOWN).map((p,i,arr)=>(i===0||tierOf(arr[i-1])!==tierOf(p)?`<tr class="tierrow"><td colspan="6">${TIER_LABEL[tierOf(p)===1?1:2]} &middot; ${rows.filter(x=>tierOf(x)===tierOf(p)).length}</td></tr>`:"")+`<tr>
       <td${p.vc&&p.vc.person?' style="font-weight:800"':''}>${esc(p.name)}${p.vc&&p.vc.person?' <span class="badge vc">VC</span>':''}</td>
       <td>${esc(outletName(p))}${(p.also_at||[]).length?`<div style="color:var(--vc-charcoal);font-size:11px">also ${p.also_at.map(o=>esc(OUT[o]?.name||o)).join(", ")}</div>`:""}</td>
       <td style="color:var(--vc-charcoal)">${esc(p.title||"—")}</td>
@@ -529,12 +551,11 @@ function renderDirectory(){
 }
 function renderKnown(){
   const rows=DATA.people.filter(p=>p.vc&&p.vc.person)
-    .sort((a,b)=>b.story_count-a.story_count||a.name.localeCompare(b.name));
+    .sort((a,b)=>tierOf(a)-tierOf(b)||b.story_count-a.story_count||a.name.localeCompare(b.name));
   $("#knownOut").innerHTML=rows.length?`<table><thead><tr><th>Name</th><th>Outlet</th><th>How we know them</th><th>Beats we can see</th><th>Address</th></tr></thead><tbody>`+
    rows.map(p=>{
      const how=[];
      if(p.vc.press_list) how.push("press list");
-     if(p.vc.vc_author) how.push("wrote for us");
      if(p.vc.cited_vc) how.push(`<a href="${esc(p.vc.cited_vc.url)}" target="_blank" rel="noopener">cited us</a>`);
      return `<tr>
        <td style="font-weight:800">${esc(p.name)}${p.title?`<div style="color:var(--vc-charcoal);font-size:11px;font-weight:400">${esc(p.title)}</div>`:""}</td>
@@ -545,9 +566,9 @@ function renderKnown(){
    }).join("")+`</tbody></table>`:`<div class="empty">No Vital City contacts flagged in this build — check that private/press_source.csv was readable.</div>`;
 }
 function renderOutlets(){
-  const rows=[...DATA.outlets].sort((a,b)=>b.people-a.people);
+  const rows=[...DATA.outlets].sort((a,b)=>(a.tier||2)-(b.tier||2)||b.people-a.people);
   $("#outletOut").innerHTML=`<table><thead><tr><th>Outlet</th><th>Kind</th><th>People</th><th>Bylined stories</th><th>Items harvested</th><th>Cites Vital City</th><th>Tips line</th><th>Phone</th></tr></thead><tbody>`+
-   rows.map(o=>`<tr>
+   rows.map((o,i)=>(i===0||(rows[i-1].tier||2)!==(o.tier||2)?`<tr class="tierrow"><td colspan="8">${(o.tier||2)===1?"Major outlets":"Smaller outlets, newsletters, podcasts and independents"}</td></tr>`:"")+`<tr>
      <td><a href="${esc(o.site)}" target="_blank" rel="noopener">${esc(o.name)}</a>${o.tagline?`<div style="color:var(--vc-charcoal);font-size:11px">${esc(o.tagline)}</div>`:""}${o.feed_note?`<div style="color:var(--vc-charcoal);font-size:10.5px;font-style:italic">${esc(o.feed_note)}</div>`:""}</td>
      <td style="color:var(--vc-charcoal)">${esc(o.type)}</td>
      <td>${o.people||'<span style="color:var(--vc-charcoal)" title="No roster reachable — pitch the tips line or the newsroom number">—</span>'}</td>
@@ -600,10 +621,21 @@ function renderMethod(){
    <b>No address here was ever guessed from a pattern.</b> Where a person came from Vital City's own curated press list, the card says so.</p>
    <h3>The Vital City flags</h3>
    <p><span class="badge vc">Vital City press list</span> is the curated list of reporters Vital City already works with.
-   <span class="badge au">Vital City contributor</span> has published under a Vital City byline.
    <span class="badge ct">Has cited Vital City</span> means a story of theirs matched a logged Vital City media mention by title &mdash;
    the strongest signal in the set, and the rarest, because the mentions feed records the outlet rather than the byline.
    <span class="badge no">Outlet cites us</span> is the weaker, outlet-level version of the same thing.</p>
+   <h3>Major outlets first</h3>
+   <p>Every list on this page puts ${DATA.outlets.filter(o=>o.tier===1).length} major outlets ahead of everything else, under a
+   rule: the dailies and wires, broadcast, the major digital and nonprofit newsrooms, the politics trade, the big magazines and
+   the two largest community papers. Hyperlocals, newsletters, podcasts and trade titles are kept, because a Bushwick story
+   belongs with a Bushwick reporter, but they sit below the rule rather than competing with the Times on score. A reporter
+   who files for several mastheads takes the highest one.</p>
+   <h3>Who is not in here</h3>
+   <p>Having written for Vital City is not a credential, and neither is a single op-ed. Vital City's own feed is not harvested.
+   A Vital City contributor stays in the map only on independent evidence of being press: the press list, a citation of Vital
+   City, an address on the outlet's own domain, a staff title on a masthead, or three or more bylines. People whose only
+   bylines are opinion pieces are dropped on the same test. ${(DATA.report?.dropped_non_press||[]).length} people were left out
+   on this build for those reasons.</p>
    <h3>The outlets with no people</h3>
    <p>NY1, Crain's, Newsday, the Wall Street Journal, the AP, CBS New York and the Brooklyn Eagle all refuse automated
    clients outright, so no roster could be read and they show a dash. They are still in the map with their tips lines,
@@ -643,7 +675,7 @@ function init(){
   $("#go").addEventListener("click",runQuery);
   $("#clear").addEventListener("click",()=>{$("#q").value="";runQuery();});
   $("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey))runQuery();});
-  ["fEmail","fActive","fVC","fDiv"].forEach(id=>$("#"+id).addEventListener("change",runQuery));
+  ["fEmail","fActive","fVC","fDiv","fMajor"].forEach(id=>$("#"+id).addEventListener("change",runQuery));
   $$(".jump a").forEach(a=>a.addEventListener("click",()=>document.getElementById(a.dataset.go)?.scrollIntoView({behavior:"smooth"})));
   document.addEventListener("click",e=>{
     const id=e.target?.dataset?.all; if(!id) return;

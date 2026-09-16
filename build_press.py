@@ -68,6 +68,16 @@ def merge_name(name):
     """Loose key for matching a reporter across sources (press list, VC authors)."""
     return re.sub(r"[^a-z]", "", norm(name))
 
+def loose_name(name):
+    """First and last name only. "John K. Roman" on his newsletter and "John
+    Roman" on the press list are one person; so are "Charles Fain Lehman" and
+    "Charles Lehman". Matching on the full string made two records for each, and
+    only one of them carried the press-list flag."""
+    parts = [w for w in re.sub(r"[^a-z\s\-]", " ", norm(name)).split() if len(w) > 1]
+    if len(parts) < 2:
+        return merge_name(name)
+    return parts[0] + parts[-1]
+
 def pairs_with_email(name, email):
     local = re.sub(r"[^a-z]", "", norm(email.split("@")[0]))
     parts = [re.sub(r"[^a-z\-]", "", norm(p)) for p in name.split()]
@@ -519,7 +529,7 @@ def load_vc_layer():
         for row in csv.DictReader(open(p, encoding="utf8")):
             n = (row.get("name") or "").strip()
             if n:
-                vc["press_list"][merge_name(n)] = {
+                vc["press_list"][loose_name(n)] = {
                     "name": n, "outlet": (row.get("outlet") or "").strip(),
                     "title": (row.get("title") or "").strip(),
                     "email": (row.get("email") or "").strip().lower() or None,
@@ -532,7 +542,7 @@ def load_vc_layer():
         for rec in json.load(open(a)):
             n = (rec.get("name") or "").strip()
             if n and n.lower() != "vital city":
-                vc["authors"].add(merge_name(n))
+                vc["authors"].add(loose_name(n))
     else:
         vc["errors"].append("data/authors.json missing — Vital City contributors could not be flagged")
 
@@ -611,7 +621,7 @@ def main():
     # "PubSubHub User" its fourth.
     NOT_A_PERSON = re.compile(
         r"^(the )?(associated press|ap|reuters|bloomberg|tribune( news service| content agency)?|"
-        r"wire( services?)?|newsroom|editorial board|the editors?|"
+        r"wire( services?)?|newsroom|[\w .\-]*editorial board|the editors?|"
         r"[\w .\-]*\b(user|bot|admin|api|rest|feed|cms|syndicat\w*|services?|agent|contributor|"
         r"staff|reports?|newsroom|editors)\b[\w .\-]*)$",
         re.I)
@@ -623,8 +633,11 @@ def main():
         all_outlet_names.add(merge_name(re.sub(r"\s*\(.*?\)", "", o["name"])))
         all_outlet_names.add(merge_name(o["id"].replace("-", " ")))
     all_outlet_names.discard("")
+    registry = {o["id"] for o in outlets}
     for s_ in stories:
         oid = s_["outlet"]
+        if oid not in registry:
+            continue
         for a in s_["authors"]:
             # A feed bylined with the publication's own name is not a person.
             # Podcast feeds do this constantly: every episode of Max Politics is
@@ -633,7 +646,9 @@ def main():
             # Checked against every outlet in the registry, not just this feed's:
             # The City Reporter co-publishes the FAQ NYC podcast, so "FAQ NYC"
             # arrives as a byline on somebody else's feed.
-            if merge_name(a) in all_outlet_names or NOT_A_PERSON.match(a.strip()):
+            ma = merge_name(a)
+            if (ma in all_outlet_names or NOT_A_PERSON.match(a.strip())
+                    or (len(ma) >= 5 and any(n.startswith(ma) for n in all_outlet_names))):
                 continue
             k = merge_name(a)
             if len(k) < 5:
@@ -703,6 +718,8 @@ def main():
 
     # mastheads: titles and addresses, onto the same person
     for r in mast:
+        if r.get("outlet") not in registry:
+            continue                          # a masthead from an outlet no longer in the map
         k = merge_name(r["name"])
         # mastheads list desks as if they were people: Customer Service, Our Staff
         if len(k) < 5 or NOT_A_PERSON.match(r["name"].strip()):
@@ -813,12 +830,10 @@ def main():
         ranked = sorted(p["beat_hits"].items(), key=lambda kv: (-kv[1], beats[kv[0]]["priority"]))[:6]
 
         mk = merge_name(p["name"])
-        pl = vc["press_list"].get(mk)
+        pl = vc["press_list"].get(loose_name(p["name"]))
         flags = {}
         if pl:
             flags["press_list"] = {"outlet": pl["outlet"], "title": pl["title"], "twitter": pl["twitter"]}
-        if mk in vc["authors"]:
-            flags["vc_author"] = True
         if p["id"] in cited_people:
             flags["cited_vc"] = cited_people[p["id"]]
         dom = dom_of.get(p["outlet"])
@@ -827,8 +842,7 @@ def main():
         # Only a fact about this person earns the bold treatment. An outlet that
         # has cited Vital City says nothing about the reporter standing in it.
         if flags:
-            flags["person"] = bool(flags.get("press_list") or flags.get("vc_author")
-                                   or flags.get("cited_vc"))
+            flags["person"] = bool(flags.get("press_list") or flags.get("cited_vc"))
 
         rec = {
             "id": p["id"], "name": p["name"], "outlet": p["outlet"],
@@ -857,7 +871,7 @@ def main():
         out_people.append(rec)
 
     # press-list contacts with no harvested presence at all
-    have = {merge_name(p["name"]) for p in out_people}
+    have = {loose_name(p["name"]) for p in out_people}
     for mk, pl in vc["press_list"].items():
         if mk in have:
             continue
@@ -869,10 +883,81 @@ def main():
             "email_evidence": "From the curated Vital City press list, not harvested from a page.",
             "x": (pl["twitter"] or "").lstrip("@") or None,
             "story_count": 0, "beats": [], "stories": [], "terms": {}, "active": False,
-            "vc": {"press_list": {"outlet": pl["outlet"], "title": pl["title"], "twitter": pl["twitter"]}},
+            # "person" is what bolds a name. It was missing here, so the sixteen
+            # press-list contacts with no harvested byline were never bold.
+            "vc": {"press_list": {"outlet": pl["outlet"], "title": pl["title"], "twitter": pl["twitter"]},
+                   "person": True},
         })
 
-    out_people.sort(key=lambda p: (-p["story_count"], p["name"]))
+    # ---- who is press ------------------------------------------------------
+    # Having written for Vital City is not a credential. Our contributors are
+    # criminologists, former cabinet secretaries and novelists, and a single
+    # op-ed of theirs in the Daily News does not make them Daily News media. A
+    # contributor stays only on independent evidence of being press. The rule is
+    # scoped to contributors deliberately: a blanket "one byline and no address"
+    # cut would also delete Times reporters, whose feed is shallow enough that
+    # most of them show a single story.
+    OPINION = re.compile(r"/(opinion|opinions|op-ed|oped|commentary|editorials?)/", re.I)
+    tier_of = {o["id"]: o.get("tier", 2) for o in outlets}
+
+    def outlet_domains(p):
+        return {dom_of.get(o) for o in [p.get("outlet"), *(p.get("also_at") or [])] if dom_of.get(o)}
+
+    def press_evidence(p):
+        v = p.get("vc") or {}
+        if v.get("press_list") or v.get("cited_vc"):
+            return "on the press list or has cited Vital City"
+        em = (p.get("email") or "").lower()
+        if "@" in em and "press_source" not in (p.get("email_source_url") or ""):
+            edom = em.split("@", 1)[1]
+            if any(edom.endswith(d) or d.endswith(edom) for d in outlet_domains(p)):
+                return "address on the outlet's own domain"
+        t = (p.get("title") or "")
+        if t and not re.search(r"contribut|fellow|guest|visiting", t, re.I):
+            return "staff title on a masthead"
+        if p.get("story_count", 0) >= 3:
+            return "three or more bylines"
+        return None
+
+    kept, dropped = [], []
+    for p in out_people:
+        mk = merge_name(p["name"])
+        why = None
+        if loose_name(p["name"]) in vc["authors"] and not press_evidence(p):
+            why = "Vital City contributor with no evidence of being press"
+        elif (p.get("stories") and p.get("story_count", 0) <= 2
+              and all(OPINION.search(s_.get("url") or "") for s_ in p["stories"])
+              and not press_evidence(p)):
+            why = "opinion bylines only"
+        if why:
+            dropped.append({"name": p["name"], "outlet": p.get("outlet"), "reason": why,
+                            "stories": p.get("story_count", 0)})
+            continue
+        # best tier across every masthead they file for: a Schneps reporter
+        # whose primary paper is the Astoria Post but who also files for amNY
+        # counts as major media
+        tiers = [tier_of.get(o, 2) for o in [p.get("outlet"), *(p.get("also_at") or [])] if o]
+        if not tiers and p.get("outlet_text"):
+            ot = norm(p["outlet_text"])
+            tiers = [o.get("tier", 2) for o in outlets
+                     if norm(re.sub(r"\s*\(.*?\)", "", o["name"])) in ot]
+        p["tier"] = min(tiers) if tiers else 2
+        # Bill Parry files for the Astoria Post and for amNewYork. Listing him
+        # under the Astoria Post, inside the major-outlets group, reads as a
+        # mistake; lead with the masthead that earned the tier.
+        if p.get("outlet") and tier_of.get(p["outlet"], 2) != p["tier"]:
+            best = next(o for o in (p.get("also_at") or []) if tier_of.get(o, 2) == p["tier"])
+            p["also_at"] = [p["outlet"]] + [o for o in p["also_at"] if o != best]
+            p["outlet"] = best
+            p["scope"] = next((o.get("scope") for o in outlets if o["id"] == best), p.get("scope"))
+        kept.append(p)
+    out_people = kept
+    report["dropped_non_press"] = dropped
+    print(f"  dropped {len(dropped)} people who are not press "
+          f"({sum(1 for d in dropped if d['reason'].startswith('Vital City'))} contributors, "
+          f"{sum(1 for d in dropped if d['reason'].startswith('opinion'))} opinion-only)")
+
+    out_people.sort(key=lambda p: (p["tier"], -p["story_count"], p["name"]))
 
     # ---- outlet rollups
     per_outlet = collections.Counter()
@@ -921,7 +1006,9 @@ def main():
             "with_beats": sum(1 for p in out_people if p["beats"]),
             "active_60d": sum(1 for p in out_people if p.get("active")),
             "stories": len(stories),
-            "vc_flagged": sum(1 for p in out_people if p.get("vc")),
+            "vc_flagged": sum(1 for p in out_people if (p.get("vc") or {}).get("person")),
+            "major_outlet_people": sum(1 for p in out_people if p.get("tier") == 1),
+            "dropped_non_press": len(report.get("dropped_non_press", [])),
             "feed_errors": len(report["errors"]),
         },
     }
