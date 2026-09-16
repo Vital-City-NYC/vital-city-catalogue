@@ -614,7 +614,7 @@
   "rss": [
    "https://www.newyorker.com/feed/news"
   ],
-  "tips": null,
+  "tips": "tips@newyorker.com",
   "tagline": "Longform & essays",
   "tier": 1,
   "size": 3
@@ -1169,7 +1169,8 @@
   "tips": null,
   "tagline": "Criminal justice journalism",
   "tier": 1,
-  "size": 2
+  "size": 2,
+  "ci_blocked": true
  },
  {
   "id": "the-trace",
@@ -1492,7 +1493,7 @@
   "rss": [
    "https://www.jewishinsider.com/feed/"
   ],
-  "tips": null,
+  "tips": "editor@jewishinsider.com",
   "tagline": "Jewish politics and NYC campaign coverage",
   "tier": 2,
   "size": 1
@@ -1569,7 +1570,7 @@
   "rss": [
    "https://therealdeal.com/new-york/feed/"
   ],
-  "tips": null,
+  "tips": "tips@therealdeal.com",
   "tagline": "Real estate trade",
   "tier": 1,
   "ci_blocked": true,

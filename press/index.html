@@ -507,7 +507,9 @@ function card(r,i){
     <div class="contact">
       ${p.email?`<span class="em"><a href="mailto:${esc(p.email)}">${esc(p.email)}</a></span>
          ${p.email_source_url?`<a href="${esc(p.email_source_url)}" target="_blank" rel="noopener" style="font-size:10.5px" title="${esc(p.email_evidence||"")}">where this came from</a>`:""}`
-       :`<span style="color:var(--vc-charcoal)">no published address found</span>`}
+       :((OUT[p.outlet]?.tips||"").includes("@")
+          ? `<span style="color:var(--vc-charcoal)">no personal address published &middot; desk:</span> <a href="mailto:${esc(OUT[p.outlet].tips)}">${esc(OUT[p.outlet].tips)}</a>`
+          : `<span style="color:var(--vc-charcoal)">no published address found</span>`)}
       ${p.author_page?`<a href="${esc(p.author_page)}" target="_blank" rel="noopener">their work &rsaquo;</a>`:""}
       ${p.staff_page&&!p.author_page?`<a href="${esc(p.staff_page)}" target="_blank" rel="noopener">masthead &rsaquo;</a>`:""}
       ${p.x?`<a href="https://x.com/${esc(p.x)}" target="_blank" rel="noopener">@${esc(p.x)}</a>`:""}
@@ -788,11 +790,11 @@ function toggleSel(id,on){
 function note(msg){ $("#selnote").textContent=msg; setTimeout(updateSelbar,2600); }
 function csvCell(v){ v=String(v==null?"":v); return /[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v; }
 function exportCsv(){
-  const cols=["name","outlet","also_at","title","email","email_source","beats","latest_clip","latest_clip_url","their_work","x","bluesky","vital_city"];
+  const cols=["name","outlet","also_at","title","email","email_source","outlet_desk","beats","latest_clip","latest_clip_url","their_work","x","bluesky","vital_city"];
   const rows=selectedPeople().map(p=>{
     const v=p.vc||{}, last=(p.stories||[])[0]||{};
     return [p.name, outletName(p), (p.also_at||[]).map(o=>OUT[o]?.name||o).join("; "), p.title||"",
-      p.email||"", p.email_source_url||"",
+      p.email||"", p.email_source_url||"", ((OUT[p.outlet]||{}).tips||"").includes("@")?OUT[p.outlet].tips:"",
       (p.beats||[]).filter(b=>b.count>=MIN_CLIPS).slice(0,4).map(b=>`${b.label} (${b.count})`).join("; "),
       last.title||"", last.url||"", p.author_page||p.staff_page||"", p.x?("@"+p.x):"", p.bluesky||"",
       [v.press_list?"press list":"", v.cited_vc?"has cited Vital City":""].filter(Boolean).join("; ")];
