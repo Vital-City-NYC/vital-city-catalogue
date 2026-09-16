@@ -187,7 +187,6 @@
       </div>
       <div class="toggles">
         <label><input type="checkbox" id="fEmail"> Only people with a published address</label>
-        <label><input type="checkbox" id="fActive" checked> Only people who filed in the last 60 days</label>
         <label><input type="checkbox" id="fVC"> Only people Vital City already knows</label>
         <label><input type="checkbox" id="fDiv" checked> Spread across outlets</label>
         <label><input type="checkbox" id="fMajor"> Major outlets only</label>
@@ -218,7 +217,6 @@
         <option value="national+metro">National</option>
       </select>
       <label><input type="checkbox" id="dEmail"> has an address</label>
-      <label><input type="checkbox" id="dActive"> filed in 60 days</label>
       <label><input type="checkbox" id="dVC"> we know them</label>
       <label><input type="checkbox" id="dMajor"> major outlets only</label>
     </div>
@@ -401,8 +399,8 @@ function rank(q){
 let DATA_DOM={};
 
 function filtered(list){
-  const em=$("#fEmail").checked, ac=$("#fActive").checked, vc=$("#fVC").checked;
-  let l=list.filter(r=>(!em||r.p.email)&&(!ac||r.p.active||r.p.story_count===0&&r.p.vc)&&(!vc||(r.p.vc&&r.p.vc.person)));
+  const em=$("#fEmail").checked, vc=$("#fVC").checked;
+  let l=list.filter(r=>(!em||r.p.email)&&(!vc||(r.p.vc&&r.p.vc.person)));
   if($("#fDiv").checked){
     const seen={}, keep=[], rest=[];
     for(const r of l){ const k=r.p.outlet||r.p.outlet_text||"?"; seen[k]=(seen[k]||0)+1; (seen[k]<=3?keep:rest).push(r); }
@@ -614,7 +612,7 @@ function initDirectory(){
   fillSelect($("#dType"),types,"Any kind of outlet");
   const bs=Object.entries(BEATS).sort((a,b)=>a[1].priority-b[1].priority||a[1].label.localeCompare(b[1].label)).map(([k,v])=>[k,v.label]);
   fillSelect($("#dBeat"),bs,"Any beat");
-  ["dq","dOutlet","dType","dBeat","dScope","dEmail","dActive","dVC","dMajor"].forEach(id=>
+  ["dq","dOutlet","dType","dBeat","dScope","dEmail","dVC","dMajor"].forEach(id=>
     $("#"+id).addEventListener(id==="dq"?"input":"change",()=>{DSHOWN=150;renderDirectory();}));
   $("#dMore").addEventListener("click",()=>{DSHOWN+=300;renderDirectory();});
   renderDirectory();
@@ -622,7 +620,7 @@ function initDirectory(){
 function dirMatches(){
   const q=$("#dq").value.trim().toLowerCase();
   const oid=$("#dOutlet").value, ty=$("#dType").value, bid=$("#dBeat").value, sc=$("#dScope").value;
-  const em=$("#dEmail").checked, ac=$("#dActive").checked, vc=$("#dVC").checked;
+  const em=$("#dEmail").checked, vc=$("#dVC").checked;
   return DATA.people.filter(p=>{
     if(oid && p.outlet!==oid && !(p.also_at||[]).includes(oid)) return false;
     if(ty){ const os=[p.outlet,...(p.also_at||[])].map(o=>OUT[o]?.type); if(!os.includes(ty)) return false; }
@@ -630,7 +628,6 @@ function dirMatches(){
     if(sc==="national+metro" && p.scope!=="national+metro") return false;
     if(sc==="nyc" && p.scope==="national+metro") return false;
     if(em && !p.email) return false;
-    if(ac && !p.active) return false;
     if(vc && !(p.vc&&p.vc.person)) return false;
     if($("#dMajor").checked && tierOf(p)!==1) return false;
     if(q){
@@ -858,7 +855,7 @@ function init(){
   $("#go").addEventListener("click",runQuery);
   $("#clear").addEventListener("click",()=>{$("#q").value="";runQuery();});
   $("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey))runQuery();});
-  ["fEmail","fActive","fVC","fDiv","fMajor"].forEach(id=>$("#"+id).addEventListener("change",runQuery));
+  ["fEmail","fVC","fDiv","fMajor"].forEach(id=>$("#"+id).addEventListener("change",runQuery));
   $$(".jump a").forEach(a=>a.addEventListener("click",()=>document.getElementById(a.dataset.go)?.scrollIntoView({behavior:"smooth"})));
   document.addEventListener("click",e=>{
     const id=e.target?.dataset?.all; if(!id) return;
