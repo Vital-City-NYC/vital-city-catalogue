@@ -18,6 +18,3 @@ private/
 *.xlsx
 growth/live/live.enc
 data/tweet_suggestions.json
-
-# Accounts vault: ciphertext must never be committed either
-accounts/*.enc
