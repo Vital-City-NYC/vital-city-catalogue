@@ -569,7 +569,7 @@ function renderOutlets(){
   const rows=[...DATA.outlets].sort((a,b)=>(a.tier||2)-(b.tier||2)||b.people-a.people);
   $("#outletOut").innerHTML=`<table><thead><tr><th>Outlet</th><th>Kind</th><th>People</th><th>Bylined stories</th><th>Items harvested</th><th>Cites Vital City</th><th>Tips line</th><th>Phone</th></tr></thead><tbody>`+
    rows.map((o,i)=>(i===0||(rows[i-1].tier||2)!==(o.tier||2)?`<tr class="tierrow"><td colspan="8">${(o.tier||2)===1?"Major outlets":"Smaller outlets, newsletters, podcasts and independents"}</td></tr>`:"")+`<tr>
-     <td><a href="${esc(o.site)}" target="_blank" rel="noopener">${esc(o.name)}</a>${o.tagline?`<div style="color:var(--vc-charcoal);font-size:11px">${esc(o.tagline)}</div>`:""}${o.feed_note?`<div style="color:var(--vc-charcoal);font-size:10.5px;font-style:italic">${esc(o.feed_note)}</div>`:""}</td>
+     <td><a href="${esc(o.site)}" target="_blank" rel="noopener">${esc(o.name)}</a>${o.tagline?`<div style="color:var(--vc-charcoal);font-size:11px">${esc(o.tagline)}</div>`:""}${o.feed_note?`<div style="color:var(--vc-charcoal);font-size:10.5px;font-style:italic">${esc(o.feed_note)}</div>`:""}${o.via_mac_harvest?`<div style="color:var(--vc-charcoal);font-size:10.5px" title="GitHub's servers are refused by this outlet, so its stories come from the Mac's harvest on this date. Addresses cannot travel that way, so its reporters may show none.">stories as of ${esc(o.via_mac_harvest)}, via the Mac</div>`:""}</td>
      <td style="color:var(--vc-charcoal)">${esc(o.type)}</td>
      <td>${o.people||'<span style="color:var(--vc-charcoal)" title="No roster reachable — pitch the tips line or the newsroom number">—</span>'}</td>
      <td>${o.stories||'<span style="color:var(--vc-charcoal)">—</span>'}</td>
@@ -624,6 +624,13 @@ function renderMethod(){
    <span class="badge ct">Has cited Vital City</span> means a story of theirs matched a logged Vital City media mention by title &mdash;
    the strongest signal in the set, and the rarest, because the mentions feed records the outlet rather than the byline.
    <span class="badge no">Outlet cites us</span> is the weaker, outlet-level version of the same thing.</p>
+   <h3>Outlets that refuse the nightly build</h3>
+   <p>The map rebuilds every night on GitHub's servers, and nineteen outlets refuse those servers outright: every Substack
+   newsletter, a hosting company that several nonprofit newsrooms share (The City Reporter, Epicenter, the Amsterdam News,
+   the Haitian Times, W42ST, the Queens Chronicle), and The Real Deal. Their headlines, bylines and profile links are
+   harvested on a Mac instead and committed as a public file, and the outlet table marks them with the date. Addresses
+   never travel that way, because that file sits in a public repository, so reporters at those outlets can be missing an
+   address here that the outlet does publish.</p>
    <h3>Major outlets first</h3>
    <p>Every list on this page puts ${DATA.outlets.filter(o=>o.tier===1).length} major outlets ahead of everything else, under a
    rule: the dailies and wires, broadcast, the major digital and nonprofit newsrooms, the politics trade, the big magazines and

@@ -565,11 +565,22 @@ def norm_title(t):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--fast", action="store_true", help="reuse the cached harvest")
+    ap.add_argument("--cache-only", action="store_true",
+                    help="on the Mac: harvest only the outlets a GitHub runner is refused by, "
+                         "and write press/harvest_cache.json (public data, no addresses)")
     args = ap.parse_args()
+    global CACHE
+    if args.cache_only:
+        CACHE = PRIV / "press_cache_mac"      # never mixed with the full build's cache
+        args.fast = False
 
-    CACHE.mkdir(exist_ok=True)
+    CACHE.mkdir(parents=True, exist_ok=True)
     PRIV.mkdir(exist_ok=True)
     outlets = json.load(open(PRESS / "outlets.json"))
+    all_outlets = outlets
+    if args.cache_only:
+        outlets = [o for o in outlets if o.get("ci_blocked")]
+        print(f"cache-only harvest: {len(outlets)} outlets a GitHub runner cannot reach")
     # Reporters almost never publish a direct line; newsrooms publish a tip line.
     # Harvested separately by press/phones.py and kept as an outlet-level fact.
     phones_path = PRESS / "phones.json"
@@ -601,6 +612,30 @@ def main():
     mast, review, mast_fails = cached("mast", lambda: harvest_mastheads(outlets))
     report["errors"] += [dict(e, stage="masthead") for e in mast_fails]
     print(f"  {len(mast)} masthead records, {len(review)} addresses dropped for not pairing")
+
+    # ---- the Mac's harvest, for what the runner is refused -------------------
+    # Substack and one nonprofit news host refuse GitHub's datacenter IPs, so on
+    # CI those outlets come back empty. press/harvest_cache.json is written on
+    # the Mac by --cache-only and holds only public material -- headlines,
+    # bylines, links, bios. No address is ever in it. An outlet falls back to it
+    # only when the live fetch returned nothing, and only while it is fresh.
+    HCACHE = PRESS / "harvest_cache.json"
+    hcache, from_cache = {}, {}
+    if not args.cache_only and HCACHE.exists():
+        hcache = json.load(open(HCACHE))
+        age = (datetime.now(timezone.utc) - datetime.fromisoformat(hcache["as_of"])).days
+        if age > 14:
+            report["notes"].append(f"harvest_cache.json is {age} days old; not used")
+            hcache = {}
+        else:
+            live = collections.Counter(i["outlet"] for i in (rss_items + wp_items))
+            for oid, items in (hcache.get("items") or {}).items():
+                if live.get(oid):
+                    continue
+                wp_items += items
+                from_cache[oid] = hcache["as_of"][:10]
+            if from_cache:
+                print(f"  {len(from_cache)} outlets filled from the Mac harvest of {hcache['as_of'][:10]}")
 
     stories = [s for s in (rss_items + wp_items) if s.get("authors")]
     if not stories:
@@ -775,6 +810,48 @@ def main():
                 p["email"] = src["email"]
                 p["email_source_url"] = src.get("email_source_url")
                 p["email_evidence"] = src.get("email_evidence")
+
+    if args.cache_only:
+        blocked = {o["id"] for o in outlets}
+        items = collections.defaultdict(list)
+        for i in (rss_items + wp_items):
+            if i["outlet"] in blocked:
+                rec = {k: i.get(k) for k in ("outlet", "title", "url", "date", "authors", "summary", "tags")}
+                if rec.get("summary"):
+                    rec["summary"] = re.sub(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}",
+                                            "[address removed]", rec["summary"])
+                items[i["outlet"]].append(rec)
+        EMAIL = re.compile(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}")
+        profiles = {}
+        for p in people.values():
+            prof = {f: p.get(f) for f in ("author_page", "bio", "x", "bluesky") if p.get(f)}
+            if prof.get("bio"):
+                prof["bio"] = EMAIL.sub("[address removed]", prof["bio"])
+            if prof:
+                profiles[loose_name(p["name"])] = prof
+        # A bare "@" is an Instagram handle, not an address; check for the real shape.
+        leak = [k for k, v in profiles.items() if EMAIL.search(json.dumps(v))]
+        if leak:
+            sys.exit(f"FATAL: an address found its way into the public cache for {leak[:3]}")
+        if not items:
+            sys.exit("FATAL: cache-only harvest reached nothing — refusing to overwrite the cache")
+        out = {"as_of": datetime.now(timezone.utc).isoformat(),
+               "_note": "Written on the Mac by build_press.py --cache-only. Public material only: "
+                        "headlines, bylines, links and bios for outlets that refuse GitHub's runners. "
+                        "No addresses.",
+               "items": items, "profiles": profiles}
+        json.dump(out, open(HCACHE, "w"), indent=1, ensure_ascii=False)
+        print(f"wrote {HCACHE} · {sum(len(v) for v in items.values())} stories from {len(items)} outlets · "
+              f"{len(profiles)} profiles")
+        return
+
+    # profiles for people at outlets the runner could not read
+    for p in people.values():
+        prof = (hcache.get("profiles") or {}).get(loose_name(p["name"]))
+        if prof:
+            for f in ("author_page", "bio", "x", "bluesky"):
+                if prof.get(f) and not p.get(f):
+                    p[f] = prof[f]
 
     # ---- Vital City relationship layer
     vc = load_vc_layer()
@@ -976,6 +1053,7 @@ def main():
         dates = sorted(cited_dates.get(d, []))
         out_outlets.append({**{k: v for k, v in o.items() if k != "feed_filter"},
                             "domain": d, "phones": phones.get(o["id"], []),
+                            "via_mac_harvest": from_cache.get(o["id"]),
                             "people": per_outlet.get(o["id"], 0),
                             "stories": story_counts.get(o["id"], 0),
                             "items": item_counts.get(o["id"], 0),

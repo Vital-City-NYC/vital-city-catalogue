@@ -83,7 +83,8 @@
   ],
   "tips": null,
   "tagline": "NYC's leading Black newspaper since 1909",
-  "tier": 1
+  "tier": 1,
+  "ci_blocked": true
  },
  {
   "id": "jewish-week",
@@ -126,7 +127,8 @@
   ],
   "tips": null,
   "tagline": "Haitian New York",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "astoria-post",
@@ -311,7 +313,8 @@
   ],
   "tips": null,
   "tagline": "Queens weekly",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "queens-eagle",
@@ -426,7 +429,8 @@
   ],
   "tips": null,
   "tagline": "Hell's Kitchen and Midtown West",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "daily-news",
@@ -603,7 +607,8 @@
   "tips": null,
   "feed_note": "advocacy newsletter, housing and building",
   "tagline": "Building more in New York",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "atlantic-yards",
@@ -617,7 +622,8 @@
   ],
   "tips": null,
   "tagline": "Norman Oder on Atlantic Yards and Pacific Park",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "changing-lanes",
@@ -646,7 +652,8 @@
   "tips": null,
   "feed_note": "crime data and criminal justice research, written by a criminologist",
   "tagline": "A criminologist on crime data and fear",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "market-urbanism",
@@ -689,7 +696,8 @@
   ],
   "tips": null,
   "tagline": "NYC housing & urban policy analysis",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "nyc-policy-forum",
@@ -704,7 +712,8 @@
   "tips": null,
   "feed_note": "research and publishing network on city governance",
   "tagline": "Expert policy debate & commentary",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "nyc-politics-101",
@@ -718,7 +727,8 @@
   ],
   "tips": null,
   "tagline": "State & local policy education",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "nycuriosity",
@@ -733,7 +743,8 @@
   "tips": null,
   "feed_note": "streets, transit and parks through data",
   "tagline": "NYC civic engagement & community boards",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "pedestrian-observations",
@@ -792,7 +803,8 @@
   "tips": null,
   "feed_note": "health, behavioral health and human services in New York",
   "tagline": "Behavioral health and human services in New York",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "bigger-apple",
@@ -820,7 +832,8 @@
   ],
   "tips": null,
   "tagline": "NYC interviews & commentary",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "urban-condition",
@@ -835,7 +848,8 @@
   "tips": null,
   "feed_note": "cities and housing; publishes irregularly",
   "tagline": "Cities and housing, published irregularly",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "bolts",
@@ -907,7 +921,8 @@
   ],
   "tips": null,
   "tagline": "Community-first reporting, immigrant New York",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "gotham-gazette",
@@ -1034,7 +1049,8 @@
   ],
   "tips": "tips@thecityreporter.nyc",
   "tagline": "Nonprofit investigative newsroom, the former THE CITY",
-  "tier": 1
+  "tier": 1,
+  "ci_blocked": true
  },
  {
   "id": "indypendent",
@@ -1048,7 +1064,8 @@
   ],
   "tips": null,
   "tagline": "Left-wing city monthly",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "the-markup",
@@ -1219,7 +1236,8 @@
   "host_source": "Apple Podcasts directory artist field",
   "feed_note": "how government actually gets things done",
   "tagline": "How government actually gets things done",
-  "tier": 2
+  "tier": 2,
+  "ci_blocked": true
  },
  {
   "id": "talking-headways",
@@ -1454,7 +1472,8 @@
   ],
   "tips": null,
   "tagline": "Real estate trade",
-  "tier": 1
+  "tier": 1,
+  "ci_blocked": true
  },
  {
   "id": "cbsny",
