@@ -367,7 +367,7 @@ function rank(q){
     }
     let clips=0, weighted=0, top=null, why=[];
     for(const b of (p.beats||[])){
-      const h=q.beats[b.id]; if(!h||b.count<MIN_CLIPS) continue;
+      const h=q.beats[b.id]; if(!h||b.count<minFor(p)) continue;
       const w=b.count*(h.n/maxN);
       why.push({kind:"beat",label:b.label,count:b.count,share:b.share,examples:b.examples,score:w});
       if(w>weighted){ weighted=w; clips=b.count; top=b; }
@@ -413,6 +413,47 @@ const tierOf=p=>p.tier||2;
 /* One story on a subject is an assignment, not a beat. Nothing counts as
    coverage below this, anywhere on the page. */
 const MIN_CLIPS=2;
+/* The New York Times is Vital City's most important target, so it leads every
+   list. Its feed is the shallowest in the map, so one clip counts there; and
+   where no Times reporter has filed on a topic at all, the Times reporters
+   closest to it still come first, labelled as the closest rather than as
+   coverage. */
+const isPinned=p=>!!(OUT[p.outlet]||{}).pin;
+/* The core outlets: the Post, the Daily News, WNYC/Gothamist, NY1 and the three
+   big broadcast stations. Their top reporter on a topic always sits above the
+   line, on one clip if that is all their feed shows. */
+const isCore=p=>!!(OUT[p.outlet]||{}).core;
+const minFor=p=>(isPinned(p)||isCore(p))?1:MIN_CLIPS;
+const CORE_IDS=()=>DATA.outlets.filter(o=>o.core).map(o=>o.id);
+function coreGaps(top){
+  const have=new Set(top.map(r=>r.p.outlet));
+  const gaps=DATA.outlets.filter(o=>o.core && !have.has(o.id) && !(o.id==="wnyc" && have.has("gothamist")) && !(o.id==="gothamist" && have.has("wnyc")));
+  if(!gaps.length) return "";
+  return `<div class="note" style="margin:6px 0 0">No reporter on file for this at ${gaps.map(o=>{
+    const t=o.tips||""; const link=t.includes("@")?`mailto:${t}`:(t||o.site);
+    return `<b>${esc(o.name)}</b> (<a href="${esc(link)}" ${t.includes("@")?"":'target="_blank" rel="noopener"'}>${t.includes("@")?esc(t):"tips"}</a>)`;
+  }).join(", ")}${gaps.some(o=>["ny1","cbsny"].includes(o.id))?". NY1 and CBS 2 block automated readers, so no roster can be read for them":""}.</div>`;
+}
+const PIN_SLOTS=3;
+function pinnedBlock(matched, fallbackScore, label){
+  // only Times reporters with at least one story on it count as coverage
+  let rows=matched.filter(r=>isPinned(r.p)&&r.clips>=1).sort((a,b)=>b.score-a.score).slice(0,PIN_SLOTS);
+  let closest=false;
+  if(!rows.length){
+    closest=true;
+    rows=DATA.people.filter(isPinned).map(p=>({p,score:fallbackScore(p),clips:0,closest:true}))
+      .filter(r=>r.score>0).sort((a,b)=>b.score-a.score).slice(0,PIN_SLOTS);
+    if(!rows.length) rows=DATA.people.filter(isPinned).sort((a,b)=>b.story_count-a.story_count)
+      .slice(0,PIN_SLOTS).map(p=>({p,score:0,clips:0,closest:true}));
+  }
+  return {rows, closest};
+}
+function pinHeader(closest){
+  const tips=(DATA.outlets.find(o=>o.pin)||{}).tips||"https://www.nytimes.com/tips";
+  return `<div class="tierdiv" style="margin-top:0"><b>The New York Times</b> &middot; always first${closest
+    ?` &middot; no Times reporter has filed on this in the stories we can see; these are the closest on its metro desk`:""}
+    &middot; <a href="${esc(tips)}" target="_blank" rel="noopener">Times tips page</a></div>`;
+}
 /* Reach: 3 for the outlets with the largest New York audiences, 2 for the rest
    of the major outlets, 1 for everyone else. Falls back to the tier on a
    payload built before size existed. */
@@ -444,7 +485,9 @@ function shortlist(ranked){          // ranked: [{p,score,...}] best first, all 
   const take=r=>{ const o=r.p.outlet||r.p.outlet_text||r.p.id;
     if(seen.has(r.p.id)||(perOutlet[o]||0)>=PER_OUTLET||picked.length>=SHORTLIST) return false;
     picked.push(r); seen.add(r.p.id); perOutlet[o]=(perOutlet[o]||0)+1; return true; };
-  for(const [m,n] of Object.entries(HOLD)){          // hold the broadcast slots first
+  // the core outlets' beat reporter first: the best-ranked person at each
+  for(const id of CORE_IDS()){ const r=ranked.find(x=>x.p.outlet===id); if(r) take(r); }
+  for(const [m,n] of Object.entries(HOLD)){          // then hold the broadcast slots
     let got=0; for(const r of ranked){ if(got>=n) break; if(slotOf(r.p)===m && take(r)) got++; }
   }
   for(const r of ranked){ if(picked.length>=SHORTLIST) break; take(r); }
@@ -494,7 +537,7 @@ function card(r,i){
         <span class="nm">${esc(p.name)}</span>
         <span class="role"> &middot; <b>${esc(outletName(p))}</b>${(p.also_at||[]).length?` <span style="color:var(--vc-charcoal)">+ ${p.also_at.map(o=>esc(OUT[o]?.name||o)).join(", ")}</span>`:""}${p.title?" &middot; "+esc(p.title):""}</span>
       </div>
-      ${r.clips!=null?`<span class="sc">${MEDIUM_LABEL[mediumOf(p)]} &middot; ${r.clips} clip${r.clips===1?"":"s"} on this</span>`:""}
+      ${r.closest?`<span class="sc">closest Times reporter &middot; ${p.story_count} metro stories on file</span>`:r.clips!=null?`<span class="sc">${MEDIUM_LABEL[mediumOf(p)]} &middot; ${r.clips} clip${r.clips===1?"":"s"} on this</span>`:""}
     </div>
     ${vcBadges(p)?`<div style="margin-top:5px">${vcBadges(p)}</div>`:""}
     ${p.bio?`<div class="role" style="margin-top:5px">${esc(p.bio)}</div>`:""}
@@ -509,7 +552,9 @@ function card(r,i){
     <div class="contact">
       ${p.email?`<span class="em"><a href="mailto:${esc(p.email)}">${esc(p.email)}</a></span>${p.email_note?` <span style="color:var(--vc-gold);font-size:11px;font-weight:700" title="Found on a page from a masthead this reporter no longer seems to file for">${esc(p.email_note)}</span>`:""}
          ${p.email_source_url?`<a href="${esc(p.email_source_url)}" target="_blank" rel="noopener" style="font-size:10.5px" title="${esc(p.email_evidence||"")}">where this came from</a>`:""}`
-       :((OUT[p.outlet]?.tips||"").includes("@")
+       :(isPinned(p)&&OUT[p.outlet]?.tips&&!OUT[p.outlet].tips.includes("@"))
+          ? `<span style="color:var(--vc-charcoal)">the Times publishes no reporter addresses &middot;</span> <a href="${esc(OUT[p.outlet].tips)}" target="_blank" rel="noopener">tips page</a>`
+          :((OUT[p.outlet]?.tips||"").includes("@")
           ? `<span style="color:var(--vc-charcoal)">no personal address published &middot; desk:</span> <a href="mailto:${esc(OUT[p.outlet].tips)}">${esc(OUT[p.outlet].tips)}</a>`
           : `<span style="color:var(--vc-charcoal)">no published address found</span>`)}
       ${p.author_page?`<a href="${esc(p.author_page)}" target="_blank" rel="noopener">their work &rsaquo;</a>`:""}
@@ -530,22 +575,31 @@ function runQuery(){
   const all=rank(q);
   const majorOnly=$("#fMajor").checked;
   LAST=filtered(all).filter(r=>!majorOnly||tierOf(r.p)===1);
-  const eligible=LAST.filter(r=>r.clips>=MIN_CLIPS&&tierOf(r.p)===1);
+  const pin=pinnedBlock(LAST, p=>{
+    const top=Object.values(q.beats).sort((a,b)=>b.n-a.n)[0];
+    const pr=top?top.priority:0, grp=pr===1?"crime":pr===2?"government":null;
+    return grp?((p.groups||{})[grp]||0):0;
+  });
+  const pinIds=new Set(pin.rows.map(r=>r.p.id));
+  LAST=LAST.filter(r=>!pinIds.has(r.p.id));
+  const eligible=LAST.filter(r=>r.clips>=minFor(r.p)&&tierOf(r.p)===1);
   const {top, rest:restMajor}=shortlist(eligible);
   const rest=[...restMajor, ...LAST.filter(r=>r.clips>=MIN_CLIPS&&tierOf(r.p)!==1)]
     .sort((a,b)=>b.score-a.score);
   rest.forEach(r=>{ const w=(r.why||[]).find(x=>x.kind==="beat"); r.example=w&&w.examples&&w.examples[0]; });
-  const single=LAST.filter(r=>r.clips<MIN_CLIPS);
+  const single=LAST.filter(r=>r.clips<minFor(r.p));
   const bl=Object.values(q.beats).sort((a,b)=>b.n-a.n||a.priority-b.priority);
   const mix=["print","tv","radio"].map(m=>[m,top.filter(r=>mediumOf(r.p)===m).length]).filter(x=>x[1]).map(([m,n])=>`${n} ${MEDIUM_LABEL[m]}`).join(", ");
   $("#readout").innerHTML = `Read as: ${bl.length?bl.slice(0,5).map(b=>`<b>${esc(b.label)}</b> <span title="matched: ${esc(b.matched.join(", "))}">(${b.n} term${b.n>1?"s":""})</span>`).join(" &middot; "):"<b>no beat vocabulary matched</b> — counting headlines that use your words"}${q.fromUrl?` &middot; link read as a headline from <b>${esc(q.fromUrl.host)}</b>${q.fromUrl.slug?`: &ldquo;${esc(q.fromUrl.slug)}&rdquo;`:" (no words in the path — paste the headline instead)"}`:""}<br>
     The shortlist is the ${top.length} strongest targets at major outlets${mix?` (${mix})`:""}: clips on this topic times the size of the outlet, at most two per outlet. ${rest.length} more below, ${single.length} with a single clip.`;
-  if(!LAST.length){
+  if(!LAST.length && !pin.rows.length){
     $("#results").innerHTML=`<div class="empty">Nobody in the map has filed on this. Try fewer words, or turn off the filters above.</div>`;
     return;
   }
   $("#results").innerHTML =
-      `<div class="tierdiv" style="margin-top:0"><b>Shortlist</b> &middot; ${top.length} target${top.length===1?"":"s"}</div>`
+      pinHeader(pin.closest) + pin.rows.map(card).join("")
+    + `<div class="tierdiv"><b>Shortlist</b> &middot; ${top.length} target${top.length===1?"":"s"} &middot; the top reporter on this at the Post, the Daily News, WNYC/Gothamist, NY1, ABC 7, NBC 4 and CBS 2 always included</div>`
+    + coreGaps(top)
     + (top.length ? top.map(card).join("")
                   : `<div class="empty">No one at a major outlet has filed on this more than once. The people below have.</div>`)
     + (rest.length ? `<div class="tierdiv">Below the line &middot; ${rest.length} more with two or more clips</div>`
@@ -580,7 +634,7 @@ function showBeat(bid){
   const GROUP_LABEL={crime:"on crime and justice",government:"on city and state government"};
   const onBeat=p=>((p.beats||[]).find(b=>b.id===bid)||{count:0});
   const inGroup=p=>grp?((p.groups||{})[grp]||0):0;
-  const rows=DATA.people.filter(p=>onBeat(p).count>=MIN_CLIPS || (grp && inGroup(p)>=MIN_CLIPS*2 && onBeat(p).count>=1) || (grp && inGroup(p)>=6))
+  const rows=DATA.people.filter(p=>onBeat(p).count>=minFor(p) || (grp && inGroup(p)>=MIN_CLIPS*2 && onBeat(p).count>=1) || (grp && inGroup(p)>=6) || (isPinned(p) && grp && inGroup(p)>=1))
     .map(p=>({p,b:onBeat(p)}));
   const ranked=rows.map(r=>{
     const g=inGroup(r.p), base=grp?Math.max(g, r.b.count):r.b.count;
@@ -588,13 +642,26 @@ function showBeat(bid){
             clipsLabel: grp?`${r.b.count} on this beat &middot; ${g} ${GROUP_LABEL[grp]}`:null,
             example:(r.b.examples||[])[0]||((r.p.stories||[])[0])};
   }).sort((a,b)=>b.score-a.score);
-  const {top, rest:restMajor}=shortlist(ranked.filter(r=>tierOf(r.p)===1));
-  const rest=[...restMajor, ...ranked.filter(r=>tierOf(r.p)!==1)].sort((a,b)=>b.score-a.score);
-  $("#beatOut").innerHTML = rows.length
-    ? `<div class="tierdiv" style="margin-top:12px"><b>Shortlist</b> &middot; ${top.length} &middot; stories on this beat times the size of the outlet, at most two per outlet</div>`
-      + compactTable(top,"Stories on this beat")
+  const pin=pinnedBlock(ranked, p=>grp?((p.groups||{})[grp]||0):0);
+  pin.rows.forEach(r=>{ if(r.closest){ r.clipsLabel=`closest Times reporter &middot; ${r.p.story_count} metro stories on file`; r.example=(r.p.stories||[])[0]; } });
+  const pinIds=new Set(pin.rows.map(r=>r.p.id));
+  // The shortlist is only people who have written on this beat. Reporters who
+  // cover the wider group -- crime and justice, city and state government --
+  // but have nothing on this exact beat go in their own labelled block below,
+  // so a zero never sits in the main list looking like coverage.
+  const unpinned=ranked.filter(r=>!pinIds.has(r.p.id));
+  const onThis=unpinned.filter(r=>r.clips>=minFor(r.p));
+  const broad=grp?unpinned.filter(r=>r.clips<minFor(r.p)).sort((a,b)=>b.score-a.score):[];
+  const {top, rest:restMajor}=shortlist(onThis.filter(r=>tierOf(r.p)===1));
+  const rest=[...restMajor, ...onThis.filter(r=>tierOf(r.p)!==1)].sort((a,b)=>b.score-a.score);
+  $("#beatOut").innerHTML = (rows.length||pin.rows.length)
+    ? `<div style="margin-top:12px">${pinHeader(pin.closest)}</div>` + compactTable(pin.rows,"Stories on this beat")
+      + `<div class="tierdiv" style="margin-top:12px"><b>Shortlist</b> &middot; ${top.length} &middot; the top reporter at each core outlet, then two or more stories on this beat, ranked by stories times the size of the outlet, at most two per outlet</div>`
+      + coreGaps(top)
+      + (top.length?compactTable(top,"Stories on this beat"):`<div class="empty">No one at a major outlet has filed on this beat yet.</div>`)
       + (rest.length?`<div class="tierdiv">Below the line &middot; ${rest.length}</div><div id="beatRest">${compactTable(rest.slice(0,20),"Stories on this beat")}</div>`
           +(rest.length>20?`<span class="more" id="beatMore">all ${rest.length} &rsaquo;</span>`:""):"")
+      + (broad.length?`<div class="tierdiv">Covers ${GROUP_LABEL[grp].replace(/^on /,"")}, but nothing on this beat yet &middot; ${broad.length}</div>${compactTable(broad.slice(0,15),"Stories on this beat &middot; in the wider area")}`:"")
     : `<div class="empty">No one has filed two or more stories on this beat.</div>`;
   const bm=$("#beatMore");
   if(bm) bm.addEventListener("click",()=>{ $("#beatRest").innerHTML=compactTable(rest,"Stories on this beat"); bm.remove(); });
@@ -624,7 +691,7 @@ function dirMatches(){
   return DATA.people.filter(p=>{
     if(oid && p.outlet!==oid && !(p.also_at||[]).includes(oid)) return false;
     if(ty){ const os=[p.outlet,...(p.also_at||[])].map(o=>OUT[o]?.type); if(!os.includes(ty)) return false; }
-    if(bid && !(p.beats||[]).some(b=>b.id===bid&&b.count>=MIN_CLIPS)) return false;
+    if(bid && !(p.beats||[]).some(b=>b.id===bid&&b.count>=minFor(p))) return false;
     if(sc==="national+metro" && p.scope!=="national+metro") return false;
     if(sc==="nyc" && p.scope==="national+metro") return false;
     if(em && !p.email) return false;
@@ -640,7 +707,8 @@ function dirMatches(){
   // question -- otherwise a prolific national housing blog outranks every
   // housing reporter in the city.
   }).sort((a,b)=>{
-    if(tierOf(a)!==tierOf(b)) return tierOf(a)-tierOf(b);   // major outlets first, always
+    if(isPinned(a)!==isPinned(b)) return isPinned(a)?-1:1;   // the Times first
+    if(tierOf(a)!==tierOf(b)) return tierOf(a)-tierOf(b);   // then major outlets
     const nat=p=>p.scope==="national+metro"?1:0;
     if(nat(a)!==nat(b)) return nat(a)-nat(b);
     const cnt=p=>(bid?((p.beats||[]).find(x=>x.id===bid)||{}).count||0:p.story_count)*REACH_WEIGHT[sizeOf(p)];
@@ -664,7 +732,7 @@ function renderDirectory(){
 }
 function renderKnown(){
   const rows=DATA.people.filter(p=>p.vc&&p.vc.person)
-    .sort((a,b)=>tierOf(a)-tierOf(b)||b.story_count-a.story_count||a.name.localeCompare(b.name));
+    .sort((a,b)=>(isPinned(b)-isPinned(a))||tierOf(a)-tierOf(b)||b.story_count-a.story_count||a.name.localeCompare(b.name));
   $("#knownOut").innerHTML=rows.length?`<table><thead><tr><th>Name</th><th>Outlet</th><th>How we know them</th><th>Beats we can see</th><th>Address</th></tr></thead><tbody>`+
    rows.map(p=>{
      const how=[];

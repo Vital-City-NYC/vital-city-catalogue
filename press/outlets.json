@@ -507,7 +507,8 @@
   "tagline": "New York's hometown paper",
   "tier": 1,
   "size": 3,
-  "medium": "print"
+  "medium": "print",
+  "core": true
  },
  {
   "id": "ny-post",
@@ -540,7 +541,8 @@
   "tagline": "Tabloid with reach",
   "tier": 1,
   "size": 3,
-  "medium": "print"
+  "medium": "print",
+  "core": true
  },
  {
   "id": "newsday",
@@ -607,7 +609,8 @@
   "tagline": "Metro section",
   "tier": 1,
   "size": 3,
-  "medium": "print"
+  "medium": "print",
+  "pin": true
  },
  {
   "id": "times-union",
@@ -1097,7 +1100,8 @@
   "tagline": "WNYC-backed local news",
   "tier": 1,
   "size": 3,
-  "medium": "online"
+  "medium": "online",
+  "core": true
  },
  {
   "id": "hell-gate",
@@ -1543,7 +1547,8 @@
   "tagline": "Public radio news",
   "tier": 1,
   "size": 3,
-  "medium": "radio"
+  "medium": "radio",
+  "core": true
  },
  {
   "id": "brian-lehrer",
@@ -1707,7 +1712,8 @@
   "tagline": "Local TV news",
   "tier": 1,
   "size": 3,
-  "medium": "tv"
+  "medium": "tv",
+  "core": true
  },
  {
   "id": "fox5",
@@ -1790,7 +1796,8 @@
   "tagline": "Cable news for the city",
   "tier": 1,
   "size": 3,
-  "medium": "tv"
+  "medium": "tv",
+  "core": true
  },
  {
   "id": "wabc",
@@ -1806,7 +1813,8 @@
   "tagline": "Local TV news",
   "tier": 1,
   "size": 3,
-  "medium": "tv"
+  "medium": "tv",
+  "core": true
  },
  {
   "id": "wnbc",
@@ -1833,7 +1841,8 @@
   "tagline": "Channel 4 news",
   "tier": 1,
   "size": 3,
-  "medium": "tv"
+  "medium": "tv",
+  "core": true
  },
  {
   "id": "telemundo47",

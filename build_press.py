@@ -820,6 +820,7 @@ def main():
             if s_.get("date"):
                 lb = p.setdefault("last_by_outlet", {})
                 lb[oid] = max(lb.get(oid, ""), s_["date"][:10])
+                p.setdefault("dates_by_outlet", {}).setdefault(oid, []).append(s_["date"][:10])
             tk = title_key(s_.get("title"))
             if tk and tk in p["titles"]:
                 continue                      # same story, another masthead
@@ -928,10 +929,20 @@ def main():
         if dated:
             latest = dated[0]["date"][:10]
             window = (datetime.fromisoformat(latest) - timedelta(days=120)).date().isoformat()
-            lb = p.get("last_by_outlet") or {}
-            p["recent_outlets"] = [o for o, d_ in sorted(lb.items(), key=lambda kv: kv[1], reverse=True) if d_ >= window] \
-                or list(dict.fromkeys(s_["outlet"] for s_ in dated if s_["date"][:10] >= window))
-            p["outlet"] = dated[0]["outlet"]
+            # Where they file most in those four months, not where their single
+            # latest story ran: Ethan Corey is on The Appeal's staff, and one
+            # co-published New York Focus piece had made him New York Focus.
+            # A masthead counts as current only with a real share of the work.
+            recent = {o: sum(1 for d_ in ds if d_ >= window) for o, ds in (p.get("dates_by_outlet") or {}).items()}
+            recent = {o: n for o, n in recent.items() if n}
+            if recent:
+                top_n = max(recent.values())
+                p["outlet"] = max(recent, key=lambda o: (recent[o], (p.get("last_by_outlet") or {}).get(o, "")))
+                p["recent_outlets"] = [o for o, n in sorted(recent.items(), key=lambda kv: -kv[1])
+                                       if n >= max(3, 0.25 * top_n) or o == p["outlet"]]
+            else:
+                p["outlet"] = dated[0]["outlet"]
+                p["recent_outlets"] = [p["outlet"]]
         else:
             p["recent_outlets"] = list(p["outlet_counts"])
         # A City & State address beats one stray Hell Gate freelance piece when
@@ -1125,6 +1136,11 @@ def main():
                                          "date": s.get("date") or hit.get("published_iso")}
                 break
 
+    # The New York Times is the most important target and always leads every list.
+    # ...and the core outlets' beat reporters always sit above the line, so both keep
+    # single-story beats: their feeds are too shallow for two.
+    PINNED = {o["id"] for o in outlets if o.get("pin") or o.get("core")}
+
     # ---- shape the output
     now = datetime.now(timezone.utc)
     recent_cut = (now - timedelta(days=60)).isoformat()
@@ -1171,7 +1187,7 @@ def main():
             "beats": [{"id": b, "label": beats[b]["label"], "priority": beats[b]["priority"],
                        "count": c, "share": round(c / total, 3) if total else 0,
                        "examples": p["beat_examples"][b]}
-                      for b, c in ranked if c >= 2],   # one story on a subject is not a beat
+                      for b, c in ranked if c >= 2 or (c >= 1 and p["outlet"] in PINNED)],   # one story is not a beat -- except at the Times, whose feed is too shallow for two
             "stories": uniq[:12],
             "terms": dict(sorted(p["terms"].items(), key=lambda kv: -kv[1])[:35]),
             "groups": {g: n for g, n in (p.get("group_hits") or {}).items() if n},
