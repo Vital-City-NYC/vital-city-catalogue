@@ -87,12 +87,54 @@ the reference view.
 
 ## Rotating the passphrase
 
+There are now **eight** encrypted payloads, not one, and CI rebuilds all of them
+nightly from the `VC_NETWORK_PASS` repo secret. So the old three-line recipe is
+wrong twice over: it left seven tools on the old passphrase, and because it never
+touched the secret, the next nightly run re-encrypted everything with the OLD
+value and silently undid the rotation.
+
+Do it in this order. Steps 1 and 2 are yours -- they involve typing the
+passphrase, so do not delegate them and do not put the value on a command line,
+where it lands in shell history and in the process list.
+
+**1. Change the repo secret first.** `gh` prompts for the value and does not echo it.
+
 ```
-VC_NETWORK_PASS='new-words-here' python3 encrypt_people.py
-echo -n 'new-words-here' > private/.netpass
-git add network/data.enc && git commit -m "rotate" && git push
+gh auth switch --user vitalcity-nyc
+gh secret set VC_NETWORK_PASS --repo vitalcity-nyc/vital-city-catalogue
+gh auth switch --user joshgreenman1973
 ```
-Share the new passphrase with the group. The old one stops working immediately.
+
+**2. Update the two local copies,** so local runs and the monthly resharing
+routine keep working. zsh, prompted, never echoed:
+
+```
+read -rs "np?New toolkit passphrase: " && \
+  printf '%s' "$np" > private/.netpass && \
+  security add-generic-password -U -a "$USER" -s vc-network-pass -w "$np" && \
+  unset np && echo "local copies updated"
+```
+
+**3. Let CI re-encrypt everything.** Do NOT re-encrypt locally: several payloads
+are built from `private/` files that go stale between pulls, and publishing a
+local build would regress the live dashboards (see the local-runs-clobber-secrets
+note in HANDOFF).
+
+```
+gh workflow run network-refresh.yml   # the seven in this repo
+gh workflow run live-refresh.yml      # growth/live/live.enc
+```
+
+**4. Verify, then tell the group.** Until those runs finish, the published
+payloads are still encrypted with the OLD passphrase and the old one still
+works -- so there is no outage, and no moment when nobody can get in. Once the
+runs are green, open each tool and unlock it with the new passphrase. Then share
+it with the team out of band. Never write it into a file in this repo: it is
+public, and a passphrase committed here in August stayed in history even after
+the line was removed.
+
+The eight payloads, for checking: `network/`, `growth/`, `growth/live/`,
+`prospects/`, `catalogue-analysis/`, `press/`, `resharing/`, `private_sources.enc`.
 
 ## Notes / limits
 
