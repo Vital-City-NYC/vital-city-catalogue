@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Vital City — press map</title>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
+<link rel="stylesheet" href="../toolkit.css">
+<style>
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-green:#57aa4a; --vc-orange:#ff7c53; --vc-cerulean:#217ebe;
+    --vc-magenta:#e7466d; --vc-paper2:#eeeeec; --vc-plum:#7a5ea6; --vc-gold:#d9a441;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--vc-cerulean)}
+  /* gate */
+  #gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px 38px;max-width:430px;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gatebox .wm{font-weight:900;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+  .gatebox h1{font-size:24px;font-weight:900;margin:10px 0 6px}
+  .gatebox p{font-size:13px;color:var(--vc-charcoal);margin:0 0 16px}
+  .gatebox input{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--vc-black);margin-bottom:10px}
+  .gatebox button{width:100%;background:var(--vc-black);color:#fff;border:0;padding:11px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
+  .gateerr{color:#c8102e;font-size:12.5px;min-height:18px;margin-top:8px}
+  .gatebox .conf{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);margin-top:14px}
+  #app{display:none}
+  /* chrome */
+  .confbar{background:#7a1f2b;color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  header.mast{border-bottom:1px solid var(--vc-black);padding:22px 30px 16px;background:var(--vc-white);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px}
+  header.mast .wm{font-weight:900;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+  header.mast h1{font-weight:900;font-size:28px;margin:6px 0 2px;letter-spacing:-.01em}
+  header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:820px}
+  .hnav{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;display:flex;gap:14px;flex-wrap:wrap}
+  .hnav a{color:var(--vc-cerulean);text-decoration:none;cursor:pointer}
+  .jump{position:sticky;top:0;z-index:40;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:8px 30px;display:flex;gap:15px;flex-wrap:wrap;font-size:11px}
+  .jump a{color:var(--vc-charcoal);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;font-weight:700;cursor:pointer}
+  .jump a:hover{color:var(--vc-cerulean)}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 30px 70px;display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:30px;align-items:start}
+  @media(max-width:1000px){.wrap{grid-template-columns:minmax(0,1fr)}}
+  h2{font-size:15px;font-weight:900;margin:0 0 4px;letter-spacing:-.01em}
+  .note{font-size:11.5px;color:var(--vc-charcoal);margin-bottom:12px;line-height:1.5}
+  /* ask box */
+  .ask{background:var(--vc-white);border:1px solid var(--vc-black);padding:18px 20px 16px;box-shadow:6px 6px 0 rgba(5,5,7,.10);margin-bottom:22px}
+  .ask textarea{width:100%;font:inherit;font-size:15px;padding:11px 12px;border:1px solid var(--vc-black);resize:vertical;min-height:74px;background:var(--vc-paper)}
+  .askrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  .askrow button{background:var(--vc-black);color:#fff;border:0;padding:10px 20px;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit}
+  .askrow button.ghost{background:transparent;color:var(--vc-black);border:1px solid var(--vc-cloud);font-weight:700}
+  .toggles{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--vc-charcoal);margin-top:10px}
+  .toggles label{display:inline-flex;gap:5px;align-items:center;cursor:pointer}
+  .readout{font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;border-top:1px solid var(--vc-cloud);padding-top:9px}
+  .readout b{color:var(--vc-black)}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .chip{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--vc-cloud);padding:3px 8px;cursor:pointer;background:var(--vc-white);color:var(--vc-charcoal)}
+  .chip.on{background:var(--vc-black);color:#fff;border-color:var(--vc-black)}
+  .chip.p1{border-left:3px solid var(--vc-magenta)}
+  .chip.p2{border-left:3px solid var(--vc-cerulean)}
+  /* person cards */
+  .card{background:var(--vc-white);border:1px solid var(--vc-cloud);border-left:3px solid var(--vc-cloud);padding:13px 15px;margin-bottom:9px}
+  .card.vc{border-left-color:var(--vc-magenta)}
+  .card .who{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+  .card .nm{font-size:16px;font-weight:700}
+  .card.vc .nm{font-weight:900}
+  .card .sc{font-size:10.5px;font-weight:700;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+  .card .role{font-size:12.5px;color:var(--vc-charcoal)}
+  .card .role b{color:var(--vc-black);font-weight:700}
+  .why{font-size:12px;margin:7px 0 0;padding:7px 0 0;border-top:1px dotted var(--vc-cloud)}
+  .why .b{display:inline-block;margin-right:10px}
+  .why .b i{font-style:normal;font-weight:700}
+  .lines{font-size:12px;margin-top:7px}
+  .lines a{text-decoration:none}
+  .lines .dt{color:var(--vc-charcoal);font-size:11px;margin-left:5px}
+  .contact{font-size:12px;margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .contact .em{font-weight:700}
+  .badge{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;padding:2px 6px;border:1px solid}
+  .badge.vc{color:var(--vc-magenta);border-color:var(--vc-magenta)}
+  .badge.au{color:var(--vc-plum);border-color:var(--vc-plum)}
+  .badge.ct{color:var(--vc-green);border-color:var(--vc-green)}
+  .badge.no{color:var(--vc-charcoal);border-color:var(--vc-cloud)}
+  .more{font-size:11.5px;color:var(--vc-cerulean);cursor:pointer;font-weight:700}
+  .empty{font-size:12.5px;color:var(--vc-charcoal);padding:12px 0}
+  /* rail */
+  aside h2{margin-top:18px}
+  aside h2:first-child{margin-top:0}
+  ul.feed{list-style:none;margin:0;padding:0;max-height:430px;overflow:auto;border-top:1px solid var(--vc-cloud)}
+  ul.feed li{border-bottom:1px solid var(--vc-cloud);padding:7px 0;font-size:12px}
+  ul.feed li a{text-decoration:none;display:block;margin:1px 0}
+  ul.feed .src{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal)}
+  ul.feed .date{font-size:10.5px;color:var(--vc-charcoal)}
+  ul.feed .empty{padding:9px 0}
+  /* tables */
+  table{border-collapse:collapse;width:100%;font-size:12.5px;background:var(--vc-white)}
+  th,td{text-align:left;padding:6px 9px;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
+  th{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:800;cursor:pointer}
+  .sect{margin-top:34px}
+  .dirbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:10px;background:var(--vc-white);border:1px solid var(--vc-cloud);padding:10px 12px}
+  .dirbar input[type=search]{font:inherit;padding:7px 9px;border:1px solid var(--vc-black);min-width:250px;flex:1 1 250px;background:var(--vc-paper)}
+  .dirbar select{font:inherit;font-size:12.5px;padding:6px 7px;border:1px solid var(--vc-cloud);background:var(--vc-white);max-width:210px}
+  .dirbar label{font-size:11.5px;color:var(--vc-charcoal);display:inline-flex;gap:4px;align-items:center;cursor:pointer}
+  .meth{font-size:12.5px;line-height:1.6;background:var(--vc-white);border:1px solid var(--vc-cloud);padding:16px 18px}
+  .meth h3{font-size:13px;margin:16px 0 5px;font-weight:900}
+  .meth h3:first-child{margin-top:0}
+  .meth code{font-size:11.5px;background:var(--vc-paper2);padding:1px 4px}
+  .caution{border-left:3px solid var(--vc-gold);padding-left:12px;margin-top:14px}
+
+  /* Dark mode. Same convention as the contacts and growth tools: html.dark set
+     from localStorage "vc_theme", not a media query, so one toggle anywhere in
+     the toolkit follows you around. */
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1d1e21}
+  html.dark body{background:var(--vc-paper);color:var(--vc-black)}
+  html.dark input,html.dark select,html.dark textarea{background:#1b1c1f!important;color:var(--vc-black)!important;border-color:var(--vc-cloud)!important}
+  html.dark .confbar{background:#0b0b0d;color:#cfcfcf}
+  html.dark .gatebox{box-shadow:7px 7px 0 rgba(0,0,0,.45)}
+  html.dark .ask{box-shadow:6px 6px 0 rgba(0,0,0,.4)}
+  html.dark .askrow button{background:var(--vc-cerulean);color:#fff}
+  html.dark .askrow button.ghost{background:transparent;color:var(--vc-black)}
+  html.dark .chip{background:var(--vc-white);color:var(--vc-charcoal)}
+  html.dark .chip.on{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
+  html.dark .gatebox button{background:var(--vc-cerulean)}
+  html.dark a{color:#6fb3e8}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>Press map</h1>
+    <p>This page is password protected. Enter the shared passphrase to view.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="off" autofocus>
+    <button id="unlock">Unlock</button>
+    <div class="gateerr" id="err"></div>
+    <div class="conf">Confidential · internal use only</div>
+  </div>
+</div>
+
+<div id="app">
+<div class="confbar"><span>Confidential · internal use only</span><span id="asof"></span></div>
+<div data-toolkit-nav style="padding:0 30px"></div>
+<header class="mast">
+  <div>
+    <div class="wm">Vital City</div>
+    <h1>Press map</h1>
+    <div class="sub">Who covers New York City government, what they have actually been writing about, and how to reach them. Describe a story or paste a link and the map ranks reporters by the evidence in their own bylines.</div>
+  </div>
+  <nav class="hnav"><a id="themeToggle" title="Switch between light and dark. Remembered on this device, and shared with the other Vital City tools.">🌙 Dark mode</a><a id="lock">Lock</a></nav>
+</header>
+<nav class="jump">
+  <a data-go="ask">Find a reporter</a><a data-go="directory">Search everyone</a><a data-go="beats">By beat</a><a data-go="outlets">By outlet</a>
+  <a data-go="known">Contacts we know</a><a data-go="mentions">Who cites us</a><a data-go="method">Method</a>
+</nav>
+
+<div class="wrap">
+ <main>
+  <section id="ask">
+    <div class="ask">
+      <h2>Find a reporter</h2>
+      <div class="note">Describe the story in a sentence, paste a headline, or paste a link. A link is read for the words in its slug, so a headline or a paragraph of the pitch will always match more sharply than a URL alone.</div>
+      <textarea id="q" placeholder="e.g. new data showing felony assaults on the subway fell 18 percent after the platform barrier pilot"></textarea>
+      <div class="askrow">
+        <button id="go">Show me who covers this</button>
+        <button class="ghost" id="clear">Clear</button>
+      </div>
+      <div class="toggles">
+        <label><input type="checkbox" id="fEmail"> Only people with a published address</label>
+        <label><input type="checkbox" id="fActive" checked> Only people who filed in the last 60 days</label>
+        <label><input type="checkbox" id="fVC"> Only people Vital City already knows</label>
+        <label><input type="checkbox" id="fDiv" checked> Spread across outlets</label>
+      </div>
+      <div class="readout" id="readout"></div>
+    </div>
+    <div id="results"></div>
+  </section>
+
+  <section class="sect" id="beats">
+    <h2>By beat</h2>
+    <div class="note">Crime and criminal justice first, then city and state government, then everything else that touches City Hall. A reporter appears under a beat because stories they filed matched that beat's vocabulary &mdash; the count is the number of stories.</div>
+    <div class="chips" id="beatChips"></div>
+    <div id="beatOut"></div>
+  </section>
+
+  <section class="sect" id="directory">
+    <h2>Everyone in the map</h2>
+    <div class="note">The whole file, searchable. Type a name, an outlet, a title or a beat; narrow it with the menus. Names in bold are people Vital City already knows.</div>
+    <div class="dirbar">
+      <input id="dq" type="search" placeholder="Search name, outlet, title, beat, bio…">
+      <select id="dOutlet"></select>
+      <select id="dType"></select>
+      <select id="dBeat"></select>
+      <select id="dScope">
+        <option value="">Any reach</option>
+        <option value="nyc">New York City and state</option>
+        <option value="national+metro">National</option>
+      </select>
+      <label><input type="checkbox" id="dEmail"> has an address</label>
+      <label><input type="checkbox" id="dActive"> filed in 60 days</label>
+      <label><input type="checkbox" id="dVC"> we know them</label>
+    </div>
+    <div class="readout" id="dCount"></div>
+    <div id="dirOut"></div>
+    <div style="margin-top:10px"><span class="more" id="dMore" style="display:none">show more &rsaquo;</span></div>
+  </section>
+
+  <section class="sect" id="known">
+    <h2>People Vital City already knows</h2>
+    <div class="note">The curated press list, Vital City contributors, and anyone whose story matched a logged Vital City mention. These are the names set in bold everywhere else on the page. Some have no harvested byline &mdash; they are on the list, not in a feed &mdash; so this is the only place they appear.</div>
+    <div id="knownOut"></div>
+  </section>
+
+  <section class="sect" id="outlets">
+    <h2>By outlet</h2>
+    <div class="note">Every outlet in the map. <b>People</b> is how many of its journalists the harvest could name; a dash means no roster is reachable, which is a fact about the outlet's crawler policy and not about its importance &mdash; pitch the tips line. <b>Bylined stories</b> counts stories that carried an author; <b>items harvested</b> counts everything, including the headline-only feeds that come through Google News.</div>
+    <div id="outletOut"></div>
+  </section>
+
+  <section class="sect" id="method">
+    <h2>Method, and what this cannot tell you</h2>
+    <div class="meth" id="methodOut"></div>
+  </section>
+ </main>
+
+ <aside id="mentions">
+   <h2>Who cites Vital City</h2>
+   <div class="note">Third-party publications citing Vital City, from the growth dashboard's media-mentions feed. The same list runs there; it sits here because the question "who should hear about this" and the question "who already reads us" are the same question asked twice.</div>
+   <ul class="feed" id="newsFeed"></ul>
+   <h2>Cited in government &amp; policy</h2>
+   <div class="note">Official statements, testimony and reports that cite Vital City, plus republications by policy institutions.</div>
+   <ul class="feed" id="govFeed"></ul>
+   <h2>Podcasts, radio &amp; video</h2>
+   <div class="note">Hand-logged, because Google News does not index audio.</div>
+   <ul class="feed" id="ledgerFeed"></ul>
+ </aside>
+</div>
+</div>
+
+<script src="../toolkit.js" data-tool="press" defer></script>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let DATA=null, OUT={}, BEATS={};
+
+/* ---------- theme: html.dark from localStorage, shared across the toolkit ---------- */
+function applyTheme(t){
+  document.documentElement.classList.toggle("dark", t==="dark");
+  const b=document.querySelector("#themeToggle");
+  if(b) b.textContent = t==="dark" ? "☀️ Light mode" : "🌙 Dark mode";
+}
+(function(){ const t=localStorage.getItem("vc_theme") || ((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light"); applyTheme(t); })();
+
+/* ---------- gate: same format and passphrase as the other tools, so one
+   login unlocks the whole toolkit ---------- */
+function b64d(s){const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+const PASSKEY="vc_net_pass", PASS_TTL_DAYS=90;
+function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+PASS_TTL_DAYS*864e5}));}catch{}}
+function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
+  const o=JSON.parse(r);if(o&&o.pass&&o.exp&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null;}catch{return null;}}
+function clearPass(){try{localStorage.removeItem(PASSKEY);sessionStorage.removeItem(PASSKEY);}catch{}}
+async function unlock(fromStore){
+  $("#err").textContent="";
+  const pass=$("#pw").value.trim();
+  if(!pass){$("#err").textContent="Enter the passphrase.";return;}
+  $("#unlock").textContent="Decrypting…";
+  let blob;
+  try{ blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json()); }
+  catch(e){ $("#err").textContent="Couldn't load the data file — check your connection and try again."; $("#unlock").textContent="Unlock"; return; }
+  try{ DATA=await decryptBlob(pass,blob); }
+  catch(e){ if(fromStore) clearPass(); $("#err").textContent="Wrong passphrase, or data unavailable."; $("#unlock").textContent="Unlock"; return; }
+  savePass(pass);
+  $("#gate").style.display="none"; $("#app").style.display="block";
+  init();
+}
+$("#unlock").addEventListener("click",()=>unlock(false));
+$("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false);});
+(function(){const s=loadPass(); if(s){$("#pw").value=s; unlock(true);}})();
+$("#lock").addEventListener("click",()=>{clearPass();location.reload();});
+$("#themeToggle").addEventListener("click",e=>{e.preventDefault();
+  const t=document.documentElement.classList.contains("dark")?"light":"dark";
+  try{localStorage.setItem("vc_theme",t);}catch{} applyTheme(t);});
+
+/* ---------- query reading ----------
+   A beat is matched against the query with the same word-boundary rules the
+   build uses, so ICE does not match "police" here either. */
+const STOP=new Set("a an the and or but of in on at to for from with by as is are was were be this that it its if then than so such not no new york city nyc more over after before amid how what when who which about into out up down off again also just only very much many most some any each other another one two three first second last next year years day days week weeks month months story piece article".split(" "));
+function beatRe(t){
+  const e=t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  if(t.endsWith("*")) return new RegExp("\\b"+e.slice(0,-2)+"\\w*","i");
+  if(t===t.toUpperCase()&&t.length<=5) return new RegExp("\\b"+e+"\\b");
+  return new RegExp("\\b"+e+"s?\\b","i");
+}
+let BEATRE={};
+function readQuery(raw){
+  let text=raw.trim(), fromUrl=null;
+  const m=text.match(/https?:\/\/[^\s]+/);
+  if(m){
+    try{
+      const u=new URL(m[0]);
+      const slug=decodeURIComponent(u.pathname).replace(/\.(html?|php|amp)$/,"").split("/").filter(Boolean).pop()||"";
+      fromUrl={host:u.hostname.replace(/^www\./,""),slug:slug.replace(/[-_]+/g," ").replace(/\b\d{4,}\b/g,"").trim()};
+      text=(text.replace(m[0],"")+" "+fromUrl.slug).trim();
+    }catch(e){}
+  }
+  const words=[...new Set((text.toLowerCase().match(/[a-z][a-z'’-]{2,}/g)||[]).filter(w=>!STOP.has(w)))];
+  const hits={};
+  for(const [bid,b] of Object.entries(BEATS)){
+    let n=0, matched=[];
+    for(const t of (b.terms||[])){ if(BEATRE[bid+"|"+t].test(text)){ n++; matched.push(t); } }
+    if(n) hits[bid]={n,matched:matched.slice(0,5),label:b.label,priority:b.priority};
+  }
+  return {text,words,beats:hits,fromUrl};
+}
+
+/* ---------- ranking ----------
+   Two kinds of evidence, kept separate so the card can explain itself:
+   beat coverage (how many stories on this subject) and term overlap (the exact
+   words of the query turning up in their headlines). */
+function rank(q){
+  const out=[];
+  const bkeys=Object.keys(q.beats);
+  const nameQ=q.text.toLowerCase().trim();
+  for(const p of DATA.people){
+    let beatScore=0, termScore=0, why=[];
+    if(nameQ.length>3 && p.name.toLowerCase().includes(nameQ)){
+      out.push({p,score:999,why:[{kind:"name",label:"name match",score:999}],beatScore:0,termScore:0});
+      continue;
+    }
+    for(const b of (p.beats||[])){
+      const h=q.beats[b.id]; if(!h) continue;
+      const w=Math.min(h.n,4);
+      const s=w*(2.2*Math.sqrt(b.count)+6*b.share);
+      beatScore+=s;
+      why.push({kind:"beat",label:b.label,count:b.count,share:b.share,examples:b.examples,score:s});
+    }
+    for(const w of q.words){
+      const c=(p.terms||{})[w]||(p.terms||{})[w.replace(/s$/,"")]||0;
+      if(c){ const s=2.6*Math.min(c,6); termScore+=s; why.push({kind:"term",label:w,count:c,score:s}); }
+    }
+    let score=beatScore+termScore;
+    if(!score) continue;
+    if(!p.active) score*=0.55;                       // may have moved on
+    // The point of this map is New York City reporters. National writers who
+    // touch the city stay in, one rung down, rather than topping a City Hall
+    // search because they are prolific about cities in general.
+    if(p.scope==="national+metro") score*=0.6;
+    if(q.fromUrl && p.outlet && DATA_DOM[p.outlet]===q.fromUrl.host) score*=0.75;  // they already have it
+    why.sort((a,b)=>b.score-a.score);
+    out.push({p,score,why,beatScore,termScore});
+  }
+  out.sort((a,b)=>b.score-a.score||b.p.story_count-a.p.story_count);
+  return out;
+}
+let DATA_DOM={};
+
+function filtered(list){
+  const em=$("#fEmail").checked, ac=$("#fActive").checked, vc=$("#fVC").checked;
+  let l=list.filter(r=>(!em||r.p.email)&&(!ac||r.p.active||r.p.story_count===0&&r.p.vc)&&(!vc||(r.p.vc&&r.p.vc.person)));
+  if($("#fDiv").checked){
+    const seen={}, keep=[], rest=[];
+    for(const r of l){ const k=r.p.outlet||r.p.outlet_text||"?"; seen[k]=(seen[k]||0)+1; (seen[k]<=3?keep:rest).push(r); }
+    l=keep.concat(rest);
+  }
+  return l;
+}
+
+function outletName(p){ return p.outlet ? (OUT[p.outlet]?.name||p.outlet) : (p.outlet_text||"—"); }
+function fmtDate(d){ return d? String(d).slice(0,10) : ""; }
+
+function vcBadges(p){
+  const v=p.vc; if(!v) return "";
+  let out=[];
+  if(v.press_list) out.push(`<span class="badge vc" title="On the curated Vital City press list${v.press_list.outlet?" — "+esc(v.press_list.outlet):""}">Vital City press list</span>`);
+  if(v.vc_author) out.push(`<span class="badge au" title="Has published under a Vital City byline">Vital City contributor</span>`);
+  if(v.cited_vc) out.push(`<a class="badge ct" href="${esc(v.cited_vc.url)}" target="_blank" rel="noopener" title="A story of theirs matches a logged Vital City mention — they have cited us by name">Has cited Vital City</a>`);
+  if(!v.cited_vc && v.outlet_cites_vc) out.push(`<span class="badge no" title="Their outlet has cited Vital City ${v.outlet_cites_vc} times in the logged window — the outlet, not necessarily this reporter">Outlet cites us · ${v.outlet_cites_vc}</span>`);
+  return out.join(" ");
+}
+
+function card(r,i){
+  const p=r.p;
+  const beats=(r.why||[]).filter(w=>w.kind==="beat").slice(0,3);
+  const terms=(r.why||[]).filter(w=>w.kind==="term").slice(0,6);
+  const ex=beats.flatMap(b=>(b.examples||[]).slice(0,1)).slice(0,2);
+  const stories=(p.stories||[]).slice(0,3);
+  return `<div class="card ${p.vc&&p.vc.person?"vc":""}">
+    <div class="who">
+      <div>
+        <span class="nm">${esc(p.name)}</span>
+        <span class="role"> &middot; <b>${esc(outletName(p))}</b>${(p.also_at||[]).length?` <span style="color:var(--vc-charcoal)">+ ${p.also_at.map(o=>esc(OUT[o]?.name||o)).join(", ")}</span>`:""}${p.title?" &middot; "+esc(p.title):""}</span>
+      </div>
+      ${r.score?`<span class="sc">score ${r.score.toFixed(0)}</span>`:""}
+    </div>
+    ${vcBadges(p)?`<div style="margin-top:5px">${vcBadges(p)}</div>`:""}
+    ${p.bio?`<div class="role" style="margin-top:5px">${esc(p.bio)}</div>`:""}
+    ${(beats.length||terms.length)?`<div class="why">
+      ${beats.map(b=>`<span class="b"><i>${b.count}</i> ${esc(b.label.toLowerCase())}${b.share>=.4?" <span style='color:var(--vc-charcoal)'>(most of their file)</span>":""}</span>`).join("")}
+      ${terms.length?`<span class="b" style="color:var(--vc-charcoal)">headlines use: ${terms.map(t=>`<i>${esc(t.label)}</i>&nbsp;${t.count}`).join(", ")}</span>`:""}
+    </div>`:""}
+    ${(ex.length||stories.length)?`<div class="lines">
+      ${(ex.length?ex:stories).map(s=>`&rsaquo; <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a><span class="dt">${esc(fmtDate(s.date))}</span>`).join("<br>")}
+      ${p.story_count>3?`<br><span class="more" data-all="${esc(p.id)}">all ${p.story_count} harvested stories &rsaquo;</span>`:""}
+    </div>`:""}
+    <div class="contact">
+      ${p.email?`<span class="em"><a href="mailto:${esc(p.email)}">${esc(p.email)}</a></span>
+         ${p.email_source_url?`<a href="${esc(p.email_source_url)}" target="_blank" rel="noopener" style="font-size:10.5px" title="${esc(p.email_evidence||"")}">where this came from</a>`:""}`
+       :`<span style="color:var(--vc-charcoal)">no published address found</span>`}
+      ${p.author_page?`<a href="${esc(p.author_page)}" target="_blank" rel="noopener">their work &rsaquo;</a>`:""}
+      ${p.staff_page&&!p.author_page?`<a href="${esc(p.staff_page)}" target="_blank" rel="noopener">masthead &rsaquo;</a>`:""}
+      ${p.x?`<a href="https://x.com/${esc(p.x)}" target="_blank" rel="noopener">@${esc(p.x)}</a>`:""}
+      ${p.bluesky?`<a href="https://bsky.app/profile/${esc(p.bluesky)}" target="_blank" rel="noopener">bluesky</a>`:""}
+      ${(OUT[p.outlet]?.phones||[]).length?`<span style="color:var(--vc-charcoal);font-size:11px" title="Newsroom line for ${esc(outletName(p))}, not a direct line">newsroom ${esc(OUT[p.outlet].phones[0].number)}</span>`:""}
+      ${p.latest?`<span style="color:var(--vc-charcoal);font-size:11px">last seen filing ${esc(fmtDate(p.latest))}</span>`:""}
+    </div>
+  </div>`;
+}
+
+let LAST=[];
+function runQuery(){
+  const raw=$("#q").value.trim();
+  if(!raw){ $("#results").innerHTML=""; $("#readout").innerHTML=""; return; }
+  const q=readQuery(raw);
+  const all=rank(q);
+  LAST=filtered(all);
+  const bl=Object.values(q.beats).sort((a,b)=>b.n-a.n||a.priority-b.priority);
+  $("#readout").innerHTML = `Read as: ${bl.length?bl.slice(0,5).map(b=>`<b>${esc(b.label)}</b> <span title="matched: ${esc(b.matched.join(", "))}">(${b.n} term${b.n>1?"s":""})</span>`).join(" &middot; "):"<b>no beat vocabulary matched</b> — ranking on word overlap alone"}${q.fromUrl?` &middot; link read as a headline from <b>${esc(q.fromUrl.host)}</b>${q.fromUrl.slug?`: &ldquo;${esc(q.fromUrl.slug)}&rdquo;`:" (no words in the path — paste the headline instead)"}`:""}<br>
+    ${all.length} reporters have evidence on this; showing ${Math.min(LAST.length,40)}${LAST.length>40?` of ${LAST.length} after filters`:""}.`;
+  $("#results").innerHTML = LAST.length ? LAST.slice(0,40).map(card).join("")
+    : `<div class="empty">Nobody in the map has filed on this. Try fewer words, or turn off the filters above.</div>`;
+}
+
+/* ---------- browse ---------- */
+function renderBeats(){
+  const ids=Object.keys(BEATS).sort((a,b)=>BEATS[a].priority-BEATS[b].priority||BEATS[a].label.localeCompare(BEATS[b].label));
+  $("#beatChips").innerHTML=ids.map(id=>`<span class="chip p${BEATS[id].priority}" data-beat="${id}">${esc(BEATS[id].label)}</span>`).join("");
+  $$("#beatChips .chip").forEach(c=>c.addEventListener("click",()=>{
+    $$("#beatChips .chip").forEach(x=>x.classList.toggle("on",x===c&&!c.classList.contains("on")));
+    const on=c.classList.contains("on");
+    showBeat(on?c.dataset.beat:null);
+  }));
+  showBeat(ids[0]);
+  $$("#beatChips .chip")[0].classList.add("on");
+}
+function showBeat(bid){
+  if(!bid){ $("#beatOut").innerHTML=""; return; }
+  const rows=DATA.people.filter(p=>(p.beats||[]).some(b=>b.id===bid))
+    .map(p=>({p,b:p.beats.find(b=>b.id===bid)}))
+    .sort((x,y)=>y.b.count-x.b.count).slice(0,60);
+  $("#beatOut").innerHTML = rows.length? `<table><thead><tr><th>Reporter</th><th>Outlet</th><th>Stories on this beat</th><th>Share of their file</th><th>Address</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr>
+      <td${r.p.vc&&r.p.vc.person?' style="font-weight:800"':''}>${esc(r.p.name)}${r.p.vc&&r.p.vc.person?' <span class="badge vc">VC</span>':''}${r.p.title?`<div style="color:var(--vc-charcoal);font-size:11px">${esc(r.p.title)}</div>`:''}</td>
+      <td>${esc(outletName(r.p))}</td>
+      <td>${r.b.count}${(r.b.examples||[]).length?` <a href="${esc(r.b.examples[0].url)}" target="_blank" rel="noopener" style="font-size:11px">example &rsaquo;</a>`:""}</td>
+      <td>${Math.round(r.b.share*100)}%</td>
+      <td>${r.p.email?`<a href="mailto:${esc(r.p.email)}">${esc(r.p.email)}</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+    </tr>`).join("")+`</tbody></table>` : `<div class="empty">No harvested stories matched this beat.</div>`;
+}
+/* ---------- the directory: search everyone by name, outlet, title or beat ---------- */
+let DSHOWN=150;
+function fillSelect(el, rows, blank){
+  el.innerHTML=`<option value="">${blank}</option>`+rows.map(r=>`<option value="${esc(r[0])}">${esc(r[1])}</option>`).join("");
+}
+function initDirectory(){
+  const outs=[...DATA.outlets].filter(o=>DATA.people.some(p=>p.outlet===o.id||(p.also_at||[]).includes(o.id)))
+    .sort((a,b)=>a.name.localeCompare(b.name)).map(o=>[o.id,o.name]);
+  fillSelect($("#dOutlet"),outs,"Any outlet");
+  const types=[...new Set(DATA.outlets.map(o=>o.type))].sort().map(t=>[t,t.replace(/-/g," ")]);
+  fillSelect($("#dType"),types,"Any kind of outlet");
+  const bs=Object.entries(BEATS).sort((a,b)=>a[1].priority-b[1].priority||a[1].label.localeCompare(b[1].label)).map(([k,v])=>[k,v.label]);
+  fillSelect($("#dBeat"),bs,"Any beat");
+  ["dq","dOutlet","dType","dBeat","dScope","dEmail","dActive","dVC"].forEach(id=>
+    $("#"+id).addEventListener(id==="dq"?"input":"change",()=>{DSHOWN=150;renderDirectory();}));
+  $("#dMore").addEventListener("click",()=>{DSHOWN+=300;renderDirectory();});
+  renderDirectory();
+}
+function dirMatches(){
+  const q=$("#dq").value.trim().toLowerCase();
+  const oid=$("#dOutlet").value, ty=$("#dType").value, bid=$("#dBeat").value, sc=$("#dScope").value;
+  const em=$("#dEmail").checked, ac=$("#dActive").checked, vc=$("#dVC").checked;
+  return DATA.people.filter(p=>{
+    if(oid && p.outlet!==oid && !(p.also_at||[]).includes(oid)) return false;
+    if(ty){ const os=[p.outlet,...(p.also_at||[])].map(o=>OUT[o]?.type); if(!os.includes(ty)) return false; }
+    if(bid && !(p.beats||[]).some(b=>b.id===bid)) return false;
+    if(sc==="national+metro" && p.scope!=="national+metro") return false;
+    if(sc==="nyc" && p.scope==="national+metro") return false;
+    if(em && !p.email) return false;
+    if(ac && !p.active) return false;
+    if(vc && !(p.vc&&p.vc.person)) return false;
+    if(q){
+      const hay=[p.name,p.title,p.bio,p.email,outletName(p),...(p.also_at||[]).map(o=>OUT[o]?.name||""),
+                 ...(p.beats||[]).map(b=>b.label)].join(" ").toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  // New York City people first, then whoever has filed most on the beat in
+  // question -- otherwise a prolific national housing blog outranks every
+  // housing reporter in the city.
+  }).sort((a,b)=>{
+    const nat=p=>p.scope==="national+metro"?1:0;
+    if(nat(a)!==nat(b)) return nat(a)-nat(b);
+    const cnt=p=>bid?((p.beats||[]).find(x=>x.id===bid)||{}).count||0:p.story_count;
+    return cnt(b)-cnt(a) || a.name.localeCompare(b.name);
+  });
+}
+function renderDirectory(){
+  const rows=dirMatches();
+  $("#dCount").innerHTML=`<b>${rows.length}</b> of ${DATA.people.length} people${rows.length>DSHOWN?` · showing the first ${DSHOWN}`:""}`;
+  $("#dirOut").innerHTML=rows.length?`<table><thead><tr><th>Name</th><th>Outlet</th><th>Title</th><th>Beats, by stories filed</th><th>Address</th><th>Work</th></tr></thead><tbody>`+
+    rows.slice(0,DSHOWN).map(p=>`<tr>
+      <td${p.vc&&p.vc.person?' style="font-weight:800"':''}>${esc(p.name)}${p.vc&&p.vc.person?' <span class="badge vc">VC</span>':''}</td>
+      <td>${esc(outletName(p))}${(p.also_at||[]).length?`<div style="color:var(--vc-charcoal);font-size:11px">also ${p.also_at.map(o=>esc(OUT[o]?.name||o)).join(", ")}</div>`:""}</td>
+      <td style="color:var(--vc-charcoal)">${esc(p.title||"—")}</td>
+      <td>${(p.beats||[]).slice(0,3).map(b=>`${esc(b.label.toLowerCase())} <b>${b.count}</b>`).join("<br>")||'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+      <td>${p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+      <td>${p.author_page?`<a href="${esc(p.author_page)}" target="_blank" rel="noopener">archive</a>`:(p.stories||[]).length?`<a href="${esc(p.stories[0].url)}" target="_blank" rel="noopener">latest</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+    </tr>`).join("")+`</tbody></table>`:`<div class="empty">Nobody matches those filters.</div>`;
+  $("#dMore").style.display=rows.length>DSHOWN?"inline":"none";
+}
+function renderKnown(){
+  const rows=DATA.people.filter(p=>p.vc&&p.vc.person)
+    .sort((a,b)=>b.story_count-a.story_count||a.name.localeCompare(b.name));
+  $("#knownOut").innerHTML=rows.length?`<table><thead><tr><th>Name</th><th>Outlet</th><th>How we know them</th><th>Beats we can see</th><th>Address</th></tr></thead><tbody>`+
+   rows.map(p=>{
+     const how=[];
+     if(p.vc.press_list) how.push("press list");
+     if(p.vc.vc_author) how.push("wrote for us");
+     if(p.vc.cited_vc) how.push(`<a href="${esc(p.vc.cited_vc.url)}" target="_blank" rel="noopener">cited us</a>`);
+     return `<tr>
+       <td style="font-weight:800">${esc(p.name)}${p.title?`<div style="color:var(--vc-charcoal);font-size:11px;font-weight:400">${esc(p.title)}</div>`:""}</td>
+       <td>${esc(outletName(p))}</td>
+       <td>${how.join(" &middot; ")}</td>
+       <td>${(p.beats||[]).slice(0,3).map(b=>esc(b.label.toLowerCase())+" ("+b.count+")").join(", ")||`<span style="color:var(--vc-charcoal)">${p.story_count?"no beat matched":"nothing harvested"}</span>`}</td>
+       <td>${p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td></tr>`;
+   }).join("")+`</tbody></table>`:`<div class="empty">No Vital City contacts flagged in this build — check that private/press_source.csv was readable.</div>`;
+}
+function renderOutlets(){
+  const rows=[...DATA.outlets].sort((a,b)=>b.people-a.people);
+  $("#outletOut").innerHTML=`<table><thead><tr><th>Outlet</th><th>Kind</th><th>People</th><th>Bylined stories</th><th>Items harvested</th><th>Cites Vital City</th><th>Tips line</th><th>Phone</th></tr></thead><tbody>`+
+   rows.map(o=>`<tr>
+     <td><a href="${esc(o.site)}" target="_blank" rel="noopener">${esc(o.name)}</a>${o.tagline?`<div style="color:var(--vc-charcoal);font-size:11px">${esc(o.tagline)}</div>`:""}${o.feed_note?`<div style="color:var(--vc-charcoal);font-size:10.5px;font-style:italic">${esc(o.feed_note)}</div>`:""}</td>
+     <td style="color:var(--vc-charcoal)">${esc(o.type)}</td>
+     <td>${o.people||'<span style="color:var(--vc-charcoal)" title="No roster reachable — pitch the tips line or the newsroom number">—</span>'}</td>
+     <td>${o.stories||'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+     <td>${o.items||'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+     <td>${o.vc_citations?`${o.vc_citations} <span style="color:var(--vc-charcoal);font-size:11px">${esc(o.vc_cited_first||"")}&ndash;${esc(o.vc_cited_last||"")}</span>`:'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+     <td>${o.tips?(String(o.tips).includes("@")?`<a href="mailto:${esc(o.tips)}">${esc(o.tips)}</a>`:`<a href="${esc(o.tips)}" target="_blank" rel="noopener">tips page</a>`):'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+     <td>${(o.phones||[]).length?(o.phones||[]).map(p=>`<a href="tel:${esc(p.number.replace(/\D/g,""))}" title="${esc(p.context||"")} — read from ${esc(p.source_url||"")}">${esc(p.number)}</a>`).join("<br>"):'<span style="color:var(--vc-charcoal)">—</span>'}</td>
+   </tr>`).join("")+`</tbody></table>`;
+}
+function renderMentions(){
+  const m=DATA.mentions||{};
+  const feed=(items,fmt)=>items&&items.length?items.map(fmt).join(""):`<li class="empty">Nothing in the current window.</li>`;
+  $("#newsFeed").innerHTML=feed((m.media||[]).slice(0,80),p=>`<li>
+    <span class="src">${esc(p.source||p.domain||"web")}${p.roundup?" &middot; <i>roundup</i>":""}</span>
+    <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+    <span class="date">${esc((p.published_iso||p.published||"").slice(0,10))}</span></li>`);
+  $("#govFeed").innerHTML=feed((m.gov||[]).slice(0,40),p=>`<li>
+    <span class="src">${esc(p.source||p.domain||"gov")}</span>
+    <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+    <span class="date">${esc((p.published_iso||p.published||"").slice(0,10))}</span></li>`);
+  $("#ledgerFeed").innerHTML=feed(m.ledger||[],p=>`<li>
+    <span class="src">${esc(p.outlet)}</span>
+    <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.program||p.outlet)}</a>
+    <span class="date">${esc(p.date||"")} &middot; ${esc(p.who||"")}</span></li>`);
+}
+function renderMethod(){
+  const c=DATA.counts||{}, r=DATA.report||{};
+  const errs=(r.errors||[]);
+  $("#methodOut").innerHTML=`
+   <h3>What is in here</h3>
+   <p>${c.outlets} outlets and ${c.people} people. ${c.with_beats} of them have a beat backed by harvested stories;
+   ${c.active_60d} filed something in the last 60 days; ${c.with_email} have an address that was read off a published page.
+   ${c.stories} bylined stories were harvested for this build. ${c.vc_flagged} people carry a Vital City flag.</p>
+   <h3>How a beat is decided</h3>
+   <p>Every harvested story is matched against a vocabulary of ${Object.keys(BEATS).length} New York City government beats.
+   A reporter's beats are the ones their stories matched, with the count of matching stories and the stories themselves kept
+   alongside. Nobody typed these labels onto a person. Acronyms match case-sensitively, so <code>ICE</code> does not match
+   &ldquo;police&rdquo; and <code>DOE</code> does not match &ldquo;does&rdquo;.</p>
+   <h3>Where the stories come from</h3>
+   <p>Each outlet's RSS feed, plus its WordPress API where one is readable &mdash; the API reaches back a few hundred stories,
+   the feed only a week or two. Outlets that block automated clients (Crain's, the Daily News feed, Brooklyn Eagle, PIX11 and
+   others) come in through a Google News <code>site:</code> query instead, which carries headlines but no bylines. That is why
+   some outlets show stories but few people.</p>
+   <h3>Where an address comes from</h3>
+   <p>Three places, all of them pages that were fetched and kept: the outlet's masthead, the byline block on one of the
+   reporter's own recent stories, and their author archive page. An address is kept only if it pairs with the person's name
+   &mdash; newsroom addresses are built out of names, so one that cannot be derived from the name is evidence the parser walked
+   into someone else's block. ${(DATA.unpaired_addresses||[]).length} addresses were dropped for exactly that reason on this build.
+   <b>No address here was ever guessed from a pattern.</b> Where a person came from Vital City's own curated press list, the card says so.</p>
+   <h3>The Vital City flags</h3>
+   <p><span class="badge vc">Vital City press list</span> is the curated list of reporters Vital City already works with.
+   <span class="badge au">Vital City contributor</span> has published under a Vital City byline.
+   <span class="badge ct">Has cited Vital City</span> means a story of theirs matched a logged Vital City media mention by title &mdash;
+   the strongest signal in the set, and the rarest, because the mentions feed records the outlet rather than the byline.
+   <span class="badge no">Outlet cites us</span> is the weaker, outlet-level version of the same thing.</p>
+   <h3>The outlets with no people</h3>
+   <p>NY1, Crain's, Newsday, the Wall Street Journal, the AP, CBS New York and the Brooklyn Eagle all refuse automated
+   clients outright, so no roster could be read and they show a dash. They are still in the map with their tips lines,
+   because knowing you cannot reach a reporter by name is different from not knowing the outlet exists. WNYC is a special
+   case: its own feed was retired, but most of its newsroom publishes through Gothamist, so its reporters are here under
+   that masthead.</p>
+   <h3>Ordering</h3>
+   <p>Two thumbs on the scale, both deliberate. Someone who has not filed in 60 days is discounted, because they may have
+   moved on. National writers who cover cities are discounted against New York City reporters, because a City Hall story
+   should surface the person at City Limits before the person at a national magazine. Nothing about a Vital City
+   relationship changes the ranking &mdash; those names are set in bold and left where the evidence puts them.</p>
+   <h3>Phone numbers</h3>
+   <p>Outlet-level only, and only where a newsroom publishes one &mdash; a tip line, a main switchboard, a news desk.
+   Individual reporters essentially never publish a direct line, so there are none here rather than guesses. Each number
+   links to the page it was read from; hover it to see the surrounding text. A number that reads oddly for the outlet's
+   area is worth checking against that page before dialling.</p>
+   <h3>What this cannot tell you</h3>
+   <p>A beat here is what someone has been publishing, which is not always what they want next. Nobody is in the map because
+   they are important; they are in it because a feed or a masthead carried them, so a great reporter at an outlet that blocks
+   crawlers can be missing entirely. Story counts are not comparable across outlets &mdash; an outlet with a readable API
+   contributes hundreds of stories and one without contributes ten. Titles are read off mastheads that go stale. And people
+   move: check a byline date before you assume someone is still on the desk.</p>
+   <div class="caution"><b>A note on how this was built.</b> The harvest, the parsing and the beat matching were written with
+   Claude, and the pairing rule above exists because automated extraction will otherwise attach a real address to the wrong
+   person. Treat every address as worth one glance at its source link before you send anything that matters.</div>
+   ${errs.length?`<h3>Harvest errors on this build (${errs.length})</h3><p style="color:var(--vc-charcoal)">${errs.slice(0,14).map(e=>esc(`${e.stage||""} ${e.outlet||""}: ${e.error||""}`)).join("<br>")}</p>`:""}
+   <p style="color:var(--vc-charcoal);margin-top:14px">Built ${esc((DATA.as_of||"").slice(0,16).replace("T"," "))} UTC.</p>`;
+}
+
+function init(){
+  BEATS=DATA.beats||{};
+  for(const [bid,b] of Object.entries(BEATS)) for(const t of (b.terms||[])) BEATRE[bid+"|"+t]=beatRe(t);
+  OUT={}; DATA_DOM={};
+  for(const o of DATA.outlets){ OUT[o.id]=o; DATA_DOM[o.id]=o.domain; }
+  $("#asof").textContent="As of "+(DATA.as_of||"").slice(0,10)+" · "+(DATA.counts?.people||0)+" people · "+(DATA.counts?.outlets||0)+" outlets";
+  renderBeats(); initDirectory(); renderKnown(); renderOutlets(); renderMentions(); renderMethod();
+  $("#go").addEventListener("click",runQuery);
+  $("#clear").addEventListener("click",()=>{$("#q").value="";runQuery();});
+  $("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey))runQuery();});
+  ["fEmail","fActive","fVC","fDiv"].forEach(id=>$("#"+id).addEventListener("change",runQuery));
+  $$(".jump a").forEach(a=>a.addEventListener("click",()=>document.getElementById(a.dataset.go)?.scrollIntoView({behavior:"smooth"})));
+  document.addEventListener("click",e=>{
+    const id=e.target?.dataset?.all; if(!id) return;
+    const p=DATA.people.find(x=>x.id===id); if(!p) return;
+    e.target.outerHTML=(p.stories||[]).map(s=>`&rsaquo; <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a><span class="dt">${esc(fmtDate(s.date))}</span>`).join("<br>");
+  });
+}
+</script>
+</body>
+</html>

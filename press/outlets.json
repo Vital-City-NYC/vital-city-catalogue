@@ -1,0 +1,1519 @@
+[
+ {
+  "id": "bloomberg-citylab",
+  "name": "Bloomberg / CityLab",
+  "type": "business",
+  "scope": "national+metro",
+  "site": "https://www.bloomberg.com/citylab",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Abloomberg.com/citylab%20when%3A30d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "no public RSS",
+  "tagline": "Cities, transport and urban policy"
+ },
+ {
+  "id": "crains",
+  "name": "Crain's New York Business",
+  "type": "business",
+  "scope": "citywide",
+  "site": "https://www.crainsnewyork.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Acrainsnewyork.com%20when%3A14d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "site feed + staff page 403 automated clients",
+  "tagline": "Business, real estate and city policy"
+ },
+ {
+  "id": "wsj",
+  "name": "The Wall Street Journal",
+  "type": "business",
+  "scope": "national+metro",
+  "site": "https://www.wsj.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Awsj.com%20when%3A7d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "tagline": "Business & policy"
+ },
+ {
+  "id": "gay-city-news",
+  "name": "Gay City News",
+  "type": "community",
+  "scope": "citywide",
+  "site": "https://gaycitynews.com",
+  "staff_url": "https://gaycitynews.com/about/",
+  "rss": [
+   "https://gaycitynews.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "LGBTQ New York, politics and health"
+ },
+ {
+  "id": "el-diario",
+  "name": "El Diario NY",
+  "type": "ethnic-community",
+  "scope": "citywide",
+  "site": "https://eldiariony.com",
+  "staff_url": null,
+  "rss": [
+   "https://eldiariony.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Spanish-language NYC news"
+ },
+ {
+  "id": "amsterdam-news",
+  "name": "New York Amsterdam News",
+  "type": "ethnic-community",
+  "scope": "citywide",
+  "site": "https://amsterdamnews.com",
+  "staff_url": "https://amsterdamnews.com/staff/",
+  "rss": [
+   "https://amsterdamnews.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "NYC's leading Black newspaper since 1909"
+ },
+ {
+  "id": "jewish-week",
+  "name": "New York Jewish Week",
+  "type": "ethnic-community",
+  "scope": "citywide",
+  "site": "https://www.jta.org/category/ny",
+  "staff_url": null,
+  "rss": [
+   "https://www.jta.org/feed"
+  ],
+  "tips": null,
+  "tagline": "Jewish New York"
+ },
+ {
+  "id": "forward",
+  "name": "The Forward",
+  "type": "ethnic-community",
+  "scope": "national+metro",
+  "site": "https://forward.com",
+  "staff_url": null,
+  "rss": [
+   "https://forward.com/feed/"
+  ],
+  "tips": null,
+  "note": "403s automated clients",
+  "tagline": "Jewish American news and politics"
+ },
+ {
+  "id": "haitian-times",
+  "name": "The Haitian Times",
+  "type": "ethnic-community",
+  "scope": "citywide",
+  "site": "https://haitiantimes.com",
+  "staff_url": "https://haitiantimes.com/about/",
+  "rss": [
+   "https://haitiantimes.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Haitian New York"
+ },
+ {
+  "id": "astoria-post",
+  "name": "Astoria Post",
+  "type": "hyperlocal",
+  "scope": "queens",
+  "site": "https://astoriapost.com",
+  "staff_url": null,
+  "rss": [
+   "https://astoriapost.com/feed"
+  ],
+  "tips": null,
+  "tagline": "Astoria neighborhood news"
+ },
+ {
+  "id": "bklyner",
+  "name": "Bklyner",
+  "type": "hyperlocal",
+  "scope": "brooklyn",
+  "site": "https://bklyner.com",
+  "staff_url": "https://bklyner.com/about/",
+  "rss": [
+   "https://bklyner.com/rss/"
+  ],
+  "tips": null,
+  "tagline": "Brooklyn neighborhood reporting"
+ },
+ {
+  "id": "bronx-times",
+  "name": "Bronx Times (Schneps)",
+  "type": "hyperlocal",
+  "scope": "bronx",
+  "site": "https://www.bxtimes.com",
+  "staff_url": null,
+  "rss": [
+   "https://www.bxtimes.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Bronx weekly"
+ },
+ {
+  "id": "brooklyn-eagle",
+  "name": "Brooklyn Eagle",
+  "type": "hyperlocal",
+  "scope": "brooklyn",
+  "site": "https://brooklyneagle.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Abrooklyneagle.com%20when%3A14d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "site 403s automated clients",
+  "tagline": "Brooklyn borough news"
+ },
+ {
+  "id": "bushwick-daily",
+  "name": "Bushwick Daily",
+  "type": "hyperlocal",
+  "scope": "brooklyn",
+  "site": "https://bushwickdaily.com",
+  "staff_url": null,
+  "rss": [
+   "https://bushwickdaily.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Bushwick neighborhood news"
+ },
+ {
+  "id": "chelsea-community",
+  "name": "Chelsea Community News",
+  "type": "hyperlocal",
+  "scope": "manhattan",
+  "site": "https://chelseacommunitynews.com",
+  "staff_url": null,
+  "rss": [
+   "https://chelseacommunitynews.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Chelsea neighborhood news"
+ },
+ {
+  "id": "greenpointers",
+  "name": "Greenpointers",
+  "type": "hyperlocal",
+  "scope": "brooklyn",
+  "site": "https://greenpointers.com",
+  "staff_url": null,
+  "rss": [
+   "https://greenpointers.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Greenpoint and north Brooklyn"
+ },
+ {
+  "id": "kings-county-politics",
+  "name": "Kings County Politics",
+  "type": "hyperlocal",
+  "scope": "brooklyn",
+  "site": "https://www.kingscountypolitics.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Akingscountypolitics.com%20when%3A21d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "site feed 404s; Google News site: query",
+  "tagline": "Brooklyn political clubhouse coverage"
+ },
+ {
+  "id": "mott-haven-herald",
+  "name": "Mott Haven Herald",
+  "type": "hyperlocal",
+  "scope": "bronx",
+  "site": "https://motthavenherald.com",
+  "staff_url": null,
+  "rss": [
+   "https://motthavenherald.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "South Bronx community paper"
+ },
+ {
+  "id": "norwood-news",
+  "name": "Norwood News",
+  "type": "hyperlocal",
+  "scope": "bronx",
+  "site": "https://www.norwoodnews.org",
+  "staff_url": null,
+  "rss": [
+   "https://www.norwoodnews.org/feed/"
+  ],
+  "tips": null,
+  "tagline": "Northwest Bronx community paper"
+ },
+ {
+  "id": "patch-nyc",
+  "name": "Patch New York City",
+  "type": "hyperlocal",
+  "scope": "citywide",
+  "site": "https://patch.com/new-york",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Apatch.com/new-york%20when%3A7d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "no public RSS; Google News site: query",
+  "tagline": "Neighborhood briefs across the city"
+ },
+ {
+  "id": "qns",
+  "name": "QNS / Queens Courier (Schneps)",
+  "type": "hyperlocal",
+  "scope": "queens",
+  "site": "https://qns.com",
+  "staff_url": null,
+  "rss": [
+   "https://qns.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Queens weekly"
+ },
+ {
+  "id": "queens-chronicle",
+  "name": "Queens Chronicle",
+  "type": "hyperlocal",
+  "scope": "queens",
+  "site": "https://www.qchron.com",
+  "staff_url": null,
+  "rss": [
+   "https://www.qchron.com/search/?f=rss"
+  ],
+  "tips": null,
+  "tagline": "Queens weekly"
+ },
+ {
+  "id": "queens-eagle",
+  "name": "Queens Daily Eagle",
+  "type": "hyperlocal",
+  "scope": "queens",
+  "site": "https://queenseagle.com",
+  "staff_url": "https://queenseagle.com/about",
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Aqueenseagle.com%20when%3A14d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "Squarespace RSS path not public",
+  "tagline": "Queens courts, politics and neighborhoods"
+ },
+ {
+  "id": "queens-post",
+  "name": "Queens Post",
+  "type": "hyperlocal",
+  "scope": "queens",
+  "site": "https://queenspost.com",
+  "staff_url": null,
+  "rss": [
+   "https://queenspost.com/feed"
+  ],
+  "tips": null,
+  "tagline": "Western Queens neighborhood news"
+ },
+ {
+  "id": "straus-news",
+  "name": "Straus News (Our Town, West Side Spirit, The Chief)",
+  "type": "hyperlocal",
+  "scope": "manhattan",
+  "site": "https://www.ourtownny.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Aourtownny.com%20OR%20site%3Awestsidespirit.com%20OR%20site%3Athechiefleader.com%20when%3A21d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "no public RSS; Google News site: query",
+  "tagline": "Manhattan weeklies and the civil service paper"
+ },
+ {
+  "id": "sunnyside-post",
+  "name": "Sunnyside Post",
+  "type": "hyperlocal",
+  "scope": "queens",
+  "site": "https://sunnysidepost.com",
+  "staff_url": null,
+  "rss": [
+   "https://sunnysidepost.com/feed"
+  ],
+  "tips": null,
+  "tagline": "Sunnyside and Woodside neighborhood news"
+ },
+ {
+  "id": "brooklyn-paper",
+  "name": "The Brooklyn Paper (Schneps)",
+  "type": "hyperlocal",
+  "scope": "brooklyn",
+  "site": "https://www.brooklynpaper.com",
+  "staff_url": null,
+  "rss": [
+   "https://www.brooklynpaper.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Brooklyn weekly"
+ },
+ {
+  "id": "riverdale-press",
+  "name": "The Riverdale Press",
+  "type": "hyperlocal",
+  "scope": "bronx",
+  "site": "https://www.riverdalepress.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Ariverdalepress.com%20when%3A21d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "site 403s automated clients",
+  "tagline": "Northwest Bronx weekly"
+ },
+ {
+  "id": "village-sun",
+  "name": "The Village Sun",
+  "type": "hyperlocal",
+  "scope": "manhattan",
+  "site": "https://thevillagesun.com",
+  "staff_url": null,
+  "rss": [
+   "https://thevillagesun.com/feed"
+  ],
+  "tips": null,
+  "tagline": "Downtown Manhattan"
+ },
+ {
+  "id": "w42st",
+  "name": "W42ST",
+  "type": "hyperlocal",
+  "scope": "manhattan",
+  "site": "https://w42st.com",
+  "staff_url": null,
+  "rss": [
+   "https://w42st.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Hell's Kitchen and Midtown West"
+ },
+ {
+  "id": "daily-news",
+  "name": "New York Daily News",
+  "type": "legacy-daily",
+  "scope": "citywide",
+  "site": "https://www.nydailynews.com",
+  "staff_url": "https://www.nydailynews.com/author/",
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Anydailynews.com%20when%3A7d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "site feed 403s automated clients (Cloudflare)",
+  "tagline": "New York's hometown paper"
+ },
+ {
+  "id": "ny-post",
+  "name": "New York Post",
+  "type": "legacy-daily",
+  "scope": "citywide",
+  "site": "https://nypost.com",
+  "staff_url": "https://nypost.com/columnists/",
+  "rss": [
+   "https://nypost.com/feed/",
+   "https://nypost.com/metro/feed/"
+  ],
+  "tips": "tips@nypost.com",
+  "tagline": "Tabloid with reach"
+ },
+ {
+  "id": "newsday",
+  "name": "Newsday",
+  "type": "legacy-daily",
+  "scope": "long-island+nyc",
+  "site": "https://www.newsday.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Anewsday.com%20when%3A7d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "no public RSS found",
+  "tagline": "Long Island's daily, with city coverage"
+ },
+ {
+  "id": "silive",
+  "name": "Staten Island Advance / SILive",
+  "type": "legacy-daily",
+  "scope": "staten-island",
+  "site": "https://www.silive.com",
+  "staff_url": null,
+  "rss": [
+   "https://www.silive.com/arc/outboundfeeds/rss/"
+  ],
+  "tips": null,
+  "note": "403s automated clients",
+  "tagline": "Staten Island's daily"
+ },
+ {
+  "id": "guardian-us",
+  "name": "The Guardian US",
+  "type": "legacy-daily",
+  "scope": "national+metro",
+  "site": "https://www.theguardian.com/us",
+  "staff_url": null,
+  "rss": [
+   "https://www.theguardian.com/us-news/new-york/rss"
+  ],
+  "tips": null,
+  "tagline": "US desk with New York coverage"
+ },
+ {
+  "id": "nytimes",
+  "name": "The New York Times",
+  "type": "legacy-daily",
+  "scope": "national+metro",
+  "site": "https://www.nytimes.com",
+  "section": "https://www.nytimes.com/section/nyregion",
+  "staff_url": null,
+  "rss": [
+   "https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml"
+  ],
+  "tips": "https://www.nytimes.com/tips",
+  "tagline": "Metro section"
+ },
+ {
+  "id": "times-union",
+  "name": "Times Union (Albany)",
+  "type": "legacy-daily",
+  "scope": "state",
+  "site": "https://www.timesunion.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Atimesunion.com%20%28Hochul%20OR%20Albany%20OR%20legislature%29%20when%3A14d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "no public RSS; Google News site: query, scoped to state politics",
+  "tagline": "Albany daily; the state government beat"
+ },
+ {
+  "id": "amny",
+  "name": "amNewYork Metro",
+  "type": "legacy-daily",
+  "scope": "citywide",
+  "site": "https://www.amny.com",
+  "staff_url": "https://www.amny.com/contact-us/",
+  "rss": [
+   "https://www.amny.com/feed/"
+  ],
+  "tips": "editorial@amny.com",
+  "tagline": "Metro daily"
+ },
+ {
+  "id": "nymag",
+  "name": "New York Magazine / Curbed / Intelligencer",
+  "type": "magazine",
+  "scope": "citywide",
+  "site": "https://nymag.com",
+  "staff_url": null,
+  "rss": [
+   "https://feeds.feedburner.com/nymag/intelligencer",
+   "https://www.curbed.com/rss/index.xml"
+  ],
+  "tips": null,
+  "tagline": "City life, politics & culture"
+ },
+ {
+  "id": "new-yorker",
+  "name": "The New Yorker",
+  "type": "magazine",
+  "scope": "national+metro",
+  "site": "https://www.newyorker.com",
+  "staff_url": "https://www.newyorker.com/contributors",
+  "rss": [
+   "https://www.newyorker.com/feed/news"
+  ],
+  "tips": null,
+  "tagline": "Longform & essays"
+ },
+ {
+  "id": "city-journal",
+  "name": "City Journal",
+  "type": "magazine-policy",
+  "scope": "citywide",
+  "site": "https://www.city-journal.org",
+  "staff_url": "https://www.city-journal.org/contributors",
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Acity-journal.org%20when%3A30d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "no public RSS; Google News site: query used instead",
+  "tagline": "Manhattan Institute urban policy"
+ },
+ {
+  "id": "abundance-ny",
+  "name": "Abundance New York",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://abundanceny.substack.com",
+  "staff_url": null,
+  "rss": [
+   "https://abundanceny.substack.com/feed"
+  ],
+  "tips": null,
+  "feed_note": "advocacy newsletter, housing and building",
+  "tagline": "Building more in New York"
+ },
+ {
+  "id": "atlantic-yards",
+  "name": "Atlantic Yards / Pacific Park Report",
+  "type": "newsletter",
+  "scope": "brooklyn",
+  "site": "https://normanoder.substack.com",
+  "staff_url": null,
+  "rss": [
+   "https://normanoder.substack.com/feed"
+  ],
+  "tips": null,
+  "tagline": "Norman Oder on Atlantic Yards and Pacific Park"
+ },
+ {
+  "id": "changing-lanes",
+  "name": "Changing Lanes",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://changinglanesnewsletter.com",
+  "staff_url": null,
+  "rss": [
+   "https://changinglanesnewsletter.com/feed"
+  ],
+  "tips": null,
+  "tagline": "Streets and transportation policy"
+ },
+ {
+  "id": "external-processing",
+  "name": "External Processing (John K. Roman)",
+  "type": "newsletter",
+  "scope": "national+metro",
+  "site": "https://johnkroman.substack.com",
+  "staff_url": null,
+  "rss": [
+   "https://johnkroman.substack.com/feed"
+  ],
+  "tips": null,
+  "feed_note": "crime data and criminal justice research, written by a criminologist",
+  "tagline": "A criminologist on crime data and fear"
+ },
+ {
+  "id": "market-urbanism",
+  "name": "Market Urbanism",
+  "type": "newsletter",
+  "scope": "national+metro",
+  "site": "https://marketurbanism.com",
+  "staff_url": null,
+  "rss": [
+   "https://marketurbanism.com/feed/"
+  ],
+  "tips": null,
+  "feed_note": "land use and housing supply economics",
+  "tagline": "Land use and housing supply economics"
+ },
+ {
+  "id": "maximum-ny",
+  "name": "Maximum New York",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://www.maximumnewyork.com",
+  "staff_url": null,
+  "rss": [
+   "https://www.maximumnewyork.com/feed"
+  ],
+  "tips": null,
+  "tagline": "Pro-growth NYC housing & development"
+ },
+ {
+  "id": "metro-mosaic",
+  "name": "Metro Mosaic",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://metromosaic.substack.com",
+  "staff_url": null,
+  "rss": [
+   "https://metromosaic.substack.com/feed"
+  ],
+  "tips": null,
+  "tagline": "NYC housing & urban policy analysis"
+ },
+ {
+  "id": "nyc-policy-forum",
+  "name": "NYC Policy Forum",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://nycpolicyforum.substack.com",
+  "staff_url": null,
+  "rss": [
+   "https://nycpolicyforum.substack.com/feed"
+  ],
+  "tips": null,
+  "feed_note": "research and publishing network on city governance",
+  "tagline": "Expert policy debate & commentary"
+ },
+ {
+  "id": "nyc-politics-101",
+  "name": "NYC Politics 101",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://nycpolitics101.substack.com",
+  "staff_url": null,
+  "rss": [
+   "https://nycpolitics101.substack.com/feed"
+  ],
+  "tips": null,
+  "tagline": "State & local policy education"
+ },
+ {
+  "id": "nycuriosity",
+  "name": "NYCuriosity",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://nycuriosity.substack.com",
+  "staff_url": null,
+  "rss": [
+   "https://nycuriosity.substack.com/feed"
+  ],
+  "tips": null,
+  "feed_note": "streets, transit and parks through data",
+  "tagline": "NYC civic engagement & community boards"
+ },
+ {
+  "id": "pedestrian-observations",
+  "name": "Pedestrian Observations (Alon Levy)",
+  "type": "newsletter",
+  "scope": "national+metro",
+  "site": "https://pedestrianobservations.com",
+  "staff_url": null,
+  "rss": [
+   "https://pedestrianobservations.com/feed/"
+  ],
+  "tips": null,
+  "feed_note": "transit construction costs and network design",
+  "tagline": "Transit construction costs and network design"
+ },
+ {
+  "id": "political-currents",
+  "name": "Political Currents (Ross Barkan)",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://rosselliotbarkan.com",
+  "staff_url": null,
+  "rss": [
+   "https://rosselliotbarkan.com/feed"
+  ],
+  "tips": null,
+  "tagline": "Ross Barkan on NYC politics & culture"
+ },
+ {
+  "id": "sidewalk-chorus",
+  "name": "Sidewalk Chorus",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://www.sidewalkchorus.com",
+  "staff_url": null,
+  "rss": [
+   "https://www.sidewalkchorus.com/feed"
+  ],
+  "tips": null,
+  "feed_note": "neighborhoods and urban life; last posted early 2026",
+  "tagline": "NYC neighborhoods & urban life"
+ },
+ {
+  "id": "step-two-policy",
+  "name": "Step Two Policy Project",
+  "type": "newsletter",
+  "scope": "state+city",
+  "site": "https://steptwopolicyproject.substack.com",
+  "staff_url": null,
+  "rss": [
+   "https://steptwopolicyproject.substack.com/feed"
+  ],
+  "tips": null,
+  "feed_note": "health, behavioral health and human services in New York",
+  "tagline": "Behavioral health and human services in New York"
+ },
+ {
+  "id": "bigger-apple",
+  "name": "The Bigger Apple (Manhattan Institute)",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://thebiggerapple.manhattan.institute",
+  "staff_url": null,
+  "rss": [
+   "https://thebiggerapple.manhattan.institute/feed"
+  ],
+  "tips": null,
+  "tagline": "Manhattan Institute weekly NYC policy brief"
+ },
+ {
+  "id": "ny-editorial-board",
+  "name": "The New York Editorial Board",
+  "type": "newsletter",
+  "scope": "citywide",
+  "site": "https://nyeditorialboard.substack.com",
+  "staff_url": null,
+  "rss": [
+   "https://nyeditorialboard.substack.com/feed"
+  ],
+  "tips": null,
+  "tagline": "NYC interviews & commentary"
+ },
+ {
+  "id": "urban-condition",
+  "name": "The Urban Condition (Benjamin Schneider)",
+  "type": "newsletter",
+  "scope": "national+metro",
+  "site": "https://benjaminschneider.substack.com",
+  "staff_url": null,
+  "rss": [
+   "https://benjaminschneider.substack.com/feed"
+  ],
+  "tips": null,
+  "feed_note": "cities and housing; publishes irregularly",
+  "tagline": "Cities and housing, published irregularly"
+ },
+ {
+  "id": "bolts",
+  "name": "Bolts",
+  "type": "nonprofit",
+  "scope": "national+metro",
+  "site": "https://boltsmag.org",
+  "staff_url": "https://boltsmag.org/about/",
+  "rss": [
+   "https://boltsmag.org/feed/"
+  ],
+  "tips": null,
+  "tagline": "Criminal justice & local democracy"
+ },
+ {
+  "id": "chalkbeat",
+  "name": "Chalkbeat New York",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://www.chalkbeat.org/newyork/",
+  "staff_url": "https://www.chalkbeat.org/pages/our-staff/",
+  "rss": [
+   "https://www.chalkbeat.org/arc/outboundfeeds/rss/"
+  ],
+  "tips": "ny.tips@chalkbeat.org",
+  "feed_filter": "/newyork/",
+  "tagline": "Education reporting"
+ },
+ {
+  "id": "city-limits",
+  "name": "City Limits",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://citylimits.org",
+  "staff_url": "https://citylimits.org/staff/",
+  "rss": [
+   "https://citylimits.org/feed/"
+  ],
+  "tips": null,
+  "tagline": "Nonprofit policy journalism since 1976"
+ },
+ {
+  "id": "documented",
+  "name": "Documented",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://documentedny.com",
+  "staff_url": null,
+  "rss": [
+   "https://documentedny.com/feed/"
+  ],
+  "tips": null,
+  "note": "team page 403s automated clients",
+  "tagline": "Immigration in New York"
+ },
+ {
+  "id": "epicenter",
+  "name": "Epicenter NYC",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://epicenter-nyc.com",
+  "staff_url": "https://epicenter-nyc.com/about/",
+  "rss": [
+   "https://epicenter-nyc.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Community-first reporting, immigrant New York"
+ },
+ {
+  "id": "gotham-gazette",
+  "name": "Gotham Gazette",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://www.gothamgazette.com",
+  "staff_url": "https://www.gothamgazette.com/about",
+  "rss": [
+   "https://news.google.com/rss/search?q=%22Gotham%20Gazette%22%20New%20York%20when%3A30d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "site RSS returns 500; Google News site: query used instead",
+  "tagline": "Nonpartisan NYC government & policy"
+ },
+ {
+  "id": "gothamist",
+  "name": "Gothamist",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://gothamist.com",
+  "staff_url": "https://gothamist.com/staff",
+  "rss": [
+   "https://gothamist.com/feed"
+  ],
+  "tips": "tips@gothamist.com",
+  "tagline": "WNYC-backed local news"
+ },
+ {
+  "id": "hell-gate",
+  "name": "Hell Gate",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://hellgatenyc.com",
+  "staff_url": "https://hellgatenyc.com/about",
+  "rss": [
+   "https://hellgatenyc.com/all-posts/rss/"
+  ],
+  "tips": "tips@hellgatenyc.com",
+  "tagline": "Worker-owned NYC journalism"
+ },
+ {
+  "id": "ny-focus",
+  "name": "New York Focus",
+  "type": "nonprofit",
+  "scope": "state",
+  "site": "https://nysfocus.com",
+  "staff_url": "https://nysfocus.com/about",
+  "rss": [
+   "https://nysfocus.com/feed"
+  ],
+  "tips": null,
+  "tagline": "State politics & accountability"
+ },
+ {
+  "id": "propublica",
+  "name": "ProPublica",
+  "type": "nonprofit",
+  "scope": "national+metro",
+  "site": "https://www.propublica.org",
+  "staff_url": "https://www.propublica.org/people/",
+  "rss": [
+   "https://www.propublica.org/feeds/propublica/main"
+  ],
+  "tips": null,
+  "tagline": "Nonprofit investigations"
+ },
+ {
+  "id": "streetsblog",
+  "name": "Streetsblog NYC",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://nyc.streetsblog.org",
+  "staff_url": "https://nyc.streetsblog.org/about",
+  "rss": [
+   "https://nyc.streetsblog.org/feed"
+  ],
+  "tips": null,
+  "tagline": "Transit & street safety policy"
+ },
+ {
+  "id": "the74",
+  "name": "The 74",
+  "type": "nonprofit",
+  "scope": "national+metro",
+  "site": "https://www.the74million.org",
+  "staff_url": "https://www.the74million.org/about/",
+  "rss": [
+   "https://www.the74million.org/feed/"
+  ],
+  "tips": null,
+  "tagline": "National education newsroom with New York coverage"
+ },
+ {
+  "id": "the-appeal",
+  "name": "The Appeal",
+  "type": "nonprofit",
+  "scope": "national+metro",
+  "site": "https://theappeal.org",
+  "staff_url": "https://theappeal.org/about/",
+  "rss": [
+   "https://theappeal.org/feed/"
+  ],
+  "tips": null,
+  "tagline": "Criminal justice, from the defense side"
+ },
+ {
+  "id": "city-reporter",
+  "name": "The City Reporter",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://www.thecityreporter.nyc",
+  "staff_url": "https://www.thecityreporter.nyc/about/staff/",
+  "rss": [
+   "https://www.thecityreporter.nyc/feed/"
+  ],
+  "tips": "tips@thecityreporter.nyc",
+  "tagline": "Nonprofit investigative newsroom, the former THE CITY"
+ },
+ {
+  "id": "indypendent",
+  "name": "The Indypendent",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://indypendent.org",
+  "staff_url": "https://indypendent.org/about/",
+  "rss": [
+   "https://indypendent.org/feed/"
+  ],
+  "tips": null,
+  "tagline": "Left-wing city monthly"
+ },
+ {
+  "id": "the-markup",
+  "name": "The Markup",
+  "type": "nonprofit",
+  "scope": "national+metro",
+  "site": "https://themarkup.org",
+  "staff_url": "https://themarkup.org/about",
+  "rss": [
+   "https://themarkup.org/feeds/rss.xml"
+  ],
+  "tips": null,
+  "feed_note": "algorithmic accountability; the New York work runs through CalMatters now",
+  "tagline": "Tech & algorithmic accountability"
+ },
+ {
+  "id": "marshall-project",
+  "name": "The Marshall Project",
+  "type": "nonprofit",
+  "scope": "national+metro",
+  "site": "https://www.themarshallproject.org",
+  "staff_url": "https://www.themarshallproject.org/staff",
+  "rss": [
+   "https://www.themarshallproject.org/rss/recent.rss"
+  ],
+  "tips": null,
+  "tagline": "Criminal justice journalism"
+ },
+ {
+  "id": "the-trace",
+  "name": "The Trace",
+  "type": "nonprofit",
+  "scope": "national+metro",
+  "site": "https://www.thetrace.org",
+  "staff_url": "https://www.thetrace.org/about/",
+  "rss": [
+   "https://www.thetrace.org/feed/"
+  ],
+  "tips": null,
+  "tagline": "Gun violence reporting"
+ },
+ {
+  "id": "vital-city",
+  "name": "Vital City",
+  "type": "nonprofit",
+  "scope": "citywide",
+  "site": "https://www.vitalcitynyc.org",
+  "staff_url": "https://www.vitalcitynyc.org/about",
+  "rss": [
+   "https://www.vitalcitynyc.org/commentary/rss/"
+  ],
+  "tips": "info@vitalcitynyc.org",
+  "tagline": "Urban policy & ideas"
+ },
+ {
+  "id": "faq-nyc",
+  "name": "FAQ NYC",
+  "type": "podcast",
+  "scope": "citywide",
+  "site": "https://faq.nyc",
+  "staff_url": null,
+  "rss": [
+   "https://feeds.fireside.fm/faqnyc/rss"
+  ],
+  "tips": null,
+  "tagline": "NYC politics, argued weekly"
+ },
+ {
+  "id": "firewall",
+  "name": "Firewall with Bradley Tusk",
+  "type": "podcast",
+  "scope": "citywide",
+  "site": "https://firewall.media",
+  "staff_url": null,
+  "rss": [
+   "https://feeds.captivate.fm/firewall/"
+  ],
+  "tips": null,
+  "host": "Bradley Tusk",
+  "host_source": "named in the show title",
+  "feed_note": "NYC politics and campaigns",
+  "tagline": "Bradley Tusk on campaigns and city politics"
+ },
+ {
+  "id": "max-politics",
+  "name": "Max Politics (Gotham Gazette)",
+  "type": "podcast",
+  "scope": "citywide",
+  "site": "https://www.gothamgazette.com",
+  "staff_url": null,
+  "rss": [
+   "https://feeds.soundcloud.com/users/soundcloud:users:205521899/sounds.rss"
+  ],
+  "tips": null,
+  "tagline": "Nonpartisan NYC government & policy"
+ },
+ {
+  "id": "odd-lots",
+  "name": "Odd Lots",
+  "type": "podcast",
+  "scope": "national+metro",
+  "site": "https://www.bloomberg.com/oddlots",
+  "staff_url": null,
+  "rss": [
+   "https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/8a94442e-5a74-4fa2-8b8d-ae27003a8d6b/982f5071-765c-403d-969d-ae27003a8d83/podcast.rss"
+  ],
+  "tips": null,
+  "feed_note": "Bloomberg; housing supply, construction costs, state capacity",
+  "tagline": "Bloomberg on construction costs and state capacity"
+ },
+ {
+  "id": "plain-english",
+  "name": "Plain English with Derek Thompson",
+  "type": "podcast",
+  "scope": "national+metro",
+  "site": "https://www.theringer.com",
+  "staff_url": null,
+  "rss": [
+   "https://feeds.megaphone.fm/plain-english"
+  ],
+  "tips": null,
+  "host": "Derek Thompson",
+  "host_source": "named in the show title",
+  "feed_note": "abundance, housing and state capacity",
+  "tagline": "Abundance, housing and state capacity"
+ },
+ {
+  "id": "probable-causation",
+  "name": "Probable Causation",
+  "type": "podcast",
+  "scope": "national+metro",
+  "site": "https://www.probablecausation.com",
+  "staff_url": null,
+  "rss": [
+   "https://feed.podbean.com/probablecausation/feed.xml"
+  ],
+  "tips": null,
+  "host": "Jennifer Doleac",
+  "host_source": "Apple Podcasts directory artist field",
+  "feed_note": "the economics of crime and justice research",
+  "tagline": "The economics of crime and justice research"
+ },
+ {
+  "id": "reducing-crime",
+  "name": "Reducing Crime",
+  "type": "podcast",
+  "scope": "national+metro",
+  "site": "https://reducingcrime.com",
+  "staff_url": null,
+  "rss": [
+   "https://feeds.soundcloud.com/users/soundcloud:users:371403587/sounds.rss"
+  ],
+  "tips": null,
+  "host": "Jerry Ratcliffe",
+  "host_source": "Apple Podcasts directory artist field",
+  "feed_note": "policing research and practice",
+  "tagline": "Policing research and practice"
+ },
+ {
+  "id": "statecraft",
+  "name": "Statecraft",
+  "type": "podcast",
+  "scope": "national+metro",
+  "site": "https://www.statecraft.pub",
+  "staff_url": null,
+  "rss": [
+   "https://api.substack.com/feed/podcast/1818323.rss"
+  ],
+  "tips": null,
+  "host": "Santi Ruiz",
+  "host_source": "Apple Podcasts directory artist field",
+  "feed_note": "how government actually gets things done",
+  "tagline": "How government actually gets things done"
+ },
+ {
+  "id": "talking-headways",
+  "name": "Talking Headways (Streetsblog)",
+  "type": "podcast",
+  "scope": "national+metro",
+  "site": "https://usa.streetsblog.org/category/podcast",
+  "staff_url": null,
+  "rss": [
+   "https://rss.libsyn.com/shows/49347/destinations/170891.xml"
+  ],
+  "tips": null,
+  "feed_note": "transportation planning",
+  "tagline": "Transportation planning, from Streetsblog"
+ },
+ {
+  "id": "ezra-klein",
+  "name": "The Ezra Klein Show",
+  "type": "podcast",
+  "scope": "national+metro",
+  "site": "https://www.nytimes.com/column/ezra-klein-podcast",
+  "staff_url": null,
+  "rss": [
+   "https://feeds.simplecast.com/kEKXbjuJ"
+  ],
+  "tips": null,
+  "host": "Ezra Klein",
+  "host_source": "named in the show title",
+  "feed_note": "New York Times Opinion; abundance and governance",
+  "tagline": "Metro section"
+ },
+ {
+  "id": "war-on-cars",
+  "name": "The War on Cars",
+  "type": "podcast",
+  "scope": "citywide",
+  "site": "https://thewaroncars.org",
+  "staff_url": null,
+  "rss": [
+   "https://rss.libsyn.com/shows/132228/destinations/807818.xml"
+  ],
+  "tips": null,
+  "feed_note": "streets and car culture, made in Brooklyn",
+  "tagline": "Brooklyn-made, streets and car culture"
+ },
+ {
+  "id": "you-decide",
+  "name": "You Decide with Errol Louis",
+  "type": "podcast",
+  "scope": "citywide",
+  "site": "https://youdecidewitherrollouis.libsyn.com",
+  "staff_url": null,
+  "rss": [
+   "https://youdecidewitherrollouis.libsyn.com/rss"
+  ],
+  "tips": null,
+  "host": "Errol Louis",
+  "host_source": "named in the show title; Spectrum News NY1",
+  "feed_note": "NYC politics interviews",
+  "tagline": "Errol Louis interviews the people who run the city"
+ },
+ {
+  "id": "1010wins",
+  "name": "1010 WINS",
+  "type": "radio",
+  "scope": "citywide",
+  "site": "https://www.audacy.com/1010wins",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Aaudacy.com/1010wins%20when%3A14d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "tagline": "All-news radio"
+ },
+ {
+  "id": "wbai",
+  "name": "WBAI 99.5 FM",
+  "type": "radio",
+  "scope": "citywide",
+  "site": "https://wbai.org",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Awbai.org%20OR%20%22WBAI%22%20New%20York%20City%20when%3A30d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "tagline": "Listener-supported community radio"
+ },
+ {
+  "id": "wnyc",
+  "name": "WNYC / New York Public Radio",
+  "type": "radio",
+  "scope": "citywide",
+  "site": "https://www.wnyc.org",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Awnyc.org%20when%3A14d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "site RSS retired; Gothamist feed carries most WNYC newsroom copy",
+  "tagline": "Public radio news"
+ },
+ {
+  "id": "brian-lehrer",
+  "name": "The Brian Lehrer Show (WNYC)",
+  "type": "radio-show",
+  "scope": "citywide",
+  "site": "https://www.wnyc.org/shows/bl",
+  "staff_url": null,
+  "rss": [
+   "https://feeds.simplecast.com/C8a1jmw4"
+  ],
+  "tips": "bltips@wnyc.org",
+  "tagline": "Public radio news"
+ },
+ {
+  "id": "nylj",
+  "name": "New York Law Journal",
+  "type": "trade-legal",
+  "scope": "state+city",
+  "site": "https://www.law.com/newyorklawjournal/",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Alaw.com/newyorklawjournal%20when%3A21d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "tagline": "Courts and the legal profession"
+ },
+ {
+  "id": "city-state",
+  "name": "City & State New York",
+  "type": "trade-politics",
+  "scope": "state+city",
+  "site": "https://www.cityandstateny.com",
+  "staff_url": "https://www.cityandstateny.com/staff/",
+  "rss": [
+   "https://www.cityandstateny.com/rss/all/"
+  ],
+  "tips": null,
+  "tagline": "NY government & politics"
+ },
+ {
+  "id": "jewish-insider",
+  "name": "Jewish Insider",
+  "type": "trade-politics",
+  "scope": "national+metro",
+  "site": "https://www.jewishinsider.com",
+  "staff_url": null,
+  "rss": [
+   "https://www.jewishinsider.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Jewish politics and NYC campaign coverage"
+ },
+ {
+  "id": "politico-ny",
+  "name": "Politico New York",
+  "type": "trade-politics",
+  "scope": "state+city",
+  "site": "https://www.politico.com/new-york",
+  "staff_url": null,
+  "rss": [
+   "https://rss.politico.com/new-york-playbook.xml"
+  ],
+  "tips": null,
+  "note": "403s automated clients",
+  "tagline": "Albany & City Hall insider"
+ },
+ {
+  "id": "politicsny",
+  "name": "PoliticsNY",
+  "type": "trade-politics",
+  "scope": "citywide",
+  "site": "https://www.politicsny.com",
+  "staff_url": null,
+  "rss": [
+   "https://www.politicsny.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Schneps politics vertical, city and borough campaigns"
+ },
+ {
+  "id": "chief-leader",
+  "name": "The Chief-Leader",
+  "type": "trade-politics",
+  "scope": "citywide",
+  "site": "https://thechiefleader.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Athechiefleader.com%20when%3A21d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "civil service and municipal labor; Google News site: query",
+  "tagline": "Civil service and municipal labor, since 1897"
+ },
+ {
+  "id": "commercial-observer",
+  "name": "Commercial Observer",
+  "type": "trade-realestate",
+  "scope": "citywide",
+  "site": "https://commercialobserver.com",
+  "staff_url": "https://commercialobserver.com/about/",
+  "rss": [
+   "https://commercialobserver.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Commercial real estate and finance"
+ },
+ {
+  "id": "therealdeal",
+  "name": "The Real Deal",
+  "type": "trade-realestate",
+  "scope": "citywide",
+  "site": "https://therealdeal.com",
+  "staff_url": "https://therealdeal.com/about/",
+  "rss": [
+   "https://therealdeal.com/new-york/feed/"
+  ],
+  "tips": null,
+  "tagline": "Real estate trade"
+ },
+ {
+  "id": "cbsny",
+  "name": "CBS News New York (WCBS Ch. 2)",
+  "type": "tv",
+  "scope": "citywide",
+  "site": "https://www.cbsnews.com/newyork/",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Acbsnews.com/newyork%20when%3A7d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "no working section RSS",
+  "tagline": "Local TV news"
+ },
+ {
+  "id": "fox5",
+  "name": "FOX 5 New York (WNYW)",
+  "type": "tv",
+  "scope": "citywide",
+  "site": "https://www.fox5ny.com",
+  "staff_url": "https://www.fox5ny.com/person/",
+  "rss": [
+   "https://www.fox5ny.com/rss/category/local-news"
+  ],
+  "tips": null,
+  "tagline": "Channel 5 news"
+ },
+ {
+  "id": "state-of-politics",
+  "name": "NY State of Politics (Spectrum)",
+  "type": "tv",
+  "scope": "state",
+  "site": "https://nystateofpolitics.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Anystateofpolitics.com%20when%3A14d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "no public RSS; Google News site: query",
+  "tagline": "Spectrum's Albany politics desk"
+ },
+ {
+  "id": "news12",
+  "name": "News 12 (Bronx/Brooklyn)",
+  "type": "tv",
+  "scope": "borough",
+  "site": "https://bronx.news12.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Anews12.com%20when%3A7d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "tagline": "Borough cable news"
+ },
+ {
+  "id": "pix11",
+  "name": "PIX11 News (WPIX)",
+  "type": "tv",
+  "scope": "citywide",
+  "site": "https://pix11.com",
+  "staff_url": null,
+  "rss": [
+   "https://pix11.com/feed/"
+  ],
+  "tips": null,
+  "feed_note": "staff page 403s automated clients",
+  "tagline": "Channel 11 news"
+ },
+ {
+  "id": "ny1",
+  "name": "Spectrum News NY1",
+  "type": "tv",
+  "scope": "citywide",
+  "site": "https://ny1.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Any1.com%20when%3A7d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "feed_note": "no public RSS",
+  "tagline": "Cable news for the city"
+ },
+ {
+  "id": "wabc",
+  "name": "WABC-TV Eyewitness News (Ch. 7)",
+  "type": "tv",
+  "scope": "citywide",
+  "site": "https://abc7ny.com",
+  "staff_url": "https://abc7ny.com/about/newsteam/",
+  "rss": [
+   "https://abc7ny.com/feed/"
+  ],
+  "tips": null,
+  "tagline": "Local TV news"
+ },
+ {
+  "id": "wnbc",
+  "name": "WNBC News 4 New York",
+  "type": "tv",
+  "scope": "citywide",
+  "site": "https://www.nbcnewyork.com",
+  "staff_url": "https://www.nbcnewyork.com/about-us/",
+  "rss": [
+   "https://www.nbcnewyork.com/?rss=y"
+  ],
+  "tips": null,
+  "tagline": "Channel 4 news"
+ },
+ {
+  "id": "telemundo47",
+  "name": "Telemundo 47 (WNJU)",
+  "type": "tv-spanish",
+  "scope": "citywide",
+  "site": "https://www.telemundo47.com",
+  "staff_url": "https://www.telemundo47.com/sobre-nosotros/",
+  "rss": [
+   "https://www.telemundo47.com/?rss=y"
+  ],
+  "tips": null,
+  "tagline": "Spanish-language TV news"
+ },
+ {
+  "id": "univision41",
+  "name": "Univision 41 Nueva York (WXTV)",
+  "type": "tv-spanish",
+  "scope": "citywide",
+  "site": "https://www.univision.com/local/nueva-york-wxtv",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Aunivision.com%20%22nueva%20york%22%20when%3A30d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "tagline": "Spanish-language TV news"
+ },
+ {
+  "id": "ap-ny",
+  "name": "Associated Press \u2014 New York",
+  "type": "wire",
+  "scope": "national+metro",
+  "site": "https://apnews.com",
+  "staff_url": null,
+  "rss": [
+   "https://news.google.com/rss/search?q=site%3Aapnews.com%20when%3A7d&hl=en-US&gl=US&ceid=US:en"
+  ],
+  "tips": null,
+  "tagline": "Wire coverage of the city and the state"
+ }
+]

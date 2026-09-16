@@ -1,0 +1,930 @@
+#!/usr/bin/env python3
+"""Build the Press map: who covers New York City government, and what they cover.
+
+Writes private/press.json (gitignored) for press/index.html to read after
+encrypt_press.py turns it into press/data.enc.
+
+The idea the tool rests on: a reporter's beat is not a label somebody typed on a
+masthead, it is the set of stories they actually filed. So the build harvests
+bylines first -- RSS for every outlet, the WordPress API wherever one is
+readable -- matches each story against a vocabulary of New York City government
+beats, and keeps the matching stories next to the count. Every card can show its
+work, and the ranking on a topic search is a claim about published evidence.
+
+Contact rules, inherited from the officials database:
+  * an address is kept only if it was read verbatim off a page we fetched,
+  * and only if it pairs with the person's name -- newsroom addresses are built
+    from names, so an address that cannot be derived from the name is evidence
+    the parser walked into the wrong person's block. Those are dropped to a
+    review list rather than published.
+Nothing is ever inferred from a pattern.
+
+  python3 build_press.py            # full harvest (~12 min)
+  python3 build_press.py --fast     # reuse cached harvest, rebuild the output
+
+Dependencies beyond the standard library: feedparser, beautifulsoup4. Fetching
+is done with curl, so no requests dependency.
+"""
+import argparse, collections, csv, html as H, json, re, subprocess, sys, unicodedata
+import concurrent.futures as cf
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+
+import feedparser
+from bs4 import BeautifulSoup
+
+ROOT = Path(__file__).resolve().parent
+PRIV = ROOT / "private"
+PRESS = ROOT / "press"
+CACHE = ROOT / "private" / "press_cache"   # inside private/, which is already gitignored
+UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+      "(KHTML, like Gecko) Chrome/124 Safari/537.36")
+
+# ---------------------------------------------------------------- fetching
+def curl(url, timeout=30):
+    try:
+        p = subprocess.run(["curl", "-sSL", "--max-time", str(timeout), "-A", UA, url],
+                           capture_output=True, timeout=timeout + 20)
+        return p.stdout.decode("utf8", "ignore")
+    except Exception:
+        return ""
+
+def curl_json(url, timeout=45):
+    try:
+        return json.loads(curl(url, timeout))
+    except Exception:
+        return None
+
+# ---------------------------------------------------------------- names
+def norm(s):
+    s = unicodedata.normalize("NFKD", s or "")
+    return "".join(c for c in s if not unicodedata.combining(c)).lower()
+
+def person_key(name, outlet):
+    slug = re.sub(r"\s+", "-", re.sub(r"[^a-z ]", "", norm(name)).strip())
+    return outlet + ":" + slug
+
+def merge_name(name):
+    """Loose key for matching a reporter across sources (press list, VC authors)."""
+    return re.sub(r"[^a-z]", "", norm(name))
+
+def pairs_with_email(name, email):
+    local = re.sub(r"[^a-z]", "", norm(email.split("@")[0]))
+    parts = [re.sub(r"[^a-z\-]", "", norm(p)) for p in name.split()]
+    parts = [p for p in parts if len(p) > 1]
+    if not parts:
+        return False
+    first, last = parts[0], parts[-1]
+    for L in {last, last.replace("-", "")}:
+        if len(L) > 2 and L in local:
+            return True
+        if local in (first[0] + L, first + L, (first + L), L + first[0]):
+            return True
+    if len(parts) > 2:
+        for mid in parts[1:-1]:
+            if len(mid) > 2 and mid in local:
+                return True
+    return len(first) > 3 and local == re.sub(r"[^a-z]", "", first)
+
+GENERIC_LOCAL = re.compile(
+    r"^(tips?|info|news|editor|editors|desk|contact|press|media|support|help|careers|jobs|hello|"
+    r"admin|webmaster|advertis\w*|sales|subscriptions?|general|newsroom|feedback|letters|corrections|"
+    r"noreply|no-reply|privacy|legal|events|donate|membership|viewer\.services|assignment\w*|story\w*)$", re.I)
+
+# ---------------------------------------------------------------- beats
+def compile_beats(beats):
+    out = {}
+    for bid, b in beats.items():
+        pats = []
+        for t in b["terms"]:
+            if t.endswith("*"):
+                pats.append((re.compile(r"\b" + re.escape(t[:-1]) + r"\w*", re.I), t))
+            elif t.isupper() and len(t) <= 5:
+                # case-sensitive so ICE does not match "police" and DOE not "does"
+                pats.append((re.compile(r"\b" + re.escape(t) + r"\b"), t))
+            else:
+                pats.append((re.compile(r"\b" + re.escape(t) + r"s?\b", re.I), t))
+        out[bid] = {"label": b["label"], "priority": b.get("priority", 3), "pats": pats}
+    return out
+
+STOP = set("""a an the and or but of in on at to for from with by as is are was were be been being this
+that these those it its if then than so such not no nor can could will would should may might must do
+does did done have has had new york city nyc more over after before amid says say said why how what when
+who whom which about into out up down off again also just only very much many most some any each other
+another one two three first second last next year years day days week weeks month months""".split())
+
+def terms_of(text):
+    ws = re.findall(r"[a-zA-Z][a-zA-Z'’\-]{2,}", (text or "").lower())
+    return [w for w in ws if w not in STOP and len(w) > 2]
+
+# ---------------------------------------------------------------- harvest: RSS
+BAD_AUTHOR = re.compile(r"^(staff|editor|admin|newsroom|press|associated press|ap|reuters|none|unknown|"
+                        r"[\w.\-]*(?:rest|api|service|bot|agent|wire|feed|cms|syndicat\w*)[\w.\-]*)$", re.I)
+NAME_OK = re.compile(r"^[A-ZÀ-Ü][\w'’.\-]+(\s+[\w'’.\-À-Ü]+){1,3}$")
+
+def clean_authors(raw):
+    if not raw:
+        return []
+    a = re.sub(r"<[^>]+>", " ", H.unescape(raw))
+    a = re.sub(r"^\s*(by|By|BY)\s+", "", re.sub(r"\s+", " ", a).strip())
+    out = []
+    for p in re.split(r",| and | & |/|\|", a):
+        p = re.sub(r"\s*\(.*?\)\s*", "", p).strip(" .;")
+        if not p or len(p) < 4 or len(p) > 48:
+            continue
+        if BAD_AUTHOR.match(p) or not NAME_OK.match(p):
+            continue
+        if p.lower().endswith((" news", " media", " desk", " report")):
+            continue
+        out.append(p)
+    return list(dict.fromkeys(out))
+
+def entry_authors(e):
+    cands = []
+    for a in (e.get("authors") or []):
+        if isinstance(a, dict) and a.get("name"):
+            cands.append(a["name"])
+    for k in ("author", "dc_creator", "creator"):
+        if e.get(k):
+            cands.append(e[k])
+    seen, out = set(), []
+    for c in cands:
+        for n in clean_authors(c):
+            if n.lower() not in seen:
+                seen.add(n.lower()); out.append(n)
+    return out
+
+def entry_date(e):
+    for k in ("published_parsed", "updated_parsed"):
+        if e.get(k):
+            try:
+                return datetime(*e[k][:6], tzinfo=timezone.utc).isoformat()
+            except Exception:
+                pass
+    return None
+
+def harvest_rss(outlets):
+    def one(o):
+        items, errors = [], []
+        for url in o.get("rss") or []:
+            raw = curl(url)
+            if not raw:
+                errors.append({"outlet": o["id"], "url": url, "error": "empty response"}); continue
+            d = feedparser.parse(raw)
+            if not d.entries:
+                errors.append({"outlet": o["id"], "url": url, "error": "parsed 0 entries"}); continue
+            ff = o.get("feed_filter")
+            for e in d.entries:
+                link = e.get("link") or ""
+                if ff and ff not in link:
+                    continue
+                items.append({
+                    "outlet": o["id"],
+                    "title": H.unescape(re.sub(r"<[^>]+>", "", e.get("title") or "")).strip(),
+                    "url": link, "date": entry_date(e), "authors": entry_authors(e),
+                    "summary": H.unescape(re.sub(r"<[^>]+>", " ", e.get("summary") or ""))[:600].strip(),
+                    "tags": [t.get("term") for t in (e.get("tags") or []) if t.get("term")][:8],
+                })
+        return items, errors
+
+    all_items, all_errors = [], []
+    with cf.ThreadPoolExecutor(max_workers=10) as ex:
+        for items, errors in ex.map(one, outlets):
+            all_items += items; all_errors += errors
+    return all_items, all_errors
+
+# ---------------------------------------------------------------- harvest: WordPress
+def harvest_wp(outlets, pages=3, per_page=100):
+    def strip(t):
+        return H.unescape(re.sub(r"<[^>]+>", "", t or "")).strip()
+
+    def one(o):
+        base = o["site"].rstrip("/")
+        items = []
+        for page in range(1, pages + 1):
+            d = curl_json(f"{base}/wp-json/wp/v2/posts?per_page={per_page}&page={page}&_embed=author,wp:term")
+            if not isinstance(d, list) or not d:
+                break
+            for p in d:
+                emb = p.get("_embedded") or {}
+                authors = [strip(a.get("name")) for a in (emb.get("author") or [])
+                           if isinstance(a, dict) and a.get("name")]
+                terms = [strip(t["name"]) for g in (emb.get("wp:term") or []) for t in (g or [])
+                         if isinstance(t, dict) and t.get("name")]
+                items.append({
+                    "outlet": o["id"], "author_id": p.get("author"),
+                    "coauthors": p.get("coauthors") or [],
+                    "title": strip((p.get("title") or {}).get("rendered")),
+                    "url": p.get("link"),
+                    "date": (p.get("date_gmt") + "Z") if p.get("date_gmt") else None,
+                    "authors": [a for a in authors if a and a.lower() not in ("admin", "staff", "editor")],
+                    "summary": strip((p.get("excerpt") or {}).get("rendered"))[:400],
+                    "tags": terms[:10],
+                })
+            if len(d) < per_page:
+                break
+        return o["id"], items
+
+    all_items, by_id = [], {o["id"]: o for o in outlets}
+    with cf.ThreadPoolExecutor(max_workers=8) as ex:
+        for oid, items in ex.map(one, outlets):
+            all_items += items
+
+    # Tribune and MediaNews papers -- the Daily News among them -- keep bylines in
+    # a Co-Authors Plus taxonomy and refuse the users endpoint outright. That
+    # taxonomy is public, and its terms carry the author archive link, so the real
+    # display name can be read off the reporter's own page rather than guessed
+    # out of a slug.
+    need_co = sorted({i["outlet"] for i in all_items if i.get("coauthors") and not i["authors"]})
+    for oid in need_co:
+        base = by_id[oid]["site"].rstrip("/")
+        wanted = {c for i in all_items if i["outlet"] == oid for c in (i.get("coauthors") or [])}
+        # Fetched one term at a time by id. Paging the whole taxonomy looked
+        # tidier but the Daily News carries thousands of historical bylines, so
+        # the reporters on this month's stories were never in the first pages
+        # and every name came back empty.
+        def term_by_id(tid):
+            d = curl_json(f"{base}/wp-json/wp/v2/coauthors/{tid}")
+            if isinstance(d, dict) and d.get("id"):
+                return tid, {"slug": d.get("name") or "", "link": d.get("link")}
+            return tid, None
+        terms = {}
+        with cf.ThreadPoolExecutor(max_workers=8) as ex:
+            for tid, t in ex.map(term_by_id, sorted(wanted)):
+                if t:
+                    terms[tid] = t
+        if not terms:
+            continue
+
+        def display(term):
+            """The author archive page carries the reporter's name in its h1 and
+            its og:title. Read it rather than title-casing a slug, which cannot
+            tell a hyphenated surname from two words."""
+            # The taxonomy link is a query-string URL that several sites render
+            # as the homepage. The clean /author/<slug>/ path is the page that
+            # actually carries the reporter's name, so try it first and fall back.
+            clean = base + "/author/" + re.sub(r"^cap-", "", term["slug"] or "") + "/"
+            src = curl(clean, 20)
+            if len(src) < 2000 and term.get("link"):
+                src = curl(term["link"], 20)
+            else:
+                term["link"] = clean
+            for pat in (r"<h1[^>]*>(.*?)</h1>",
+                        r'property="og:title"\s+content="([^"]{4,60})"'):
+                for m in re.findall(pat, src, re.S | re.I):
+                    t = strip_tags(H.unescape(m))
+                    t = re.split(r"\s+[|\u2013\u2014]\s+", t)[0].strip()
+                    if 4 < len(t) < 45 and re.match("^" + NAME_PAT + "$", t) and not JUNK.match(t):
+                        return t, term["link"], "author archive page"
+            return None, term.get("link"), None
+
+        resolved = {}
+        with cf.ThreadPoolExecutor(max_workers=8) as ex:
+            for tid, (name, link, how) in zip(terms.keys(), ex.map(display, terms.values())):
+                if name:
+                    resolved[tid] = name
+        for i in all_items:
+            if i["outlet"] == oid and not i["authors"]:
+                names = [resolved[c] for c in (i.get("coauthors") or []) if c in resolved]
+                if names:
+                    i["authors"] = names
+        print(f"  co-authors resolved for {oid}: {len(resolved)} names")
+
+    # Some sites serve posts but refuse the author embed; ask for the user list.
+    need = sorted({i["outlet"] for i in all_items if i["author_id"] and not i["authors"]})
+    users = {}
+    for oid in need:
+        d = curl_json(by_id[oid]["site"].rstrip("/") + "/wp-json/wp/v2/users?per_page=100")
+        if isinstance(d, list) and d:
+            users[oid] = {str(u.get("id")): strip(u.get("name")) for u in d if u.get("id")}
+    for i in all_items:
+        if not i["authors"] and i["author_id"] is not None:
+            n = users.get(i["outlet"], {}).get(str(i["author_id"]))
+            if n and n.lower() not in ("admin", "staff", "editor"):
+                i["authors"] = [n]
+    return all_items
+
+# ---------------------------------------------------------------- harvest: mastheads
+ROLE = re.compile(r"reporter|editor|correspond|columnist|producer|anchor|writer|chief|bureau|director|"
+                  r"publisher|founder|host|photograph|data|investigat|deputy|managing|senior|contribut|"
+                  r"critic|desk|politics|housing|education|health|transit|justice|climate|immigration|"
+                  r"business|labor|courts|news|manager|president|officer|fellow|coordinator|engagement|"
+                  r"audience|social|newsletter", re.I)
+JUNK = re.compile(r"^(home|about|staff|contact|menu|search|subscribe|donate|newsletter|privacy|terms|follow|"
+                  r"share|more|read|sign|log|our team|the team|masthead|support|advertise|careers|jobs|events|"
+                  r"podcast|español|new york|york city|city hall|united states|read more|learn more|get in|sign up)\b", re.I)
+NAME_PAT = (r"[A-Z][\w'’\-áéíóúñàüöä]+"
+            r"(?:\s+(?:de|van|von|del|la|di|Mc|Mac)?[A-Z][\w'’\-áéíóúñàüöä.]+){1,3}")
+
+def ok_name(s):
+    if not s or len(s) < 5 or len(s) > 42:
+        return False
+    if JUNK.match(s) or ROLE.search(s):
+        return False
+    return bool(re.match("^" + NAME_PAT + "$", s))
+
+def deescape(s):
+    return (s.replace('\\"', '"').replace("\\n", "\n").replace("\\/", "/")
+             .replace("\\u003C", "<").replace("\\u003E", ">").replace("\\u002F", "/"))
+
+INLINE = re.compile(r"</?(?:b|i|em|strong|span|u|small|sup|sub|a|mark|abbr|wbr)\b[^>]*>", re.I)
+
+def strip_tags(s):
+    """Inline tags close up, block tags become a space. Replacing every tag with
+    a space turned "Co<span>ntent</span> Producer" into "Co ntent Producer"."""
+    s = INLINE.sub("", s)
+    return re.sub(r"\s+", " ", H.unescape(re.sub(r"<[^>]+>", " ", s))).strip()
+
+def tidy_title(t):
+    if not t:
+        return None
+    t = re.sub(r"\s+", " ", t).strip(" ,-–—|·•:")
+    if t.isupper():
+        small = {"for", "of", "and", "in", "the", "at", "on", "to", "a", "an", "with", "by", "de"}
+        words = []
+        for i, w in enumerate(t.lower().split()):
+            words.append(w if (i and w in small) else "-".join(x.capitalize() for x in w.split("-")))
+        t = " ".join(words)
+    return t
+
+def candidates_from_tail(tail):
+    toks = tail.split()
+    out = []
+    for i in range(len(toks) - 1, -1, -1):
+        for L in (2, 3, 4):
+            if i + L > len(toks):
+                break
+            cand = " ".join(toks[i:i + L]).strip(" ,–—-|·•:")
+            if cand.isupper() or not ok_name(cand):
+                continue
+            title = " ".join(toks[i + L:]).strip(" ,–—-|·•:")
+            if title and (len(title) > 80 or not ROLE.search(title)):
+                continue
+            out.append((cand, title, i))
+    return out
+
+def parse_masthead(oid, src, url, review):
+    people = {}
+    # 1. published addresses, read backwards for the name and role in front of them
+    s = deescape(src)
+    for m in re.finditer(r"mailto:([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})", s):
+        email = m.group(1).strip().lower()
+        if GENERIC_LOCAL.match(email.split("@")[0]):
+            continue
+        ctx = strip_tags(re.sub(r"<[^>]*$", " ", s[max(0, m.start() - 460):m.start()]))
+        tail = re.split(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}", ctx[-230:])[-1]
+        tail = re.sub(r"<[^>]*$", " ", tail).strip()
+        cands = candidates_from_tail(tail)
+        if not cands:
+            continue
+        paired = next(((n, t) for n, t, _ in cands if pairs_with_email(n, email)), None)
+        name, title = paired if paired else (cands[0][0], cands[0][1])
+        rec = people.setdefault(name, {"name": name, "outlet": oid, "staff_page": url})
+        if paired:
+            rec["email"] = email
+            rec["email_source_url"] = url
+            rec["email_evidence"] = tail[-110:]
+        else:
+            review.append({"outlet": oid, "email": email, "nearest_name": name,
+                           "reason": "no name in the surrounding text pairs with this address",
+                           "context": tail[-150:], "source_url": url})
+        if title and not rec.get("title"):
+            rec["title"] = tidy_title(title)
+            rec["title_source_url"] = url
+    # 2. name / role pairs in card markup, for the many mastheads without addresses
+    soup = BeautifulSoup(src, "html.parser")
+    for bad in soup(["script", "style", "noscript"]):
+        bad.decompose()
+    text = lambda el: re.sub(r"\s+", " ", el.get_text(" ", strip=True)) if el else ""
+    for h in soup.find_all(["h1", "h2", "h3", "h4", "h5", "strong", "b", "p", "span", "div", "li",
+                            "figcaption", "td", "a"]):
+        name = text(h)
+        if not ok_name(name):
+            continue
+        title, sib, hops = "", h.next_sibling, 0
+        while sib is not None and hops < 4:
+            st = text(sib) if getattr(sib, "get_text", None) else re.sub(r"\s+", " ", str(sib)).strip()
+            if st:
+                if ROLE.search(st) and len(st) < 85:
+                    title = st; break
+                if len(st) > 85:
+                    break
+            sib = sib.next_sibling; hops += 1
+        if not title and h.parent is not None:
+            m = re.search(re.escape(name) + r"\s*[,|·•—–-]?\s*([^.|·•]{3,80})", text(h.parent))
+            if m and ROLE.search(m.group(1)):
+                title = m.group(1).strip(" ,-–—|")
+        if not title:
+            continue
+        rec = people.setdefault(name, {"name": name, "outlet": oid, "staff_page": url})
+        rec.setdefault("title", tidy_title(title))
+        rec.setdefault("title_source_url", url)
+    return list(people.values())
+
+def harvest_mastheads(outlets):
+    jobs = [(o["id"], o["staff_url"]) for o in outlets if o.get("staff_url")]
+    people, review, fails = [], [], []
+
+    def one(job):
+        oid, url = job
+        return oid, url, curl(url, 40)
+
+    with cf.ThreadPoolExecutor(max_workers=8) as ex:
+        for oid, url, src in ex.map(one, jobs):
+            if not src or len(src) < 500:
+                fails.append({"outlet": oid, "url": url, "error": "masthead did not load"}); continue
+            people += parse_masthead(oid, src, url, review)
+    return people, review, fails
+
+# ---------------------------------------------------------------- harvest: byline blocks
+AUTHORPATH = re.compile(r'href="([^"]*/(?:author|authors|staff|people|profile|contributor|contributors|by|reporters?)/[^"?#]+)"', re.I)
+
+def slugs(name):
+    parts = re.sub(r"[^a-z\s\-]", "", norm(name)).split()
+    if not parts:
+        return []
+    return list(dict.fromkeys(["-".join(parts), "".join(parts), ".".join(parts), "_".join(parts)]))
+
+def read_byline_block(job):
+    pid, name, url = job
+    out = {"id": pid}
+    src = curl(url, 25)
+    if not src:
+        out["error"] = "story page did not load"
+        return out
+    s = src.replace('\\"', '"').replace("\\/", "/").replace("\\u003C", "<").replace("\\u003E", ">")
+    sl = slugs(name)
+    for m in AUTHORPATH.finditer(s):
+        href = m.group(1)
+        if any(x in norm(href) for x in sl):
+            if href.startswith("/"):
+                base = re.match(r"(https?://[^/]+)", url)
+                href = (base.group(1) + href) if base else href
+            if href.startswith("http"):
+                out["author_page"] = href
+                break
+    for em in re.finditer(r"(?:mailto:)?([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})", s):
+        email = em.group(1).lower()
+        if GENERIC_LOCAL.match(email.split("@")[0]) or email.endswith((".png", ".jpg", ".gif", ".svg", ".webp")):
+            continue
+        if pairs_with_email(name, email):
+            out["email"] = email
+            out["email_source_url"] = url
+            out["email_evidence"] = strip_tags(s[max(0, em.start() - 160):em.end() + 40])[-150:]
+            break
+    for pat, fld in ((r'https?://(?:www\.)?(?:twitter|x)\.com/([A-Za-z0-9_]{2,15})', "x"),
+                     (r'https?://bsky\.app/profile/([A-Za-z0-9._\-]+)', "bluesky")):
+        for m in re.finditer(pat, s):
+            h = m.group(1)
+            if h.lower() in ("share", "intent", "home", "i", "search", "hashtag"):
+                continue
+            flat = [x.replace("-", "").replace(".", "").replace("_", "") for x in sl]
+            if norm(h) in flat or norm(h) in norm(name).replace(" ", ""):
+                out[fld] = h
+                break
+    return out
+
+def read_author_page(job):
+    pid, name, url = job
+    out = {"id": pid}
+    src = curl(url, 25)
+    if not src:
+        return out
+    s = src.replace('\\"', '"').replace("\\/", "/")
+    for em in re.finditer(r"(?:mailto:)?([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})", s):
+        email = em.group(1).lower()
+        if GENERIC_LOCAL.match(email.split("@")[0]) or email.endswith((".png", ".jpg", ".gif", ".svg", ".webp")):
+            continue
+        if pairs_with_email(name, email):
+            out["email"] = email
+            out["email_source_url"] = url
+            out["email_evidence"] = strip_tags(s[max(0, em.start() - 160):em.end() + 40])[-150:]
+            break
+    m = (re.search(r'<meta[^>]+name="description"[^>]+content="([^"]{40,400})"', s, re.I)
+         or re.search(r'<meta[^>]+property="og:description"[^>]+content="([^"]{40,400})"', s, re.I))
+    if m:
+        bio = H.unescape(m.group(1)).strip()
+        low = bio.lower()
+        if name.split()[0].lower() in low or " covers " in low or " reports " in low:
+            out["bio"] = bio[:400]
+    return out
+
+# ---------------------------------------------------------------- Vital City layer
+def load_vc_layer():
+    """Who already engages with Vital City, read from the catalogue's own files."""
+    vc = {"press_list": {}, "authors": set(), "mentions": [], "ledger": {}, "errors": []}
+
+    p = PRIV / "press_source.csv"
+    if p.exists():
+        for row in csv.DictReader(open(p, encoding="utf8")):
+            n = (row.get("name") or "").strip()
+            if n:
+                vc["press_list"][merge_name(n)] = {
+                    "name": n, "outlet": (row.get("outlet") or "").strip(),
+                    "title": (row.get("title") or "").strip(),
+                    "email": (row.get("email") or "").strip().lower() or None,
+                    "twitter": (row.get("twitter") or "").strip() or None}
+    else:
+        vc["errors"].append("private/press_source.csv missing — the Vital City press list could not be read")
+
+    a = ROOT / "data/authors.json"
+    if a.exists():
+        for rec in json.load(open(a)):
+            n = (rec.get("name") or "").strip()
+            if n and n.lower() != "vital city":
+                vc["authors"].add(merge_name(n))
+    else:
+        vc["errors"].append("data/authors.json missing — Vital City contributors could not be flagged")
+
+    g = PRIV / "growth.json"
+    if g.exists():
+        d = json.load(open(g))
+        vc["mentions"] = d.get("news_mentions") or []
+        vc["ledger"] = d.get("mentions_ledger") or {}
+    else:
+        vc["errors"].append("private/growth.json missing — Vital City mentions could not be read")
+    return vc
+
+def norm_title(t):
+    """Google News titles arrive with the outlet appended and sometimes doubled.
+    Strip that before comparing, or a real match looks like a miss."""
+    t = re.sub(r"\s+[-\u2013\u2014|]\s+[^-\u2013\u2014|]{2,40}$", "", (t or "").strip())
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", norm(t))).strip()
+
+# ---------------------------------------------------------------- build
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--fast", action="store_true", help="reuse the cached harvest")
+    args = ap.parse_args()
+
+    CACHE.mkdir(exist_ok=True)
+    PRIV.mkdir(exist_ok=True)
+    outlets = json.load(open(PRESS / "outlets.json"))
+    # Reporters almost never publish a direct line; newsrooms publish a tip line.
+    # Harvested separately by press/phones.py and kept as an outlet-level fact.
+    phones_path = PRESS / "phones.json"
+    phones = json.load(open(phones_path)) if phones_path.exists() else {}
+    beats_raw = json.load(open(PRESS / "beats.json"))
+    beats = compile_beats(beats_raw["beats"])
+    started = datetime.now(timezone.utc)
+    report = {"errors": [], "notes": []}
+
+    def cached(name, fn):
+        f = CACHE / f"{name}.json"
+        if args.fast and f.exists():
+            print(f"  [cache] {name}")
+            return json.load(open(f))
+        val = fn()
+        json.dump(val, open(f, "w"))
+        return val
+
+    print("harvesting feeds…")
+    rss_items, rss_errors = cached("rss", lambda: harvest_rss(outlets))
+    report["errors"] += [dict(e, stage="rss") for e in rss_errors]
+    print(f"  {len(rss_items)} items, {len(rss_errors)} feed errors")
+
+    print("harvesting WordPress APIs…")
+    wp_items = cached("wp", lambda: harvest_wp(outlets))
+    print(f"  {len(wp_items)} posts")
+
+    print("reading mastheads…")
+    mast, review, mast_fails = cached("mast", lambda: harvest_mastheads(outlets))
+    report["errors"] += [dict(e, stage="masthead") for e in mast_fails]
+    print(f"  {len(mast)} masthead records, {len(review)} addresses dropped for not pairing")
+
+    stories = [s for s in (rss_items + wp_items) if s.get("authors")]
+    if not stories:
+        sys.exit("FATAL: harvest produced no bylined stories — refusing to write an empty press.json")
+
+    # ---- fold stories into people
+    # Keyed on the person, not on person-and-masthead. Schneps runs one byline
+    # across amNewYork, the Brooklyn Paper, QNS, the Bronx Times, Gay City News
+    # and the Queens papers, so keying by outlet turned one reporter into six
+    # half-records and then, when they were added back together, credited him
+    # with six copies of the same story. Stories are deduped by normalized title
+    # inside the person, and the beat counts are computed after that.
+    def title_key(t):
+        return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", norm(t or ""))).strip()[:70]
+
+    people = {}
+    all_outlet_names = set()
+    for o in outlets:
+        all_outlet_names.add(merge_name(o["name"]))
+        all_outlet_names.add(merge_name(re.sub(r"\s*\(.*?\)", "", o["name"])))
+        all_outlet_names.add(merge_name(o["id"].replace("-", " ")))
+    all_outlet_names.discard("")
+    for s_ in stories:
+        oid = s_["outlet"]
+        for a in s_["authors"]:
+            # A feed bylined with the publication's own name is not a person.
+            # Podcast feeds do this constantly: every episode of Max Politics is
+            # "by Max Politics", which otherwise walks in as the most prolific
+            # City Hall reporter in New York.
+            # Checked against every outlet in the registry, not just this feed's:
+            # The City Reporter co-publishes the FAQ NYC podcast, so "FAQ NYC"
+            # arrives as a byline on somebody else's feed.
+            if merge_name(a) in all_outlet_names:
+                continue
+            k = merge_name(a)
+            if len(k) < 5:
+                continue
+            p = people.setdefault(k, {"key": k, "name": a, "outlet_counts": collections.Counter(),
+                                      "stories": {}, "titles": set()})
+            if len(p["name"]) < len(a):
+                p["name"] = a
+            p["outlet_counts"][oid] += 1
+            tk = title_key(s_.get("title"))
+            if tk and tk in p["titles"]:
+                continue                      # same story, another masthead
+            p["titles"].add(tk)
+            p["stories"][s_.get("url") or tk] = {"title": s_.get("title"), "url": s_.get("url"),
+                                                 "date": s_.get("date"), "outlet": oid,
+                                                 "blob": " ".join([s_.get("title") or "", s_.get("summary") or "",
+                                                                   " ".join(s_.get("tags") or [])])}
+
+    # beats and vocabulary, computed once per person over their deduped file
+    for p in people.values():
+        p["beat_hits"] = collections.Counter()
+        p["beat_examples"] = collections.defaultdict(list)
+        p["terms"] = collections.Counter()
+        for st in p["stories"].values():
+            blob = st.pop("blob", "")
+            for bid, b in beats.items():
+                matched = [lbl for pat, lbl in b["pats"] if pat.search(blob)]
+                if matched:
+                    p["beat_hits"][bid] += 1
+                    if len(p["beat_examples"][bid]) < 3 and st.get("url"):
+                        p["beat_examples"][bid].append({"title": st.get("title"), "url": st.get("url"),
+                                                        "date": st.get("date"), "matched": matched[:4]})
+            for t in terms_of(blob):
+                p["terms"][t] += 1
+
+    # A podcast has no byline, but it has a host, and a host is who you pitch.
+    # Hosts are only carried where the show title or the podcast directory named
+    # a person -- never inferred from the show's name.
+    hosts = {o["id"]: o for o in outlets if o.get("host")}
+    for oid, o in hosts.items():
+        k = merge_name(o["host"])
+        p = people.setdefault(k, {"key": k, "name": o["host"], "outlet_counts": collections.Counter(),
+                                  "stories": {}, "titles": set(), "beat_hits": collections.Counter(),
+                                  "beat_examples": collections.defaultdict(list), "terms": collections.Counter()})
+        p.setdefault("title", "Host, " + o["name"])
+        p.setdefault("title_source_url", o.get("host_source"))
+        for s_ in stories:
+            if s_["outlet"] != oid:
+                continue
+            tk = title_key(s_.get("title"))
+            if tk in p["titles"]:
+                continue
+            p["titles"].add(tk)
+            p["outlet_counts"][oid] += 1
+            blob = " ".join([s_.get("title") or "", s_.get("summary") or ""])
+            p["stories"][s_.get("url") or tk] = {"title": s_.get("title"), "url": s_.get("url"),
+                                                 "date": s_.get("date"), "outlet": oid}
+            for bid, b in beats.items():
+                matched = [lbl for pat, lbl in b["pats"] if pat.search(blob)]
+                if matched:
+                    p["beat_hits"][bid] += 1
+                    if len(p["beat_examples"][bid]) < 3 and s_.get("url"):
+                        p["beat_examples"][bid].append({"title": s_.get("title"), "url": s_.get("url"),
+                                                        "date": s_.get("date"), "matched": matched[:4]})
+            for t in terms_of(blob):
+                p["terms"][t] += 1
+
+    # mastheads: titles and addresses, onto the same person
+    for r in mast:
+        k = merge_name(r["name"])
+        if len(k) < 5:
+            continue
+        p = people.setdefault(k, {"key": k, "name": r["name"], "outlet_counts": collections.Counter(),
+                                  "stories": {}, "titles": set(), "beat_hits": collections.Counter(),
+                                  "beat_examples": collections.defaultdict(list), "terms": collections.Counter()})
+        p["outlet_counts"].setdefault(r["outlet"], 0)
+        for fld in ("title", "email", "email_source_url", "email_evidence", "title_source_url", "staff_page"):
+            if r.get(fld) and not p.get(fld):
+                p[fld] = r[fld]
+
+    dom_by_outlet = {o["id"]: re.sub(r"^www\.", "", re.sub(r"^https?://", "", o["site"]).split("/")[0])
+                     for o in outlets}
+    for k, p in people.items():
+        p["id"] = k
+        p["outlet"] = (p["outlet_counts"].most_common(1)[0][0] if p["outlet_counts"] else None)
+        # A City & State address beats one stray Hell Gate freelance piece when
+        # deciding which masthead to put under someone's name.
+        em = (p.get("email") or "")
+        if "@" in em:
+            edom = em.split("@")[1]
+            for oid in p["outlet_counts"]:
+                od = dom_by_outlet.get(oid, "")
+                if od and (edom.endswith(od) or od.endswith(edom)):
+                    p["outlet"] = oid
+                    break
+        p["also_at"] = [o for o, _ in p["outlet_counts"].most_common()[1:]]
+        p["stories"] = sorted(p["stories"].values(), key=lambda s: s.get("date") or "", reverse=True)
+
+    # ---- byline blocks and author pages, one fetch each
+    jobs = []
+    for p in people.values():
+        st = [s for s in p["stories"] if (s.get("url") or "").startswith("http")]
+        if st:
+            jobs.append((p["id"], p["name"], sorted(st, key=lambda s: s.get("date") or "", reverse=True)[0]["url"]))
+    print(f"reading {len(jobs)} byline blocks…")
+    blocks = cached("blocks", lambda: [r for r in cf.ThreadPoolExecutor(max_workers=12).map(read_byline_block, jobs)])
+    by_id = {r["id"]: r for r in blocks}
+
+    apjobs = [(r["id"], people[r["id"]]["name"], r["author_page"])
+              for r in blocks if r.get("author_page") and r["id"] in people]
+    print(f"reading {len(apjobs)} author pages…")
+    apages = cached("apages", lambda: [r for r in cf.ThreadPoolExecutor(max_workers=12).map(read_author_page, apjobs)])
+    ap_id = {r["id"]: r for r in apages}
+
+    for pid, p in people.items():
+        for src in (by_id.get(pid) or {}, ap_id.get(pid) or {}):
+            for fld in ("author_page", "x", "bluesky", "bio"):
+                if src.get(fld) and not p.get(fld):
+                    p[fld] = src[fld]
+            if src.get("email") and not p.get("email"):
+                p["email"] = src["email"]
+                p["email_source_url"] = src.get("email_source_url")
+                p["email_evidence"] = src.get("email_evidence")
+
+    # ---- Vital City relationship layer
+    vc = load_vc_layer()
+    report["errors"] += [{"stage": "vital-city", "error": e} for e in vc["errors"]]
+
+    cited_domains = collections.Counter()
+    cited_dates = collections.defaultdict(list)
+    mention_titles = {}
+    for m in vc["mentions"]:
+        if m.get("own_post") or m.get("kind") not in ("media", "republication"):
+            continue
+        dom = m.get("domain") or ""
+        if dom:
+            cited_domains[dom] += 1
+            if m.get("published_iso"):
+                cited_dates[dom].append(m["published_iso"])
+        nt = norm_title(m.get("title"))
+        if len(nt) > 25:
+            mention_titles[nt] = m
+            mention_titles.setdefault(nt[:45], m)
+
+    dom_of = {}
+    for o in outlets:
+        d = re.sub(r"^www\.", "", re.sub(r"^https?://", "", o["site"]).split("/")[0])
+        dom_of[o["id"]] = d
+
+    # a story we harvested whose title matches a logged Vital City mention means
+    # this reporter has cited Vital City by name -- the strongest person-level flag
+    cited_people = {}
+    for p in people.values():
+        for s in p["stories"]:
+            nt = norm_title(s.get("title"))
+            hit = mention_titles.get(nt) or (mention_titles.get(nt[:45]) if len(nt) > 30 else None)
+            if hit:
+                cited_people[p["id"]] = {"title": s.get("title"), "url": s.get("url"),
+                                         "date": s.get("date") or hit.get("published_iso")}
+                break
+
+    # ---- shape the output
+    now = datetime.now(timezone.utc)
+    recent_cut = (now - timedelta(days=60)).isoformat()
+    out_people = []
+    for p in people.values():
+        st = [s for s in p["stories"] if s.get("url")]
+        st.sort(key=lambda s: s.get("date") or "", reverse=True)
+        seen, uniq = set(), []
+        for s in st:
+            if s["url"] in seen:
+                continue
+            seen.add(s["url"]); uniq.append(s)
+        dates = [s["date"] for s in uniq if s.get("date")]
+        total = len(uniq)
+        ranked = sorted(p["beat_hits"].items(), key=lambda kv: (-kv[1], beats[kv[0]]["priority"]))[:6]
+
+        mk = merge_name(p["name"])
+        pl = vc["press_list"].get(mk)
+        flags = {}
+        if pl:
+            flags["press_list"] = {"outlet": pl["outlet"], "title": pl["title"], "twitter": pl["twitter"]}
+        if mk in vc["authors"]:
+            flags["vc_author"] = True
+        if p["id"] in cited_people:
+            flags["cited_vc"] = cited_people[p["id"]]
+        dom = dom_of.get(p["outlet"])
+        if dom and cited_domains.get(dom):
+            flags["outlet_cites_vc"] = cited_domains[dom]
+        # Only a fact about this person earns the bold treatment. An outlet that
+        # has cited Vital City says nothing about the reporter standing in it.
+        if flags:
+            flags["person"] = bool(flags.get("press_list") or flags.get("vc_author")
+                                   or flags.get("cited_vc"))
+
+        rec = {
+            "id": p["id"], "name": p["name"], "outlet": p["outlet"],
+            "also_at": p.get("also_at") or None,
+            "scope": (next((o.get("scope") for o in outlets if o["id"] == p["outlet"]), None)),
+            "title": tidy_title(p.get("title")), "bio": p.get("bio"),
+            "email": p.get("email"), "email_source_url": p.get("email_source_url"),
+            "email_evidence": (p.get("email_evidence") or "")[:130] or None,
+            "x": p.get("x"), "bluesky": p.get("bluesky"),
+            "author_page": p.get("author_page"), "staff_page": p.get("staff_page"),
+            "story_count": total, "latest": max(dates) if dates else None,
+            "active": bool(dates and max(dates) >= recent_cut),
+            "beats": [{"id": b, "label": beats[b]["label"], "priority": beats[b]["priority"],
+                       "count": c, "share": round(c / total, 3) if total else 0,
+                       "examples": p["beat_examples"][b]}
+                      for b, c in ranked if c >= 2 or total < 4],
+            "stories": uniq[:12],
+            "terms": dict(sorted(p["terms"].items(), key=lambda kv: -kv[1])[:35]),
+            "vc": flags or None,
+        }
+        # press-list people who never appeared in a harvest still belong in the map
+        if pl and not rec["email"] and pl["email"]:
+            rec["email"] = pl["email"]
+            rec["email_source_url"] = "private/press_source.csv (Vital City press list)"
+            rec["email_evidence"] = "From the curated Vital City press list, not harvested from a page."
+        out_people.append(rec)
+
+    # press-list contacts with no harvested presence at all
+    have = {merge_name(p["name"]) for p in out_people}
+    for mk, pl in vc["press_list"].items():
+        if mk in have:
+            continue
+        out_people.append({
+            "id": "presslist:" + re.sub(r"[^a-z]+", "-", mk), "name": pl["name"],
+            "outlet": None, "outlet_text": pl["outlet"], "title": pl["title"],
+            "email": pl["email"],
+            "email_source_url": "private/press_source.csv (Vital City press list)",
+            "email_evidence": "From the curated Vital City press list, not harvested from a page.",
+            "x": (pl["twitter"] or "").lstrip("@") or None,
+            "story_count": 0, "beats": [], "stories": [], "terms": {}, "active": False,
+            "vc": {"press_list": {"outlet": pl["outlet"], "title": pl["title"], "twitter": pl["twitter"]}},
+        })
+
+    out_people.sort(key=lambda p: (-p["story_count"], p["name"]))
+
+    # ---- outlet rollups
+    per_outlet = collections.Counter()
+    for p in out_people:
+        for oid in {p["outlet"], *(p.get("also_at") or [])}:
+            if oid:
+                per_outlet[oid] += 1
+    story_counts = collections.Counter(s["outlet"] for s in stories)
+    # everything harvested, bylined or not -- an outlet reached only through a
+    # Google News query contributes headlines with no byline, and showing it as
+    # zero made a working feed look broken
+    item_counts = collections.Counter(i["outlet"] for i in (rss_items + wp_items))
+    out_outlets = []
+    for o in outlets:
+        d = dom_of[o["id"]]
+        dates = sorted(cited_dates.get(d, []))
+        out_outlets.append({**{k: v for k, v in o.items() if k != "feed_filter"},
+                            "domain": d, "phones": phones.get(o["id"], []),
+                            "people": per_outlet.get(o["id"], 0),
+                            "stories": story_counts.get(o["id"], 0),
+                            "items": item_counts.get(o["id"], 0),
+                            "vc_citations": cited_domains.get(d, 0),
+                            "vc_cited_first": dates[0][:10] if dates else None,
+                            "vc_cited_last": dates[-1][:10] if dates else None})
+    out_outlets.sort(key=lambda o: (-o["people"], o["name"]))
+
+    mentions = {
+        "media": [m for m in vc["mentions"] if m.get("kind") == "media" and not m.get("own_post")][:120],
+        "gov": [m for m in vc["mentions"] if m.get("kind") in ("gov", "republication")][:60],
+        "ledger": (vc["ledger"] or {}).get("items", []) if isinstance(vc["ledger"], dict) else [],
+    }
+
+    payload = {
+        "as_of": now.isoformat(),
+        "built_in_seconds": round((now - started).total_seconds()),
+        "outlets": out_outlets,
+        "people": out_people,
+        "beats": {k: {"label": v["label"], "priority": v["priority"],
+                      "terms": beats_raw["beats"][k]["terms"]} for k, v in beats.items()},
+        "mentions": mentions,
+        "unpaired_addresses": review,
+        "report": report,
+        "counts": {
+            "outlets": len(out_outlets), "people": len(out_people),
+            "with_email": sum(1 for p in out_people if p.get("email")),
+            "with_beats": sum(1 for p in out_people if p["beats"]),
+            "active_60d": sum(1 for p in out_people if p.get("active")),
+            "stories": len(stories),
+            "vc_flagged": sum(1 for p in out_people if p.get("vc")),
+            "feed_errors": len(report["errors"]),
+        },
+    }
+    PRIV.mkdir(exist_ok=True)
+    out = PRIV / "press.json"
+    json.dump(payload, open(out, "w"), indent=1)
+    c = payload["counts"]
+    print(f"\nwrote {out} ({out.stat().st_size/1e6:.1f} MB)")
+    print(f"  {c['outlets']} outlets · {c['people']} people · {c['with_beats']} with an evidenced beat")
+    print(f"  {c['with_email']} with a published address · {c['active_60d']} active in 60 days")
+    print(f"  {c['stories']} bylined stories · {c['vc_flagged']} flagged as Vital City contacts")
+    if report["errors"]:
+        print(f"  {len(report['errors'])} harvest errors (kept in report.errors):")
+        for e in report["errors"][:12]:
+            print("   ", e.get("stage"), e.get("outlet"), (e.get("error") or "")[:60])
+
+main()
