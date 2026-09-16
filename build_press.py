@@ -126,6 +126,17 @@ def clean_person_name(name, has_byline):
     if not name:
         return None
     n = re.sub(r"\s+", " ", name).strip(" .,;:|")
+    # Wire datelines: "Joseph Gedeon in Washington", "Xan Brooks in Venice".
+    n = re.sub(r"\s+in\s+[A-Z][\w.\-]+(?:\s+[A-Z][\w.\-]+)?$", "", n)
+    # Credit lines, desks and features that sit in a byline field.
+    low = n.lower()
+    if re.search(r"\b(photos?|courtesy|subscriber|faq|tracker|recovery|reporting|digital|updates?|"
+                 r"live|video|podcast|newsletter|editorial|explainer|guide|q&a|news|team|network|connect|crime|pr|mundo|desk|wire)\b", low) or "\u2019re " in low or "'re " in low:
+        return None
+    raw_words = n.split()
+    lower_words = [w for w in raw_words[1:] if w.islower() and w not in ("de", "da", "di", "del", "della", "der", "van", "von", "la", "le", "du", "dos", "y", "e", "and", "bin", "ibn", "al", "el")]
+    if lower_words and not n.islower():
+        return None          # "Word in Black": an ordinary lowercase word mid-name is prose, not a name
     if "@" in n or re.search(r"\d", n):
         return None
     words = [w for w in re.findall(r"[A-Za-z\u00c0-\u024f'\u2019\-]+", n) if len(w.strip("'-\u2019")) >= 2]
@@ -138,7 +149,8 @@ def clean_person_name(name, has_byline):
         n = person_case(n)
     elif letters.islower():
         n = person_case(n)
-    return n
+    from name_case import fix_name_case
+    return fix_name_case(n)
 
 def loose_name(name):
     """First and last name only. "John K. Roman" on his newsletter and "John

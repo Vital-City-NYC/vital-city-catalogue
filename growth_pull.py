@@ -5141,6 +5141,20 @@ def main():
                 out[key] = carried
                 log(f"  {key}: unavailable this run — carried forward the last good pull "
                     f"({carried['stale_reason']})")
+    from name_case import fix_name_case
+    def _recase_people(o, key=None):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if k in ("x_followers", "x_profile", "ga4", "top_campaigns", "campaigns"):
+                    continue
+                if k in ("name", "donor", "who") and isinstance(v, str):
+                    o[k] = fix_name_case(v)
+                else:
+                    _recase_people(v, k)
+        elif isinstance(o, list):
+            for x in o:
+                _recase_people(x, key)
+    _recase_people(out)
     OUT.write_text(json.dumps(out, indent=2))
     size_kb = OUT.stat().st_size // 1024
     mc = out["mailchimp"]; gh = out["ghost"]

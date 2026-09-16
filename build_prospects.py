@@ -447,7 +447,8 @@ def years_since(s):
 
 def person_row(r, why):
     """The displayed record for one prospect — components, never a single score."""
-    return {"n": r.get("n") or "", "e": r.get("e") or "",
+    from name_case import fix_name_case
+    return {"n": fix_name_case(r.get("n") or ""), "e": r.get("e") or "",
             "inst": (r.get("inst") or "").strip(),
             "damt": round(r.get("damt") or 0), "dcnt": r.get("dcnt") or 0,
             "dlast": (r.get("dlast") or "")[:10],
@@ -616,7 +617,7 @@ def main():
             "grantees": GRANTEES.get(f["name"]),
             "readers": len(ppl), "engaged": len(engaged),
             "donors": sum(1 for r in ppl if r.get("don")),
-            "names": [r.get("n") for r in sorted(ppl, key=lambda r: -(r.get("eopen") or 0))
+            "names": [__import__("name_case").fix_name_case(r.get("n")) for r in sorted(ppl, key=lambda r: -(r.get("eopen") or 0))
                       if r.get("n")][:4],
         })
     funders_out.sort(key=lambda f: (f["lead"], -f["engaged"], -f["readers"]))

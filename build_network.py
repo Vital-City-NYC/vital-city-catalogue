@@ -1583,6 +1583,18 @@ def main():
             prospects += 1
     print(f"likely fundraising prospects (score 4+): {prospects}", file=__import__("sys").stderr)
 
+    # Names as typed into Ghost, Mailchimp and Donorbox ("John ARNOLD", "Barry
+    # cooper"). Fixed here, at the source every tool reads, rather than in each page.
+    from name_case import fix_name_case
+    recased = 0
+    for p in people:
+        for k in ("n", "fn", "ln", "aname"):
+            if isinstance(p.get(k), str):
+                v = fix_name_case(p[k])
+                if v != p[k]:
+                    p[k] = v; recased += 1
+    print(f"names recased: {recased}", file=__import__("sys").stderr)
+
     PRIV.mkdir(exist_ok=True)
     (PRIV / "people.json").write_text(json.dumps(people, ensure_ascii=False, separators=(",", ":")))
     (PRIV / "network_stats.json").write_text(json.dumps(stats, indent=2, ensure_ascii=False))
