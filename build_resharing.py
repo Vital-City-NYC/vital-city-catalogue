@@ -114,7 +114,18 @@ def live_ga4_pieces():
         return None, "GA4_PROPERTY_ID not in env and not recorded in growth.json"
     try:
         sys.path.insert(0, str(ROOT))
+        import base64 as _b64
         from growth_pull import _ga4_access_token, _ga4_piece_index  # noqa
+        # _sa_access_token indexes creds["client_email"], so it wants the parsed
+        # dict, not the raw value. The keychain copy is base64 and the CI secret
+        # may be either, so try both the way growth_pull's own pull_ga4 does.
+        # Passing the string through raised "string indices must be integers"
+        # and sent every CI run down the fallback path.
+        if isinstance(creds, str):
+            try:
+                creds = json.loads(_b64.b64decode(creds))
+            except Exception:
+                creds = json.loads(creds)
         idx = _ga4_piece_index(str(prop), _ga4_access_token(creds))
         if not idx or not idx.get("available") or not idx.get("pieces"):
             return None, "GA4 piece index came back empty"
@@ -232,16 +243,27 @@ def main():
     moments = [e for e in seed["entries"] if e["kind"] == "moment"]
     hooks = [e for e in seed["entries"] if e["kind"] == "hook"]
 
-    pieces, as_of = live_ga4_pieces()
+    # In CI the growth pull rebuilds private/growth.json minutes before this
+    # runs, so its piece index is already current and querying GA4 again would
+    # be a second identical round trip. Use it when it is from today; that block
+    # is not stale just because we did not fetch it ourselves.
+    pieces, as_of, err = stored_ga4_pieces()
     stale, reason = False, None
-    if pieces is None:
-        reason = as_of
-        log(f"GA4 live pull unavailable ({reason}) — falling back to the stored piece index")
-        pieces, as_of, err = stored_ga4_pieces()
-        stale = True
-        if pieces is None:
-            log(f"WARNING: no traffic data at all ({err})")
-            pieces, as_of = [], None
+    if pieces and as_of == today.isoformat():
+        log(f"using the piece index already built this run (as of {as_of})")
+    else:
+        fresh, fresh_as_of = live_ga4_pieces()
+        if fresh is not None:
+            pieces, as_of, stale = fresh, fresh_as_of, False
+        elif pieces is not None:
+            reason = fresh_as_of
+            stale = True
+            log(f"GA4 live pull unavailable ({reason}) — falling back to the stored "
+                f"piece index from {as_of}")
+        else:
+            reason = fresh_as_of
+            log(f"WARNING: no traffic data at all ({err or reason})")
+            pieces, as_of, stale = [], None, True
     views = {p["slug"]: p.get("views") or 0 for p in pieces if p.get("slug")}
 
     by_slug, evergreen, new_since = {}, [], []
