@@ -122,6 +122,8 @@
   .toolnav a.here{background:var(--vc-black);color:var(--vc-white);cursor:default;pointer-events:none}
   html.dark .toolnav a.here{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
 </style>
+<link rel="stylesheet" href="../toolkit.css">
+<script src="../toolkit.js" data-tool="prospects" defer></script>
 </head>
 <body>
 
@@ -139,11 +141,10 @@
 
 <div id="app" style="display:none">
 <div class="confbar"><span>Confidential &middot; fundraising intelligence &middot; do not forward</span><span id="stamp"></span></div>
+<div data-toolkit-nav></div>
 <header class="mast">
   <div>
-    <div class="wm">Vital City</div>
     <h1>Fundraising prospects</h1>
-    <nav class="toolnav" aria-label="Vital City tools"><span class="tlab">Tools</span><a href="../">Catalogue</a><a href="../growth/">Growth</a><a href="../network/">Contacts</a><a href="../prospects/" class="here">Prospects</a></nav>
     <div class="sub">Who might fund a platform for ideas about civic life &mdash; commentary, data made intelligible, and evidence-based policy pressed into practice. Institutions and individuals, ranked by the evidence in our own data; leads are labelled as leads.</div>
   </div>
   <nav class="hnav"><a href="#" id="lock">Lock</a></nav>

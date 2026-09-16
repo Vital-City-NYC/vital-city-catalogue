@@ -1,0 +1,111 @@
+/* The Vital City toolkit — shared nav.
+ *
+ * Inherits the house tokens each page already defines (--vc-black, --vc-paper,
+ * --vc-cerulean, --vc-sans …) and falls back to literal values so the bar still
+ * looks right on a page that has not declared them. Dark mode follows the
+ * pages' own convention: html.dark, not a media query, because the tools have a
+ * manual theme toggle.
+ */
+
+.vckit {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 9px 0 11px;
+  margin: 0 0 4px;
+  border-bottom: 1.5px solid var(--vc-black, #050507);
+  font-family: var(--vc-sans, "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif);
+}
+
+/* Wordmark. "Vital City" in the house weight, "toolkit" set quieter beside it —
+   the suite is the product, each tool is a room in it. */
+.vckit-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+.vckit-vc {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--vc-black, #050507);
+}
+.vckit-tk {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--vc-charcoal, #707175);
+}
+.vckit-mark:hover .vckit-tk { color: var(--vc-cerulean, #217ebe); }
+
+.vckit-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.vckit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 13px;
+  border: 1.5px solid var(--vc-black, #050507);
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  text-decoration: none;
+  color: var(--vc-black, #050507);
+  background: var(--vc-white, #fff);
+  white-space: nowrap;
+}
+.vckit-link:hover {
+  background: var(--vc-cerulean, #217ebe);
+  border-color: var(--vc-cerulean, #217ebe);
+  color: #fff;
+}
+.vckit-link.here {
+  background: var(--vc-black, #050507);
+  color: var(--vc-white, #fff);
+  cursor: default;
+}
+
+/* A tool that lives in another repo. The arrow says "you are leaving this
+   site", which matters when everything else here is one hop away. */
+.vckit-link.ext::after {
+  content: "\2197";
+  font-size: 11px;
+  font-weight: 600;
+  opacity: .65;
+}
+
+/* Which tools want the passphrase, said quietly. A dot rather than a padlock
+   glyph: the lock emoji renders at a different weight in every browser and
+   dragged the pill out of line. */
+.vckit-lock {
+  font-size: 15px;
+  line-height: 0;
+  opacity: .42;
+}
+.vckit-link.here .vckit-lock { opacity: .6; }
+
+html.dark .vckit-link.here {
+  background: var(--vc-cerulean, #217ebe);
+  border-color: var(--vc-cerulean, #217ebe);
+  color: #fff;
+}
+html.dark .vckit-vc { color: var(--vc-black, #f2f2ef); }
+
+@media (max-width: 620px) {
+  .vckit { gap: 10px; padding: 8px 0 9px; }
+  .vckit-link { padding: 4px 10px; font-size: 11.5px; }
+  .vckit-vc, .vckit-tk { font-size: 11.5px; letter-spacing: .1em; }
+}
+
+@media print { .vckit { display: none !important; } }

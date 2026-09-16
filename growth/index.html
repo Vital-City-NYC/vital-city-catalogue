@@ -588,6 +588,8 @@
   .strow .sts.old{color:#c8102e}
   @media(max-width:640px){.strow{grid-template-columns:70px 70px 1fr;gap:6px}.strow .sts{grid-column:3;text-align:right}}
 </style>
+<link rel="stylesheet" href="../toolkit.css">
+<script src="../toolkit.js" data-tool="growth" defer></script>
 </head>
 <body>
 
@@ -604,7 +606,8 @@
 </div>
 
 <div id="app">
-  <header class="mast">
+  <div data-toolkit-nav></div>
+<header class="mast">
     <div class="mastlinks">
       <a href="live/" title="The live companion app: the site right now, today, this week, 28 days. Installable on a phone.">● Live</a>
       <a href="about.html" target="_blank">How it works ↗</a>
@@ -612,9 +615,7 @@
       <a href="#" id="themeToggle">🌙 Dark mode</a>
       <a href="#" id="forget" title="You stay logged in automatically on this device for 90 days (refreshed each visit) — and the same login covers the Contact tool too, so you shouldn't need to re-enter the passphrase. 'Lock' is the opposite: tap it to forget the saved passphrase and re-lock now, e.g. on a shared or public computer.">Lock</a>
     </div>
-    <div class="wm">Vital City</div>
     <h1>Growth dashboard</h1>
-    <nav class="toolnav" aria-label="Vital City tools"><span class="tlab">Tools</span><a href="../">Catalogue</a><a href="../growth/" class="here">Growth</a><a href="../network/">Contacts</a><a href="../prospects/">Prospects</a></nav>
     <div class="sub" id="subline">Ordered by priority: growing the list first, then donors and influence, then the content engine that drives both. List health and raw traffic signals at the bottom.</div>
   </header>
   <div class="confbar">Confidential · internal growth metrics · do not redistribute</div>
