@@ -84,3 +84,16 @@ spanning 2021–2026.
 
 See `methodology.md` for sources, field definitions, tag classification and
 limitations.
+
+## Accounts vault (`/accounts/`)
+
+Fifth tool in the gated suite: a searchable, editable list of Vital City's shared
+logins. Everything is encrypted in the browser (PBKDF2-SHA256 600k + AES-256-GCM,
+same scheme as the other tools) with its **own** passphrase, which is never written
+to localStorage. The ciphertext is **not** in this repo: it is stored by a Google
+Apps Script web app on info@vitalcitynyc.org (source in `private/accounts-backend.gs`,
+never committed) as a file in that account's Drive, and fetched only with a token
+derived from the passphrase. Eight wrong tokens lock the endpoint for 30 minutes.
+`accounts/*.enc` is gitignored as a guard. Edits are re-encrypted client-side and
+saved with a revision check so two people cannot silently overwrite each other.
+Without a backend URL the page runs in file mode (open / download `.enc` files).
