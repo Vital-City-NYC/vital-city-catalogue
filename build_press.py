@@ -41,11 +41,28 @@ UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/124 Safari/537.36")
 
 # ---------------------------------------------------------------- fetching
+def _cf_decode(h):
+    try:
+        k = int(h[:2], 16)
+        return "".join(chr(int(h[i:i + 2], 16) ^ k) for i in range(2, len(h), 2))
+    except Exception:
+        return ""
+
+def unhide_emails(src):
+    """Cloudflare rewrites every address on a page it protects into a hex blob
+    (data-cfemail="…", /cdn-cgi/l/email-protection#…) that a browser decodes and
+    a scraper never sees. The Trace, The 74 and Jewish Insider publish their
+    reporters' addresses this way, so to this build they had none. Decoding is
+    reading what the page publishes, not inferring anything."""
+    src = re.sub(r'data-cfemail="([0-9a-fA-F]{8,})"', lambda m: f'href="mailto:{_cf_decode(m.group(1))}"', src)
+    src = re.sub(r'/cdn-cgi/l/email-protection#([0-9a-fA-F]{8,})', lambda m: f'mailto:{_cf_decode(m.group(1))}', src)
+    return src
+
 def curl(url, timeout=30):
     try:
         p = subprocess.run(["curl", "-sSL", "--max-time", str(timeout), "-A", UA, url],
                            capture_output=True, timeout=timeout + 20)
-        return p.stdout.decode("utf8", "ignore")
+        return unhide_emails(p.stdout.decode("utf8", "ignore"))
     except Exception:
         return ""
 
@@ -870,8 +887,26 @@ def main():
     apages = cached("apages", lambda: [r for r in cf.ThreadPoolExecutor(max_workers=12).map(read_author_page, apjobs)])
     ap_id = {r["id"]: r for r in apages}
 
+    # One story is often the wrong story: The Real Deal signs off "Let me know at
+    # ben.miller@therealdeal.com" on some pieces and not others. Anyone still
+    # without an address gets up to two more of their own stories read.
+    have = {r["id"] for r in (blocks + apages) if r.get("email")}
+    more_jobs = []
+    for p in people.values():
+        if p["id"] in have or p.get("email"):
+            continue
+        st = [s_ for s_ in p["stories"] if (s_.get("url") or "").startswith("http")]
+        for s_ in st[1:3]:
+            more_jobs.append((p["id"], p["name"], s_["url"]))
+    print(f"reading {len(more_jobs)} more stories for people still without an address…")
+    more = cached("more", lambda: [r for r in cf.ThreadPoolExecutor(max_workers=12).map(read_byline_block, more_jobs)])
+    more_id = {}
+    for r in more:
+        if r.get("email") and r["id"] not in more_id:
+            more_id[r["id"]] = r
+
     for pid, p in people.items():
-        for src in (by_id.get(pid) or {}, ap_id.get(pid) or {}):
+        for src in (by_id.get(pid) or {}, ap_id.get(pid) or {}, more_id.get(pid) or {}):
             for fld in ("author_page", "x", "bluesky", "bio"):
                 if src.get(fld) and not p.get(fld):
                     p[fld] = src[fld]
