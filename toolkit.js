@@ -69,19 +69,21 @@
       a.className = "vckit-link" + (here ? " here" : "") + (t.href ? " ext" : "");
       if (!here) { a.href = t.href || (root + t.path); }
       if (here) { a.setAttribute("aria-current", "page"); }
+      // Six of the eight tools are gated, so a dot on each said almost nothing
+      // and put a row of specks across the bar. The tooltip still says it.
       a.title = t.blurb + (t.gated ? " Passphrase required." : "");
       a.appendChild(document.createTextNode(t.label));
-      if (t.gated) {
-        var lock = document.createElement("span");
-        lock.className = "vckit-lock";
-        lock.setAttribute("aria-label", "passphrase required");
-        lock.textContent = "•";
-        a.appendChild(lock);
-      }
       list.appendChild(a);
     });
 
     nav.appendChild(list);
+
+    // Page utilities (how it works, print, theme, lock) ride at the right end
+    // of the same bar. They used to float over the title as a second row of
+    // links; one bar carries navigation left, page controls right.
+    var utils = document.querySelector(".mastlinks");
+    if (utils) { utils.classList.add("vckit-utils"); nav.appendChild(utils); }
+
     return nav;
   }
 
