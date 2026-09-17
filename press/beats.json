@@ -1,100 +1,8 @@
 {
  "_note": "Keyword sets used to read a beat off the stories a reporter actually filed. ALL-CAPS entries match case-sensitively so ICE does not match 'police' and DOE does not match 'does'. A trailing * matches as a prefix stem. Everything else matches whole words, case-insensitively, tolerating a plural s.",
  "beats": {
-  "housing": {
-   "label": "Housing and homelessness",
-   "terms": [
-    "housing",
-    "rent",
-    "rents",
-    "rental",
-    "tenant*",
-    "landlord*",
-    "eviction*",
-    "evict*",
-    "affordable housing",
-    "rent-stabilized",
-    "rent stabilization",
-    "homeless*",
-    "shelter*",
-    "right to shelter",
-    "voucher*",
-    "CityFHEPS",
-    "Section 8",
-    "HPD",
-    "public housing",
-    "NYCHA",
-    "housing court",
-    "squatter*",
-    "overcrowd*",
-    "co-op",
-    "condo*",
-    "mortgage*",
-    "foreclosure*",
-    "housing lottery",
-    "supportive housing",
-    "SRO",
-    "basement apartment*"
-   ],
-   "priority": 3
-  },
-  "land-use": {
-   "label": "Land use, zoning and development",
-   "terms": [
-    "zoning",
-    "rezon*",
-    "ULURP",
-    "City of Yes",
-    "land use",
-    "upzon*",
-    "downzon*",
-    "developer*",
-    "development site",
-    "City Planning",
-    "DCP",
-    "BSA",
-    "landmark*",
-    "LPC",
-    "historic district*",
-    "community board",
-    "variance*",
-    "air rights",
-    "FAR",
-    "envelope",
-    "special district",
-    "waterfront",
-    "megaproject*",
-    "Atlantic Yards",
-    "Penn Station",
-    "casino*"
-   ],
-   "priority": 3
-  },
-  "real-estate": {
-   "label": "Real estate and commercial property",
-   "terms": [
-    "real estate",
-    "REBNY",
-    "office tower*",
-    "office vacancy",
-    "conversion*",
-    "commercial real estate",
-    "broker*",
-    "listing*",
-    "square feet",
-    "lease*",
-    "building sale",
-    "investment sales",
-    "REIT",
-    "property tax*",
-    "J-51",
-    "421-a",
-    "485-x"
-   ],
-   "priority": 3
-  },
   "policing": {
-   "label": "Policing and the NYPD",
+   "label": "Policing, guns and public safety",
    "terms": [
     "NYPD",
     "police",
@@ -118,12 +26,46 @@
     "SRG",
     "quality-of-life",
     "subway policing",
-    "school safety agent*"
+    "school safety agent*",
+    "shooting*",
+    "gun*",
+    "firearm*",
+    "ghost gun*",
+    "homicide*",
+    "murder*",
+    "violence interrupt*",
+    "Cure Violence",
+    "crisis management system",
+    "gun violence",
+    "stray bullet",
+    "assault weapon*",
+    "concealed carry",
+    "gun buyback",
+    "crime rate*",
+    "crime data",
+    "CompStat",
+    "felony assault*",
+    "robbery",
+    "robberies",
+    "burglar*",
+    "grand larceny",
+    "index crime*",
+    "clearance rate*",
+    "recidivism",
+    "crime stats",
+    "transit crime",
+    "hate crime*",
+    "subway crime"
    ],
-   "priority": 1
+   "priority": 1,
+   "merged_from": [
+    "policing",
+    "guns",
+    "crime-data"
+   ]
   },
-  "criminal-justice": {
-   "label": "Criminal justice, courts and prosecution",
+  "courts-jails": {
+   "label": "Courts, jails and prosecution",
    "terms": [
     "district attorney",
     "DA",
@@ -150,13 +92,7 @@
     "arrest*",
     "felony",
     "misdemeanor*",
-    "charges"
-   ],
-   "priority": 1
-  },
-  "jails": {
-   "label": "Jails, Rikers and corrections",
-   "terms": [
+    "charges",
     "Rikers",
     "jail*",
     "Department of Correction",
@@ -176,166 +112,11 @@
     "state prison",
     "DOCCS"
    ],
-   "priority": 1
-  },
-  "guns": {
-   "label": "Guns and violence",
-   "terms": [
-    "shooting*",
-    "gun*",
-    "firearm*",
-    "ghost gun*",
-    "homicide*",
-    "murder*",
-    "violence interrupt*",
-    "Cure Violence",
-    "crisis management system",
-    "gun violence",
-    "stray bullet",
-    "assault weapon*",
-    "concealed carry",
-    "gun buyback"
-   ],
-   "priority": 1
-  },
-  "crime-data": {
-   "label": "Crime statistics and public safety data",
-   "terms": [
-    "crime rate*",
-    "crime data",
-    "CompStat",
-    "felony assault*",
-    "robbery",
-    "robberies",
-    "burglar*",
-    "grand larceny",
-    "index crime*",
-    "clearance rate*",
-    "recidivism",
-    "crime stats",
-    "transit crime",
-    "hate crime*",
-    "subway crime"
-   ],
-   "priority": 1
-  },
-  "education": {
-   "label": "Schools and education",
-   "terms": [
-    "school*",
-    "student*",
-    "teacher*",
-    "DOE",
-    "Department of Education",
-    "chancellor",
-    "classroom*",
-    "principal*",
-    "UFT",
-    "class size",
-    "specialized high school*",
-    "SHSAT",
-    "gifted and talented",
-    "charter school*",
-    "pre-K",
-    "3-K",
-    "admissions",
-    "test scores",
-    "reading",
-    "curriculum",
-    "absentee*",
-    "chronic absenteeism",
-    "school bus*",
-    "special education",
-    "IEP",
-    "CUNY",
-    "community school*",
-    "school budget*"
-   ],
-   "priority": 3
-  },
-  "childcare": {
-   "label": "Child care and early childhood",
-   "terms": [
-    "child care",
-    "childcare",
-    "day care",
-    "daycare",
-    "universal child care",
-    "pre-K",
-    "3-K",
-    "early childhood",
-    "babysit*",
-    "parental leave",
-    "Head Start",
-    "ACS",
-    "child welfare",
-    "foster care",
-    "family court"
-   ],
-   "priority": 3
-  },
-  "transit": {
-   "label": "Transit, subways and buses",
-   "terms": [
-    "MTA",
-    "subway*",
-    "bus*",
-    "train*",
-    "transit",
-    "straphanger*",
-    "fare evasion",
-    "fare*",
-    "OMNY",
-    "congestion pricing",
-    "capital plan",
-    "signal*",
-    "CBTC",
-    "Second Avenue Subway",
-    "Interborough Express",
-    "IBX",
-    "LIRR",
-    "Metro-North",
-    "paratransit",
-    "Access-A-Ride",
-    "service cuts",
-    "ridership",
-    "platform*",
-    "conductor*",
-    "TWU"
-   ],
-   "priority": 3
-  },
-  "streets": {
-   "label": "Streets, traffic and street safety",
-   "terms": [
-    "Vision Zero",
-    "bike lane*",
-    "bike*",
-    "cyclist*",
-    "pedestrian*",
-    "crash*",
-    "traffic",
-    "speed camera*",
-    "red light camera*",
-    "DOT",
-    "open street*",
-    "busway*",
-    "bus lane*",
-    "parking",
-    "placard*",
-    "e-bike*",
-    "moped*",
-    "delivery worker*",
-    "sidewalk*",
-    "curb*",
-    "daylighting",
-    "speed limit",
-    "Sammy's Law",
-    "street safety",
-    "road diet",
-    "plaza*"
-   ],
-   "priority": 3
+   "priority": 1,
+   "merged_from": [
+    "criminal-justice",
+    "jails"
+   ]
   },
   "city-hall": {
    "label": "City Hall and the mayor",
@@ -358,10 +139,13 @@
     "press secretary",
     "City Hall staff"
    ],
-   "priority": 2
+   "priority": 2,
+   "merged_from": [
+    "city-hall"
+   ]
   },
   "council": {
-   "label": "City Council and local legislation",
+   "label": "City Council and community boards",
    "terms": [
     "City Council",
     "council member*",
@@ -378,9 +162,26 @@
     "council district*",
     "borough president*",
     "public advocate",
-    "term limits"
+    "term limits",
+    "community board*",
+    "participatory budgeting",
+    "civic",
+    "volunteer*",
+    "mutual aid",
+    "neighborhood association*",
+    "block association*",
+    "town hall",
+    "public comment",
+    "local democracy",
+    "census",
+    "redistricting",
+    "district lines"
    ],
-   "priority": 2
+   "priority": 2,
+   "merged_from": [
+    "council",
+    "civic"
+   ]
   },
   "albany": {
    "label": "Albany and state government",
@@ -403,10 +204,13 @@
     "state law",
     "Cuomo"
    ],
-   "priority": 2
+   "priority": 2,
+   "merged_from": [
+    "albany"
+   ]
   },
-  "elections": {
-   "label": "Elections and campaigns",
+  "elections-ethics": {
+   "label": "Elections, ethics and lobbying",
    "terms": [
     "election*",
     "primary",
@@ -430,13 +234,7 @@
     "runoff",
     "super PAC",
     "independent expenditure*",
-    "fundraising"
-   ],
-   "priority": 2
-  },
-  "ethics": {
-   "label": "Ethics, lobbying and corruption",
-   "terms": [
+    "fundraising",
     "corruption",
     "bribe*",
     "kickback*",
@@ -458,10 +256,14 @@
     "no-bid",
     "pay-to-play"
    ],
-   "priority": 2
+   "priority": 2,
+   "merged_from": [
+    "elections",
+    "ethics"
+   ]
   },
-  "budget": {
-   "label": "City budget, taxes and fiscal policy",
+  "budget-economy": {
+   "label": "Budget, economy and labor",
    "terms": [
     "budget",
     "budget gap",
@@ -493,13 +295,30 @@
     "capital budget",
     "preliminary budget",
     "executive budget",
-    "adopted budget"
-   ],
-   "priority": 2
-  },
-  "labor": {
-   "label": "Labor, unions and city workers",
-   "terms": [
+    "adopted budget",
+    "jobs",
+    "unemployment",
+    "employment",
+    "economy",
+    "economic development",
+    "EDC",
+    "small business*",
+    "storefront*",
+    "retail",
+    "restaurant*",
+    "nightlife",
+    "tourism",
+    "hotel*",
+    "Wall Street",
+    "finance industry",
+    "startup*",
+    "tech sector",
+    "layoffs",
+    "hiring",
+    "wages",
+    "cost of living",
+    "affordability",
+    "inflation",
     "union*",
     "labor",
     "contract*",
@@ -525,36 +344,303 @@
     "gig worker*",
     "freelancer*"
    ],
-   "priority": 3
-  },
-  "economy": {
-   "label": "Economy, jobs and small business",
-   "terms": [
-    "jobs",
-    "unemployment",
-    "employment",
+   "priority": 2,
+   "merged_from": [
+    "budget",
     "economy",
-    "economic development",
-    "EDC",
-    "small business*",
-    "storefront*",
-    "retail",
-    "restaurant*",
-    "nightlife",
-    "tourism",
-    "hotel*",
-    "Wall Street",
-    "finance industry",
-    "startup*",
-    "tech sector",
-    "layoffs",
-    "hiring",
-    "wages",
-    "cost of living",
-    "affordability",
-    "inflation"
+    "labor"
+   ]
+  },
+  "housing": {
+   "label": "Housing, homelessness and NYCHA",
+   "terms": [
+    "housing",
+    "rent",
+    "rents",
+    "rental",
+    "tenant*",
+    "landlord*",
+    "eviction*",
+    "evict*",
+    "affordable housing",
+    "rent-stabilized",
+    "rent stabilization",
+    "homeless*",
+    "shelter*",
+    "right to shelter",
+    "voucher*",
+    "CityFHEPS",
+    "Section 8",
+    "HPD",
+    "public housing",
+    "NYCHA",
+    "housing court",
+    "squatter*",
+    "overcrowd*",
+    "co-op",
+    "condo*",
+    "mortgage*",
+    "foreclosure*",
+    "housing lottery",
+    "supportive housing",
+    "SRO",
+    "basement apartment*",
+    "tenant association*",
+    "RAD",
+    "PACT",
+    "Section 9",
+    "heat outage*",
+    "elevator outage*",
+    "mold",
+    "lead paint",
+    "capital needs",
+    "Blueprint for Change",
+    "resident council*"
    ],
-   "priority": 3
+   "priority": 3,
+   "merged_from": [
+    "housing",
+    "nycha"
+   ]
+  },
+  "land-use": {
+   "label": "Land use, development and real estate",
+   "terms": [
+    "zoning",
+    "rezon*",
+    "ULURP",
+    "City of Yes",
+    "land use",
+    "upzon*",
+    "downzon*",
+    "developer*",
+    "development site",
+    "City Planning",
+    "DCP",
+    "BSA",
+    "landmark*",
+    "LPC",
+    "historic district*",
+    "community board",
+    "variance*",
+    "air rights",
+    "FAR",
+    "envelope",
+    "special district",
+    "waterfront",
+    "megaproject*",
+    "Atlantic Yards",
+    "Penn Station",
+    "casino*",
+    "real estate",
+    "REBNY",
+    "office tower*",
+    "office vacancy",
+    "conversion*",
+    "commercial real estate",
+    "broker*",
+    "listing*",
+    "square feet",
+    "lease*",
+    "building sale",
+    "investment sales",
+    "REIT",
+    "property tax*",
+    "J-51",
+    "421-a",
+    "485-x"
+   ],
+   "priority": 3,
+   "merged_from": [
+    "land-use",
+    "real-estate"
+   ]
+  },
+  "education": {
+   "label": "Schools and child care",
+   "terms": [
+    "school*",
+    "student*",
+    "teacher*",
+    "DOE",
+    "Department of Education",
+    "chancellor",
+    "classroom*",
+    "principal*",
+    "UFT",
+    "class size",
+    "specialized high school*",
+    "SHSAT",
+    "gifted and talented",
+    "charter school*",
+    "pre-K",
+    "3-K",
+    "admissions",
+    "test scores",
+    "reading",
+    "curriculum",
+    "absentee*",
+    "chronic absenteeism",
+    "school bus*",
+    "special education",
+    "IEP",
+    "CUNY",
+    "community school*",
+    "school budget*",
+    "child care",
+    "childcare",
+    "day care",
+    "daycare",
+    "universal child care",
+    "early childhood",
+    "babysit*",
+    "parental leave",
+    "Head Start",
+    "ACS",
+    "child welfare",
+    "foster care",
+    "family court"
+   ],
+   "priority": 3,
+   "merged_from": [
+    "education",
+    "childcare"
+   ]
+  },
+  "transit-streets": {
+   "label": "Transit, streets and street safety",
+   "terms": [
+    "MTA",
+    "subway*",
+    "bus*",
+    "train*",
+    "transit",
+    "straphanger*",
+    "fare evasion",
+    "fare*",
+    "OMNY",
+    "congestion pricing",
+    "capital plan",
+    "signal*",
+    "CBTC",
+    "Second Avenue Subway",
+    "Interborough Express",
+    "IBX",
+    "LIRR",
+    "Metro-North",
+    "paratransit",
+    "Access-A-Ride",
+    "service cuts",
+    "ridership",
+    "platform*",
+    "conductor*",
+    "TWU",
+    "Vision Zero",
+    "bike lane*",
+    "bike*",
+    "cyclist*",
+    "pedestrian*",
+    "crash*",
+    "traffic",
+    "speed camera*",
+    "red light camera*",
+    "DOT",
+    "open street*",
+    "busway*",
+    "bus lane*",
+    "parking",
+    "placard*",
+    "e-bike*",
+    "moped*",
+    "delivery worker*",
+    "sidewalk*",
+    "curb*",
+    "daylighting",
+    "speed limit",
+    "Sammy's Law",
+    "street safety",
+    "road diet",
+    "plaza*"
+   ],
+   "priority": 3,
+   "merged_from": [
+    "transit",
+    "streets"
+   ]
+  },
+  "health": {
+   "label": "Health, mental health and social services",
+   "terms": [
+    "hospital*",
+    "Health + Hospitals",
+    "H+H",
+    "health department",
+    "DOHMH",
+    "Medicaid",
+    "Medicare",
+    "insurance",
+    "clinic*",
+    "doctor*",
+    "nurse*",
+    "patient*",
+    "public health",
+    "vaccine*",
+    "COVID",
+    "measles",
+    "maternal",
+    "overdose*",
+    "fentanyl",
+    "opioid*",
+    "harm reduction",
+    "overdose prevention center*",
+    "syringe",
+    "lead poisoning",
+    "asthma",
+    "food insecurity",
+    "SNAP",
+    "WIC",
+    "mental health",
+    "mentally ill",
+    "psychiatric",
+    "involuntary removal*",
+    "B-HEARD",
+    "crisis response",
+    "serious mental illness",
+    "supportive housing",
+    "Kendra's Law",
+    "AOT",
+    "clubhouse*",
+    "peer specialist*",
+    "street homeless*",
+    "outreach team*",
+    "subway outreach",
+    "benefit*",
+    "cash assistance",
+    "food stamp*",
+    "HRA",
+    "Department of Social Services",
+    "welfare",
+    "poverty",
+    "food pantr*",
+    "free lunch",
+    "child tax credit",
+    "EITC",
+    "unemployment insurance",
+    "rental assistance",
+    "utility assistance",
+    "legal services",
+    "disabilit*",
+    "senior*",
+    "aging",
+    "NORC",
+    "Meals on Wheels"
+   ],
+   "priority": 3,
+   "merged_from": [
+    "health",
+    "mental-health",
+    "social-services"
+   ]
   },
   "immigration": {
    "label": "Immigration and new arrivals",
@@ -584,92 +670,13 @@
     "day laborer*",
     "work permit*"
    ],
-   "priority": 3
+   "priority": 3,
+   "merged_from": [
+    "immigration"
+   ]
   },
-  "health": {
-   "label": "Health care and hospitals",
-   "terms": [
-    "hospital*",
-    "Health + Hospitals",
-    "H+H",
-    "health department",
-    "DOHMH",
-    "Medicaid",
-    "Medicare",
-    "insurance",
-    "clinic*",
-    "doctor*",
-    "nurse*",
-    "patient*",
-    "public health",
-    "vaccine*",
-    "COVID",
-    "measles",
-    "maternal",
-    "overdose*",
-    "fentanyl",
-    "opioid*",
-    "harm reduction",
-    "overdose prevention center*",
-    "syringe",
-    "lead poisoning",
-    "asthma",
-    "food insecurity",
-    "SNAP",
-    "WIC"
-   ],
-   "priority": 3
-  },
-  "mental-health": {
-   "label": "Mental health and homelessness services",
-   "terms": [
-    "mental health",
-    "mentally ill",
-    "psychiatric",
-    "involuntary removal*",
-    "B-HEARD",
-    "crisis response",
-    "serious mental illness",
-    "supportive housing",
-    "Kendra's Law",
-    "AOT",
-    "clubhouse*",
-    "peer specialist*",
-    "street homeless*",
-    "outreach team*",
-    "subway outreach"
-   ],
-   "priority": 3
-  },
-  "social-services": {
-   "label": "Social services and benefits",
-   "terms": [
-    "benefit*",
-    "cash assistance",
-    "SNAP",
-    "food stamp*",
-    "HRA",
-    "Department of Social Services",
-    "welfare",
-    "poverty",
-    "food pantr*",
-    "free lunch",
-    "child tax credit",
-    "EITC",
-    "unemployment insurance",
-    "rental assistance",
-    "utility assistance",
-    "legal services",
-    "disabilit*",
-    "senior*",
-    "aging",
-    "NORC",
-    "Meals on Wheels"
-   ],
-   "priority": 3
-  },
-  "climate": {
-   "label": "Climate, energy and the environment",
+  "environment": {
+   "label": "Climate, sanitation and parks",
    "terms": [
     "climate",
     "emissions",
@@ -696,13 +703,7 @@
     "DEP",
     "water",
     "sewer*",
-    "combined sewer overflow"
-   ],
-   "priority": 3
-  },
-  "sanitation": {
-   "label": "Sanitation, trash and rats",
-   "terms": [
+    "combined sewer overflow",
     "trash",
     "garbage",
     "sanitation",
@@ -717,13 +718,7 @@
     "alternate side",
     "waste",
     "transfer station*",
-    "curbside"
-   ],
-   "priority": 3
-  },
-  "parks": {
-   "label": "Parks and public space",
-   "terms": [
+    "curbside",
     "park*",
     "Parks Department",
     "playground*",
@@ -742,10 +737,15 @@
     "Central Park",
     "Prospect Park"
    ],
-   "priority": 3
+   "priority": 3,
+   "merged_from": [
+    "climate",
+    "sanitation",
+    "parks"
+   ]
   },
-  "tech": {
-   "label": "Technology, data and surveillance",
+  "tech-media": {
+   "label": "Technology, media and surveillance",
    "terms": [
     "algorithm*",
     "artificial intelligence",
@@ -764,9 +764,23 @@
     "smart city",
     "drone*",
     "license plate reader*",
-    "ShotSpotter"
+    "ShotSpotter",
+    "newsroom*",
+    "journalis*",
+    "press freedom",
+    "public radio",
+    "FOIL",
+    "freedom of information",
+    "records request*",
+    "misinformation",
+    "podcast*",
+    "newspaper*"
    ],
-   "priority": 3
+   "priority": 3,
+   "merged_from": [
+    "tech",
+    "media"
+   ]
   },
   "federal": {
    "label": "Washington and the city",
@@ -790,10 +804,13 @@
     "DHS",
     "executive order"
    ],
-   "priority": 3
+   "priority": 3,
+   "merged_from": [
+    "federal"
+   ]
   },
-  "race-equity": {
-   "label": "Race, equity and civil rights",
+  "civil-rights": {
+   "label": "Civil rights, race and LGBTQ communities",
    "terms": [
     "racial",
     "racism",
@@ -812,13 +829,7 @@
     "diversity",
     "hate crime*",
     "antisemitism",
-    "Islamophobia"
-   ],
-   "priority": 3
-  },
-  "lgbtq": {
-   "label": "LGBTQ communities and policy",
-   "terms": [
+    "Islamophobia",
     "LGBTQ",
     "queer",
     "transgender",
@@ -833,10 +844,14 @@
     "PrEP",
     "drag"
    ],
-   "priority": 3
+   "priority": 3,
+   "merged_from": [
+    "race-equity",
+    "lgbtq"
+   ]
   },
-  "arts-culture": {
-   "label": "Arts, culture and nightlife",
+  "culture": {
+   "label": "Arts, culture, food and nightlife",
    "terms": [
     "arts",
     "artist*",
@@ -854,30 +869,7 @@
     "Broadway",
     "public art",
     "mural*",
-    "festival*"
-   ],
-   "priority": 3
-  },
-  "media": {
-   "label": "Media, press and information",
-   "terms": [
-    "newsroom*",
-    "journalis*",
-    "press freedom",
-    "public radio",
-    "FOIL",
-    "freedom of information",
-    "records request*",
-    "misinformation",
-    "podcast*",
-    "newspaper*"
-   ],
-   "priority": 3,
-   "_note": "Deliberately narrow. Section names like 'local news' and ordinary words like 'social media' matched most of the city's crime copy."
-  },
-  "food": {
-   "label": "Food, restaurants and street vending",
-   "terms": [
+    "festival*",
     "restaurant*",
     "food",
     "street vendor*",
@@ -894,46 +886,13 @@
     "liquor license*",
     "SLA"
    ],
-   "priority": 3
-  },
-  "nycha": {
-   "label": "NYCHA and public housing",
-   "terms": [
-    "NYCHA",
-    "public housing",
-    "tenant association*",
-    "RAD",
-    "PACT",
-    "Section 9",
-    "heat outage*",
-    "elevator outage*",
-    "mold",
-    "lead paint",
-    "capital needs",
-    "Blueprint for Change",
-    "resident council*"
-   ],
-   "priority": 3
-  },
-  "civic": {
-   "label": "Civic life, community boards and participation",
-   "terms": [
-    "community board*",
-    "participatory budgeting",
-    "civic",
-    "volunteer*",
-    "mutual aid",
-    "neighborhood association*",
-    "block association*",
-    "town hall",
-    "public comment",
-    "local democracy",
-    "census",
-    "redistricting",
-    "district lines"
-   ],
-   "priority": 2
+   "priority": 3,
+   "merged_from": [
+    "arts-culture",
+    "food"
+   ]
   }
  },
- "_priority_note": "priority 1 = crime and criminal justice, 2 = city and state government, 3 = the rest. Used for ordering, never for filtering: every beat that touches city or state government is carried."
+ "_priority_note": "priority 1 = crime and criminal justice, 2 = city and state government, 3 = the rest. Used for ordering, never for filtering: every beat that touches city or state government is carried.",
+ "_consolidation_note": "Sept. 17, 2026: 36 beats consolidated to 18 so each holds more reporters. Each beat's terms are the union of the beats listed in merged_from; its priority is the highest (lowest number) among them. Nothing was dropped."
 }

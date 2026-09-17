@@ -44,7 +44,7 @@
   .wm{font-weight:900;letter-spacing:.22em;text-transform:uppercase;font-size:12px}
   header.mast h1{font-family:var(--vc-sans);font-weight:900;font-size:26px;margin:6px 0 2px}
   .sub{color:var(--vc-charcoal);font-size:13px}
-  .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.1em;padding:4px 30px;font-weight:700}
+  .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
   /* There are SEVEN tiles. Any column count that leaves a remainder of 1 strands
      "unsubscribed" alone on its own line, which is what 6 (and 3, and 2) all did.
@@ -426,6 +426,7 @@
 
 <div id="app">
   <div class="toast" id="toast"></div>
+  <div class="confbar"><span>Confidential · contains subscriber, donor and contact data · do not redistribute</span></div>
   <div data-toolkit-nav></div>
 <header class="mast">
     <div class="mastlinks">
@@ -436,7 +437,6 @@
     <h1>Contact master search</h1>
     <div class="sub">Everyone in Vital City's orbit — newsletter subscribers, contributors, contacts and donors — searchable by type and category. Filter to any subset, then export it, copy its emails, or email the group.</div>
   </header>
-  <div class="confbar">Confidential · contains subscriber, donor and contact data · do not redistribute</div>
   <div class="stats" id="stats"></div>
   <div class="statsnote" title="In Mailchimp every email address is its own line; here, all of a person's known addresses are merged into one record. So a subscriber on the list under 2 or 3 emails counts once here, and these totals can read slightly lower than Mailchimp's raw counts.">Counts above are <b>unique people</b> — anyone subscribed under 2 or 3 email addresses is counted once, so these totals can read a little lower than Mailchimp's raw subscriber count (which counts addresses).</div>
   <div class="activitybar" id="activityBar" title="A quick pulse of recent movement: new newsletter sign-ups, people who unsubscribed, and money raised (with the number of gifts) over the last 7 and 30 days. Refreshes daily."></div>
