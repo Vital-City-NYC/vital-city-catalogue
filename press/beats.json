@@ -119,7 +119,7 @@
    ]
   },
   "city-hall": {
-   "label": "City Hall and the mayor",
+   "label": "City Hall, the mayor and the budget",
    "terms": [
     "mayor",
     "City Hall",
@@ -137,11 +137,43 @@
     "city charter",
     "chief of staff",
     "press secretary",
-    "City Hall staff"
+    "City Hall staff",
+    "budget",
+    "budget gap",
+    "deficit",
+    "surplus",
+    "revenue*",
+    "tax*",
+    "property tax*",
+    "income tax",
+    "millionaire*",
+    "fiscal",
+    "OMB",
+    "Office of Management and Budget",
+    "comptroller",
+    "Lander",
+    "bond*",
+    "debt service",
+    "reserves",
+    "rainy day fund",
+    "PEG",
+    "headcount",
+    "vacanc*",
+    "pension*",
+    "retiree*",
+    "Medicare Advantage",
+    "fiscal cliff",
+    "spending",
+    "appropriation*",
+    "capital budget",
+    "preliminary budget",
+    "executive budget",
+    "adopted budget"
    ],
    "priority": 2,
    "merged_from": [
-    "city-hall"
+    "city-hall",
+    "budget"
    ]
   },
   "council": {
@@ -262,40 +294,9 @@
     "ethics"
    ]
   },
-  "budget-economy": {
-   "label": "Budget, economy and labor",
+  "economy-labor": {
+   "label": "Economy, jobs and labor",
    "terms": [
-    "budget",
-    "budget gap",
-    "deficit",
-    "surplus",
-    "revenue*",
-    "tax*",
-    "property tax*",
-    "income tax",
-    "millionaire*",
-    "fiscal",
-    "OMB",
-    "Office of Management and Budget",
-    "comptroller",
-    "Lander",
-    "bond*",
-    "debt service",
-    "reserves",
-    "rainy day fund",
-    "PEG",
-    "headcount",
-    "vacanc*",
-    "pension*",
-    "retiree*",
-    "Medicare Advantage",
-    "fiscal cliff",
-    "spending",
-    "appropriation*",
-    "capital budget",
-    "preliminary budget",
-    "executive budget",
-    "adopted budget",
     "jobs",
     "unemployment",
     "employment",
@@ -344,9 +345,8 @@
     "gig worker*",
     "freelancer*"
    ],
-   "priority": 2,
+   "priority": 3,
    "merged_from": [
-    "budget",
     "economy",
     "labor"
    ]
@@ -894,5 +894,5 @@
   }
  },
  "_priority_note": "priority 1 = crime and criminal justice, 2 = city and state government, 3 = the rest. Used for ordering, never for filtering: every beat that touches city or state government is carried.",
- "_consolidation_note": "Sept. 17, 2026: 36 beats consolidated to 18 so each holds more reporters. Each beat's terms are the union of the beats listed in merged_from; its priority is the highest (lowest number) among them. Nothing was dropped."
+ "_consolidation_note": "Sept. 17, 2026: 36 beats consolidated to 18 so each holds more reporters. Each beat's terms are the union of the beats listed in merged_from; its priority is the highest (lowest number) among them. Nothing was dropped. The city budget sits with City Hall rather than with economy and labor, so reporters on small business and unions do not count toward city and state government."
 }
