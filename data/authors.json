@@ -1,7 +1,7 @@
 [
  {
   "name": "Vital City",
-  "post_count": 98,
+  "post_count": 99,
   "slugs": [
    "2025-a-look-back-most-read",
    "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -214,9 +214,8 @@
  },
  {
   "name": "Jamie Rubin",
-  "post_count": 34,
+  "post_count": 33,
   "slugs": [
-   "a-housing-agenda-for-the-next-mayor",
    "adam-lubinsky-interview",
    "after-hours-with-jamie-rubin-and-majora-carter",
    "after-hours-with-jamie-rubin-reflections-on-disaster-relief",
@@ -254,6 +253,46 @@
   "slug": "rubin-jamie",
   "bio": "is the chief investment officer of Aligned Climate Capital and chairman of the board of the New York City Housing Authority (NYCHA).",
   "url": "https://www.vitalcitynyc.org/author/rubin-jamie/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "New York Editorial Board",
+  "post_count": 29,
+  "slugs": [
+   "adrienne-adams-interview-transcript",
+   "alex-bores-on-housing-ai-regulation",
+   "antonio-reynoso-on-mamdani-immigration",
+   "bill-de-blasio-interview-transcript",
+   "brad-lander-interview-transcript",
+   "brad-lander-on-immigration-reform",
+   "claire-valdez-on-mamdani-aoc-and",
+   "dan-goldman-on-zohran-mamdani-donald",
+   "darializa-avila-chevalier-on-housing",
+   "janno-lieber-on-free-buses-the-state",
+   "jenifer-rajkumar-interview-transcript",
+   "jessica-ramos-interview-transcript",
+   "jim-walden-interview-transcript",
+   "john-catsimatidis-on-donald-trump",
+   "julie-menin-on-leading-the-city-council",
+   "julie-won-on-immigration-ai-regulation",
+   "jumaane-williams-interview-transcript",
+   "justin-brannan-interview-transcript",
+   "mark-levine-interview-transcript",
+   "mayor-mamdanis-first-200-days-and",
+   "micah-lasher-on-housing-immigration",
+   "michael-blake-interview-transcript",
+   "patrick-gaspard-on-barack-obama-zohran",
+   "scott-stringer-interview-transcript",
+   "steven-fulop-on-fighting-for-business",
+   "what-we-learned-interviewing-the",
+   "whitney-tilson-interview-transcript",
+   "zellnor-myrie-interview-transcript",
+   "zohran-mamdani-interview-transcript"
+  ],
+  "slug": "editorial-board-new-york",
+  "bio": "is an informal group of veteran journalists hoping to fill some of the space left by the retreat of newspaper editorial boards from the city's civic life by conducting interviews with candidates for high office and other civic leaders.\n\n",
+  "url": "https://www.vitalcitynyc.org/author/editorial-board-new-york/",
   "twitter": null,
   "website": null
  },
@@ -343,7 +382,7 @@
  },
  {
   "name": "A Survey",
-  "post_count": 15,
+  "post_count": 14,
   "slugs": [
    "6-observers-and-veterans-of-new-york-city-politics-weigh-in-on-the-mayors-chances-of-finishing-out-his-term",
    "challenges-around-every-bend-transit-workers-day-to-day",
@@ -351,7 +390,6 @@
    "envisioning-car-free-streets",
    "how-drugs-hurt-or-helped-me",
    "measures-of-urban-vitality",
-   "my-first-adult-apartment",
    "pointing-a-firearm-or-looking-down-its-barrel",
    "six-ways-new-york-can-spare-more-people-from-shootings",
    "summer-city-memories",
@@ -905,6 +943,20 @@
   "website": null
  },
  {
+  "name": "Benjamin Schneider",
+  "post_count": 4,
+  "slugs": [
+   "jane-jacobs-would-support-city-of-yes",
+   "learning-from-jersey-city",
+   "taking-mamdanis-revolution-to-the-streets"
+  ],
+  "slug": "schneider-benjamin",
+  "bio": "is a freelance journalist and Bloomberg CityLab contributor currently and author of the recently published book, \"The Unfinished Metropolis: Igniting the City-Building Revolution.\"",
+  "url": "https://www.vitalcitynyc.org/author/schneider-benjamin/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Barry Friedman",
   "post_count": 4,
   "slugs": [
@@ -1186,16 +1238,15 @@
   "website": null
  },
  {
-  "name": "Howard Slatkin",
+  "name": "Sean Campion",
   "post_count": 3,
   "slugs": [
-   "flip-the-script-and-the-ballot-for-housing",
-   "rental-ripoff-hearings-landlords-tenants-economics",
-   "the-rent-is-too-damn-high-but-also-too-low"
+   "how-seqra-slows-housing-development-new-york",
+   "why-it-costs-so-much-to-build-in-new-york-city"
   ],
-  "slug": "slatkin-howard",
-  "bio": "is the executive director of the Citizens Housing & Planning Council.",
-  "url": "https://www.vitalcitynyc.org/author/slatkin-howard/",
+  "slug": "campion-sean",
+  "bio": "is director of housing and economic development studies at the Citizens Budget Commission, which focuses on constructive change in New York City and New York State government finances and services.",
+  "url": "https://www.vitalcitynyc.org/author/campion-sean/",
   "twitter": null,
   "website": null
  },
@@ -1238,20 +1289,6 @@
   "slug": "been-vicki",
   "bio": "is the Weinfeld Professor of Law at NYU School of Law and faculty director of NYU\u2019s Furman Center. She served as NYC\u2019s deputy mayor of housing and economic development from 2019 to 2021.",
   "url": "https://www.vitalcitynyc.org/author/been-vicki/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Benjamin Schneider",
-  "post_count": 3,
-  "slugs": [
-   "jane-jacobs-would-support-city-of-yes",
-   "learning-from-jersey-city",
-   "taking-mamdanis-revolution-to-the-streets"
-  ],
-  "slug": "schneider-benjamin",
-  "bio": "is a freelance journalist and Bloomberg CityLab contributor currently and author of the recently published book, \"The Unfinished Metropolis: Igniting the City-Building Revolution.\"",
-  "url": "https://www.vitalcitynyc.org/author/schneider-benjamin/",
   "twitter": null,
   "website": null
  },
@@ -1633,15 +1670,15 @@
   "website": null
  },
  {
-  "name": "Sean Campion",
+  "name": "Howard Slatkin",
   "post_count": 2,
   "slugs": [
-   "how-seqra-slows-housing-development-new-york",
-   "why-it-costs-so-much-to-build-in-new-york-city"
+   "flip-the-script-and-the-ballot-for-housing",
+   "rental-ripoff-hearings-landlords-tenants-economics"
   ],
-  "slug": "campion-sean",
-  "bio": "is director of housing and economic development studies at the Citizens Budget Commission, which focuses on constructive change in New York City and New York State government finances and services.",
-  "url": "https://www.vitalcitynyc.org/author/campion-sean/",
+  "slug": "slatkin-howard",
+  "bio": "is the executive director of the Citizens Housing & Planning Council.",
+  "url": "https://www.vitalcitynyc.org/author/slatkin-howard/",
   "twitter": null,
   "website": null
  },
@@ -3682,18 +3719,6 @@
   "website": null
  },
  {
-  "name": "Jessica Gillooly",
-  "post_count": 1,
-  "slugs": [
-   "the-devil-is-in-the-details-of-911-dispatch"
-  ],
-  "slug": "gilooly-jessica",
-  "bio": "is an assistant professor of sociology and criminal justice at Suffolk University.",
-  "url": "https://www.vitalcitynyc.org/author/gilooly-jessica/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Alex Armlovich",
   "post_count": 1,
   "slugs": [
@@ -3727,6 +3752,30 @@
   "slug": "bogart-michele",
   "bio": "is professor emeritus of art history and visual culture at Stony Brook University.",
   "url": "https://www.vitalcitynyc.org/author/bogart-michele/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Jessica Gillooly",
+  "post_count": 1,
+  "slugs": [
+   "the-devil-is-in-the-details-of-911-dispatch"
+  ],
+  "slug": "gilooly-jessica",
+  "bio": "is an assistant professor of sociology and criminal justice at Suffolk University.",
+  "url": "https://www.vitalcitynyc.org/author/gilooly-jessica/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Charles Brecher",
+  "post_count": 1,
+  "slugs": [
+   "tough-budget-choices-ahead-for-zohran-mamdani"
+  ],
+  "slug": "brechner-charles",
+  "bio": "is professor emeritus at NYU\u2019s Wagner School and research director emeritus at the Citizens Budget Commission.",
+  "url": "https://www.vitalcitynyc.org/author/brechner-charles/",
   "twitter": null,
   "website": null
  },
@@ -4139,14 +4188,50 @@
   "website": null
  },
  {
-  "name": "Samantha J. Simon",
+  "name": "Theodore Roosevelt IV",
   "post_count": 1,
   "slugs": [
-   "the-good-gun-owner"
+   "guns-my-family-and-me"
   ],
-  "slug": "simon-samantha-j",
-  "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-  "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+  "slug": "roosevelt-theodore-iv",
+  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
+  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Chris Marvin",
+  "post_count": 1,
+  "slugs": [
+   "licensed-to-kill-concealed-carry-training-course"
+  ],
+  "slug": "marvin-chris",
+  "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
+  "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Brian DeLay",
+  "post_count": 1,
+  "slugs": [
+   "gun-culture-then-and-now"
+  ],
+  "slug": "delay-brian",
+  "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of \u201cThe Myth of Continuity in American Gun Culture,\u201d and the 2025\u20132026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
+  "url": "https://www.vitalcitynyc.org/author/delay-brian/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Charles Buckhanan",
+  "post_count": 1,
+  "slugs": [
+   "my-seven-guns-a-personal-inventory"
+  ],
+  "slug": "buckhanan-charles",
+  "bio": "is a street outreach worker on Chicago\u2019s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
+  "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
   "twitter": null,
   "website": null
  },
@@ -4163,26 +4248,14 @@
   "website": null
  },
  {
-  "name": "Theodore Roosevelt IV",
+  "name": "Samantha J. Simon",
   "post_count": 1,
   "slugs": [
-   "guns-my-family-and-me"
+   "the-good-gun-owner"
   ],
-  "slug": "roosevelt-theodore-iv",
-  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Charles Buckhanan",
-  "post_count": 1,
-  "slugs": [
-   "my-seven-guns-a-personal-inventory"
-  ],
-  "slug": "buckhanan-charles",
-  "bio": "is a street outreach worker on Chicago\u2019s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
-  "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
+  "slug": "simon-samantha-j",
+  "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+  "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
   "twitter": null,
   "website": null
  },
