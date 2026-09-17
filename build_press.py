@@ -58,9 +58,12 @@ def unhide_emails(src):
     src = re.sub(r'/cdn-cgi/l/email-protection#([0-9a-fA-F]{8,})', lambda m: f'mailto:{_cf_decode(m.group(1))}', src)
     return src
 
-def curl(url, timeout=30):
+def curl(url, timeout=30, user_agent=UA):
     try:
-        p = subprocess.run(["curl", "-sSL", "--max-time", str(timeout), "-A", UA, url],
+        command = ["curl", "-sSL", "--max-time", str(timeout)]
+        if user_agent:
+            command += ["-A", user_agent]
+        p = subprocess.run(command + [url],
                            capture_output=True, timeout=timeout + 20)
         return unhide_emails(p.stdout.decode("utf8", "ignore"))
     except Exception:
@@ -578,10 +581,10 @@ def read_byline_block(job):
                 break
     return out
 
-def read_author_page(job):
+def read_author_page(job, plain_user_agent=False):
     pid, name, url = job
     out = {"id": pid}
-    src = curl(url, 25)
+    src = curl(url, 25, user_agent=None) if plain_user_agent else curl(url, 25)
     if not src:
         return out
     s = src.replace('\\"', '"').replace("\\/", "/")
@@ -602,6 +605,52 @@ def read_author_page(job):
         if name.split()[0].lower() in low or " covers " in low or " reports " in low:
             out["bio"] = bio[:400]
     return out
+
+def read_contact_sources(people):
+    """Recheck reviewed contact pages that the feed/byline crawl does not reach.
+
+    The public registry contains names and URLs only. Addresses are read anew
+    from the source, name-matched, and kept exclusively in the private output.
+    Never replace an existing address or create a person from this registry.
+    """
+    path = PRESS / "contact_sources.json"
+    if not path.exists():
+        return []
+    sources = json.loads(path.read_text())
+    jobs = []
+    for p in people:
+        if p.get("email"):
+            continue
+        outlets = {p.get("outlet"), *(p.get("also_at") or [])}
+        for source in sources:
+            if (source["outlet"] in outlets
+                    and merge_name(source["name"]) == merge_name(p["name"])):
+                jobs.append((p["id"], p["name"], source["url"]))
+    def read(job):
+        result = read_author_page(job)
+        # Some publisher caches return different HTML to curl and browser UAs.
+        # A second ordinary public-page request can recover the contact section.
+        if not result.get("email"):
+            result = read_author_page(job, plain_user_agent=True)
+        return result
+
+    with cf.ThreadPoolExecutor(max_workers=6) as pool:
+        return list(pool.map(read, jobs))
+
+def apply_contact_sources(people, contacts):
+    by_id = {p["id"]: p for p in people}
+    added = 0
+    for contact in contacts:
+        p = by_id.get(contact["id"])
+        email = contact.get("email")
+        if (p and not p.get("email") and email
+                and contact.get("email_source_url")
+                and not GENERIC_LOCAL.match(email.split("@")[0])
+                and pairs_with_email(p["name"], email)):
+            for field in ("email", "email_source_url", "email_evidence"):
+                p[field] = contact.get(field)
+            added += 1
+    return added
 
 # ---------------------------------------------------------------- Vital City layer
 def load_vc_layer():
@@ -1225,6 +1274,10 @@ def main():
                    "person": True},
         })
 
+    supplemental = cached("contact_sources", lambda: read_contact_sources(out_people))
+    added = apply_contact_sources(out_people, supplemental)
+    print(f"  {added} addresses added from reviewed contact pages")
+
     # ---- who is press ------------------------------------------------------
     # Having written for Vital City is not a credential. Our contributors are
     # criminologists, former cabinet secretaries and novelists, and a single
@@ -1386,4 +1439,5 @@ def main():
         for e in report["errors"][:12]:
             print("   ", e.get("stage"), e.get("outlet"), (e.get("error") or "")[:60])
 
-main()
+if __name__ == "__main__":
+    main()
