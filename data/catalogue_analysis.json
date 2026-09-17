@@ -1,27 +1,52 @@
 {
   "meta": {
-    "generated_at": "2026-09-17T11:04:43.811144+00:00",
+    "generated_at": "2026-09-17T15:53:35.150502+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 914,
-    "total_authors": 509,
+    "total_posts": 918,
+    "total_authors": 511,
     "total_issues": 33,
-    "total_topics": 219,
+    "total_topics": 220,
     "date_range": [
       "2021-09-15",
-      "2026-09-10"
+      "2026-09-17"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 4,
+    "new_articles": [
+      {
+        "title": "6 Policy Reforms to Make Childcare Dollars Go Further for Families",
+        "url": "https://www.vitalcitynyc.org/cost-effective-childcare-policy-reforms-nyc/",
+        "published_date": "2026-09-17",
+        "primary_author": null
+      },
+      {
+        "title": "The City Needs 700,000 New Homes \u2014 Here\u2019s 57,000",
+        "url": "https://www.vitalcitynyc.org/unlocking-vacant-rent-stabilized-housing-units-nyc/",
+        "published_date": "2026-09-17",
+        "primary_author": null
+      },
+      {
+        "title": "The Real Path to Better Government Technology",
+        "url": "https://www.vitalcitynyc.org/better-government-technologies-strategies-nyc/",
+        "published_date": "2026-09-17",
+        "primary_author": null
+      },
+      {
+        "title": "Brad Lander Interview Transcript",
+        "url": "https://www.vitalcitynyc.org/brad-lander-interview-transcript/",
+        "published_date": "2024-12-15",
+        "primary_author": null
+      }
+    ]
   },
-  "total_pieces": 914,
+  "total_pieces": 918,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
-    "2024": 225,
+    "2024": 226,
     "2025": 287,
-    "2026": 202
+    "2026": 205
   },
   "by_month": {
     "2021-09": 1,
@@ -57,7 +82,7 @@
     "2024-09": 13,
     "2024-10": 55,
     "2024-11": 11,
-    "2024-12": 9,
+    "2024-12": 10,
     "2025-01": 27,
     "2025-02": 24,
     "2025-03": 29,
@@ -78,16 +103,16 @@
     "2026-06": 44,
     "2026-07": 22,
     "2026-08": 16,
-    "2026-09": 16
+    "2026-09": 19
   },
   "by_type": [
     [
       "opinion/commentary",
-      739
+      741
     ],
     [
       "q&a",
-      58
+      59
     ],
     [
       "data analysis",
@@ -98,12 +123,12 @@
       29
     ],
     [
-      "something else",
+      "policy",
       14
     ],
     [
-      "policy",
-      13
+      "something else",
+      14
     ],
     [
       "book review",
@@ -120,12 +145,12 @@
       147
     ],
     [
-      "History",
+      "City Government",
       144
     ],
     [
-      "City Government",
-      141
+      "History",
+      144
     ],
     [
       "Government Operations",
@@ -137,7 +162,7 @@
     ],
     [
       "Housing",
-      80
+      81
     ],
     [
       "Justice",
@@ -173,11 +198,11 @@
     ],
     [
       "Technology",
-      34
+      35
     ],
     [
       "Education",
-      33
+      34
     ],
     [
       "Transit",
@@ -209,14 +234,14 @@
     ],
     [
       "interview",
-      24
+      25
     ],
     [
       "Infrastructure",
       23
     ]
   ],
-  "n_topics_total": 219,
+  "n_topics_total": 220,
   "by_credential_pieces": [
     [
       "Academic",
@@ -228,11 +253,11 @@
     ],
     [
       "Journalist / media",
-      101
+      102
     ],
     [
       "Vital City (institutional)",
-      97
+      98
     ],
     [
       "Other / unclassified",
@@ -248,7 +273,7 @@
     ],
     [
       "Think tank / research institute",
-      53
+      54
     ],
     [
       "Architecture / design / planning",
@@ -256,7 +281,7 @@
     ],
     [
       "Legal practitioner",
-      30
+      31
     ],
     [
       "Survey / reader poll",
@@ -282,7 +307,7 @@
     ],
     [
       "Journalist / media",
-      36
+      37
     ],
     [
       "Government / public official",
@@ -290,7 +315,7 @@
     ],
     [
       "Think tank / research institute",
-      29
+      30
     ],
     [
       "Business / private sector",
@@ -319,8 +344,8 @@
   ],
   "top_topics_for_stack": [
     "Crime",
-    "History",
     "City Government",
+    "History",
     "Government Operations",
     "City Planning",
     "Housing",
@@ -335,18 +360,18 @@
       "2025": 31,
       "2026": 23
     },
+    "City Government": {
+      "2023": 4,
+      "2024": 20,
+      "2025": 54,
+      "2026": 66
+    },
     "History": {
       "2022": 12,
       "2023": 28,
       "2024": 38,
       "2025": 52,
       "2026": 14
-    },
-    "City Government": {
-      "2023": 4,
-      "2024": 20,
-      "2025": 54,
-      "2026": 63
     },
     "Government Operations": {
       "2022": 1,
@@ -366,7 +391,7 @@
       "2023": 5,
       "2024": 11,
       "2025": 37,
-      "2026": 27
+      "2026": 28
     },
     "Justice": {
       "2022": 4,
@@ -384,19 +409,19 @@
     }
   },
   "wc_stats": {
-    "n": 907,
-    "median": 1614,
-    "mean": 1884,
-    "p90": 2839,
+    "n": 911,
+    "median": 1615,
+    "mean": 1895,
+    "p90": 2840,
     "max": 30332,
-    "p10": 899,
-    "p25": 1269,
-    "p75": 2131,
-    "p95": 3827,
+    "p10": 901,
+    "p25": 1271,
+    "p75": 2137,
+    "p95": 3845,
     "no_count": 7,
-    "core_1000_2499": 665,
+    "core_1000_2499": 667,
     "under_500": 46,
-    "over_5000": 24
+    "over_5000": 25
   },
   "wc_buckets": [
     [
@@ -409,7 +434,7 @@
     ],
     [
       "1,000-1,999",
-      531
+      533
     ],
     [
       "2,000-2,999",
@@ -417,11 +442,11 @@
     ],
     [
       "3,000-4,999",
-      56
+      57
     ],
     [
       "5,000+",
-      24
+      25
     ]
   ],
   "wc_hist": {
@@ -456,7 +481,7 @@
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 142
+        "n": 143
       },
       {
         "floor": 1500,
@@ -466,7 +491,7 @@
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 107
+        "n": 108
       },
       {
         "floor": 2000,
@@ -501,7 +526,7 @@
       {
         "floor": 3500,
         "label": "3,500+",
-        "n": 55
+        "n": 57
       }
     ]
   },
@@ -524,10 +549,10 @@
     },
     {
       "year": "2024",
-      "n": 225,
+      "n": 226,
       "p25": 1240,
-      "median": 1599,
-      "p75": 2030,
+      "median": 1602,
+      "p75": 2054,
       "max": 11319
     },
     {
@@ -540,15 +565,15 @@
     },
     {
       "year": "2026",
-      "n": 197,
-      "p25": 1270,
-      "median": 1635,
-      "p75": 2377,
+      "n": 200,
+      "p25": 1271,
+      "median": 1637,
+      "p75": 2379,
       "max": 7139
     }
   ],
   "by_nauthors": {
-    "1": 773,
+    "1": 777,
     "2": 112,
     "3": 26,
     "4": 1,
@@ -558,7 +583,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 97,
+      "posts": 98,
       "credential": "Vital City (institutional)"
     },
     {
@@ -647,14 +672,14 @@
       "credential": "Think tank / research institute"
     },
     {
+      "name": "Howard Yaruss",
+      "posts": 6,
+      "credential": "Legal practitioner"
+    },
+    {
       "name": "Cara Eckholm",
       "posts": 6,
       "credential": "Journalist / media"
-    },
-    {
-      "name": "Michael Jacobson",
-      "posts": 6,
-      "credential": "Academic"
     }
   ],
   "n_issues": 33,
@@ -690,10 +715,10 @@
       {
         "year": "2024",
         "weeks": 52.3,
-        "pieces": 225,
-        "outside_issues": 71,
-        "per_week_all": 4.3,
-        "per_week_outside_issues": 1.36,
+        "pieces": 226,
+        "outside_issues": 72,
+        "per_week_all": 4.32,
+        "per_week_outside_issues": 1.38,
         "partial": false
       },
       {
@@ -707,34 +732,34 @@
       },
       {
         "year": "2026",
-        "weeks": 36.1,
-        "pieces": 202,
-        "outside_issues": 138,
-        "per_week_all": 5.59,
-        "per_week_outside_issues": 3.82,
+        "weeks": 37.1,
+        "pieces": 205,
+        "outside_issues": 140,
+        "per_week_all": 5.52,
+        "per_week_outside_issues": 3.77,
         "partial": true
       }
     ],
-    "total_weeks": 260.1,
-    "all_time_per_week": 3.51,
+    "total_weeks": 261.1,
+    "all_time_per_week": 3.52,
     "all_time_per_week_outside_issues": 1.61,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.82,
-    "current_per_week_all": 5.59,
+    "current_per_week_outside_issues": 3.77,
+    "current_per_week_all": 5.52,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 496,
-      "published_away_from_drop": 63,
-      "share_of_issue_pieces": 12.7,
-      "current_year_strict": 3.82,
-      "current_year_loose": 3.98,
+      "issue_tagged_pieces": 497,
+      "published_away_from_drop": 64,
+      "share_of_issue_pieces": 12.9,
+      "current_year_strict": 3.77,
+      "current_year_loose": 3.96,
       "all_time_strict": 1.61,
-      "all_time_loose": 1.85,
-      "all_time_all": 3.51
+      "all_time_loose": 1.86,
+      "all_time_all": 3.52
     }
   },
   "rhythm": {
-    "n_dated": 914,
+    "n_dated": 918,
     "by_weekday": [
       {
         "day": "Mon",
@@ -744,22 +769,22 @@
       {
         "day": "Tue",
         "pieces": 160,
-        "share": 17.5
+        "share": 17.4
       },
       {
         "day": "Wed",
         "pieces": 440,
-        "share": 48.1
+        "share": 47.9
       },
       {
         "day": "Thu",
-        "pieces": 177,
-        "share": 19.4
+        "pieces": 180,
+        "share": 19.6
       },
       {
         "day": "Fri",
         "pieces": 60,
-        "share": 6.6
+        "share": 6.5
       },
       {
         "day": "Sat",
@@ -768,14 +793,14 @@
       },
       {
         "day": "Sun",
-        "pieces": 0,
-        "share": 0.0
+        "pieces": 1,
+        "share": 0.1
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 48.1,
+    "top_day_share": 47.9,
     "midweek_share": 85.0,
-    "weekend_pieces": 24,
+    "weekend_pieces": 25,
     "by_month": [
       {
         "month": "January",
@@ -836,9 +861,9 @@
       {
         "month": "September",
         "abbr": "Sep",
-        "pieces": 111,
+        "pieces": 114,
         "occurrences": 6,
-        "per_occurrence": 18.5
+        "per_occurrence": 19.0
       },
       {
         "month": "October",
@@ -857,9 +882,9 @@
       {
         "month": "December",
         "abbr": "Dec",
-        "pieces": 59,
+        "pieces": 60,
         "occurrences": 5,
-        "per_occurrence": 11.8
+        "per_occurrence": 12.0
       }
     ]
   }

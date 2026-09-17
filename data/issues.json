@@ -450,6 +450,36 @@
     ]
   },
   {
+    "name": "just-fix-it",
+    "post_count": 6,
+    "first_published": "2025-12-18",
+    "last_published": "2026-09-17",
+    "number": null,
+    "display_name": "Just Fix It",
+    "top_topics": [
+      [
+        "Just Fix It",
+        6
+      ],
+      [
+        "City Government",
+        5
+      ],
+      [
+        "Government Operations",
+        2
+      ],
+      [
+        "Education",
+        1
+      ],
+      [
+        "Housing",
+        1
+      ]
+    ]
+  },
+  {
     "name": "women-and-guns",
     "post_count": 6,
     "first_published": "2026-09-09",
@@ -592,36 +622,6 @@
     ]
   },
   {
-    "name": "just-fix-it",
-    "post_count": 5,
-    "first_published": "2025-12-18",
-    "last_published": "2026-08-19",
-    "number": null,
-    "display_name": "Just Fix It",
-    "top_topics": [
-      [
-        "Just Fix It",
-        5
-      ],
-      [
-        "City Government",
-        4
-      ],
-      [
-        "Government Operations",
-        2
-      ],
-      [
-        "Housing",
-        1
-      ],
-      [
-        "State Government",
-        1
-      ]
-    ]
-  },
-  {
     "name": "rubber-meets-road",
     "post_count": 9,
     "first_published": "2026-05-20",
@@ -750,11 +750,11 @@
     "display_name": "Trump 100 Days And Beyond",
     "top_topics": [
       [
-        "Government Operations",
+        "Repercussions",
         4
       ],
       [
-        "Repercussions",
+        "Government Operations",
         4
       ],
       [
@@ -766,7 +766,7 @@
         2
       ],
       [
-        "Journalism",
+        "Corruption",
         1
       ]
     ]

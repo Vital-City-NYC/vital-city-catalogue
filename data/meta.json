@@ -1,15 +1,40 @@
 {
-  "generated_at": "2026-09-17T11:04:43.811144+00:00",
+  "generated_at": "2026-09-17T15:53:35.150502+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 914,
-  "total_authors": 509,
+  "total_posts": 918,
+  "total_authors": 511,
   "total_issues": 33,
-  "total_topics": 219,
+  "total_topics": 220,
   "date_range": [
     "2021-09-15",
-    "2026-09-10"
+    "2026-09-17"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 4,
+  "new_articles": [
+    {
+      "title": "6 Policy Reforms to Make Childcare Dollars Go Further for Families",
+      "url": "https://www.vitalcitynyc.org/cost-effective-childcare-policy-reforms-nyc/",
+      "published_date": "2026-09-17",
+      "primary_author": null
+    },
+    {
+      "title": "The City Needs 700,000 New Homes — Here’s 57,000",
+      "url": "https://www.vitalcitynyc.org/unlocking-vacant-rent-stabilized-housing-units-nyc/",
+      "published_date": "2026-09-17",
+      "primary_author": null
+    },
+    {
+      "title": "The Real Path to Better Government Technology",
+      "url": "https://www.vitalcitynyc.org/better-government-technologies-strategies-nyc/",
+      "published_date": "2026-09-17",
+      "primary_author": null
+    },
+    {
+      "title": "Brad Lander Interview Transcript",
+      "url": "https://www.vitalcitynyc.org/brad-lander-interview-transcript/",
+      "published_date": "2024-12-15",
+      "primary_author": null
+    }
+  ]
 }

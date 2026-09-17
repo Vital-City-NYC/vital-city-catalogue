@@ -1,7 +1,7 @@
 [
  {
   "name": "Vital City",
-  "post_count": 97,
+  "post_count": 98,
   "slugs": [
    "2025-a-look-back-most-read",
    "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -12,6 +12,7 @@
    "case-studies-from-large-cities-people-in-crisis-on-streets-and-subways",
    "chidinma-ume-erin-pilnyak-interview",
    "conditions-inside-the-citys-jails-continue-to-be-violent-a-data-story",
+   "cost-effective-childcare-policy-reforms-nyc",
    "crime-in-new-york-city-midyear-the-big-picture",
    "crime-in-new-york-city-trends-statistics",
    "curtis-sliwa-talks-public-safety",
@@ -582,6 +583,23 @@
   "senior": true
  },
  {
+  "name": "Howard Yaruss",
+  "post_count": 6,
+  "slugs": [
+   "how-mamdani-can-delivery-free-buses-and-subways-too",
+   "how-new-york-citys-building-emission-law-may-harm-the-environment-and-economy",
+   "mamdani-city-run-grocery-stores-small-businesses-nyc",
+   "offer-riders-a-better-deal",
+   "paved-paradise-review",
+   "unlocking-vacant-rent-stabilized-housing-units-nyc"
+  ],
+  "slug": "yaruss-howard",
+  "bio": "is former general counsel of Radian Group and author of the book \"Understandable Economics.\" He is an attorney and adjunct assistant professor at New York University's Schack Institute of Real Estate.",
+  "url": "https://www.vitalcitynyc.org/author/yaruss-howard/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Cara Eckholm",
   "post_count": 6,
   "slugs": [
@@ -683,22 +701,6 @@
   "twitter": null,
   "website": null,
   "senior": true
- },
- {
-  "name": "Howard Yaruss",
-  "post_count": 5,
-  "slugs": [
-   "how-mamdani-can-delivery-free-buses-and-subways-too",
-   "how-new-york-citys-building-emission-law-may-harm-the-environment-and-economy",
-   "mamdani-city-run-grocery-stores-small-businesses-nyc",
-   "offer-riders-a-better-deal",
-   "paved-paradise-review"
-  ],
-  "slug": "yaruss-howard",
-  "bio": "is an attorney and economist, and author of the book \"Understandable Economics.\"",
-  "url": "https://www.vitalcitynyc.org/author/yaruss-howard/",
-  "twitter": null,
-  "website": null
  },
  {
   "name": "Megan Kang",
@@ -2420,6 +2422,18 @@
   "senior": true
  },
  {
+  "name": "Brittany N. Montgomery",
+  "post_count": 1,
+  "slugs": [
+   "better-government-technologies-strategies-nyc"
+  ],
+  "slug": "montgomery-brittany-n",
+  "bio": "is a senior fellow at the Manhattan Institute to build state capacity. She has led initiatives to improve tech, procurement and operations at the MTA and has worked in 15 cities across nine countries in public service and government advisory roles. ",
+  "url": "https://www.vitalcitynyc.org/author/montgomery-brittany-n/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Justin Reich",
   "post_count": 1,
   "slugs": [
@@ -3656,18 +3670,6 @@
   "website": null
  },
  {
-  "name": "Jessica Gillooly",
-  "post_count": 1,
-  "slugs": [
-   "the-devil-is-in-the-details-of-911-dispatch"
-  ],
-  "slug": "gilooly-jessica",
-  "bio": "is an assistant professor of sociology and criminal justice at Suffolk University.",
-  "url": "https://www.vitalcitynyc.org/author/gilooly-jessica/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Ben Krauss",
   "post_count": 1,
   "slugs": [
@@ -3680,14 +3682,14 @@
   "website": null
  },
  {
-  "name": "Charles Brecher",
+  "name": "Jessica Gillooly",
   "post_count": 1,
   "slugs": [
-   "tough-budget-choices-ahead-for-zohran-mamdani"
+   "the-devil-is-in-the-details-of-911-dispatch"
   ],
-  "slug": "brechner-charles",
-  "bio": "is professor emeritus at NYU\u2019s Wagner School and research director emeritus at the Citizens Budget Commission.",
-  "url": "https://www.vitalcitynyc.org/author/brechner-charles/",
+  "slug": "gilooly-jessica",
+  "bio": "is an assistant professor of sociology and criminal justice at Suffolk University.",
+  "url": "https://www.vitalcitynyc.org/author/gilooly-jessica/",
   "twitter": null,
   "website": null
  },
@@ -3703,6 +3705,18 @@
   "twitter": null,
   "website": null,
   "senior": true
+ },
+ {
+  "name": "Charles Brecher",
+  "post_count": 1,
+  "slugs": [
+   "tough-budget-choices-ahead-for-zohran-mamdani"
+  ],
+  "slug": "brechner-charles",
+  "bio": "is professor emeritus at NYU\u2019s Wagner School and research director emeritus at the Citizens Budget Commission.",
+  "url": "https://www.vitalcitynyc.org/author/brechner-charles/",
+  "twitter": null,
+  "website": null
  },
  {
   "name": "Michele Bogart",
@@ -4041,6 +4055,30 @@
   "website": null
  },
  {
+  "name": "Chris Marvin",
+  "post_count": 1,
+  "slugs": [
+   "licensed-to-kill-concealed-carry-training-course"
+  ],
+  "slug": "marvin-chris",
+  "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
+  "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Brian DeLay",
+  "post_count": 1,
+  "slugs": [
+   "gun-culture-then-and-now"
+  ],
+  "slug": "delay-brian",
+  "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of \u201cThe Myth of Continuity in American Gun Culture,\u201d and the 2025\u20132026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
+  "url": "https://www.vitalcitynyc.org/author/delay-brian/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Greg Lickenbrock",
   "post_count": 1,
   "slugs": [
@@ -4101,42 +4139,6 @@
   "website": null
  },
  {
-  "name": "Theodore Roosevelt IV",
-  "post_count": 1,
-  "slugs": [
-   "guns-my-family-and-me"
-  ],
-  "slug": "roosevelt-theodore-iv",
-  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Chris Marvin",
-  "post_count": 1,
-  "slugs": [
-   "licensed-to-kill-concealed-carry-training-course"
-  ],
-  "slug": "marvin-chris",
-  "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
-  "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Brian DeLay",
-  "post_count": 1,
-  "slugs": [
-   "gun-culture-then-and-now"
-  ],
-  "slug": "delay-brian",
-  "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of \u201cThe Myth of Continuity in American Gun Culture,\u201d and the 2025\u20132026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
-  "url": "https://www.vitalcitynyc.org/author/delay-brian/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Samantha J. Simon",
   "post_count": 1,
   "slugs": [
@@ -4157,6 +4159,18 @@
   "slug": "daugherty-kate",
   "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
   "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Theodore Roosevelt IV",
+  "post_count": 1,
+  "slugs": [
+   "guns-my-family-and-me"
+  ],
+  "slug": "roosevelt-theodore-iv",
+  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
+  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
   "twitter": null,
   "website": null
  },
@@ -4522,18 +4536,6 @@
   "website": null
  },
  {
-  "name": "Adam Cohen",
-  "post_count": 1,
-  "slugs": [
-   "trumps-bizarro-new-deal"
-  ],
-  "slug": "cohen-adam",
-  "bio": "is author of \u201cNothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
-  "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Richard Schragger",
   "post_count": 1,
   "slugs": [
@@ -4542,6 +4544,18 @@
   "slug": "schragger-richard",
   "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
   "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Adam Cohen",
+  "post_count": 1,
+  "slugs": [
+   "trumps-bizarro-new-deal"
+  ],
+  "slug": "cohen-adam",
+  "bio": "is author of \u201cNothing to Fear: FDR's Inner Circle and the Hundred Days That Created Modern America.\"",
+  "url": "https://www.vitalcitynyc.org/author/cohen-adam/",
   "twitter": null,
   "website": null
  },
@@ -4986,6 +5000,18 @@
   "slug": "pugliese-katheryne",
   "bio": "is a PhD candidate in Criminal Justice at John Jay College of Criminal Justice.",
   "url": "https://www.vitalcitynyc.org/author/pugliese-katheryne/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "New York Editorial Board",
+  "post_count": 1,
+  "slugs": [
+   "brad-lander-interview-transcript"
+  ],
+  "slug": "editorial-board-new-york",
+  "bio": "is an informal group of veteran journalists hoping to fill some of the space left by the retreat of newspaper editorial boards from the city's civic life by conducting interviews with candidates for high office and other civic leaders.\n\n",
+  "url": "https://www.vitalcitynyc.org/author/editorial-board-new-york/",
   "twitter": null,
   "website": null
  },
