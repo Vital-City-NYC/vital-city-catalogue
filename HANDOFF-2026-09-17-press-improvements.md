@@ -4,7 +4,7 @@ This handoff covers the email-enrichment pass and the subsequent functionality p
 
 ## Status and user requirements
 
-The user subsequently authorized publication with “publish.” Source publication and a focused GitHub contact refresh are now being performed. Check the latest deployment record below and GitHub Actions for final status.
+The user authorized publication with “publish.” Source changes are committed and pushed to main. Three successful focused GitHub contact-refresh runs added all 17 reviewed addresses to the latest cloud dataset. See the publication record below; GitHub Pages deployment verification follows these commits.
 
 The user asked to improve email coverage and functionality without changing the design language. They subsequently clarified that **the New York Times must always be prioritized**, even when ordinary result filters would exclude its reporters. Times matches and fallbacks deliberately bypass those filters. This is a product requirement, not a bug to fix.
 
@@ -116,3 +116,15 @@ Do not commit `private/`, plaintext emails, or locally re-encrypted toolkit data
 `press-contact-refresh.yml` is manual-only and shares the full refresh's `network-refresh` concurrency group. It checks out current main, decrypts the current committed `press/data.enc` using the existing repository secret, runs `refresh_press_contacts.py`, and calls `encrypt_press.py` inside GitHub. Only the newly encrypted press payload is committed. There is no local encryption or upload of the laptop's plaintext data.
 
 `refresh_press_contacts.py` fills missing contacts using the reviewed URL registry, recomputes the email count and appends an enrichment note. It retains the roster, other fields and original full-harvest timestamp. This avoids waiting for and modifying unrelated dashboards through the full refresh. Future scheduled full builds still use the supplemental source stage in `build_press.py`. Four Python tests and eight UI checks passed before publication.
+
+## Publication record
+
+Published source commit: `9001a57` (Improve press contact coverage and search behavior).
+
+The current cloud dataset was newer than the initial laptop baseline: **1,334 people and 408 emails** before enrichment. Three successful manual runs recovered **13 + 3 + 1 = 17** addresses as intermittent Times responses became readable, producing **425 emails with all 1,334 people retained**. The final data commit is `4da8787` (Refresh verified press contact addresses). All encryption occurred in GitHub using the existing repository secret.
+
+- First refresh: https://github.com/vitalcity-nyc/vital-city-catalogue/actions/runs/35227517484
+- Second refresh: https://github.com/vitalcity-nyc/vital-city-catalogue/actions/runs/35227667698
+- Final refresh: https://github.com/vitalcity-nyc/vital-city-catalogue/actions/runs/35227775764
+
+The local `private/press.json` remains the earlier 1,308-person enriched working copy; it must not be used to replace the newer live dataset. Read/decrypt the current `press/data.enc` when assessing live state. Normal full builds still refetch the reviewed contact pages and remain subject to intermittent publisher blocking.
