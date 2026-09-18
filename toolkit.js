@@ -26,13 +26,20 @@
       blurb: "The people database: contributors, press, funders, members, donors." },
     { id: "prospects",  label: "Prospects",  path: "prospects/",         gated: true,
       blurb: "Funder and donor prospecting." },
-    { id: "resharing",  label: "Resharing",  path: "resharing/",         gated: true,
-      blurb: "Which archive piece to post, and when — bound to the calendar's real dates." },
     { id: "press",      label: "Press",      path: "press/",             gated: true,
       blurb: "Who covers New York City government: reporters, the beats their own bylines prove, and how to reach them." },
+    // One tab, two views: the city's calendar and the archive pieces worth
+    // reposting against it. The bar shows "Calendar"; on either page the two
+    // views appear beside it so you can switch without leaving the tab.
     { id: "calendar",   label: "Calendar",   gated: false,
       href: "https://vitalcity-nyc.github.io/nyc-policy-calendar/",
-      blurb: "The New York City calendar: hearings, budget dates, anniversaries, books, city life." }
+      blurb: "The New York City calendar and the archive pieces worth reposting against it.",
+      views: [
+        { id: "calendar",  label: "City calendar",   href: "https://vitalcity-nyc.github.io/nyc-policy-calendar/", gated: false,
+          blurb: "Hearings, budget dates, anniversaries, books and city life, sized by how much they matter." },
+        { id: "resharing", label: "What to reshare", path: "resharing/", gated: true,
+          blurb: "Which archive piece to post, and when, bound to the calendar's real dates." }
+      ] }
   ];
 
   // The right end of each page's confidential strip says when its data was
@@ -76,16 +83,32 @@
     list.className = "vckit-list";
 
     TOOLS.forEach(function (t) {
-      var here = t.id === current;
-      var a = document.createElement(here ? "span" : "a");
+      var inGroup = !!(t.views && t.views.some(function (v) { return v.id === current; }));
+      var here = t.id === current || inGroup;
+      var exact = t.id === current && !t.views;          // the tab is this very page
+      var a = document.createElement(exact ? "span" : "a");
       a.className = "vckit-link" + (here ? " here" : "");
-      if (!here) { a.href = t.href || (root + t.path); }
+      if (!exact) { a.href = t.href || (root + t.path); }
       if (here) { a.setAttribute("aria-current", "page"); }
       // Six of the eight tools are gated, so a dot on each said almost nothing
       // and put a row of specks across the bar. The tooltip still says it.
       a.title = t.blurb + (t.gated ? " Passphrase required." : "");
       a.appendChild(document.createTextNode(t.label));
       list.appendChild(a);
+      if (inGroup) {
+        var sub = document.createElement("span");
+        sub.className = "vckit-views";
+        t.views.forEach(function (v) {
+          var on = v.id === current;
+          var b = document.createElement(on ? "span" : "a");
+          b.className = "vckit-view" + (on ? " on" : "");
+          if (!on) { b.href = v.href || (root + v.path); }
+          b.title = v.blurb + (v.gated ? " Passphrase required." : "");
+          b.appendChild(document.createTextNode(v.label));
+          sub.appendChild(b);
+        });
+        list.appendChild(sub);
+      }
     });
 
     nav.appendChild(list);

@@ -76,6 +76,12 @@
 .vckit-link:hover { color: var(--vc-black, #050507); }
 html body nav.vckit a.vckit-link { color: var(--vc-charcoal, #707175); }
 html body nav.vckit a.vckit-link:hover, html body nav.vckit .vckit-link.here { color: var(--vc-black, #050507); }
+/* The two views inside a grouped tab (City calendar / What to reshare), set
+   beside the active tab on the same line so the bar never changes height. */
+.vckit-views { display: inline-flex; align-items: baseline; gap: 12px; padding: 0 0 9px 12px; margin-left: -8px; border-left: 1px solid var(--vc-cloud, #dddddd); white-space: nowrap; }
+html body nav.vckit .vckit-view { font-size: 11px; font-weight: 600; color: var(--vc-charcoal, #707175); text-decoration: none; }
+html body nav.vckit a.vckit-view:hover { color: var(--vc-black, #050507); }
+html body nav.vckit .vckit-view.on { color: var(--vc-black, #050507); font-weight: 800; }
 html body nav.vckit .vckit-utils { position: static; margin: 0 0 0 auto; padding: 0 0 9px; flex-wrap: nowrap; }
 html body nav.vckit .vckit-utils a { color: var(--vc-charcoal, #707175); }
 html body nav.vckit .vckit-utils a:hover { color: var(--vc-black, #050507); }
