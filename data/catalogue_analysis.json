@@ -1,10 +1,10 @@
 {
   "meta": {
-    "generated_at": "2026-09-18T11:04:47.133277+00:00",
+    "generated_at": "2026-09-18T15:13:00.778590+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 946,
     "total_authors": 511,
-    "total_issues": 33,
+    "total_issues": 34,
     "total_topics": 219,
     "date_range": [
       "2021-09-15",
@@ -657,7 +657,7 @@
       "credential": "Legal practitioner"
     }
   ],
-  "n_issues": 33,
+  "n_issues": 34,
   "cadence": {
     "by_year": [
       {
@@ -724,10 +724,10 @@
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 498,
-      "published_away_from_drop": 65,
-      "share_of_issue_pieces": 13.1,
+      "published_away_from_drop": 64,
+      "share_of_issue_pieces": 12.9,
       "current_year_strict": 4.04,
-      "current_year_loose": 4.25,
+      "current_year_loose": 4.23,
       "all_time_strict": 1.72,
       "all_time_loose": 1.96,
       "all_time_all": 3.62

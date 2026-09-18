@@ -481,22 +481,22 @@
   },
   {
     "name": "skiphome",
-    "post_count": 3,
+    "post_count": 2,
     "first_published": "2026-09-09",
     "last_published": "2026-09-17",
     "number": null,
     "display_name": "Skiphome",
     "top_topics": [
       [
-        "Gun Violence",
-        2
-      ],
-      [
         "Housing",
         1
       ],
       [
         "City Government",
+        1
+      ],
+      [
+        "Gun Violence",
         1
       ],
       [
@@ -536,6 +536,36 @@
       [
         "Race",
         1
+      ]
+    ]
+  },
+  {
+    "name": "hidecommentary",
+    "post_count": 13,
+    "first_published": "2026-09-05",
+    "last_published": "2026-09-09",
+    "number": null,
+    "display_name": "Hidecommentary",
+    "top_topics": [
+      [
+        "9/11",
+        7
+      ],
+      [
+        "Looking Back, Looking Forward",
+        7
+      ],
+      [
+        "Gun Violence",
+        6
+      ],
+      [
+        "When Women Wield Guns",
+        4
+      ],
+      [
+        "Crime",
+        2
       ]
     ]
   },
