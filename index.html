@@ -263,11 +263,31 @@
   .rt-typical { color: var(--vc-charcoal); } .rt-quiet { color: var(--vc-charcoal); opacity: .7; }
   .rt-new { color: var(--vc-charcoal); font-weight: 600; text-transform: none; letter-spacing: 0; }
   .rq { color: var(--vc-charcoal); }
+
+  /* Passphrase gate, the same box and backdrop as the other tools. The page is
+     locked from the first paint (the class is set in <head>) until the
+     passphrase opens the readership file. */
+  html.locked body > *:not(#gate){display:none !important}
+  #gate{position:fixed;inset:0;background:var(--vc-paper);display:none;align-items:center;justify-content:center;z-index:100}
+  html.locked #gate{display:flex}
+  .gateerr{color:var(--vc-magenta);font-size:13px;font-weight:700;margin-top:12px;min-height:18px}
 </style>
+<script>document.documentElement.classList.add("locked");</script>
 <link rel="stylesheet" href="toolkit.css">
 <script src="toolkit.js" data-tool="catalogue" defer></script>
 </head>
 <body>
+<div id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>Content catalogue</h1>
+    <p>Every piece Vital City has published, with readership and contributor details. Enter the shared passphrase.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="current-password" autofocus>
+    <button id="unlock">Unlock</button>
+    <div class="gateerr" id="err"></div>
+    <div class="conf">Confidential · internal use only</div>
+  </div>
+</div>
 <div class="confbar"><span>Confidential &middot; internal catalogue and readership data &middot; do not redistribute</span><span id="stamp"></span></div>
 <div data-toolkit-nav></div>
 <header class="masthead">
@@ -275,6 +295,7 @@
     <a href="catalogue-analysis/" title="What the catalogue adds up to: subject, format, contributors, length">The catalogue, analyzed</a>
     <a href="#" id="readersToggle" title="Add a Readers column: lifetime views, and how each piece's first 30 days compared with every other piece's. Needs the shared toolkit passphrase; the public never sees it.">Show readership</a>
     <a href="#" id="themeToggle" title="Switch between light and dark color themes. Your choice is remembered on this device.">🌙 Dark mode</a>
+    <a href="#" id="lockCat" title="Forget the passphrase on this device">Lock</a>
   </div>
   <h1>Content catalogue</h1>
   <div class="sub">Every article published on vitalcitynyc.org, searchable by author, topic, issue and date. For what it all adds up to, see <a href="catalogue-analysis/" style="color:var(--vc-cerulean);text-decoration:underline">the catalogue, analyzed</a>.</div>
@@ -733,7 +754,29 @@ new ResizeObserver(syncStickyOffset).observe(document.querySelector(".controls")
 syncStickyOffset();
 
 $("#footer").innerHTML = '<span class="wm">Vital City</span> &nbsp; Data pulled from the Vital City Ghost Content API. See methodology.md for sources, definitions and limitations. Refreshes weekly.';
-load().catch(e => { $("#rows").innerHTML = `<tr><td colspan="7" class="empty">Could not load data (${e}). Serve this folder over http — see README.</td></tr>`; });
+// ---- Gate ----------------------------------------------------------------
+// The passphrase is checked by opening the readership file, the part of this
+// page that is actually confidential. A passphrase saved by any toolkit tool
+// on this device opens it without asking.
+async function unlockCatalogue(pass, fromStore){
+  $("#err").textContent=""; $("#unlock").textContent="Checking…";
+  let blob;
+  try{ blob=await fetch("data/readership.enc",{cache:"no-cache"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }); }
+  catch(e){ $("#err").textContent="Couldn't reach the data file. Check your connection and try again."; $("#unlock").textContent="Unlock"; return; }
+  try{ await decryptCat(pass, blob); }
+  catch(e){
+    if(fromStore){ try{ localStorage.removeItem(SHARED_PASSKEY); }catch(_){} }
+    else $("#err").textContent="That passphrase didn't open it.";
+    $("#unlock").textContent="Unlock"; $("#pw").value=""; return;
+  }
+  saveSharedPass(pass);
+  document.documentElement.classList.remove("locked");
+  load().catch(e => { $("#rows").innerHTML = `<tr><td colspan="7" class="empty">Could not load data (${e}). Serve this folder over http — see README.</td></tr>`; });
+}
+$("#unlock").addEventListener("click", ()=>{ const p=$("#pw").value.trim(); if(p) unlockCatalogue(p,false); else $("#err").textContent="Enter the passphrase."; });
+$("#pw").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#unlock").click(); });
+$("#lockCat").addEventListener("click", e=>{ e.preventDefault(); try{ localStorage.removeItem(SHARED_PASSKEY); sessionStorage.removeItem(SHARED_PASSKEY); }catch(_){} location.reload(); });
+{ const saved=sharedPass(); if(saved) unlockCatalogue(saved,true); }
 </script>
 </body>
 </html>

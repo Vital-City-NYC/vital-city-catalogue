@@ -18,7 +18,7 @@
   // Not listed: catalogue-analysis (reached from the catalogue page itself) and
   // growth/live (a phone app, not a desk tool).
   var TOOLS = [
-    { id: "catalogue",  label: "Catalogue",  path: "",                   gated: false,
+    { id: "catalogue",  label: "Catalogue",  path: "",                   gated: true,
       blurb: "Every piece published on vitalcitynyc.org, searchable by author, topic, issue and date." },
     { id: "growth",     label: "Growth",     path: "growth/",            gated: true,
       blurb: "Audience, signups, sends and traffic." },
