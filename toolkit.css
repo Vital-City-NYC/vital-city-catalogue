@@ -196,4 +196,10 @@ html body .gatebox button { box-sizing: border-box; width: 100%; height: 43px; f
 html body .gatebox .conf { font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif; font-weight: 400; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--vc-charcoal, #707175); margin-top: 14px; }
 html.dark body .gatebox { box-shadow: 7px 7px 0 rgba(0, 0, 0, .45); }
 
+/* Printing: no browser header or footer (date, page title, web address, page
+   count). Chrome draws those in the page margin unless the page puts something
+   there itself; empty margin boxes do that without giving up the margin. @page
+   rules cascade, so a page's own size and margins still apply. */
+@page { @top-left{content:""} @top-center{content:""} @top-right{content:""} @bottom-left{content:""} @bottom-center{content:""} @bottom-right{content:""} }
+
 @media print { .vckit { display: none !important; } }

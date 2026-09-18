@@ -142,7 +142,7 @@
   .bar button{background:none;border:1.5px solid var(--vc-white);color:var(--vc-white);font-family:inherit;
               font-weight:800;font-size:11px;padding:5px 12px;cursor:pointer;margin-left:6px;letter-spacing:.06em}
 
-  @page{size:letter landscape;margin:0.35in}
+  @page{size:letter landscape;margin:0.35in; @top-left{content:""} @top-center{content:""} @top-right{content:""} @bottom-left{content:""} @bottom-center{content:""} @bottom-right{content:""}}   /* empty margin boxes: no browser header/footer on the PDF */
   @media print{
     body{background:#fff}
     .bar,.gate{display:none!important}
