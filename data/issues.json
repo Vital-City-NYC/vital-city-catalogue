@@ -462,6 +462,10 @@
         6
       ],
       [
+        "policy",
+        6
+      ],
+      [
         "City Government",
         5
       ],
@@ -471,10 +475,6 @@
       ],
       [
         "Education",
-        1
-      ],
-      [
-        "Housing",
         1
       ]
     ]
@@ -660,16 +660,16 @@
     "display_name": "Rubber Meets Road",
     "top_topics": [
       [
+        "policy",
+        9
+      ],
+      [
         "Street Lighting",
         8
       ],
       [
         "Crime",
         3
-      ],
-      [
-        "policy",
-        1
       ],
       [
         "About This Project",
@@ -720,6 +720,10 @@
     "display_name": "What To Do And Not To Do",
     "top_topics": [
       [
+        "policy",
+        6
+      ],
+      [
         "People in Crisis on Streets and Subways",
         4
       ],
@@ -734,10 +738,6 @@
       [
         "Subway Safety",
         2
-      ],
-      [
-        "Crime",
-        1
       ]
     ]
   },
