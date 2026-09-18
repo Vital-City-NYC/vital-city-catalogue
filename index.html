@@ -237,6 +237,24 @@
   html.dark #embpop{box-shadow:5px 5px 0 rgba(0,0,0,.4)}
   html.dark .clear{background:var(--vc-black);color:var(--vc-paper)}   /* the solid button reads as a hole in the page otherwise */
 
+  /* Contributor contact panel, shown while the catalogue is filtered to one author. */
+  .authorcard{margin:14px 32px 0;padding:14px 18px 12px;background:var(--vc-white);border:1px solid var(--vc-cloud);border-left:3px solid var(--vc-cerulean)}
+  .authorcard .ac-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .authorcard .ac-name{font-size:17px;font-weight:800}
+  .authorcard .ac-org{font-size:13px;color:var(--vc-charcoal);margin-top:1px}
+  .authorcard .ac-link{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--vc-charcoal);text-decoration:none;white-space:nowrap}
+  .authorcard .ac-link:hover{color:var(--vc-black)}
+  .authorcard .ac-mail{margin-top:8px;font-size:13.5px}
+  .authorcard .ac-mail a{color:var(--vc-cerulean);text-decoration:none;margin-right:14px}
+  .authorcard .ac-mail a:hover{text-decoration:underline}
+  .authorcard .ac-meta{margin-top:6px;font-size:12px;color:var(--vc-charcoal);line-height:1.5}
+  .authorcard .ac-meta b{color:var(--vc-black);font-weight:700}
+  .authorcard .ac-lock{font-size:12.5px;color:var(--vc-charcoal);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .authorcard .ac-lock input{font:inherit;font-size:12.5px;padding:5px 8px;border:1px solid var(--vc-cloud);width:180px;background:var(--vc-paper);color:var(--vc-black)}
+  .authorcard .ac-lock button{font:inherit;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:6px 11px;border:0;background:var(--vc-black);color:var(--vc-paper);cursor:pointer}
+  .authorcard .ac-err{color:#a0432d;font-size:12px}
+  @media (max-width:620px){ .authorcard{margin:12px 16px 0} }
+
   .credit{cursor:pointer}
   .credit:hover{color:var(--vc-cerulean,#217ebe);text-decoration:underline}
   .readcell { white-space: nowrap; text-align: right; }
@@ -287,6 +305,7 @@
   <button class="clear" id="clear">Clear</button>
 </div>
 
+<div class="authorcard" id="authorCard" hidden></div>
 <div class="resultbar" id="resultbar"></div>
 <div class="tablewrap">
   <table id="tbl">
@@ -597,6 +616,87 @@ function showEmbedPop(pill){
   pop.style.top = (b.bottom + scrollY + 6) + "px";
 }
 function closeEmbedPop(){ const p = document.getElementById("embpop"); if(p) p.remove(); }
+// ---- Contributor contact panel ------------------------------------------
+// Clicking a byline still filters the catalogue to that author; this adds
+// their contact details above the results. The details live in
+// network/authors.enc, a contributors-only slice of the contacts database
+// built nightly and sealed with the toolkit passphrase. The sign-in is the one
+// the other tools save on this device (sharedPass, shared with the readership column), so a signed-in reader sees the card with
+// no extra step, and anyone else sees nothing but a passphrase box.
+const acEsc = s => String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const AP_MON=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+const apDate = d => { const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d||""); return m?`${AP_MON[+m[2]-1]} ${+m[3]}, ${m[1]}`:(d||""); };
+let CONTRIB=null, contribBlob=null;
+async function loadContributors(pass){
+  if(CONTRIB) return CONTRIB;
+  if(!contribBlob){
+    const r=await fetch("network/authors.enc",{cache:"no-cache"});
+    if(!r.ok) throw Object.assign(new Error("not published"),{code:"missing"});
+    contribBlob=await r.json();
+  }
+  try{ CONTRIB=await decryptCat(pass, contribBlob); }
+  catch(e){ throw Object.assign(new Error("wrong passphrase"),{code:"pass"}); }
+  return CONTRIB;
+}
+// Bylines and contact records usually agree exactly (the contacts build keeps
+// each contributor's byline as aname). The fallback drops middle initials,
+// credentials and accents: "Jay K. Varma, MD" / "Jay Varma".
+function kitNorm(n){
+  const w=(n||"").split(",")[0].replace(/[øØ]/g,"o").replace(/[æÆ]/g,"ae").replace(/ß/g,"ss")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z\s'-]/g," ")
+    .split(/\s+/).filter(x=>x&&x.length>1&&!["jr","sr","ii","iii","iv"].includes(x));
+  return w.length>1?w[0]+" "+w[w.length-1]:w.join(" ");
+}
+function findContributor(list, name){
+  return list.find(p=>p.aname===name) || list.find(p=>p.n===name)
+      || list.find(p=>kitNorm(p.aname)===kitNorm(name)) || list.find(p=>kitNorm(p.n)===kitNorm(name)) || null;
+}
+let cardToken=0;
+async function showAuthorCard(name){
+  const el=$("#authorCard"); const tok=++cardToken;
+  if(!name){ el.hidden=true; el.innerHTML=""; return; }
+  const full=`network/#${encodeURIComponent(JSON.stringify({author:name}))}`;
+  const openLink=`<a class="ac-link" href="${full}" target="_blank" rel="noopener">Full record in contacts &#8599;</a>`;
+  const lockForm=(msg)=>{
+    el.hidden=false;
+    el.innerHTML=`<div class="ac-top"><div class="ac-name">${acEsc(name)}</div>${openLink}</div>
+      <div class="ac-lock" style="margin-top:8px"><span>Contact details are in the contacts database.</span>
+        <input type="password" id="acPass" placeholder="Toolkit passphrase" autocomplete="current-password">
+        <button type="button" id="acGo">Show</button>${msg?`<span class="ac-err">${acEsc(msg)}</span>`:""}</div>`;
+    const go=async()=>{ const p=$("#acPass").value.trim(); if(!p) return;
+      try{ await loadContributors(p); saveSharedPass(p); showAuthorCard(name); }
+      catch(e){ lockForm(e.code==="missing"?"Not published yet.":"That passphrase did not open it."); } };
+    $("#acGo").addEventListener("click",go);
+    $("#acPass").addEventListener("keydown",e=>{ if(e.key==="Enter") go(); });
+  };
+  const pass=sharedPass();
+  if(!pass){ lockForm(""); return; }
+  let list;
+  try{ list=await loadContributors(pass); }
+  catch(e){
+    if(tok!==cardToken) return;
+    if(e.code==="missing"){ el.hidden=false; el.innerHTML=`<div class="ac-top"><div class="ac-name">${acEsc(name)}</div>${openLink}</div><div class="ac-meta">Contact details for contributors are published with tonight's refresh.</div>`; return; }
+    lockForm(""); return;
+  }
+  if(tok!==cardToken) return;
+  const p=findContributor(list, name);
+  el.hidden=false;
+  if(!p){ el.innerHTML=`<div class="ac-top"><div class="ac-name">${acEsc(name)}</div>${openLink}</div><div class="ac-meta">No contact record for this byline yet.</div>`; return; }
+  const emails=[...new Set([p.e,...(p.emails||[])].filter(Boolean))];
+  const org=[p.role,p.inst].filter(Boolean).join(", ");
+  const facts=[];
+  if(p.arts) facts.push(`<b>${p.arts}</b> piece${p.arts===1?"":"s"}${p.alast?`, latest ${acEsc(apDate(p.alast))}`:""}`);
+  if(p.senior) facts.push("Senior contributor");
+  facts.push(p.mem?`Newsletter subscriber${p.since?` since ${acEsc(apDate(p.since))}`:""}`:"Not on the newsletter list");
+  if(p.don) facts.push("Donor");
+  if(p.wiki) facts.push("Has a Wikipedia page");
+  if(p.ptw) facts.push(acEsc(p.ptw));
+  const topics=(p.topics||[]).length?`<div class="ac-meta">Writes on ${acEsc(p.topics.join(", "))}</div>`:"";
+  el.innerHTML=`<div class="ac-top"><div><div class="ac-name">${acEsc(p.n||name)}</div>${org?`<div class="ac-org">${acEsc(org)}</div>`:""}</div>${openLink}</div>
+    <div class="ac-mail">${emails.length?emails.map(m=>`<a href="mailto:${acEsc(m)}">${acEsc(m)}</a>`).join(""):`<span class="ac-meta">No email address on file.</span>`}</div>
+    <div class="ac-meta">${facts.join(" &middot; ")}</div>${topics}`;
+}
+
 function render() {
   const rows = sortRows(filtered());
   document.querySelectorAll("thead th .arrow").forEach(a => a.textContent = "");
@@ -604,6 +704,7 @@ function render() {
   if (th) th.textContent = sortDir === 1 ? "▲" : "▼";
 
   $("#resultbar").innerHTML = `Showing <b>${rows.length}</b> of ${DATA.length} articles`;
+  showAuthorCard($("#fAuthor").value);
   if (!rows.length) { $("#rows").innerHTML = `<tr><td colspan="7" class="empty">No articles match these filters.</td></tr>`; return; }
 
   const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");

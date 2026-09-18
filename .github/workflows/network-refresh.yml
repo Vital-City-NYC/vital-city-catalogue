@@ -242,7 +242,7 @@ jobs:
           # skipped), staging NOTHING — which is how the rotation rebuild on
           # 2026-09-16 re-encrypted every payload and then published none of them.
           git add data 2>/dev/null || true
-          for f in network/data.enc growth/data.enc prospects/data.enc catalogue-analysis/data.enc resharing/data.enc press/data.enc; do
+          for f in network/data.enc network/authors.enc growth/data.enc prospects/data.enc catalogue-analysis/data.enc resharing/data.enc press/data.enc; do
             [ -e "$f" ] && git add "$f"
           done
           # encrypt_people.py runs every time and rewrites network/data.enc with a

@@ -1807,10 +1807,45 @@ function updateHash(){
   const h=Object.keys(o).length?"#"+encodeURIComponent(JSON.stringify(o)):location.pathname;
   history.replaceState(null,"",h);
 }
+// Author links from the content catalogue (#{"author":"<byline name>"}). A
+// byline often carries a middle initial or a suffix the contact record does not
+// ("Anthony A. Braga" / "Anthony Braga"), so both sides are reduced to first and
+// last name before matching, and contributors win a tie.
+function normAuthorName(n){
+  return (n||"").split(",")[0]                       // "Jay K. Varma, MD" -> "Jay K. Varma"
+    .replace(/[øØ]/g,"o").replace(/[æÆ]/g,"ae").replace(/ß/g,"ss").replace(/[łŁ]/g,"l")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()
+    .replace(/[^a-z\s'-]/g," ").split(/\s+/)
+    .filter(w=>w&&w.length>1&&!["jr","sr","ii","iii","iv"].includes(w)).join(" ");
+}
+// Only contributors count. Every byline in the catalogue belongs to someone the
+// contacts database already flags as an author, and among 14,000 records a bare
+// name match outside that set is a namesake (the "Vital City" house byline
+// matched a subscriber of that name).
+function authorMatches(name){
+  const full=normAuthorName(name), w=full.split(" "), fl=w.length>1?w[0]+" "+w[w.length-1]:full;
+  const flOf=n=>{ const x=normAuthorName(n).split(" "); return x.length>1?x[0]+" "+x[x.length-1]:x[0]; };
+  const authors=PEOPLE.filter(p=>p.auth);
+  let c=authors.filter(p=>p.aname===name);                 // the build keeps each contributor's byline
+  if(!c.length) c=authors.filter(p=>normAuthorName(p.n)===full);
+  if(!c.length) c=authors.filter(p=>flOf(p.n)===fl);
+  return c;
+}
 function applyHash(){
   if(!location.hash||location.hash.length<2) return false;
   try{ const o=JSON.parse(decodeURIComponent(location.hash.slice(1)));
+    let authorHit=null;
+    if(o.author){
+      const c=authorMatches(o.author);
+      if(c.length===1) authorHit=c[0];
+      // Show the match (or everyone the name could mean) in the list behind the card.
+      if(!o.q) o.q=authorHit?authorHit.n:o.author.split(" ").slice(-1)[0];
+    }
     applyState({want:{mem:o.m||0,don:o.d||0,auth:o.a||0,press:o.pr||0},cats:o.c||[],q:o.q||"",dFrom:o.f||"",dTo:o.t||"",repeat:!!o.r,unsub:!!o.u,onlyUnsub:!!o.o,star:!!o.st,wiki:!!o.wk,multisub:!!o.ms,noEmail:!!o.ne,noName:!!o.nn,name:o.nm||"any",engagement:o.eg||"any",house:o.hp||"any",sortKey:o.sk||"last",sortDir:o.sd||1});
+    if(o.author){
+      if(authorHit) openDetail(personKey(authorHit));
+      else toast(`No single contact matches ${o.author}; showing the closest names.`);
+    }
     // A per-contact link (#{"person":"<id>"}) opens that person's card.
     if(o.person){
       const p=PEOPLE.find(x=>pidFor(personKey(x))===o.person);

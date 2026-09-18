@@ -47,6 +47,39 @@ def resolve_passphrase():
     return p, "generated"
 
 
+# The content catalogue shows a contributor's contact details beside their
+# pieces. It is a public page, so it gets a small separate payload holding only
+# contributors and only the fields a contact panel needs, sealed with the same
+# passphrase, instead of pulling the 15 MB people file for one card.
+AUTHORS_OUT = ROOT / "network" / "authors.enc"
+AUTHOR_FIELDS = ("aname", "n", "e", "emails", "inst", "role", "types", "topics", "arts",
+                 "alast", "mem", "since", "don", "senior", "wiki", "ptw")
+
+
+def seal(data, passphrase):
+    salt = secrets.token_bytes(16)
+    iv = secrets.token_bytes(12)
+    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=ITERS)
+    key = kdf.derive(passphrase.encode())
+    ct = AESGCM(key).encrypt(iv, data, None)
+    return {
+        "v": 1, "kdf": "PBKDF2-SHA256", "iters": ITERS,
+        "salt": base64.b64encode(salt).decode(),
+        "iv": base64.b64encode(iv).decode(),
+        "ct": base64.b64encode(ct).decode(),
+    }
+
+
+def write_authors(data, passphrase):
+    people = json.loads(data)
+    authors = [{k: p[k] for k in AUTHOR_FIELDS if p.get(k) not in (None, "", [], 0)}
+               for p in people if p.get("auth")]
+    if not authors:
+        raise SystemExit("encrypt_people: no contributors in people.json; refusing to write an empty authors.enc")
+    AUTHORS_OUT.write_text(json.dumps(seal(json.dumps(authors, ensure_ascii=False).encode(), passphrase)))
+    print(f"Wrote {AUTHORS_OUT} ({len(authors)} contributors, {AUTHORS_OUT.stat().st_size//1024} KB encrypted)")
+
+
 def main():
     data = SRC.read_bytes()
     passphrase, source = resolve_passphrase()
@@ -66,6 +99,7 @@ def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(blob))
     print(f"Wrote {OUT} ({OUT.stat().st_size//1024} KB encrypted)")
+    write_authors(data, passphrase)
     if source == "generated":
         print("\n" + "=" * 52)
         print("  NEW PASSPHRASE (saved to private/.netpass; share out-of-band):")
