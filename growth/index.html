@@ -5805,7 +5805,7 @@ function kiTileHTML(x, w, marks, h, noRead){
 const KI_ROWS_CSS='.ki-rows{border-top:2px solid #050507;margin-top:4px}'
   +'.ki-rh,.ki-row{display:grid;grid-template-columns:1.1fr 1.45fr 1.45fr 1.95fr;gap:10px;align-items:start}'
   +'.ki-rh{font-size:7.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:#707175;padding:4px 0 3px;border-bottom:1px solid #050507}'
-  +'.ki-row{padding:5px 0 4px;border-bottom:1px solid #d9d9d6;break-inside:avoid;page-break-inside:avoid}'
+  +'.ki-row{padding:3px 0 2px;border-bottom:1px solid #d9d9d6;break-inside:avoid;page-break-inside:avoid}'
   +'.ki-row .ki-name{font-size:8px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;line-height:1.2;color:#050507}'
   +'.ki-row .ki-num{font-family:Georgia,"Times New Roman",serif;font-size:21px;font-weight:700;line-height:1.05;margin-top:2px;color:#050507}'
   +'.ki-row .ki-unit{font-size:8px;color:#707175;line-height:1.3;margin-top:1px}'
@@ -5814,7 +5814,7 @@ const KI_ROWS_CSS='.ki-rows{border-top:2px solid #050507;margin-top:4px}'
   +'.ki-row .ki-spark{color:#050507}.ki-row .ki-spark svg{width:100%;height:auto;display:block}.ki-row .sc-axis{display:flex;justify-content:space-between;font-size:7.5px;color:#707175;margin-top:1px}'
   +'.ki-row .ki-wait{font-size:8.5px;color:#707175;line-height:1.3}'
   +'.ki-row .ki-std{font-size:8.5px;line-height:1.3;background:#f7f7f4;border-left:2px solid #217ebe;padding:3px 6px;margin:0;color:#050507}.ki-row .ki-std.own{border-left-color:#c9c9c6;color:#505050}'
-  +'.ki-paper .ki-also,.ki-paper .ki-marks{font-size:8.5px;line-height:1.4;margin-top:6px;color:#505050}.ki-also,.ki-marks{break-inside:avoid}';
+  +'.ki-paper .ki-also,.ki-paper .ki-marks{font-size:8px;line-height:1.35;margin-top:5px;color:#505050}.ki-also,.ki-marks{break-inside:avoid}';
 document.head.insertAdjacentHTML("beforeend",`<style>${KI_ROWS_CSS}</style>`);
 function kiRowsHTML(sc, w, marks, h){
   const row=x=>{
@@ -5854,7 +5854,7 @@ function kiBodyHTML(sc, w, opts){
   return (opts.noLede?"":`<p class="ki-lede">${esc(sc.lede)}</p>`)+
     (sc.summary.length?`<div class="ki-sum">${sc.summary.map(esc).join("<br>")}</div>`:"")+
     (opts.layout==="rows"?"":`<div class="ki-grid">${sc.measures.map(x=>kiTileHTML(x,w,marks,opts.sparkH,opts.noRead)).join("")}</div>`)+
-    (opts.layout==="grid"?"":`<div class="ki-paper">${kiRowsHTML(sc,210,marks,36)}</div>`)+
+    (opts.layout==="grid"?"":`<div class="ki-paper">${kiRowsHTML(sc,210,marks,30)}</div>`)+
     (sc.also?`<div class="ki-also">${esc(sc.also)}</div>`:"")+
     (marks.length?`<div class="ki-marks"><b>Dotted lines mark:</b> ${marks.map(k=>`${esc(k.when)}: ${esc(k.label)}`).join(" · ")}</div>`:"")+
     (opts.stay||"")+
@@ -6077,7 +6077,7 @@ function pulseReportMD(m){
 function pulseReportHTML(m){
   const cls=c=>c==="up"?"up":c==="down"?"down":"";
   let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">As of ${esc(m.asof)} · data refreshed ${esc(m.generated)}</p>`;
-  if(m.scorecard) b+=`<h2>Key indicators</h2>`+kiBodyHTML(m.scorecard,210,{layout:"rows",noNotes:true,noLede:true})+`<div class="pb"></div>`;
+  if(m.scorecard) b+=`<h2>Key indicators</h2>`+kiBodyHTML(m.scorecard,210,{layout:"rows",noNotes:true,noLede:true});
   m.windows.forEach(w=>{
     b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.curStart)} → ${esc(w.curEnd)} · ${w.N} days · vs the ${w.N} days before</span></h2>`;
     b+=`<table>`+w.tiles.map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
@@ -6118,12 +6118,12 @@ function pulseReportHTML(m){
     +'.sc-name b{font-size:12px}.sc-def{font-size:10px;color:#707175;line-height:1.35;margin-top:2px}.sc-n{font-family:Georgia,serif;font-size:19px;line-height:1.05}.sc-u{font-size:9.5px;color:#707175;margin-top:2px}'
     +'.sc-spark{color:#050507}.sc-axis{display:flex;justify-content:space-between;font-size:8.5px;color:#707175}.sc-cmp{font-size:11px;font-weight:700}.sc-cmp.good{color:#3d7a35}.sc-cmp.watch{color:#a0432d}'
     +'.sc-tr{font-weight:400;color:#050507}.sc-why{font-size:11px;line-height:1.4;margin-top:2px}.sc-note{font-size:9.5px;color:#707175;margin-top:2px;line-height:1.35}.sc-legend{font-size:9.5px;color:#707175;margin-top:8px}'
-    +'@media print{.pb{break-after:page}}'
+    +'@media print{h2,h3{break-after:avoid}table tr,ol li,.ins li,.ki-who{break-inside:avoid}body>h2:first-of-type{margin-top:12px}.ki-sum{padding:5px 8px;margin-bottom:5px}}'
     +'.r4{font-size:12.5px;margin:2px 0 6px}table.r4t{font-size:11.5px}table.r4t td{text-align:right;padding:3px 5px;font-variant-numeric:tabular-nums}table.r4t td.l{text-align:left;width:auto;white-space:nowrap}table.r4t tr:first-child td{color:#707175;font-size:10.5px}'
     +'table.bm td.l{width:16%}table.bm td.v{width:30%;font-weight:600}table.bm td.v .r{font-weight:400;color:#3d7a35;font-size:11px}table.bm td.n{font-size:11px}'
     +'.ctx{font-size:11.5px;color:#333;padding-left:18px}.ctx li{margin:3px 0}.cav{font-size:10.5px;color:#707175;margin-top:18px;border-top:1px solid #ddd;padding-top:10px}'
     +'.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.bar button{font:inherit;font-size:12px;font-weight:700;padding:7px 12px;border:1.5px solid #050507;background:#fff;border-radius:3px;cursor:pointer}.bar button.p{background:#050507;color:#fff}'
-    +'@media print{.bar{display:none}body{margin:0;max-width:none}h1{font-size:24px;margin:2px 0}.period{margin:0 0 8px}}';
+    +'@media print{.bar{display:none}body{margin:0;max-width:none}h1{font-size:22px;margin:2px 0}.period{margin:0 0 4px}}';
   const subject=`Vital City ${m.title.toLowerCase()} · ${m.asof}`;
   const script=`<script>const MD=${JSON.stringify(md)};const SUBJ=${JSON.stringify(subject)};const NAME=${JSON.stringify("Vital-City-"+m.title.replace(/[^A-Za-z0-9]+/g,"-")+"-"+m.asof)};
 function dl(){const b=new Blob([MD],{type:"text/markdown;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=NAME+".md";document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500);}
