@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vital City content catalogue</title>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
+<style>
+  @font-face {
+    font-family: "GascogneTS";
+    src: url("https://vital-city-nyc.github.io/vital-city-design-system/fonts/GascogneTS-Light.ttf") format("truetype");
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+  }
+  :root {
+    /* Vital City design tokens */
+    --vc-black: #050507;
+    --vc-white: #ffffff;
+    --vc-paper: #f7f7f4;
+    --vc-cloud: #dddddd;
+    --vc-charcoal: #707175;
+    --vc-orange: #ff7c53;
+    --vc-magenta: #e7466d;
+    --vc-cerulean: #217ebe;
+    --vc-indigo: #394882;
+    --vc-periwinkle: #9b9fbc;
+    --vc-rose: #cea9be;
+    --vc-sans: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif;
+    --vc-serif: "GascogneTS", "Source Serif 4", Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--vc-paper);
+    color: var(--vc-black);
+    font-family: var(--vc-sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.42;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Masthead ---------- */
+  header.masthead {
+    border-bottom: 1px solid var(--vc-black);
+    padding: 26px 30px 20px;
+    background: var(--vc-white);
+    position: relative;
+  }
+  .mastlinks {
+    position: absolute; right: 30px; top: 24px;
+    display: flex; gap: 14px;
+    font-family: var(--vc-sans);
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .mastlinks a { color: var(--vc-cerulean); text-decoration: none; white-space: nowrap; }
+  .mastlinks a:hover { text-decoration: underline; }
+  @media (max-width: 600px) {
+    .mastlinks { position: static; right: auto; top: auto; margin-bottom: 12px; flex-wrap: wrap; }
+  }
+  .wordmark {
+    font-family: var(--vc-sans);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: var(--vc-sans);
+    font-weight: 900;
+    font-size: 30px;
+    line-height: 1.05;
+    margin: 8px 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .sub { color: var(--vc-charcoal); font-size: 14px; font-weight: 300; max-width: 640px; }
+
+  /* ---------- Stats strip ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-bottom: 1px solid var(--vc-black);
+    background: var(--vc-paper);
+  }
+  .stat { padding: 16px 20px; border-right: 1px solid var(--vc-cloud); }
+  .stat:last-child { border-right: none; }
+  .stat .num {
+    font-family: var(--vc-serif);
+    font-weight: 200;
+    font-synthesis: none;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.003em;
+  }
+  .stat .lbl {
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--vc-charcoal); margin-top: 8px; font-weight: 700;
+  }
+
+  /* ---------- Controls ---------- */
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--vc-paper);
+    border-bottom: 1px solid var(--vc-black);
+    padding: 14px 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .controls input[type=search], .controls select {
+    font: inherit; font-size: 14px; padding: 9px 11px;
+    border: 1px solid var(--vc-black); background: var(--vc-white);
+    border-radius: 0; color: var(--vc-black);
+  }
+  .controls input[type=search] { flex: 1 1 260px; min-width: 200px; }
+  .controls input[type=search]::placeholder { color: var(--vc-charcoal); }
+  .controls select { max-width: 200px; cursor: pointer; }
+  .controls label.chk {
+    font-size: 12px; display: inline-flex; align-items: center; gap: 6px;
+    color: var(--vc-charcoal); cursor: pointer; text-transform: uppercase;
+    letter-spacing: 0.06em; font-weight: 700;
+  }
+  button.clear {
+    font: inherit; font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 9px 14px; border: 1px solid var(--vc-black);
+    background: var(--vc-black); color: var(--vc-white); cursor: pointer;
+  }
+  button.clear:hover { background: var(--vc-orange); border-color: var(--vc-orange); color: var(--vc-black); }
+
+  .resultbar {
+    padding: 12px 30px 0; font-size: 11px; color: var(--vc-charcoal);
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;
+  }
+  .resultbar b { color: var(--vc-black); font-family: var(--vc-serif); font-weight: 200; font-size: 15px; }
+
+  /* ---------- Table ---------- */
+  .tablewrap { padding: 8px 30px 70px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead th {
+    text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.09em;
+    color: var(--vc-charcoal); font-weight: 700; padding: 10px 12px;
+    border-bottom: 1px solid var(--vc-black); cursor: pointer; user-select: none;
+    white-space: nowrap; position: sticky; top: var(--ctrlh, 64px); z-index: 10;
+    background: var(--vc-paper);
+  }
+  thead th:hover { color: var(--vc-black); }
+  thead th .arrow { color: var(--vc-orange); }
+  tbody td { padding: 13px 12px; border-bottom: 1px solid var(--vc-cloud); vertical-align: top; }
+  tbody tr:hover { background: var(--vc-white); }
+  td.date { white-space: nowrap; color: var(--vc-charcoal); font-variant-numeric: tabular-nums; font-size: 13px; }
+  td.title { max-width: 460px; }
+  td.title a.headline { font-weight: 700; }
+  td.title a.headline:hover { color: var(--vc-orange); }
+  td.title .summary {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    font-weight: 300; font-size: 13px; color: var(--vc-charcoal); margin-top: 4px; line-height: 1.4;
+  }
+  a.author { font-weight: 300; cursor: pointer; border-bottom: 1px solid var(--vc-cloud); }
+  a.author:hover { color: var(--vc-orange); border-bottom-color: var(--vc-orange); }
+  td.words { text-align: right; font-variant-numeric: tabular-nums; color: var(--vc-charcoal); white-space: nowrap; font-size: 13px; }
+  .pill {
+    display: inline-block; font-size: 11px; padding: 2px 8px; margin: 1px 4px 1px 0;
+    border: 1px solid var(--vc-cloud); background: var(--vc-white); color: var(--vc-charcoal);
+    cursor: pointer; white-space: nowrap;
+  }
+  .pill:hover { border-color: var(--vc-black); color: var(--vc-black); }
+  .pill.issue { border-color: var(--vc-orange); color: var(--vc-orange); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; font-size: 10px; }
+  .pill.issue:hover { background: var(--vc-orange); color: var(--vc-black); }
+  td.typecell { white-space: nowrap; }
+  .tt {
+    display: inline-block; font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 3px 7px; border: 1px solid var(--vc-cloud);
+    color: var(--vc-charcoal); background: var(--vc-white); cursor: pointer; white-space: nowrap;
+  }
+  .tt:hover { border-color: var(--vc-black); color: var(--vc-black); }
+  /* Orange is reserved for the issue/series pills — type pills stay clear of it. */
+  .tt.t-opinion { border-color: var(--vc-charcoal); color: var(--vc-charcoal); }
+  .tt.t-policy { border-color: var(--vc-indigo); color: var(--vc-indigo); }
+  .tt.t-data { border-color: var(--vc-cerulean); color: var(--vc-cerulean); }
+  .tt.t-podcast { border-color: var(--vc-magenta); color: var(--vc-magenta); }
+  .tt.t-qa { border-color: var(--vc-black); color: var(--vc-black); }
+  .tt.t-review { border-color: var(--vc-rose); color: var(--vc-black); }
+  .tt.t-tool { border-color: var(--vc-periwinkle); color: var(--vc-charcoal); }
+  .catpill {
+    display: inline-block; font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 2px 7px; margin: 2px 4px 0 0;
+    background: var(--vc-cloud); color: var(--vc-black); cursor: pointer; white-space: nowrap;
+  }
+  .catpill:hover { background: var(--vc-cerulean); color: var(--vc-white); }
+  .star { color: var(--vc-orange); }
+  .loading, .empty { padding: 70px 30px; text-align: center; color: var(--vc-charcoal); }
+  footer {
+    padding: 22px 30px 60px; font-size: 12px; color: var(--vc-charcoal);
+    border-top: 1px solid var(--vc-black); background: var(--vc-white); font-weight: 300;
+  }
+  footer .wm { font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; font-size: 11px; color: var(--vc-black); }
+  @media (max-width: 760px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stat { border-bottom: 1px solid var(--vc-cloud); }
+    td.title { max-width: none; }
+    .controls select { flex: 1 1 45%; max-width: none; }
+    .stat .num { font-size: 28px; }
+  }
+  /* Embedded material + header-image credit */
+  .embcell{max-width:132px;min-width:96px}
+  .epill{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.02em;padding:2px 6px;
+         border-radius:3px;margin:0 3px 3px 0;cursor:pointer;white-space:nowrap;
+         background:var(--vc-cloud);color:var(--vc-black)}
+  .epill:hover{background:var(--vc-black);color:#fff}
+  .e-flourish{background:#217ebe;color:#fff}
+  .e-vitalcityproject{background:#57aa4a;color:#fff}
+  .e-podcast{background:#7a5ea6;color:#fff}
+  .e-video{background:#e7466d;color:#fff}
+  .e-document{background:#d9a441;color:#fff}
+  .credit{display:block;font-size:10px;color:var(--vc-charcoal);line-height:1.35;margin-top:2px}
+  .nocred{color:var(--vc-cloud)}
+  /* Cross-tool switcher — identical on every page so it reads as one suite */
+
+  #embpop{position:absolute;z-index:120;background:var(--vc-white,#fff);border:1px solid var(--vc-black,#050507);
+          box-shadow:5px 5px 0 rgba(5,5,7,.12);padding:12px 14px;max-width:340px;font-size:12px}
+  #embpop .epTitle{font-weight:800;font-size:11px;margin-bottom:7px}
+  #embpop .epLinks a{display:block;color:var(--vc-cerulean,#217ebe);padding:2px 0;text-decoration:underline;word-break:break-all}
+  #embpop .epFilter{margin-top:9px;background:var(--vc-black,#050507);color:#fff;border:0;padding:5px 9px;
+          font-size:10px;font-weight:700;cursor:pointer;font-family:inherit}
+  /* Dark mode. Same token overrides and the same "vc_theme" key as the contact
+     tool and the growth dashboard, so a choice made in one tool holds in all. */
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2}
+  html.dark body{background:var(--vc-paper);color:var(--vc-black)}
+  html.dark input,html.dark select,html.dark textarea{background:#212329!important;color:var(--vc-black)!important;border-color:var(--vc-cloud)!important}
+  html.dark #embpop{box-shadow:5px 5px 0 rgba(0,0,0,.4)}
+  html.dark .clear{background:var(--vc-black);color:var(--vc-paper)}   /* the solid button reads as a hole in the page otherwise */
+
+  /* Contributor contact panel, shown while the catalogue is filtered to one author. */
+  .authorcard{margin:14px 30px 0;padding:14px 18px 12px;background:var(--vc-white);border:1px solid var(--vc-cloud);border-left:3px solid var(--vc-cerulean)}
+  .authorcard .ac-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .authorcard .ac-name{font-size:17px;font-weight:800}
+  .authorcard .ac-org{font-size:13px;color:var(--vc-charcoal);margin-top:1px}
+  .authorcard .ac-link{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--vc-charcoal);text-decoration:none;white-space:nowrap}
+  .authorcard .ac-link:hover{color:var(--vc-black)}
+  .authorcard .ac-mail{margin-top:8px;font-size:13.5px}
+  .authorcard .ac-mail a{color:var(--vc-cerulean);text-decoration:none;margin-right:14px}
+  .authorcard .ac-mail a:hover{text-decoration:underline}
+  .authorcard .ac-meta{margin-top:6px;font-size:12px;color:var(--vc-charcoal);line-height:1.5}
+  .authorcard .ac-meta b{color:var(--vc-black);font-weight:700}
+  .authorcard .ac-lock{font-size:12.5px;color:var(--vc-charcoal);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .authorcard .ac-lock input{font:inherit;font-size:12.5px;padding:5px 8px;border:1px solid var(--vc-cloud);width:180px;background:var(--vc-paper);color:var(--vc-black)}
+  .authorcard .ac-lock button{font:inherit;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:6px 11px;border:0;background:var(--vc-black);color:var(--vc-paper);cursor:pointer}
+  .authorcard .ac-err{color:#a0432d;font-size:12px}
+  @media (max-width:620px){ .authorcard{margin:12px 16px 0} }
+
+  .credit{cursor:pointer}
+  .credit:hover{color:var(--vc-cerulean,#217ebe);text-decoration:underline}
+  .readcell { white-space: nowrap; text-align: right; }
+  .readcell .rv { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .readcell .rt { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; }
+  .rt-standout { color: var(--vc-green); } .rt-strong { color: var(--vc-cerulean); }
+  .rt-typical { color: var(--vc-charcoal); } .rt-quiet { color: var(--vc-charcoal); opacity: .7; }
+  .rt-new { color: var(--vc-charcoal); font-weight: 600; text-transform: none; letter-spacing: 0; }
+  .rq { color: var(--vc-charcoal); }
+
+  /* Passphrase gate, the same box and backdrop as the other tools. The page is
+     locked from the first paint (the class is set in <head>) until the
+     passphrase opens the readership file. */
+  html.locked body > *:not(#gate){display:none !important}
+  #gate{position:fixed;inset:0;background:var(--vc-paper);display:none;align-items:center;justify-content:center;z-index:100}
+  html.locked #gate{display:flex}
+  .gateerr{color:var(--vc-magenta);font-size:13px;font-weight:700;margin-top:12px;min-height:18px}
+</style>
+<script>document.documentElement.classList.add("locked");</script>
+<link rel="stylesheet" href="../toolkit.css">
+<script src="../toolkit.js" data-tool="catalogue" defer></script>
+</head>
+<body>
+<div id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>Content catalogue</h1>
+    <p>Every piece Vital City has published, with readership and contributor details. Enter the shared passphrase.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="current-password" autofocus>
+    <button id="unlock">Unlock</button>
+    <div class="gateerr" id="err"></div>
+    <div class="conf">Confidential · internal use only</div>
+  </div>
+</div>
+<div class="confbar"><span>Confidential &middot; internal catalogue and readership data &middot; do not redistribute</span><span id="stamp"></span></div>
+<div data-toolkit-nav></div>
+<header class="masthead">
+  <div class="mastlinks">
+    <a href="../catalogue-analysis/" title="What the catalogue adds up to: subject, format, contributors, length">The catalogue, analyzed</a>
+    <a href="#" id="readersToggle" title="Add a Readers column: lifetime views, and how each piece's first 30 days compared with every other piece's. Needs the shared toolkit passphrase; the public never sees it.">Show readership</a>
+    <a href="#" id="themeToggle" title="Switch between light and dark color themes. Your choice is remembered on this device.">🌙 Dark mode</a>
+    <a href="#" id="lockCat" title="Forget the passphrase on this device">Lock</a>
+  </div>
+  <h1>Content catalogue</h1>
+  <div class="sub">Every article published on vitalcitynyc.org, searchable by author, topic, issue and date. For what it all adds up to, see <a href="../catalogue-analysis/" style="color:var(--vc-cerulean);text-decoration:underline">the catalogue, analyzed</a>.</div>
+</header>
+
+<div class="stats" id="stats"></div>
+
+<div class="controls">
+  <input type="search" id="q" placeholder="Search titles, summaries, authors, topics…" autocomplete="off">
+  <select id="fType"><option value="">All types</option></select>
+  <select id="fAuthorType" hidden><option value="">All author types</option></select>
+  <select id="fAuthor"><option value="">All authors</option></select>
+  <select id="fTopic"><option value="">All topics</option></select>
+  <select id="fIssue"><option value="">All issues</option></select>
+  <select id="fYear"><option value="">All years</option></select>
+  <select id="fCredit" title="Filter by header-image photographer or source. Counts show how many pieces used each."><option value="">All photography</option></select>
+  <select id="fEmbed" title="What material is embedded in the piece — Flourish charts, podcast players, Vital City's own projects, video, documents.">
+    <option value="">Any embedded material</option>
+    <option value="__any">Has any embed</option>
+    <option value="__none">No embeds</option>
+    <option value="flourish">Flourish chart</option>
+    <option value="podcast">Podcast player</option>
+    <option value="vital city project">Vital City project</option>
+    <option value="video">Video</option>
+    <option value="document">Document</option>
+  </select>
+  <label class="chk"><input type="checkbox" id="fFeatured"> Featured</label>
+  <button class="clear" id="clear">Clear</button>
+</div>
+
+<div class="authorcard" id="authorCard" hidden></div>
+<div class="resultbar" id="resultbar"></div>
+<div class="tablewrap">
+  <table id="tbl">
+    <thead><tr>
+      <th data-k="published_date">Date <span class="arrow"></span></th>
+      <th data-k="type">Type <span class="arrow"></span></th>
+      <th data-k="embed_count" title="Charts, players and other material embedded in the piece, plus the header-image credit.">Embeds &amp; image <span class="arrow"></span></th>
+      <th data-k="title">Title &amp; summary <span class="arrow"></span></th>
+      <th data-k="primary_author">Author <span class="arrow"></span></th>
+      <th data-k="topics">Topics <span class="arrow"></span></th>
+      <th data-k="issues">Issue <span class="arrow"></span></th>
+      <th data-k="word_count">Words <span class="arrow"></span></th>
+      <th data-k="views" class="readcol" hidden title="Lifetime page views from Google Analytics. The tier compares the piece's first 30 days with every other piece's first 30 days, so older pieces are not favored for their age. Pieces older than that data are compared with pieces from the same year.">Readers <span class="arrow"></span></th>
+    </tr></thead>
+    <tbody id="rows"><tr><td colspan="7" class="loading">Loading catalogue…</td></tr></tbody>
+  </table>
+</div>
+
+<footer id="footer"></footer>
+
+<script>
+const $ = s => document.querySelector(s);
+
+// ---- Theme (light/dark) ----
+function applyTheme(t){ document.documentElement.classList.toggle("dark", t==="dark");
+  const b=$("#themeToggle"); if(b) b.textContent = t==="dark" ? "☀️ Light mode" : "🌙 Dark mode"; }
+(function(){ const t=localStorage.getItem("vc_theme") || ((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light"); applyTheme(t); })();
+document.addEventListener("DOMContentLoaded", ()=>{
+  const b=$("#themeToggle"); if(!b) return;
+  applyTheme(document.documentElement.classList.contains("dark")?"dark":"light");
+  b.addEventListener("click", e=>{ e.preventDefault();
+    const t=document.documentElement.classList.contains("dark")?"light":"dark";
+    localStorage.setItem("vc_theme",t); applyTheme(t); });
+});
+let DATA = [], META = {}, ISSUES = [];
+let AUTHOR_CATS = {};        // {author name -> {categories, topics, institution}} — local-only CRM layer
+let HAS_CRM = false;
+let sortKey = "published_date", sortDir = -1;
+
+// Union of contact categories across an article's authors
+function articleCats(r) {
+  const set = new Set();
+  (r.authors || []).forEach(a => (AUTHOR_CATS[a]?.categories || []).forEach(c => set.add(c)));
+  return [...set];
+}
+
+function fmtDate(d) {
+  if (!d) return "";
+  const [y, m, day] = d.split("-");
+  const mo = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m - 1];
+  return `${mo} ${+day}, ${y}`;
+}
+function issueLabel(name) {
+  const it = ISSUES.find(i => i.name === name);
+  return it ? it.display_name : name.replace(/-/g, " ");
+}
+function typeClass(t) {
+  return ({
+    "opinion/commentary": "t-opinion", "policy": "t-policy", "data analysis": "t-data",
+    "podcast": "t-podcast", "q&a": "t-qa", "book review": "t-review", "map/tool": "t-tool",
+  })[t] || "";
+}
+
+async function load() {
+  const [cat, meta, issues] = await Promise.all([
+    fetch("../data/catalogue.json").then(r => r.json()),
+    fetch("../data/meta.json").then(r => r.json()),
+    fetch("../data/issues.json").then(r => r.json()),
+  ]);
+  DATA = cat; META = meta; ISSUES = issues;
+  if (window.vcStamp) vcStamp("#stamp", META.generated_at);
+  // Optional, local-only contact CRM layer (gitignored; absent on the public site).
+  try {
+    const resp = await fetch("../private/author_categories.json");
+    if (resp.ok) { AUTHOR_CATS = await resp.json(); HAS_CRM = Object.keys(AUTHOR_CATS).length > 0; }
+  } catch (e) { /* no CRM available — public mode */ }
+  buildStats(); buildFilters(); bind(); applyURLParams(); render();
+  // Already signed in to the toolkit on this device: show the column without asking.
+  showReaders(false);
+  $("#readersToggle").addEventListener("click", e=>{ e.preventDefault(); if(!READERS) showReaders(true); });
+}
+
+// Deep-link support: ?author=<name> (and optional ?q=) preselects a filter, so
+// the contact tool's "VC contributor" chip can open this catalogue scoped to one
+// author. Falls back gracefully if the author isn't in the list.
+function applyURLParams() {
+  const p = new URLSearchParams(location.search);
+  const a = p.get("author");
+  if (a) {
+    const sel = $("#fAuthor");
+    const match = [...sel.options].find(o => o.value.toLowerCase() === a.toLowerCase());
+    if (match) sel.value = match.value;
+  }
+  if (p.get("q")) $("#q").value = p.get("q");
+}
+
+function buildStats() {
+  const span = META.date_range ? `${(META.date_range[0]||"").slice(0,4)}–${(META.date_range[1]||"").slice(0,4)}` : "";
+  const s = [
+    [META.total_posts, "articles"],
+    [META.total_authors, "contributors"],
+    [META.total_issues, "issues & series"],
+    [META.total_topics, "topics"],
+    [span, "span"],
+  ];
+  $("#stats").innerHTML = s.map(([n, l]) => `<div class="stat"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join("");
+}
+
+function buildFilters() {
+  const authors = {}, topics = {}, years = {}, types = {};
+  DATA.forEach(r => {
+    (r.authors||[]).forEach(a => authors[a] = (authors[a]||0)+1);
+    (r.topics||[]).forEach(t => topics[t] = (topics[t]||0)+1);
+    if (r.type) types[r.type] = (types[r.type]||0)+1;
+    if (r.published_date) years[r.published_date.slice(0,4)] = true;
+  });
+  const opt = (v, t) => `<option value="${v.replace(/"/g,'&quot;')}">${t}</option>`;
+  $("#fType").innerHTML += Object.keys(types).sort((a,b)=>types[b]-types[a])
+    .map(t => opt(t, `${t} (${types[t]})`)).join("");
+  // Author-type filter (contact CRM categories) — only when the local CRM layer is present
+  if (HAS_CRM) {
+    const catArticles = {};
+    DATA.forEach(r => articleCats(r).forEach(c => catArticles[c] = (catArticles[c]||0)+1));
+    $("#fAuthorType").innerHTML += Object.keys(catArticles).sort((a,b)=>catArticles[b]-catArticles[a])
+      .map(c => opt(c, `${c} (${catArticles[c]})`)).join("");
+    $("#fAuthorType").hidden = false;
+  }
+  $("#fAuthor").innerHTML += Object.keys(authors).sort((a,b)=>authors[b]-authors[a])
+    .map(a => opt(a, `${a} (${authors[a]})`)).join("");
+  $("#fTopic").innerHTML += Object.keys(topics).sort((a,b)=>topics[b]-topics[a])
+    .map(t => opt(t, `${t} (${topics[t]})`)).join("");
+  $("#fIssue").innerHTML += ISSUES.map(i => opt(i.name, `${i.display_name} (${i.post_count})`)).join("");
+  $("#fYear").innerHTML += Object.keys(years).sort((a,b)=>b-a).map(y => opt(y, y)).join("");
+  const credits = {};
+  DATA.forEach(r => { const c = r.feature_image_credit; if (c) credits[c] = (credits[c]||0)+1; });
+  $("#fCredit").innerHTML += Object.keys(credits).sort((a,b)=>credits[b]-credits[a]||a.localeCompare(b))
+    .map(c => opt(c, `${c} (${credits[c]})`)).join("");
+}
+
+function bind() {
+  ["#q","#fType","#fAuthorType","#fAuthor","#fTopic","#fIssue","#fYear","#fCredit","#fEmbed"].forEach(s => $(s).addEventListener("input", render));
+  $("#fFeatured").addEventListener("change", render);
+  $("#clear").addEventListener("click", () => {
+    $("#q").value=""; ["#fType","#fAuthorType","#fAuthor","#fTopic","#fIssue","#fYear","#fCredit","#fEmbed"].forEach(s=>$(s).value="");
+    $("#fFeatured").checked=false; render();
+  });
+  document.querySelectorAll("thead th").forEach(th => th.addEventListener("click", () => {
+    const k = th.dataset.k;
+    if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = (k==="published_date"||k==="word_count")?-1:1; }
+    render();
+  }));
+  // pill -> popover with the actual chart links; its footer button -> filter
+  document.addEventListener("click", e => {
+    const fb = e.target.closest(".epFilter");
+    if (fb) { $("#fEmbed").value = fb.dataset.embed; closeEmbedPop(); render(); return; }
+    const p = e.target.closest(".epill");
+    if (p) { showEmbedPop(p); e.stopPropagation(); return; }
+    const cr = e.target.closest("[data-credit]");
+    if (cr) {
+      const sel = $("#fCredit");
+      sel.value = (sel.value === cr.dataset.credit) ? "" : cr.dataset.credit;
+      render(); return;
+    }
+    if (!e.target.closest("#embpop")) closeEmbedPop();
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeEmbedPop(); });
+  // delegate clicks on author / topic / issue to set the matching filter
+  $("#rows").addEventListener("click", e => {
+    const el = e.target.closest("[data-author],[data-topic],[data-issue],[data-type],[data-cat]"); if (!el) return;
+    if (el.dataset.author !== undefined) $("#fAuthor").value = el.dataset.author;
+    if (el.dataset.topic !== undefined) $("#fTopic").value = el.dataset.topic;
+    if (el.dataset.issue !== undefined) $("#fIssue").value = el.dataset.issue;
+    if (el.dataset.type !== undefined) $("#fType").value = el.dataset.type;
+    if (el.dataset.cat !== undefined) $("#fAuthorType").value = el.dataset.cat;
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
+function filtered() {
+  const q = $("#q").value.trim().toLowerCase();
+  const ftype = $("#fType").value, fatype = $("#fAuthorType").value, fa = $("#fAuthor").value, ft = $("#fTopic").value, fi = $("#fIssue").value, fy = $("#fYear").value;
+  const feat = $("#fFeatured").checked, fe = $("#fEmbed").value, fc = $("#fCredit").value;
+  return DATA.filter(r => {
+    if (ftype && r.type !== ftype) return false;
+    if (fatype && !articleCats(r).includes(fatype)) return false;
+    if (fa && !(r.authors||[]).includes(fa)) return false;
+    if (ft && !(r.topics||[]).includes(ft)) return false;
+    if (fi && !(r.issues||[]).includes(fi)) return false;
+    if (fy && !(r.published_date||"").startsWith(fy)) return false;
+    if (feat && !r.featured) return false;
+    if (fc && (r.feature_image_credit || "") !== fc) return false;
+    if (fe) {
+      const cnts = (r.embeds && r.embeds.counts) || {};
+      const total = (r.embeds && r.embeds.total) || 0;
+      if (fe === "__any"  && !total) return false;
+      else if (fe === "__none" && total) return false;
+      else if (fe !== "__any" && fe !== "__none" && !cnts[fe]) return false;
+    }
+    if (q) {
+      // Photo credit and embed kinds are searchable too, so "magnum" finds every
+      // piece with a Magnum photograph and "flourish" every charted piece.
+      const cnts = (r.embeds && r.embeds.counts) || {};
+      const hay = [r.title, r.summary, r.type, (r.authors||[]).join(" "), (r.topics||[]).join(" "),
+        (r.issues||[]).join(" "), r.feature_image_credit || "", r.feature_image_alt || "",
+        Object.keys(cnts).join(" ")].join(" ").toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+/* ---------- readership (signed-in only) ----------
+   Traffic is internal, so it ships encrypted with the toolkit passphrase and
+   this column only exists for someone who has it. Same login as every other
+   tool: signed in anywhere in the toolkit on this device, signed in here. */
+let READERS=null;
+const TIER_LABEL={standout:"Standout",strong:"Strong",typical:"Typical",quiet:"Quiet"};
+function slugOf(url){ return String(url||"").split("?")[0].replace(/\/+$/,"").split("/").pop().toLowerCase(); }
+function readersCell(r){
+  const x=READERS[slugOf(r.url)];
+  if(!x) return `<span class="rq">—</span>`;
+  const n=x.v.toLocaleString();
+  if(!x.t) return `<div class="rv">${n}</div><div class="rt rt-new" title="Published less than 30 days before the data was pulled">too new to tier</div>`;
+  const how=x.b==="debut"?`first 30 days: ${Number(x.v30||0).toLocaleString()} views, compared with every piece's first 30 days`
+                          :"compared on lifetime views with pieces published the same year (no first-month data this far back)";
+  return `<div class="rv">${n}</div><div class="rt rt-${x.t}" title="${how}">${TIER_LABEL[x.t]}${x.b==="year"?" for its year":""}</div>`;
+}
+function b64dCat(s){ const b=atob(s), u=new Uint8Array(b.length); for(let i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; }
+async function decryptCat(pass, blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64dCat(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:b64dCat(blob.iv)},key,b64dCat(blob.ct))));
+}
+const SHARED_PASSKEY="vc_net_pass";
+function sharedPass(){ try{ const r=localStorage.getItem(SHARED_PASSKEY); if(!r) return null; if(r[0]!=="{") return r;
+  const o=JSON.parse(r); return (o&&o.pass&&o.exp>Date.now())?o.pass:null; }catch(e){ return null; } }
+function saveSharedPass(p){ try{ localStorage.setItem(SHARED_PASSKEY,JSON.stringify({pass:p,exp:Date.now()+90*864e5})); }catch(e){} }
+async function showReaders(interactive){
+  let blob;
+  try{ blob=await fetch("../data/readership.enc",{cache:"no-cache"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }); }
+  catch(e){ if(interactive) alert("Readership data isn't available yet."); return false; }
+  let pass=sharedPass();
+  for(let attempt=0; attempt<2; attempt++){
+    if(!pass){ if(!interactive) return false; pass=prompt("Toolkit passphrase (the same one the growth dashboard uses):"); if(!pass) return false; }
+    try{
+      const d=await decryptCat(pass.trim(), blob);
+      READERS=d.pieces; saveSharedPass(pass.trim());
+      DATA.forEach(r=>{ const x=READERS[slugOf(r.url)]; r.views=x?x.v:null; });
+      document.querySelectorAll(".readcol").forEach(th=>th.hidden=false);
+      const t=$("#readersToggle"); t.textContent="Readers as of "+String(d.as_of).slice(0,10); t.style.pointerEvents="none";
+      render(); return true;
+    }catch(e){ pass=null; if(!interactive) return false; alert("That passphrase didn't open the readership data."); }
+  }
+  return false;
+}
+
+function sortRows(rows) {
+  const k = sortKey;
+  return rows.sort((a, b) => {
+    let va, vb;
+    if (k === "topics" || k === "issues") { va=(a[k]||[]).join(" "); vb=(b[k]||[]).join(" "); }
+    else if (k === "embed_count") { va=(a.embeds&&a.embeds.total)||0; vb=(b.embeds&&b.embeds.total)||0; }
+    else if (k === "views") { va=a.views==null?-1:a.views; vb=b.views==null?-1:b.views; }
+    else { va = a[k]; vb = b[k]; }
+    if (va == null) va = ""; if (vb == null) vb = "";
+    if (typeof va === "number") return (va - vb) * sortDir;
+    return String(va).localeCompare(String(vb)) * sortDir;
+  });
+}
+
+// What is embedded in a piece, plus who took the header photograph. Kept
+// compact: a count per kind, and the credit underneath.
+const EMB_LABEL = {"flourish":"chart","podcast":"podcast","vital city project":"VC project",
+                   "video":"video","document":"doc","chart":"chart","social":"social",
+                   "map":"map","form":"form","other":"embed"};
+function embedCell(r, esc){
+  const c = (r.embeds && r.embeds.counts) || {};
+  const pills = Object.keys(c).sort((a,b)=>c[b]-c[a]).map(k =>
+    `<span class="epill e-${k.replace(/[^a-z]/g,"")}" data-embed="${esc(k)}" data-pid="${esc(r.id)}" title="${c[k]} ${esc(k)} embed${c[k]===1?"":"s"} — click for the list, with links">${esc(EMB_LABEL[k]||k)}${c[k]>1?` ${c[k]}`:""}</span>`).join("");
+  const cred = r.feature_image_credit
+    ? `<span class="credit" data-credit="${esc(r.feature_image_credit)}" title="Header image: ${esc(r.feature_image_credit)} — click to see every piece using this photographer/source">${esc(r.feature_image_credit)}</span>` : "";
+  return pills + cred || '<span class="nocred">&mdash;</span>';
+}
+// Popover listing exactly what is embedded in one piece, with links. The pill
+// used to jump straight to a filter, which answered "show me more like this"
+// but not "what are these seven charts?" — this answers both.
+function showEmbedPop(pill){
+  closeEmbedPop();
+  const r = DATA.find(x => String(x.id) === pill.dataset.pid); if(!r) return;
+  const kind = pill.dataset.embed, esc2 = s => String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const fl = (r.embeds.flourish||[]);
+  const ifr = (r.embeds.iframes||[]).filter(e => e.kind === kind);
+  let rows = "";
+  if(kind === "flourish"){
+    rows = fl.map((x,i)=>`<a href="${esc2(x.url)}" target="_blank" rel="noopener">Flourish visualisation ${esc2(x.id)}</a>`).join("")
+         + ifr.filter(e=>e.host.includes("flo.uri.sh")).map(e=>`<a href="${esc2(e.url)}" target="_blank" rel="noopener">${esc2(e.url.split("//")[1]||e.url)}</a>`).join("");
+  } else {
+    rows = ifr.map(e=>`<a href="${esc2(e.url)}" target="_blank" rel="noopener">${esc2((e.url.split("//")[1]||e.url).slice(0,58))}</a>`).join("");
+  }
+  const pop = document.createElement("div");
+  pop.id = "embpop";
+  pop.innerHTML = `<div class="epTitle">${esc2(EMB_LABEL[kind]||kind)} embeds &middot; ${esc2(r.title).slice(0,60)}</div>
+    <div class="epLinks">${rows || "<span class='nocred'>none found</span>"}</div>
+    <button class="epFilter" data-embed="${esc2(kind)}">Show every piece with a ${esc2(EMB_LABEL[kind]||kind)} &rarr;</button>`;
+  document.body.appendChild(pop);
+  const b = pill.getBoundingClientRect();
+  pop.style.left = Math.min(b.left, innerWidth - pop.offsetWidth - 12) + "px";
+  pop.style.top = (b.bottom + scrollY + 6) + "px";
+}
+function closeEmbedPop(){ const p = document.getElementById("embpop"); if(p) p.remove(); }
+// ---- Contributor contact panel ------------------------------------------
+// Clicking a byline still filters the catalogue to that author; this adds
+// their contact details above the results. The details live in
+// network/authors.enc, a contributors-only slice of the contacts database
+// built nightly and sealed with the toolkit passphrase. The sign-in is the one
+// the other tools save on this device (sharedPass, shared with the readership column), so a signed-in reader sees the card with
+// no extra step, and anyone else sees nothing but a passphrase box.
+const acEsc = s => String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const AP_MON=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+const apDate = d => { const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d||""); return m?`${AP_MON[+m[2]-1]} ${+m[3]}, ${m[1]}`:(d||""); };
+let CONTRIB=null, contribBlob=null;
+async function loadContributors(pass){
+  if(CONTRIB) return CONTRIB;
+  if(!contribBlob){
+    const r=await fetch("../network/authors.enc",{cache:"no-cache"});
+    if(!r.ok) throw Object.assign(new Error("not published"),{code:"missing"});
+    contribBlob=await r.json();
+  }
+  try{ CONTRIB=await decryptCat(pass, contribBlob); }
+  catch(e){ throw Object.assign(new Error("wrong passphrase"),{code:"pass"}); }
+  return CONTRIB;
+}
+// Bylines and contact records usually agree exactly (the contacts build keeps
+// each contributor's byline as aname). The fallback drops middle initials,
+// credentials and accents: "Jay K. Varma, MD" / "Jay Varma".
+function kitNorm(n){
+  const w=(n||"").split(",")[0].replace(/[øØ]/g,"o").replace(/[æÆ]/g,"ae").replace(/ß/g,"ss")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z\s'-]/g," ")
+    .split(/\s+/).filter(x=>x&&x.length>1&&!["jr","sr","ii","iii","iv"].includes(x));
+  return w.length>1?w[0]+" "+w[w.length-1]:w.join(" ");
+}
+function findContributor(list, name){
+  return list.find(p=>p.aname===name) || list.find(p=>p.n===name)
+      || list.find(p=>kitNorm(p.aname)===kitNorm(name)) || list.find(p=>kitNorm(p.n)===kitNorm(name)) || null;
+}
+let cardToken=0;
+async function showAuthorCard(name){
+  const el=$("#authorCard"); const tok=++cardToken;
+  if(!name){ el.hidden=true; el.innerHTML=""; return; }
+  const full=`../network/#${encodeURIComponent(JSON.stringify({author:name}))}`;
+  const openLink=`<a class="ac-link" href="${full}" target="_blank" rel="noopener">Full record in contacts &#8599;</a>`;
+  const lockForm=(msg)=>{
+    el.hidden=false;
+    el.innerHTML=`<div class="ac-top"><div class="ac-name">${acEsc(name)}</div>${openLink}</div>
+      <div class="ac-lock" style="margin-top:8px"><span>Contact details are in the contacts database.</span>
+        <input type="password" id="acPass" placeholder="Toolkit passphrase" autocomplete="current-password">
+        <button type="button" id="acGo">Show</button>${msg?`<span class="ac-err">${acEsc(msg)}</span>`:""}</div>`;
+    const go=async()=>{ const p=$("#acPass").value.trim(); if(!p) return;
+      try{ await loadContributors(p); saveSharedPass(p); showAuthorCard(name); }
+      catch(e){ lockForm(e.code==="missing"?"Not published yet.":"That passphrase did not open it."); } };
+    $("#acGo").addEventListener("click",go);
+    $("#acPass").addEventListener("keydown",e=>{ if(e.key==="Enter") go(); });
+  };
+  const pass=sharedPass();
+  if(!pass){ lockForm(""); return; }
+  let list;
+  try{ list=await loadContributors(pass); }
+  catch(e){
+    if(tok!==cardToken) return;
+    if(e.code==="missing"){ el.hidden=false; el.innerHTML=`<div class="ac-top"><div class="ac-name">${acEsc(name)}</div>${openLink}</div><div class="ac-meta">Contact details for contributors are published with tonight's refresh.</div>`; return; }
+    lockForm(""); return;
+  }
+  if(tok!==cardToken) return;
+  const p=findContributor(list, name);
+  el.hidden=false;
+  if(!p){ el.innerHTML=`<div class="ac-top"><div class="ac-name">${acEsc(name)}</div>${openLink}</div><div class="ac-meta">No contact record for this byline yet.</div>`; return; }
+  const emails=[...new Set([p.e,...(p.emails||[])].filter(Boolean))];
+  const org=[p.role,p.inst].filter(Boolean).join(", ");
+  const facts=[];
+  if(p.arts) facts.push(`<b>${p.arts}</b> piece${p.arts===1?"":"s"}${p.alast?`, latest ${acEsc(apDate(p.alast))}`:""}`);
+  if(p.senior) facts.push("Senior contributor");
+  facts.push(p.mem?`Newsletter subscriber${p.since?` since ${acEsc(apDate(p.since))}`:""}`:"Not on the newsletter list");
+  if(p.don) facts.push("Donor");
+  if(p.wiki) facts.push("Has a Wikipedia page");
+  if(p.ptw) facts.push(acEsc(p.ptw));
+  const topics=(p.topics||[]).length?`<div class="ac-meta">Writes on ${acEsc(p.topics.join(", "))}</div>`:"";
+  el.innerHTML=`<div class="ac-top"><div><div class="ac-name">${acEsc(p.n||name)}</div>${org?`<div class="ac-org">${acEsc(org)}</div>`:""}</div>${openLink}</div>
+    <div class="ac-mail">${emails.length?emails.map(m=>`<a href="mailto:${acEsc(m)}">${acEsc(m)}</a>`).join(""):`<span class="ac-meta">No email address on file.</span>`}</div>
+    <div class="ac-meta">${facts.join(" &middot; ")}</div>${topics}`;
+}
+
+function render() {
+  const rows = sortRows(filtered());
+  document.querySelectorAll("thead th .arrow").forEach(a => a.textContent = "");
+  const th = document.querySelector(`thead th[data-k="${sortKey}"] .arrow`);
+  if (th) th.textContent = sortDir === 1 ? "▲" : "▼";
+
+  $("#resultbar").innerHTML = `Showing <b>${rows.length}</b> of ${DATA.length} articles`;
+  showAuthorCard($("#fAuthor").value);
+  if (!rows.length) { $("#rows").innerHTML = `<tr><td colspan="7" class="empty">No articles match these filters.</td></tr>`; return; }
+
+  const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  $("#rows").innerHTML = rows.map(r => `
+    <tr>
+      <td class="date">${fmtDate(r.published_date)}</td>
+      <td class="typecell">${r.type?`<span class="tt ${typeClass(r.type)}" data-type="${esc(r.type)}">${esc(r.type)}</span>`:''}</td>
+      <td class="embcell">${embedCell(r, esc)}</td>
+      <td class="title">${r.featured?'<span class="star">★ </span>':''}<a class="headline" href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a>${r.summary?`<span class="summary">${esc(r.summary)}</span>`:''}</td>
+      <td>${(r.authors||[]).map(a=>`<a class="author" data-author="${esc(a)}">${esc(a)}</a>`).join(", ")}${HAS_CRM?articleCats(r).map(c=>`<span class="catpill" data-cat="${esc(c)}">${esc(c)}</span>`).join(""):""}</td>
+      <td>${(r.topics||[]).map(t=>`<span class="pill" data-topic="${esc(t)}">${esc(t)}</span>`).join("")}</td>
+      <td>${(r.issues||[]).map(n=>`<span class="pill issue" data-issue="${esc(n)}">${esc(issueLabel(n))}</span>`).join("")}</td>
+      <td class="words">${r.word_count?.toLocaleString()||""}</td>
+      ${READERS?`<td class="readcell">${readersCell(r)}</td>`:""}
+    </tr>`).join("");
+}
+
+// Keep the sticky column header pinned exactly below the (variable-height) filter bar.
+function syncStickyOffset() {
+  const c = document.querySelector(".controls");
+  if (c) document.documentElement.style.setProperty("--ctrlh", c.offsetHeight + "px");
+}
+window.addEventListener("resize", syncStickyOffset);
+new ResizeObserver(syncStickyOffset).observe(document.querySelector(".controls"));
+syncStickyOffset();
+
+$("#footer").innerHTML = '<span class="wm">Vital City</span> &nbsp; Data pulled from the Vital City Ghost Content API. See methodology.md for sources, definitions and limitations. Refreshes weekly.';
+// ---- Gate ----------------------------------------------------------------
+// The passphrase is checked by opening the readership file, the part of this
+// page that is actually confidential. A passphrase saved by any toolkit tool
+// on this device opens it without asking.
+async function unlockCatalogue(pass, fromStore){
+  $("#err").textContent=""; $("#unlock").textContent="Checking…";
+  let blob;
+  try{ blob=await fetch("../data/readership.enc",{cache:"no-cache"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }); }
+  catch(e){ $("#err").textContent="Couldn't reach the data file. Check your connection and try again."; $("#unlock").textContent="Unlock"; return; }
+  try{ await decryptCat(pass, blob); }
+  catch(e){
+    if(fromStore){ try{ localStorage.removeItem(SHARED_PASSKEY); }catch(_){} }
+    else $("#err").textContent="That passphrase didn't open it.";
+    $("#unlock").textContent="Unlock"; $("#pw").value=""; return;
+  }
+  saveSharedPass(pass);
+  document.documentElement.classList.remove("locked");
+  load().catch(e => { $("#rows").innerHTML = `<tr><td colspan="7" class="empty">Could not load data (${e}). Serve this folder over http — see README.</td></tr>`; });
+}
+$("#unlock").addEventListener("click", ()=>{ const p=$("#pw").value.trim(); if(p) unlockCatalogue(p,false); else $("#err").textContent="Enter the passphrase."; });
+$("#pw").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#unlock").click(); });
+$("#lockCat").addEventListener("click", e=>{ e.preventDefault(); try{ localStorage.removeItem(SHARED_PASSKEY); sessionStorage.removeItem(SHARED_PASSKEY); }catch(_){} location.reload(); });
+{ const saved=sharedPass(); if(saved) unlockCatalogue(saved,true); }
+</script>
+</body>
+</html>

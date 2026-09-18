@@ -2016,7 +2016,7 @@ function rowHTML(p){
     const x=(t==='VC contributor'&&p.arts>1)?` ×${p.arts}`:'';
     if(t==='VC contributor'&&p.auth){
       const an=encodeURIComponent(p.aname||p.n);
-      return `<a class="pill pill-link" href="../?author=${an}" target="_blank" rel="noopener" title="See ${esc(p.aname||p.n)}'s pieces in the catalogue ↗">${esc(t)}${x} ↗</a>`;
+      return `<a class="pill pill-link" href="../catalogue/?author=${an}" target="_blank" rel="noopener" title="See ${esc(p.aname||p.n)}'s pieces in the catalogue ↗">${esc(t)}${x} ↗</a>`;
     }
     return `<span class="pill" data-type="${esc(t)}" title="Click to filter the list to everyone tagged '${esc(t)}'.">${esc(t)}${x}</span>`;
   }).join("")||'<span class="muted">—</span>';

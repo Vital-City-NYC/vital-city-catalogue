@@ -18,15 +18,15 @@
   // Not listed: catalogue-analysis (reached from the catalogue page itself) and
   // growth/live (a phone app, not a desk tool).
   var TOOLS = [
-    { id: "catalogue",  label: "Catalogue",  path: "",                   gated: true,
-      blurb: "Every piece published on vitalcitynyc.org, searchable by author, topic, issue and date." },
-    { id: "growth",     label: "Growth",     path: "growth/",            gated: true,
-      blurb: "Audience, signups, sends and traffic." },
-    { id: "contacts",   label: "Contacts",   path: "network/",           gated: true,
-      blurb: "The people database: contributors, press, funders, members, donors." },
-    { id: "prospects",  label: "Prospects",  path: "prospects/",         gated: true,
-      blurb: "Funder and donor prospecting." },
-    { id: "press",      label: "Press",      path: "press/",             gated: true,
+    { id: "catalogue",  label: "Catalogue",  path: "catalogue/",         gated: true,  data: "data/meta.json",
+      blurb: "Every piece Vital City has published, searchable by author, topic, issue and date, with readership and contributor contacts." },
+    { id: "growth",     label: "Growth",     path: "growth/",            gated: true,  data: "growth/data.enc",
+      blurb: "The newsletter list, signups, sends, site traffic and giving, with the ten key indicators and the weekly report." },
+    { id: "contacts",   label: "Contacts",   path: "network/",           gated: true,  data: "network/data.enc",
+      blurb: "Everyone in Vital City's orbit: subscribers, contributors, press, funders and donors, searchable and exportable." },
+    { id: "prospects",  label: "Prospects",  path: "prospects/",         gated: true,  data: "prospects/data.enc",
+      blurb: "Foundations and individual donors worth approaching, ranked by the evidence in our own data." },
+    { id: "press",      label: "Press",      path: "press/",             gated: true,  data: "press/data.enc",
       blurb: "Who covers New York City government: reporters, the beats their own bylines prove, and how to reach them." },
     // One tab, two views: the city's calendar and the archive pieces worth
     // reposting against it. The bar shows "Calendar"; on either page the two
@@ -36,8 +36,9 @@
       blurb: "The New York City calendar and the archive pieces worth reposting against it.",
       views: [
         { id: "calendar",  label: "City calendar",   href: "https://vitalcity-nyc.github.io/nyc-policy-calendar/", gated: false,
+          dataHref: "https://vitalcity-nyc.github.io/nyc-policy-calendar/data/events.json",
           blurb: "Hearings, budget dates, anniversaries, books and city life, sized by how much they matter." },
-        { id: "resharing", label: "What to reshare", path: "resharing/", gated: true,
+        { id: "resharing", label: "What to reshare", path: "resharing/", gated: true, data: "resharing/data.enc",
           blurb: "Which archive piece to post, and when, bound to the calendar's real dates." }
       ] }
   ];
@@ -51,6 +52,7 @@
     return AP_MON[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
   }
   window.vcApDate = apDate;
+  window.vcTools = TOOLS;
   window.vcStamp = function (el, when, extra) {
     if (typeof el === "string") { el = document.querySelector(el); }
     if (!el || !when) { return; }
