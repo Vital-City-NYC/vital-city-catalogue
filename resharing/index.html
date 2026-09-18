@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Vital City — resharing calendar</title>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
 <link rel="stylesheet" href="../toolkit.css">
 <script src="../toolkit.js" data-tool="resharing" defer></script>
 <style>
@@ -34,8 +35,6 @@
   .gateerr{color:#c8102e;font-size:12.5px;min-height:18px;margin-top:8px}
   .gatebox .conf{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);margin-top:14px}
   /* chrome */
-  .confbar{background:#7a1f2b;color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
-  [data-toolkit-nav]{padding:0 30px;background:var(--vc-white)}
   header.mast{border-bottom:1px solid var(--vc-black);padding:16px 30px 16px;background:var(--vc-white);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px}
   header.mast h1{font-weight:900;font-size:28px;margin:0 0 2px;letter-spacing:-.01em}
   header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:760px}
@@ -92,10 +91,10 @@
     <div class="wm">Vital City</div>
     <h1>Resharing calendar</h1>
     <p>Which piece from the archive to post, and when — bound to the dates on the New York City calendar. Enter the shared passphrase.</p>
-    <input id="pw" type="password" placeholder="passphrase" autocomplete="current-password">
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="current-password">
     <button id="unlock">Unlock</button>
     <div class="gateerr" id="err"></div>
-    <div class="conf">Confidential · contains readership data · internal editorial use</div>
+    <div class="conf">Confidential · internal use only</div>
   </div>
 </div>
 
@@ -125,7 +124,13 @@ const PASSKEY="vc_net_pass", TTL=90*24*3600*1000;
 function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+TTL}))}catch{}}
 function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
   const o=JSON.parse(r);if(o&&o.pass&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null}catch{return null}}
-(function(){const t=localStorage.getItem("vc_theme");if(t==="dark")document.documentElement.classList.add("dark")})();
+// Same theme logic as the contact tool: a saved choice, else the system setting,
+// and the button always names the mode it will switch to.
+function applyTheme(t){ document.documentElement.classList.toggle("dark", t==="dark");
+  const b=document.getElementById("themeToggle"); if(b) b.textContent = t==="dark" ? "☀️ Light mode" : "🌙 Dark mode"; }
+(function(){ let t=null; try{ t=localStorage.getItem("vc_theme"); }catch{}
+  applyTheme(t || ((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light")); })();
+document.addEventListener("DOMContentLoaded", ()=>applyTheme(document.documentElement.classList.contains("dark")?"dark":"light"));
 function b64d(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
 async function decryptBlob(pass,blob){
   const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
@@ -162,8 +167,8 @@ function jumpToToday(){
 document.addEventListener("click",e=>{
   if(e.target.id==="todayBtn"){e.preventDefault();jumpToToday();return}
   if(e.target.id==="lock"){e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()}
-  if(e.target.id==="themeToggle"){e.preventDefault();const d=document.documentElement.classList.toggle("dark");
-    try{localStorage.setItem("vc_theme",d?"dark":"light")}catch{}}
+  if(e.target.id==="themeToggle"){e.preventDefault();const t=document.documentElement.classList.contains("dark")?"light":"dark";
+    applyTheme(t); try{localStorage.setItem("vc_theme",t)}catch{}}
 });
 
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -219,7 +224,7 @@ function entry(r){
 }
 
 function boot(d){
-  $("#stamp").textContent = "Built "+d.as_of_date;
+  if(window.vcStamp) vcStamp("#stamp", d.as_of_date); else $("#stamp").textContent = "Updated "+d.as_of_date;
   const t = d.traffic || {}, cal = d.calendar || {};
   const out = [];
 

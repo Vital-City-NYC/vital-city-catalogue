@@ -160,10 +160,10 @@
     <div class="wm">Vital City</div>
     <h1>Fundraising prospects</h1>
     <p>Grant leads and individual-donor intelligence, built nightly from the contact database, Donorbox and the catalogue. Enter the shared passphrase.</p>
-    <input id="pw" type="password" placeholder="passphrase" autocomplete="current-password">
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="current-password">
     <button id="unlock">Unlock</button>
     <div class="gateerr" id="err"></div>
-    <div class="conf">Confidential · internal fundraising use only</div>
+    <div class="conf">Confidential · internal use only</div>
   </div>
 </div>
 
@@ -416,7 +416,7 @@ document.addEventListener("click",e=>{
 function boot(d){
   if(!RAW) RAW=d;
   d=withLocalEdits(JSON.parse(JSON.stringify(RAW)));
-  $("#stamp").textContent="built "+(d.generated_at||"");
+  if(window.vcStamp) vcStamp("#stamp", d.generated_at); else $("#stamp").textContent="Updated "+(d.generated_at||"");
   const t=d.topline||{};
   $("#kpis").innerHTML=[
     ["Online giving",money(t.raised),`Donorbox only · ${t.donors} donors · median ${money(t.median_gift)}`],

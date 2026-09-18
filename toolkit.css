@@ -13,13 +13,15 @@
  */
 
 .vckit {
+  font-size: 12px;
+  line-height: 1.42;
   display: flex;
   align-items: baseline;
   gap: 22px;
   padding: 10px 0 0;
   margin: 0 0 14px;
   border-bottom: 1px solid var(--vc-cloud, #dddddd);
-  font-family: var(--vc-sans, "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif);
+  font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif;
 }
 
 /* Wordmark. "Vital City" in the house weight, "toolkit" set quieter beside it —
@@ -72,6 +74,11 @@
   white-space: nowrap;
 }
 .vckit-link:hover { color: var(--vc-black, #050507); }
+html body nav.vckit a.vckit-link { color: var(--vc-charcoal, #707175); }
+html body nav.vckit a.vckit-link:hover, html body nav.vckit .vckit-link.here { color: var(--vc-black, #050507); }
+html body nav.vckit .vckit-utils { position: static; margin: 0 0 0 auto; padding: 0 0 9px; flex-wrap: nowrap; }
+html body nav.vckit .vckit-utils a { color: var(--vc-charcoal, #707175); }
+html body nav.vckit .vckit-utils a:hover { color: var(--vc-black, #050507); }
 .vckit-link.here {
   color: var(--vc-black, #050507);
   border-bottom-color: var(--vc-black, #050507);
@@ -106,10 +113,6 @@ html.dark .vckit-link.here { color: var(--vc-black, #e8e8e5); border-bottom-colo
 }
 .vckit-utils a:hover { color: var(--vc-black, #050507) !important; text-decoration: none; }
 
-/* The bar sits on the page's own gutter. Every tool masthead pads 30px; the
-   catalogue's is 32px and sets its own on the slot. */
-[data-toolkit-nav] { padding-left: 30px; padding-right: 30px; }
-
 @media (max-width: 620px) {
   .vckit { gap: 14px; margin-bottom: 10px; }
   .vckit-list { gap: 15px; }
@@ -129,5 +132,62 @@ html.dark .vckit-link.here { color: var(--vc-black, #e8e8e5); border-bottom-colo
   .vckit-list { flex-wrap: wrap; overflow-x: visible; row-gap: 2px; }
   .vckit-mark { padding-bottom: 6px; }
 }
+
+/* ---- The top of every tool page -----------------------------------------
+   Strip, toolkit bar, masthead: defined once, here. Each page used to carry its
+   own copy, and the copies drifted (a burgundy strip on one tool, 26/28/30px
+   headings, three different masthead paddings, a 32px gutter on one page and
+   30px on the rest), so the page jumped a little every time you changed tools.
+   The "html body" prefix outranks a page's own single-class rules without
+   resorting to !important; if a page needs to differ, it should not. */
+html body .confbar {
+  display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;
+  margin: 0; padding: 5px 30px; line-height: 15px;
+  background: #050507; color: #fff;
+  font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase;
+}
+html.dark body .confbar { background: #0b0b0d; color: #cfcfcf; }
+html body [data-toolkit-nav] { background: transparent; padding-left: 30px; padding-right: 30px; }
+html body nav.vckit { font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif; font-size: 12px; line-height: 1.42; }
+html body header.mast, html body header.masthead, html body .confbar { font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif; }
+html body header.mast, html body header.masthead {
+  position: relative; margin: 0; padding: 18px 30px 16px;
+  background: var(--vc-white, #fff); border-bottom: 1px solid var(--vc-black, #050507);
+}
+html body header.mast h1, html body header.masthead h1 {
+  font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-size: 26px; font-weight: 900; line-height: 1.2; letter-spacing: -.01em; margin: 0 0 4px;
+}
+html body header.mast .sub, html body header.masthead .sub {
+  font-size: 13px; line-height: 1.5; color: var(--vc-charcoal, #707175); max-width: 780px; margin: 0;
+}
+@media (max-width: 640px) {
+  html body .confbar, html body [data-toolkit-nav], html body header.mast, html body header.masthead { padding-left: 16px; padding-right: 16px; }
+  /* One line on a phone: each tool's label is a different length, and a strip
+     that wraps to two or three lines moved everything below it. The date gives
+     way first; the label trims with an ellipsis. */
+  html body .confbar { flex-wrap: nowrap; }
+  html body .confbar > span:first-child { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  html body .confbar > span:not(:first-child) { display: none; }
+  html body nav.vckit .vckit-utils { margin: 0; padding: 4px 0 9px; flex-wrap: wrap; gap: 6px 14px; }
+  html body header.mast h1, html body header.masthead h1 { font-size: 22px; }
+}
+
+/* The sign-in box. It is the first thing seen on any gated tool from a new
+   device, and it came in three widths, two heading weights, with and without a
+   shadow. One version, the one most tools already used. */
+html body .gatebox {
+  box-sizing: border-box; width: 440px; max-width: calc(100vw - 32px);
+  padding: 34px; background: var(--vc-white, #fff); border: 1px solid var(--vc-black, #050507);
+  box-shadow: 7px 7px 0 rgba(5, 5, 7, .14); font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+html body .gatebox .wm { font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif; color: var(--vc-black, #050507); font-size: 12px; font-weight: 900; letter-spacing: .24em; text-transform: uppercase; margin: 0; }
+html body .gatebox h1 { font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif; color: var(--vc-black, #050507); font-size: 24px; font-weight: 900; line-height: 1.2; letter-spacing: -.01em; margin: 10px 0 6px; }
+html body .gatebox p { font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif; font-size: 13px; line-height: 1.5; color: var(--vc-charcoal, #707175); margin: 0 0 16px; }
+html body .gatebox input { box-sizing: border-box; width: 100%; height: 43px; font: inherit; font-size: 14px; padding: 10px 12px; margin: 0 0 10px; border: 1px solid var(--vc-black, #050507); }
+html body .gatebox button { box-sizing: border-box; width: 100%; height: 43px; font-family: inherit; font-size: 12.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; background: var(--vc-black, #050507); color: var(--vc-white, #fff); border: 0; cursor: pointer; }
+html body .gatebox .conf { font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif; font-weight: 400; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--vc-charcoal, #707175); margin-top: 14px; }
+html.dark body .gatebox { box-shadow: 7px 7px 0 rgba(0, 0, 0, .45); }
 
 @media print { .vckit { display: none !important; } }

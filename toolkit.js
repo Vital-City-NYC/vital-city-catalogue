@@ -35,6 +35,21 @@
       blurb: "The New York City calendar: hearings, budget dates, anniversaries, books, city life." }
   ];
 
+  // The right end of each page's confidential strip says when its data was
+  // built, in one wording and AP date style on every tool.
+  var AP_MON = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+  function apDate(v) {
+    var d = v instanceof Date ? v : new Date(String(v || "").length === 10 ? v + "T12:00:00" : v);
+    if (isNaN(d)) { return String(v || ""); }
+    return AP_MON[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+  }
+  window.vcApDate = apDate;
+  window.vcStamp = function (el, when, extra) {
+    if (typeof el === "string") { el = document.querySelector(el); }
+    if (!el || !when) { return; }
+    el.textContent = "Updated " + apDate(when) + (extra ? " \u00b7 " + extra : "");
+  };
+
   function base() {
     var s = document.currentScript;
     if (!s) {

@@ -416,7 +416,7 @@
   <div class="gatebox">
     <div class="wm">Vital City</div>
     <h1>Contact master search</h1>
-    <p>This page is password protected. Enter the shared passphrase to view.</p>
+    <p>Everyone in Vital City's orbit: subscribers, contributors, contacts and donors. Enter the shared passphrase.</p>
     <input id="pw" type="password" placeholder="Passphrase" autocomplete="off" autofocus>
     <button id="unlock">Unlock</button>
     <div class="gateerr" id="err"></div>
@@ -426,7 +426,7 @@
 
 <div id="app">
   <div class="toast" id="toast"></div>
-  <div class="confbar"><span>Confidential · contains subscriber, donor and contact data · do not redistribute</span></div>
+  <div class="confbar"><span>Confidential · contains subscriber, donor and contact data · do not redistribute</span><span id="stamp"></span></div>
   <div data-toolkit-nav></div>
 <header class="mast">
     <div class="mastlinks">
@@ -847,7 +847,10 @@ async function unlock(fromStore){
     // no-cache: always revalidate with the server (cheap 304 when unchanged,
     // full download when the daily refresh updates it) so a stale browser cache
     // can never mask a fresh dataset — e.g. new "notable" flags not showing up.
-    blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
+    const resp=await fetch("data.enc",{cache:"no-cache"});
+    const built=resp.headers.get("last-modified");   // the nightly build's publish time
+    blob=await resp.json();
+    if(window.vcStamp&&built) vcStamp("#stamp", built);
   }catch(e){
     // Fetch/network problem — DON'T wipe a saved passphrase over a transient
     // hiccup, or the user is needlessly logged out.

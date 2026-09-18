@@ -103,7 +103,7 @@
   .secnav{position:sticky;top:0;z-index:30;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);
           margin:0 0 18px;padding:8px 2px;display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}
   .secnav-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--vc-charcoal);white-space:nowrap}
-  .secnav a{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;
+  .secnav a{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;
     color:var(--vc-charcoal);text-decoration:none;white-space:nowrap}
   .secnav a:hover{text-decoration:underline}
   .secnav a.on{color:var(--vc-black);text-decoration:underline;text-underline-offset:3px}
@@ -597,8 +597,8 @@
   <div class="gatebox">
     <div class="wm">Vital City</div>
     <h1>Growth dashboard</h1>
-    <p>Internal dashboard for newsletter growth, campaign performance and brand mentions. Enter the shared passphrase to view.</p>
-    <input id="pw" type="password" placeholder="passphrase" autocomplete="current-password">
+    <p>Newsletter growth, campaign performance and who is citing Vital City. Enter the shared passphrase.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="current-password">
     <button id="unlock">Unlock</button>
     <div class="gateerr" id="err"></div>
     <div class="conf">Confidential · internal use only</div>
@@ -606,7 +606,7 @@
 </div>
 
 <div id="app">
-  <div class="confbar"><span>Confidential · internal growth metrics · do not redistribute</span></div>
+  <div class="confbar"><span>Confidential · internal growth metrics · do not redistribute</span><span id="stamp"></span></div>
   <div data-toolkit-nav></div>
 <header class="mast">
     <div class="mastlinks">
@@ -1089,6 +1089,7 @@ function boot(data){
   // Header subline. Idempotent: strip any prior refresh stamp before adding,
   // so a re-render (e.g. theme toggle re-running boot) can't duplicate it.
   const gen=new Date(data.generated_at);
+  if(window.vcStamp) vcStamp("#stamp", data.generated_at);
   const sub=$("#subline");
   const oldGen=sub.querySelector(".gen"); if(oldGen) oldGen.remove();
   sub.insertAdjacentHTML("beforeend", ` <span class="gen">Last refresh: ${gen.toLocaleString()}.</span>`);

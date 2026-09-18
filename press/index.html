@@ -147,7 +147,7 @@
   <div class="gatebox">
     <div class="wm">Vital City</div>
     <h1>Press map</h1>
-    <p>This page is password protected. Enter the shared passphrase to view.</p>
+    <p>Who covers New York City government, what they write about and how to reach them. Enter the shared passphrase.</p>
     <input id="pw" type="password" placeholder="Passphrase" autocomplete="off" autofocus>
     <button id="unlock">Unlock</button>
     <div class="gateerr" id="err"></div>
@@ -157,7 +157,7 @@
 
 <div id="app">
 <div class="confbar"><span>Confidential · internal use only</span><span id="asof"></span></div>
-<div data-toolkit-nav style="padding:0 30px"></div>
+<div data-toolkit-nav></div>
 <header class="mast">
   <div>
     <div class="mastlinks">
@@ -939,7 +939,8 @@ function init(){
   for(const [bid,b] of Object.entries(BEATS)) for(const t of (b.terms||[])) BEATRE[bid+"|"+t]=beatRe(t);
   OUT={}; DATA_DOM={};
   for(const o of DATA.outlets){ OUT[o.id]=o; DATA_DOM[o.id]=o.domain; }
-  $("#asof").textContent="As of "+(DATA.as_of||"").slice(0,10)+" · "+(DATA.counts?.people||0)+" people · "+(DATA.counts?.outlets||0)+" outlets";
+  const pc=(DATA.counts?.people||0).toLocaleString()+" people · "+(DATA.counts?.outlets||0)+" outlets";
+  if(window.vcStamp) vcStamp("#asof", DATA.as_of, pc); else $("#asof").textContent="Updated "+(DATA.as_of||"").slice(0,10)+" · "+pc;
   renderBeats(); initDirectory(); renderKnown(); renderOutlets(); renderMentions(); renderMethod();
   $("#go").addEventListener("click",runQuery);
   $("#clear").addEventListener("click",()=>{$("#q").value="";runQuery();});
