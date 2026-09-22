@@ -1458,6 +1458,46 @@ def _ga4_monthly_channels(prop, token, start_date="2024-09-01"):
     return rows
 
 
+# Hosts that are AI assistants rather than search engines or social networks.
+# GA4's default channel grouping files these under Referral, so they are
+# invisible in the channel view; publishers are watching them because search
+# clicks are being replaced by answers (Similarweb, via Axios, Sept. 19, 2026).
+AI_HOSTS = ("chatgpt.com", "chat.openai.com", "openai.com", "perplexity.ai", "www.perplexity.ai",
+            "gemini.google.com", "bard.google.com", "copilot.microsoft.com", "claude.ai",
+            "you.com", "poe.com", "grok.com", "x.ai", "meta.ai", "deepseek.com", "mistral.ai",
+            "duckduckgo.com/aichat", "phind.com", "kagi.com")
+
+
+def _ga4_ai_referrals(prop, token, start_date="2024-09-01"):
+    """Sessions by calendar month and source, kept only for AI assistants.
+
+    Answers "are answer engines sending anyone", the question the search-share
+    line cannot: a visit from ChatGPT lands in GA4 as a plain referral. Returns
+    [] when nothing matches, which is itself the finding, not an error."""
+    body = {
+        "dateRanges": [{"startDate": start_date, "endDate": "today"}],
+        "dimensions": [{"name": "yearMonth"}, {"name": "sessionSource"}],
+        "metrics": [{"name": "sessions"}, {"name": "engagedSessions"}],
+        "limit": 100000,
+    }
+    req = urllib.request.Request(
+        f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+        data=json.dumps(body).encode(),
+        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        rep_ = json.loads(r.read())
+    rows = []
+    for row in rep_.get("rows") or []:
+        ym = row["dimensionValues"][0]["value"]
+        src = (row["dimensionValues"][1]["value"] or "").lower().lstrip("www.")
+        if not any(h.lstrip("www.") in src for h in AI_HOSTS):
+            continue
+        v = [int(float(x["value"])) for x in row["metricValues"]]
+        rows.append({"m": f"{ym[:4]}-{ym[4:6]}", "src": src, "sessions": v[0], "engaged": v[1]})
+    rows.sort(key=lambda r: (r["m"], -r["sessions"]))
+    return rows
+
+
 def _ga4_story_weekly(prop, token, days=300, top=120):
     """Per-article weekly page views + engaged seconds, so the custom report can
     rank top stories for the EXACT period the reader picks (week resolution)
@@ -2200,6 +2240,10 @@ def pull_ga4():
         except Exception as e:
             log(f"  ga4 monthly channels failed: {e}"); monthly_channels = []
         try:
+            ai_referrals = _ga4_ai_referrals(prop, token, "2024-09-01")
+        except Exception as e:
+            log(f"  ga4 AI referrals failed: {e}"); ai_referrals = None
+        try:
             story_weekly = _ga4_story_weekly(prop, token)
         except Exception as e:
             log(f"  ga4 story weekly failed: {e}"); story_weekly = {"pages": [], "rows": []}
@@ -2234,6 +2278,8 @@ def pull_ga4():
             "by_year": by_year, "returning": returning,
             "traffic_weekly": traffic_weekly,
             "monthly_channels": monthly_channels,
+            "ai_referrals": ai_referrals,   # None if the pull failed; [] means none arrived
+
             "story_weekly": story_weekly,
             "piece_benchmarks": piece_benchmarks,
             "piece_index": piece_index,

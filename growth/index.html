@@ -5620,6 +5620,21 @@ function scorecardModel(data){
   const chRows=ga4.monthly_channels||[]; const chM={};
   chRows.forEach(r=>{ const e=chM[r.m]=chM[r.m]||{s:0,eng:0,ch:{}}; e.s+=r.sessions||0; e.eng+=r.eng_secs||0; e.ch[r.ch]=(e.ch[r.ch]||0)+(r.sessions||0); });
   const chStart = chRows.length ? chRows[0].m : null;
+  // Visits from AI assistants (ChatGPT, Perplexity, Gemini and the rest). GA4
+  // files these under Referral, so the channel line cannot show them. null =
+  // the pull has not run yet; an empty list means none arrived, which is an
+  // answer in itself.
+  const aiRows=ga4.ai_referrals; const aiM={};
+  (aiRows||[]).forEach(r=>{ const e=aiM[r.m]=aiM[r.m]||{n:0,src:{}}; e.n+=r.sessions||0; e.src[r.src]=(e.src[r.src]||0)+(r.sessions||0); });
+  const aiLine=()=>{
+    if(!Array.isArray(aiRows)||!chRows.length) return "";
+    let n=0, all=0, src={};
+    CUR.forEach(i=>{ const m=months[i], e=aiM[m], c=chM[m]; if(c) all+=c.s; if(!e) return; n+=e.n; Object.entries(e.src).forEach(([k,v])=>src[k]=(src[k]||0)+v); });
+    if(!all) return "";
+    const top=Object.entries(src).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k])=>k).join(" and ");
+    return n? `AI assistants sent ${n0(n)} visits over those three months, ${(n/all*100).toFixed(1)}% of the total${top?`, mostly ${top}`:""}.`
+            : `AI assistants sent no measurable visits over those three months.`;
+  };
   // Who joins, by role (contacts database, via the nightly pull).
   const rf=data.role_flows||{}; const rfm={}; (rf.monthly||[]).forEach(r=>rfm[r.m]=r);
   const DM=["gov","academic","press","policy"];
@@ -5644,7 +5659,7 @@ function scorecardModel(data){
     def:"Visits to vitalcitynyc.org, from Google Analytics.",
     vals:S(m=>vis[m]||null, visStart), fmt:n0,
     std:()=>{ const p3=avgOf(m=>pieces[m]||0,CUR), pb=avgOf(m=>pieces[m]||0,BASE);
-      return `Context: publisher search traffic fell by about a third in 2025, more for small publishers (Chartbeat via Press Gazette).`+(p3!=null&&pb!=null?` Publishing: ${Math.round(p3)} pieces a month, against ${Math.round(pb)} before.`:""); }},
+      return `Context: news-site traffic fell about 26% in the year after Google's AI Overviews launched, and AI assistants refer at roughly a tenth of search's old rate (Similarweb, via Axios, Sept. 19, 2026); publisher search traffic fell by about a third in 2025 (Chartbeat via Press Gazette).`+(p3!=null&&pb!=null?` Publishing: ${Math.round(p3)} pieces a month, against ${Math.round(pb)} before.`:""); }},
    {k:"click", name:"Newsletter click rate", unit:"of recipients clicked,", kind:"rate", good:1,
     def:"Share of newsletter recipients who clicked a link. Apple Mail inflates open rates, so clicks are the honest sign that people read.",
     vals:S(m=>mcp[m]&&mcp[m].click_pct!=null?+mcp[m].click_pct:null), fmt:v=>(+v).toFixed(1)+"%",
@@ -5676,7 +5691,7 @@ function scorecardModel(data){
     std:()=>{ if(!chRows.length) return ""; const tot={}; let all=0; CUR.forEach(i=>{const e=chM[months[i]]; if(!e) return; all+=e.s; Object.entries(e.ch).forEach(([c,n])=>tot[c]=(tot[c]||0)+n);});
       const nm={"Organic Search":"search","Direct":"direct","Email":"email","Organic Social":"social","Referral":"other sites","Unassigned":"unassigned"};
       const top=Object.entries(tot).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([c,n])=>`${nm[c]||c.toLowerCase()} ${Math.round(n/all*100)}%`);
-      return all?`${curLbl}, where visits came from: ${top.join(", ")}. Publishers broadly are losing search traffic (Chartbeat).`:""; }},
+      return all?`${curLbl}, where visits came from: ${top.join(", ")}. Industry: 69% of Google searches ended without a click by May 2025, up from 56% a year earlier, and the click-through share fell about a fifth again by May 2026 (Similarweb). ${aiLine()}`.trim():""; }},
    {k:"cites", name:"Press and policy citations", unit:"in", kind:"flow", good:1,
     def:"News stories, government documents and republications citing Vital City, from the press tracker.",
     vals:S(m=>cites[m]||0,"2025-03"), fmt:n0, note:"The tracker's record starts in March 2025.",
@@ -6062,6 +6077,15 @@ function pulseBenchmarks(m, data){
       norm:"Readers who regularly open a newsletter are about twice as likely to still be subscribed a year later (INMA, 2025). No fixed benchmark; the direction is what matters.", read:""}); }
   rows.push({k:"Site traffic", vc:(m.windows||[]).map(w=>{const V=w.tiles.find(t=>t.k==="visitors"); return V?`${w.label}: ${V.value}`:null;}).filter(Boolean).slice(0,2).join(" · ")||"—",
     norm:"Publisher search traffic fell by about a third globally in 2025, and small publishers lost more (Chartbeat data via Press Gazette). Across news media, loyal audiences and subscriptions grow while overall traffic shrinks (Reuters Institute Digital News Report 2025).", read:""});
+  // Zero-click search: impressions keep rising while clicks do not follow.
+  const sc=(data||{}).search_console||{}; const win=(sc.windows||{});
+  const w28=(win["28"]||{}).totals, w365=(win["365"]||{}).totals;
+  if(w28&&w28.impressions){
+    rows.push({k:"Search click-through", vc:`${w28.ctr}% of ${Number(w28.impressions).toLocaleString("en-US")} Google impressions became clicks (last 28 days, average position ${w28.position})`+
+        (w365&&w365.ctr?`; ${w365.ctr}% over the last year`:""),
+      norm:"69% of Google searches ended without a click by May 2025, up from 56% a year earlier, and the share falling to sites dropped about a fifth again by May 2026 (Similarweb). AI assistants refer at roughly a tenth of search's old rate, so impressions rising while clicks do not is the expected shape, not a ranking failure.",
+      read: w365&&w28.ctr>w365.ctr ? "clicking more than over the past year" : ""});
+  }
   rows.push({k:"Paying for news", vc:"Vital City is free; the lever is donors",
     norm:"Only ~18% of people in wealthy countries (~20% in the US) pay for any online news, and growth is flat (Reuters Institute, 2025).", read:""});
   return rows;
