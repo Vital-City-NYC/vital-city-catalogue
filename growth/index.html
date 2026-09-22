@@ -5762,6 +5762,17 @@ function scorecardModel(data){
   // The indicators stop at the last complete month, so a report run mid-month
   // would otherwise say nothing about the month in progress. Giving is the one
   // where a single gift matters, so it gets a so-far line with the largest gift.
+  // Reach per send: site visits credited to email, against emails delivered.
+  // Click rate says who clicked; this says how many arrived, and it moves only
+  // when behaviour changes, not when the send schedule does.
+  const recip={}; (mc.monthly_campaigns||[]).forEach(r=>{ if(r.month) recip[r.month]=r.recipients||0; });
+  const per1k=m=>{ const e=chM[m], r=recip[m]; const v=e&&e.ch?e.ch["Email"]:null;
+    return (r&&v!=null)? v/r*1000 : null; };
+  if(B.click){
+    const c=avgOf(per1k,CUR), bse=avgOf(per1k,BASE);
+    if(c!=null) B.click.extra=`Reaching the site: ${n0(Math.round(c))} visits per 1,000 emails sent (${curLbl})`+
+      (bse!=null?`, against ${n0(Math.round(bse))} over the twelve months before`:"")+".";
+  }
   const curM=lastDay.slice(0,7);
   if(B.giving && curM!==full){
     const row=(db.monthly_series||[]).find(r=>r.m===curM);
@@ -5820,7 +5831,7 @@ function kiTileHTML(x, w, marks, h, noRead){
   return `<div class="ki-tile">
     <div class="ki-name">${esc(x.name)}</div>
     <div class="ki-top"><span class="ki-num">${esc(scNowText(x))}</span><span class="ki-unit">${esc(x.unitLine)}</span></div>
-    <div class="ki-cmp ${x.tone}">${esc(x.cmpShort)}</div>${x.mtd?`<div class="ki-mtd">${esc(x.mtd)}</div>`:""}
+    <div class="ki-cmp ${x.tone}">${esc(x.cmpShort)}</div>${(x.mtd||x.extra)?`<div class="ki-mtd">${esc(x.mtd||x.extra)}</div>`:""}
     ${x.stdText?`<div class="ki-std">${esc(x.stdText)}</div>`:""}
     ${spark?`<div class="ki-spark">${spark}<div class="sc-axis"><span>${esc(scName(x.firstMonth))}</span><span>${esc(scName(x.nowMonth))}</span></div></div>`:""}
     ${readTxt?`<div class="ki-read">${esc(readTxt)}</div>`:""}
@@ -5851,7 +5862,7 @@ function kiRowsHTML(sc, w, marks, h){
     const own=!x.stdText||/no (reliable |published )?(public )?standard/i.test(x.stdText);
     return `<div class="ki-row">
       <div><div class="ki-name">${esc(x.name)}</div><div class="ki-num">${esc(scNowText(x))}</div><div class="ki-unit">${esc(x.unitLine)}</div></div>
-      <div class="ki-cmp ${x.tone}">${esc(x.cmpShort)}${x.trendText?`<div class="ki-tr">${esc(x.trendText)}</div>`:""}${x.mtd?`<div class="ki-mtd">${esc(x.mtd)}</div>`:""}</div>
+      <div class="ki-cmp ${x.tone}">${esc(x.cmpShort)}${x.trendText?`<div class="ki-tr">${esc(x.trendText)}</div>`:""}${(x.mtd||x.extra)?`<div class="ki-mtd">${esc(x.mtd||x.extra)}</div>`:""}</div>
       <div class="ki-spark">${spark?spark+`<div class="sc-axis"><span>${esc(scName(x.firstMonth))}</span><span>${esc(scName(x.nowMonth))}</span></div>`:`<div class="ki-wait">${esc(x.waiting||"Not enough months yet.")}</div>`}</div>
       <div class="ki-std${own?" own":""}">${esc(x.stdText||"No published standard; compared with Vital City's own recent average.")}</div>
     </div>`;
@@ -5900,7 +5911,7 @@ function scReportMD(sc, data){
   let o=`\n## The bigger picture: key indicators (monthly, through ${sc.fullLbl}, the latest full month; the same in every report)\n\n_${sc.lede}_\n\n`;
   sc.summary.forEach(l=>{ o+=`**${l}**\n\n`; });
   sc.measures.forEach(x=>{
-    o+=`- **${x.name}: ${scNowText(x)}** ${x.unitLine}. ${x.cmpShort}${x.stdText?` ${x.stdText}`:""}${x.trendText?` ${x.trendText}`:""}${x.reading?` ${x.reading}`:""}${x.mtd?` ${x.mtd}`:""}\n`;
+    o+=`- **${x.name}: ${scNowText(x)}** ${x.unitLine}. ${x.cmpShort}${x.stdText?` ${x.stdText}`:""}${x.trendText?` ${x.trendText}`:""}${x.reading?` ${x.reading}`:""}${x.mtd?` ${x.mtd}`:""}${x.extra?` ${x.extra}`:""}\n`;
   });
   if(sc.also) o+=`\n${sc.also}\n`;
   if((sc.marks||[]).length) o+=`\nDotted lines mark: ${sc.marks.map(k=>`${k.when}: ${k.label}`).join("; ")}.\n`;
