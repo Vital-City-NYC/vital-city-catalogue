@@ -176,7 +176,8 @@ jobs:
         env:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        run: python3 slack_mentions.py || echo "WARNING: #vc-mentions not read; influence summary uses the feed only"
+        run: |
+          python3 slack_mentions.py || echo "WARNING - vc-mentions not read, influence summary uses the feed only"
 
       - name: Build fundraising-prospects intelligence
         env:
