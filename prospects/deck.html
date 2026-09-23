@@ -396,7 +396,7 @@ async function exportPptx(){
   // 4 media influence
   { const s=slide("Media influence","When New York's press corps needs intelligent, honest analysis, it comes here.");
     let y=figs(s,s._bodyY||2.3,[
-      {v:P.total||"—",k:"Press citations tracked",n:"Across "+(P.outlets||"—")+" outlets since "+(P.since||""),hero:true},
+      {v:P.total||"—",k:"Press and social citations tracked",n:"Across "+(P.outlets||"—")+" outlets and platforms since "+(P.since||""),hero:true},
       {v:tile("New York Times").n||"—",k:"New York Times citations",n:"No outlet cites Vital City more often"},
       {v:P.y2026||"—",k:"Citations in "+asof.slice(0,4),n:P.permonth?("~"+P.permonth+" a month — one every day and a half"):""}]);
     if((P.by_year||[]).length){
@@ -585,7 +585,7 @@ function slides(){
   S.push({eyebrow:"Media influence",html:`
     <h2>When New York's press corps needs intelligent, honest analysis, it comes here.</h2>
     ${figs([
-      {v:String(P.total||"—"),k:"Press citations tracked",n:"Across "+(P.outlets||"—")+" outlets since "+esc(P.since||""),hero:true},
+      {v:String(P.total||"—"),k:"Press and social citations tracked",n:"Across "+(P.outlets||"—")+" outlets and platforms since "+esc(P.since||""),hero:true},
       {v:String(tile("New York Times").n||"—"),k:"New York Times citations",n:"No outlet cites Vital City more often"},
       {v:String(P.y2026||"—"),k:"Citations in "+asof.slice(0,4),n:(P.permonth?("~"+P.permonth+" a month — one every day and a half"):"")}
     ])}

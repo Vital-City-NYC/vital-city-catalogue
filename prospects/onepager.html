@@ -172,7 +172,7 @@ function build(d){
       <div class="senior">${esc(String(S.pool||""))} contributors since 2021: criminologists, economists, planners, prosecutors, agency heads, mayors. ${esc(String(S.count))} are named senior contributors on the masthead${spotTxt?`, among them ${spotTxt}`:""}.</div></div>` : "");
   window.__model={asof,V,FF,tiles:(FF.tiles||[]).slice(0,8),receipts:rlist.slice(0,5),roles:(FF.roles||[]).filter(r=>r.label!=="Contributors"&&r.n).map(r=>({n:r.n,label:ROLE[r.label]||r.label.toLowerCase()})),
     aud:audRows.map(r=>{const m=AUD[r.label]||[r.label,null];return {label:m[0],value:r.value,note:m[1]||r.note}}).concat(PR&&PR.count?[{label:"Power readers",value:PR.count.toLocaleString("en-US"),note:`one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${Math.round(PR.open||0)}% of everything sent; disproportionately government, academic and press`}]:[]),
-    press:{total:P.total,outlets:P.outlets,since:ym(P.since),top:(P.top||[]).slice(0,5),also,republished:FF.republished_by||[],sample:V?null:(P.samples||[])[0]||null,most:V?null:M},
+    press:{total:P.total,social:P.social,outlets:P.outlets,since:ym(P.since),top:(P.top||[]).slice(0,5),also,republished:FF.republished_by||[],sample:V?null:(P.samples||[])[0]||null,most:V?null:M},
     spots,writes:{pool:S.pool,count:S.count,spot},funders:{names:FU.names||[],giving:G}};
   $("#sheet").innerHTML=`
     <div class="mast">
@@ -195,7 +195,7 @@ function build(d){
         ${roles?`<div class="roles">${roles}</div>`:""}
         <div class="aud">${aud}</div>
         <div class="block"><div class="sec">In the press</div>
-        <p><b>${esc(String(P.total||0))}</b> citations in ${esc(String(P.outlets||0))} outlets since ${esc(ym(P.since))}, an undercount, since only a fixed set of outlets is watched.</p>
+        <p><b>${esc(String(P.total||0))}</b> citations in the press and on social media${P.social?` (${esc(String(P.social))} of them social posts)`:""}, across ${esc(String(P.outlets||0))} outlets and platforms since ${esc(ym(P.since))}, an undercount, since only a fixed set of outlets is watched.</p>
         <div class="chips">${chips}</div>
         ${alsoTxt}
         ${V?"":cites}
@@ -235,7 +235,7 @@ async function exportDocx(){
   if(m.roles.length) kids.push(P([R(m.roles.map(r=>`${r.n.toLocaleString("en-US")} ${r.label}`).join(" · "))]));
   m.aud.forEach(a=>kids.push(P([R(a.label+": ",{bold:true}),R(a.value),R(a.note?" — "+a.note:"",{color:"707175"})],{after:40})));
   kids.push(H("In the press"));
-  const pr=m.press; kids.push(P([R(`${pr.total} citations in ${pr.outlets} outlets since ${pr.since}, an undercount, since only a fixed set of outlets is watched. `),R(pr.top.map(o=>`${o.outlet} ${o.n}`).join(" · "),{bold:true})]));
+  const pr=m.press; kids.push(P([R(`${pr.total} citations in the press and on social media${pr.social?` (${pr.social} of them social posts)`:""}, across ${pr.outlets} outlets and platforms since ${pr.since}, an undercount, since only a fixed set of outlets is watched. `),R(pr.top.map(o=>`${o.outlet} ${o.n}`).join(" · "),{bold:true})]));
   if(pr.also.length||pr.republished.length) kids.push(P([R((pr.also.length?`Also cited by ${pr.also.join(", ")}.`:"")+(pr.republished.length?` Essays are republished by ${pr.republished.slice(0,-1).join(", ")} and ${pr.republished.slice(-1)[0]}.`:""))]));
   if(pr.sample) kids.push(P([R(pr.sample.outlet.toUpperCase()+"  ",{bold:true,size:15}),R(pr.sample.title)]));
   if(pr.most&&pr.most.visitors) kids.push(P([R(`Most read in ${pr.most.year}: `,{bold:true}),R(`“${pr.most.title}” — ${pr.most.visitors.toLocaleString("en-US")} readers.`)]));

@@ -9,15 +9,16 @@
     <string>/bin/bash</string>
     <string>/Users/joshgreenman/Experiments/vital-city-catalogue/press/refresh_harvest_cache.sh</string>
   </array>
-  <!-- Weekly, Sunday 5:30pm, ahead of that evening's 7pm GitHub rebuild.
-       The files it writes stay valid for two weeks, so one missed Sunday costs nothing. -->
+  <!-- Checked every day at 5:30pm and at every login; the script itself runs the
+       harvest only when the last one is six or more days old, so it stays weekly
+       whenever the Mac happens to be on. The files it writes stay valid for two
+       weeks, so a missed week costs nothing. -->
   <key>StartCalendarInterval</key>
   <dict>
-    <key>Weekday</key><integer>0</integer>
     <key>Hour</key><integer>17</integer>
     <key>Minute</key><integer>30</integer>
   </dict>
   <key>RunAtLoad</key>
-  <false/>
+  <true/>
 </dict>
 </plist>

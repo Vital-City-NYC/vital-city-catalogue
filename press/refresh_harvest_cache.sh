@@ -32,6 +32,12 @@ cd "$WT"
 git checkout -q --detach origin/main
 git reset -q --hard origin/main
 
+# Checked daily and at login, run weekly: the Mac is not always on at a fixed
+# hour, so this goes ahead only when the published harvest is six days old or
+# more. FORCE=1 runs it regardless.
+age_days=$(python3 -c "import json,datetime as d;a=json.load(open('press/harvest_cache.json'))['as_of'];print((d.datetime.now(d.timezone.utc)-d.datetime.fromisoformat(a)).days)" 2>/dev/null || echo 99)
+if [ "${FORCE:-0}" != "1" ] && [ "$age_days" -lt 6 ]; then echo "harvest is $age_days days old; nothing to do"; exit 0; fi
+
 # The passphrase lives in the Keychain entry the toolkit already uses. It goes
 # to the build in the environment of this one process and is never written down.
 if VC_NETWORK_PASS="$(security find-generic-password -s vc-network-pass -w 2>/dev/null)"; then

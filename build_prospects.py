@@ -1107,8 +1107,11 @@ def main():
       "tiles": [
         {"n": f"{mc.get('total_subscribers', len(sub)):,}", "l": "Newsletter subscribers",
          "s": (f"up {yoy_pct}% on {_ym(_prev)}" if yoy_pct else "Mailchimp, current")},
-        {"n": f"{len(press):,}", "l": "Press citations",
-         "s": f"in {sum(1 for v in p_out.values() if v)} outlets since {_ym(p_first)}; an undercount, since only a fixed set of outlets is watched"},
+        {"n": f"{len(press):,}", "l": "Press and social citations",
+         "s": (f"{sum(1 for x in press if x.get('kind') == 'media'):,} in news outlets, "
+               f"{sum(1 for x in press if x.get('kind') in ('gov', 'republication')):,} from government and policy groups, "
+               f"{sum(1 for x in press if x.get('kind') == 'social'):,} on social media, since {_ym(p_first)}; "
+               "an undercount, since only a fixed set of outlets is watched")},
         {"n": f"{p_out.get('nytimes.com', 0)}", "l": "New York Times citations",
          "s": "no outlet cites Vital City more often"},
       ] + ([{"n": f"{ytd_users:,}", "l": f"Visitors, Jan. 1 to {_md(TODAY)}, {TODAY.year}",
@@ -1185,6 +1188,7 @@ def main():
                  "tags": {n: t for n, t in SHORT_TAGS.items() if n in _roster_names},
                  "pool": len(authors)},
       "press": {"total": len(press), "outlets": sum(1 for v in p_out.values() if v), "since": p_first,
+                "social": sum(1 for x in press if x.get("kind") == "social"),
                 "y2026": sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))),
                 "permonth": round(sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))) / max(1, TODAY.month - 0.5), 1),
                 "by_year": [{"y": y, "n": n} for y, n in sorted(MENTIONS_ARCHIVE.items()) if y >= "2022"],
