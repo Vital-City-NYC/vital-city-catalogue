@@ -148,6 +148,25 @@
   .mastlinks a{color:var(--vc-cerulean);text-decoration:none;white-space:nowrap;cursor:pointer}
   .mastlinks a:hover{text-decoration:underline}
   @media(max-width:700px){.mastlinks{position:static;right:auto;top:auto;flex-wrap:wrap;gap:10px 14px;margin:0 0 10px}}
+  /* Impact ledger: a scrolling list inside its card, so it never takes over the page */
+  .ledsum{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+  .ledsum button{font-family:inherit;border:0;background:var(--vc-paper2);color:var(--vc-black);border-radius:14px;padding:4px 11px;font-size:11.5px;cursor:pointer}
+  .ledsum button b{font-variant-numeric:tabular-nums;margin-right:3px}
+  .ledsum button.on{background:var(--vc-black);color:var(--vc-white)}
+  .ledctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px;font-size:12px}
+  .ledctl select,.ledctl input{font-family:inherit;font-size:12px;padding:4px 7px;border:1px solid var(--vc-cloud);border-radius:4px;background:var(--vc-white);color:var(--vc-black)}
+  .ledctl input{flex:1;min-width:160px}
+  .ledbox{max-height:520px;overflow-y:auto;background:var(--vc-paper);padding:4px 12px;border-radius:4px}
+  .led{display:grid;grid-template-columns:96px 150px 1fr;gap:2px 14px;padding:8px 0;font-size:12.5px;line-height:1.45}
+  .led .ld{color:var(--vc-charcoal);font-variant-numeric:tabular-nums;font-size:11.5px;white-space:nowrap}
+  .led .lk{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--vc-charcoal)}
+  .led .lk i{font-style:normal;display:block;width:8px;height:8px;border-radius:50%;float:left;margin:3px 6px 0 0}
+  .led .lt a{color:var(--vc-black);font-weight:700;text-decoration:none}
+  .led .lt a:hover{color:var(--vc-cerulean)}
+  .led .lm{font-size:11px;color:var(--vc-charcoal)}
+  .ledcount{font-size:11px;color:var(--vc-charcoal);margin:8px 0 0}
+  @media(max-width:620px){.led{grid-template-columns:1fr}.led .ld{order:0}}
+  @media print{.ledbox{max-height:none;overflow:visible;background:none;padding:0}.ledctl,.ledsum button:not(.on){display:none}}
 </style>
 <link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
 <link rel="stylesheet" href="../toolkit.css">
@@ -182,7 +201,7 @@
   </div>
 </header>
 <nav class="jump">
-  <a href="#fit">What we can show funders</a><a href="#grants">Grant landscape</a>
+  <a href="#fit">What we can show funders</a><a href="#impact">Impact ledger</a><a href="#grants">Grant landscape</a>
   <a href="#people">Individual prospects</a><a href="#base">The donor base</a><a href="#method">Method</a>
 </nav>
 <div class="wrap">
@@ -235,6 +254,67 @@ function csv(rows,cols,fname){
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([txt],{type:"text/csv"}));
   a.download=fname; a.click(); URL.revokeObjectURL(a.href);
+}
+
+// The impact ledger: every dated sign that the work reached someone who acts
+// on it, built nightly by build_prospects.py from the mention tracker, the
+// appearance log and the contacts file. Filters run here; nothing is edited.
+const LED_KINDS=[
+  ["press","Press citations","var(--vc-cerulean)"],
+  ["government","Government documents","var(--vc-magenta)"],
+  ["republished","Republished or excerpted","var(--vc-orange)"],
+  ["appearance","Staff appearances","var(--vc-green)"],
+  ["scholarly","Scholarly citations","var(--vc-gold)"],
+  ["reader","Officials and public figures who subscribed","var(--vc-charcoal)"],
+  ["outcome","Outcomes","var(--vc-black)"]];
+const LED_ONE={press:"Press citation",government:"Government document",republished:"Republished",appearance:"Staff appearance",
+  scholarly:"Scholarly citation",reader:"Subscribed",outcome:"Outcome"};
+function renderLedger(L){
+  if(!L||!(L.rows||[]).length){ $("#impact").style.display="none"; return; }
+  const on=new Set(LED_KINDS.map(k=>k[0]).filter(k=>k!=="reader"));
+  const since=w=>w==="all"?"":new Date(Date.now()-(+w)*864e5).toISOString().slice(0,10);
+  const areas=[...new Set(L.rows.map(r=>r.area).filter(Boolean))].sort();
+  $("#ledArea").innerHTML='<option value="">Every topic</option>'+areas.map(a=>`<option>${esc(a)}</option>`).join("");
+  const c=L.counts||{};
+  $("#ledHint").innerHTML=`Every dated sign that Vital City's work reached people who act on it, rebuilt each night (as of ${esc(L.asof)}). `+
+    `Press, government and republication rows come from the mention tracker, which watches Google News for the name, so it undercounts: podcasts, broadcast, paywalled pieces and law reviews mostly never reach it. `+
+    `Appearances combine the hand-kept log with a search for each editor's name. Subscribers are people with a government role or address, a judge, or a Wikipedia entry who signed up in the last year and still read. `+
+    `Topics are matched from each title against the press map's beats, so treat them as a guide. Tap a category to show or hide it.`;
+  function sum(){
+    const w=$("#ledWin").value, a=since(w), win=w==="90"?"d90":w==="365"?"d365":"all";
+    $("#ledSum").innerHTML=LED_KINDS.filter(([k])=>(c[k]||{}).all).map(([k,l,col])=>
+      `<button data-k="${k}" class="${on.has(k)?"on":""}" title="Show or hide this category"><b>${fmtN((c[k]||{})[k==="outcome"?"all":win])}</b>${esc(l)}</button>`).join("");
+  }
+  function rows(){
+    const a=since($("#ledWin").value), ar=$("#ledArea").value, q=$("#ledQ").value.trim().toLowerCase();
+    return L.rows.filter(r=>on.has(r.kind)
+      &&(r.kind==="outcome"||!a||(r.date||"")>=a)
+      &&(!ar||r.area===ar)
+      &&(!q||[r.title,r.source,r.who,r.detail].join(" ").toLowerCase().includes(q)));
+  }
+  const col=Object.fromEntries(LED_KINDS.map(([k,,c])=>[k,c]));
+  const fmtD=d=>!d?"undated":(window.vcApDate&&d.length===10?vcApDate(new Date(d+"T12:00:00")):d);
+  function draw(){
+    sum();
+    const R=rows();
+    $("#ledBox").innerHTML=R.slice(0,600).map(r=>`<div class="led">
+      <span class="ld">${esc(fmtD(r.date))}</span>
+      <span class="lk"><i style="background:${col[r.kind]}"></i>${esc(LED_ONE[r.kind]||r.kind)}</span>
+      <span><span class="lt">${r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:`<b>${esc(r.title)}</b>`}</span>
+        <div class="lm">${[r.source?esc(r.source):"",r.who&&r.kind!=="reader"?esc(r.who):"",r.kind==="reader"&&r.detail?esc(r.detail):"",r.area?esc(r.area):""].filter(Boolean).join(" · ")}</div>
+        ${r.links?`<div class="lm">${r.links.map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join(" · ")}</div>`
+          :r.detail&&r.kind!=="reader"?`<div class="lm">${esc(r.detail)}</div>`:""}</span></div>`).join("")
+      ||'<div class="led"><span></span><span></span><span class="lm">Nothing matches these filters.</span></div>';
+    $("#ledCount").textContent=`${fmtN(R.length)} of ${fmtN(L.rows.length)} entries shown`+(R.length>600?" (first 600 in the list; the CSV has them all)":"");
+    return R;
+  }
+  $("#ledSum").addEventListener("click",e=>{const b=e.target.closest("button[data-k]"); if(!b) return;
+    const k=b.dataset.k; on.has(k)?on.delete(k):on.add(k); draw();});
+  ["ledWin","ledArea"].forEach(id=>$("#"+id).addEventListener("change",draw));
+  $("#ledQ").addEventListener("input",draw);
+  $("#ledCsv").addEventListener("click",()=>csv(rows().map(r=>({...r,kind:LED_ONE[r.kind]||r.kind})),
+    ["date","kind","title","source","who","detail","area","url"],`vital-city-impact-ledger-${L.asof}.csv`));
+  draw();
 }
 
 let RAW=null;
@@ -494,6 +574,21 @@ function boot(d){
     <div class="src">${esc((d.funder_facts||{}).benchmark_note||"")}</div>
   </div>
 
+  <div class="card" id="impact">
+    <h2>Impact ledger
+      <button class="exp" id="ledCsv">&#8681; Download CSV</button>
+</h2>
+    <div class="hint" id="ledHint"></div>
+    <div class="ledsum" id="ledSum"></div>
+    <div class="ledctl">
+      <select id="ledWin"><option value="90">Last 90 days</option><option value="365" selected>Last 12 months</option><option value="all">Everything on record</option></select>
+      <select id="ledArea"><option value="">Every topic</option></select>
+      <input id="ledQ" type="search" placeholder="Search outlets, titles, people">
+    </div>
+    <div class="ledbox" id="ledBox"></div>
+    <div class="ledcount" id="ledCount"></div>
+  </div>
+
   <div class="card" id="grants">
     <div class="ins edithelp"><b>This page is editable.</b> Use <b>Edit</b> next to any funder or conversation, or the <b>+ Add</b> links under each table. You see a change at once; everyone else sees it after the next rebuild, at 7am and 7pm. Every change is also written to the <a href="${SHEET_URL}" target="_blank" rel="noopener">shared edit sheet</a>, which records who changed what and when. Reader counts for a newly added funder fill in at the next rebuild.</div>
     <h2>Current funders &mdash; renew and grow</h2>
@@ -595,6 +690,7 @@ function boot(d){
         <table class="tbl"><tbody>${(FF.audience||[]).map(r=>`<tr><td style="width:150px"><b>${esc(r.label)}</b></td><td class="why" style="white-space:normal">${esc(r.value)}${r.note?` — ${esc(r.note)}`:""}</td></tr>`).join("")}</tbody></table></div>
     </div>`;
   $("#factsAll").addEventListener("click",e=>copyText(allMd(),e.target));
+  renderLedger(d.impact_ledger);
   $("#factsMd").addEventListener("click",()=>{
     const a=document.createElement("a");
     a.href=URL.createObjectURL(new Blob([allMd()],{type:"text/markdown"}));

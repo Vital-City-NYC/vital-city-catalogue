@@ -139,6 +139,32 @@
   html.dark .chip.on{background:var(--vc-cerulean);border-color:var(--vc-cerulean);color:#fff}
   html.dark .gatebox button{background:var(--vc-cerulean)}
   html.dark a{color:#6fb3e8}
+  /* "Who should hear about this": recent pieces, each with reporters to pitch and
+     draft posts. Scrolls inside its own box so it never takes over the page. */
+  .amp-box{max-height:560px;overflow-y:auto;border:1px solid var(--vc-cloud);background:var(--vc-white);padding:4px 14px}
+  .amp{padding:14px 0 16px;border-bottom:1px solid var(--vc-cloud)}
+  .amp:last-child{border-bottom:0}
+  .amp .t{font-size:15px;font-weight:800;line-height:1.3}
+  .amp .t a{color:var(--vc-black);text-decoration:none}
+  .amp .t a:hover{text-decoration:underline}
+  .amp .m{font-size:11.5px;color:var(--vc-charcoal);margin-top:2px}
+  .amp .cols{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;margin-top:10px}
+  .amp .hd{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--vc-charcoal);margin-bottom:5px}
+  .amp .rp{font-size:12.5px;line-height:1.35;padding:4px 0;border-top:1px solid var(--vc-paper2,#eee)}
+  .amp .rp:first-of-type{border-top:0}
+  .amp .rp .n{font-weight:600}
+  .amp .rp.vc .n{font-weight:900}
+  .amp .rp .o{color:var(--vc-charcoal)}
+  .amp .rp .e{font-size:11.5px}
+  .amp .more{font-size:11.5px;margin-top:6px;cursor:pointer;color:var(--vc-cerulean);background:none;border:0;padding:0;font:inherit;font-size:11.5px;font-weight:700}
+  .amp .dp{font-size:12.5px;line-height:1.45;padding:6px 0;border-top:1px solid var(--vc-paper2,#eee);display:flex;gap:8px;align-items:flex-start}
+  .amp .dp:first-of-type{border-top:0}
+  .amp .dp .k{font-size:9.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--vc-charcoal);min-width:44px;padding-top:2px}
+  .amp .dp .x{flex:1}
+  .amp .dp button{font:inherit;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--vc-cloud);background:var(--vc-white);color:var(--vc-charcoal);padding:2px 7px;cursor:pointer;white-space:nowrap}
+  .amp .dp button:hover{color:var(--vc-black);border-color:var(--vc-black)}
+  .amp .fl{color:#a0432d;font-size:11px}
+  @media(max-width:760px){ .amp .cols{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -170,7 +196,7 @@
   </div>
 </header>
 <nav class="jump">
-  <a data-go="ask">Find a reporter</a><a data-go="directory">Search everyone</a><a data-go="beats">By beat</a><a data-go="outlets">By outlet</a>
+  <a data-go="ask">Find a reporter</a><a data-go="amplify">Who should hear</a><a data-go="directory">Search everyone</a><a data-go="beats">By beat</a><a data-go="outlets">By outlet</a>
   <a data-go="known">Contacts we know</a><a data-go="mentions">Who cites us</a><a data-go="method">Method</a>
 </nav>
 
@@ -194,6 +220,12 @@
       <div class="readout" id="readout"></div>
     </div>
     <div id="results"></div>
+  </section>
+
+  <section class="sect" id="amplify">
+    <h2>Who should hear about this</h2>
+    <div class="note" id="ampNote">Every piece from the last 30 days, with the reporters whose own bylines cover its subject and three draft posts to start from. Tick a reporter to add them to the people you are contacting.</div>
+    <div class="amp-box" id="ampBox"><div class="empty">Loading recent pieces…</div></div>
   </section>
 
   <section class="sect" id="beats">
@@ -564,6 +596,50 @@ function card(r,i){
       ${p.latest?`<span style="color:var(--vc-charcoal);font-size:11px">last seen filing ${esc(fmtDate(p.latest))}</span>`:""}
     </div>
   </div>`;
+}
+
+// ---------- who should hear about this ----------
+// Reporters come from the same ranking as "Find a reporter", run on each piece's
+// headline, dek and tags. Drafts come from the tweet suggester
+// (data/tweet_suggestions.json, rebuilt when a new piece appears).
+async function renderAmplify(){
+  const host=$("#ampBox");
+  let d;
+  try{ d=await fetch("../data/tweet_suggestions.json",{cache:"no-cache"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); }); }
+  catch(e){ host.innerHTML=`<div class="empty">The recent-pieces file could not be loaded (${esc(String(e.message||e))}).</div>`; return; }
+  const pieces=d.pieces||[];
+  if(!pieces.length){ host.innerHTML=`<div class="empty">No pieces in the last 30 days.</div>`; return; }
+  const modes=new Set(pieces.map(p=>p.mode));
+  $("#ampNote").innerHTML=`Every piece from the last 30 days, with the reporters whose own bylines cover its subject and three draft posts to start from. `+
+    (modes.has("claude")?`Drafts are written by Claude from the full text. `:`Drafts are built by rule from the editor's dek, the writer's name and a sentence quoted from the piece; they are starting points to edit. `)+
+    `Tick a reporter to add them to the people you are contacting.`;
+  const KIND={claim:"Claim",writer:"Writer",quote:"Quote",finding:"Claim",argument:"Writer",hook:"Hook",title:"Title"};
+  host.innerHTML=pieces.map((pc,idx)=>{
+    const query=[pc.title,pc.dek,(pc.tags||[]).join(" ")].filter(Boolean).join(". ");
+    const q=readQuery(query);
+    const ranked=filtered(rank(q)).filter(r=>r.clips>=minFor(r.p));
+    const top=[...ranked.filter(r=>tierOf(r.p)===1),...ranked.filter(r=>tierOf(r.p)!==1)].slice(0,6);
+    const beat=Object.values(q.beats).sort((a,b)=>b.n-a.n)[0];
+    const rep=top.length?top.map(r=>{ const p=r.p; const w=(r.why||[]).find(x=>x.kind==="beat");
+      return `<div class="rp ${p.vc&&p.vc.person?"vc":""}">${box(p)}<span class="n">${esc(p.name)}</span> <span class="o">&middot; ${esc(outletName(p))}${w?` &middot; ${w.count} on ${esc(String(w.label).toLowerCase())}`:""}</span>
+        <div class="e">${p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:`<span class="o">no published address</span>`}${p.x?` &middot; <a href="https://x.com/${esc(p.x)}" target="_blank" rel="noopener">@${esc(p.x)}</a>`:""}</div></div>`; }).join("")
+      :`<div class="rp o">No reporter's file matches this subject closely.</div>`;
+    const drafts=(pc.posts||[]).map((x,j)=>`<div class="dp"><span class="k">${esc(KIND[x.kind]||x.kind)}</span><span class="x">${esc(x.text)}${(x.flags||[]).length?` <span class="fl">(${esc(x.flags.join(", "))})</span>`:""}</span><button type="button" data-copy="${idx}:${j}" title="Copy the post with the link">Copy</button></div>`).join("");
+    return `<div class="amp">
+      <div class="t"><a href="${esc(pc.url)}" target="_blank" rel="noopener">${esc(pc.title)}</a></div>
+      <div class="m">${esc(pc.date)}${pc.author?` &middot; ${esc(pc.author)}`:""}${pc.handle?` (${esc(pc.handle)})`:""}${beat?` &middot; reads as ${esc(String(beat.label).toLowerCase())}`:""}</div>
+      <div class="cols">
+        <div><div class="hd">Reporters to pitch</div>${rep}<button class="more" type="button" data-full="${idx}">See everyone who covers this &rsaquo;</button></div>
+        <div><div class="hd">Draft posts</div>${drafts||`<div class="dp o">No drafts.</div>`}</div>
+      </div></div>`;
+  }).join("");
+  host.addEventListener("click",e=>{
+    const c=e.target.closest("[data-copy]");
+    if(c){ const [i,j]=c.dataset.copy.split(":").map(Number); const pc=pieces[i], t=`${pc.posts[j].text} ${pc.url}`;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{ c.textContent="Copied"; setTimeout(()=>c.textContent="Copy",1400); },()=>prompt("Copy this post:",t)); return; }
+    const f=e.target.closest("[data-full]");
+    if(f){ const pc=pieces[+f.dataset.full]; $("#q").value=[pc.title,pc.dek].filter(Boolean).join(". "); runQuery(); document.getElementById("ask").scrollIntoView({behavior:"smooth"}); }
+  });
 }
 
 let LAST=[];
@@ -941,7 +1017,7 @@ function init(){
   for(const o of DATA.outlets){ OUT[o.id]=o; DATA_DOM[o.id]=o.domain; }
   const pc=(DATA.counts?.people||0).toLocaleString()+" people · "+(DATA.counts?.outlets||0)+" outlets";
   if(window.vcStamp) vcStamp("#asof", DATA.as_of, pc); else $("#asof").textContent="Updated "+(DATA.as_of||"").slice(0,10)+" · "+pc;
-  renderBeats(); initDirectory(); renderKnown(); renderOutlets(); renderMentions(); renderMethod();
+  renderBeats(); initDirectory(); renderKnown(); renderOutlets(); renderMentions(); renderMethod(); renderAmplify();
   $("#go").addEventListener("click",runQuery);
   $("#clear").addEventListener("click",()=>{$("#q").value="";runQuery();});
   $("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey))runQuery();});

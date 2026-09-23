@@ -1,12 +1,16 @@
 name: tweet-suggester
-
-# UNPLUGGED 2026-09-10. The hourly schedule was removed after every run
-# aborted on an empty ANTHROPIC_API_KEY repo secret. The workflow stays here so
-# it can be run by hand from the Actions tab; to plug it back in, restore the
-# schedule block (it was "0 13-23 * * 1-5", hourly on weekdays through Vital
-# City's publishing hours) and set the ANTHROPIC_API_KEY and Slack secrets.
+# Drafts posts for each new piece and feeds the Press page's "Who should hear
+# about this" module (data/tweet_suggestions.json, a rolling 30 days).
 #
+# Plugged back in 2026-09-23 without an API key: with ANTHROPIC_API_KEY unset
+# it writes free rule-based drafts built from this account's own measured
+# posts (the dek, "Read [writer]: ...", a quoted sentence). Add the secret to
+# switch to Claude drafts, about $0.02 a piece. Slack delivery happens only if
+# SLACK_WEBHOOK_URL, or SLACK_BOT_TOKEN plus SLACK_DM_TO, is set; otherwise the
+# drafts live on the Press page. A run commits only when a new piece appears.
 on:
+  schedule:
+    - cron: "0 13-23 * * 1-5"   # hourly on weekdays, 9am to 7pm Eastern (summer)
   workflow_dispatch:
     inputs:
       days:
@@ -51,13 +55,13 @@ jobs:
       - name: Remember what has been suggested
         if: github.event.inputs.dry_run != 'true'
         run: |
-          if git diff --quiet -- data/tweet_suggester_seen.json; then
+          if git diff --quiet -- data/tweet_suggester_seen.json data/tweet_suggestions.json; then
             echo "nothing new this run"
             exit 0
           fi
           git config user.name  "vital-city-bot"
           git config user.email "actions@github.com"
-          git add data/tweet_suggester_seen.json
+          git add data/tweet_suggester_seen.json data/tweet_suggestions.json
           git commit -m "Suggested posts for new pieces [skip ci]"
           # network-refresh commits to the same branch twice a day; rebase rather
           # than fail a run whose Slack message has already gone out.

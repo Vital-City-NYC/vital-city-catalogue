@@ -17,7 +17,7 @@ launchd.network.err.log
 private/
 *.xlsx
 growth/live/live.enc
-data/tweet_suggestions.json
+# data/tweet_suggestions.json is published: the press page reads it (draft posts about public pieces only)
 
 # resharing tool: built payload and run state are private/, already ignored;
 # the encrypted bundle IS published, so it is explicitly not ignored here.

@@ -552,6 +552,142 @@ def apply_page_edits(funders, pipeline, grantees):
     return out_f, out_p, grantees, pers, log
 
 
+# ---------------------------------------------------------------------------
+# Impact ledger. One dated row per piece of evidence that Vital City's work
+# reached someone who acts on it: press that cited it, government documents
+# that cited it, other publications that republished or excerpted it, staff
+# appearances, and officials or public figures who subscribed. Everything is
+# read from the nightly growth pull and the contacts file; nothing is typed in
+# here except the hand-curated outcomes, which come from funder_facts.
+BEATS_FILE = ROOT / "press" / "beats.json"
+DECISION_TYPES = {"current nyc.gov", "city gov", "state gov", "fed gov", "judge"}
+_MONTHS = {m: i for i, m in enumerate(["january", "february", "march", "april", "may", "june", "july",
+                                        "august", "september", "october", "november", "december"], 1)}
+
+
+def _beat_matchers():
+    try:
+        beats = json.loads(BEATS_FILE.read_text())["beats"]
+    except Exception:
+        return []
+    out = []
+    for key, b in beats.items():
+        pats = []
+        for t in b.get("terms") or []:
+            body = re.escape(t.rstrip("*")) + (r"\w*" if t.endswith("*") else "")
+            # short all-caps terms (DA, DOC, SRG) only count in capitals
+            flags = 0 if (t.isupper() and len(t) <= 4) else re.I
+            pats.append(re.compile(r"\b" + body + r"\b", flags))
+        out.append((b.get("priority", 9), b.get("label") or key, pats))
+    return out
+
+
+def _area(text, matchers):
+    best = None
+    for pri, label, pats in matchers:
+        n = sum(1 for p in pats if p.search(text))
+        if n and (best is None or (n, -pri) > (best[0], -best[1])):
+            best = (n, pri, label)
+    return best[2] if best else ""
+
+
+def build_impact_ledger(growth, people, receipts):
+    matchers = _beat_matchers()
+    rows, seen = [], set()
+
+    def add(date_, kind, source, title, url, detail="", who="", area_text=None, links=None):
+        title = re.sub(r"\s+", " ", (title or "")).strip()
+        k = (kind, re.sub(r"\W+", "", title.lower())[:80], source.lower())
+        if not title or k in seen:
+            return
+        seen.add(k)
+        rows.append({"date": (date_ or "")[:10], "kind": kind, "source": source, "title": title,
+                     "url": url or "", "detail": detail, "who": who,
+                     "area": _area(title + " " + detail if area_text is None else area_text, matchers)
+                             if matchers else "", **({"links": links} if links else {})})
+
+    # 1. Mentions from the nightly tracker. Social posts are left out (they are
+    #    counted on the growth page); so are Vital City's own posts, newsletter
+    #    roundups, junk titles, and rows dated before the site existed.
+    label = {"media": "press", "gov": "government", "republication": "republished"}
+    for x in growth.get("news_mentions") or []:
+        kind = label.get(x.get("kind"))
+        d = (x.get("published_iso") or "")[:10]
+        if not kind or x.get("own_post") or x.get("roundup") or d < "2021-09":
+            continue
+        src = (x.get("source") or x.get("domain") or "").strip()
+        t = (x.get("title") or "").strip()
+        if src and t.endswith(" - " + src):
+            t = t[: -len(src) - 3]
+        if len(t) < 16 or t.startswith("-") or t.lower() in {"staff", "home", "about"}:
+            continue
+        add(d, kind, src, t, x.get("url"))
+
+    # 2. Appearances: the hand-logged ledger, then the per-person search.
+    for x in (growth.get("mentions_ledger") or {}).get("items") or []:
+        add(x.get("date"), "appearance" if x.get("role") == "appearance" else "press",
+            x.get("outlet") or "", x.get("program") or x.get("outlet") or "", x.get("url"),
+            x.get("note") or "", x.get("who") or "")
+    for p in (growth.get("voice_appearances") or {}).get("people") or []:
+        for x in p.get("items") or []:
+            src = (x.get("source") or "").strip()
+            t = (x.get("title") or "").strip()
+            if src and t.endswith(" - " + src):
+                t = t[: -len(src) - 3]
+            try:
+                d = datetime.strptime(x.get("published") or "", "%a, %d %b %Y %H:%M:%S %Z").date().isoformat()
+            except ValueError:
+                d = ""
+            add(d, "appearance", src, t, x.get("url"), "", p.get("name") or "")
+
+    # 3. Scholarly citations, when the Scholar pull got through.
+    for x in (growth.get("scholar_citations") or {}).get("citations") or []:
+        if x.get("confirmed") is False:
+            continue
+        add(str(x.get("year") or x.get("date") or ""), "scholarly", x.get("venue") or x.get("source") or "",
+            x.get("title") or "", x.get("url"))
+
+    # 4. Decision-makers who subscribed in the last year and still read: the
+    #    same rule as the weekly report's notable joiners (a government role or
+    #    address, a judge, or a Wikipedia entry), with a name on file.
+    cut = (TODAY - timedelta(days=365)).isoformat()
+    for r in people:
+        s = str(r.get("since") or "")[:10]
+        if not (r.get("mem") and not r.get("unsub") and len((r.get("n") or "").split()) >= 2 and s >= cut):
+            continue
+        types = set(r.get("types") or [])
+        gov = bool(types & DECISION_TYPES) or (r.get("e") or "").lower().endswith(".gov")
+        if not (gov or r.get("wiki")):
+            continue
+        org = r.get("inst") or ""
+        add(s, "reader", org or ("Government" if gov else ""), r.get("n"),
+            "", ", ".join(x for x in [r.get("role") or "", org] if x),
+            "government" if gov else "public figure", area_text=org)
+
+    # 5. The hand-curated outcomes from the case for funders, dated when the
+    #    note carries a month and year.
+    for x in receipts or []:
+        m = re.search(r"(" + "|".join(_MONTHS) + r")\s+(20\d\d)", (x.get("note") or "").lower())
+        d = f"{m.group(2)}-{_MONTHS[m.group(1)]:02d}" if m else ""
+        link = (x.get("links") or [{}])[0]
+        add(d, "outcome", "", f"{x.get('head')}: {x.get('claim')}", link.get("u"),
+            "; ".join(l.get("t", "") for l in x.get("links") or []), x.get("note") or "",
+            links=[{"t": l.get("t", ""), "u": l.get("u", "")} for l in x.get("links") or []])
+
+    # newest first; the undated curated outcomes go last (they lead the case above)
+    rows.sort(key=lambda r: r["date"] or "0", reverse=True)
+
+    kinds = ["press", "government", "republished", "appearance", "scholarly", "reader", "outcome"]
+    d90, d365 = (TODAY - timedelta(days=90)).isoformat(), cut
+    counts = {k: {"d90": sum(1 for r in rows if r["kind"] == k and r["date"] >= d90),
+                  "d365": sum(1 for r in rows if r["kind"] == k and r["date"] >= d365),
+                  "all": sum(1 for r in rows if r["kind"] == k)} for k in kinds}
+    areas = Counter(r["area"] for r in rows if r["area"] and r["date"] >= d365 and r["kind"] != "reader")
+    return {"asof": TODAY.isoformat(), "rows": rows, "counts": counts,
+            "areas": areas.most_common(),
+            "scholar_note": (growth.get("scholar_citations") or {}).get("reason") or ""}
+
+
 def main():
     global FUNDERS, PIPELINE, GRANTEES
     FUNDERS, PIPELINE, GRANTEES, PERSON_EDITS, EDIT_LOG = apply_page_edits(FUNDERS, PIPELINE, dict(GRANTEES))
@@ -962,6 +1098,7 @@ def main():
         "funders": funders_out,
         "beats": beats,
         "funder_facts": funder_facts,
+        "impact_ledger": build_impact_ledger(growth, people, funder_facts.get("receipts")),
         "variants": (lambda: {
             k: {"label": v["label"], "spot_title": v["spot_title"],
                 "receipts": v["receipts"], "authors": v["authors"], "products": v["products"],

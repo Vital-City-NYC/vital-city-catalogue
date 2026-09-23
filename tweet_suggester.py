@@ -3,9 +3,18 @@
 Scan vitalcitynyc.org for newly published pieces and draft 2-3 posts for each.
 
 Reads the Ghost Content API, keeps a seen-list so nothing is suggested twice,
-sends each new piece's full text to Claude, and asks for posts written in
-plain declarative English rather than the shapes that make writing sound
-machine-generated. Delivers to Slack, or prints.
+and drafts three posts per piece in one of two ways:
+
+  rules   (default when no ANTHROPIC_API_KEY is set; free): built from what this
+          account's own posts show works. The editor's dek as the claim, "Read
+          [writer] on ..." with their known handle, and a sentence quoted
+          verbatim from the piece. Every draft still goes through the style screen.
+  claude  (when the key is set): sends the full text to Claude with the style
+          guide below, as before. About $0.02 a piece.
+
+Writes a rolling 30-day file, data/tweet_suggestions.json, that the Press
+page's "Who should hear about this" module reads. Posts to Slack when a
+destination is configured; without one it skips delivery instead of failing.
 
   python3 tweet_suggester.py                    # last 7 days, print
   python3 tweet_suggester.py --days 30          # wider window
@@ -13,6 +22,9 @@ machine-generated. Delivers to Slack, or prints.
   python3 tweet_suggester.py --dry-run          # list what it would draft, no API spend
   python3 tweet_suggester.py --piece <slug>     # redo one piece, ignoring the seen-list
   python3 tweet_suggester.py --self-test        # offline checks
+  python3 tweet_suggester.py --rules            # force the free rule-based drafts
+  python3 tweet_suggester.py --refill 30        # redraft every piece of the last N days
+                                                # (rules mode; rebuilds the Press module)
 
 Costs money: one Claude call per new piece (~$0.02 each at current Sonnet
 prices). --dry-run first if a wide window might pick up dozens.
@@ -336,6 +348,76 @@ def draft(key, post, retries=2):
     return posts, retries + 1
 
 
+# ------------------------------------------------------------- rule-based drafts
+# No model, no cost. Each shape is one this account's own posts show working
+# (see STYLE): the claim, the writer by name and handle, a quoted sentence.
+# They are starting points a human edits, and they go through screen() like
+# any model draft.
+LEAD_OFF = re.compile(r"^(this|that|these|those|it|its|they|their|he|she|his|her|we|our|us|"
+                      r"but|and|so|or|yet|here|there|such|then|also|still|instead|meanwhile|"
+                      r"however|moreover|indeed|similarly|likewise|in short|in other words)\b", re.I)
+
+
+def plain(t):
+    t = (t or "").replace("\u2019", "'").replace("\u2018", "'").replace("\u201c", '"').replace("\u201d", '"')
+    t = re.sub(r"\bNYC\b", "New York City", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def names_line(post):
+    names = [a["name"] for a in post.get("authors") or [] if a.get("name") and a["name"] != "Vital City"]
+    if not names:
+        return None
+    return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
+
+
+def quote_sentence(body):
+    """A sentence from the piece that stands on its own: early in the piece,
+    70 to 220 characters, not leaning on the sentence before it."""
+    paras = [p for p in re.split(r"\n{2,}", body) if len(p) > 80]
+    cands = []
+    for pi, para in enumerate(paras[:12]):
+        for sent in re.split(r"(?<=[.?!])\s+(?=[A-Z\"])", plain(para)):
+            s = sent.strip()
+            if not (70 <= len(s) <= 200) or LEAD_OFF.match(s) or '"' in s or "http" in s:
+                continue
+            if re.search(r"\bVital City\b|\bthis (?:piece|essay|article|series|issue)\b", s, re.I):
+                continue                              # series boilerplate and self-reference
+            if s.endswith(":") or s.count("(") != s.count(")"):
+                continue
+            score = pi + abs(len(s) - 120) / 50      # early, and about tweet length
+            cands.append((score, s))
+    return min(cands)[1] if cands else None
+
+
+def rules_draft(post):
+    title = plain(post.get("title"))
+    dek = plain(post.get("custom_excerpt") or "")
+    who = names_line(post)
+    handle = author_handle(post)
+    body = post.get("plaintext") or ""
+    drafts = []
+    if dek and len(dek) <= MAX_CHARS:
+        drafts.append({"kind": "claim", "text": dek})
+    if who:
+        by = f"{who} ({handle})" if handle else who
+        drafts.append({"kind": "writer", "text": f'Read {by}: "{title}"'})
+    q = quote_sentence(body)
+    if q:
+        tail = f" {who} writes." if who else ""
+        text = f'"{q}"{tail}'
+        if len(text) > MAX_CHARS:
+            text = f'"{q}"'
+        drafts.append({"kind": "quote", "text": text})
+    if not drafts:
+        drafts.append({"kind": "title", "text": title})
+    for d in drafts:
+        f = screen(d["text"])
+        if f:
+            d["flags"] = f
+    return drafts
+
+
 # ------------------------------------------------------------------ delivery
 def format_slack(results):
     L = [f"*Vital City - {len(results)} new "
@@ -369,8 +451,10 @@ def post_slack(text):
 
     tok, to = os.environ.get("SLACK_BOT_TOKEN"), os.environ.get("SLACK_DM_TO")
     if not tok or not to:
-        raise Abort("No Slack destination. Set SLACK_WEBHOOK_URL, or both "
-                    "SLACK_BOT_TOKEN and SLACK_DM_TO.")
+        # The Press page is the main destination now; Slack is a bonus.
+        log("no Slack destination configured (SLACK_WEBHOOK_URL, or SLACK_BOT_TOKEN "
+            "and SLACK_DM_TO); drafts are on the Press page only")
+        return
     r = http_json("https://slack.com/api/chat.postMessage", timeout=30,
         headers={"Authorization": f"Bearer {tok}",
                  "Content-Type": "application/json; charset=utf-8"},
@@ -397,6 +481,17 @@ def self_test():
         if flagged != should_flag:
             ok = False
             print(f"FAIL: {text[:50]!r} flagged={flagged} expected={should_flag}")
+    fake = {"title": "Why Affordable Apartments Sit Empty", "custom_excerpt": "A city in need of housing must unlock its empty rent-stabilized apartments.",
+            "authors": [{"name": "Howard Yaruss"}],
+            "plaintext": ("A short intro.\n\n"
+                          "More than 57,000 rent-stabilized apartments are sitting empty across New York City, enough to house a small city. "
+                          "This sentence leans on the one before it and should never be chosen as a quote.")}
+    d = rules_draft(fake)
+    kinds = [x["kind"] for x in d]
+    if (kinds != ["claim", "writer", "quote"] or not d[2]["text"].startswith('"More than 57,000')
+            or d[1]["text"] != 'Read Howard Yaruss: "Why Affordable Apartments Sit Empty"' or any(x.get("flags") for x in d)):
+        ok = False
+        print("FAIL: rules_draft", json.dumps(d))
     print("self-test passed" if ok else "self-test FAILED")
     return 0 if ok else 1
 
@@ -411,20 +506,30 @@ def main():
     ap.add_argument("--piece", metavar="SLUG", help="redraft one piece, ignoring the seen-list")
     ap.add_argument("--max", type=int, default=12, help="cap pieces per run (default 12)")
     ap.add_argument("--self-test", action="store_true")
+    ap.add_argument("--rules", action="store_true", help="free rule-based drafts even if a key exists")
+    ap.add_argument("--refill", type=int, metavar="DAYS",
+                    help="redraft every piece from the last DAYS days (rules mode), ignoring the seen-list")
     a = ap.parse_args()
 
     if a.self_test:
         return self_test()
 
+    if a.refill:
+        a.days, a.rules, a.max = a.refill, True, 200
     posts = fetch_posts(max(a.days, 60) if a.piece else a.days)
     seen = load_seen()
 
-    if a.piece:
+    if a.refill:
+        new = list(posts)
+    elif a.piece:
         new = [p for p in posts if p["slug"] == a.piece]
         if not new:
             raise Abort(f"No piece with slug '{a.piece}' in the last 60 days.")
     else:
         new = [p for p in posts if p["slug"] not in seen]
+    # Pages that are not pieces: the issue landing pages and similar carry no
+    # author and little text, and have nothing to pitch.
+    new = [p for p in new if len((p.get("plaintext") or "").strip()) >= 400]
 
     log(f"{len(posts)} published in window, {len(new)} not yet suggested")
     if not new:
@@ -440,22 +545,47 @@ def main():
         print(f"\n{len(new)} pieces would cost roughly ${0.02*len(new):.2f}.")
         return 0
 
-    key, results = anthropic_key(), []
+    key = None
+    if not a.rules:
+        try:
+            key = anthropic_key()
+        except Abort:
+            log("no ANTHROPIC_API_KEY: using the free rule-based drafts")
+    mode = "claude" if key else "rules"
+    results = []
     for i, p in enumerate(new, 1):
         log(f"[{i}/{len(new)}] {p['title'][:64]}")
-        drafts, tries = draft(key, p)
+        if key:
+            drafts, tries = draft(key, p)
+        else:
+            drafts, tries = rules_draft(p), 0
         results.append({
             "slug": p["slug"], "title": p["title"], "url": p["url"],
             "date": p["published_at"][:10],
             "author": ", ".join(a_["name"] for a_ in p.get("authors") or []),
-            "posts": drafts, "attempts": tries + 1})
-        if i < len(new):
+            "handle": author_handle(p),
+            "dek": plain(p.get("custom_excerpt") or ""),
+            "tags": [t["name"] for t in p.get("tags") or [] if not t["name"].startswith("#")],
+            "mode": mode, "posts": drafts, "attempts": tries + 1})
+        if key and i < len(new):
             time.sleep(1)
 
+    # Rolling window: keep the last 30 days, newest first, one entry per piece.
+    keep = {}
+    if OUT.exists():
+        try:
+            for r in json.loads(OUT.read_text()).get("pieces", []):
+                keep[r["slug"]] = r
+        except Exception:
+            log("! suggestions file unreadable, starting it fresh")
+    for r in results:
+        keep[r["slug"]] = r
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=30)).strftime("%Y-%m-%d")
+    window = sorted((r for r in keep.values() if r["date"] >= cutoff), key=lambda r: r["date"], reverse=True)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(
         {"generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-         "pieces": results}, indent=1))
+         "window_days": 30, "pieces": window}, indent=1, ensure_ascii=False))
 
     digest = format_slack(results)
     if a.slack:
@@ -463,7 +593,7 @@ def main():
     else:
         print("\n" + digest)
 
-    if not a.piece:
+    if not a.piece and not a.refill:
         save_seen(seen | {p["slug"] for p in new})
     return 0
 

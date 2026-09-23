@@ -136,6 +136,9 @@ def clean_person_name(name, has_byline):
     if re.search(r"\b(photos?|courtesy|subscriber|faq|tracker|recovery|reporting|digital|updates?|"
                  r"live|video|podcast|newsletter|editorial|explainer|guide|q&a|news|team|network|connect|crime|pr|mundo|desk|wire)\b", low) or "\u2019re " in low or "'re " in low:
         return None
+    # Advice and reader-question columns run under a byline: "Dear Abby", "Ask Bolts".
+    if re.match(r"(dear|ask)\s", low):
+        return None
     raw_words = n.split()
     lower_words = [w for w in raw_words[1:] if w.islower() and w not in ("de", "da", "di", "del", "della", "der", "van", "von", "la", "le", "du", "dos", "y", "e", "and", "bin", "ibn", "al", "el")]
     if lower_words and not n.islower():
