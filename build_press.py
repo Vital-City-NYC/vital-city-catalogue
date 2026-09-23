@@ -1451,7 +1451,8 @@ def main():
         # press hits the page check rejected (named only in a card or sidebar,
         # or not on the page at all) are left out; unchecked ones stay
         "media": [m for m in vc["mentions"] if m.get("kind") == "media" and not m.get("own_post")
-                  and m.get("incidental") is not True
+                  and m.get("incidental") is not True and not m.get("roundup")
+                  and not re.search(r"/newsletters?/|mailchi\.mp/|/playbook", m.get("url") or "", re.I)
                   and m.get("verify_note") not in ("phrase not found on the page", "phrase present but used generically")
                   and not re.search(r"(?:^|, )Vital City$|^Story Archive|^(Public Safety|Criminal Justice) News$",
                                     m.get("title") or "")][:120],

@@ -3992,8 +3992,10 @@ def pull_news_mentions():
                     "snippet": snip, "domain": domain, "match_shape": shape,
                     "kind": kind,
                     "is_url_share": (shape == "vitalcitynyc.org"),
-                    "roundup": bool(kind == "media" and any(
-                        re.search(pt, title, re.I) for pt in ROUNDUP_TITLE_PATTERNS)),
+                    "roundup": bool(kind == "media" and (any(
+                        re.search(pt, title, re.I) for pt in ROUNDUP_TITLE_PATTERNS)
+                        # newsletter issues are roundups whatever their headline
+                        or re.search(r"/newsletters?/|mailchi\.mp/|/playbook", link, re.I))),
                 })
             _t.sleep(0.15)   # polite pacing across many outlets × shapes
 
