@@ -48,8 +48,9 @@ git add press/harvest_cache.json
 if git diff --cached --quiet; then echo "no change"; exit 0; fi
 git -c user.name="Josh Greenman" -c user.email="josh.greenman@gmail.com" \
   commit -q -m "Press map: weekly Mac harvest for the outlets that refuse GitHub"
-gh auth switch --user vitalcity-nyc >/dev/null 2>&1 || true
-if git -c credential.helper='!gh auth git-credential' push -q origin HEAD:main; then
+# Push as vitalcity-nyc with that account's token for this one command, without
+# switching the machine's active GitHub account (other sessions rely on it).
+if git -c credential.helper= -c credential.helper='!f(){ echo username=vitalcity-nyc; echo "password=$(gh auth token -u vitalcity-nyc)"; }; f' push -q origin HEAD:main; then
   echo "pushed"
 else
   echo "WARNING: push failed. Nothing is lost: the files stay valid for two weeks and next week's run tries again."

@@ -1,0 +1,439 @@
+{
+ "_note": "Reviewed byline corrections, applied by build_press.py after the harvest. relabel: the person's stories ran on the outlet_seen site, but they work for 'employer' (wire, network or a sister paper), so they are shown under that name and no longer count as that outlet's own reporter. drop: not a person, or a guest writer rather than a reporter. Researched 2026-09-23; each row carries the page that established it.",
+ "corrections": [
+  {
+   "name": "Ascend Agency",
+   "outlet_seen": "daily-news",
+   "action": "drop",
+   "why": "a sponsor, agency or syndication label, not a person",
+   "source": "https://www.nydailynews.com/author/ascend-agency/"
+  },
+  {
+   "name": "Gothamist Sponsor",
+   "outlet_seen": "gothamist",
+   "action": "drop",
+   "why": "a sponsor, agency or syndication label, not a person",
+   "source": "https://gothamist.com"
+  },
+  {
+   "name": "Mayo Clinic",
+   "outlet_seen": "silive",
+   "action": "drop",
+   "why": "a sponsor, agency or syndication label, not a person",
+   "source": ""
+  },
+  {
+   "name": "Nbc New York",
+   "outlet_seen": "telemundo47",
+   "action": "drop",
+   "why": "a sponsor, agency or syndication label, not a person",
+   "source": ""
+  },
+  {
+   "name": "Aamer Madhani",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Alex Veiga",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Anna Wilder",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": "https://www.reportforamerica.org/members/anna-wilder/"
+  },
+  {
+   "name": "Anthony Izaguirre",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": "https://www.wusf.org/anthony-izaguirre-associated-press"
+  },
+  {
+   "name": "Dee-ann Durbin",
+   "outlet_seen": "telemundo47",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Elliot Spagat",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Eric Tucker",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Fatima Hussein",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Gary Fields",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Jaimie Ding",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Jeffrey Collins",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": "https://www.wfae.org/people/jeffrey-collins-associated-press-1"
+  },
+  {
+   "name": "Jennifer Peltz",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Jesse Bedayn",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Jocelyn Noveck",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Joey Cappelletti",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Josh Boak",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": "https://www.wlrn.org/josh-boak"
+  },
+  {
+   "name": "Larry Fleisher",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Larry Neumeister",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": "https://www.wesa.fm/people/larry-neumeister-associated-press"
+  },
+  {
+   "name": "Lisa Mascaro",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": "https://www.wlrn.org/lisa-mascaro-ap-congressional-correspondent"
+  },
+  {
+   "name": "Marc Levy",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Mary Clare Jalonick",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Matthew Daly",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Matthew Lee",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Michael R. Sisak",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": "https://www.wesa.fm/people/michael-r-sisak-associated-press"
+  },
+  {
+   "name": "Michelle L. Price",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Patrick Whittle",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Philip Marcelo",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": "https://www.wlrn.org/philip-marcelo-the-associated-press"
+  },
+  {
+   "name": "Rebecca Boone",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Rob Gillies",
+   "outlet_seen": "telemundo47",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Ryan J. Foley",
+   "outlet_seen": "telemundo47",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": ""
+  },
+  {
+   "name": "Seung Min Kim",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": "https://muckrack.com/seung-min-kim"
+  },
+  {
+   "name": "Daniel Farr",
+   "outlet_seen": "ny-post",
+   "action": "relabel",
+   "employer": "California Post",
+   "source": "https://nypost.com/author/daniel-farr/"
+  },
+  {
+   "name": "Katie Jerkovich",
+   "outlet_seen": "ny-post",
+   "action": "relabel",
+   "employer": "California Post",
+   "source": "https://nypost.com/author/katie-jerkovich/"
+  },
+  {
+   "name": "Marc Vartabedian",
+   "outlet_seen": "ny-post",
+   "action": "relabel",
+   "employer": "California Post",
+   "source": "nypost.com author bio (research, 2026-09-23)"
+  },
+  {
+   "name": "Nina Joudeh",
+   "outlet_seen": "ny-post",
+   "action": "relabel",
+   "employer": "California Post",
+   "source": "https://nypost.com/author/nina-joudeh/"
+  },
+  {
+   "name": "Adam Reiss",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": "https://www.linkedin.com/in/adam-reiss-9204235"
+  },
+  {
+   "name": "Dan Gallo",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Dana Griffin",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Daniella Silva",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": "https://www.nbcnews.com/author/daniella-silva-ncpn211"
+  },
+  {
+   "name": "Dareh Gregorian",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": "https://www.nbcnews.com/author/dareh-gregorian-ncpn925686"
+  },
+  {
+   "name": "David K. Li",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": "https://www.nbcnews.com/author/david-k-li-ncpn915856"
+  },
+  {
+   "name": "Dennis Romero",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Gary Grumbach",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": "https://www.nbcnews.com/author/gary-grumbach-ncpn752571"
+  },
+  {
+   "name": "Jasmine Cui",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Julia Ainsley",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": "https://www.nbcnews.com/author/julia-ainsley-ncpn796096"
+  },
+  {
+   "name": "Kyla Guilfoil",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": "https://www.nbcnews.com/author/kyla-guilfoil-ncpn1307185"
+  },
+  {
+   "name": "Kyle Stewart",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Lawrence Hurley",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Matt Lavietes",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Phil Helsel",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": "https://www.nbcnews.com/author/phil-helsel-ncpn115631"
+  },
+  {
+   "name": "Rob Wile",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Rudy Chinchilla",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": "https://www.nbcnewyork.com/author/rudy-chinchilla/"
+  },
+  {
+   "name": "Sahil Kapur",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Scott Wong",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Tara Prindiville",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "NBC News",
+   "source": ""
+  },
+  {
+   "name": "Ken Fisher",
+   "outlet_seen": "ny-post",
+   "action": "drop",
+   "why": "a money manager's syndicated markets column, not a reporter",
+   "source": "https://www.kenfisher.com/"
+  },
+  {
+   "name": "Scott Strauss",
+   "outlet_seen": "ny-post",
+   "action": "drop",
+   "why": "a one-off first-person piece by a retired NYPD detective",
+   "source": "nypost.com author page (research, 2026-09-23)"
+  },
+  {
+   "name": "Adam Lehodey",
+   "outlet_seen": "ny-post",
+   "action": "drop",
+   "why": "an outside opinion contributor from City Journal, not Post staff",
+   "source": "https://adamlehodey.com/"
+  }
+ ]
+}

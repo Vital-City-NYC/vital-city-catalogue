@@ -571,6 +571,7 @@ function card(r,i){
       ${r.nameMatch?`<span class="sc">name match</span>`:r.closest?`<span class="sc">closest Times reporter &middot; ${p.story_count} metro stories on file</span>`:r.clips!=null?`<span class="sc">${MEDIUM_LABEL[mediumOf(p)]} &middot; ${r.clips} clip${r.clips===1?"":"s"} on this</span>`:""}
     </div>
     ${vcBadges(p)?`<div style="margin-top:5px">${vcBadges(p)}</div>`:""}
+    ${p.byline_note?`<div class="role" style="margin-top:5px;color:var(--vc-charcoal)">${esc(p.byline_note)}.</div>`:""}
     ${p.bio?`<div class="role" style="margin-top:5px">${esc(p.bio)}</div>`:""}
     ${(beats.length||terms.length)?`<div class="why">
       ${beats.map(b=>`<span class="b"><i>${b.count}</i> ${esc(b.label.toLowerCase())}${b.share>=.4?" <span style='color:var(--vc-charcoal)'>(most of their file)</span>":""}</span>`).join("")}

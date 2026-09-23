@@ -893,6 +893,21 @@ def main():
     # group (priority 1) and the city-and-state government group (priority 2).
     GROUPS = {"crime": {b for b, v in beats.items() if v["priority"] == 1},
               "government": {b for b, v in beats.items() if v["priority"] == 2}}
+    # A story's section says what kind of story it is. Sports, celebrity,
+    # betting, shopping, lottery, weather and lifestyle pages are not beat
+    # evidence ("rock star hospitalized" is not health coverage); arts,
+    # entertainment and food pages count only toward the culture beat.
+    NO_BEAT = re.compile(r"/(sports?|celebrity|celebrities|betting|shopping|shopping-deals|deals|lottery|"
+                         r"horoscopes?|astrology|weather|lifestyle|style|fashion|buying-guide|reviews)(/|$)", re.I)
+    CULTURE_ONLY = re.compile(r"/(entertainment|food|dining|movies|tv|television|music|arts?|theater)(/|$)", re.I)
+
+    def beats_for(url):
+        path = re.sub(r"^https?://[^/]+", "", url or "")
+        if NO_BEAT.search(path):
+            return {}
+        if CULTURE_ONLY.search(path):
+            return {k: v for k, v in beats.items() if k == "culture"}
+        return beats
     for p in people.values():
         p["beat_hits"] = collections.Counter()
         p["beat_examples"] = collections.defaultdict(list)
@@ -901,7 +916,7 @@ def main():
         for st in p["stories"].values():
             blob = st.pop("blob", "")
             hit_groups = set()
-            for bid, b in beats.items():
+            for bid, b in beats_for(st.get("url")).items():
                 matched = [lbl for pat, lbl in b["pats"] if pat.search(blob)]
                 if matched:
                     for g, members in GROUPS.items():
@@ -1059,6 +1074,9 @@ def main():
                 p["email_evidence"] = src.get("email_evidence")
 
     if args.cache_only:
+        # Reviewed contact pages at these outlets can only be read from here too.
+        extra = read_contact_sources(list(people.values()))
+        print(f"  contact_sources: {apply_contact_sources(list(people.values()), extra)} addresses from reviewed pages")
         blocked = {o["id"] for o in outlets}
         items = collections.defaultdict(list)
         for i in (rss_items + wp_items):
@@ -1280,6 +1298,34 @@ def main():
     supplemental = cached("contact_sources", lambda: read_contact_sources(out_people))
     added = apply_contact_sources(out_people, supplemental)
     print(f"  {added} addresses added from reviewed contact pages")
+
+    # ---- reviewed byline corrections ----------------------------------------
+    # A station site runs wire and network copy under the reporter's own name,
+    # so Associated Press and NBC News correspondents harvested from
+    # nbcnewyork.com looked like NBC 4's own staff, and could take the NBC 4
+    # slot the core-outlet rule reserves. The Post's site carries its California
+    # edition the same way. press/byline_corrections.json names them, each row
+    # with the page that established it: relabel shows the real employer and
+    # takes them off the outlet they were harvested from; drop removes bylines
+    # that are not people, or guest writers.
+    corr_path = PRESS / "byline_corrections.json"
+    name_of = {o["id"]: o.get("name") or o["id"] for o in outlets}
+    if corr_path.exists():
+        corr = {(merge_name(c["name"]), c.get("outlet_seen")): c
+                for c in json.loads(corr_path.read_text()).get("corrections", [])}
+        kept, relabelled, dropped = [], 0, 0
+        for p in out_people:
+            c = corr.get((merge_name(p["name"]), p.get("outlet")))
+            if c and c.get("action") == "drop":
+                dropped += 1
+                continue
+            if c and c.get("action") == "relabel" and c.get("employer"):
+                p["byline_note"] = f"Stories ran on {name_of.get(p['outlet'], p['outlet'])}; works for {c['employer']}"
+                p["outlet_text"], p["outlet"] = c["employer"], None
+                relabelled += 1
+            kept.append(p)
+        out_people = kept
+        print(f"  byline corrections: {relabelled} relabelled, {dropped} dropped")
 
     # ---- who is press ------------------------------------------------------
     # Having written for Vital City is not a credential. Our contributors are
