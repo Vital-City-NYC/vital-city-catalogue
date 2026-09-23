@@ -3727,11 +3727,19 @@ def verify_citations(items, workers=12):
             return it
         if isinstance(raw, bytes):
             raw = raw.decode("utf8", "replace")
+        page = raw
+        # Only the page's own content counts. The <head> repeats neighbouring
+        # posts' titles in feed links, and "previous post / next post" links
+        # carry the next post's title: a blog that republished one Vital City
+        # piece otherwise "cites" us on the posts either side of it.
+        raw = re.sub(r"<head\b.*?</head>", " ", raw, flags=re.S | re.I)
+        raw = re.sub(r"<a\b[^>]*\brel=[\"'](?:prev|next)[\"'][^>]*>.*?</a>", " ", raw, flags=re.S | re.I)
+        raw = re.sub(r"<(nav|aside|footer)\b.*?</\1>", " ", raw, flags=re.S | re.I)
         text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", raw, flags=re.S | re.I)
         text = re.sub(r"<[^>]+>", " ", text)
         text = html_mod.unescape(re.sub(r"\s+", " ", text))
         if not it.get("title"):
-            tm = re.search(r"<title[^>]*>(.*?)</title>", raw, re.S | re.I)
+            tm = re.search(r"<title[^>]*>(.*?)</title>", page, re.S | re.I)
             if tm:
                 it["title"] = re.sub(r"\s+", " ", html_mod.unescape(
                     re.sub(r"<[^>]+>", "", tm.group(1)))).strip()[:220]

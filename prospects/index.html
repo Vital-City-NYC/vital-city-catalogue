@@ -167,6 +167,8 @@
   .led .lt a{color:var(--vc-black);font-weight:700;text-decoration:none}
   .led .lt a:hover{color:var(--vc-cerulean)}
   .led .lm{font-size:11px;color:var(--vc-charcoal)}
+  .infl{font-size:12px;line-height:1.5;background:var(--vc-paper);padding:9px 12px;border-radius:4px;margin:4px 0 12px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+  .infl .inflbtns{display:flex;gap:6px;flex-wrap:wrap}.infl .exp{float:none;text-decoration:none;color:var(--vc-black)}
   .ledcount{font-size:11px;color:var(--vc-charcoal);margin:8px 0 0}
   @media(max-width:620px){.led{grid-template-columns:1fr}.led .ld{order:0}}
   @media print{.ledbox{max-height:none;overflow:visible;background:none;padding:0}.ledctl,.ledsum button:not(.on){display:none}}
@@ -581,6 +583,8 @@ function boot(d){
     <h2>Impact ledger
       <button class="exp" id="ledCsv">&#8681; Download CSV</button>
 </h2>
+    <div class="infl"><b>Influence summary</b> for outside readers: the editors' narrative plus the latest citations, rebuilt twice a day and editable on the page.
+      <span class="inflbtns"><a class="exp" href="influence.html" target="_blank" rel="noopener">Open and edit</a><a class="exp" href="influence.html?print=1" target="_blank" rel="noopener">Print / PDF</a><a class="exp" href="influence.html?docx=1" target="_blank" rel="noopener">Word</a><a class="exp" href="influence.html?email=1" target="_blank" rel="noopener">Email</a></span></div>
     <div class="hint" id="ledHint"></div>
     <div class="ledsum" id="ledSum"></div>
     <div class="ledctl">

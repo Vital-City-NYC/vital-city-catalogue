@@ -626,6 +626,9 @@ def build_impact_ledger(growth, people, receipts):
             t = t[: -len(src) - 3]
         if len(t) < 16 or t.startswith("-") or t.lower() in {"staff", "home", "about"}:
             continue
+        # author and section pages are not citations
+        if re.search(r"(?:^|, )Vital City$|^Story Archive|^(Public Safety|Criminal Justice) News$", t):
+            continue
         add(d, kind, src, t, x.get("url"))
 
     # 2. Appearances: the hand-logged ledger, then the per-person search.
@@ -691,6 +694,173 @@ def build_impact_ledger(growth, people, receipts):
     return {"asof": TODAY.isoformat(), "rows": rows, "counts": counts,
             "areas": areas.most_common(),
             "scholar_note": (growth.get("scholar_citations") or {}).get("reason") or ""}
+
+
+# ---------------------------------------------------------------------------
+# Influence summary (prospects/influence.html). The narrative is the editors'
+# own text, editable on the page (prospect:text:influence-pN, same shared edit
+# sheet as the rest of this page). Below it, recent evidence is rebuilt on
+# every run from the confirmed mention feed and the links staff share in
+# #vc-mentions (slack_mentions.py -> private/slack_mentions.json).
+SLACK_FILE = ROOT / "private" / "slack_mentions.json"
+INFLUENCE_DOC_DATE = "2026-06-16"
+INFLUENCE_TEXT = [
+    "Vital City's influence has been broadly felt in the city's corridors of power.",
+    "Since our inception, we've beaten the drum on the need for profound reforms — including a federal receiver — to make the city's jails on Rikers Island more just, humane and efficient. A judge decided to name such an official last year, and he's now in place, looking to Vital City for guidance. The City's new correction commissioner listens to and reads Vital City closely.",
+    "We've been a consistent voice both for more effective policing and for broader approaches that help build durable neighborhood public safety through other means. Our analysis was cited in 2025 by then-candidate Zohran Mamdani, who proclaimed himself \"quite taken\" by our annual crime report, which educated him on how financially motivated crimes have been falling while anger-driven, seemingly random violence have risen. Later in that campaign year, Mamdani sat for an hour-long Vital City conversation hosted by Errol Louis. In December 2025, Mamdani advisor Patrick Gaspard said, \"one of the things I love about Vital City is its ability to give space to sharp, well-articulated argument that's backed up with data that can even move a hack like me on an issue.\"",
+    "Our influence is evident: Renita Francois, named the city's first-ever deputy mayor for community safety, is a two-time Vital City author; her December 2025 essay in our pages in many respects reads like a blueprint for the Mamdani administration's approach to creating safer and more vibrant communities.",
+    "At the state level, our policy recommendations on improving subway safety, informed by a Vital City data analysis that drove an exclusive in the New York Times, were taken up in part by Gov. Kathy Hochul and the MTA.",
+    "Our housing issue and subsequent commentary on the topic has helped guide the conversation in a city in which progressives, liberals, independents and conservatives increasingly agree on the need to build more homes for New Yorkers. For this work, the Citizens Housing and Planning Council, the city's leading nonprofit housing policy research organization, honored us with its Insight Award. Our incisive work on homelessness and serious mental illness, including a set of policy recommendations on how to better help troubled people on the streets and subways, has put pragmatic guidance in the hands of the city's new leadership.",
+    "And just days after we released a series of ideas for improving permitting as part of our \"Just Fix It\" series, City Hall released a report directly echoing many of those recommendations.",
+    "Rather than cheering the mayor on or shaking our fists, we've engaged in constructive criticism about Mamdani's public supermarket proposal, with one essay about the city's existing impediments to private sector grocery competition gaining particular traction. Months after a piece appeared in our pages arguing for free, public observation decks, the Mamdani administration created one.",
+    "Because of all this and more, Vital City is cited approvingly across the ideological spectrum — from City Journal and Reason on the right to The Guardian, The Atlantic and Mother Jones on the left — a rare feat for a policy publication, and its work even surfaced on John Oliver's \"Last Week Tonight.\" The people best positioned to judge its quality have been its loudest champions: criminologist Peter Moskos called it by far the best journal for anyone interested in urban issues, Thomas Abt dubbed it \"the crime nerds' New Yorker,\" and opinion leaders like Matt Yglesias and Chris Hayes have amplified its work — with Ravi Gupta calling one piece the single best thing written about the mayoral race. That authority extends into the academy, where a Boston College professor reported students singling out the Vital City readings as the best part of his course and called the journal a gold mine for teaching.",
+    "Our essays and analysis don't only live on our website; they've been republished by the New York Daily News, The City Reporter, Crains New York Business, Next City and others.",
+]
+_INF_NAMES = {
+    "podcasts.apple.com": "Apple Podcasts", "x.com": "X", "twitter.com": "X", "linkedin.com": "LinkedIn",
+    "economist.com": "The Economist", "theatlantic.com": "The Atlantic", "bloomberg.com": "Bloomberg",
+    "newyorker.com": "The New Yorker", "slowboring.com": "Slow Boring", "thedispatch.com": "The Dispatch",
+    "americanprogress.org": "Center for American Progress", "thebiggerapple.manhattan.institute": "Manhattan Institute",
+    "hks.harvard.edu": "Harvard Kennedy School", "today.umd.edu": "University of Maryland",
+    "forever-wars.com": "Forever Wars", "innotechtoday.com": "Innovation & Tech Today", "nycuriosity.com": "NYC Curiosity",
+    "mailchi.mp": "The Trace", "open.substack.com": "Statecraft", "probablecausation.substack.com": "Probable Causation",
+    "thecity.nyc": "The City Reporter", "thecityreporter.nyc": "The City Reporter", "nytimes.com": "The New York Times",
+    "nypost.com": "New York Post", "nydailynews.com": "New York Daily News", "dailynews.com": "Los Angeles Daily News",
+    "gothamist.com": "Gothamist", "politico.com": "Politico", "amny.com": "amNewYork", "therealdeal.com": "The Real Deal",
+    "cityandstateny.com": "City & State", "crainsnewyork.com": "Crain's New York Business", "nysfocus.com": "New York Focus",
+    "nyc.streetsblog.org": "Streetsblog New York City", "w42st.com": "W42ST",
+}
+_POLICY = ("americanprogress.org", "manhattan.institute", "hks.harvard.edu", "umd.edu", ".gov", "cbcny.org")
+_AIR = ("podcasts.apple.com", "economist.com/podcasts", "probablecausation", "wnyc.org", "1010wins")
+_COMMENT = ("x.com", "twitter.com", "linkedin.com", "substack.com", "slowboring.com", "forever-wars.com",
+            "thedispatch.com", "nycuriosity.com", "mailchi.mp", "innotechtoday.com")
+
+
+def _canon(u):
+    u = re.sub(r"^https?://(www\.)?", "", (u or "").strip().lower())
+    return u.split("#")[0].split("?")[0].rstrip("/")
+
+
+def _host(u):
+    return _canon(u).split("/")[0]
+
+
+def _words(t):
+    return {w for w in re.findall(r"[a-z0-9]+", (t or "").lower()) if len(w) > 2}
+
+
+def _slug_title(u):
+    parts = [p for p in _canon(u).split("/")[1:] if p and not re.fullmatch(r"[\d-]+|p|news|article|articles|opinion|id\d+|status", p)]
+    s = parts[-1] if parts else ""
+    s = re.sub(r"-\d{5,}$", "", re.sub(r"\.html?$", "", s)).replace("-", " ").strip()
+    return (s[:1].upper() + s[1:]) if s else ""
+
+
+def _page_title(u):
+    try:
+        raw = http_get_title(u)
+    except Exception:
+        return ""
+    m = re.search(r"<title[^>]*>(.*?)</title>", raw or "", re.S | re.I)
+    if not m:
+        return ""
+    import html as _h
+    t = re.sub(r"\s+", " ", _h.unescape(m.group(1))).strip()
+    seg = re.split(r"\s+[|\-–—]\s+", t)
+    if len(seg) > 1 and len(seg[-1]) <= 40 and len(" - ".join(seg[:-1])) >= 20:
+        t = " - ".join(seg[:-1])
+    bad = ("just a moment", "access denied", "attention required", "403", "404", "robot", "subscribe to read", "x.com", "log in")
+    return "" if (len(t) < 12 or any(b in t.lower() for b in bad)) else t[:200]
+
+
+def http_get_title(u):
+    import urllib.request as _r
+    req = _r.Request(u, headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                                              "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"})
+    with _r.urlopen(req, timeout=8) as r:
+        return r.read(300_000).decode("utf8", "replace")
+
+
+def build_influence(growth, ledger_rows):
+    slack = (load(SLACK_FILE) or {})
+    feed = [r for r in ledger_rows if r["kind"] in ("press", "government", "republished", "appearance", "scholarly")]
+    by_url = {_canon(r["url"]): r for r in feed if r.get("url")}
+
+    def section(host, url, kind=None):
+        u = _canon(url)
+        if kind in ("government", "republished", "scholarly") or any(p in host for p in _POLICY):
+            return "policy"
+        if kind == "appearance" or any(p in u for p in _AIR):
+            return "air"
+        if any(host == p or host.endswith("." + p) or p in host for p in _COMMENT):
+            return "comment"
+        return "press"
+
+    items, seen = [], set()
+    todo = []
+    for s in slack.get("items") or []:
+        u, host = s.get("url") or "", _host(s.get("url"))
+        c = _canon(u)
+        if not u or c in seen:
+            continue
+        seen.add(c)
+        match = by_url.get(c)
+        if not match:
+            sw = _words(_slug_title(u))
+            for r in feed:
+                tw = _words(r["title"])
+                if len(sw) >= 4 and tw and len(sw & tw) / len(sw) >= 0.7:
+                    match = r
+                    break
+        outlet = _INF_NAMES.get(host) or _INF_NAMES.get(host.split(".", 1)[-1]) or (match or {}).get("source") or host
+        row = {"date": s.get("date") or "", "outlet": outlet, "url": u, "title": (match or {}).get("title") or "",
+               # staff comments and who posted stay out: this summary is for outside readers
+               "quote": s.get("quote") or "", "section": section(host, u), "from": "staff"}
+        if host in ("x.com", "twitter.com"):
+            h = _canon(u).split("/")[1] if "/" in _canon(u) else ""
+            row["title"] = row["title"] or f"Post by @{h}"
+        if not row["title"]:
+            todo.append(row)
+        items.append(row)
+        if match:
+            seen.add(_canon(match.get("url")))
+    # titles the feed did not have: read the page's own <title>, else the URL slug
+    if todo:
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=10) as ex:
+            titles = list(ex.map(lambda r: _page_title(r["url"]), todo))
+        for r, t in zip(todo, titles):
+            r["title"] = t or _slug_title(r["url"]) or r["outlet"]
+            if not t:
+                r["title_from_url"] = True   # the page says so, and the title can be edited there
+    for r in feed:
+        c = _canon(r.get("url"))
+        if c and c in seen:
+            continue
+        seen.add(c)
+        items.append({"date": r["date"], "outlet": r["source"], "url": r["url"], "title": r["title"],
+                      "quote": "",
+                      "section": section(_host(r.get("url")), r.get("url"), r["kind"]), "from": "feed"})
+    for i in items:
+        o = re.escape(i["outlet"] or "")
+        i["title"] = re.sub(rf"\s+[|\-–—]\s+(?:{o}|THE CITY)\s*$", "", i["title"] or "", flags=re.I).strip()
+    # the same story can arrive twice (Slack and the feed, or two URLs for one
+    # piece); keep the first, which is the Slack row when there is one
+    uniq, tseen = [], set()
+    for i in items:
+        k = (i["outlet"].lower(), re.sub(r"\W+", "", i["title"].lower())[:70])
+        if k in tseen:
+            continue
+        tseen.add(k)
+        uniq.append(i)
+    # section and author pages are not citations
+    items = [i for i in uniq if i["date"] >= "2025-01-01"
+             and not re.search(r"(?:^|, )Vital City$|^Story Archive|^(Public Safety|Criminal Justice) News$", i["title"])]
+    items.sort(key=lambda i: i["date"], reverse=True)
+    for i in items:
+        i["id"] = __import__("hashlib").sha1(_canon(i["url"]).encode()).hexdigest()[:10]
+    return {"asof": TODAY.isoformat(), "doc_date": INFLUENCE_DOC_DATE, "paragraphs": INFLUENCE_TEXT,
+            "items": items, "slack_source": slack.get("source") or "", "slack_read_at": slack.get("read_at") or ""}
 
 
 def main():
@@ -1106,7 +1276,8 @@ def main():
         "funders": funders_out,
         "beats": beats,
         "funder_facts": funder_facts,
-        "impact_ledger": build_impact_ledger(growth, people, funder_facts.get("receipts")),
+        "impact_ledger": (_ledger := build_impact_ledger(growth, people, funder_facts.get("receipts"))),
+        "influence": build_influence(growth, _ledger["rows"]),
         "variants": (lambda: {
             k: {"label": v["label"], "spot_title": v["spot_title"],
                 "receipts": v["receipts"], "authors": v["authors"], "products": v["products"],

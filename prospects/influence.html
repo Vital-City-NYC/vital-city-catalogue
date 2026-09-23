@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Vital City's influence</title>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
+<style>
+  @font-face{font-family:'GascogneTS';src:url('../growth/fonts/GascogneTS-Light.ttf') format('truetype');font-weight:300 900;font-style:normal;font-display:swap;}
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-cerulean:#217ebe; --vc-paper2:#eeeeec; --vc-chartreuse:#d7df23;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --vc-serif:"GascogneTS",Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--vc-paper2);color:var(--vc-black);font-family:var(--vc-sans);-webkit-font-smoothing:antialiased}
+  a{color:var(--vc-black);text-decoration:none}
+  a:hover{color:var(--vc-cerulean)}
+
+  .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500;padding:16px}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px 38px;max-width:420px;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gatebox h1{font-family:var(--vc-serif);font-weight:300;font-size:26px;margin:0 0 6px}
+  .gatebox p{font-size:13px;color:var(--vc-charcoal);margin:0 0 14px;line-height:1.5}
+  .gatebox input{width:100%;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--vc-black);margin-bottom:10px}
+  .gatebox button{font:inherit;font-weight:900;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:11px 16px;background:var(--vc-black);color:#fff;border:0;cursor:pointer;width:100%}
+  .err{color:#c8102e;font-size:12.5px;min-height:18px;margin-top:8px}
+  .wordmark{font-weight:900;font-size:13px;letter-spacing:.22em;text-transform:uppercase}
+
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;padding:14px 16px;font-size:12.5px;color:var(--vc-charcoal)}
+  .bar button,.bar a,.bar select{font:inherit;font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:9px 14px;border:1.5px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);cursor:pointer;border-radius:3px}
+  .bar select{text-transform:none;letter-spacing:0;font-weight:700}
+  .bar button.primary{background:var(--vc-black);color:#fff}
+  .barnote{width:100%;text-align:center;font-size:12px;line-height:1.5;max-width:760px;margin:0 auto}
+
+  .sheet{width:8.5in;max-width:100%;margin:0 auto 30px;background:var(--vc-white);padding:.6in .7in .55in;box-shadow:0 4px 30px rgba(0,0,0,.12)}
+  .mast{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px}
+  .mast h1{font-family:var(--vc-serif);font-weight:300;font-size:36px;line-height:1.05;margin:8px 0 0;letter-spacing:-.01em}
+  .asof{font-size:10.5px;color:var(--vc-charcoal);text-align:right;line-height:1.5;white-space:nowrap}
+  .narr p{font-size:12.5px;line-height:1.6;margin:0 0 10px;position:relative}
+  .narr p.lede{font-family:var(--vc-serif);font-size:19px;line-height:1.35;margin-bottom:14px}
+  .sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;font-weight:900;margin:24px 0 8px}
+  .sum{font-size:12px;line-height:1.55;margin:0 0 6px}
+  .ev{display:grid;grid-template-columns:62px 1fr;gap:2px 12px;padding:5px 0;font-size:11.5px;line-height:1.42;break-inside:avoid}
+  .ev .d{color:var(--vc-charcoal);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ev .o{font-weight:800}
+  .ev .q{color:var(--vc-black);margin-top:2px;padding-left:9px;box-shadow:inset 2px 0 0 var(--vc-chartreuse)}
+  .ev .n{color:var(--vc-charcoal);font-size:10.5px;margin-top:2px}
+  .ev .n b{font-weight:700}
+  .ev.hidden{opacity:.38}
+  .more{font-size:11px;color:var(--vc-cerulean);cursor:pointer;margin:4px 0 0 74px;display:inline-block}
+  .foot{margin-top:26px;font-size:9.5px;color:var(--vc-charcoal);line-height:1.5}
+  .ed{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--vc-cerulean);cursor:pointer;margin-left:6px;white-space:nowrap}
+  .edstamp{font-size:9.5px;color:var(--vc-charcoal);margin-left:6px}
+  .flag{font-size:10px;color:#a0432d;margin-left:4px}
+
+  #pedit{position:fixed;inset:0;background:rgba(5,5,7,.45);display:none;align-items:center;justify-content:center;z-index:600;padding:16px}
+  #pedit.on{display:flex}
+  #pedit .box{background:var(--vc-white);max-width:640px;width:100%;padding:22px 24px;border:1px solid var(--vc-black)}
+  #pedit h3{margin:0 0 4px;font-size:16px}
+  #pedit .sub{font-size:12px;color:var(--vc-charcoal);margin-bottom:12px;line-height:1.5}
+  #pedit textarea{width:100%;min-height:180px;font:inherit;font-size:13px;line-height:1.5;padding:8px;border:1px solid var(--vc-cloud)}
+  #pedit .btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  #pedit button{font:inherit;font-weight:800;font-size:12px;padding:8px 14px;border:1.5px solid var(--vc-black);background:var(--vc-black);color:#fff;cursor:pointer}
+  #pedit button.ghost{background:var(--vc-white);color:var(--vc-black)}
+  #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--vc-black);color:#fff;padding:10px 16px;font-size:12.5px;z-index:700;display:none}
+
+  @media(max-width:640px){
+    .sheet{padding:28px 18px}
+    .mast{flex-direction:column;align-items:flex-start}
+    .asof{text-align:left}
+    .mast h1{font-size:28px}
+    .ev{grid-template-columns:1fr}
+    .more{margin-left:0}
+  }
+  @page{size:letter portrait;margin:.55in .65in .5in}
+  @media print{
+    html,body{background:#fff}
+    .bar,.gate,.ed,.edstamp,.flag,.more,.ev .n,.ev.hidden,#toast{display:none !important}
+    .sheet{width:auto;margin:0;box-shadow:none;padding:0}
+    a{color:inherit}
+  }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="wordmark">Vital City</div>
+    <h1>Vital City's influence</h1>
+    <p>The editors' summary of where Vital City's work has landed, with the latest evidence added on every rebuild. Enter the shared passphrase.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="current-password">
+    <button id="unlock">Unlock</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="bar">
+    <button class="primary" id="print">Print / save as PDF</button>
+    <button id="docx">Download Word</button>
+    <button id="email" title="Opens a draft in your mail app with the summary in the body">Email</button>
+    <select id="win" title="How far back the recent-evidence list reaches">
+      <option value="doc">Evidence since the last version</option>
+      <option value="90" selected>Evidence from the last 90 days</option>
+      <option value="180">Evidence from the last six months</option>
+      <option value="365">Evidence from the last year</option>
+    </select>
+    <a href="index.html#impact">Back</a>
+    <div class="barnote" id="barnote"></div>
+  </div>
+  <div class="sheet" id="sheet"></div>
+</div>
+<div id="toast"></div>
+
+<script src="vendor/docx.umd.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const PASSKEY="vc_net_pass", TTL=90*24*3600*1000;
+function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+TTL}))}catch{}}
+function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
+  const o=JSON.parse(r);if(o&&o.pass&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null}catch{return null}}
+function b64d(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+
+/* Edits use the prospects page's store: the same Apps Script and Google Sheet,
+   under prospect:text:influence-* keys. The editor sees a change at once; the
+   nightly build folds it in for everyone. */
+const BACKEND_URL="https://script.google.com/macros/s/AKfycbw-lsFo3rHWZX3BnL0mEOo1kgRGqcsznH8WC3e5bcEu95zuwMG7NSCYpazP2Z4z7w3hPQ/exec";
+const EDKEY="vc_prospect_edits";
+function localEdits(){ try{return JSON.parse(localStorage.getItem(EDKEY)||"{}")}catch(e){return {}} }
+function saveLocal(key,o){ const all=localEdits(); all[key]=o; try{localStorage.setItem(EDKEY,JSON.stringify(all))}catch(e){} }
+function pushEdit(tid,text){
+  const key="prospect:text:"+tid, o={text,at:new Date().toISOString()};
+  saveLocal(key,o);
+  try{ fetch(BACKEND_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({pass:loadPass()||"",key,override:o})}).catch(()=>{}); }catch(e){}
+  render();
+  toast("Saved. You see it now; everyone else sees it after the next rebuild (7am or 7pm).");
+}
+function toast(t){ const m=$("#toast"); m.textContent=t; m.style.display="block"; clearTimeout(m._t); m._t=setTimeout(()=>m.style.display="none",4200); }
+function texts(){
+  const built=RAW.built_at||RAW.generated_at||"";
+  const T=Object.assign({},RAW.texts||{});
+  for(const [k,v] of Object.entries(localEdits())) if(k.startsWith("prospect:text:influence-")&&(v.at||"")>built) T[k.slice(14)]=v;
+  return T;
+}
+function openEditor(title,sub,value,onSave,extra){
+  let m=$("#pedit"); if(!m){ m=document.createElement("div"); m.id="pedit"; document.body.appendChild(m);
+    m.addEventListener("click",e=>{ if(e.target===m) m.classList.remove("on"); }); }
+  m.innerHTML=`<div class="box"><h3>${esc(title)}</h3><div class="sub">${sub}</div><textarea>${esc(value)}</textarea>
+    <div class="btns"><button data-s>Save</button><button class="ghost" data-x>Cancel</button>${extra?`<button class="ghost" data-e>${esc(extra.label)}</button>`:""}</div></div>`;
+  m.querySelector("[data-s]").onclick=()=>{ onSave(m.querySelector("textarea").value.trim()); m.classList.remove("on"); };
+  m.querySelector("[data-x]").onclick=()=>m.classList.remove("on");
+  if(extra) m.querySelector("[data-e]").onclick=()=>{ extra.fn(); m.classList.remove("on"); };
+  m.classList.add("on"); setTimeout(()=>m.querySelector("textarea").focus(),30);
+}
+
+const MON=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+const apDate=(s,withYear)=>{ const [y,m,d]=String(s||"").split("-").map(Number); if(!y||!m) return ""; return `${MON[m-1]}${d?" "+d:""}${withYear?", "+y:""}`; };
+const SECTIONS=[["press","In the press"],["policy","Government, universities and think tanks"],["air","On air and on podcasts"],["comment","Commentators and newsletters"]];
+let RAW=null, SHOWALL={};
+
+function model(){
+  const I=RAW.influence||{}, T=texts();
+  const paras=(I.paragraphs||[]).map((p,i)=>{ const e=T["influence-p"+i]; return {tid:"influence-p"+i, text:(e&&typeof e.text==="string")?e.text:p, edited:e?e.at:""}; })
+    .filter(p=>p.text);
+  const win=$("#win").value;
+  const since=win==="doc"?(I.doc_date||""):new Date(Date.now()-(+win)*864e5).toISOString().slice(0,10);
+  const items=(I.items||[]).filter(x=>x.date>=since).map(x=>{
+    const t=T["influence-title-"+x.id], h=T["influence-hide-"+x.id];
+    return Object.assign({},x,{title:(t&&t.text)?t.text:x.title, titleEdited:!!(t&&t.text), hidden:!!(h&&h.text==="hidden")});
+  });
+  return {I,paras,since,items,asof:I.asof||String(RAW.generated_at||"").slice(0,10)};
+}
+
+function render(){
+  const M=model();
+  const shown=M.items.filter(x=>!x.hidden);
+  const n=k=>shown.filter(x=>x.section===k).length;
+  const counts=SECTIONS.map(([k,l])=>n(k)?`${n(k)} ${({press:n(k)===1?"press citation":"press citations",policy:"from government, universities and think tanks",air:"on air and on podcasts",comment:n(k)===1?"commentator or newsletter":"commentators and newsletters"})[k]}`:"").filter(Boolean);
+  const sinceTxt=apDate(M.since,true);
+  const row=x=>`<div class="ev${x.hidden?" hidden":""}" data-id="${esc(x.id)}">
+      <div class="d">${esc(apDate(x.date))}</div>
+      <div><span class="o">${esc(x.outlet)}</span> &middot; <a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a>${x.title_from_url&&!x.titleEdited?`<span class="flag" title="The site blocked the title check, so these words come from the web address">title from web address</span>`:""}
+        <span class="ed" data-t="${esc(x.id)}">Edit</span>
+        ${x.quote?`<div class="q">${esc(x.quote)}</div>`:""}
+      </div></div>`;
+  const secs=SECTIONS.map(([k,label])=>{
+    const all=M.items.filter(x=>x.section===k); if(!all.length) return "";
+    const cap=SHOWALL[k]?all.length:12;
+    return `<div class="sec">${esc(label)}</div>${all.slice(0,cap).map(row).join("")}
+      ${all.length>cap?`<span class="more" data-more="${k}">Show all ${all.length}</span>`:""}`;
+  }).join("");
+  $("#sheet").innerHTML=`
+    <div class="mast">
+      <div><div class="wordmark">Vital City</div><h1>Vital City's influence</h1></div>
+      <div class="asof">vitalcitynyc.org<br>Updated ${esc(apDate(M.asof,true))}</div>
+    </div>
+    <div class="narr">${M.paras.map((p,i)=>`<p class="${i===0?"lede":""}">${esc(p.text)}<span class="ed" data-p="${p.tid}">Edit</span>${p.edited?`<span class="edstamp">edited ${esc(p.edited.slice(0,10))}</span>`:""}</p>`).join("")}</div>
+    <div class="sec">Recent evidence</div>
+    <p class="sum">Since ${esc(sinceTxt)}: ${esc(counts.join("; ")||"nothing new on file")}.</p>
+    ${secs}
+    <div class="foot">Vital City is a project of the Fund for the City of New York, a 501(c)(3), EIN 13-2612524. Editors Elizabeth Glazer and Greg Berman; managing editor Josh Greenman.</div>`;
+  $("#barnote").innerHTML=`The narrative is the editors' text: <b>Edit</b> any paragraph or title, or leave an item out. The evidence list updates twice a day.`;
+  window.__model=Object.assign(M,{shown});
+}
+
+document.addEventListener("click",e=>{
+  const p=e.target.closest("[data-p]"); if(p){ const M=model(), para=M.paras.find(x=>x.tid===p.dataset.p);
+    openEditor("Edit this paragraph","Plain text. Leave it empty and save to drop the paragraph.",para?para.text:"",v=>pushEdit(p.dataset.p,v)); return; }
+  const t=e.target.closest("[data-t]"); if(t){ const x=model().items.find(i=>i.id===t.dataset.t); if(!x) return;
+    openEditor("Edit this item's title","The headline as it should appear. The link stays the same.",x.title,v=>pushEdit("influence-title-"+x.id,v),
+      {label:x.hidden?"Put it back in":"Leave it out", fn:()=>pushEdit("influence-hide-"+x.id,x.hidden?"":"hidden")}); return; }
+  const m=e.target.closest("[data-more]"); if(m){ SHOWALL[m.dataset.more]=true; render(); }
+});
+$("#win").addEventListener("change",render);
+
+function plainText(){
+  const M=window.__model; const L=["VITAL CITY'S INFLUENCE","Updated "+apDate(M.asof,true),""];
+  M.paras.forEach(p=>{ L.push(p.text); L.push(""); });
+  L.push("RECENT EVIDENCE, SINCE "+apDate(M.since,true).toUpperCase(),"");
+  SECTIONS.forEach(([k,label])=>{ const xs=M.shown.filter(x=>x.section===k).slice(0,SHOWALL[k]?999:12); if(!xs.length) return;
+    L.push(label.toUpperCase());
+    xs.forEach(x=>{ L.push(`${apDate(x.date)}: ${x.outlet}, "${x.title}" ${x.url}`); if(x.quote) L.push("   "+x.quote); });
+    L.push(""); });
+  return L.join("\n");
+}
+$("#email").addEventListener("click",()=>{
+  let body=plainText(); if(body.length>12000) body=body.slice(0,12000)+"\n…";
+  location.href="mailto:?subject="+encodeURIComponent("Vital City's influence")+"&body="+encodeURIComponent(body);
+});
+$("#print").addEventListener("click",()=>window.print());
+
+async function exportDocx(){
+  const M=window.__model; if(!M||!window.docx){ alert("The page has not finished loading."); return; }
+  const {Document,Packer,Paragraph,TextRun,ExternalHyperlink}=docx;
+  const F="Arial";
+  const R=(text,o={})=>new TextRun({text,font:F,size:o.size||21,bold:o.bold,color:o.color});
+  const P=(kids,o={})=>new Paragraph({spacing:{after:o.after??120,before:o.before??0},indent:o.indent?{left:o.indent}:undefined,children:kids});
+  const kids=[P([R("VITAL CITY",{bold:true,size:18})],{after:60}),P([R("Vital City's influence",{size:44})],{after:60}),
+    P([R("vitalcitynyc.org · Updated "+apDate(M.asof,true),{size:17,color:"707175"})],{after:240})];
+  M.paras.forEach((p,i)=>kids.push(P([R(p.text,{size:i===0?28:21})],{after:160})));
+  kids.push(P([R("RECENT EVIDENCE",{bold:true,size:18})],{before:240,after:80}));
+  const c=SECTIONS.map(([k,l])=>[l,M.shown.filter(x=>x.section===k).length]).filter(x=>x[1]).map(([l,n])=>`${l}: ${n}`).join("; ");
+  kids.push(P([R(`Since ${apDate(M.since,true)}. ${c}.`,{size:19,color:"707175"})],{after:120}));
+  SECTIONS.forEach(([k,label])=>{ const xs=M.shown.filter(x=>x.section===k).slice(0,SHOWALL[k]?999:12); if(!xs.length) return;
+    kids.push(P([R(label.toUpperCase(),{bold:true,size:17})],{before:200,after:60}));
+    xs.forEach(x=>{
+      kids.push(P([R(apDate(x.date)+"   ",{size:19,color:"707175"}),R(x.outlet+" · ",{size:19,bold:true}),
+        new ExternalHyperlink({link:x.url,children:[new TextRun({text:x.title,font:F,size:19,color:"217EBE"})]})],{after:x.quote?20:60}));
+      if(x.quote) kids.push(P([R(x.quote,{size:18})],{indent:360,after:80}));
+    }); });
+  kids.push(P([R("Vital City is a project of the Fund for the City of New York, a 501(c)(3), EIN 13-2612524. Editors Elizabeth Glazer and Greg Berman; managing editor Josh Greenman.",{size:16,color:"707175"})],{before:300}));
+  const doc=new Document({styles:{default:{document:{run:{font:F,size:21}}}},sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:1000,bottom:1000,left:1080,right:1080}}},children:kids}]});
+  const blob=await Packer.toBlob(doc); window.__lastDocxSize=blob.size;
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`Vital-City-influence-${M.asof}.docx`;
+  document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);
+}
+$("#docx").addEventListener("click",exportDocx);
+
+async function unlock(fromStore){
+  $("#err").textContent="";
+  const pass=$("#pw").value.trim(); if(!pass){$("#err").textContent="Enter the passphrase.";return}
+  try{
+    const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
+    RAW=await decryptBlob(pass,blob);
+    savePass(pass); $("#gate").style.display="none"; $("#app").style.display="";
+    if(!RAW.influence){ $("#sheet").innerHTML='<p style="font-size:13px">The influence summary appears after the next rebuild.</p>'; return; }
+    render();
+  }catch(e){console.error(e);$("#err").textContent="Wrong passphrase, or data unavailable.";if(fromStore)try{localStorage.removeItem(PASSKEY)}catch{}}
+}
+$("#unlock").addEventListener("click",()=>unlock(false));
+$("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
+(async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
+// ?print=1, ?docx=1 and ?email=1 from the prospects page: act once the page has content.
+for(const [flag,fn] of [["print",()=>window.print()],["docx",exportDocx],["email",()=>$("#email").click()]]){
+  if(new RegExp("[?&]"+flag+"=1").test(location.search)){ const t=setInterval(()=>{ if(window.__model){ clearInterval(t); setTimeout(fn,500); } },150); }
+}
+</script>
+</body>
+</html>
