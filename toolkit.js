@@ -52,6 +52,15 @@
     return AP_MON[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
   }
   window.vcApDate = apDate;
+
+  // The installable app: one offline worker for the whole toolkit, registered
+  // from every page. It changes nothing on screen; see sw.js.
+  try {
+    if ("serviceWorker" in navigator && location.protocol === "https:") {
+      var swBase = (document.currentScript && document.currentScript.src || "").replace(/[^/]*$/, "");
+      if (swBase) { navigator.serviceWorker.register(swBase + "sw.js", { scope: swBase }).catch(function () {}); }
+    }
+  } catch (e) {}
   window.vcTools = TOOLS;
   window.vcStamp = function (el, when, extra) {
     if (typeof el === "string") { el = document.querySelector(el); }

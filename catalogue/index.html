@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- installable app (VC Toolkit): phone home-screen only, no effect on the desktop page -->
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../app/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VC Toolkit">
 <title>Vital City content catalogue</title>
 <link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
 <style>
@@ -204,7 +211,8 @@
     .stats { grid-template-columns: repeat(2, 1fr); }
     .stat { border-bottom: 1px solid var(--vc-cloud); }
     td.title { max-width: none; }
-    .controls select { flex: 1 1 45%; max-width: none; }
+    .controls select { flex: 1 1 45%; max-width: 100%; min-width: 0; }
+    .tablewrap { overflow-x: auto; padding: 8px 16px 50px; }
     .stat .num { font-size: 28px; }
   }
   /* Embedded material + header-image credit */

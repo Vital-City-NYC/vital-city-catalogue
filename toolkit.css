@@ -178,6 +178,8 @@ html body header.mast .sub, html body header.masthead .sub {
   html body .confbar > span:not(:first-child) { display: none; }
   html body nav.vckit .vckit-utils { margin: 0; padding: 4px 0 9px; flex-wrap: wrap; gap: 6px 14px; }
   html body header.mast h1, html body header.masthead h1 { font-size: 22px; }
+  html body .mastlinks { flex-wrap: wrap; max-width: 100%; gap: 6px 14px; }
+  html body nav.vckit > .mastlinks { flex: 1 1 100%; min-width: 0; }
 }
 
 /* The sign-in box. It is the first thing seen on any gated tool from a new

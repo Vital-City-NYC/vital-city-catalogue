@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- installable app (VC Toolkit): phone home-screen only, no effect on the desktop page -->
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../app/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VC Toolkit">
 <meta name="robots" content="noindex,nofollow">
 <title>Vital City — fundraising prospects</title>
 <style>
@@ -132,9 +139,11 @@
   .prod .pl{font-size:11px;margin-top:7px}
   .prod .pl a{margin-right:9px}
   .twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media(max-width:760px){.fitTiles .fitTile:last-child{grid-column:auto}.fitTiles,.prodgrid{grid-template-columns:1fr};.twocol{grid-template-columns:1fr};.rcp{flex-direction:column;gap:2px}}
+  @media(max-width:760px){.fitTiles .fitTile:last-child:nth-child(n){grid-column:auto}.fitTiles,.prodgrid{grid-template-columns:1fr}.twocol{grid-template-columns:1fr}.rcp{flex-direction:column;gap:2px}}
   @media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}}
-  @media(max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)};.wrap{padding:16px 14px 50px}}
+  /* phones: the deck and one-pager grid scrolls inside its box */
+  @media(max-width:640px){.deckcta{overflow-x:auto;-webkit-overflow-scrolling:touch}table.tbl{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}
+  @media(max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)}.wrap{padding:16px 14px 50px}}
   html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1d1e21}
   html.dark .gatebox,html.dark .card{box-shadow:none}
   html.dark .b-lead{background:#3a3d45;color:#c9ccd2}

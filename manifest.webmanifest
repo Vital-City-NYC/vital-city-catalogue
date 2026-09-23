@@ -1,0 +1,24 @@
+{
+  "name": "Vital City toolkit",
+  "short_name": "VC Toolkit",
+  "description": "Every tool Vital City uses to track its work, readers, supporters and coverage.",
+  "id": "/vital-city-catalogue/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#050507",
+  "background_color": "#f7f7f4",
+  "icons": [
+    { "src": "app/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Growth", "url": "growth/", "icons": [{ "src": "app/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Contacts", "url": "network/", "icons": [{ "src": "app/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Press", "url": "press/", "icons": [{ "src": "app/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Prospects", "url": "prospects/", "icons": [{ "src": "app/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Catalogue", "url": "catalogue/", "icons": [{ "src": "app/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

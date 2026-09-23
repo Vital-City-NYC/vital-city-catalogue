@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- installable app (VC Toolkit): phone home-screen only, no effect on the desktop page -->
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../app/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VC Toolkit">
 <meta name="robots" content="noindex,nofollow">
 <title>Vital City — press map</title>
 <link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
@@ -165,6 +172,8 @@
   .amp .dp button:hover{color:var(--vc-black);border-color:var(--vc-black)}
   .amp .fl{color:#a0432d;font-size:11px}
   @media(max-width:760px){ .amp .cols{grid-template-columns:1fr} }
+  /* phones: wide tables scroll inside their box instead of pushing the page sideways */
+  @media(max-width:640px){ #beatOut,#beatRest,#dirOut,#knownOut,#outletOut{overflow-x:auto;-webkit-overflow-scrolling:touch} }
 </style>
 </head>
 <body>
