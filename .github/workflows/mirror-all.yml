@@ -6,7 +6,8 @@ name: mirror-all
 # sources are mirrored — a private repo is never published. Pure downstream
 # copy; the live sites stay on the vitalcity-nyc Pages links.
 #
-# Needs the MIRROR_TOKEN secret. Until it's set, this job skips cleanly.
+# Needs the MIRROR_TOKEN secret. Until it's set, this job skips cleanly. A run
+# where any repo fails now fails, and DMs Josh on Slack.
 
 on:
   schedule:
@@ -48,8 +49,29 @@ jobs:
             if [ -z "$(git -C /tmp/m rev-list -n1 --all 2>/dev/null)" ]; then
               echo "skip $r (empty repo)"; skipped=$((skipped+1)); continue
             fi
-            if git -C /tmp/m push --quiet "https://x-access-token:${MIRROR_TOKEN}@github.com/Vital-City-NYC/$r.git" "+HEAD:refs/heads/$db" 2>/dev/null; then
+            if git -C /tmp/m push --quiet "https://x-access-token:${MIRROR_TOKEN}@github.com/Vital-City-NYC/$r.git" "+HEAD:refs/heads/$db" 2>/tmp/push_err; then
               echo "synced $r ($db)"; ok=$((ok+1))
-            else echo "push failed $r"; failed=$((failed+1)); fi
+            else echo "push failed $r: $(grep -m1 -iE 'denied|refused|permission|workflow|403|401' /tmp/push_err | sed 's/x-access-token:[^@]*@/***@/')"; failed=$((failed+1)); fi
           done
           echo "=== mirror-all: synced=$ok skipped=$skipped failed=$failed ==="
+          echo "Institutional mirror: synced $ok, skipped $skipped, failed $failed" >> "$GITHUB_STEP_SUMMARY"
+          # Fail the run when any repo fails. From early September to Sept. 23
+          # every run reported success while syncing 0 or 1 of 38 repos,
+          # because the token could not write to the org.
+          if [ "$failed" -gt 0 ]; then
+            echo "$failed repos did not reach the Vital-City-NYC org. Most likely MIRROR_TOKEN lacks write access to the org's repos (Contents, Administration and Workflows), or has expired."
+            exit 1
+          fi
+
+      - name: Tell Josh when the mirror fails
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_DM_TO: ${{ secrets.SLACK_DM_TO }}
+        run: |
+          if [ -z "$SLACK_BOT_TOKEN" ] || [ -z "$SLACK_DM_TO" ]; then echo "no Slack token; failure shows on the Actions page only"; exit 0; fi
+          url="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          curl -s -X POST https://slack.com/api/chat.postMessage \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" -H "Content-type: application/json; charset=utf-8" \
+            --data "{\"channel\":\"$SLACK_DM_TO\",\"text\":\"The nightly mirror to the Vital-City-NYC GitHub org failed; the org copies are not current. Details: $url\"}" \
+            | grep -q '"ok":true' && echo "Slack alert sent" || echo "Slack alert failed"
