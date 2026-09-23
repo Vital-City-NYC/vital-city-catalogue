@@ -172,7 +172,7 @@ jobs:
       # Links shared in #vc-mentions, for the influence summary. Reads the channel
       # live when a Slack bot token is set, else the committed encrypted seed.
       # Non-fatal: without it the summary carries the mention feed only.
-      - name: Read #vc-mentions for the influence summary
+      - name: Read the vc-mentions Slack channel for the influence summary
         env:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
