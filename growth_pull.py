@@ -3263,6 +3263,11 @@ JUNK_TITLE_PATTERNS = [
     r"^watch live\b",
     r"^live blog\b",
     r"^today'?s (top )?headlines?$",   # bare headline-roundup pages (no specifics)
+    # author and section pages: "Paul Reeping, Vital City" is The City
+    # Reporter's page for a writer, not a story
+    r"(?:^|, )vital city$",
+    r"^story archive\b",
+    r"^(public safety|criminal justice|politics|housing|education) news$",
 ]
 
 # Link roundups are REAL distribution but not substantive engagement, and the

@@ -1448,7 +1448,13 @@ def main():
     out_outlets.sort(key=lambda o: (-o["people"], o["name"]))
 
     mentions = {
-        "media": [m for m in vc["mentions"] if m.get("kind") == "media" and not m.get("own_post")][:120],
+        # press hits the page check rejected (named only in a card or sidebar,
+        # or not on the page at all) are left out; unchecked ones stay
+        "media": [m for m in vc["mentions"] if m.get("kind") == "media" and not m.get("own_post")
+                  and m.get("incidental") is not True
+                  and m.get("verify_note") not in ("phrase not found on the page", "phrase present but used generically")
+                  and not re.search(r"(?:^|, )Vital City$|^Story Archive|^(Public Safety|Criminal Justice) News$",
+                                    m.get("title") or "")][:120],
         # Only citations the growth pull confirmed by fetching the page: Google's
         # phrase match also returns "vital City services" and the like.
         "gov": [m for m in vc["mentions"] if m.get("kind") in ("gov", "republication") and m.get("verified")][:60],

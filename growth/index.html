@@ -1582,7 +1582,11 @@ function boot(data){
 
   // ----- Media mentions (third-party press only — kind='media')
   const news = data.news_mentions || [];
-  const realPress = news.filter(it => it.kind === 'media');
+  // Hits the page check rejected are left out: named only in a related-story
+  // card or sidebar, not on the page at all, or an author or section page.
+  const realPress = news.filter(it => it.kind === 'media' && it.incidental !== true
+    && !['phrase not found on the page','phrase present but used generically'].includes(it.verify_note)
+    && !/(?:^|, )Vital City$|^Story Archive|^(Public Safety|Criminal Justice) News$/.test(it.title||''));
   const socialItems = news.filter(it => it.kind === 'social');
   const pressStale = realPress.length && realPress.every(p=>p.stale);
 
