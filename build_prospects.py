@@ -602,7 +602,20 @@ def _is_roundup(title, url):
     return bool(_ROUNDUP.search(title or "") or _ROUNDUP_URL.search(url or ""))
 
 
-def build_impact_ledger(growth, people, receipts):
+# A republication is a Vital City piece appearing elsewhere, and nothing else:
+# the page says so outright, or its headline is one of ours. A think tank or
+# newsletter that quotes, links to or excerpts a piece is citing it.
+_REPUB_LINE = re.compile(r"(?:originally|first) (?:published|appeared|ran) (?:by|in|at|on|with) (?:the )?Vital City"
+                         r"|republished (?:from|with permission (?:of|from)) Vital City|appeared first in Vital City"
+                         r"|in partnership with Vital City", re.I)
+
+
+def _norm_title(t):
+    return re.sub(r"[^a-z0-9]+", " ", (t or "").lower().replace("’", "'")).strip()
+
+
+def build_impact_ledger(growth, people, receipts, cat_titles=None):
+    ours = {_norm_title(t) for t in (cat_titles or []) if len(_norm_title(t)) > 18}
     matchers = _beat_matchers()
     rows, seen = [], set()
 
@@ -646,8 +659,13 @@ def build_impact_ledger(growth, people, receipts):
         # author and section pages are not citations
         if re.search(r"(?:^|, )Vital City$|^Story Archive|^(Public Safety|Criminal Justice) News$", t):
             continue
+        ctx = x.get("mention_context") or ""
+        if _REPUB_LINE.search(ctx) or _norm_title(t) in ours:
+            kind = "republished"
+        elif kind == "republished":
+            kind = "policy"          # quoted, linked or excerpted, not a Vital City piece
         add(d, kind, src, t, x.get("url"), checked=bool(x.get("verified")) and x.get("incidental") is False,
-            context=x.get("mention_context") or "")
+            context=ctx)
 
     # 2. Appearances: the hand-logged ledger, then the per-person search.
     for x in (growth.get("mentions_ledger") or {}).get("items") or []:
@@ -703,7 +721,7 @@ def build_impact_ledger(growth, people, receipts):
     # newest first; the undated curated outcomes go last (they lead the case above)
     rows.sort(key=lambda r: r["date"] or "0", reverse=True)
 
-    kinds = ["press", "government", "republished", "appearance", "scholarly", "reader", "outcome"]
+    kinds = ["press", "government", "policy", "republished", "appearance", "scholarly", "reader", "outcome"]
     d90, d365 = (TODAY - timedelta(days=90)).isoformat(), cut
     counts = {k: {"d90": sum(1 for r in rows if r["kind"] == k and r["date"] >= d90),
                   "d365": sum(1 for r in rows if r["kind"] == k and r["date"] >= d365),
@@ -806,12 +824,14 @@ def build_influence(growth, ledger_rows):
     # per-editor search. Press rows whose page could not be read stay in the
     # internal ledger but not here.
     feed = [r for r in ledger_rows if r["kind"] in ("appearance", "scholarly")
-            or (r["kind"] in ("press", "government", "republished") and r.get("checked") is True)]
+            or (r["kind"] in ("press", "government", "policy", "republished") and r.get("checked") is True)]
     by_url = {_canon(r["url"]): r for r in feed if r.get("url")}
 
     def section(host, url, kind=None):
         u = _canon(url)
-        if kind in ("government", "republished", "scholarly") or any(p in host for p in _POLICY):
+        if kind == "republished":
+            return "republished"
+        if kind in ("government", "policy", "scholarly") or any(p in host for p in _POLICY):
             return "policy"
         if kind == "appearance" or any(p in u for p in _AIR):
             return "air"
@@ -838,7 +858,9 @@ def build_influence(growth, ledger_rows):
         outlet = _INF_NAMES.get(host) or _INF_NAMES.get(host.split(".", 1)[-1]) or (match or {}).get("source") or host
         row = {"date": s.get("date") or "", "outlet": outlet, "url": u, "title": (match or {}).get("title") or "",
                # staff comments and who posted stay out: this summary is for outside readers
-               "quote": s.get("quote") or "", "section": section(host, u), "from": "staff"}
+               "quote": s.get("quote") or "",
+               "section": "republished" if (match or {}).get("kind") == "republished" else section(host, u),
+               "from": "staff"}
         if host in ("x.com", "twitter.com"):
             h = _canon(u).split("/")[1] if "/" in _canon(u) else ""
             row["title"] = row["title"] or f"Post by @{h}"
@@ -1326,7 +1348,8 @@ def main():
         "funders": funders_out,
         "beats": beats,
         "funder_facts": funder_facts,
-        "impact_ledger": (_ledger := build_impact_ledger(growth, people, funder_facts.get("receipts"))),
+        "impact_ledger": (_ledger := build_impact_ledger(growth, people, funder_facts.get("receipts"),
+                                                         [p.get("title") for p in cat])),
         "influence": build_influence(growth, _ledger["rows"]),
         "variants": (lambda: {
             k: {"label": v["label"], "spot_title": v["spot_title"],

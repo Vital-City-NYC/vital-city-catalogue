@@ -267,12 +267,13 @@ function csv(rows,cols,fname){
 const LED_KINDS=[
   ["press","Press citations","var(--vc-cerulean)"],
   ["government","Government documents","var(--vc-magenta)"],
-  ["republished","Republished or excerpted","var(--vc-orange)"],
+  ["policy","Cited by think tanks and policy writers","var(--vc-plum)"],
+  ["republished","Vital City pieces republished elsewhere","var(--vc-orange)"],
   ["appearance","Staff appearances","var(--vc-green)"],
   ["scholarly","Scholarly citations","var(--vc-gold)"],
   ["reader","Officials and public figures who subscribed","var(--vc-charcoal)"],
   ["outcome","Outcomes","var(--vc-black)"]];
-const LED_ONE={press:"Press citation",government:"Government document",republished:"Republished",appearance:"Staff appearance",
+const LED_ONE={press:"Press citation",government:"Government document",policy:"Policy citation",republished:"Republished",appearance:"Staff appearance",
   scholarly:"Scholarly citation",reader:"Subscribed",outcome:"Outcome"};
 function renderLedger(L){
   if(!L||!(L.rows||[]).length){ $("#impact").style.display="none"; return; }
@@ -282,9 +283,9 @@ function renderLedger(L){
   $("#ledArea").innerHTML='<option value="">Every topic</option>'+areas.map(a=>`<option>${esc(a)}</option>`).join("");
   const c=L.counts||{};
   $("#ledHint").innerHTML=`Every dated sign that Vital City's work reached people who act on it, rebuilt each night (as of ${esc(L.asof)}). `+
-    `Press, government and republication rows come from the mention tracker, which watches Google News for the name, so it undercounts: podcasts, broadcast, paywalled pieces and law reviews mostly never reach it. `+
+    `Press, government, policy and republication rows come from the mention tracker, which watches Google News for the name, so it undercounts: podcasts, broadcast, paywalled pieces and law reviews mostly never reach it. `+
     `Appearances combine the hand-kept log with a search for each editor's name. Subscribers are people with a government role or address, a judge, or a Wikipedia entry who signed up in the last year and still read. `+
-    `Topics are matched from each title against the press map's beats, so treat them as a guide. Tap a category to show or hide it.`;
+    `Topics are matched from each title against the press map's beats, so treat them as a guide. A republication means the page carries a Vital City piece (it says so, or the headline is ours); a policy citation quotes, links to or excerpts one. Tap a category to show or hide it.`;
   function sum(){
     const w=$("#ledWin").value, a=since(w), win=w==="90"?"d90":w==="365"?"d365":"all";
     $("#ledSum").innerHTML=LED_KINDS.filter(([k])=>(c[k]||{}).all).map(([k,l,col])=>

@@ -165,7 +165,7 @@ function openEditor(title,sub,value,onSave,extra){
 
 const MON=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
 const apDate=(s,withYear)=>{ const [y,m,d]=String(s||"").split("-").map(Number); if(!y||!m) return ""; return `${MON[m-1]}${d?" "+d:""}${withYear?", "+y:""}`; };
-const SECTIONS=[["press","In the press"],["policy","Government, universities and think tanks"],["air","On air, on podcasts and in other outlets"],["comment","Commentators and newsletters"]];
+const SECTIONS=[["press","In the press"],["republished","Vital City pieces republished elsewhere"],["policy","Government, universities and think tanks"],["air","On air, on podcasts and in other outlets"],["comment","Commentators and newsletters"]];
 let RAW=null, SHOWALL={};
 
 function model(){
@@ -185,7 +185,7 @@ function render(){
   const M=model();
   const shown=M.items.filter(x=>!x.hidden);
   const n=k=>shown.filter(x=>x.section===k).length;
-  const counts=SECTIONS.map(([k,l])=>n(k)?`${n(k)} ${({press:n(k)===1?"press citation":"press citations",policy:"from government, universities and think tanks",air:"on air, on podcasts and in other outlets",comment:n(k)===1?"commentator or newsletter":"commentators and newsletters"})[k]}`:"").filter(Boolean);
+  const counts=SECTIONS.map(([k,l])=>n(k)?`${n(k)} ${({press:n(k)===1?"press citation":"press citations",republished:n(k)===1?"piece republished elsewhere":"pieces republished elsewhere",policy:"from government, universities and think tanks",air:"on air, on podcasts and in other outlets",comment:n(k)===1?"commentator or newsletter":"commentators and newsletters"})[k]}`:"").filter(Boolean);
   const sinceTxt=apDate(M.since,true);
   const row=x=>`<div class="ev${x.hidden?" hidden":""}" data-id="${esc(x.id)}">
       <div class="d">${esc(apDate(x.date))}</div>
