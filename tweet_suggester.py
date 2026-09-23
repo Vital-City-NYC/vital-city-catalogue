@@ -144,8 +144,8 @@ MECHANICS
 
 THE THREE POSTS MUST DIFFER IN KIND, not be paraphrases of each other:
 1. THE CLAIM. The piece's argument or its most counterintuitive point,
-   stated flat, no attribution needed. Model: "Why it takes four new housing
-   units to get one person off the street."
+   credited to the writer. Model: "Why it takes four new housing units to
+   get one person off the street, according to Jane Doe."
 2. THE WRITER. Name the author and say what they say. Give their standing
    when it is the reason to read - former budget director, economist,
    architect. Use the handle from AUTHOR HANDLE below if one is given; if
@@ -156,12 +156,23 @@ THE THREE POSTS MUST DIFFER IN KIND, not be paraphrases of each other:
    question the piece answers. Not a teaser question with no answer - a
    question a reader would actually want settled.
 
+WHOSE ARGUMENT IT IS
+Vital City publishes and shares these pieces; the argument belongs to the
+writer, not to the account. Every one of the three posts must make that
+clear: name the writer (or tag the handle) and attribute the claim to them
+- "Jane Doe argues", "says Jane Doe", "Jane Doe writes", "from Jane Doe".
+Never state a writer's argument as the account's own opinion. The one
+exception: when AUTHOR is "Vital City", the piece is the house's own (a
+series such as Just Fix It), and the posts credit the series by name.
+
 Every claim must come from the text given to you. Do not add numbers,
 attributions or context that are not in the piece. If the piece is a
 personal essay or a reminiscence rather than an argument, do not force it
 into a policy frame; quote its concreteness instead."""
 
-EXAMPLES = """Posts the editor approved, as a calibration:
+EXAMPLES = """Posts the editor approved, as a calibration of tone and sentence
+shape. They predate the rule that every post credits its writer, so most need
+the writer's name added before they would pass today:
 
 "Redlining ended in 1968. You can still find it on a map of New York City today."
 "Twenty things that bring crime down in cities. None of them replace policing. All of them work alongside it."
@@ -371,6 +382,14 @@ def names_line(post):
     return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
 
 
+SERIES = ["Just Fix It", "Rubber Meets Road", "What To Do", "Reality Check"]
+
+
+def house_series(post):
+    names = {t.get("name") for t in post.get("tags") or []}
+    return next((x for x in SERIES if x in names), None)
+
+
 def quote_sentence(body):
     """A sentence from the piece that stands on its own: early in the piece,
     70 to 220 characters, not leaning on the sentence before it."""
@@ -396,16 +415,21 @@ def rules_draft(post):
     who = names_line(post)
     handle = author_handle(post)
     body = post.get("plaintext") or ""
+    # The account shares the piece; the argument belongs to the writer, so
+    # every draft names them up front. A piece bylined Vital City itself (a
+    # house series such as Just Fix It) is the house's own argument, and is
+    # credited to the series instead.
+    by = (f"{who} ({handle})" if handle else who) if who else None
+    series = house_series(post) if not who else None
+    lead = f"From {by}: " if by else (f"From {series}: " if series else "")
     drafts = []
-    if dek and len(dek) <= MAX_CHARS:
-        drafts.append({"kind": "claim", "text": dek})
-    if who:
-        by = f"{who} ({handle})" if handle else who
+    if dek and len(lead + dek) <= MAX_CHARS:
+        drafts.append({"kind": "claim", "text": lead + dek})
+    if by:
         drafts.append({"kind": "writer", "text": f'Read {by}: "{title}"'})
     q = quote_sentence(body)
     if q:
-        tail = f" {who} writes." if who else ""
-        text = f'"{q}"{tail}'
+        text = f'{who} writes: "{q}"' if who else f'{lead}"{q}"'
         if len(text) > MAX_CHARS:
             text = f'"{q}"'
         drafts.append({"kind": "quote", "text": text})
@@ -488,7 +512,9 @@ def self_test():
                           "This sentence leans on the one before it and should never be chosen as a quote.")}
     d = rules_draft(fake)
     kinds = [x["kind"] for x in d]
-    if (kinds != ["claim", "writer", "quote"] or not d[2]["text"].startswith('"More than 57,000')
+    if (kinds != ["claim", "writer", "quote"]
+            or d[0]["text"] != "From Howard Yaruss: A city in need of housing must unlock its empty rent-stabilized apartments."
+            or not d[2]["text"].startswith('Howard Yaruss writes: "More than 57,000')
             or d[1]["text"] != 'Read Howard Yaruss: "Why Affordable Apartments Sit Empty"' or any(x.get("flags") for x in d)):
         ok = False
         print("FAIL: rules_draft", json.dumps(d))
