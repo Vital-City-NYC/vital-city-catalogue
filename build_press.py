@@ -1403,7 +1403,9 @@ def main():
 
     mentions = {
         "media": [m for m in vc["mentions"] if m.get("kind") == "media" and not m.get("own_post")][:120],
-        "gov": [m for m in vc["mentions"] if m.get("kind") in ("gov", "republication")][:60],
+        # Only citations the growth pull confirmed by fetching the page: Google's
+        # phrase match also returns "vital City services" and the like.
+        "gov": [m for m in vc["mentions"] if m.get("kind") in ("gov", "republication") and m.get("verified")][:60],
         "ledger": (vc["ledger"] or {}).get("items", []) if isinstance(vc["ledger"], dict) else [],
     }
 

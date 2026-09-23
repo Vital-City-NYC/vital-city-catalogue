@@ -5614,7 +5614,7 @@ function scorecardModel(data){
   const vis={}; const tw=(ga4.traffic_weekly||[]).filter(w=>w.wk&&w.visits!=null);
   tw.forEach(w=>{ for(let i=0;i<7;i++){ const m=new Date(Date.parse(w.wk+"T00:00:00Z")+i*86400000).toISOString().slice(0,7); vis[m]=(vis[m]||0)+w.visits/7; } });
   const visStart = tw.length ? scAdd(tw[0].wk.slice(0,7), tw[0].wk.slice(8)==="01"?0:1) : null;
-  const cites={}; (data.news_mentions||[]).forEach(x=>{ if(x.own_post||x.roundup||!["media","republication","gov"].includes(x.kind)) return; const m=String(x.published_iso||"").slice(0,7); if(m) cites[m]=(cites[m]||0)+1; });
+  const cites={}; (data.news_mentions||[]).forEach(x=>{ if(x.own_post||x.roundup||!["media","republication","gov"].includes(x.kind)) return; if(x.kind!=="media"&&!x.verified) return; const m=String(x.published_iso||"").slice(0,7); if(m) cites[m]=(cites[m]||0)+1; });
   const giving={}; (db.monthly_series||[]).forEach(r=>{giving[r.m]=r.amt;});
   const pieces={}; (gh.pub_dates||[]).forEach(d=>{const m=String(d).slice(0,7); pieces[m]=(pieces[m]||0)+1;});
   // GA4 by month and channel (from the nightly pull): time per visit, search share.

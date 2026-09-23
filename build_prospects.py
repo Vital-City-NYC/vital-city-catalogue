@@ -615,6 +615,11 @@ def build_impact_ledger(growth, people, receipts):
         d = (x.get("published_iso") or "")[:10]
         if not kind or x.get("own_post") or x.get("roundup") or d < "2021-09":
             continue
+        # Government and republication hits are checked by fetching the page;
+        # keep only the ones that name Vital City the publication, not "vital
+        # City services".
+        if kind != "press" and not x.get("verified"):
+            continue
         src = (x.get("source") or x.get("domain") or "").strip()
         t = (x.get("title") or "").strip()
         if src and t.endswith(" - " + src):
@@ -905,7 +910,10 @@ def main():
     # profile pages whose account-creation dates leak in as publication dates,
     # not press citations. Genuine backfill from 2022 on stays.
     press = [x for x in mentions if not x.get("own_post")
-             and (x.get("published_iso") or "9999") >= "2021-09"]
+             and (x.get("published_iso") or "9999") >= "2021-09"
+             # government and republication hits count only once the page check
+             # confirms they name the publication (not "vital City services")
+             and (x.get("kind") not in ("gov", "republication") or x.get("verified"))]
     p_out = Counter(x.get("domain") or "" for x in press)
     p_first = min((x.get("published_iso") or "9999" for x in press), default="")[:7]
     TOP_OUT = {"nytimes.com":"The New York Times","gothamist.com":"Gothamist","politico.com":"Politico",
