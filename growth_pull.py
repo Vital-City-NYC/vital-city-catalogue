@@ -3656,6 +3656,121 @@ def resolve_gnews_url(stub_url, timeout=25):
         return stub_url
 
 
+from html.parser import HTMLParser as _HTMLParser
+
+# Where on the page the name appears decides whether the page is about us. A
+# related-story card promoting another article, a sidebar, a byline box or a
+# newsletter block names us without the article doing so: Gothamist's "Actor
+# Jeffrey Wright arrested" page carried a card for its Knicks-and-assaults
+# story, and The City Reporter's newsletter issues mention our analysis in a
+# one-line roundup item. A mention counts as substantive only inside a real
+# body paragraph that sits outside those blocks.
+# matched as whole words inside class and id names ("v-card", "related_posts",
+# "sidebar"), never as fragments ("canvas" is not "nav")
+_SIDE = re.compile(r"(?:^|[\s_\-])(?:v-card|card|cards|teaser|related|recirc|promo|more-from|read-more|also-read|"
+                   r"trending|most-read|popular|sidebar|widget|newsletter|signup|subscribe|byline|metadata|"
+                   r"author-bio|nav|navigation|menu|footer|breadcrumbs?|share|sharing|social|comments?|"
+                   r"ads?|advert|advertisement|sponsored|sponsor)(?=$|[\s_\-])", re.I)
+_PAGE_TAGS = {"html", "body", "main", "article"}   # page-wide classes say nothing about a block
+# Article-body containers. The nearest labelled container decides, so a
+# paragraph in "entry-content" inside a page "layout--sidebar" is body text.
+_BODY = re.compile(r"(?:^|[\s_\-])(?:entry-content|article-body|articlebody|article__body|article-content|"
+                   r"post-content|post-body|story-body|story-content|body-text|rte-text|streamfield|"
+                   r"available-content|content-body|single__content|article__content|body markup)(?=$|[\s_\-])", re.I)
+
+
+def _block_kind(tag, cls):
+    """ "body", "side" or "" for one element, judged by its own tag and class."""
+    if tag in _BLOCK_TAGS:
+        return "side"
+    if tag in _PAGE_TAGS:
+        return ""
+    if _BODY.search(cls):
+        return "body"
+    # layout modifiers describe the page ("layout--sidebar", "has-sidebar"), not the block
+    toks = [t for t in cls.split() if "--" not in t and not re.match(r"(has|with|layout|l)[-_]", t)]
+    return "side" if _SIDE.search(" ".join(toks)) else ""
+_BLOCK_TAGS = {"aside", "nav", "footer", "header", "form"}
+_VOID = {"br", "img", "hr", "input", "meta", "link", "source", "wbr", "area", "base", "col", "embed", "param", "track"}
+
+
+class _BodyMentions(_HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.stack, self.buf, self.href_hit, self.out = [], None, False, []
+
+    def handle_starttag(self, tag, attrs):
+        if tag in _VOID:
+            if tag == "br" and self.buf is not None:
+                self.buf.append(" ")
+            return
+        a = dict(attrs)
+        kind = _block_kind(tag, (a.get("class") or "") + " " + (a.get("id") or ""))
+        self.stack.append((tag, kind))
+        if tag in ("p", "li", "blockquote", "figcaption") and self.buf is None:
+            self.buf, self.href_hit, self.depth, self.tag = [], False, len(self.stack), tag
+            nearest = next((k for _, k in reversed(self.stack) if k), "")
+            self.in_side = nearest == "side"
+        if tag == "a" and self.buf is not None and "vitalcitynyc.org" in (a.get("href") or ""):
+            self.href_hit = True
+
+    def handle_endtag(self, tag):
+        if tag in _VOID:
+            return
+        # pop to the matching tag (HTML in the wild is not always well formed)
+        for i in range(len(self.stack) - 1, -1, -1):
+            if self.stack[i][0] == tag:
+                if self.buf is not None and i + 1 <= self.depth:
+                    text = re.sub(r"\s+", " ", "".join(self.buf)).strip()
+                    self.out.append((text, self.in_side, self.href_hit, self.tag))
+                    self.buf = None
+                del self.stack[i:]
+                return
+
+    def handle_data(self, data):
+        if self.buf is not None:
+            self.buf.append(data)
+
+
+def body_mention(page_html, names_us):
+    """(sentence, where): the first sentence in a body paragraph that names Vital
+    City or links to it; where is "body", "side" (only in cards, sidebars,
+    related links and the like), "thin" (too little paragraph text to judge, as
+    on a paywall) or "" (not in any paragraph; the text arrives in scripts)."""
+    p = _BodyMentions()
+    try:
+        p.feed(page_html)
+    except Exception:
+        return "", ""
+    side_hit = False
+    # A paywall or script-built page carries almost no paragraph text; the
+    # name then shows up only in metadata, which says nothing either way.
+    if sum(len(o[0]) for o in p.out if not o[1]) < 500:
+        return "", "thin"
+    for text, in_side, href, tag in p.out:
+        if len(text) < 25 or not (href or names_us(text)):
+            continue
+        # "Related: ... (Vital City)" and a short further-reading list item are
+        # pointers to a piece, not the article citing it
+        if re.match(r"(related|read more|see also|also read|more from|recommended|further reading)\b", text, re.I) \
+                or (tag == "li" and len(text) < 110):
+            side_hit = True
+            continue
+        if in_side:
+            side_hit = True
+            continue
+        sents = re.split(r"(?<=[.?!\u201d\"])\s+(?=[A-Z\u201c\"])", text)
+        i = next((k for k, x in enumerate(sents) if names_us(x) or "Vital City" in x), None)
+        if i is None:
+            return text[:320], "body"
+        sent = sents[i]
+        # "Gupta said during an event hosted by Vital City." needs the quote before it
+        if i > 0 and (len(sent) < 90 or sent[:1].islower()):
+            sent = sents[i - 1] + " " + sent
+        return sent[:400], "body"
+    return "", ("side" if side_hit else "")
+
+
 def verify_citations(items, workers=12):
     """Fetch each gov/republication page and check it actually names us.
 
@@ -3746,6 +3861,14 @@ def verify_citations(items, workers=12):
         if "vitalcitynyc" in raw.lower() or names_us(text):
             it["verified"] = True
             it["verify_note"] = ""
+            sent, where = body_mention(raw, names_us)
+            it["mention_context"] = sent
+            # named on the page, but not in the article's own paragraphs; None
+            # when the page has too little text to tell (paywalls)
+            # (True only when we are named solely in a card, sidebar or similar
+            # block; a page whose text arrives in scripts names us in no
+            # paragraph at all, and that says nothing either way)
+            it["incidental"] = True if where == "side" else (False if where == "body" else None)
         elif re.search(r"vital\s+city", text, re.I):
             it["verified"] = False
             it["verify_note"] = "phrase present but used generically"
@@ -3960,6 +4083,16 @@ def pull_news_mentions():
                 f"forward {len(media)} cached items from {str(cached.get('as_of',''))[:10]}")
         except Exception as e:
             log(f"  media cache read failed: {e}")
+    # Press hits in the last ~13 months get the same page check, which also
+    # says whether the mention is in the article itself or only in a card,
+    # sidebar or newsletter block on the page. Older ones keep their flags.
+    _cut = (datetime.now(timezone.utc) - timedelta(days=400)).isoformat()
+    recent = [it for it in media if (it.get("published_iso") or "") >= _cut and not it.get("own_post")]
+    if recent:
+        verify_citations(recent)
+        for it in recent:
+            if it.get("resolved_url"):
+                it["url"] = it["resolved_url"]
     # Seeded citations join the searched ones before verification, so they are
     # held to the same standard rather than trusted because we typed them in.
     seen_urls = {i.get("url") for i in gov + repub}

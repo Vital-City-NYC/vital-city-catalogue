@@ -591,11 +591,22 @@ def _area(text, matchers):
     return best[2] if best else ""
 
 
+_ROUNDUP = re.compile(r"\bheadlines\b|\bedition\b|playbook|newsletter|bulletin|quickbytes|daily dirt|"
+                      r"morning memo|what we'?re reading|\broundup\b|\bdigest\b|\bthe download\b|"
+                      r":\s*(january|february|march|april|may|june|july|august|september|october|november|december)\s+20\d\d$",
+                      re.I)
+_ROUNDUP_URL = re.compile(r"/newsletters?/|mailchi\.mp/|/headlines|playbook|quickbytes|/bulletin", re.I)
+
+
+def _is_roundup(title, url):
+    return bool(_ROUNDUP.search(title or "") or _ROUNDUP_URL.search(url or ""))
+
+
 def build_impact_ledger(growth, people, receipts):
     matchers = _beat_matchers()
     rows, seen = [], set()
 
-    def add(date_, kind, source, title, url, detail="", who="", area_text=None, links=None):
+    def add(date_, kind, source, title, url, detail="", who="", area_text=None, links=None, checked=None, context=""):
         title = re.sub(r"\s+", " ", (title or "")).strip()
         k = (kind, re.sub(r"\W+", "", title.lower())[:80], source.lower())
         if not title or k in seen:
@@ -604,7 +615,9 @@ def build_impact_ledger(growth, people, receipts):
         rows.append({"date": (date_ or "")[:10], "kind": kind, "source": source, "title": title,
                      "url": url or "", "detail": detail, "who": who,
                      "area": _area(title + " " + detail if area_text is None else area_text, matchers)
-                             if matchers else "", **({"links": links} if links else {})})
+                             if matchers else "", **({"links": links} if links else {}),
+                     **({"checked": checked} if checked is not None else {}),
+                     **({"context": context} if context else {})})
 
     # 1. Mentions from the nightly tracker. Social posts are left out (they are
     #    counted on the growth page); so are Vital City's own posts, newsletter
@@ -620,6 +633,10 @@ def build_impact_ledger(growth, people, receipts):
         # City services".
         if kind != "press" and not x.get("verified"):
             continue
+        # Named on the page but not in the article itself (a related-story card,
+        # a sidebar, a newsletter block), or a link roundup: not a citation.
+        if x.get("incidental") or _is_roundup(x.get("title"), x.get("url")):
+            continue
         src = (x.get("source") or x.get("domain") or "").strip()
         t = (x.get("title") or "").strip()
         if src and t.endswith(" - " + src):
@@ -629,7 +646,8 @@ def build_impact_ledger(growth, people, receipts):
         # author and section pages are not citations
         if re.search(r"(?:^|, )Vital City$|^Story Archive|^(Public Safety|Criminal Justice) News$", t):
             continue
-        add(d, kind, src, t, x.get("url"))
+        add(d, kind, src, t, x.get("url"), checked=bool(x.get("verified")) and x.get("incidental") is False,
+            context=x.get("mention_context") or "")
 
     # 2. Appearances: the hand-logged ledger, then the per-person search.
     for x in (growth.get("mentions_ledger") or {}).get("items") or []:
@@ -783,7 +801,12 @@ def http_get_title(u):
 
 def build_influence(growth, ledger_rows):
     slack = (load(SLACK_FILE) or {})
-    feed = [r for r in ledger_rows if r["kind"] in ("press", "government", "republished", "appearance", "scholarly")]
+    # For outside readers only citations whose page was read and found to cite
+    # us in the article itself; appearances come from the hand log and the
+    # per-editor search. Press rows whose page could not be read stay in the
+    # internal ledger but not here.
+    feed = [r for r in ledger_rows if r["kind"] in ("appearance", "scholarly")
+            or (r["kind"] in ("press", "government", "republished") and r.get("checked") is True)]
     by_url = {_canon(r["url"]): r for r in feed if r.get("url")}
 
     def section(host, url, kind=None):
@@ -801,7 +824,7 @@ def build_influence(growth, ledger_rows):
     for s in slack.get("items") or []:
         u, host = s.get("url") or "", _host(s.get("url"))
         c = _canon(u)
-        if not u or c in seen:
+        if not u or c in seen or _is_roundup("", u):
             continue
         seen.add(c)
         match = by_url.get(c)
@@ -824,6 +847,28 @@ def build_influence(growth, ledger_rows):
         items.append(row)
         if match:
             seen.add(_canon(match.get("url")))
+    # Staff-shared links get the same page check as the feed. Where the page can
+    # be read and names us only in a card, sidebar or newsletter block, or not at
+    # all, it is not a citation and is dropped; where it can't be read, the
+    # staff member's judgment stands. Podcast and broadcast pages often don't
+    # name a guest's publication, so the air section is not checked.
+    checkable = [r for r in items if r["from"] == "staff" and r["section"] != "air"
+                 and _host(r["url"]) not in ("x.com", "twitter.com", "linkedin.com")]
+    if checkable:
+        try:
+            from growth_pull import verify_citations
+            probe = verify_citations([{"url": r["url"], "title": r["title"] or "x"} for r in checkable])
+            drop = set()
+            for r, v in zip(checkable, probe):
+                fetched = v.get("verify_note") != "page could not be fetched"
+                if fetched and (not v.get("verified") or v.get("incidental")):
+                    drop.add(id(r))
+                elif v.get("mention_context") and not r["quote"]:
+                    r["quote"] = v["mention_context"]
+            items = [r for r in items if id(r) not in drop]
+            todo = [r for r in todo if id(r) not in drop]
+        except Exception as e:
+            print(f"  influence: staff-link check skipped ({e})")
     # titles the feed did not have: read the page's own <title>, else the URL slug
     if todo:
         from concurrent.futures import ThreadPoolExecutor
@@ -839,11 +884,12 @@ def build_influence(growth, ledger_rows):
             continue
         seen.add(c)
         items.append({"date": r["date"], "outlet": r["source"], "url": r["url"], "title": r["title"],
-                      "quote": "",
+                      "quote": r.get("context") or "",
                       "section": section(_host(r.get("url")), r.get("url"), r["kind"]), "from": "feed"})
     for i in items:
         o = re.escape(i["outlet"] or "")
         i["title"] = re.sub(rf"\s+[|\-–—]\s+(?:{o}|THE CITY)\s*$", "", i["title"] or "", flags=re.I).strip()
+    items = [i for i in items if not _is_roundup(i["title"], i["url"])]
     # the same story can arrive twice (Slack and the feed, or two URLs for one
     # piece); keep the first, which is the Slack row when there is one
     uniq, tseen = [], set()
