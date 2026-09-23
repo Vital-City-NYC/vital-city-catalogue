@@ -159,6 +159,25 @@
   .ki-spark{color:var(--vc-black)}.ki-spark svg{display:block;width:100%;height:auto}
   .ki-read{font-size:11.5px;line-height:1.4;color:var(--vc-charcoal)}
   .ki-also,.ki-marks{font-size:11.5px;line-height:1.5;margin-top:10px;color:var(--vc-charcoal)}
+  /* Sept. 23, 2026 declutter: on screen the tiles show number, comparison and
+     trend; benchmarks, context and the chart legend sit behind a switch. Print
+     and the generated reports are untouched. */
+  @media screen{
+    #scorecard:not(.ki-full) .ki-std,#scorecard:not(.ki-full) .ki-read,#scorecard:not(.ki-full) .ki-lede,
+    #scorecard:not(.ki-full) .ki-marks,#scorecard:not(.ki-full) .ki-notes{display:none}
+    #scorecard .ki-sum{font-size:14px;line-height:1.55}
+  }
+  .ki-ctxbtn{margin-left:auto;font-size:10.5px}
+  details.readnote > summary{cursor:pointer;list-style:none}
+  details.readnote > summary::-webkit-details-marker{display:none}
+  details.readnote > summary::before{content:"▸ ";color:var(--vc-cerulean)}
+  details.readnote[open] > summary::before{content:"▾ "}
+  details.pc-more{margin-top:12px}
+  details.pc-more > summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--vc-cerulean)}
+  aside.brandwatch > div[style]{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  aside.brandwatch ul.feed li.xtra{display:none}
+  aside.brandwatch ul.feed.showall li.xtra{display:list-item}
+  .feedmore{font-size:11px;color:var(--vc-cerulean);cursor:pointer;margin:2px 0 6px;display:inline-block}
   .ki-notes{margin-top:10px;font-size:11.5px;line-height:1.5}.ki-notes p{margin:4px 0}.ki-notes summary{cursor:pointer;font-weight:700}
   .ki-stay{margin-top:12px;font-size:12px;line-height:1.5}.ki-stay table{border-collapse:collapse;margin-top:4px}.ki-stay td,.ki-stay th{padding:3px 18px 3px 0;text-align:left}.ki-stay th{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal)}.ki-stay td:not(:first-child),.ki-stay th:not(:first-child){text-align:right}.ki-stay td:not(:first-child){font-variant-numeric:tabular-nums}
   .ki-fine{font-size:10.5px;color:var(--vc-charcoal);margin-top:4px}
@@ -630,25 +649,30 @@
         <a href="#sec-glance">At a glance</a>
         <a href="#rangeReport">Reports</a>
         <a href="#bigPicture">Long view</a>
-        <a href="#audienceQuality">Who's reading</a>
+        <a href="#policyCircle">Who's reading</a>
+        <a href="#audienceQuality">Funnel</a>
         <a href="#sec-growth">Growing the list</a>
         <a href="#sec-health">List health</a>
         <a href="#sec-donors">Donors</a>
         <a href="#sec-content">Content</a>
         <a href="#sec-reach">Reach</a>
       </nav>
-      <div class="readnote">
-        <div class="readnote-h">How to read this</div>
+      <details class="readnote">
+        <summary class="readnote-h">How to read this dashboard</summary>
         <ul>
           <li><b>Week-to-week swings are mostly noise.</b> One especially successful piece or a slow news cycle moves these numbers more than anything we do, so trust the long-run trend lines over the latest data point.</li>
           <li><b>Engagement matters more than raw traffic.</b> A smaller audience that reads to the end, comes back and subscribes is worth far more than a spike of one-time visitors who never return.</li>
           <li><b>Think in terms of the funnel.</b> Visitors count when they convert to subscribers, subscribers count when they stay engaged and engaged readers are the ones who eventually give, share or act — so watch where people drop off, not just how many arrive.</li>
           <li><b>Who reads matters more than how many.</b> Vital City exists to move policy, so a few hundred mayors, commissioners, council staffers, funders and reporters reading closely can count for more than tens of thousands of casual visitors.</li>
         </ul>
-      </div>
+      </details>
       <div class="sechead-title" id="sec-glance" style="margin:24px 0 4px">At a glance</div>
-      <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">Two bands. The first is where things stand: list size, the engaged core, the donor base and the recurring income that makes the organization sustainable. Those numbers have no window &mdash; a list does not have a &ldquo;last 7 days.&rdquo; The second band is what moved, and the buttons change its window. Net list change leads it because growing the list is objective one, and only the net number says whether the list is growing.</div>
+      <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">The monthly measures to steer by, who is reading, and the last seven days. Everything below starts folded; click a heading to open it.</div>
       <div class="card" id="scorecard"><h2>Key indicators</h2><div class="hint">Loading…</div></div>
+      <div class="card" id="policyCircle">
+        <h2>Who's reading <span class="hint">notable and government readers active in the last 30 days &middot; the measure the mission turns on</span></h2>
+        <div id="policyCircleBody"><div class="hint">Loading…</div></div>
+      </div>
       <div class="kpis" id="kpis"></div>
 
       <div class="card" id="weekPulse" style="display:none">
@@ -1411,6 +1435,7 @@ function boot(data){
   // Make each card foldable too (caret in its title); deeper/secondary cards
   // start folded so the headline cards and the at-a-glance strip carry the page.
   setupCardCollapse(data);
+  capFeeds(); setTimeout(capFeeds,1500);
   setupCardTools();          // per-card "link" + "PDF" buttons (top-right, on hover)
   gotoCardFromHash();        // if the URL has #cardId, expand + scroll to it
 
@@ -2688,9 +2713,26 @@ function cardPeek(id, d){
 
 // Fold individual cards (caret in the title). Headline cards open by default;
 // deeper/secondary cards start folded to shorten the scroll. Per-device memory.
+// The right-hand rail lists run long: each shows its 8 most recent items and
+// a link to the rest.
+function capFeeds(){
+  document.querySelectorAll("aside.brandwatch ul.feed").forEach(ul=>{
+    const items=[...ul.children].filter(li=>li.tagName==="LI"&&!li.classList.contains("empty"));
+    ul.querySelectorAll("li.xtra").forEach(li=>li.classList.remove("xtra"));
+    const nx=ul.nextElementSibling; if(nx&&nx.classList.contains("feedmore")) nx.remove();
+    if(items.length<=8) return;
+    items.slice(8).forEach(li=>li.classList.add("xtra"));
+    const a=document.createElement("span"); a.className="feedmore"; a.textContent=`Show all ${items.length}`;
+    a.onclick=()=>{ const on=ul.classList.toggle("showall"); a.textContent=on?"Show fewer":`Show all ${items.length}`; };
+    ul.insertAdjacentElement("afterend",a);
+  });
+}
 function setupCardCollapse(data){
-  const KEY = "vc_growth_cards_collapsed";
-  const OPEN = new Set(["scorecard","weekPulse","bigPicture","audienceQuality","growthChart","fundraising","perf"]);
+  // Open by default: the monthly indicators, who is reading, the last seven
+  // days and giving. Everything else starts folded, showing its one-line peek.
+  // (Key bumped Sept. 23, 2026 so the new defaults reach devices once.)
+  const KEY = "vc_growth_cards_collapsed_v2";
+  const OPEN = new Set(["scorecard","policyCircle","weekPulse","fundraising"]);
   const cards = [...document.querySelectorAll("main .card")].filter(c=>c.id && c.querySelector(":scope > h2"));
   let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){}
   const collapsed = new Set(Array.isArray(saved) ? saved : cards.filter(c=>!OPEN.has(c.id)).map(c=>c.id));
@@ -4831,21 +4873,21 @@ function renderAudienceQuality(data){
       <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin-top:12px;border-left:3px solid var(--vc-cerulean);padding:2px 0 2px 12px">
         <b>Influence beyond the inbox:</b> ${fmtN(xf.total)} accounts follow Vital City on <b>X</b> (${compactX(xf.combined_reach||0)} combined reach), <b>${fmtN(highReach)}</b> of them with 10k+ audiences of their own &mdash; a social-reach cut that barely overlaps the readers above (only ${fmtN((xf.crossmatch||{}).in_db||0)} of ${fmtN((xf.crossmatch||{}).influential||0)} high-reach followers are even in our contacts). Named breakdown in the <a href="#xfollowers" style="color:var(--vc-cerulean)">Who follows Vital City on X</a> card. <span style="color:var(--vc-charcoal)">Snapshot ${esc(xf.as_of||"")}.</span></div>` : "";
 
-    blocks.push(`
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px">Who's reading &mdash; the policy circle</div>
+    const pcHost = $("#policyCircleBody");
+    if(pcHost) pcHost.innerHTML = (`
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:4px">
         <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Notable readers · 30d</div><div class="pn"><span class="clickable-num" onclick="showPeople('notable_in_mau','Notable readers active in the last 30 days','Wikipedia-notable people on the list who opened at least one Vital City email in the last 30 days. Sorted alphabetically by last name.')">${fmtN(iwr.notable_in_mau||0)}</span></div><div class="pd flat">Wikipedia-notable, active <span style="color:var(--vc-cerulean)">· click to view</span></div></div>
         <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Government readers · 30d</div><div class="pn"><span class="clickable-num" onclick="showPeople('gov_in_mau','Government readers active in the last 30 days','Subscribers at .gov / public-office inboxes (or tagged as government) who opened at least one Vital City email in the last 30 days. Sorted alphabetically by last name.')">${fmtN(iwr.gov_in_mau||0)}</span></div><div class="pd flat">.gov / public-office inboxes <span style="color:var(--vc-cerulean)">· click to view</span></div></div>
         <div class="perfcell" style="flex:1;min-width:150px"><div class="pl">Of active audience</div><div class="pn">${iwr.raw_mau?(((iwr.notable_in_mau||0)+(iwr.gov_in_mau||0))/iwr.raw_mau*100).toFixed(1):"—"}%</div><div class="pd flat">share of ${fmtN(iwr.raw_mau||0)} monthly actives</div></div>
       </div>
       <div style="font-size:12.5px;color:var(--vc-charcoal);line-height:1.5">For a publication built to move policy, this is the number that matters most: a few hundred decision-makers and notable New Yorkers reading every month is worth more than a spike of anonymous traffic.</div>
-      ${xline}
       ${trend}
-      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:18px 0 6px">Who the ${fmtN(nlist.length)} notable readers are</div>
+      <details class="pc-more"><summary>Who they are, and the most-engaged names</summary>
+      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:12px 0 6px">Who the ${fmtN(nlist.length)} notable readers are</div>
       ${sectorBars}
       <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Most-engaged notable readers now</div>
       <div>${chips}<span class="clickable-num" style="font-size:11.5px" onclick="showPeople('notable_in_mau','Notable readers active in the last 30 days','Wikipedia-notable people who opened at least one Vital City email in the last 30 days.')">view all ${fmtN(nlist.length)} &rarr;</span></div>
-      <div class="flagnote" style="margin-top:12px"><b>A floor, not a ceiling.</b> This counts only subscribers whose email matched a flagged person in the contact database; influential readers we haven't tagged (or who read without subscribing) aren't included, so the real policy reach is higher. "Notable" is a conservative Wikipedia-name match, so treat it as a strong signal, not a verified fact.</div>`);
+      <div class="flagnote" style="margin-top:12px"><b>A floor, not a ceiling.</b> This counts only subscribers whose email matched a flagged person in the contact database; influential readers we haven't tagged (or who read without subscribing) aren't included, so the real policy reach is higher. "Notable" is a conservative Wikipedia-name match, so treat it as a strong signal, not a verified fact.</div></details>`);
   }
 
   host.innerHTML = blocks.length ? blocks.join("") :
@@ -5909,7 +5951,9 @@ function renderScorecard(data){
   const el=document.getElementById("scorecard"); if(!el) return;
   try{
     const sc=scorecardModel(data); window._scorecard=sc;
-    el.innerHTML=`<h2>Key indicators <span class="hint">the ten measures to steer by · monthly, through ${esc(sc.fullLbl)}, the latest full month · compared with the months before and with industry standards</span></h2>`+kiBodyHTML(sc,230);
+    el.innerHTML=`<h2>Key indicators <span class="hint">the ten measures to steer by · monthly, through ${esc(sc.fullLbl)}, the latest full month</span>`+
+      `<button class="winbtn ki-ctxbtn noprint" type="button" onclick="this.closest('#scorecard').classList.toggle('ki-full');this.textContent=this.closest('#scorecard').classList.contains('ki-full')?'Hide context and benchmarks':'Show context and benchmarks'">Show context and benchmarks</button></h2>`+
+      kiBodyHTML(sc,230);
   }catch(e){ el.innerHTML=`<h2>Key indicators</h2><div class="hint">The indicators could not be built from this data: ${esc(e.message)}</div>`; }
 }
 function scReportMD(sc, data){
