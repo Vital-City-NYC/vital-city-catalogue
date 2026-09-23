@@ -104,6 +104,9 @@
   .loading{padding:50px;text-align:center;color:var(--vc-charcoal)}
   /* funder showcase */
   .fitTiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--vc-black);border:1px solid var(--vc-black);margin:4px 0 18px}
+  /* a short last row stretches its tile(s) so no empty cell shows the grid's background */
+  .fitTiles .fitTile:last-child:nth-child(3n+1){grid-column:span 3}
+  .fitTiles .fitTile:last-child:nth-child(3n+2){grid-column:span 2}
   .fitTile{background:var(--vc-white);padding:16px 16px 13px}
   .fitTile .n{font-weight:900;font-size:34px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
   .fitTile .l{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-top:6px}
@@ -129,7 +132,7 @@
   .prod .pl{font-size:11px;margin-top:7px}
   .prod .pl a{margin-right:9px}
   .twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media(max-width:760px){.fitTiles,.prodgrid{grid-template-columns:1fr};.twocol{grid-template-columns:1fr};.rcp{flex-direction:column;gap:2px}}
+  @media(max-width:760px){.fitTiles .fitTile:last-child{grid-column:auto}.fitTiles,.prodgrid{grid-template-columns:1fr};.twocol{grid-template-columns:1fr};.rcp{flex-direction:column;gap:2px}}
   @media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}}
   @media(max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)};.wrap{padding:16px 14px 50px}}
   html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1d1e21}

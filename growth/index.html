@@ -160,7 +160,7 @@
   .ki-read{font-size:11.5px;line-height:1.4;color:var(--vc-charcoal)}
   .ki-also,.ki-marks{font-size:11.5px;line-height:1.5;margin-top:10px;color:var(--vc-charcoal)}
   .ki-notes{margin-top:10px;font-size:11.5px;line-height:1.5}.ki-notes p{margin:4px 0}.ki-notes summary{cursor:pointer;font-weight:700}
-  .ki-stay{margin-top:12px;font-size:12px;line-height:1.5}.ki-stay table{border-collapse:collapse;margin-top:4px}.ki-stay td,.ki-stay th{padding:3px 12px 3px 0;text-align:left;border-bottom:1px solid var(--vc-cloud)}.ki-stay td:not(:first-child){font-variant-numeric:tabular-nums}
+  .ki-stay{margin-top:12px;font-size:12px;line-height:1.5}.ki-stay table{border-collapse:collapse;margin-top:4px}.ki-stay td,.ki-stay th{padding:3px 18px 3px 0;text-align:left}.ki-stay th{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal)}.ki-stay td:not(:first-child),.ki-stay th:not(:first-child){text-align:right}.ki-stay td:not(:first-child){font-variant-numeric:tabular-nums}
   .ki-fine{font-size:10.5px;color:var(--vc-charcoal);margin-top:4px}
   .ki-paper{display:none}   /* the row layout is for paper; see the print block and KI_ROWS_CSS */
   .ki-who{font-size:12px;line-height:1.5;margin:4px 0 10px}.ki-whohd{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-charcoal);font-weight:700;margin-bottom:3px}
@@ -1393,7 +1393,7 @@ function boot(data){
   renderABTests(mc);
   renderAcquisition(data.ghost_signup_attribution || {});
   renderEngagementExtras(data.engagement_extras || {});
-  renderLifecycle(data.lifecycle || {});
+  renderLifecycle(data.lifecycle || {}, kiStayHTML(data));
   renderTraffic(data);
   renderSearchConsole(data);
   renderTopSearches(data);
@@ -5018,7 +5018,7 @@ function renderBigPicture(data){
     </div>` + listBlock;
 }
 
-function renderLifecycle(lc){
+function renderLifecycle(lc, stayHTML){
   const host = $("#lifecycleBody");
   if(!host) return;
   const card=document.getElementById("lifecycle");
@@ -5147,6 +5147,7 @@ function renderLifecycle(lc){
   }
 
   host.innerHTML = kpis + chart + (insight ? `<div style="font-size:12px;color:var(--vc-charcoal);margin-top:14px;line-height:1.55"><b style="color:var(--vc-black)">What the curve says:</b> ${insight}</div>` : '') + lists +
+    (stayHTML || '') +
     `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:14px;line-height:1.55;border-top:1px dashed var(--vc-cloud);padding-top:10px">
       <b>Methodology:</b> Activation, retention and at-risk are computed by joining each subscriber's signup date (from the merged Ghost+Mailchimp dataset) against this month's MAU set (the union of email addresses that opened at least one regular Vital City send in the last 30 days). Sunset adds a Mailchimp 1-2★ rating + 6mo+ tenure filter. Apple Mail's privacy auto-opens slightly inflate retention numbers across the industry — click rate (in the Newsletter performance card) is the cleaner truth.
     </div>`;
@@ -5883,7 +5884,7 @@ function kiStayHTML(data){
   const rows=(cl.channels||[]).filter(r=>r.stayed_pct!=null&&r.matched>=10);
   if(!rows.length) return "";
   const start=((data.ghost_signup_attribution||{}).coverage_start)||"";
-  return `<div class="ki-stay"><b>Do new subscribers stay?</b> Signups since ${esc(start)} by how they arrived, and the share still subscribed today.
+  return `<div class="ki-stay" style="margin-top:16px"><b>Do new subscribers stay?</b> Signups since ${esc(start)} by how they arrived, and the share still subscribed today.
     <table><tr><th>Arrived from</th><th>Signups</th><th>Still subscribed</th><th>Became donors</th></tr>${rows.map(r=>`<tr><td>${esc(kiSrc(r.source))}</td><td>${fmtN(r.signups)}</td><td>${Math.round(r.stayed_pct)}%</td><td>${fmtN(r.donors)}</td></tr>`).join("")}</table>
     <div class="ki-fine">Event registrations are added to the list outside Ghost, so they aren't in this table yet.</div></div>`;
 }
@@ -5904,7 +5905,7 @@ function renderScorecard(data){
   const el=document.getElementById("scorecard"); if(!el) return;
   try{
     const sc=scorecardModel(data); window._scorecard=sc;
-    el.innerHTML=`<h2>Key indicators <span class="hint">the ten measures to steer by · monthly, through ${esc(sc.fullLbl)}, the latest full month · compared with the months before and with industry standards</span></h2>`+kiBodyHTML(sc,230,{stay:kiStayHTML(data)});
+    el.innerHTML=`<h2>Key indicators <span class="hint">the ten measures to steer by · monthly, through ${esc(sc.fullLbl)}, the latest full month · compared with the months before and with industry standards</span></h2>`+kiBodyHTML(sc,230);
   }catch(e){ el.innerHTML=`<h2>Key indicators</h2><div class="hint">The indicators could not be built from this data: ${esc(e.message)}</div>`; }
 }
 function scReportMD(sc, data){
@@ -6164,7 +6165,7 @@ function pulseReportHTML(m){
     +'.ki-name{font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:800}.ki-top{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;margin:1px 0}.ki-num{font-family:Georgia,serif;font-size:19px;font-weight:700;line-height:1}.ki-unit{font-size:8px;color:#707175}'
     +'.ki-cmp{font-size:9px;font-weight:700;line-height:1.28}.ki-cmp.good{color:#3d7a35}.ki-cmp.watch{color:#a0432d}.ki-std{font-size:8px;line-height:1.3;background:#f7f7f4;border-left:2px solid #217ebe;padding:2px 5px;margin:2px 0}'
     +'.ki-spark{color:#050507}.ki-spark svg{width:100%;height:auto;display:block}.ki-spark .sc-axis{font-size:7.5px}.ki-read{font-size:8.5px;color:#555;line-height:1.28}.ki-also,.ki-marks{font-size:9.5px;color:#555;margin-top:6px;line-height:1.4}'
-    +'.ki-notes p{font-size:10px;color:#444;margin:3px 0}.ki-stay table{border-collapse:collapse;font-size:11px;width:auto}.ki-stay td,.ki-stay th{padding:3px 12px 3px 0;border-bottom:1px solid #ddd;text-align:left}.ki-fine{font-size:9.5px;color:#707175;margin-top:4px}.ki-who{font-size:11.5px;line-height:1.5;margin:6px 0}.ki-whohd{font-weight:700;margin-bottom:2px}'
+    +'.ki-notes p{font-size:10px;color:#444;margin:3px 0}.ki-stay table{border-collapse:collapse;font-size:11px;width:auto}.ki-stay td,.ki-stay th{padding:3px 12px 3px 0;text-align:left}.ki-fine{font-size:9.5px;color:#707175;margin-top:4px}.ki-who{font-size:11.5px;line-height:1.5;margin:6px 0}.ki-whohd{font-weight:700;margin-bottom:2px}'
     +'.sc-intro{font-size:12px;color:#333;margin:4px 0 8px}.sc-sum{font-size:12.5px;line-height:1.5;margin:0 0 8px;padding:8px 10px;background:#f1f1ef}'
     +'.sc-grp{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#707175;margin:12px 0 2px}'
     +'.sc-row{display:grid;grid-template-columns:1.25fr .8fr 180px 1.55fr;gap:10px;align-items:start;padding:7px 0;border-top:1px solid #ddd;break-inside:avoid}'
