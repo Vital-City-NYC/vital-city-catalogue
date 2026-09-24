@@ -661,7 +661,7 @@ async function renderAmplify(){
     const top=[...ranked.filter(r=>isFriend(r.p)),...ranked.filter(r=>!isFriend(r.p)&&tierOf(r.p)===1),
                ...ranked.filter(r=>!isFriend(r.p)&&tierOf(r.p)!==1)].slice(0,6);
     const beat=Object.values(q.beats).sort((a,b)=>b.n-a.n)[0];
-    AMP[idx]={title:pc.title,url:pc.url,author:pc.author||"",topic:beat?beat.label:""};
+    AMP[idx]={title:pc.title,url:pc.url,author:pc.author||"",tags:pc.tags||[],topic:beat?beat.label:""};
     const rep=top.length?top.map(r=>{ const p=r.p; const w=(r.why||[]).find(x=>x.kind==="beat");
       return `<div class="rp ${p.vc&&p.vc.person?"vc":""}">${box(p)}<span class="n">${esc(p.name)}</span> <span class="o">&middot; ${esc(outletName(p))}${w?` &middot; ${w.count} on ${esc(String(w.label).toLowerCase())}`:""}</span>
         <div class="e">${p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:`<span class="o">no published address</span>`}${p.x?` &middot; <a href="https://x.com/${esc(p.x)}" target="_blank" rel="noopener">@${esc(p.x)}</a>`:""}</div></div>`; }).join("")
@@ -1020,12 +1020,26 @@ function topicPhrase(label){
   if(!label) return "";
   return /^(City Hall|Albany|Washington)/.test(label) ? label : label.charAt(0).toLowerCase()+label.slice(1);
 }
+// What the piece is about, from the site's own topic tags: series names ("Just
+// Fix It", "When Women Wield Guns") and "policy" are skipped, "City Government"
+// gives way to anything more specific, and at most two are joined.
+function tagTopic(tags){
+  const t=(tags||[]).filter(x=>x&&!/^#/.test(x)&&x.trim().split(/\s+/).length<=2&&!/^policy$/i.test(x))
+    .map(x=>x.replace(/Artifical/i,"Artificial"));
+  const specific=t.filter(x=>!/^city government$/i.test(x));
+  const pick=(specific.length?specific:t).slice(0,2).map(x=>/^(AI|NYCHA|NYPD|MTA)$/.test(x)?x:x.toLowerCase());
+  return pick.join(" and ");
+}
 function pitchFor(i){
   const pc=AMP[i]; if(!pc) return null;
-  const on=pc.topic?` on ${topicPhrase(pc.topic)}`:"";
-  const by=pc.author&&pc.author!=="Vital City"?` by ${pc.author}`:"";
+  const topic=tagTopic(pc.tags)||topicPhrase(pc.topic);
+  const on=topic?` on ${topic}`:"";
+  // "Anthony A. Braga, Marianna Mitchem" reads as a list; say it as a sentence would
+  const names=String(pc.author||"").split(/\s*,\s*|\s+and\s+/).filter(n=>n&&n!=="Vital City");
+  const by=names.length?` by ${names.length>1?names.slice(0,-1).join(", ")+" and "+names.slice(-1):names[0]}`:"";
   const title=String(pc.title||"").replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"');
-  return {subject:title,
+  // Subject line in Josh's words (Sept. 24, 2026).
+  return {subject: `A new piece${on} that might interest you`,
     body:`Thought you might be interested in this new piece${on}${by}, just published on Vital City. Please call me with any questions or if you want to connect with the author.\n\n${title}\n${pc.url}`};
 }
 function mailDraft(i){
