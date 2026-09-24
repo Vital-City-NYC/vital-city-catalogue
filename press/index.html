@@ -166,6 +166,7 @@
   .ampact{margin:8px 0 2px;padding:9px 11px;background:var(--vc-paper2);font-size:12px;line-height:1.7}
   .ampact button{font:inherit;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;background:var(--vc-black);color:#fff;border:0;padding:6px 10px;margin:4px 6px 0 0;cursor:pointer}
   .ampact button:hover{background:var(--vc-cerulean)}
+  .ampact .amppre{margin-top:6px;font-size:11.5px;color:var(--vc-charcoal);line-height:1.45}
   .ampact .ampmsg{font-size:11.5px;color:var(--vc-charcoal);margin-left:4px}
   .amp .more{font-size:11.5px;margin-top:6px;cursor:pointer;color:var(--vc-cerulean);background:none;border:0;padding:0;font:inherit;font-size:11.5px;font-weight:700}
   .amp .dp{font-size:12.5px;line-height:1.45;padding:6px 0;border-top:1px solid var(--vc-paper2,#eee);display:flex;gap:8px;align-items:flex-start}
@@ -306,8 +307,7 @@
   <span id="selcount"></span>
   <button id="selCopy" title="Copy the addresses, comma-separated, to paste into any To or BCC field">Copy emails</button>
   <button id="selCsv" title="Download a spreadsheet of the people selected, with where each address came from">Export CSV</button>
-  <button id="selMail" title="Open a new message in your mail app with everyone selected in BCC">Draft email</button>
-  <button id="selGmail" title="Open a Gmail compose window with everyone selected in BCC">Draft in Gmail</button>
+  <button id="selMail" title="Open a new message with everyone selected in BCC. If the last names you ticked were under a piece in 'Who should hear about this', the draft carries the note, the title and the link.">Draft email</button>
   <button id="selClear" class="ghost">Clear</button>
   <span id="selnote"></span>
 </div>
@@ -661,17 +661,18 @@ async function renderAmplify(){
     const top=[...ranked.filter(r=>isFriend(r.p)),...ranked.filter(r=>!isFriend(r.p)&&tierOf(r.p)===1),
                ...ranked.filter(r=>!isFriend(r.p)&&tierOf(r.p)!==1)].slice(0,6);
     const beat=Object.values(q.beats).sort((a,b)=>b.n-a.n)[0];
+    AMP[idx]={title:pc.title,url:pc.url,author:pc.author||"",topic:beat?beat.label:""};
     const rep=top.length?top.map(r=>{ const p=r.p; const w=(r.why||[]).find(x=>x.kind==="beat");
       return `<div class="rp ${p.vc&&p.vc.person?"vc":""}">${box(p)}<span class="n">${esc(p.name)}</span> <span class="o">&middot; ${esc(outletName(p))}${w?` &middot; ${w.count} on ${esc(String(w.label).toLowerCase())}`:""}</span>
         <div class="e">${p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:`<span class="o">no published address</span>`}${p.x?` &middot; <a href="https://x.com/${esc(p.x)}" target="_blank" rel="noopener">@${esc(p.x)}</a>`:""}</div></div>`; }).join("")
       :`<div class="rp o">No reporter's file matches this subject closely.</div>`;
     const drafts=(pc.posts||[]).map((x,j)=>`<div class="dp"><span class="k">${esc(KIND[x.kind]||x.kind)}</span><span class="x">${esc(x.text)}${(x.flags||[]).length?` <span class="fl">(${esc(x.flags.join(", "))})</span>`:""}</span><button type="button" data-copy="${idx}:${j}" title="Copy the post with the link">Copy</button></div>`).join("");
-    return `<div class="amp">
+    return `<div class="amp" data-idx="${idx}">
       <div class="t"><a href="${esc(pc.url)}" target="_blank" rel="noopener">${esc(pc.title)}</a></div>
       <div class="m">${esc(pc.date)}${pc.author?` &middot; ${esc(pc.author)}`:""}${pc.handle?` (${esc(pc.handle)})`:""}${beat?` &middot; reads as ${esc(String(beat.label).toLowerCase())}`:""}</div>
       <div class="cols">
         <div><div class="hd">Reporters to pitch</div>${rep}<button class="more" type="button" data-full="${idx}">See everyone who covers this &rsaquo;</button>
-          <button class="more ampmail" type="button" title="Draft an email to every ticked reporter in BCC: in Gmail, in your mail app, or copy the addresses. The same buttons (plus a spreadsheet) also sit in the black bar at the bottom of the window.">Email the ticked reporters &rsaquo;</button></div>
+          <button class="more ampmail" type="button" data-idx="${idx}" title="Draft an email about this piece to every ticked reporter in BCC, or copy the addresses. The same button (plus a spreadsheet) also sits in the black bar at the bottom of the window.">Email the ticked reporters &rsaquo;</button></div>
         <div><div class="hd">Draft posts</div>${drafts||`<div class="dp o">No drafts.</div>`}</div>
       </div></div>`;
   }).join("");
@@ -1012,9 +1013,27 @@ function toggleSel(id,on){
   if(on) SELECTED.set(id,p); else SELECTED.delete(id);
   saveSel();
 }
-// The same three actions from the bar and from the panel under each piece.
-function mailDraft(){ const em=selEmails(); if(!em.length) return false; location.href=`mailto:?bcc=${em.map(encodeURIComponent).join(",")}`; return true; }
-function gmailDraft(){ const em=selEmails(); if(!em.length) return false; window.open(`https://mail.google.com/mail/?view=cm&fs=1&bcc=${em.map(encodeURIComponent).join(",")}`,"_blank","noopener"); return true; }
+// The pitch email. For a piece in "Who should hear about this", the draft
+// carries Josh's note, the title and the link; the subject is the title.
+let AMP=[], LAST_PIECE=null;
+function topicPhrase(label){
+  if(!label) return "";
+  return /^(City Hall|Albany|Washington)/.test(label) ? label : label.charAt(0).toLowerCase()+label.slice(1);
+}
+function pitchFor(i){
+  const pc=AMP[i]; if(!pc) return null;
+  const on=pc.topic?` on ${topicPhrase(pc.topic)}`:"";
+  const by=pc.author&&pc.author!=="Vital City"?` by ${pc.author}`:"";
+  const title=String(pc.title||"").replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"');
+  return {subject:title,
+    body:`Thought you might be interested in this new piece${on}${by}, just published on Vital City. Please call me with any questions or if you want to connect with the author.\n\n${title}\n${pc.url}`};
+}
+function mailDraft(i){
+  const em=selEmails(); if(!em.length) return false;
+  const pt=pitchFor(i==null?LAST_PIECE:i);
+  location.href=`mailto:?bcc=${em.map(encodeURIComponent).join(",")}`+(pt?`&subject=${encodeURIComponent(pt.subject)}&body=${encodeURIComponent(pt.body)}`:"");
+  return true;
+}
 async function copyEmails(){ const em=selEmails(); if(!em.length) return 0;
   try{ await navigator.clipboard.writeText(em.join(", ")); }catch(e){ prompt("Copy these addresses:", em.join(", ")); } return em.length; }
 function ampPanel(btn){
@@ -1023,7 +1042,8 @@ function ampPanel(btn){
   const n=SELECTED.size, em=selEmails().length, missing=selectedPeople().filter(p=>!(p.email||"").trim()).length;
   el.innerHTML = !n ? `Tick the reporters above first, then come back here.`
     : `<b>${n} ticked</b>${missing?` · ${missing} without a published address will be left out`:""} · everyone goes in BCC<br>
-       <button type="button" data-act="gmail">Draft in Gmail</button><button type="button" data-act="mail">Draft in your mail app</button><button type="button" data-act="copy">Copy the ${em} address${em===1?"":"es"}</button><span class="ampmsg"></span>`;
+       <button type="button" data-act="mail" data-idx="${btn.dataset.idx}">Draft email</button><button type="button" data-act="copy">Copy the ${em} address${em===1?"":"es"}</button><span class="ampmsg"></span>
+       ${(()=>{ const pt=pitchFor(+btn.dataset.idx); return pt?`<div class="amppre">${esc(pt.body.split("\n")[0])}</div>`:""; })()}`;
 }
 function note(msg){ $("#selnote").textContent=msg; setTimeout(updateSelbar,2600); }
 function csvCell(v){ v=String(v==null?"":v); return /[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v; }
@@ -1046,7 +1066,7 @@ function exportCsv(){
 function initSelection(){
   document.addEventListener("change",e=>{
     const t=e.target;
-    if(t.classList.contains("selp")){ toggleSel(t.dataset.id,t.checked); updateSelbar(); }
+    if(t.classList.contains("selp")){ const a=t.closest(".amp[data-idx]"); LAST_PIECE=a?+a.dataset.idx:null; toggleSel(t.dataset.id,t.checked); updateSelbar(); }
     if(t.classList.contains("selall")){
       t.closest("table").querySelectorAll(".selp").forEach(c=>toggleSel(c.dataset.id,t.checked));
       updateSelbar();
@@ -1060,8 +1080,7 @@ function initSelection(){
     const b=e.target.closest(".ampmail"); if(b){ ampPanel(b); return; }
     const a=e.target.closest(".ampact [data-act]"); if(!a) return;
     const msg=a.parentElement.querySelector(".ampmsg");
-    if(a.dataset.act==="gmail") gmailDraft();
-    else if(a.dataset.act==="mail"){ mailDraft(); if(msg) msg.textContent="If nothing opened, your browser has no mail app set; use Gmail or copy the addresses."; }
+    if(a.dataset.act==="mail"){ LAST_PIECE=+a.dataset.idx; mailDraft(+a.dataset.idx); }
     else { const n=await copyEmails(); if(msg) msg.textContent=n?`Copied ${n}.`:""; }
   });
   $("#selCopy").addEventListener("click",async()=>{
@@ -1071,7 +1090,6 @@ function initSelection(){
   });
   $("#selCsv").addEventListener("click",exportCsv);
   $("#selMail").addEventListener("click",()=>{ if(!mailDraft()) note("No one selected has a published address."); });
-  $("#selGmail").addEventListener("click",()=>{ if(!gmailDraft()) note("No one selected has a published address."); });
 }
 let PBYID=new Map();
 function init(){
