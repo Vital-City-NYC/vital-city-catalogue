@@ -1,7 +1,64 @@
 {
- "generated": "2026-09-23T14:20:11+00:00",
+ "generated": "2026-09-24T13:46:21+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "making-micromobility-work-nyc",
+   "title": "Making Micromobility Work",
+   "url": "https://www.vitalcitynyc.org/making-micromobility-work-nyc/",
+   "date": "2026-09-24",
+   "author": "Charles Komanoff",
+   "handle": null,
+   "dek": "A new vision should make clear distinctions between different ways of getting about the city.",
+   "tags": [
+    "Streets",
+    "Transit"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Charles Komanoff: A new vision should make clear distinctions between different ways of getting about the city."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Charles Komanoff: \"Making Micromobility Work\""
+    },
+    {
+     "kind": "quote",
+     "text": "Charles Komanoff writes: \"Back when I burned with fervor for New York City bicycling, I typically took to heart my occasional run-ins with fellow New Yorkers.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "nyc-middle-class-family-affordability-challenge",
+   "title": "New York City’s Prime Economic Challenge: Middle-Class Family Affordability",
+   "url": "https://www.vitalcitynyc.org/nyc-middle-class-family-affordability-challenge/",
+   "date": "2026-09-24",
+   "author": "Jordan McGillis",
+   "handle": null,
+   "dek": "Affordability isn't one thing, it's many — and the city's biggest problem is the flight of families.",
+   "tags": [
+    "Economics"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Jordan McGillis: Affordability isn't one thing, it's many — and the city's biggest problem is the flight of families."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Jordan McGillis: \"New York City's Prime Economic Challenge: Middle-Class Family Affordability\""
+    },
+    {
+     "kind": "quote",
+     "text": "Jordan McGillis writes: \"Zohran Mamdani tapped into that sentiment on his way to winning the mayoralty in 2025, with affordability at the heart of his campaign.\""
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "cost-effective-childcare-policy-reforms-nyc",
    "title": "6 Policy Reforms to Make Childcare Dollars Go Further for Families",
