@@ -143,3 +143,20 @@ The eight payloads, for checking: `network/`, `growth/`, `growth/live/`,
   Sheet is the place people edit; `publish.sh` is how edits go live.
 - Source files (`private/`) and the plaintext people data never leave this
   machine — only the encrypted blob is published.
+
+## Website manual (the Manual tab)
+
+The Manual tab (`manual/`) is the staff guide to how vitalcitynyc.org works in
+Ghost and in Obox's theme. It is a document, not a nightly dataset, so it has no
+workflow step and the home page never calls it stale.
+
+- **Source:** `private/manual/manual.html` (gitignored; the published copy is
+  encrypted with the suite passphrase because it names contacts and admin steps).
+- **To change it:** edit the source, run `python3 build_manual.py`, then commit
+  `manual/data.enc` and push. The build refreshes `~/Desktop/Vital City website
+  manual.pdf`, pulls the site's live top menu into the menus section, and moves
+  the "As of" date to today only when the content or the menu actually changed.
+- **Drift check:** the page compares the live Ghost menu with the one the manual
+  was built from and shows a banner when they differ. Rebuild to clear it.
+- **Lost the source?** `manual/data.enc` decrypts to the full built HTML, so the
+  text can be recovered from it with the passphrase.

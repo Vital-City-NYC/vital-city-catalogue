@@ -28,6 +28,10 @@
       blurb: "Foundations and individual donors worth approaching, ranked by the evidence in our own data." },
     { id: "press",      label: "Press",      path: "press/",             gated: true,  data: "press/data.enc",
       blurb: "Who covers New York City government: reporters, the beats their own bylines prove, and how to reach them." },
+    // A document, not a nightly dataset: "static" keeps the home page from
+    // calling it stale. Rebuilt by build_manual.py whenever the source changes.
+    { id: "manual",     label: "Manual",     path: "manual/",            gated: true,  data: "manual/data.enc", static: true,
+      blurb: "How the website works: plain steps for arranging vitalcitynyc.org in Ghost, and what only Obox can change." },
     // One tab, two views: the city's calendar and the archive pieces worth
     // reposting against it. The bar shows "Calendar"; on either page the two
     // views appear beside it so you can switch without leaving the tab.

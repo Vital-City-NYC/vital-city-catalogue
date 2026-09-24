@@ -126,12 +126,12 @@ async function unlock(pass, fromStore){
 // whose nightly build has stopped shows up here instead of going quiet.
 const STALE_HOURS=36;
 function freshCell(id){ return `<span class="fresh" id="fresh-${esc(id)}">&nbsp;</span>`; }
-async function fillFresh(id, url){
+async function fillFresh(id, url, isStatic){
   const el=document.getElementById("fresh-"+id); if(!el||!url) return;
   try{
     const r=await fetch(url,{method:"HEAD",cache:"no-cache"});
     const lm=r.ok&&r.headers.get("last-modified"); if(!lm){ el.textContent=""; return; }
-    const d=new Date(lm), hrs=(Date.now()-d)/36e5;
+    const d=new Date(lm), hrs=isStatic?0:(Date.now()-d)/36e5;
     el.textContent=(hrs>STALE_HOURS?"Not updated since ":"Updated ")+(window.vcApDate?vcApDate(d):d.toDateString());
     if(hrs>STALE_HOURS){ el.classList.add("stale"); el.title="Its nightly build has not published for more than a day and a half."; }
   }catch(e){ el.textContent=""; }
@@ -144,7 +144,7 @@ function renderTools(){
       <div class="views">${t.views.map(v=>`<div class="view"><a class="vname" href="${esc(url(v))}">${esc(v.label)}</a><span class="blurb">${esc(v.blurb)}</span>${freshCell(v.id)}</div>`).join("")}</div></div>`;
     return `<div class="tool"><a class="name" href="${esc(url(t))}">${esc(t.label)}</a><span class="blurb">${esc(t.blurb)}</span>${freshCell(t.id)}</div>`;
   }).join("");
-  tools.forEach(t=>{ (t.views||[t]).forEach(v=>fillFresh(v.id, v.dataHref||v.data)); });
+  tools.forEach(t=>{ (t.views||[t]).forEach(v=>fillFresh(v.id, v.dataHref||v.data, v.static)); });
 }
 
 function applyTheme(t){ document.documentElement.classList.toggle("dark", t==="dark");

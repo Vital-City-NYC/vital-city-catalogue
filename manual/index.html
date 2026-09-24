@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- installable app (VC Toolkit): phone home-screen only, no effect on the desktop page -->
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../app/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VC Toolkit">
+<meta name="robots" content="noindex,nofollow">
+<title>Vital City — website manual</title>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
+<link rel="stylesheet" href="../toolkit.css">
+<script src="../toolkit.js" data-tool="manual" defer></script>
+<style>
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-orange:#ff7c53; --vc-cerulean:#217ebe; --vc-orange20:#fde5dd;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+  }
+  /* Growth's dark tokens verbatim, for the page chrome. The manual itself stays
+     on white paper in both modes: it is a document, and it prints. */
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2}
+  html.dark body{background:var(--vc-paper);color:var(--vc-black)}
+  html.dark .gatebox{box-shadow:none}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--vc-cerulean)}
+  /* gate */
+  .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px 38px;max-width:420px;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gatebox .wm{font-weight:900;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+  .gatebox h1{font-size:24px;font-weight:900;margin:10px 0 6px}
+  .gatebox p{font-size:13px;color:var(--vc-charcoal);margin:0 0 16px}
+  .gatebox input{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--vc-black);margin-bottom:10px}
+  .gatebox button{width:100%;background:var(--vc-black);color:#fff;border:0;padding:11px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
+  .gateerr{color:#c8102e;font-size:12.5px;min-height:18px;margin-top:8px}
+  .gatebox .conf{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);margin-top:14px}
+  /* chrome */
+  header.mast{border-bottom:1px solid var(--vc-black);padding:16px 30px 16px;background:var(--vc-white);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px}
+  header.mast h1{font-weight:900;font-size:28px;margin:0 0 2px;letter-spacing:-.01em}
+  header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:760px}
+  .mastlinks{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .mastlinks a{color:var(--vc-cerulean);text-decoration:none;white-space:nowrap}
+  .mastlinks a:hover{text-decoration:underline}
+  .wrap{padding:24px 30px 60px}
+  .drift{max-width:760px;margin:0 auto 18px;background:var(--vc-orange20);color:#050507;padding:12px 16px;font-size:13.5px}
+  .drift strong{font-weight:800}
+  .paper{max-width:820px;margin:0 auto;background:#fff}
+  #doc{display:block;width:100%;border:0;min-height:600px;background:#fff}
+  .loading{color:var(--vc-charcoal);padding:40px 0;text-align:center}
+  @media(max-width:640px){.wrap,header.mast,.confbar,[data-toolkit-nav]{padding-left:16px;padding-right:16px}header.mast h1{font-size:23px}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>Website manual</h1>
+    <p>How vitalcitynyc.org works, in plain steps: arranging the site in Ghost, and what only Obox can change. Enter the shared passphrase.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="current-password">
+    <button id="unlock">Unlock</button>
+    <div class="gateerr" id="err"></div>
+    <div class="conf">Confidential · internal use only</div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+<div class="confbar"><span>Confidential &middot; internal staff guide</span><span id="stamp"></span></div>
+<div data-toolkit-nav></div>
+<header class="mast">
+  <div>
+    <h1>Website manual</h1>
+    <div class="sub">How vitalcitynyc.org works: plain steps for arranging the site in Ghost, and what only Obox can change. The site can change; if this disagrees with your screen, trust the screen.</div>
+  </div>
+  <nav class="mastlinks"><a href="#" id="printBtn" title="Print the manual, or save it as a PDF from the print dialog">Print</a><a href="#" id="themeToggle">🌙 Dark mode</a><a href="#" id="lock">Lock</a></nav>
+</header>
+<div class="wrap">
+  <div id="drift" class="drift" hidden></div>
+  <div class="paper"><div id="loading" class="loading">Loading&hellip;</div><iframe id="doc" title="Website manual" hidden></iframe></div>
+</div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const PASSKEY="vc_net_pass", TTL=90*24*3600*1000;
+function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+TTL}))}catch{}}
+function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
+  const o=JSON.parse(r);if(o&&o.pass&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null}catch{return null}}
+function applyTheme(t){ document.documentElement.classList.toggle("dark", t==="dark");
+  const b=document.getElementById("themeToggle"); if(b) b.textContent = t==="dark" ? "☀️ Light mode" : "🌙 Dark mode"; }
+(function(){ let t=null; try{ t=localStorage.getItem("vc_theme"); }catch{}
+  applyTheme(t || ((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light")); })();
+document.addEventListener("DOMContentLoaded", ()=>applyTheme(document.documentElement.classList.contains("dark")?"dark":"light"));
+function b64d(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+async function unlock(fromStore){
+  $("#err").textContent="";
+  const pass=$("#pw").value.trim(); if(!pass){$("#err").textContent="Enter the passphrase.";return}
+  let data;
+  try{
+    const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
+    data=await decryptBlob(pass,blob);
+  }catch(e){console.error(e);$("#err").textContent="Wrong passphrase, or data unavailable.";if(fromStore)try{localStorage.removeItem(PASSKEY)}catch{};return}
+  savePass(pass); $("#gate").style.display="none"; $("#app").style.display="";
+  boot(data);
+}
+$("#unlock").addEventListener("click",()=>unlock(false));
+$("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
+(async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
+
+document.addEventListener("click",e=>{
+  if(e.target.id==="lock"){e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()}
+  if(e.target.id==="printBtn"){e.preventDefault();const f=$("#doc");if(f&&f.contentWindow)f.contentWindow.print()}
+  if(e.target.id==="themeToggle"){e.preventDefault();const t=document.documentElement.classList.contains("dark")?"light":"dark";
+    applyTheme(t); try{localStorage.setItem("vc_theme",t)}catch{}}
+});
+
+// The manual renders in a same-origin frame so its own styles (and its print
+// layout) never collide with the toolkit chrome. The frame grows to fit.
+// Measure the content, not scrollHeight: scrollHeight never drops below the
+// frame's own height, so growing the frame to it can only ratchet upward.
+function fit(){ const f=$("#doc"); try{ f.style.height=Math.ceil(f.contentDocument.documentElement.getBoundingClientRect().height)+"px" }catch{} }
+function boot(d){
+  if(window.vcStamp) vcStamp("#stamp", d.as_of_iso); else $("#stamp").textContent="Updated "+d.as_of;
+  const f=$("#doc");
+  f.addEventListener("load",()=>{ fit(); setTimeout(fit,400); setTimeout(fit,1500);
+    try{ f.contentDocument.fonts && f.contentDocument.fonts.ready.then(fit) }catch{} });
+  window.addEventListener("resize",fit);
+  f.srcdoc=d.html; f.hidden=false; $("#loading").remove();
+  checkDrift(d);
+}
+// The manual copies the site's top menu at build time. If the live menu has
+// moved on since, say so rather than let the menu section quietly go stale.
+async function checkDrift(d){
+  try{
+    const r=await fetch("https://vital-city.ghost.io/ghost/api/content/settings/?key=dd8e178e9ddfc883537e71dd07",{cache:"no-cache"});
+    const live=(await r.json()).settings.navigation.map(n=>[n.label,n.url]);
+    if(JSON.stringify(live)!==JSON.stringify(d.nav)){
+      const el=$("#drift"); el.hidden=false;
+      el.innerHTML="<strong>The site's top menu has changed since this manual was last updated on "+d.as_of.replace(/</g,"&lt;")+".</strong> The menus section may be out of date. Ask Claude to rebuild the manual.";
+    }
+  }catch(e){ console.warn("menu check skipped",e) }
+}
+</script>
+</body>
+</html>
