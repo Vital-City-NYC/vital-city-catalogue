@@ -353,10 +353,10 @@ async function unlock(fromStore){
   try{ blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json()); }
   catch(e){ $("#err").textContent="Couldn't load the data file — check your connection and try again."; $("#unlock").textContent="Unlock"; return; }
   try{ DATA=await decryptBlob(pass,blob); }
-  // Josh's default sign-off and phone, locked with the same passphrase (the page's code is public)
-  fetch("signer.enc",{cache:"no-cache"}).then(r=>r.ok?r.json():null).then(b=>b&&decryptBlob(pass,b)).then(o=>{ if(o) DEFAULT_SIGNER=o; }).catch(()=>{});
   catch(e){ if(fromStore) clearPass(); $("#err").textContent="Wrong passphrase, or data unavailable."; $("#unlock").textContent="Unlock"; return; }
   savePass(pass);
+  // Josh's default sign-off and phone, locked with the same passphrase (the page's code is public)
+  fetch("signer.enc",{cache:"no-cache"}).then(r=>r.ok?r.json():null).then(b=>b&&decryptBlob(pass,b)).then(o=>{ if(o) DEFAULT_SIGNER=o; }).catch(()=>{});
   $("#gate").style.display="none"; $("#app").style.display="block";
   init();
 }
