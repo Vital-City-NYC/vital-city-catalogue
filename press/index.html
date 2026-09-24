@@ -166,6 +166,11 @@
   .ampact{margin:8px 0 2px;padding:9px 11px;background:var(--vc-paper2);font-size:12px;line-height:1.7}
   .ampact button{font:inherit;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;background:var(--vc-black);color:#fff;border:0;padding:6px 10px;margin:4px 6px 0 0;cursor:pointer}
   .ampact button:hover{background:var(--vc-cerulean)}
+  .ampme[hidden]{display:none}
+  .ampme{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:flex-end}
+  .ampme label{font-size:11px;font-weight:700;display:flex;flex-direction:column;gap:3px}
+  .ampme input{font:inherit;font-size:12.5px;padding:5px 7px;border:1px solid var(--vc-cloud);min-width:180px}
+  .ampme .amppre{flex-basis:100%;margin-top:0}
   .ampact .amppre{margin-top:6px;font-size:11.5px;color:var(--vc-charcoal);line-height:1.45}
   .ampact .ampmsg{font-size:11.5px;color:var(--vc-charcoal);margin-left:4px}
   .amp .more{font-size:11.5px;margin-top:6px;cursor:pointer;color:var(--vc-cerulean);background:none;border:0;padding:0;font:inherit;font-size:11.5px;font-weight:700}
@@ -1030,8 +1035,15 @@ function tagTopic(tags){
   const pick=(specific.length?specific:t).slice(0,2).map(x=>/^(AI|NYCHA|NYPD|MTA)$/.test(x)?x:x.toLowerCase());
   return pick.join(" and ");
 }
+// Phone and sign-off live in this browser only: the page's code is public, so a
+// personal number never goes into it. Gmail drops its own signature when a
+// draft arrives with a body, so the sign-off stands in for it.
+const MEKEY="vc_press_signer";
+function signer(){ try{ return JSON.parse(localStorage.getItem(MEKEY)||"null"); }catch(e){ return null; } }
+function saveSigner(o){ try{ localStorage.setItem(MEKEY, JSON.stringify(o)); }catch(e){} }
 function pitchFor(i){
   const pc=AMP[i]; if(!pc) return null;
+  const me=signer()||{};
   const topic=tagTopic(pc.tags)||topicPhrase(pc.topic);
   const on=topic?` on ${topic}`:"";
   // "Anthony A. Braga, Marianna Mitchem" reads as a list; say it as a sentence would
@@ -1040,7 +1052,7 @@ function pitchFor(i){
   const title=String(pc.title||"").replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"');
   // Subject line in Josh's words (Sept. 24, 2026).
   return {subject: `A new piece${on} that might interest you`,
-    body:`Thought you might be interested in this new piece${on}${by}, just published on Vital City. Please call me with any questions or if you want to connect with the author.\n\n${title}\n${pc.url}`};
+    body:`Hi. I thought you might be interested in this new piece${on}${by}, just published by Vital City. Please call me${me.phone?` at ${me.phone}`:""} with any questions or if you want to connect with the author.\n\n${title}\n${pc.url}${me.sign?`\n\n${me.sign}`:""}`};
 }
 function mailDraft(i){
   const em=selEmails(); if(!em.length) return false;
@@ -1057,7 +1069,13 @@ function ampPanel(btn){
   el.innerHTML = !n ? `Tick the reporters above first, then come back here.`
     : `<b>${n} ticked</b>${missing?` · ${missing} without a published address will be left out`:""} · everyone goes in BCC<br>
        <button type="button" data-act="mail" data-idx="${btn.dataset.idx}">Draft email</button><button type="button" data-act="copy">Copy the ${em} address${em===1?"":"es"}</button><span class="ampmsg"></span>
-       ${(()=>{ const pt=pitchFor(+btn.dataset.idx); return pt?`<div class="amppre">${esc(pt.body.split("\n")[0])}</div>`:""; })()}`;
+       ${(()=>{ const pt=pitchFor(+btn.dataset.idx); if(!pt) return ""; const me=signer();
+         return `<div class="amppre">${esc(pt.body.split("\n")[0])}</div>`+
+           (me?`<div class="amppre">Signed ${esc(me.sign||"(no sign-off)")}${me.phone?` · phone ${esc(me.phone)}`:""} · <a href="#" data-act="me">change</a></div>`
+              :`<div class="amppre"><a href="#" data-act="me">Add your phone and sign-off</a> (saved in this browser only)</div>`); })()}
+       <div class="ampme" hidden><label>Phone for the note <input type="tel" data-me="phone" placeholder="e.g. 917-555-0100"></label>
+         <label>Sign-off <input type="text" data-me="sign" placeholder="-Your Name"></label><button type="button" data-act="mesave">Save</button>
+         <div class="amppre">Kept in this browser on this device, never in the page's code.</div></div>`;
 }
 function note(msg){ $("#selnote").textContent=msg; setTimeout(updateSelbar,2600); }
 function csvCell(v){ v=String(v==null?"":v); return /[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v; }
@@ -1094,6 +1112,21 @@ function initSelection(){
     const b=e.target.closest(".ampmail"); if(b){ ampPanel(b); return; }
     const a=e.target.closest(".ampact [data-act]"); if(!a) return;
     const msg=a.parentElement.querySelector(".ampmsg");
+    if(a.dataset.act==="me"||(a.dataset.act==="mail"&&!signer())){
+      e.preventDefault();
+      const f=a.closest(".ampact").querySelector(".ampme"), me=signer()||{sign:"-Josh Greenman",phone:""};
+      f.hidden=false; f.dataset.then=a.dataset.act==="mail"?a.dataset.idx:"";
+      f.querySelector('[data-me=phone]').value=me.phone||""; f.querySelector('[data-me=sign]').value=me.sign||"";
+      f.querySelector('[data-me=phone]').focus(); return;
+    }
+    if(a.dataset.act==="mesave"){
+      const f=a.closest(".ampme");
+      saveSigner({phone:f.querySelector('[data-me=phone]').value.trim(), sign:f.querySelector('[data-me=sign]').value.trim()});
+      const then=f.dataset.then, btn=a.closest(".ampact").previousElementSibling;
+      ampPanel(btn);
+      if(then!==""&&then!=null){ LAST_PIECE=+then; mailDraft(+then); }
+      return;
+    }
     if(a.dataset.act==="mail"){ LAST_PIECE=+a.dataset.idx; mailDraft(+a.dataset.idx); }
     else { const n=await copyEmails(); if(msg) msg.textContent=n?`Copied ${n}.`:""; }
   });
