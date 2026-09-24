@@ -1269,8 +1269,14 @@ def main():
             "groups": {g: n for g, n in (p.get("group_hits") or {}).items() if n},
             "vc": flags or None,
         }
-        # press-list people who never appeared in a harvest still belong in the map
-        if pl and not rec["email"] and pl["email"]:
+        # The Vital City press list is the address of record for the people on
+        # it: Josh keeps it, and a harvested address can be a dead one (Ethan
+        # Stark-Miller's amny.com address bounced; the list had schnepsmedia.com).
+        # A different harvested address is kept alongside as a fallback.
+        if pl and pl["email"] and (rec["email"] or "").lower() != pl["email"].lower():
+            if rec["email"]:
+                rec["email_alt"] = rec["email"]
+                rec["email_alt_source_url"] = rec["email_source_url"]
             rec["email"] = pl["email"]
             rec["email_source_url"] = "private/press_source.csv (Vital City press list)"
             rec["email_evidence"] = "From the curated Vital City press list, not harvested from a page."

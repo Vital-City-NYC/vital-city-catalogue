@@ -626,7 +626,7 @@ function card(r,i){
       ${(p.stories||[]).length>3?`<br><span class="more" data-all="${esc(p.id)}">show ${(p.stories||[]).length} recent stories of ${p.story_count} harvested &rsaquo;</span>`:""}
     </div>`:""}
     <div class="contact">
-      ${p.email?`<span class="em"><a href="mailto:${esc(p.email)}">${esc(p.email)}</a></span>${p.email_note?` <span style="color:var(--vc-gold);font-size:11px;font-weight:700" title="Found on a page from a masthead this reporter no longer seems to file for">${esc(p.email_note)}</span>`:""}
+      ${p.email?`<span class="em"><a href="mailto:${esc(p.email)}">${esc(p.email)}</a></span>${p.email_alt?` <span style="color:var(--vc-charcoal);font-size:11px" title="The Vital City press list gives the address above; this one was found on ${esc(p.email_alt_source_url||"a public page")}. Try it if the first bounces.">also found: ${esc(p.email_alt)}</span>`:""}${p.email_note?` <span style="color:var(--vc-gold);font-size:11px;font-weight:700" title="Found on a page from a masthead this reporter no longer seems to file for">${esc(p.email_note)}</span>`:""}
          ${p.email_source_url?`<a href="${esc(p.email_source_url)}" target="_blank" rel="noopener" style="font-size:10.5px" title="${esc(p.email_evidence||"")}">where this came from</a>`:""}`
        :(isPinned(p)&&OUT[p.outlet]?.tips&&!OUT[p.outlet].tips.includes("@"))
           ? `<span style="color:var(--vc-charcoal)">the Times publishes no reporter addresses &middot;</span> <a href="${esc(OUT[p.outlet].tips)}" target="_blank" rel="noopener">tips page</a>`
