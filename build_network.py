@@ -1204,6 +1204,12 @@ def main():
                     rec["nyc"] = 1
                 if (row.get("oom") or "").strip() in ("1", "y", "yes", "true"):
                     rec["oom"] = 1
+                # Human-reviewed cultivation leads; independent of the automatic
+                # prospect score. The explanation records public professional
+                # relevance, not an estimate of wealth or willingness to give.
+                if (row.get("frreview") or "").strip() in ("1", "y", "yes", "true"):
+                    rec["frreview"] = 1
+                    rec["frwhy"] = (row.get("frwhy") or "").strip()
 
     # ---- 5a. Senior contributors (data/senior_contributors.json) ----
     # The roster on vitalcitynyc.org/contributors/, pulled by
