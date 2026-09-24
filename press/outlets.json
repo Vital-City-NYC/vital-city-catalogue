@@ -1878,7 +1878,7 @@
  },
  {
   "id": "ap-ny",
-  "name": "Associated Press \u2014 New York",
+  "name": "Associated Press — New York",
   "type": "wire",
   "scope": "national+metro",
   "site": "https://apnews.com",
@@ -1891,5 +1891,25 @@
   "tier": 1,
   "size": 3,
   "medium": "online"
+ },
+ {
+  "id": "the-atlantic",
+  "name": "The Atlantic",
+  "type": "magazine",
+  "scope": "national+metro",
+  "site": "https://www.theatlantic.com",
+  "staff_url": null,
+  "rss": [
+   "https://www.theatlantic.com/feed/author/jonathan-lemire/"
+  ],
+  "only_authors": [
+   "Jonathan Lemire"
+  ],
+  "tips": null,
+  "feed_note": "One writer's feed, not the whole magazine: Jonathan Lemire, staff writer (White House and national politics; a New Yorker who writes on the city). Added at Josh's request, Sept. 24, 2026.",
+  "tagline": "National politics",
+  "tier": 1,
+  "size": 3,
+  "medium": "print"
  }
 ]

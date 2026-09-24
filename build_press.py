@@ -274,14 +274,23 @@ def harvest_rss(outlets):
             if not d.entries:
                 errors.append({"outlet": o["id"], "url": url, "error": "parsed 0 entries"}); continue
             ff = o.get("feed_filter")
+            # A single writer's feed at a big national title (The Atlantic, for
+            # Jonathan Lemire): credit only the writers named, not co-authors
+            # the map was not asked to follow.
+            only = {merge_name(n) for n in (o.get("only_authors") or [])}
             for e in d.entries:
                 link = e.get("link") or ""
                 if ff and ff not in link:
                     continue
+                auth = entry_authors(e)
+                if only:
+                    auth = [n for n in auth if merge_name(n) in only]
+                    if not auth:
+                        continue
                 items.append({
                     "outlet": o["id"],
                     "title": H.unescape(re.sub(r"<[^>]+>", "", e.get("title") or "")).strip(),
-                    "url": link, "date": entry_date(e), "authors": entry_authors(e),
+                    "url": link, "date": entry_date(e), "authors": auth,
                     "summary": H.unescape(re.sub(r"<[^>]+>", " ", e.get("summary") or ""))[:600].strip(),
                     "tags": [t.get("term") for t in (e.get("tags") or []) if t.get("term")][:8],
                 })
@@ -1442,7 +1451,7 @@ def main():
     for o in outlets:
         d = dom_of[o["id"]]
         dates = sorted(cited_dates.get(d, []))
-        out_outlets.append({**{k: v for k, v in o.items() if k != "feed_filter"},
+        out_outlets.append({**{k: v for k, v in o.items() if k not in ("feed_filter", "only_authors")},
                             "domain": d, "phones": phones.get(o["id"], []),
                             "via_mac_harvest": from_cache.get(o["id"]),
                             "people": per_outlet.get(o["id"], 0),
