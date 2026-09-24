@@ -144,19 +144,21 @@ The eight payloads, for checking: `network/`, `growth/`, `growth/live/`,
 - Source files (`private/`) and the plaintext people data never leave this
   machine — only the encrypted blob is published.
 
-## Website manual (the Manual tab)
+## Staff manuals (the Manuals tab)
 
-The Manual tab (`manual/`) is the staff guide to how vitalcitynyc.org works in
-Ghost and in Obox's theme. It is a document, not a nightly dataset, so it has no
-workflow step and the home page never calls it stale.
+The Manuals tab holds two staff guides, each a document rather than a nightly
+dataset, so neither has a workflow step and the home page never calls them stale.
 
-- **Source:** `private/manual/manual.html` (gitignored; the published copy is
-  encrypted with the suite passphrase because it names contacts and admin steps).
-- **To change it:** edit the source, run `python3 build_manual.py`, then commit
-  `manual/data.enc` and push. The build refreshes `~/Desktop/Vital City website
-  manual.pdf`, pulls the site's live top menu into the menus section, and moves
-  the "As of" date to today only when the content or the menu actually changed.
-- **Drift check:** the page compares the live Ghost menu with the one the manual
-  was built from and shows a banner when they differ. Rebuild to clear it.
-- **Lost the source?** `manual/data.enc` decrypts to the full built HTML, so the
-  text can be recovered from it with the passphrase.
+| Manual | Source (gitignored) | Published (encrypted) | Desktop PDF |
+|---|---|---|---|
+| Website | `private/manual/manual.html` | `manual/data.enc` | Vital City website manual.pdf |
+| Newsletter | `private/manual/newsletter.html` | `newsletter-manual/data.enc` | Vital City newsletter manual.pdf |
+
+- **To change one:** edit its source, run `python3 build_manual.py` (or
+  `python3 build_manual.py newsletter` for just one), then commit the data.enc
+  files and push. The build moves a manual's "As of" date to today only when its
+  content changed, fills the contents list from its headings and, for the
+  website manual, pulls the site's live top menu.
+- **Drift check:** the website manual's page compares the live Ghost menu with
+  the built copy and shows a banner when they differ. Rebuild to clear it.
+- **Lost a source?** Each data.enc decrypts to the full built HTML.
