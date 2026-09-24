@@ -539,7 +539,13 @@ function shortlist(ranked){          // ranked: [{p,score,...}] best first, all 
    draft with everyone in BCC. The selection survives new searches, so a list
    can be built across several topics. */
 const SELECTED=new Map();
-const box=p=>`<input type="checkbox" class="selp" data-id="${esc(p.id)}" ${SELECTED.has(p.id)?"checked":""} title="Add to the people you are contacting">`;
+const box=p=>`<input type="checkbox" class="selp" autocomplete="off" data-id="${esc(p.id)}" ${SELECTED.has(p.id)?"checked":""} title="Add to the people you are contacting">`;
+// The selection lives in this tab's session, so a reload or a trip back to the
+// page keeps it, and the browser's own habit of re-ticking boxes on reload can
+// no longer show ticks the page doesn't know about (which hid the email bar).
+const SELKEY="vc_press_selected";
+function saveSel(){ try{ sessionStorage.setItem(SELKEY, JSON.stringify([...SELECTED.keys()])); }catch(e){} }
+function restoreSel(){ try{ (JSON.parse(sessionStorage.getItem(SELKEY)||"[]")||[]).forEach(id=>{ const p=PBYID.get(id); if(p) SELECTED.set(id,p); }); }catch(e){} }
 function compactTable(rows, cols){   // everyone below the line: one line each
   return `<table><thead><tr><th class="selcol"><input type="checkbox" class="selall" title="Select every row in this table"></th><th>Name</th><th>Outlet</th><th>${cols}</th><th>Address</th></tr></thead><tbody>`+
     rows.map(r=>`<tr>
@@ -639,7 +645,8 @@ async function renderAmplify(){
       <div class="t"><a href="${esc(pc.url)}" target="_blank" rel="noopener">${esc(pc.title)}</a></div>
       <div class="m">${esc(pc.date)}${pc.author?` &middot; ${esc(pc.author)}`:""}${pc.handle?` (${esc(pc.handle)})`:""}${beat?` &middot; reads as ${esc(String(beat.label).toLowerCase())}`:""}</div>
       <div class="cols">
-        <div><div class="hd">Reporters to pitch</div>${rep}<button class="more" type="button" data-full="${idx}">See everyone who covers this &rsaquo;</button></div>
+        <div><div class="hd">Reporters to pitch</div>${rep}<button class="more" type="button" data-full="${idx}">See everyone who covers this &rsaquo;</button>
+          <button class="more ampmail" type="button" title="Opens a new message in your mail app with every ticked reporter in BCC. The same buttons (Gmail, copy, spreadsheet) sit in the black bar at the bottom of the window.">Email the ticked reporters &rsaquo;</button></div>
         <div><div class="hd">Draft posts</div>${drafts||`<div class="dp o">No drafts.</div>`}</div>
       </div></div>`;
   }).join("");
@@ -973,6 +980,7 @@ function updateSelbar(){
 function toggleSel(id,on){
   const p=PBYID.get(id); if(!p) return;
   if(on) SELECTED.set(id,p); else SELECTED.delete(id);
+  saveSel();
 }
 function note(msg){ $("#selnote").textContent=msg; setTimeout(updateSelbar,2600); }
 function csvCell(v){ v=String(v==null?"":v); return /[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v; }
@@ -1001,7 +1009,10 @@ function initSelection(){
       updateSelbar();
     }
   });
-  $("#selClear").addEventListener("click",()=>{ SELECTED.clear(); $$(".selall").forEach(c=>c.checked=false); updateSelbar(); });
+  $("#selClear").addEventListener("click",()=>{ SELECTED.clear(); saveSel(); $$(".selall").forEach(c=>c.checked=false); updateSelbar(); });
+  window.addEventListener("pageshow",()=>updateSelbar());
+  // the in-module shortcut to the same action as the bar's Draft email button
+  document.addEventListener("click",e=>{ if(e.target.closest(".ampmail")){ if(!SELECTED.size){ updateSelbar(); $("#selbar").hidden=false; $("#selcount").textContent="0 selected"; return note("Tick the reporters to email first."); } $("#selMail").click(); } });
   $("#selCopy").addEventListener("click",async()=>{
     const em=selEmails(); if(!em.length) return note("No one selected has a published address.");
     try{ await navigator.clipboard.writeText(em.join(", ")); note(`Copied ${em.length} address${em.length===1?"":"es"}.`); }
@@ -1020,6 +1031,7 @@ function initSelection(){
 let PBYID=new Map();
 function init(){
   PBYID=new Map(DATA.people.map(p=>[p.id,p]));
+  restoreSel();
   initSelection();
   BEATS=DATA.beats||{};
   for(const [bid,b] of Object.entries(BEATS)) for(const t of (b.terms||[])) BEATRE[bid+"|"+t]=beatRe(t);
@@ -1027,7 +1039,9 @@ function init(){
   for(const o of DATA.outlets){ OUT[o.id]=o; DATA_DOM[o.id]=o.domain; }
   const pc=(DATA.counts?.people||0).toLocaleString()+" people · "+(DATA.counts?.outlets||0)+" outlets";
   if(window.vcStamp) vcStamp("#asof", DATA.as_of, pc); else $("#asof").textContent="Updated "+(DATA.as_of||"").slice(0,10)+" · "+pc;
-  renderBeats(); initDirectory(); renderKnown(); renderOutlets(); renderMentions(); renderMethod(); renderAmplify();
+  renderBeats(); initDirectory(); renderKnown(); renderOutlets(); renderMentions(); renderMethod();
+  Promise.resolve(renderAmplify()).finally(updateSelbar);
+  updateSelbar();
   $("#go").addEventListener("click",runQuery);
   $("#clear").addEventListener("click",()=>{$("#q").value="";runQuery();});
   $("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey))runQuery();});
