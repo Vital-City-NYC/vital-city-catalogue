@@ -1,27 +1,52 @@
 {
   "meta": {
-    "generated_at": "2026-09-24T11:12:54.461992+00:00",
+    "generated_at": "2026-09-24T15:14:40.816591+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 946,
-    "total_authors": 511,
+    "total_posts": 948,
+    "total_authors": 512,
     "total_issues": 34,
-    "total_topics": 219,
+    "total_topics": 220,
     "date_range": [
       "2021-09-15",
-      "2026-09-17"
+      "2026-09-24"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 4,
+    "new_articles": [
+      {
+        "title": "Making Micromobility Work",
+        "url": "https://www.vitalcitynyc.org/making-micromobility-work-nyc/",
+        "published_date": "2026-09-24",
+        "primary_author": null
+      },
+      {
+        "title": "New York City\u2019s Prime Economic Challenge: Middle-Class Family Affordability",
+        "url": "https://www.vitalcitynyc.org/nyc-middle-class-family-affordability-challenge/",
+        "published_date": "2026-09-24",
+        "primary_author": null
+      },
+      {
+        "title": "A Housing Agenda for the Next Mayor",
+        "url": "https://www.vitalcitynyc.org/a-housing-agenda-for-the-next-mayor/",
+        "published_date": "2025-09-17",
+        "primary_author": null
+      },
+      {
+        "title": "My First Adult Apartment",
+        "url": "https://www.vitalcitynyc.org/my-first-adult-apartment/",
+        "published_date": "2025-09-17",
+        "primary_author": null
+      }
+    ]
   },
-  "total_pieces": 946,
+  "total_pieces": 948,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 216
+    "2026": 218
   },
   "by_month": {
     "2021-09": 1,
@@ -78,12 +103,12 @@
     "2026-06": 46,
     "2026-07": 23,
     "2026-08": 16,
-    "2026-09": 19
+    "2026-09": 21
   },
   "by_type": [
     [
       "opinion/commentary",
-      741
+      743
     ],
     [
       "q&a",
@@ -120,16 +145,16 @@
       147
     ],
     [
+      "City Government",
+      144
+    ],
+    [
       "History",
       144
     ],
     [
-      "City Government",
-      143
-    ],
-    [
       "Government Operations",
-      127
+      126
     ],
     [
       "City Planning",
@@ -137,7 +162,7 @@
     ],
     [
       "Housing",
-      80
+      82
     ],
     [
       "Justice",
@@ -145,19 +170,19 @@
     ],
     [
       "culture",
-      75
+      76
     ],
     [
       "Gun Violence",
       72
     ],
     [
-      "Economics",
+      "Police Reform",
       56
     ],
     [
-      "Police Reform",
-      56
+      "Economics",
+      55
     ],
     [
       "Politics",
@@ -180,12 +205,12 @@
       35
     ],
     [
-      "Education",
+      "Transit",
       34
     ],
     [
-      "Transit",
-      33
+      "Education",
+      34
     ],
     [
       "Public Health",
@@ -216,27 +241,27 @@
       26
     ]
   ],
-  "n_topics_total": 219,
+  "n_topics_total": 220,
   "by_credential_pieces": [
     [
       "Academic",
-      225
+      226
     ],
     [
       "Journalist / media",
-      131
+      130
     ],
     [
       "Nonprofit / advocacy",
-      112
-    ],
-    [
-      "Vital City (institutional)",
-      99
+      113
     ],
     [
       "Other / unclassified",
-      96
+      98
+    ],
+    [
+      "Vital City (institutional)",
+      97
     ],
     [
       "Government / public official",
@@ -244,11 +269,11 @@
     ],
     [
       "Business / private sector",
-      57
+      58
     ],
     [
       "Think tank / research institute",
-      55
+      54
     ],
     [
       "Architecture / design / planning",
@@ -260,7 +285,7 @@
     ],
     [
       "Survey / reader poll",
-      13
+      14
     ],
     [
       "Unknown / no bio",
@@ -274,7 +299,7 @@
     ],
     [
       "Other / unclassified",
-      110
+      111
     ],
     [
       "Nonprofit / advocacy",
@@ -319,8 +344,8 @@
   ],
   "top_topics_for_stack": [
     "Crime",
-    "History",
     "City Government",
+    "History",
     "Government Operations",
     "City Planning",
     "Housing",
@@ -335,6 +360,12 @@
       "2025": 31,
       "2026": 23
     },
+    "City Government": {
+      "2023": 4,
+      "2024": 20,
+      "2025": 54,
+      "2026": 66
+    },
     "History": {
       "2022": 12,
       "2023": 28,
@@ -342,17 +373,11 @@
       "2025": 52,
       "2026": 14
     },
-    "City Government": {
-      "2023": 4,
-      "2024": 20,
-      "2025": 53,
-      "2026": 66
-    },
     "Government Operations": {
       "2022": 1,
       "2023": 16,
       "2024": 38,
-      "2025": 58,
+      "2025": 57,
       "2026": 14
     },
     "City Planning": {
@@ -365,7 +390,7 @@
     "Housing": {
       "2023": 5,
       "2024": 11,
-      "2025": 36,
+      "2025": 38,
       "2026": 28
     },
     "Justice": {
@@ -379,22 +404,22 @@
       "2022": 4,
       "2023": 19,
       "2024": 26,
-      "2025": 17,
+      "2025": 18,
       "2026": 9
     }
   },
   "wc_stats": {
-    "n": 939,
+    "n": 941,
     "median": 1635,
     "mean": 2168,
-    "p90": 3276,
+    "p90": 3240,
     "max": 30332,
-    "p10": 910,
-    "p25": 1280,
-    "p75": 2234,
-    "p95": 5742,
+    "p10": 911,
+    "p25": 1282,
+    "p75": 2230,
+    "p95": 5728,
     "no_count": 7,
-    "core_1000_2499": 667,
+    "core_1000_2499": 669,
     "under_500": 46,
     "over_5000": 53
   },
@@ -413,11 +438,11 @@
     ],
     [
       "2,000-2,999",
-      188
+      191
     ],
     [
       "3,000-4,999",
-      57
+      56
     ],
     [
       "5,000+",
@@ -471,17 +496,17 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 66
+        "n": 70
       },
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 68
+        "n": 66
       },
       {
         "floor": 2500,
         "label": "2,500",
-        "n": 34
+        "n": 35
       },
       {
         "floor": 2750,
@@ -496,12 +521,12 @@
       {
         "floor": 3250,
         "label": "3,250",
-        "n": 12
+        "n": 10
       },
       {
         "floor": 3500,
         "label": "3,500+",
-        "n": 84
+        "n": 85
       }
     ]
   },
@@ -535,20 +560,20 @@
       "n": 304,
       "p25": 1316,
       "median": 1671,
-      "p75": 2264,
+      "p75": 2206,
       "max": 14800
     },
     {
       "year": "2026",
-      "n": 211,
-      "p25": 1285,
-      "median": 1699,
-      "p75": 2478,
+      "n": 213,
+      "p25": 1286,
+      "median": 1709,
+      "p75": 2490,
       "max": 13669
     }
   ],
   "by_nauthors": {
-    "1": 805,
+    "1": 807,
     "2": 112,
     "3": 26,
     "4": 1,
@@ -558,7 +583,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 99,
+      "posts": 97,
       "credential": "Vital City (institutional)"
     },
     {
@@ -573,7 +598,7 @@
     },
     {
       "name": "Jamie Rubin",
-      "posts": 33,
+      "posts": 34,
       "credential": "Business / private sector"
     },
     {
@@ -598,7 +623,7 @@
     },
     {
       "name": "A Survey",
-      "posts": 14,
+      "posts": 15,
       "credential": "Survey / reader poll"
     },
     {
@@ -707,34 +732,34 @@
       },
       {
         "year": "2026",
-        "weeks": 37.1,
-        "pieces": 216,
-        "outside_issues": 150,
-        "per_week_all": 5.82,
-        "per_week_outside_issues": 4.04,
+        "weeks": 38.1,
+        "pieces": 218,
+        "outside_issues": 152,
+        "per_week_all": 5.72,
+        "per_week_outside_issues": 3.99,
         "partial": true
       }
     ],
-    "total_weeks": 261.1,
+    "total_weeks": 262.1,
     "all_time_per_week": 3.62,
     "all_time_per_week_outside_issues": 1.72,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.04,
-    "current_per_week_all": 5.82,
+    "current_per_week_outside_issues": 3.99,
+    "current_per_week_all": 5.72,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 498,
       "published_away_from_drop": 64,
       "share_of_issue_pieces": 12.9,
-      "current_year_strict": 4.04,
-      "current_year_loose": 4.23,
+      "current_year_strict": 3.99,
+      "current_year_loose": 4.17,
       "all_time_strict": 1.72,
       "all_time_loose": 1.96,
       "all_time_all": 3.62
     }
   },
   "rhythm": {
-    "n_dated": 946,
+    "n_dated": 948,
     "by_weekday": [
       {
         "day": "Mon",
@@ -744,22 +769,22 @@
       {
         "day": "Tue",
         "pieces": 167,
-        "share": 17.7
+        "share": 17.6
       },
       {
         "day": "Wed",
         "pieces": 446,
-        "share": 47.1
+        "share": 47.0
       },
       {
         "day": "Thu",
-        "pieces": 183,
-        "share": 19.3
+        "pieces": 185,
+        "share": 19.5
       },
       {
         "day": "Fri",
         "pieces": 62,
-        "share": 6.6
+        "share": 6.5
       },
       {
         "day": "Sat",
@@ -773,8 +798,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.1,
-    "midweek_share": 84.1,
+    "top_day_share": 47.0,
+    "midweek_share": 84.2,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -836,9 +861,9 @@
       {
         "month": "September",
         "abbr": "Sep",
-        "pieces": 115,
+        "pieces": 117,
         "occurrences": 6,
-        "per_occurrence": 19.2
+        "per_occurrence": 19.5
       },
       {
         "month": "October",

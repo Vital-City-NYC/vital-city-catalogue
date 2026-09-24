@@ -1,15 +1,40 @@
 {
-  "generated_at": "2026-09-24T11:12:54.461992+00:00",
+  "generated_at": "2026-09-24T15:14:40.816591+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 946,
-  "total_authors": 511,
+  "total_posts": 948,
+  "total_authors": 512,
   "total_issues": 34,
-  "total_topics": 219,
+  "total_topics": 220,
   "date_range": [
     "2021-09-15",
-    "2026-09-17"
+    "2026-09-24"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 4,
+  "new_articles": [
+    {
+      "title": "Making Micromobility Work",
+      "url": "https://www.vitalcitynyc.org/making-micromobility-work-nyc/",
+      "published_date": "2026-09-24",
+      "primary_author": null
+    },
+    {
+      "title": "New York City’s Prime Economic Challenge: Middle-Class Family Affordability",
+      "url": "https://www.vitalcitynyc.org/nyc-middle-class-family-affordability-challenge/",
+      "published_date": "2026-09-24",
+      "primary_author": null
+    },
+    {
+      "title": "A Housing Agenda for the Next Mayor",
+      "url": "https://www.vitalcitynyc.org/a-housing-agenda-for-the-next-mayor/",
+      "published_date": "2025-09-17",
+      "primary_author": null
+    },
+    {
+      "title": "My First Adult Apartment",
+      "url": "https://www.vitalcitynyc.org/my-first-adult-apartment/",
+      "published_date": "2025-09-17",
+      "primary_author": null
+    }
+  ]
 }

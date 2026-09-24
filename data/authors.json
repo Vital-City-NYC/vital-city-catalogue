@@ -1,7 +1,7 @@
 [
  {
   "name": "Vital City",
-  "post_count": 99,
+  "post_count": 97,
   "slugs": [
    "2025-a-look-back-most-read",
    "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -92,7 +92,6 @@
    "vital-signs-state-of-the-city-on-crime-2024",
    "what-brought-new-york-city-back-from-the-brink",
    "what-does-it-take-to-govern-the-jails",
-   "what-hangs-in-the-balance-sheets",
    "what-the-data-show-people-in-crisis-on-the-streets-and-subways",
    "what-the-numbers-tell-us-about-gun-crimes",
    "what-to-do-about-people-in-crisis-on-streets-and-subways",
@@ -214,8 +213,9 @@
  },
  {
   "name": "Jamie Rubin",
-  "post_count": 33,
+  "post_count": 34,
   "slugs": [
+   "a-housing-agenda-for-the-next-mayor",
    "adam-lubinsky-interview",
    "after-hours-with-jamie-rubin-and-majora-carter",
    "after-hours-with-jamie-rubin-reflections-on-disaster-relief",
@@ -382,7 +382,7 @@
  },
  {
   "name": "A Survey",
-  "post_count": 14,
+  "post_count": 15,
   "slugs": [
    "6-observers-and-veterans-of-new-york-city-politics-weigh-in-on-the-mayors-chances-of-finishing-out-his-term",
    "challenges-around-every-bend-transit-workers-day-to-day",
@@ -390,6 +390,7 @@
    "envisioning-car-free-streets",
    "how-drugs-hurt-or-helped-me",
    "measures-of-urban-vitality",
+   "my-first-adult-apartment",
    "pointing-a-firearm-or-looking-down-its-barrel",
    "six-ways-new-york-can-spare-more-people-from-shootings",
    "summer-city-memories",
@@ -708,6 +709,22 @@
   "senior": true
  },
  {
+  "name": "Charles Komanoff",
+  "post_count": 5,
+  "slugs": [
+   "hochul-nuclear-energy-climate-new-york",
+   "kathy-hochul-nese-pipeline-empire-wind",
+   "making-micromobility-work-nyc",
+   "one-year-into-congestion-pricing-in-new-york-city",
+   "safe-only-at-certain-speeds"
+  ],
+  "slug": "komanoff-charles",
+  "bio": "is an architect of New York City's congestion pricing program and a former head of Transportation Alternatives. He was an energy analyst and utility expert for New York City and states from New York to California.",
+  "url": "https://www.vitalcitynyc.org/author/komanoff-charles/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Anthony A. Braga",
   "post_count": 5,
   "slugs": [
@@ -924,35 +941,6 @@
   "slug": "eichenthal-david-r",
   "bio": "is a former Biden White House aide after 30 years working with state and local governments. He was chief of staff to Mark Green and is co-author of works on New York urban politics.",
   "url": "https://www.vitalcitynyc.org/author/eichenthal-david-r/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Charles Komanoff",
-  "post_count": 4,
-  "slugs": [
-   "hochul-nuclear-energy-climate-new-york",
-   "kathy-hochul-nese-pipeline-empire-wind",
-   "one-year-into-congestion-pricing-in-new-york-city",
-   "safe-only-at-certain-speeds"
-  ],
-  "slug": "komanoff-charles",
-  "bio": "is an architect of New York City's congestion pricing program and a former head of Transportation Alternatives. He was an energy analyst and utility expert for New York City and states from New York to California.",
-  "url": "https://www.vitalcitynyc.org/author/komanoff-charles/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Benjamin Schneider",
-  "post_count": 4,
-  "slugs": [
-   "jane-jacobs-would-support-city-of-yes",
-   "learning-from-jersey-city",
-   "taking-mamdanis-revolution-to-the-streets"
-  ],
-  "slug": "schneider-benjamin",
-  "bio": "is a freelance journalist and Bloomberg CityLab contributor currently and author of the recently published book, \"The Unfinished Metropolis: Igniting the City-Building Revolution.\"",
-  "url": "https://www.vitalcitynyc.org/author/schneider-benjamin/",
   "twitter": null,
   "website": null
  },
@@ -1238,15 +1226,15 @@
   "website": null
  },
  {
-  "name": "Sean Campion",
+  "name": "Joe McReynolds",
   "post_count": 3,
   "slugs": [
-   "how-seqra-slows-housing-development-new-york",
-   "why-it-costs-so-much-to-build-in-new-york-city"
+   "how-tokyo-built-clean-accessible-toilets-nyc-wants",
+   "teachings-from-tokyo"
   ],
-  "slug": "campion-sean",
-  "bio": "is director of housing and economic development studies at the Citizens Budget Commission, which focuses on constructive change in New York City and New York State government finances and services.",
-  "url": "https://www.vitalcitynyc.org/author/campion-sean/",
+  "slug": "mcreynolds-joe",
+  "bio": "is co-author of \"Emergent Tokyo: Designing the Spontaneous City\" and a researcher and Ph.D. candidate at Keio University\u2019s Almazan Architecture and Urban Studies Laboratory in Japan.",
+  "url": "https://www.vitalcitynyc.org/author/mcreynolds-joe/",
   "twitter": null,
   "website": null
  },
@@ -1293,6 +1281,20 @@
   "website": null
  },
  {
+  "name": "Benjamin Schneider",
+  "post_count": 3,
+  "slugs": [
+   "jane-jacobs-would-support-city-of-yes",
+   "learning-from-jersey-city",
+   "taking-mamdanis-revolution-to-the-streets"
+  ],
+  "slug": "schneider-benjamin",
+  "bio": "is a freelance journalist and Bloomberg CityLab contributor currently and author of the recently published book, \"The Unfinished Metropolis: Igniting the City-Building Revolution.\"",
+  "url": "https://www.vitalcitynyc.org/author/schneider-benjamin/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Ana Champeny",
   "post_count": 3,
   "slugs": [
@@ -1305,6 +1307,20 @@
   "url": "https://www.vitalcitynyc.org/author/champeny-ana/",
   "twitter": null,
   "website": null
+ },
+ {
+  "name": "Henry Grabar",
+  "post_count": 3,
+  "slugs": [
+   "smarter-parking-policy-please",
+   "the-high-price-of-fine-print"
+  ],
+  "slug": "grabar-henry",
+  "bio": "is the author of \"Paved Paradise: How Parking Explains the World.\"",
+  "url": "https://www.vitalcitynyc.org/author/grabar-henry/",
+  "twitter": null,
+  "website": null,
+  "senior": true
  },
  {
   "name": "Julie Sandorf",
@@ -1670,6 +1686,19 @@
   "website": null
  },
  {
+  "name": "Sean Campion",
+  "post_count": 2,
+  "slugs": [
+   "how-seqra-slows-housing-development-new-york",
+   "why-it-costs-so-much-to-build-in-new-york-city"
+  ],
+  "slug": "campion-sean",
+  "bio": "is director of housing and economic development studies at the Citizens Budget Commission, which focuses on constructive change in New York City and New York State government finances and services.",
+  "url": "https://www.vitalcitynyc.org/author/campion-sean/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Howard Slatkin",
   "post_count": 2,
   "slugs": [
@@ -1692,19 +1721,6 @@
   "slug": "roman-caterina",
   "bio": "is a professor in the Department of Criminal Justice at Temple University.",
   "url": "https://www.vitalcitynyc.org/author/roman-caterina/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Joe McReynolds",
-  "post_count": 2,
-  "slugs": [
-   "how-tokyo-built-clean-accessible-toilets-nyc-wants",
-   "teachings-from-tokyo"
-  ],
-  "slug": "mcreynolds-joe",
-  "bio": "is co-author of \"Emergent Tokyo: Designing the Spontaneous City\" and a researcher and Ph.D. candidate at Keio University\u2019s Almazan Architecture and Urban Studies Laboratory in Japan.",
-  "url": "https://www.vitalcitynyc.org/author/mcreynolds-joe/",
   "twitter": null,
   "website": null
  },
@@ -1865,20 +1881,6 @@
   "url": "https://www.vitalcitynyc.org/author/bates-josiah/",
   "twitter": null,
   "website": null
- },
- {
-  "name": "Henry Grabar",
-  "post_count": 2,
-  "slugs": [
-   "smarter-parking-policy-please",
-   "the-high-price-of-fine-print"
-  ],
-  "slug": "grabar-henry",
-  "bio": "is the author of \"Paved Paradise: How Parking Explains the World.\"",
-  "url": "https://www.vitalcitynyc.org/author/grabar-henry/",
-  "twitter": null,
-  "website": null,
-  "senior": true
  },
  {
   "name": "Freddie deBoer",
@@ -2457,6 +2459,18 @@
   "twitter": null,
   "website": null,
   "senior": true
+ },
+ {
+  "name": "Jordan McGillis",
+  "post_count": 1,
+  "slugs": [
+   "nyc-middle-class-family-affordability-challenge"
+  ],
+  "slug": "mcgillis-jordan",
+  "bio": "is a fellow at the Economic Innovation Group. With the support of the Fund for American Studies\u2019 Novak Journalism Fellowship, he has spent the past year writing about regional economies and industrial policy.",
+  "url": "https://www.vitalcitynyc.org/author/mcgillis-jordan/",
+  "twitter": null,
+  "website": null
  },
  {
   "name": "Brittany N. Montgomery",
@@ -3960,18 +3974,6 @@
   "website": null
  },
  {
-  "name": "Ned Resnikoff",
-  "post_count": 1,
-  "slugs": [
-   "california-dreaming"
-  ],
-  "slug": "resnikoff-ned",
-  "bio": "is an urban policy consultant and writer. He writes the newsletter Public Comment and is working on a book about cities with an expected publication date of Fall 2026.",
-  "url": "https://www.vitalcitynyc.org/author/resnikoff-ned/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Jonathan Tarleton",
   "post_count": 1,
   "slugs": [
@@ -3980,6 +3982,18 @@
   "slug": "tarleton-jonathan",
   "bio": "is a writer and urban planner. He previously served as chief researcher on urban projects and as editor-in-chief of the online magazine Urban Omnibus.",
   "url": "https://www.vitalcitynyc.org/author/tarleton-jonathan/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Ned Resnikoff",
+  "post_count": 1,
+  "slugs": [
+   "california-dreaming"
+  ],
+  "slug": "resnikoff-ned",
+  "bio": "is an urban policy consultant and writer. He writes the newsletter Public Comment and is working on a book about cities with an expected publication date of Fall 2026.",
+  "url": "https://www.vitalcitynyc.org/author/resnikoff-ned/",
   "twitter": null,
   "website": null
  },
@@ -4092,26 +4106,86 @@
   "website": null
  },
  {
-  "name": "Greg Lickenbrock",
+  "name": "Samantha J. Simon",
   "post_count": 1,
   "slugs": [
-   "the-money-behind-mass-shootings"
+   "the-good-gun-owner"
   ],
-  "slug": "lickenbrock-greg",
-  "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
-  "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
+  "slug": "simon-samantha-j",
+  "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+  "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
   "twitter": null,
   "website": null
  },
  {
-  "name": "Daniel Semenza",
+  "name": "Kate Daugherty",
   "post_count": 1,
   "slugs": [
-   "the-80-20-rule-of-gun-supply"
+   "what-we-know-and-dont-know-about-guns"
   ],
-  "slug": "semenza-daniel",
-  "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
-  "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
+  "slug": "daugherty-kate",
+  "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+  "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Charles Buckhanan",
+  "post_count": 1,
+  "slugs": [
+   "my-seven-guns-a-personal-inventory"
+  ],
+  "slug": "buckhanan-charles",
+  "bio": "is a street outreach worker on Chicago\u2019s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
+  "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Brian DeLay",
+  "post_count": 1,
+  "slugs": [
+   "gun-culture-then-and-now"
+  ],
+  "slug": "delay-brian",
+  "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of \u201cThe Myth of Continuity in American Gun Culture,\u201d and the 2025\u20132026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
+  "url": "https://www.vitalcitynyc.org/author/delay-brian/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Chris Marvin",
+  "post_count": 1,
+  "slugs": [
+   "licensed-to-kill-concealed-carry-training-course"
+  ],
+  "slug": "marvin-chris",
+  "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
+  "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Theodore Roosevelt IV",
+  "post_count": 1,
+  "slugs": [
+   "guns-my-family-and-me"
+  ],
+  "slug": "roosevelt-theodore-iv",
+  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
+  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Nina Vinik",
+  "post_count": 1,
+  "slugs": [
+   "breaking-through-with-the-next-generation-on-firearms"
+  ],
+  "slug": "vinik-nina",
+  "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
+  "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
   "twitter": null,
   "website": null
  },
@@ -4140,86 +4214,26 @@
   "website": null
  },
  {
-  "name": "Nina Vinik",
+  "name": "Daniel Semenza",
   "post_count": 1,
   "slugs": [
-   "breaking-through-with-the-next-generation-on-firearms"
+   "the-80-20-rule-of-gun-supply"
   ],
-  "slug": "vinik-nina",
-  "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
-  "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
+  "slug": "semenza-daniel",
+  "bio": "is an associate professor at Rutgers University and director of research at the New Jersey Gun Violence Research Center. His work has been published in leading criminology, public health and medical journals.",
+  "url": "https://www.vitalcitynyc.org/author/semenza-daniel/",
   "twitter": null,
   "website": null
  },
  {
-  "name": "Theodore Roosevelt IV",
+  "name": "Greg Lickenbrock",
   "post_count": 1,
   "slugs": [
-   "guns-my-family-and-me"
+   "the-money-behind-mass-shootings"
   ],
-  "slug": "roosevelt-theodore-iv",
-  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Chris Marvin",
-  "post_count": 1,
-  "slugs": [
-   "licensed-to-kill-concealed-carry-training-course"
-  ],
-  "slug": "marvin-chris",
-  "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
-  "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Brian DeLay",
-  "post_count": 1,
-  "slugs": [
-   "gun-culture-then-and-now"
-  ],
-  "slug": "delay-brian",
-  "bio": "is Preston Hotchkis Chair in the History of the United States at the University of California, Berkeley, author of \u201cThe Myth of Continuity in American Gun Culture,\u201d and the 2025\u20132026 Lillian Gollay Knafel Fellow at Harvard Radcliffe Institute.",
-  "url": "https://www.vitalcitynyc.org/author/delay-brian/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Charles Buckhanan",
-  "post_count": 1,
-  "slugs": [
-   "my-seven-guns-a-personal-inventory"
-  ],
-  "slug": "buckhanan-charles",
-  "bio": "is a street outreach worker on Chicago\u2019s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
-  "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Kate Daugherty",
-  "post_count": 1,
-  "slugs": [
-   "what-we-know-and-dont-know-about-guns"
-  ],
-  "slug": "daugherty-kate",
-  "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
-  "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Samantha J. Simon",
-  "post_count": 1,
-  "slugs": [
-   "the-good-gun-owner"
-  ],
-  "slug": "simon-samantha-j",
-  "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-  "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
+  "slug": "lickenbrock-greg",
+  "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
+  "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
   "twitter": null,
   "website": null
  },
@@ -4561,14 +4575,14 @@
   "website": null
  },
  {
-  "name": "Meryl Chertoff",
+  "name": "Richard Schragger",
   "post_count": 1,
   "slugs": [
-   "trumps-executive-orders-have-cities-in-the-crosshairs"
+   "is-it-time-for-cities-to-go-it-alone"
   ],
-  "slug": "chertoff-meryl",
-  "bio": "is adjunct professor of law at Georgetown University Law Center.",
-  "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
+  "slug": "schragger-richard",
+  "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
+  "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
   "twitter": null,
   "website": null
  },
@@ -4585,14 +4599,14 @@
   "website": null
  },
  {
-  "name": "Richard Schragger",
+  "name": "Meryl Chertoff",
   "post_count": 1,
   "slugs": [
-   "is-it-time-for-cities-to-go-it-alone"
+   "trumps-executive-orders-have-cities-in-the-crosshairs"
   ],
-  "slug": "schragger-richard",
-  "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
-  "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
+  "slug": "chertoff-meryl",
+  "bio": "is adjunct professor of law at Georgetown University Law Center.",
+  "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
   "twitter": null,
   "website": null
  },
