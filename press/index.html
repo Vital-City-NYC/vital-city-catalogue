@@ -432,6 +432,7 @@ function rank(q){
     if(!p.active) score*=0.55;                       // may have moved on
     if(p.scope==="national+metro") score*=0.6;       // New York City reporters first
     if(q.fromUrl && p.outlet && DATA_DOM[p.outlet]===q.fromUrl.host) score*=0.75;  // they already have it
+    if(isFriend(p)) score*=FRIEND_BOOST;             // the Vital City press list leads
     score+=tieBreak/1000;
     why.sort((a,b)=>b.score-a.score);
     const above = tierOf(p)===1 && clips>=MIN_CLIPS;
@@ -467,7 +468,20 @@ const isPinned=p=>!!(OUT[p.outlet]||{}).pin;
    big broadcast stations. Their top reporter on a topic always sits above the
    line, on one clip if that is all their feed shows. */
 const isCore=p=>!!(OUT[p.outlet]||{}).core;
+/* Vital City's own press list (the friendlies, private/press_source.csv) is the
+   top tier by default: from any outlet, first in every shortlist after the
+   Times, weighted double, and never capped at two per outlet. They still need
+   two stories on a topic, like everyone else: on one, a broad query ("under
+   Mayor Mamdani") pulled in nearly the whole list. */
+const isFriend=p=>!!(p.vc&&p.vc.press_list);
+const FRIEND_BOOST=2, FRIEND_SLOTS=12;   // more than twelve on a broad topic continue at the head of the list below the line
 const minFor=p=>(isPinned(p)||isCore(p))?1:MIN_CLIPS;
+function friendsNoClips(){
+  const f=DATA.people.filter(p=>isFriend(p)&&!(p.story_count>0)).sort((a,b)=>a.name.localeCompare(b.name));
+  if(!f.length) return "";
+  return `<div class="note" style="margin:8px 0 0">Also on the Vital City press list, with no stories on file for the map to match against: ${
+    f.map(p=>`${box(p)} <b>${esc(p.name)}</b> (${esc(outletName(p))})`).join(", ")}.</div>`;
+}
 const CORE_IDS=()=>DATA.outlets.filter(o=>o.core).map(o=>o.id);
 function coreGaps(top){
   const have=new Set(top.map(r=>r.p.outlet));
@@ -526,16 +540,22 @@ const MEDIUM_LABEL={tv:"TV",radio:"Radio",podcast:"Podcast",print:"Print",online
 const slotOf=p=>{ const m=mediumOf(p); return m==="podcast"?"radio":m; };
 function shortlist(ranked){          // ranked: [{p,score,...}] best first, all eligible
   const picked=[], perOutlet={}, seen=new Set();
-  const take=r=>{ const o=r.p.outlet||r.p.outlet_text||r.p.id;
-    if(seen.has(r.p.id)||(perOutlet[o]||0)>=PER_OUTLET||picked.length>=SHORTLIST) return false;
+  // Friendlies ride on top of the fifteen: the core outlets and the broadcast
+  // slots still get their places, and at least eight others always make it.
+  let cap=SHORTLIST;
+  const take=(r,uncapped)=>{ const o=r.p.outlet||r.p.outlet_text||r.p.id;
+    if(seen.has(r.p.id)||(!uncapped&&(perOutlet[o]||0)>=PER_OUTLET)||(!uncapped&&picked.length>=cap)) return false;
     picked.push(r); seen.add(r.p.id); perOutlet[o]=(perOutlet[o]||0)+1; return true; };
+  // the Vital City press list first, whatever the outlet and however many per outlet
+  let nf=0; for(const r of ranked){ if(nf<FRIEND_SLOTS && isFriend(r.p) && take(r,true)) nf++; }
+  cap=Math.max(SHORTLIST, picked.length+8);
   // the core outlets' beat reporter first: the best-ranked person at each
   for(const id of CORE_IDS()){ const r=ranked.find(x=>x.p.outlet===id); if(r) take(r); }
   for(const [m,n] of Object.entries(HOLD)){          // then hold the broadcast slots
     let got=picked.filter(r=>slotOf(r.p)===m).length; for(const r of ranked){ if(got>=n) break; if(slotOf(r.p)===m && take(r)) got++; }
   }
   for(const r of ranked){ if(picked.length>=SHORTLIST) break; take(r); }
-  picked.sort((a,b)=>b.score-a.score);
+  picked.sort((a,b)=>(isFriend(b.p)-isFriend(a.p))||b.score-a.score);
   return {top:picked, rest:ranked.filter(r=>!seen.has(r.p.id))};
 }
 /* ---------- picking people to contact ----------
@@ -638,7 +658,8 @@ async function renderAmplify(){
     const query=[pc.title,pc.dek,(pc.tags||[]).join(" ")].filter(Boolean).join(". ");
     const q=readQuery(query);
     const ranked=filtered(rank(q)).filter(r=>r.clips>=minFor(r.p));
-    const top=[...ranked.filter(r=>tierOf(r.p)===1),...ranked.filter(r=>tierOf(r.p)!==1)].slice(0,6);
+    const top=[...ranked.filter(r=>isFriend(r.p)),...ranked.filter(r=>!isFriend(r.p)&&tierOf(r.p)===1),
+               ...ranked.filter(r=>!isFriend(r.p)&&tierOf(r.p)!==1)].slice(0,6);
     const beat=Object.values(q.beats).sort((a,b)=>b.n-a.n)[0];
     const rep=top.length?top.map(r=>{ const p=r.p; const w=(r.why||[]).find(x=>x.kind==="beat");
       return `<div class="rp ${p.vc&&p.vc.person?"vc":""}">${box(p)}<span class="n">${esc(p.name)}</span> <span class="o">&middot; ${esc(outletName(p))}${w?` &middot; ${w.count} on ${esc(String(w.label).toLowerCase())}`:""}</span>
@@ -690,9 +711,10 @@ function runQuery(){
   });
   const pinIds=new Set(pin.rows.map(r=>r.p.id));
   LAST=LAST.filter(r=>!pinIds.has(r.p.id));
-  const eligible=LAST.filter(r=>r.clips>=minFor(r.p)&&tierOf(r.p)===1);
+  const eligible=LAST.filter(r=>r.clips>=minFor(r.p)&&(tierOf(r.p)===1||isFriend(r.p)));
   const {top, rest:restMajor}=shortlist(eligible);
-  const rest=[...restMajor, ...LAST.filter(r=>r.clips>=MIN_CLIPS&&tierOf(r.p)!==1)]
+  const topIds=new Set(top.map(r=>r.p.id));
+  const rest=[...restMajor, ...LAST.filter(r=>r.clips>=MIN_CLIPS&&tierOf(r.p)!==1&&!topIds.has(r.p.id))]
     .sort((a,b)=>b.score-a.score);
   rest.forEach(r=>{ const w=(r.why||[]).find(x=>x.kind==="beat"); r.example=w&&w.examples&&w.examples[0]; });
   const single=LAST.filter(r=>r.clips<minFor(r.p));
@@ -706,8 +728,9 @@ function runQuery(){
   }
   $("#results").innerHTML =
       pinHeader(pin.closest) + pin.rows.map(card).join("")
-    + `<div class="tierdiv"><b>Shortlist</b> &middot; ${top.length} target${top.length===1?"":"s"} &middot; the top reporter on this at the Post, the Daily News, WNYC/Gothamist, NY1, ABC 7, NBC 4 and CBS 2 always included</div>`
+    + `<div class="tierdiv"><b>Shortlist</b> &middot; Vital City press list first &middot; ${top.length} target${top.length===1?"":"s"} &middot; the top reporter on this at the Post, the Daily News, WNYC/Gothamist, NY1, ABC 7, NBC 4 and CBS 2 always included</div>`
     + coreGaps(top)
+    + friendsNoClips()
     + (top.length ? top.map(card).join("")
                   : `<div class="empty">No one at a major outlet has filed on this more than once. The people below have.</div>`)
     + (rest.length ? `<div class="tierdiv">Below the line &middot; ${rest.length} more with two or more clips</div>`
@@ -761,12 +784,14 @@ function showBeat(bid){
   const unpinned=ranked.filter(r=>!pinIds.has(r.p.id));
   const onThis=unpinned.filter(r=>r.clips>=minFor(r.p));
   const broad=grp?unpinned.filter(r=>r.clips<minFor(r.p)).sort((a,b)=>b.score-a.score):[];
-  const {top, rest:restMajor}=shortlist(onThis.filter(r=>tierOf(r.p)===1));
-  const rest=[...restMajor, ...onThis.filter(r=>tierOf(r.p)!==1)].sort((a,b)=>b.score-a.score);
+  const {top, rest:restMajor}=shortlist(onThis.filter(r=>tierOf(r.p)===1||isFriend(r.p)));
+  const topIds=new Set(top.map(r=>r.p.id));
+  const rest=[...restMajor, ...onThis.filter(r=>tierOf(r.p)!==1&&!topIds.has(r.p.id))].sort((a,b)=>b.score-a.score);
   $("#beatOut").innerHTML = (rows.length||pin.rows.length)
     ? `<div style="margin-top:12px">${pinHeader(pin.closest)}</div>` + compactTable(pin.rows,"Stories on this beat")
-      + `<div class="tierdiv" style="margin-top:12px"><b>Shortlist</b> &middot; ${top.length} &middot; the top reporter at each core outlet, then two or more stories on this beat, ranked by stories times the size of the outlet, at most two per outlet</div>`
+      + `<div class="tierdiv" style="margin-top:12px"><b>Shortlist</b> &middot; Vital City press list first &middot; ${top.length} &middot; the top reporter at each core outlet, then two or more stories on this beat, ranked by stories times the size of the outlet, at most two per outlet</div>`
       + coreGaps(top)
+      + friendsNoClips()
       + (top.length?compactTable(top,"Stories on this beat"):`<div class="empty">No one at a major outlet has filed on this beat yet.</div>`)
       + (rest.length?`<div class="tierdiv">Below the line &middot; ${rest.length}</div><div id="beatRest">${compactTable(rest.slice(0,20),"Stories on this beat")}</div>`
           +(rest.length>20?`<span class="more" id="beatMore">all ${rest.length} &rsaquo;</span>`:""):"")

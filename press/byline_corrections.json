@@ -434,6 +434,13 @@
    "action": "drop",
    "why": "an outside opinion contributor from City Journal, not Post staff",
    "source": "https://adamlehodey.com/"
+  },
+  {
+   "name": "Jake Offenhartz",
+   "outlet_seen": "wnbc",
+   "action": "relabel",
+   "employer": "Associated Press",
+   "source": "Vital City press list (FriendliesTopReporters, July 2026): 'Contributor, New York City Reporter, AP'"
   }
  ]
 }
