@@ -37,7 +37,7 @@ Four constraints, each earned:
    commissioning list exists to surface.
 """
 from __future__ import annotations
-import json, os, re, subprocess, sys, urllib.request, urllib.error
+import json, os, re, subprocess, sys, urllib.parse, urllib.request, urllib.error
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -277,7 +277,9 @@ def main():
             continue
         rec = {"slug": slug, "title": it.get("title"), "url": it.get("url"),
                "published": pub, "views": views.get(slug), "topics": it.get("topics") or [],
-               "summary": it.get("summary") or "", "age_months": months_between(pd, today)}
+               "summary": it.get("summary") or "", "age_months": months_between(pd, today),
+               # who wrote it, so draft posts can credit the writer
+               "authors": [a for a in (it.get("authors") or []) if a and a != "Vital City"]}
         by_slug[slug] = rec
         if last_run and pub > last_run:
             new_since.append(rec)
@@ -285,10 +287,34 @@ def main():
             evergreen.append(rec)
     evergreen.sort(key=lambda r: (r["views"] or -1), reverse=True)
 
+    def from_site(slug):
+        """A curated pick the catalogue lacks (the catalogue missed Howard
+        Slatkin's rent piece): read it from the site's public content feed."""
+        if slug in from_site.cache:
+            return from_site.cache[slug]
+        rec = None
+        try:
+            u = ("https://vital-city.ghost.io/ghost/api/content/posts/slug/" + urllib.parse.quote(slug) +
+                 "/?key=dd8e178e9ddfc883537e71dd07&include=authors,tags&fields=title,url,published_at,custom_excerpt,slug")
+            with urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"}), timeout=20) as r:
+                post = json.loads(r.read())["posts"][0]
+            pub = (post.get("published_at") or "")[:10]
+            rec = {"slug": slug, "title": post.get("title"), "url": post.get("url"), "published": pub,
+                   "views": views.get(slug), "topics": [t["name"] for t in post.get("tags") or [] if t.get("visibility") == "public"],
+                   "summary": post.get("custom_excerpt") or "",
+                   "age_months": months_between(date.fromisoformat(pub), today) if pub else None,
+                   "authors": [a["name"] for a in post.get("authors") or [] if a.get("name") and a["name"] != "Vital City"],
+                   "from_site": True}
+        except Exception as e:
+            print(f"  resharing: {slug} is not in the catalogue and could not be read from the site ({e})")
+        from_site.cache[slug] = rec
+        return rec
+    from_site.cache = {}
+
     def hydrate(refs, reviewed=True):
         out = []
         for ref in refs:
-            r = by_slug.get(ref["slug"])
+            r = by_slug.get(ref["slug"]) or from_site(ref["slug"])
             out.append(dict(r, reviewed=reviewed) if r else
                        {"slug": ref["slug"], "title": ref.get("title"), "url": None,
                         "views": None, "published": None, "missing": True, "reviewed": reviewed})

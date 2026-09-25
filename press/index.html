@@ -156,6 +156,7 @@
   .amp.evg:first-of-type{border-top:0}
   .amp.evg details.evgd{margin-top:6px}
   .amp.evg details.evgd>summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--vc-cerulean)}
+  .amp.evg .evgposts{margin-top:6px;max-width:880px}
   .amp.evg .why{font-size:12px;line-height:1.5;color:var(--vc-black);margin-top:4px;max-width:880px}
   .amp-box{max-height:560px;overflow-y:auto;border:1px solid var(--vc-cloud);background:var(--vc-white);padding:4px 14px}
   .amp{padding:14px 0 16px;border-bottom:1px solid var(--vc-cloud)}
@@ -698,16 +699,30 @@ function evergreenPicks(){
   const out=[], seen=new Set();
   for(const u of RESHARE.upcoming||[]){
     const d=u.post_on||u.date, p=(u.picks||[])[0];
-    if(!d||d<t0||d>t1||!["hook","moment"].includes(u.kind)||!u.why||!p||p.reviewed===false) continue;
+    if(!d||d<t0||d>t1||!["hook","moment"].includes(u.kind)||!u.why||!p||!p.url||p.reviewed===false) continue;
     if(((u.event||{}).significance||0)<60||seen.has(p.slug)) continue;
     seen.add(p.slug); out.push({date:d, event:(u.event||{}).title||u.label, why:u.why, pick:p});
   }
   for(const sn of RESHARE.seasonal||[]){
     const p=(sn.picks||[])[0];
-    if(!sn.active_now||!sn.why||!p||seen.has(p.slug)) continue;
+    if(!sn.active_now||!sn.why||!p||!p.url||seen.has(p.slug)) continue;
     seen.add(p.slug); out.push({date:null, event:sn.label, why:sn.why, pick:p});
   }
   return out.slice(0,EVG_MAX);
+}
+// Two plain posts for an archive piece, crediting the writer like the new-piece
+// drafts do; a roundtable of many writers is credited to the archive instead.
+function evergreenPosts(x){
+  const p=x.pick, auth=(p.authors||[]).filter(Boolean);
+  const names=auth.length&&auth.length<=3?(auth.length>1?auth.slice(0,-1).join(", ")+" and "+auth.slice(-1):auth[0]):"";
+  const title=String(p.title||"").replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"');
+  let when=String(x.event||"").split(";")[0].replace(/[.\s]+$/,"");
+  if(!x.date) when=when.split("·").pop().trim();                      // seasons: "October · the year's crime picture takes shape"
+  when=when.charAt(0).toUpperCase()+when.slice(1);
+  const posts=[{kind:"Date",text:`${when}${x.date?`, ${apShort(x.date)}`:""}. ${names?`Read ${names}`:"From our archive"}: "${title}"`}];
+  const dek=String(p.summary||"").trim().replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"');
+  if(dek) posts.push({kind:"Claim",text:`${names?`From ${names}: `:""}${dek}${/[.?!]$/.test(dek)?"":"."}`});
+  return posts;
 }
 function renderEvergreen(){
   const host=$("#evergreen"); if(!host) return;
@@ -723,10 +738,14 @@ function renderEvergreen(){
         <div class="m">${x.date?`For ${esc(apShort(x.date))} &middot; `:"Now &middot; "}${esc(x.event)}</div>
         <div class="t"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>${p.published?` <span class="o" style="font-weight:400;font-size:11.5px">&middot; published ${esc(String(p.published).slice(0,4))}</span>`:""}</div>
         <div class="why">${esc(String(x.why).replace(/^Why (this one|now):\s*/,""))}</div>
+        <div class="evgposts">${evergreenPosts(x).map((d,j)=>`<div class="dp"><span class="k">${esc(d.kind)}</span><span class="x">${esc(d.text)}</span><button type="button" class="exp" data-ecopy="${esc(d.text+" "+(p.url||""))}">Copy</button></div>`).join("")}</div>
         <details class="evgd"><summary>Reporters to pitch (${top.length}) and email</summary>${ampRepHTML(top)}
         <button class="more ampmail" type="button" data-idx="${idx}">Email the ticked reporters &rsaquo;</button></details></div>`;
     }).join("");
   updateSelbar();
+  if(!host.dataset.wired){ host.dataset.wired="1";
+    host.addEventListener("click",e=>{ const c=e.target.closest("[data-ecopy]"); if(!c) return; const t=c.dataset.ecopy;
+      (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{ c.textContent="Copied"; setTimeout(()=>c.textContent="Copy",1400); },()=>prompt("Copy this post:",t)); }); }
 }
 
 async function renderAmplify(){
