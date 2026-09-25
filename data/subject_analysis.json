@@ -1,16 +1,16 @@
 {
- "generated_from": "2026-09-05T11:15:05.816218+00:00",
- "total_pieces": 899,
- "n_topics_normalized": 207,
+ "generated_from": "2026-09-25T16:59:10.183680+00:00",
+ "total_pieces": 948,
+ "n_topics_normalized": 213,
  "topic_bucket_sizes": {
-  "subjects": 136,
-  "meta": 23,
-  "rubrics": 48
+  "subjects": 137,
+  "meta": 24,
+  "rubrics": 52
  },
  "topic_bucket_piece_volume": {
-  "subject_tag_applications": 1995,
-  "meta_tag_applications": 196,
-  "rubric_tag_applications": 292
+  "subject_tag_applications": 2030,
+  "meta_tag_applications": 274,
+  "rubric_tag_applications": 304
  },
  "rubrics_listed": [
   "Beyond False Simplicity",
@@ -23,6 +23,7 @@
   "How Did It Get This Bad?",
   "If I Had a Hammer...",
   "Looking Back",
+  "Looking Back, Looking Forward",
   "Mugged by Reality",
   "New Solutions",
   "Persistent Problems Inside",
@@ -35,6 +36,7 @@
   "Some Policy Solutions",
   "Sweating the Small Stuff",
   "The Causes",
+  "The Culture Around Us",
   "The Great Debate",
   "The Joy of Incrementalism",
   "The Policy Record",
@@ -51,10 +53,12 @@
   "What It Looks Like Up Close",
   "What Makes a Great City Work?",
   "What Opportunities Await?",
+  "What We Know and Don't Know",
   "What the Future Holds",
   "What to Do Now",
   "What's The Plan?",
   "What’s Driving Trends and What to Do About It",
+  "When Women Wield Guns",
   "Where Do We Go From Here?",
   "Where We Are",
   "Where We Go From Here",
@@ -71,6 +75,7 @@
   "Events",
   "In Conversation With...",
   "In Memoriam",
+  "New York Editorial Board",
   "Overview",
   "Podcast",
   "Press Releases",
@@ -90,13 +95,13 @@
  "beats": [
   {
    "beat": "City government & governance",
-   "pieces": 259,
-   "share": 28.8,
-   "median_words": 1564,
+   "pieces": 262,
+   "share": 27.6,
+   "median_words": 1572,
    "types": [
     [
      "opinion/commentary",
-     210
+     212
     ],
     [
      "q&a",
@@ -112,7 +117,7 @@
     ],
     [
      "policy",
-     5
+     6
     ],
     [
      "something else",
@@ -128,22 +133,22 @@
     "2023": 18,
     "2024": 58,
     "2025": 109,
-    "2026": 73
+    "2026": 76
    }
   },
   {
    "beat": "Crime & violence",
-   "pieces": 237,
-   "share": 26.4,
-   "median_words": 1639,
+   "pieces": 243,
+   "share": 25.6,
+   "median_words": 1624,
    "types": [
     [
      "opinion/commentary",
-     184
+     189
     ],
     [
      "data analysis",
-     29
+     30
     ],
     [
      "q&a",
@@ -171,18 +176,18 @@
     "2023": 53,
     "2024": 65,
     "2025": 66,
-    "2026": 26
+    "2026": 32
    }
   },
   {
    "beat": "Land use & the built city",
-   "pieces": 156,
-   "share": 17.4,
-   "median_words": 1594,
+   "pieces": 158,
+   "share": 16.7,
+   "median_words": 1603,
    "types": [
     [
      "opinion/commentary",
-     138
+     140
     ],
     [
      "podcast",
@@ -210,18 +215,18 @@
     "2023": 29,
     "2024": 35,
     "2025": 54,
-    "2026": 30
+    "2026": 32
    }
   },
   {
    "beat": "History & the long view",
-   "pieces": 144,
+   "pieces": 152,
    "share": 16.0,
-   "median_words": 1653,
+   "median_words": 1647,
    "types": [
     [
      "opinion/commentary",
-     130
+     138
     ],
     [
      "q&a",
@@ -244,14 +249,14 @@
     "2022": 12,
     "2023": 28,
     "2024": 39,
-    "2025": 53,
-    "2026": 12
+    "2025": 54,
+    "2026": 19
    }
   },
   {
    "beat": "Courts & prosecution",
    "pieces": 113,
-   "share": 12.6,
+   "share": 11.9,
    "median_words": 1611,
    "types": [
     [
@@ -289,13 +294,13 @@
   },
   {
    "beat": "Culture & city life",
-   "pieces": 96,
-   "share": 10.7,
+   "pieces": 95,
+   "share": 10.0,
    "median_words": 1600,
    "types": [
     [
      "opinion/commentary",
-     86
+     85
     ],
     [
      "book review",
@@ -318,19 +323,19 @@
     "2022": 5,
     "2023": 24,
     "2024": 26,
-    "2025": 27,
+    "2025": 26,
     "2026": 14
    }
   },
   {
    "beat": "Money, budgets & the economy",
-   "pieces": 87,
-   "share": 9.7,
-   "median_words": 1585,
+   "pieces": 88,
+   "share": 9.3,
+   "median_words": 1588,
    "types": [
     [
      "opinion/commentary",
-     74
+     75
     ],
     [
      "podcast",
@@ -353,18 +358,18 @@
     "2023": 7,
     "2024": 15,
     "2025": 22,
-    "2026": 43
+    "2026": 44
    }
   },
   {
    "beat": "Housing",
-   "pieces": 81,
-   "share": 9.0,
-   "median_words": 1817,
+   "pieces": 82,
+   "share": 8.6,
+   "median_words": 1805,
    "types": [
     [
      "opinion/commentary",
-     69
+     70
     ],
     [
      "podcast",
@@ -388,18 +393,18 @@
     "2023": 5,
     "2024": 11,
     "2025": 37,
-    "2026": 27
+    "2026": 28
    }
   },
   {
    "beat": "Transportation",
-   "pieces": 76,
-   "share": 8.5,
-   "median_words": 1614,
+   "pieces": 77,
+   "share": 8.1,
+   "median_words": 1618,
    "types": [
     [
      "opinion/commentary",
-     66
+     67
     ],
     [
      "q&a",
@@ -422,18 +427,18 @@
     "2023": 4,
     "2024": 30,
     "2025": 20,
-    "2026": 22
+    "2026": 23
    }
   },
   {
    "beat": "Policing",
-   "pieces": 71,
-   "share": 7.9,
-   "median_words": 1782,
+   "pieces": 70,
+   "share": 7.4,
+   "median_words": 1773,
    "types": [
     [
      "opinion/commentary",
-     50
+     49
     ],
     [
      "q&a",
@@ -460,14 +465,14 @@
     "2022": 8,
     "2023": 18,
     "2024": 10,
-    "2025": 11,
+    "2025": 10,
     "2026": 24
    }
   },
   {
    "beat": "Jails & incarceration",
    "pieces": 68,
-   "share": 7.6,
+   "share": 7.2,
    "median_words": 1684,
    "types": [
     [
@@ -503,7 +508,7 @@
   {
    "beat": "Politics & elections",
    "pieces": 65,
-   "share": 7.2,
+   "share": 6.9,
    "median_words": 1501,
    "types": [
     [
@@ -533,7 +538,7 @@
   {
    "beat": "Health, mental health & drugs",
    "pieces": 62,
-   "share": 6.9,
+   "share": 6.5,
    "median_words": 1675,
    "types": [
     [
@@ -567,13 +572,17 @@
   },
   {
    "beat": "Education & youth",
-   "pieces": 37,
-   "share": 4.1,
-   "median_words": 1605,
+   "pieces": 40,
+   "share": 4.2,
+   "median_words": 1632,
    "types": [
     [
      "opinion/commentary",
-     35
+     37
+    ],
+    [
+     "policy",
+     1
     ],
     [
      "data analysis",
@@ -588,18 +597,18 @@
     "2023": 5,
     "2024": 8,
     "2025": 14,
-    "2026": 10
+    "2026": 13
    }
   },
   {
    "beat": "Technology",
-   "pieces": 34,
+   "pieces": 36,
    "share": 3.8,
-   "median_words": 1670,
+   "median_words": 1759,
    "types": [
     [
      "opinion/commentary",
-     28
+     30
     ],
     [
      "q&a",
@@ -610,13 +619,13 @@
     "2023": 3,
     "2024": 8,
     "2025": 9,
-    "2026": 14
+    "2026": 16
    }
   },
   {
    "beat": "State, federal & beyond NYC",
    "pieces": 34,
-   "share": 3.8,
+   "share": 3.6,
    "median_words": 1820,
    "types": [
     [
@@ -650,13 +659,13 @@
   },
   {
    "beat": "Race, gender & inequality",
-   "pieces": 28,
+   "pieces": 29,
    "share": 3.1,
-   "median_words": 1808,
+   "median_words": 1817,
    "types": [
     [
      "opinion/commentary",
-     23
+     24
     ],
     [
      "q&a",
@@ -674,13 +683,14 @@
    "by_year": {
     "2023": 8,
     "2024": 4,
-    "2025": 16
+    "2025": 16,
+    "2026": 1
    }
   },
   {
    "beat": "Climate, environment & sanitation",
    "pieces": 21,
-   "share": 2.3,
+   "share": 2.2,
    "median_words": 1805,
    "types": [
     [
@@ -705,7 +715,7 @@
   {
    "beat": "Homelessness & social services",
    "pieces": 18,
-   "share": 2.0,
+   "share": 1.9,
    "median_words": 1842,
    "types": [
     [
@@ -731,7 +741,7 @@
   {
    "beat": "Media & journalism",
    "pieces": 17,
-   "share": 1.9,
+   "share": 1.8,
    "median_words": 1577,
    "types": [
     [
@@ -759,13 +769,13 @@
   },
   {
    "beat": "Civil society & philanthropy",
-   "pieces": 16,
+   "pieces": 17,
    "share": 1.8,
-   "median_words": 1560,
+   "median_words": 1572,
    "types": [
     [
      "opinion/commentary",
-     15
+     16
     ],
     [
      "q&a",
@@ -776,7 +786,7 @@
     "2022": 2,
     "2023": 3,
     "2024": 1,
-    "2025": 10
+    "2025": 11
    }
   }
  ],
@@ -799,16 +809,16 @@
   {
    "a": "Crime & violence",
    "b": "Policing",
-   "pieces": 38
-  },
-  {
-   "a": "Housing",
-   "b": "Land use & the built city",
-   "pieces": 36
+   "pieces": 37
   },
   {
    "a": "Crime & violence",
    "b": "History & the long view",
+   "pieces": 37
+  },
+  {
+   "a": "Housing",
+   "b": "Land use & the built city",
    "pieces": 36
   },
   {
@@ -819,17 +829,17 @@
   {
    "a": "Land use & the built city",
    "b": "Transportation",
-   "pieces": 28
+   "pieces": 29
   },
   {
    "a": "History & the long view",
    "b": "Land use & the built city",
-   "pieces": 27
+   "pieces": 28
   },
   {
    "a": "City government & governance",
    "b": "Housing",
-   "pieces": 26
+   "pieces": 27
   },
   {
    "a": "City government & governance",
@@ -849,7 +859,7 @@
   {
    "a": "City government & governance",
    "b": "Education & youth",
-   "pieces": 20
+   "pieces": 21
   },
   {
    "a": "City government & governance",
@@ -867,13 +877,13 @@
    "pieces": 17
   },
   {
-   "a": "Crime & violence",
-   "b": "Culture & city life",
-   "pieces": 17
-  },
-  {
    "a": "Culture & city life",
    "b": "Land use & the built city",
+   "pieces": 16
+  },
+  {
+   "a": "Crime & violence",
+   "b": "Culture & city life",
    "pieces": 16
   },
   {
@@ -907,9 +917,9 @@
   {
    "beat": "Jails & incarceration",
    "pieces": 68,
-   "distinct_bylines": 31,
-   "top5_share": 57.4,
-   "vital_city_share": 19.1,
+   "distinct_bylines": 30,
+   "top5_share": 58.8,
+   "vital_city_share": 20.6,
    "top3": [
     {
      "name": "Elizabeth Glazer",
@@ -917,7 +927,7 @@
     },
     {
      "name": "Vital City",
-     "pieces": 13
+     "pieces": 14
     },
     {
      "name": "Vincent Schiraldi",
@@ -948,10 +958,10 @@
   },
   {
    "beat": "Policing",
-   "pieces": 71,
+   "pieces": 70,
    "distinct_bylines": 33,
-   "top5_share": 47.9,
-   "vital_city_share": 21.1,
+   "top5_share": 48.6,
+   "vital_city_share": 21.4,
    "top3": [
     {
      "name": "Vital City",
@@ -990,9 +1000,9 @@
   },
   {
    "beat": "Civil society & philanthropy",
-   "pieces": 16,
-   "distinct_bylines": 15,
-   "top5_share": 37.5,
+   "pieces": 17,
+   "distinct_bylines": 16,
+   "top5_share": 35.3,
    "vital_city_share": 0.0,
    "top3": [
     {
@@ -1004,7 +1014,7 @@
      "pieces": 1
     },
     {
-     "name": "Jack Rakove",
+     "name": "Brian DeLay",
      "pieces": 1
     }
    ]
@@ -1031,6 +1041,27 @@
    ]
   },
   {
+   "beat": "Courts & prosecution",
+   "pieces": 113,
+   "distinct_bylines": 70,
+   "top5_share": 32.7,
+   "vital_city_share": 15.9,
+   "top3": [
+    {
+     "name": "Vital City",
+     "pieces": 18
+    },
+    {
+     "name": "Elizabeth Glazer",
+     "pieces": 7
+    },
+    {
+     "name": "Greg Berman",
+     "pieces": 6
+    }
+   ]
+  },
+  {
    "beat": "State, federal & beyond NYC",
    "pieces": 34,
    "distinct_bylines": 28,
@@ -1052,36 +1083,15 @@
    ]
   },
   {
-   "beat": "Courts & prosecution",
-   "pieces": 113,
-   "distinct_bylines": 72,
-   "top5_share": 31.0,
-   "vital_city_share": 14.2,
-   "top3": [
-    {
-     "name": "Vital City",
-     "pieces": 16
-    },
-    {
-     "name": "Elizabeth Glazer",
-     "pieces": 7
-    },
-    {
-     "name": "Greg Berman",
-     "pieces": 6
-    }
-   ]
-  },
-  {
    "beat": "Crime & violence",
-   "pieces": 237,
-   "distinct_bylines": 115,
-   "top5_share": 29.5,
-   "vital_city_share": 12.7,
+   "pieces": 243,
+   "distinct_bylines": 119,
+   "top5_share": 30.9,
+   "vital_city_share": 14.4,
    "top3": [
     {
      "name": "Vital City",
-     "pieces": 30
+     "pieces": 35
     },
     {
      "name": "Elizabeth Glazer",
@@ -1094,11 +1104,32 @@
    ]
   },
   {
+   "beat": "Culture & city life",
+   "pieces": 95,
+   "distinct_bylines": 61,
+   "top5_share": 28.4,
+   "vital_city_share": 3.2,
+   "top3": [
+    {
+     "name": "Greg Berman",
+     "pieces": 9
+    },
+    {
+     "name": "Vishaan Chakrabarti",
+     "pieces": 7
+    },
+    {
+     "name": "A Survey",
+     "pieces": 4
+    }
+   ]
+  },
+  {
    "beat": "Technology",
-   "pieces": 34,
-   "distinct_bylines": 29,
-   "top5_share": 29.4,
-   "vital_city_share": 8.8,
+   "pieces": 36,
+   "distinct_bylines": 31,
+   "top5_share": 27.8,
+   "vital_city_share": 8.3,
    "top3": [
     {
      "name": "Cara Eckholm",
@@ -1116,10 +1147,10 @@
   },
   {
    "beat": "Race, gender & inequality",
-   "pieces": 28,
-   "distinct_bylines": 25,
-   "top5_share": 28.6,
-   "vital_city_share": 10.7,
+   "pieces": 29,
+   "distinct_bylines": 26,
+   "top5_share": 27.6,
+   "vital_city_share": 10.3,
    "top3": [
     {
      "name": "Vital City",
@@ -1130,29 +1161,29 @@
      "pieces": 2
     },
     {
-     "name": "Eli Dvorkin",
+     "name": "Brooklynn Hitchens",
      "pieces": 1
     }
    ]
   },
   {
-   "beat": "Culture & city life",
-   "pieces": 96,
-   "distinct_bylines": 61,
-   "top5_share": 28.1,
-   "vital_city_share": 3.1,
+   "beat": "Education & youth",
+   "pieces": 40,
+   "distinct_bylines": 34,
+   "top5_share": 27.5,
+   "vital_city_share": 7.5,
    "top3": [
     {
-     "name": "Greg Berman",
-     "pieces": 9
+     "name": "Vital City",
+     "pieces": 3
     },
     {
-     "name": "Vishaan Chakrabarti",
-     "pieces": 7
+     "name": "Joseph P. Viteritti",
+     "pieces": 2
     },
     {
-     "name": "A Survey",
-     "pieces": 4
+     "name": "David Bloomfield",
+     "pieces": 2
     }
    ]
   },
@@ -1178,32 +1209,11 @@
    ]
   },
   {
-   "beat": "Education & youth",
-   "pieces": 37,
-   "distinct_bylines": 32,
-   "top5_share": 27.0,
-   "vital_city_share": 5.4,
-   "top3": [
-    {
-     "name": "Joseph P. Viteritti",
-     "pieces": 2
-    },
-    {
-     "name": "David Bloomfield",
-     "pieces": 2
-    },
-    {
-     "name": "Elliot Haspel",
-     "pieces": 2
-    }
-   ]
-  },
-  {
    "beat": "Money, budgets & the economy",
-   "pieces": 87,
-   "distinct_bylines": 65,
-   "top5_share": 26.4,
-   "vital_city_share": 4.6,
+   "pieces": 88,
+   "distinct_bylines": 66,
+   "top5_share": 26.1,
+   "vital_city_share": 4.5,
    "top3": [
     {
      "name": "Jamie Rubin",
@@ -1221,14 +1231,14 @@
   },
   {
    "beat": "City government & governance",
-   "pieces": 259,
+   "pieces": 262,
    "distinct_bylines": 161,
-   "top5_share": 24.7,
-   "vital_city_share": 8.9,
+   "top5_share": 25.2,
+   "vital_city_share": 9.5,
    "top3": [
     {
      "name": "Vital City",
-     "pieces": 23
+     "pieces": 25
     },
     {
      "name": "Jamie Rubin",
@@ -1241,10 +1251,31 @@
    ]
   },
   {
+   "beat": "Transportation",
+   "pieces": 77,
+   "distinct_bylines": 55,
+   "top5_share": 23.4,
+   "vital_city_share": 5.2,
+   "top3": [
+    {
+     "name": "Nicole Gelinas",
+     "pieces": 5
+    },
+    {
+     "name": "Vital City",
+     "pieces": 4
+    },
+    {
+     "name": "Charles Komanoff",
+     "pieces": 3
+    }
+   ]
+  },
+  {
    "beat": "Housing",
-   "pieces": 81,
-   "distinct_bylines": 60,
-   "top5_share": 23.5,
+   "pieces": 82,
+   "distinct_bylines": 61,
+   "top5_share": 23.2,
    "vital_city_share": 4.9,
    "top3": [
     {
@@ -1262,65 +1293,44 @@
    ]
   },
   {
-   "beat": "Transportation",
-   "pieces": 76,
-   "distinct_bylines": 55,
-   "top5_share": 22.4,
-   "vital_city_share": 5.3,
+   "beat": "History & the long view",
+   "pieces": 152,
+   "distinct_bylines": 111,
+   "top5_share": 17.8,
+   "vital_city_share": 4.6,
    "top3": [
     {
-     "name": "Nicole Gelinas",
-     "pieces": 5
-    },
-    {
      "name": "Vital City",
-     "pieces": 4
+     "pieces": 7
     },
     {
-     "name": "Eric Goldwyn",
-     "pieces": 3
+     "name": "Nicole Gelinas",
+     "pieces": 6
+    },
+    {
+     "name": "Vishaan Chakrabarti",
+     "pieces": 6
     }
    ]
   },
   {
    "beat": "Land use & the built city",
-   "pieces": 156,
+   "pieces": 158,
    "distinct_bylines": 111,
-   "top5_share": 17.3,
+   "top5_share": 17.7,
    "vital_city_share": 1.9,
    "top3": [
+    {
+     "name": "Vishaan Chakrabarti",
+     "pieces": 8
+    },
     {
      "name": "Jamie Rubin",
      "pieces": 8
     },
     {
-     "name": "Vishaan Chakrabarti",
-     "pieces": 7
-    },
-    {
      "name": "Cara Eckholm",
      "pieces": 4
-    }
-   ]
-  },
-  {
-   "beat": "History & the long view",
-   "pieces": 144,
-   "distinct_bylines": 106,
-   "top5_share": 16.7,
-   "vital_city_share": 4.2,
-   "top3": [
-    {
-     "name": "Vital City",
-     "pieces": 6
-    },
-    {
-     "name": "Vishaan Chakrabarti",
-     "pieces": 5
-    },
-    {
-     "name": "Nicole Gelinas",
-     "pieces": 5
     }
    ]
   }
@@ -1328,32 +1338,32 @@
  "history_lens_reach": [
   {
    "beat": "Culture & city life",
-   "pieces": 96,
+   "pieces": 95,
    "with_history": 41,
-   "share": 42.7
-  },
-  {
-   "beat": "Race, gender & inequality",
-   "pieces": 28,
-   "with_history": 6,
-   "share": 21.4
+   "share": 43.2
   },
   {
    "beat": "Civil society & philanthropy",
-   "pieces": 16,
-   "with_history": 3,
-   "share": 18.8
+   "pieces": 17,
+   "with_history": 4,
+   "share": 23.5
+  },
+  {
+   "beat": "Race, gender & inequality",
+   "pieces": 29,
+   "with_history": 6,
+   "share": 20.7
   },
   {
    "beat": "Land use & the built city",
-   "pieces": 156,
-   "with_history": 27,
-   "share": 17.3
+   "pieces": 158,
+   "with_history": 28,
+   "share": 17.7
   },
   {
    "beat": "Crime & violence",
-   "pieces": 237,
-   "with_history": 36,
+   "pieces": 243,
+   "with_history": 37,
    "share": 15.2
   },
   {
@@ -1370,15 +1380,15 @@
   },
   {
    "beat": "Transportation",
-   "pieces": 76,
+   "pieces": 77,
    "with_history": 8,
-   "share": 10.5
+   "share": 10.4
   },
   {
    "beat": "Housing",
-   "pieces": 81,
+   "pieces": 82,
    "with_history": 8,
-   "share": 9.9
+   "share": 9.8
   },
   {
    "beat": "Courts & prosecution",
@@ -1394,9 +1404,9 @@
   },
   {
    "beat": "City government & governance",
-   "pieces": 259,
+   "pieces": 262,
    "with_history": 20,
-   "share": 7.7
+   "share": 7.6
   },
   {
    "beat": "Jails & incarceration",
@@ -1412,15 +1422,15 @@
   },
   {
    "beat": "Education & youth",
-   "pieces": 37,
+   "pieces": 40,
    "with_history": 2,
-   "share": 5.4
+   "share": 5.0
   },
   {
    "beat": "Policing",
-   "pieces": 71,
+   "pieces": 70,
    "with_history": 3,
-   "share": 4.2
+   "share": 4.3
   },
   {
    "beat": "Politics & elections",
@@ -1429,20 +1439,20 @@
    "share": 3.1
   },
   {
-   "beat": "Technology",
-   "pieces": 34,
-   "with_history": 1,
-   "share": 2.9
-  },
-  {
    "beat": "State, federal & beyond NYC",
    "pieces": 34,
    "with_history": 1,
    "share": 2.9
   },
   {
+   "beat": "Technology",
+   "pieces": 36,
+   "with_history": 1,
+   "share": 2.8
+  },
+  {
    "beat": "Money, budgets & the economy",
-   "pieces": 87,
+   "pieces": 88,
    "with_history": 2,
    "share": 2.3
   }
@@ -1454,8 +1464,8 @@
    "Courts & prosecution",
    "Jails & incarceration"
   ],
-  "pieces": 381,
-  "share": 42.4,
+  "pieces": 387,
+  "share": 40.8,
   "by_year": {
    "2021": {
     "cj": 1,
@@ -1474,67 +1484,67 @@
    },
    "2024": {
     "cj": 119,
-    "total": 225,
-    "share": 52.9
+    "total": 226,
+    "share": 52.7
    },
    "2025": {
     "cj": 96,
-    "total": 287,
-    "share": 33.4
+    "total": 304,
+    "share": 31.6
    },
    "2026": {
-    "cj": 49,
-    "total": 187,
-    "share": 26.2
+    "cj": 55,
+    "total": 218,
+    "share": 25.2
    }
   }
  },
  "beats_per_piece": {
-  "0": 16,
-  "1": 199,
-  "2": 552,
+  "0": 45,
+  "1": 212,
+  "2": 559,
   "3": 114,
   "4": 15,
   "5": 3
  },
  "stance": {
-  "pieces_with_rubric": 291,
-  "coverage_share": 32.4,
+  "pieces_with_rubric": 303,
+  "coverage_share": 32.0,
   "buckets": [
    {
     "stance": "Prescribing a fix",
-    "pieces": 117,
-    "share_of_rubriced": 40.2
+    "pieces": 116,
+    "share_of_rubriced": 38.3
    },
    {
     "stance": "Framing the terms",
-    "pieces": 69,
-    "share_of_rubriced": 23.7
+    "pieces": 75,
+    "share_of_rubriced": 24.8
    },
    {
     "stance": "Diagnosing what's broken",
     "pieces": 57,
-    "share_of_rubriced": 19.6
+    "share_of_rubriced": 18.8
    },
    {
     "stance": "Looking ahead",
     "pieces": 21,
-    "share_of_rubriced": 7.2
+    "share_of_rubriced": 6.9
    },
    {
     "stance": "Looking back",
-    "pieces": 11,
-    "share_of_rubriced": 3.8
+    "pieces": 18,
+    "share_of_rubriced": 5.9
    },
    {
     "stance": "Staging a debate",
     "pieces": 9,
-    "share_of_rubriced": 3.1
+    "share_of_rubriced": 3.0
    },
    {
     "stance": "Unsorted",
     "pieces": 7,
-    "share_of_rubriced": 2.4
+    "share_of_rubriced": 2.3
    }
   ],
   "rubrics_by_stance": {
@@ -1545,10 +1555,13 @@
     "Defining the Challenge",
     "Public Perception and Statistical Realities",
     "Setting the Stage",
+    "The Culture Around Us",
     "What Do We Know?",
     "What Does It All Mean?",
     "What It Looks Like Up Close",
-    "What Makes a Great City Work?"
+    "What Makes a Great City Work?",
+    "What We Know and Don't Know",
+    "When Women Wield Guns"
    ],
    "Diagnosing what's broken": [
     "How Did It Get This Bad?",
@@ -1592,6 +1605,7 @@
    ],
    "Looking back": [
     "Looking Back",
+    "Looking Back, Looking Forward",
     "Where We’ve Been"
    ],
    "Staging a debate": [
@@ -1603,10 +1617,10 @@
   }
  },
  "curation": {
-  "in_curated_issue": 483,
-  "share": 53.7,
-  "standalone": 416,
-  "n_issues_and_series": 29,
+  "in_curated_issue": 498,
+  "share": 52.5,
+  "standalone": 450,
+  "n_issues_and_series": 34,
   "named_series_top": [
    {
     "series": "data-stories",
@@ -1637,6 +1651,10 @@
     "pieces": 14
    },
    {
+    "series": "hidecommentary",
+    "pieces": 13
+   },
+   {
     "series": "the-case-against-eric-adams-corruption-issue",
     "pieces": 11
    },
@@ -1651,10 +1669,6 @@
    {
     "series": "rubber-meets-road",
     "pieces": 9
-   },
-   {
-    "series": "what-to-do-and-not-to-do",
-    "pieces": 6
    }
   ]
  },
@@ -1669,132 +1683,132 @@
    "2026"
   ],
   "early_pieces": 200,
-  "late_pieces": 474,
+  "late_pieces": 522,
   "beats": [
    {
     "beat": "City government & governance",
-    "pieces": 259,
+    "pieces": 262,
     "early": 9.5,
-    "late": 38.4,
-    "change": 28.9
+    "late": 35.4,
+    "change": 25.9
    },
    {
     "beat": "Politics & elections",
     "pieces": 65,
     "early": 0.5,
-    "late": 11.2,
-    "change": 10.7
+    "late": 10.2,
+    "change": 9.7
    },
    {
     "beat": "Housing",
-    "pieces": 81,
+    "pieces": 82,
     "early": 3.0,
-    "late": 13.5,
-    "change": 10.5
+    "late": 12.5,
+    "change": 9.5
    },
    {
     "beat": "Money, budgets & the economy",
-    "pieces": 87,
+    "pieces": 88,
     "early": 3.5,
-    "late": 13.7,
-    "change": 10.2
+    "late": 12.6,
+    "change": 9.1
    },
    {
     "beat": "Transportation",
-    "pieces": 76,
+    "pieces": 77,
     "early": 2.0,
-    "late": 8.9,
-    "change": 6.9
+    "late": 8.2,
+    "change": 6.2
+   },
+   {
+    "beat": "Technology",
+    "pieces": 36,
+    "early": 1.5,
+    "late": 4.8,
+    "change": 3.3
    },
    {
     "beat": "State, federal & beyond NYC",
     "pieces": 34,
     "early": 2.0,
-    "late": 5.5,
-    "change": 3.5
-   },
-   {
-    "beat": "Technology",
-    "pieces": 34,
-    "early": 1.5,
-    "late": 4.9,
-    "change": 3.4
+    "late": 5.0,
+    "change": 3.0
    },
    {
     "beat": "Education & youth",
-    "pieces": 37,
+    "pieces": 40,
     "early": 2.5,
-    "late": 5.1,
-    "change": 2.6
+    "late": 5.2,
+    "change": 2.7
    },
    {
     "beat": "Land use & the built city",
-    "pieces": 156,
+    "pieces": 158,
     "early": 18.5,
-    "late": 17.7,
-    "change": -0.8
-   },
-   {
-    "beat": "Policing",
-    "pieces": 71,
-    "early": 13.0,
-    "late": 7.4,
-    "change": -5.6
-   },
-   {
-    "beat": "Culture & city life",
-    "pieces": 96,
-    "early": 14.5,
-    "late": 8.6,
-    "change": -5.9
+    "late": 16.5,
+    "change": -2.0
    },
    {
     "beat": "History & the long view",
-    "pieces": 144,
+    "pieces": 152,
     "early": 20.0,
-    "late": 13.7,
-    "change": -6.3
+    "late": 14.0,
+    "change": -6.0
+   },
+   {
+    "beat": "Policing",
+    "pieces": 70,
+    "early": 13.0,
+    "late": 6.5,
+    "change": -6.5
+   },
+   {
+    "beat": "Culture & city life",
+    "pieces": 95,
+    "early": 14.5,
+    "late": 7.7,
+    "change": -6.8
    },
    {
     "beat": "Courts & prosecution",
     "pieces": 113,
     "early": 17.0,
-    "late": 8.4,
-    "change": -8.6
+    "late": 7.7,
+    "change": -9.3
    },
    {
     "beat": "Jails & incarceration",
     "pieces": 68,
     "early": 11.5,
-    "late": 2.3,
-    "change": -9.2
+    "late": 2.1,
+    "change": -9.4
    },
    {
     "beat": "Health, mental health & drugs",
     "pieces": 62,
     "early": 16.0,
-    "late": 3.4,
-    "change": -12.6
+    "late": 3.1,
+    "change": -12.9
    },
    {
     "beat": "Crime & violence",
-    "pieces": 237,
+    "pieces": 243,
     "early": 40.0,
-    "late": 19.4,
-    "change": -20.6
+    "late": 18.8,
+    "change": -21.2
    }
   ]
  },
  "named_in_headline": [
   {
    "name": "Mamdani",
-   "headlines": 58,
-   "share": 6.5,
+   "headlines": 67,
+   "share": 7.1,
    "by_year": {
-    "2025": 29,
-    "2026": 29
+    "2025": 32,
+    "2026": 35
    },
-   "first": "2025-06-16",
+   "first": "2025-02-02",
    "titles": [
     {
      "date": "2026-08-27",
@@ -1823,6 +1837,10 @@
     {
      "date": "2026-07-29",
      "title": "For Inspiration on Mayor Mamdani’s Vision for Community Safety, Look to Newark"
+    },
+    {
+     "date": "2026-07-28",
+     "title": "Mayor Mamdani's First 200 Days and What Comes Next"
     },
     {
      "date": "2026-07-23",
@@ -1869,6 +1887,14 @@
      "title": "Mamdani’s Supermarket Mistake"
     },
     {
+     "date": "2026-05-08",
+     "title": "Antonio Reynoso on Mamdani, Immigration, and His Campaign for Congress in New York's 7th District"
+    },
+    {
+     "date": "2026-04-30",
+     "title": "Claire Valdez on Mamdani, AOC, and Her Campaign for Congress in New York's 7th District"
+    },
+    {
      "date": "2026-04-24",
      "title": "How the Public Can Help Mamdani Guide New York City Schools"
     },
@@ -1881,8 +1907,16 @@
      "title": "A Road Safety Blueprint for the Mamdani Administration"
     },
     {
+     "date": "2026-03-29",
+     "title": "Steven Fulop on Fighting for Business Interests in Zohran Mamdani's New York"
+    },
+    {
      "date": "2026-03-18",
      "title": "Can Mayor Mamdani Freeze the Rent? It’s Complicated"
+    },
+    {
+     "date": "2026-02-24",
+     "title": "Dan Goldman on Zohran Mamdani, Donald Trump, and His Case for Reelection"
     },
     {
      "date": "2026-02-19",
@@ -1895,6 +1929,10 @@
     {
      "date": "2026-02-03",
      "title": "Evaluating Mamdani’s Diagnosis of New York City’s Budget Deficit"
+    },
+    {
+     "date": "2026-01-26",
+     "title": "Julie Menin on Leading the City Council, Working with Mayor Mamdani, and Tackling Challenges Facing the City"
     },
     {
      "date": "2026-01-14",
@@ -1914,7 +1952,7 @@
     },
     {
      "date": "2025-12-18",
-     "title": "Just Fix It: 11 Governance Improvements The Mamdani Administration Can Tackle in the First 100 Days"
+     "title": "11 Governance Improvements The Mamdani Administration Can Tackle in the First 100 Days"
     },
     {
      "date": "2025-12-10",
@@ -1923,6 +1961,10 @@
     {
      "date": "2025-12-09",
      "title": "How Mamdani Can Deliver Free Buses — and Subways, Too"
+    },
+    {
+     "date": "2025-12-08",
+     "title": "Patrick Gaspard on Barack Obama, Zohran Mamdani, and Political Capital"
     },
     {
      "date": "2025-12-04",
@@ -1946,15 +1988,15 @@
     },
     {
      "date": "2025-11-06",
-     "title": "Which Way Mamdani?"
-    },
-    {
-     "date": "2025-11-06",
      "title": "Mamdani’s Charter School Dilemma"
     },
     {
      "date": "2025-11-06",
      "title": "Why Mayor-Elect Mamdani Should Embrace Mayoral Control of Our Schools"
+    },
+    {
+     "date": "2025-11-06",
+     "title": "Which Way Mamdani?"
     },
     {
      "date": "2025-10-29",
@@ -1983,6 +2025,10 @@
     {
      "date": "2025-10-17",
      "title": "Even Mamdani’s New York Needs Millionaires"
+    },
+    {
+     "date": "2025-09-22",
+     "title": "Bill de Blasio on Zohran Mamdani, New York's Future, and Why He Had a Chip on His Shoulder"
     },
     {
      "date": "2025-09-12",
@@ -2027,17 +2073,21 @@
     {
      "date": "2025-06-16",
      "title": "Zohran Mamdani and Andrew Cuomo Aren’t as Different as You Might Think"
+    },
+    {
+     "date": "2025-02-02",
+     "title": "Zohran Mamdani Interview Transcript"
     }
    ]
   },
   {
    "name": "Adams",
-   "headlines": 18,
+   "headlines": 19,
    "share": 2.0,
    "by_year": {
     "2023": 1,
     "2024": 7,
-    "2025": 10
+    "2025": 11
    },
    "first": "2023-09-27",
    "titles": [
@@ -2060,6 +2110,10 @@
     {
      "date": "2025-07-16",
      "title": "Does Eric Adams Have a Chance?"
+    },
+    {
+     "date": "2025-06-12",
+     "title": "Adrienne Adams Interview Transcript"
     },
     {
      "date": "2025-04-04",
@@ -2117,18 +2171,26 @@
   },
   {
    "name": "Trump",
-   "headlines": 15,
-   "share": 1.7,
+   "headlines": 17,
+   "share": 1.8,
    "by_year": {
     "2024": 2,
-    "2025": 12,
-    "2026": 1
+    "2025": 13,
+    "2026": 2
    },
    "first": "2024-11-07",
    "titles": [
     {
+     "date": "2026-02-24",
+     "title": "Dan Goldman on Zohran Mamdani, Donald Trump, and His Case for Reelection"
+    },
+    {
      "date": "2026-01-22",
      "title": "Trump’s Unconstitutional Coercion"
+    },
+    {
+     "date": "2025-12-17",
+     "title": "John Catsimatidis on Donald Trump, Immigration, and New York Republicans"
     },
     {
      "date": "2025-11-18",
@@ -2148,15 +2210,15 @@
     },
     {
      "date": "2025-04-29",
-     "title": "Donald Trump vs. the Rule of Law, and New York City"
-    },
-    {
-     "date": "2025-04-29",
      "title": "The Bizarro New Deal: Trump’s Dark Inversion of FDR’s First 100 Days"
     },
     {
      "date": "2025-04-29",
      "title": "Trump’s Executive Orders Have Cities in the Crosshairs"
+    },
+    {
+     "date": "2025-04-29",
+     "title": "Donald Trump vs. the Rule of Law, and New York City"
     },
     {
      "date": "2025-04-29",
@@ -2218,12 +2280,12 @@
   },
   {
    "name": "de Blasio",
-   "headlines": 2,
-   "share": 0.2,
+   "headlines": 3,
+   "share": 0.3,
    "by_year": {
-    "2025": 2
+    "2025": 3
    },
-   "first": "2025-10-17",
+   "first": "2025-09-22",
    "titles": [
     {
      "date": "2025-12-10",
@@ -2232,6 +2294,10 @@
     {
      "date": "2025-10-17",
      "title": "Bill de Blasio, Role Model?"
+    },
+    {
+     "date": "2025-09-22",
+     "title": "Bill de Blasio on Zohran Mamdani, New York's Future, and Why He Had a Chip on His Shoulder"
     }
    ]
   },
@@ -2247,111 +2313,121 @@
  "headline_words": [
   {
    "word": "mamdani",
-   "headlines": 58,
-   "share": 6.5
+   "headlines": 67,
+   "share": 7.1
   },
   {
    "word": "crime",
    "headlines": 46,
-   "share": 5.1
+   "share": 4.9
+  },
+  {
+   "word": "mayor",
+   "headlines": 34,
+   "share": 3.6
   },
   {
    "word": "jail",
    "headlines": 33,
-   "share": 3.7
-  },
-  {
-   "word": "mayor",
-   "headlines": 31,
-   "share": 3.4
+   "share": 3.5
   },
   {
    "word": "conversation",
    "headlines": 27,
-   "share": 3.0
-  },
-  {
-   "word": "public",
-   "headlines": 25,
    "share": 2.8
   },
   {
+   "word": "public",
+   "headlines": 26,
+   "share": 2.7
+  },
+  {
    "word": "housing",
-   "headlines": 23,
-   "share": 2.6
+   "headlines": 26,
+   "share": 2.7
   },
   {
    "word": "government",
-   "headlines": 20,
+   "headlines": 21,
+   "share": 2.2
+  },
+  {
+   "word": "zohran",
+   "headlines": 21,
    "share": 2.2
   },
   {
    "word": "safety",
-   "headlines": 18,
-   "share": 2.0
-  },
-  {
-   "word": "violence",
-   "headlines": 18,
+   "headlines": 19,
    "share": 2.0
   },
   {
    "word": "adams",
-   "headlines": 18,
+   "headlines": 19,
    "share": 2.0
   },
   {
    "word": "state",
-   "headlines": 17,
+   "headlines": 18,
    "share": 1.9
   },
   {
-   "word": "zohran",
-   "headlines": 16,
+   "word": "violence",
+   "headlines": 18,
+   "share": 1.9
+  },
+  {
+   "word": "policy",
+   "headlines": 17,
+   "share": 1.8
+  },
+  {
+   "word": "better",
+   "headlines": 17,
+   "share": 1.8
+  },
+  {
+   "word": "trump",
+   "headlines": 17,
    "share": 1.8
   },
   {
    "word": "police",
    "headlines": 16,
-   "share": 1.8
+   "share": 1.7
   },
   {
-   "word": "better",
+   "word": "gun",
    "headlines": 15,
-   "share": 1.7
+   "share": 1.6
   },
   {
    "word": "rikers",
    "headlines": 15,
-   "share": 1.7
-  },
-  {
-   "word": "trump",
-   "headlines": 15,
-   "share": 1.7
+   "share": 1.6
   },
   {
    "word": "congestion",
    "headlines": 15,
-   "share": 1.7
+   "share": 1.6
   },
   {
    "word": "eric",
    "headlines": 15,
-   "share": 1.7
-  },
-  {
-   "word": "policy",
-   "headlines": 14,
-   "share": 1.6
-  },
-  {
-   "word": "gun",
-   "headlines": 14,
    "share": 1.6
   },
   {
    "word": "pricing",
+   "headlines": 13,
+   "share": 1.4
+  },
+  {
+   "word": "transcript",
+   "headlines": 13,
+   "share": 1.4
+  },
+  {
+   "word": "interview",
    "headlines": 13,
    "share": 1.4
   },
@@ -2364,6 +2440,11 @@
    "word": "urban",
    "headlines": 12,
    "share": 1.3
+  },
+  {
+   "word": "real",
+   "headlines": 11,
+   "share": 1.2
   },
   {
    "word": "people",
@@ -2381,6 +2462,16 @@
    "share": 1.2
   },
   {
+   "word": "needs",
+   "headlines": 10,
+   "share": 1.1
+  },
+  {
+   "word": "data",
+   "headlines": 10,
+   "share": 1.1
+  },
+  {
    "word": "time",
    "headlines": 10,
    "share": 1.1
@@ -2396,17 +2487,7 @@
    "share": 1.1
   },
   {
-   "word": "real",
-   "headlines": 10,
-   "share": 1.1
-  },
-  {
    "word": "politics",
-   "headlines": 10,
-   "share": 1.1
-  },
-  {
-   "word": "good",
    "headlines": 10,
    "share": 1.1
   },
@@ -2416,53 +2497,38 @@
    "share": 1.1
   },
   {
-   "word": "needs",
+   "word": "work",
    "headlines": 9,
-   "share": 1.0
+   "share": 0.9
   },
   {
    "word": "way",
    "headlines": 9,
-   "share": 1.0
+   "share": 0.9
   },
   {
    "word": "big",
    "headlines": 9,
-   "share": 1.0
-  },
-  {
-   "word": "system",
-   "headlines": 9,
-   "share": 1.0
-  },
-  {
-   "word": "data",
-   "headlines": 9,
-   "share": 1.0
-  },
-  {
-   "word": "streets",
-   "headlines": 9,
-   "share": 1.0
+   "share": 0.9
   }
  ],
  "headline_signal_test": {
-  "argument_pieces": 786,
-  "excluded_non_argument": 113,
+  "argument_pieces": 806,
+  "excluded_non_argument": 142,
   "base_rate_data_analysis": 6.1,
   "base_rate_opinion": 93.9,
   "rows": [
    {
     "signal": "analysis signal",
     "headlines": 46,
-    "share_of_argument": 5.9,
+    "share_of_argument": 5.7,
     "pct_data_analysis": 50.0,
     "lift_vs_base": 8.2
    },
    {
     "signal": "opinion signal",
-    "headlines": 73,
-    "share_of_argument": 9.3,
+    "headlines": 72,
+    "share_of_argument": 8.9,
     "pct_data_analysis": 1.4,
     "lift_vs_base": 0.2
    },
@@ -2475,8 +2541,8 @@
    },
    {
     "signal": "no signal",
-    "headlines": 664,
-    "share_of_argument": 84.5,
+    "headlines": 685,
+    "share_of_argument": 85.0,
     "pct_data_analysis": 3.5,
     "lift_vs_base": 0.6
    }
@@ -2498,14 +2564,86 @@
   }
  },
  "bench": {
-  "primary_bylines": 416,
-  "wrote_once": 287,
-  "wrote_once_share": 69.0
+  "primary_bylines": 427,
+  "wrote_once": 299,
+  "wrote_once_share": 70.0
  },
- "history_only_pieces": 103,
+ "history_only_pieces": 111,
  "pieces_with_no_subject_tag": {
-  "count": 16,
+  "count": 45,
   "examples": [
+   {
+    "title": "Mayor Mamdani's First 200 Days and What Comes Next",
+    "date": "2026-07-28",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Darializa Avila Chevalier on Housing, Immigration, & Her Run for Congress in New York's 13th District",
+    "date": "2026-06-18",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Micah Lasher on Housing, Immigration, and His Campaign for Congress in New York's 12th District",
+    "date": "2026-06-09",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Julie Won on Immigration, AI Regulation, and Her Campaign for Congress in New York's 7th District",
+    "date": "2026-05-26",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Alex Bores on Housing, AI Regulation, and His Campaign for Congress in New York's 12th District",
+    "date": "2026-05-13",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Antonio Reynoso on Mamdani, Immigration, and His Campaign for Congress in New York's 7th District",
+    "date": "2026-05-08",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Claire Valdez on Mamdani, AOC, and Her Campaign for Congress in New York's 7th District",
+    "date": "2026-04-30",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Brad Lander on Immigration Reform, Foreign Policy, and His Bid for Congress",
+    "date": "2026-04-10",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
    {
     "title": "Does When We're Born Make Us Who We Are? A New Way of Thinking About Crime and Success in America",
     "date": "2026-04-08",
@@ -2523,6 +2661,15 @@
     "type": "something else"
    },
    {
+    "title": "Steven Fulop on Fighting for Business Interests in Zohran Mamdani's New York",
+    "date": "2026-03-29",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
     "title": "What Molly Park Knows About Homelessness and City Government",
     "date": "2026-03-11",
     "topics": [
@@ -2531,134 +2678,144 @@
     "type": "podcast"
    },
    {
-    "title": "Free Fares, for Better and Worse",
-    "date": "2024-10-02",
+    "title": "Dan Goldman on Zohran Mamdani, Donald Trump, and His Case for Reelection",
+    "date": "2026-02-24",
     "topics": [
-     "Decisions, Decisions, Decisions"
-    ],
-    "type": "opinion/commentary"
-   },
-   {
-    "title": "Does Evidence Matter in Policy Making?",
-    "date": "2024-06-17",
-    "topics": [
-     "Events",
-     "data"
-    ],
-    "type": "something else"
-   },
-   {
-    "title": "The Hubris of Social Scientists",
-    "date": "2024-03-27",
-    "topics": [
-     "Beyond False Simplicity",
-     "Social Science"
-    ],
-    "type": "opinion/commentary"
-   },
-   {
-    "title": "The Precautionary Principle",
-    "date": "2024-03-27",
-    "topics": [
-     "The Joy of Incrementalism",
-     "Social Science"
-    ],
-    "type": "opinion/commentary"
-   },
-   {
-    "title": "The World is Hard to Change",
-    "date": "2024-03-27",
-    "topics": [
-     "Social Science",
-     "Setting the Stage"
-    ],
-    "type": "opinion/commentary"
-   },
-   {
-    "title": "Drugs in New York City: By the Numbers",
-    "date": "2023-12-13",
-    "topics": [
-     "Setting the Stage",
-     "data",
-     "Data Stories"
-    ],
-    "type": "data analysis"
-   },
-   {
-    "title": "In Summery",
-    "date": "2023-06-23",
-    "topics": [
-     "Data Stories"
-    ],
-    "type": "data analysis"
-   },
-   {
-    "title": "Vital City Issues Call for Submissions",
-    "date": "2023-06-06",
-    "topics": [
-     "Press Releases"
-    ],
-    "type": "something else"
-   },
-   {
-    "title": "Errol Louis, Harry Siegel and Vishaan Chakrabarti Join Vital City as Contributing Writers",
-    "date": "2023-05-03",
-    "topics": [
-     "Press Releases"
-    ],
-    "type": "something else"
-   },
-   {
-    "title": "'Collective Action Can Make a Difference': A Conversation with Robert Sampson",
-    "date": "2023-03-28",
-    "topics": [
-     "Conversations",
-     "Social Science"
+     "interview",
+     "New York Editorial Board"
     ],
     "type": "q&a"
    },
    {
-    "title": "Sunday in the Park with Everybody",
-    "date": "2023-02-11",
-    "topics": [],
-    "type": "opinion/commentary"
-   },
-   {
-    "title": "Longtime Daily News Opinion and Editorial Page Editor Josh Greenman Joins Vital City as Managing Editor",
-    "date": "2022-12-05",
+    "title": "Julie Menin on Leading the City Council, Working with Mayor Mamdani, and Tackling Challenges Facing the City",
+    "date": "2026-01-26",
     "topics": [
-     "Press Releases"
+     "interview",
+     "New York Editorial Board"
     ],
-    "type": "something else"
+    "type": "q&a"
    },
    {
-    "title": "NYC Jails Data",
-    "date": "2022-10-25",
-    "topics": [],
-    "type": "opinion/commentary"
+    "title": "John Catsimatidis on Donald Trump, Immigration, and New York Republicans",
+    "date": "2025-12-17",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Patrick Gaspard on Barack Obama, Zohran Mamdani, and Political Capital",
+    "date": "2025-12-08",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Janno Lieber on Free Buses, the State of the MTA, and The Promise of the Interborough Express",
+    "date": "2025-10-29",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Bill de Blasio on Zohran Mamdani, New York's Future, and Why He Had a Chip on His Shoulder",
+    "date": "2025-09-22",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "What We Learned Interviewing the Democratic Candidates for Mayor",
+    "date": "2025-06-18",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Jenifer Rajkumar Interview Transcript",
+    "date": "2025-06-16",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Adrienne Adams Interview Transcript",
+    "date": "2025-06-12",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Justin Brannan Interview Transcript",
+    "date": "2025-06-09",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Jumaane Williams Interview Transcript",
+    "date": "2025-06-02",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Mark Levine Interview Transcript",
+    "date": "2025-05-21",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
+   },
+   {
+    "title": "Michael Blake Interview Transcript",
+    "date": "2025-04-08",
+    "topics": [
+     "interview",
+     "New York Editorial Board"
+    ],
+    "type": "q&a"
    }
   ]
  },
  "subtopics": [
   {
    "beat": "City government & governance",
-   "pieces": 259,
+   "pieces": 262,
    "classified_pct": 59,
    "subtopics": [
     {
      "name": "General / mixed",
-     "n": 106,
-     "share": 40.9,
+     "n": 108,
+     "share": 41.2,
      "examples": [
-      "A Smarter Way To Roll Out the Pied-à-Terre Surcharge",
-      "When Rent Regulation Makes Sense",
-      "The Myth of Millionaire Flight"
+      "The City Needs 700,000 New Homes — Here’s 57,000",
+      "The Real Path to Better Government Technology",
+      "A Smarter Way To Roll Out the Pied-à-Terre Surcharge"
      ]
     },
     {
      "name": "Mayoral power & leadership",
      "n": 97,
-     "share": 37.5,
+     "share": 37.0,
      "examples": [
       "Zohran Mamdani's Promise and the Reality of Supermarket Prices",
       "Appreciate Mamdani’s Housing Achievement",
@@ -2667,12 +2824,12 @@
     },
     {
      "name": "Agency operations & delivery",
-     "n": 27,
-     "share": 10.4,
+     "n": 28,
+     "share": 10.7,
      "examples": [
+      "6 Policy Reforms to Make Childcare Dollars Go Further for Families",
       "Mamdani’s Childcare Strategy Should Focus on Equity",
-      "Mamdani’s PIT Crews: Government Innovation, or Innovation Theater?",
-      "Mamdani Is Hitting Many Milestones on Childcare. Except One."
+      "Mamdani’s PIT Crews: Government Innovation, or Innovation Theater?"
      ]
     },
     {
@@ -2688,7 +2845,7 @@
     {
      "name": "Appointments & personnel",
      "n": 10,
-     "share": 3.9,
+     "share": 3.8,
      "examples": [
       "Dan Garodnick on What Comes After Yes",
       "Stanley Richards on the Past, Present and Future of Rikers Island",
@@ -2706,7 +2863,7 @@
     {
      "name": "The civil service & workforce",
      "n": 3,
-     "share": 1.2,
+     "share": 1.1,
      "examples": [
       "The Other Side of Affordability",
       "New York’s Civil Service System vs. Public Sector Progress"
@@ -2724,13 +2881,13 @@
   },
   {
    "beat": "Crime & violence",
-   "pieces": 237,
-   "classified_pct": 65,
+   "pieces": 243,
+   "classified_pct": 66,
    "subtopics": [
     {
      "name": "General / mixed",
      "n": 82,
-     "share": 34.6,
+     "share": 33.7,
      "examples": [
       "For Inspiration on Mayor Mamdani’s Vision for Community Safety, Look to Newark",
       "Modern Community Safety Includes More than Police",
@@ -2739,18 +2896,18 @@
     },
     {
      "name": "Gun violence & shootings",
-     "n": 72,
-     "share": 30.4,
+     "n": 78,
+     "share": 32.1,
      "examples": [
-      "The NYPD’s Crime-Reduction Strategy: Chief of Department Michael LiPetri in Conversation",
-      "New York City’s Crime Puzzle",
-      "How Criminals Get Their Guns"
+      "She Buys It, He Fires It",
+      "Unpacking the Triggers",
+      "Stand Your Ground Laws and Women’s Safety"
      ]
     },
     {
      "name": "Disorder & quality of life",
      "n": 40,
-     "share": 16.9,
+     "share": 16.5,
      "examples": [
       "New York Needs a Better Noise Strategy",
       "New York Families Are Doing Better Than You’ve Heard",
@@ -2760,7 +2917,7 @@
     {
      "name": "Subway & transit crime",
      "n": 21,
-     "share": 8.9,
+     "share": 8.6,
      "examples": [
       "What To Do (and Not To Do) About Subway Safety",
       "Subway Safety: What the Data Show",
@@ -2770,7 +2927,7 @@
     {
      "name": "Crime trends & the data",
      "n": 12,
-     "share": 5.1,
+     "share": 4.9,
      "examples": [
       "Reality Check: Why Do New York City’s Crime Numbers Change?",
       "The State of Crime in New York City: 2025 and Beyond",
@@ -2780,7 +2937,7 @@
     {
      "name": "Murders & major felonies",
      "n": 7,
-     "share": 3.0,
+     "share": 2.9,
      "examples": [
       "The State of Crime in New York City, Midyear 2026: The Detailed Picture",
       "Crime in New York City Midyear: The Big Picture",
@@ -2790,7 +2947,7 @@
     {
      "name": "Victims & survivors",
      "n": 3,
-     "share": 1.3,
+     "share": 1.2,
      "examples": [
       "Crime Victims Can Help Point the Way Forward"
      ]
@@ -2799,13 +2956,13 @@
   },
   {
    "beat": "Land use & the built city",
-   "pieces": 156,
+   "pieces": 158,
    "classified_pct": 47,
    "subtopics": [
     {
      "name": "General / mixed",
      "n": 83,
-     "share": 53.2,
+     "share": 52.5,
      "examples": [
       "The Road to Producing More Housing Passes Through Meaningful Local Zoning Reforms",
       "Making the Shade",
@@ -2813,9 +2970,19 @@
      ]
     },
     {
+     "name": "Streets & the public realm",
+     "n": 20,
+     "share": 12.7,
+     "examples": [
+      "Making Micromobility Work",
+      "How To Make Driverless Ride-Hail Work in New York",
+      "An Agenda for New York City’s Sidewalks"
+     ]
+    },
+    {
      "name": "Neighborhood change",
      "n": 20,
-     "share": 12.8,
+     "share": 12.7,
      "examples": [
       "Sustaining the Joyful City: A New York City Social Infrastructure Agenda",
       "New York's Nameless Knights",
@@ -2823,19 +2990,9 @@
      ]
     },
     {
-     "name": "Streets & the public realm",
-     "n": 19,
-     "share": 12.2,
-     "examples": [
-      "How To Make Driverless Ride-Hail Work in New York",
-      "An Agenda for New York City’s Sidewalks",
-      "Put a Price on Street Parking, Generate Billions"
-     ]
-    },
-    {
      "name": "Parks & public space",
      "n": 11,
-     "share": 7.1,
+     "share": 7.0,
      "examples": [
       "The Lifeguard Fiefdom",
       "Urban Design as Social Infrastructure",
@@ -2844,12 +3001,12 @@
     },
     {
      "name": "Architecture & design",
-     "n": 9,
-     "share": 5.8,
+     "n": 10,
+     "share": 6.3,
      "examples": [
+      "Much More Than Two Towers",
       "New York Needs New Ornamental Architecture",
-      "What New York Can Learn from the NIMBYs of the 19th Century",
-      "Designing Cities to Go the Distance"
+      "What New York Can Learn from the NIMBYs of the 19th Century"
      ]
     },
     {
@@ -2865,7 +3022,7 @@
     {
      "name": "Big projects & megadevelopment",
      "n": 4,
-     "share": 2.6,
+     "share": 2.5,
      "examples": [
       "A Bolder Development Strategy for a Crowded New York",
       "Time to Build Big Again",
@@ -2884,43 +3041,43 @@
   },
   {
    "beat": "History & the long view",
-   "pieces": 144,
-   "classified_pct": 44,
+   "pieces": 152,
+   "classified_pct": 42,
    "subtopics": [
     {
      "name": "General / mixed",
-     "n": 81,
-     "share": 56.2,
+     "n": 88,
+     "share": 57.9,
      "examples": [
-      "Pragmatic Philanthropy: Appreciating Nathan Straus",
-      "New York Needs a Better Noise Strategy",
-      "The History That Was Made at Bowling Green"
+      "That Very Blue Day",
+      "How It Felt As It Happened",
+      "Downtown Manhattan, Split in Two"
      ]
     },
     {
      "name": "Crime & justice history",
-     "n": 25,
-     "share": 17.4,
+     "n": 24,
+     "share": 15.8,
      "examples": [
       "What is the Future of ‘Renewable Rikers’ Island?",
       "The Case Against Futility",
-      "The Case Against Futility"
+      "When Buses and Subways Were Free"
      ]
     },
     {
      "name": "Built-city history",
-     "n": 16,
-     "share": 11.1,
+     "n": 17,
+     "share": 11.2,
      "examples": [
+      "Much More Than Two Towers",
       "Time to Build Big Again",
-      "New York’s Wooden Water Tanks: A Perfect Fusion of Form and Function",
-      "Crossing Delancey: One Project’s Story"
+      "New York’s Wooden Water Tanks: A Perfect Fusion of Form and Function"
      ]
     },
     {
      "name": "Political history",
      "n": 14,
-     "share": 9.7,
+     "share": 9.2,
      "examples": [
       "Charter Revision Politics: A Primer",
       "Mamdani’s Victory, and Memories of Dinkins’",
@@ -2929,18 +3086,18 @@
     },
     {
      "name": "Social & cultural history",
-     "n": 6,
-     "share": 4.2,
+     "n": 7,
+     "share": 4.6,
      "examples": [
       "What New York Can Learn from the NIMBYs of the 19th Century",
       "A City of Winners and Losers: New York in the 1980s",
-      "New York City's Catholic Church at a Crossroads"
+      "Gun Culture Then and Now"
      ]
     },
     {
      "name": "The fiscal crisis & the 1970s",
      "n": 2,
-     "share": 1.4,
+     "share": 1.3,
      "examples": [
       "What Came After ‘Drop Dead’"
      ]
@@ -3042,13 +3199,13 @@
   },
   {
    "beat": "Culture & city life",
-   "pieces": 96,
+   "pieces": 95,
    "classified_pct": 45,
    "subtopics": [
     {
      "name": "General / mixed",
-     "n": 53,
-     "share": 55.2,
+     "n": 52,
+     "share": 54.7,
      "examples": [
       "Borrow and Steal: The Art of Reinvention in Nantes",
       "New York's Nameless Knights",
@@ -3058,7 +3215,7 @@
     {
      "name": "Arts & institutions",
      "n": 18,
-     "share": 18.8,
+     "share": 18.9,
      "examples": [
       "How to Survive in New York City, According to Spider-Man",
       "A Diamond, a Mayor and a Citywide Lesson Plan"
@@ -3067,7 +3224,7 @@
     {
      "name": "Books & ideas",
      "n": 10,
-     "share": 10.4,
+     "share": 10.5,
      "examples": [
       "Pragmatic Philanthropy: Appreciating Nathan Straus",
       "A Sweeping Critique of America's Justice System",
@@ -3077,7 +3234,7 @@
     {
      "name": "Sports",
      "n": 6,
-     "share": 6.2,
+     "share": 6.3,
      "examples": [
       "New York is the Town and the Team is the Knicks",
       "Why This Knicks Championship Means So Much",
@@ -3112,7 +3269,7 @@
     {
      "name": "Monuments & public memory",
      "n": 1,
-     "share": 1.0,
+     "share": 1.1,
      "examples": [
       "No City for Old Monuments?"
      ]
@@ -3121,13 +3278,13 @@
   },
   {
    "beat": "Money, budgets & the economy",
-   "pieces": 87,
+   "pieces": 88,
    "classified_pct": 70,
    "subtopics": [
     {
      "name": "The city budget & fiscal health",
      "n": 29,
-     "share": 33.3,
+     "share": 33.0,
      "examples": [
       "Come Again Another Day?",
       "Mamdani Is Hitting Many Milestones on Childcare. Except One.",
@@ -3137,7 +3294,7 @@
     {
      "name": "General / mixed",
      "n": 26,
-     "share": 29.9,
+     "share": 29.5,
      "examples": [
       "After the Mamdani Rent Freeze",
       "The Myth of Millionaire Flight",
@@ -3147,7 +3304,7 @@
     {
      "name": "Jobs, wages & labor",
      "n": 14,
-     "share": 16.1,
+     "share": 15.9,
      "examples": [
       "Time to Take on Small Business Insurance Premiums",
       "Complexity on the Menu: The State of New York City's Restaurant Industry",
@@ -3156,12 +3313,12 @@
     },
     {
      "name": "The economic engine",
-     "n": 12,
-     "share": 13.8,
+     "n": 13,
+     "share": 14.8,
      "examples": [
+      "New York City’s Prime Economic Challenge: Middle-Class Family Affordability",
       "Economic Growth vs. Economic Justice: A False Choice",
-      "Economic Justice Starts With Young People",
-      "The Affordability Conundrum"
+      "Economic Justice Starts With Young People"
      ]
     },
     {
@@ -3184,13 +3341,13 @@
   },
   {
    "beat": "Housing",
-   "pieces": 81,
-   "classified_pct": 69,
+   "pieces": 82,
+   "classified_pct": 70,
    "subtopics": [
     {
      "name": "Supply, zoning & building more",
      "n": 32,
-     "share": 39.5,
+     "share": 39.0,
      "examples": [
       "Appreciate Mamdani’s Housing Achievement",
       "The Road to Producing More Housing Passes Through Meaningful Local Zoning Reforms",
@@ -3200,7 +3357,7 @@
     {
      "name": "General / mixed",
      "n": 25,
-     "share": 30.9,
+     "share": 30.5,
      "examples": [
       "Why the City Council Must Confirm John Mangin",
       "The Prosperity Equation",
@@ -3210,7 +3367,7 @@
     {
      "name": "Affordability & subsidy",
      "n": 7,
-     "share": 8.6,
+     "share": 8.5,
      "examples": [
       "The Big Hole in Mamdani’s Housing Plan",
       "Mamdani’s Affordability Dilemma: The Challenge of Making New York City Housing Less Expensive",
@@ -3220,7 +3377,7 @@
     {
      "name": "Rent regulation & the freeze",
      "n": 7,
-     "share": 8.6,
+     "share": 8.5,
      "examples": [
       "When Rent Regulation Makes Sense",
       "After the Rent Freeze: What Happens to New York City’s Regulated Housing Stock Now and in the Future",
@@ -3239,9 +3396,10 @@
     },
     {
      "name": "The pied-à-terre surcharge",
-     "n": 2,
-     "share": 2.5,
+     "n": 3,
+     "share": 3.7,
      "examples": [
+      "The City Needs 700,000 New Homes — Here’s 57,000",
       "A Smarter Way To Roll Out the Pied-à-Terre Surcharge",
       "Before You Surcharge the Penthouse, Fix the Foundation"
      ]
@@ -3249,7 +3407,7 @@
     {
      "name": "Public housing & NYCHA",
      "n": 2,
-     "share": 2.5,
+     "share": 2.4,
      "examples": [
       "Anchors of Opportunity?"
      ]
@@ -3257,7 +3415,7 @@
     {
      "name": "Homeownership & landlords",
      "n": 2,
-     "share": 2.5,
+     "share": 2.4,
      "examples": [
       "Landlords: The ‘Good,’ the ‘Bad’ and the Ugly Financial Realities",
       "The Real Story of Co-op City"
@@ -3267,13 +3425,13 @@
   },
   {
    "beat": "Transportation",
-   "pieces": 76,
+   "pieces": 77,
    "classified_pct": 68,
    "subtopics": [
     {
      "name": "Subway service & the system",
      "n": 29,
-     "share": 38.2,
+     "share": 37.7,
      "examples": [
       "Taxing Land: An Old Idea is New Again",
       "Put a Price on Street Parking, Generate Billions",
@@ -3282,24 +3440,24 @@
     },
     {
      "name": "General / mixed",
-     "n": 24,
-     "share": 31.6,
+     "n": 25,
+     "share": 32.5,
      "examples": [
+      "Making Micromobility Work",
       "How To Make Driverless Ride-Hail Work in New York",
-      "Flooding in New York is a Policy Choice. Mayor Mamdani Should Reject It.",
-      "Sustaining the Joyful City: A New York City Social Infrastructure Agenda"
+      "Flooding in New York is a Policy Choice. Mayor Mamdani Should Reject It."
      ]
     },
     {
      "name": "Congestion pricing",
      "n": 14,
-     "share": 18.4,
+     "share": 18.2,
      "examples": []
     },
     {
      "name": "Buses",
      "n": 6,
-     "share": 7.9,
+     "share": 7.8,
      "examples": [
       "Speeding Up the Bus: Reality Behind the Rhetoric",
       "How Mamdani Can Deliver Free Buses — and Subways, Too",
@@ -3319,13 +3477,13 @@
   },
   {
    "beat": "Policing",
-   "pieces": 71,
+   "pieces": 70,
    "classified_pct": 70,
    "subtopics": [
     {
      "name": "General / mixed",
      "n": 21,
-     "share": 29.6,
+     "share": 30.0,
      "examples": [
       "A Sweeping Critique of America's Justice System",
       "New Mexico: Surprising Proving Ground for Two Big Mamdani Ideas?",
@@ -3334,8 +3492,8 @@
     },
     {
      "name": "The NYPD on the street",
-     "n": 21,
-     "share": 29.6,
+     "n": 20,
+     "share": 28.6,
      "examples": [
       "Cities Aren’t Putting Police Officers Where They’re Needed Most",
       "The Knicks, the Hooligans and the Cops",
@@ -3345,7 +3503,7 @@
     {
      "name": "Community safety & non-police response",
      "n": 10,
-     "share": 14.1,
+     "share": 14.3,
      "examples": [
       "For Inspiration on Mayor Mamdani’s Vision for Community Safety, Look to Newark",
       "Modern Community Safety Includes More than Police",
@@ -3355,7 +3513,7 @@
     {
      "name": "Street lighting",
      "n": 9,
-     "share": 12.7,
+     "share": 12.9,
      "examples": [
       "The Big Picture",
       "How to Get It Done",
@@ -3365,7 +3523,7 @@
     {
      "name": "Strategy & deployment",
      "n": 7,
-     "share": 9.9,
+     "share": 10.0,
      "examples": [
       "Did NYPD's Zone Strategy Cause Crime to Drop?",
       "The NYPD’s Crime-Reduction Strategy: Chief of Department Michael LiPetri in Conversation",
@@ -3559,13 +3717,13 @@
   },
   {
    "beat": "Education & youth",
-   "pieces": 37,
-   "classified_pct": 65,
+   "pieces": 40,
+   "classified_pct": 68,
    "subtopics": [
     {
      "name": "General / mixed",
      "n": 13,
-     "share": 35.1,
+     "share": 32.5,
      "examples": [
       "A Diamond, a Mayor and a Citywide Lesson Plan",
       "New Mexico: Surprising Proving Ground for Two Big Mamdani Ideas?",
@@ -3573,9 +3731,19 @@
      ]
     },
     {
+     "name": "K-12 schools",
+     "n": 12,
+     "share": 30.0,
+     "examples": [
+      "What a Better Public School AI Policy Would Look Like",
+      "A Simple Change That Could Improve the Lives of Millions of New Yorkers",
+      "Hochul's School-Choice Choice"
+     ]
+    },
+    {
      "name": "Youth programs & summer jobs",
      "n": 10,
-     "share": 27.0,
+     "share": 25.0,
      "examples": [
       "Mamdani Is Hitting Many Milestones on Childcare. Except One.",
       "Economic Justice Starts With Young People",
@@ -3583,30 +3751,67 @@
      ]
     },
     {
-     "name": "K-12 schools",
-     "n": 10,
-     "share": 27.0,
-     "examples": [
-      "Hochul's School-Choice Choice",
-      "How the Public Can Help Mamdani Guide New York City Schools",
-      "Want More Parental Input While Keeping Mayoral Control? Look to Community Schools"
-     ]
-    },
-    {
      "name": "Childcare & early childhood",
-     "n": 3,
-     "share": 8.1,
+     "n": 4,
+     "share": 10.0,
      "examples": [
+      "6 Policy Reforms to Make Childcare Dollars Go Further for Families",
       "Mamdani’s Childcare Strategy Should Focus on Equity",
-      "Small Children, Big Looming Policy Questions",
-      "Done Right, Universal Child Care Would Be a Seismic Shift for New York’s Children"
+      "Small Children, Big Looming Policy Questions"
      ]
     },
     {
      "name": "Higher education",
      "n": 1,
-     "share": 2.7,
+     "share": 2.5,
      "examples": []
+    }
+   ]
+  },
+  {
+   "beat": "Technology",
+   "pieces": 36,
+   "classified_pct": 64,
+   "subtopics": [
+    {
+     "name": "General / mixed",
+     "n": 13,
+     "share": 36.1,
+     "examples": [
+      "Mamdani’s PIT Crews: Government Innovation, or Innovation Theater?",
+      "Living in the City, Floating on the Hudson: A Conversation with Leslie Day",
+      "Building Better, Piece by Piece"
+     ]
+    },
+    {
+     "name": "AI & the city",
+     "n": 11,
+     "share": 30.6,
+     "examples": [
+      "What a Better Public School AI Policy Would Look Like",
+      "How New Jersey Got a Head Start on AI",
+      "What AI Can Do for Cities"
+     ]
+    },
+    {
+     "name": "Government technology",
+     "n": 9,
+     "share": 25.0,
+     "examples": [
+      "The Real Path to Better Government Technology",
+      "How Guadalajara Killed the Paper Permit",
+      "How the MTA Built Its New App In-House"
+     ]
+    },
+    {
+     "name": "Robotaxis & autonomous vehicles",
+     "n": 3,
+     "share": 8.3,
+     "examples": [
+      "How To Make Driverless Ride-Hail Work in New York",
+      "A Different Waymo Future Is Possible",
+      "Tokyo and London are Test-Driving Waymo. New York, Take Notes."
+     ]
     }
    ]
   },
@@ -3666,71 +3871,24 @@
    ]
   },
   {
-   "beat": "Technology",
-   "pieces": 34,
-   "classified_pct": 62,
-   "subtopics": [
-    {
-     "name": "General / mixed",
-     "n": 13,
-     "share": 38.2,
-     "examples": [
-      "Mamdani’s PIT Crews: Government Innovation, or Innovation Theater?",
-      "Living in the City, Floating on the Hudson: A Conversation with Leslie Day",
-      "Building Better, Piece by Piece"
-     ]
-    },
-    {
-     "name": "AI & the city",
-     "n": 10,
-     "share": 29.4,
-     "examples": [
-      "How New Jersey Got a Head Start on AI",
-      "What AI Can Do for Cities",
-      "Use AI to Analyze Bodyworn Camera Footage"
-     ]
-    },
-    {
-     "name": "Government technology",
-     "n": 8,
-     "share": 23.5,
-     "examples": [
-      "How Guadalajara Killed the Paper Permit",
-      "How the MTA Built Its New App In-House",
-      "Technology Transformation Will Make or Break Progressive Governance"
-     ]
-    },
-    {
-     "name": "Robotaxis & autonomous vehicles",
-     "n": 3,
-     "share": 8.8,
-     "examples": [
-      "How To Make Driverless Ride-Hail Work in New York",
-      "A Different Waymo Future Is Possible",
-      "Tokyo and London are Test-Driving Waymo. New York, Take Notes."
-     ]
-    }
-   ]
-  },
-  {
    "beat": "Race, gender & inequality",
-   "pieces": 28,
+   "pieces": 29,
    "classified_pct": 100,
    "subtopics": [
     {
      "name": "Race & the city",
-     "n": 15,
-     "share": 53.6,
+     "n": 16,
+     "share": 55.2,
      "examples": [
+      "Unpacking the Triggers",
       "Percy Sutton, Eric Adams and the State of Black Political Power in New York",
-      "A City of Winners and Losers: New York in the 1980s",
-      "Newark and the Limits of Criminal Justice Reform"
+      "A City of Winners and Losers: New York in the 1980s"
      ]
     },
     {
      "name": "Inequality & class",
      "n": 12,
-     "share": 42.9,
+     "share": 41.4,
      "examples": [
       "The Other Side of Affordability",
       "New York’s Housing Crisis: Self-Inflicted and Solvable",
@@ -3740,7 +3898,7 @@
     {
      "name": "Gender & women",
      "n": 1,
-     "share": 3.6,
+     "share": 3.4,
      "examples": []
     }
    ]
@@ -3893,32 +4051,32 @@
   },
   {
    "beat": "Civil society & philanthropy",
-   "pieces": 16,
-   "classified_pct": 69,
+   "pieces": 17,
+   "classified_pct": 71,
    "subtopics": [
     {
      "name": "Nonprofits & their economics",
      "n": 7,
-     "share": 43.8,
+     "share": 41.2,
      "examples": [
       "Trump vs. Civil Society"
      ]
     },
     {
-     "name": "General / mixed",
+     "name": "Philanthropy & foundations",
      "n": 5,
-     "share": 31.2,
-     "examples": []
+     "share": 29.4,
+     "examples": [
+      "Gun Culture Then and Now",
+      "A Brief Biography of the Second Amendment",
+      "One Nation Under Guns"
+     ]
     },
     {
-     "name": "Philanthropy & foundations",
-     "n": 4,
-     "share": 25.0,
-     "examples": [
-      "A Brief Biography of the Second Amendment",
-      "One Nation Under Guns",
-      "Forging Firearm Folklore"
-     ]
+     "name": "General / mixed",
+     "n": 5,
+     "share": 29.4,
+     "examples": []
     }
    ]
   }

@@ -69,9 +69,17 @@ def fetch_all_posts():
             # The New York Times / Redux"); alt is the accessibility text.
             f"&fields=id,uuid,title,slug,url,excerpt,custom_excerpt,feature_image,"
             f"feature_image_alt,feature_image_caption,featured,visibility,"
-            f"published_at,updated_at,created_at,reading_time"
+            f"published_at,updated_at,created_at,reading_time,"
+            # Ghost drops primary_author whenever `fields` is set unless it is
+            # named here; without it every piece's byline came back null.
+            f"primary_author"
             f"&formats=html"
-            f"&order=published_at%20desc"
+            # id is the tiebreaker. Ghost pages by offset, and whole issues go
+            # live on one shared published_at (ten housing pieces at
+            # 2025-09-17T16:00:15), so sorting on the timestamp alone let the
+            # database return a tied group in a different order on each page:
+            # two posts appeared twice and two never appeared at all.
+            f"&order=published_at%20desc%2Cid%20desc"
         )
         try:
             data = fetch_json(url)
@@ -89,6 +97,40 @@ def fetch_all_posts():
         page = next_page
         time.sleep(0.3)  # be polite to the API
     return posts
+
+
+def fetch_ghost_slugs():
+    """Every published slug, fetched separately and ordered by id (unique), so
+    it cannot share a pagination fault with the main pull."""
+    slugs, page = [], 1
+    while page:
+        data = fetch_json(f"{API_BASE}/posts/?key={API_KEY}&fields=slug"
+                          f"&limit=100&page={page}&order=id%20asc")
+        slugs.extend(p["slug"] for p in data.get("posts", []))
+        page = data.get("meta", {}).get("pagination", {}).get("next")
+    return slugs
+
+
+def check_matches_ghost(raw):
+    """Fail loudly unless every Ghost post appears exactly once."""
+    pulled = [p.get("slug") for p in raw]
+    dupes = sorted({s for s in pulled if pulled.count(s) > 1})
+    ghost = fetch_ghost_slugs()
+    problems = []
+    if dupes:
+        problems.append(f"slugs repeated in the pull: {dupes}")
+    if len(ghost) != len(set(ghost)):
+        problems.append("Ghost's own slug listing repeats a slug; listing is unreliable")
+    missing = sorted(set(ghost) - set(pulled))
+    extra = sorted(set(pulled) - set(ghost))
+    if missing:
+        problems.append(f"in Ghost but missing from the pull: {missing}")
+    if extra:
+        problems.append(f"in the pull but not in Ghost: {extra}")
+    if problems:
+        raise SystemExit("ERROR: catalogue does not match Ghost; nothing written.\n  "
+                         + "\n  ".join(problems))
+    print(f"Checked against Ghost: {len(pulled)} posts, every slug exactly once.")
 
 
 TAG_RE = re.compile(r"<[^>]+>")
@@ -482,6 +524,7 @@ def main():
     prev_slugs = load_previous_slugs()
     print("Fetching all posts from Ghost Content API...")
     raw = fetch_all_posts()
+    check_matches_ghost(raw)
     print(f"Fetched {len(raw)} posts. Normalizing...")
     records = [normalize_post(p) for p in raw]
     records.sort(key=lambda r: r["published_at"] or "", reverse=True)

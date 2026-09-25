@@ -1,7 +1,7 @@
 [
  {
   "name": "Vital City",
-  "post_count": 97,
+  "post_count": 98,
   "slugs": [
    "2025-a-look-back-most-read",
    "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -92,6 +92,7 @@
    "vital-signs-state-of-the-city-on-crime-2024",
    "what-brought-new-york-city-back-from-the-brink",
    "what-does-it-take-to-govern-the-jails",
+   "what-hangs-in-the-balance-sheets",
    "what-the-data-show-people-in-crisis-on-the-streets-and-subways",
    "what-the-numbers-tell-us-about-gun-crimes",
    "what-to-do-about-people-in-crisis-on-streets-and-subways",
@@ -1226,15 +1227,16 @@
   "website": null
  },
  {
-  "name": "Joe McReynolds",
+  "name": "Howard Slatkin",
   "post_count": 3,
   "slugs": [
-   "how-tokyo-built-clean-accessible-toilets-nyc-wants",
-   "teachings-from-tokyo"
+   "flip-the-script-and-the-ballot-for-housing",
+   "rental-ripoff-hearings-landlords-tenants-economics",
+   "the-rent-is-too-damn-high-but-also-too-low"
   ],
-  "slug": "mcreynolds-joe",
-  "bio": "is co-author of \"Emergent Tokyo: Designing the Spontaneous City\" and a researcher and Ph.D. candidate at Keio University\u2019s Almazan Architecture and Urban Studies Laboratory in Japan.",
-  "url": "https://www.vitalcitynyc.org/author/mcreynolds-joe/",
+  "slug": "slatkin-howard",
+  "bio": "is the executive director of the Citizens Housing & Planning Council.",
+  "url": "https://www.vitalcitynyc.org/author/slatkin-howard/",
   "twitter": null,
   "website": null
  },
@@ -1307,20 +1309,6 @@
   "url": "https://www.vitalcitynyc.org/author/champeny-ana/",
   "twitter": null,
   "website": null
- },
- {
-  "name": "Henry Grabar",
-  "post_count": 3,
-  "slugs": [
-   "smarter-parking-policy-please",
-   "the-high-price-of-fine-print"
-  ],
-  "slug": "grabar-henry",
-  "bio": "is the author of \"Paved Paradise: How Parking Explains the World.\"",
-  "url": "https://www.vitalcitynyc.org/author/grabar-henry/",
-  "twitter": null,
-  "website": null,
-  "senior": true
  },
  {
   "name": "Julie Sandorf",
@@ -1699,19 +1687,6 @@
   "website": null
  },
  {
-  "name": "Howard Slatkin",
-  "post_count": 2,
-  "slugs": [
-   "flip-the-script-and-the-ballot-for-housing",
-   "rental-ripoff-hearings-landlords-tenants-economics"
-  ],
-  "slug": "slatkin-howard",
-  "bio": "is the executive director of the Citizens Housing & Planning Council.",
-  "url": "https://www.vitalcitynyc.org/author/slatkin-howard/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Caterina Roman",
   "post_count": 2,
   "slugs": [
@@ -1721,6 +1696,19 @@
   "slug": "roman-caterina",
   "bio": "is a professor in the Department of Criminal Justice at Temple University.",
   "url": "https://www.vitalcitynyc.org/author/roman-caterina/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Joe McReynolds",
+  "post_count": 2,
+  "slugs": [
+   "how-tokyo-built-clean-accessible-toilets-nyc-wants",
+   "teachings-from-tokyo"
+  ],
+  "slug": "mcreynolds-joe",
+  "bio": "is co-author of \"Emergent Tokyo: Designing the Spontaneous City\" and a researcher and Ph.D. candidate at Keio University\u2019s Almazan Architecture and Urban Studies Laboratory in Japan.",
+  "url": "https://www.vitalcitynyc.org/author/mcreynolds-joe/",
   "twitter": null,
   "website": null
  },
@@ -1881,6 +1869,20 @@
   "url": "https://www.vitalcitynyc.org/author/bates-josiah/",
   "twitter": null,
   "website": null
+ },
+ {
+  "name": "Henry Grabar",
+  "post_count": 2,
+  "slugs": [
+   "smarter-parking-policy-please",
+   "the-high-price-of-fine-print"
+  ],
+  "slug": "grabar-henry",
+  "bio": "is the author of \"Paved Paradise: How Parking Explains the World.\"",
+  "url": "https://www.vitalcitynyc.org/author/grabar-henry/",
+  "twitter": null,
+  "website": null,
+  "senior": true
  },
  {
   "name": "Freddie deBoer",
@@ -2275,20 +2277,6 @@
   "website": null
  },
  {
-  "name": "Jennifer Doleac",
-  "post_count": 2,
-  "slugs": [
-   "fixing-the-research-to-policy-pipeline",
-   "stemming-violence-investing-in-civic-goods"
-  ],
-  "slug": "doleac-jennifer",
-  "bio": "is executive vice president of criminal justice at Arnold Ventures. She is an economist who specializes in the economics of crime and criminal justice policy.",
-  "url": "https://www.vitalcitynyc.org/author/doleac-jennifer/",
-  "twitter": null,
-  "website": null,
-  "senior": true
- },
- {
   "name": "John MacDonald",
   "post_count": 2,
   "slugs": [
@@ -2298,6 +2286,20 @@
   "slug": "macdonald-john",
   "bio": "is a professor of criminology and sociology at the University of Pennsylvania.",
   "url": "https://www.vitalcitynyc.org/author/macdonald-john/",
+  "twitter": null,
+  "website": null,
+  "senior": true
+ },
+ {
+  "name": "Jennifer Doleac",
+  "post_count": 2,
+  "slugs": [
+   "fixing-the-research-to-policy-pipeline",
+   "stemming-violence-investing-in-civic-goods"
+  ],
+  "slug": "doleac-jennifer",
+  "bio": "is executive vice president of criminal justice at Arnold Ventures. She is an economist who specializes in the economics of crime and criminal justice policy.",
+  "url": "https://www.vitalcitynyc.org/author/doleac-jennifer/",
   "twitter": null,
   "website": null,
   "senior": true
@@ -2343,19 +2345,6 @@
   "website": null
  },
  {
-  "name": "John Pfaff",
-  "post_count": 2,
-  "slugs": [
-   "please-stop-blaming-bail-reform",
-   "two-big-thoughts-about-the-steep-crime-drop"
-  ],
-  "slug": "pfaff-john",
-  "bio": "is a professor of law at the Fordham University School of Law, and is the author of \"Locked In: The True Causes of Mass Incarceration and How to Achieve Real Reform.\"",
-  "url": "https://www.vitalcitynyc.org/author/pfaff-john/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Anthony Washburn",
   "post_count": 2,
   "slugs": [
@@ -2365,6 +2354,19 @@
   "slug": "washburn-anthony",
   "bio": "is a senior research methodologist in the Methodology and Quantitative Social Sciences Department at NORC at the University of Chicago.",
   "url": "https://www.vitalcitynyc.org/author/washburn-anthony/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "John Pfaff",
+  "post_count": 2,
+  "slugs": [
+   "please-stop-blaming-bail-reform",
+   "two-big-thoughts-about-the-steep-crime-drop"
+  ],
+  "slug": "pfaff-john",
+  "bio": "is a professor of law at the Fordham University School of Law, and is the author of \"Locked In: The True Causes of Mass Incarceration and How to Achieve Real Reform.\"",
+  "url": "https://www.vitalcitynyc.org/author/pfaff-john/",
   "twitter": null,
   "website": null
  },
@@ -3493,18 +3495,6 @@
   "website": null
  },
  {
-  "name": "Christopher Winship",
-  "post_count": 1,
-  "slugs": [
-   "nypd-gang-database-shooting-reduction"
-  ],
-  "slug": "winship-christopher",
-  "bio": null,
-  "url": "https://www.vitalcitynyc.org/author/winship-christopher/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Adam Gelb",
   "post_count": 1,
   "slugs": [
@@ -3513,6 +3503,18 @@
   "slug": "gelb-adam",
   "bio": "is the president and CEO of the Council on Criminal Justice.",
   "url": "https://www.vitalcitynyc.org/author/gelb-adam/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Christopher Winship",
+  "post_count": 1,
+  "slugs": [
+   "nypd-gang-database-shooting-reduction"
+  ],
+  "slug": "winship-christopher",
+  "bio": null,
+  "url": "https://www.vitalcitynyc.org/author/winship-christopher/",
   "twitter": null,
   "website": null
  },
@@ -3685,30 +3687,6 @@
   "website": null
  },
  {
-  "name": "Mason B. Williams",
-  "post_count": 1,
-  "slugs": [
-   "a-new-era-in-new-york-city-political-history"
-  ],
-  "slug": "williams-mason-b",
-  "bio": "is the author of \"City of Ambition: FDR, La Guardia, and the Making of Modern New York.\" His next book, \"City of Fortune: Inequality and the Remaking of New York,\" will be published by W.W. Norton next June. He teaches at Williams College.",
-  "url": "https://www.vitalcitynyc.org/author/williams-mason-b/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Anthony Townsend",
-  "post_count": 1,
-  "slugs": [
-   "putting-tech-to-work-for-all-new-yorkers"
-  ],
-  "slug": "townsend-anthony",
-  "bio": "is a senior research associate at Cornell Tech\u2019s Jacobs Urban Tech Hub, and the author of \"Smart Cities: Big Data, Civic Hackers, and the Quest for a New Utopia\" and \"Ghost Road: Beyond the Driverless Car.\"",
-  "url": "https://www.vitalcitynyc.org/author/townsend-anthony/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Satyam Khanna",
   "post_count": 1,
   "slugs": [
@@ -3721,14 +3699,14 @@
   "website": null
  },
  {
-  "name": "Ben Krauss",
+  "name": "Anthony Townsend",
   "post_count": 1,
   "slugs": [
-   "zohran-mamdani-michelle-wu-and-brandon-johnson"
+   "putting-tech-to-work-for-all-new-yorkers"
   ],
-  "slug": "krauss-ben",
-  "bio": "is the editorial assistant at Slow Boring.",
-  "url": "https://www.vitalcitynyc.org/author/krauss-ben/",
+  "slug": "townsend-anthony",
+  "bio": "is a senior research associate at Cornell Tech\u2019s Jacobs Urban Tech Hub, and the author of \"Smart Cities: Big Data, Civic Hackers, and the Quest for a New Utopia\" and \"Ghost Road: Beyond the Driverless Car.\"",
+  "url": "https://www.vitalcitynyc.org/author/townsend-anthony/",
   "twitter": null,
   "website": null
  },
@@ -3746,14 +3724,14 @@
   "senior": true
  },
  {
-  "name": "Michele Bogart",
+  "name": "Ben Krauss",
   "post_count": 1,
   "slugs": [
-   "no-city-for-old-monuments"
+   "zohran-mamdani-michelle-wu-and-brandon-johnson"
   ],
-  "slug": "bogart-michele",
-  "bio": "is professor emeritus of art history and visual culture at Stony Brook University.",
-  "url": "https://www.vitalcitynyc.org/author/bogart-michele/",
+  "slug": "krauss-ben",
+  "bio": "is the editorial assistant at Slow Boring.",
+  "url": "https://www.vitalcitynyc.org/author/krauss-ben/",
   "twitter": null,
   "website": null
  },
@@ -3778,6 +3756,30 @@
   "slug": "brechner-charles",
   "bio": "is professor emeritus at NYU\u2019s Wagner School and research director emeritus at the Citizens Budget Commission.",
   "url": "https://www.vitalcitynyc.org/author/brechner-charles/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Michele Bogart",
+  "post_count": 1,
+  "slugs": [
+   "no-city-for-old-monuments"
+  ],
+  "slug": "bogart-michele",
+  "bio": "is professor emeritus of art history and visual culture at Stony Brook University.",
+  "url": "https://www.vitalcitynyc.org/author/bogart-michele/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Mason B. Williams",
+  "post_count": 1,
+  "slugs": [
+   "a-new-era-in-new-york-city-political-history"
+  ],
+  "slug": "williams-mason-b",
+  "bio": "is the author of \"City of Ambition: FDR, La Guardia, and the Making of Modern New York.\" His next book, \"City of Fortune: Inequality and the Remaking of New York,\" will be published by W.W. Norton next June. He teaches at Williams College.",
+  "url": "https://www.vitalcitynyc.org/author/williams-mason-b/",
   "twitter": null,
   "website": null
  },
@@ -4106,42 +4108,6 @@
   "website": null
  },
  {
-  "name": "Samantha J. Simon",
-  "post_count": 1,
-  "slugs": [
-   "the-good-gun-owner"
-  ],
-  "slug": "simon-samantha-j",
-  "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
-  "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Kate Daugherty",
-  "post_count": 1,
-  "slugs": [
-   "what-we-know-and-dont-know-about-guns"
-  ],
-  "slug": "daugherty-kate",
-  "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
-  "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Charles Buckhanan",
-  "post_count": 1,
-  "slugs": [
-   "my-seven-guns-a-personal-inventory"
-  ],
-  "slug": "buckhanan-charles",
-  "bio": "is a street outreach worker on Chicago\u2019s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
-  "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Brian DeLay",
   "post_count": 1,
   "slugs": [
@@ -4162,30 +4128,6 @@
   "slug": "marvin-chris",
   "bio": "is a former U.S. Army Black Hawk helicopter pilot and combat-wounded veteran of the war in Afghanistan. He is a gun violence prevention advocate.",
   "url": "https://www.vitalcitynyc.org/author/marvin-chris/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Theodore Roosevelt IV",
-  "post_count": 1,
-  "slugs": [
-   "guns-my-family-and-me"
-  ],
-  "slug": "roosevelt-theodore-iv",
-  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
-  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Nina Vinik",
-  "post_count": 1,
-  "slugs": [
-   "breaking-through-with-the-next-generation-on-firearms"
-  ],
-  "slug": "vinik-nina",
-  "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
-  "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
   "twitter": null,
   "website": null
  },
@@ -4214,6 +4156,42 @@
   "website": null
  },
  {
+  "name": "Theodore Roosevelt IV",
+  "post_count": 1,
+  "slugs": [
+   "guns-my-family-and-me"
+  ],
+  "slug": "roosevelt-theodore-iv",
+  "bio": "is a board member of the Center for Climate and Energy Solutions and trustee of The Climate Reality Project. He is a member of the governing council of The Wilderness Society.",
+  "url": "https://www.vitalcitynyc.org/author/roosevelt-theodore-iv/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Nina Vinik",
+  "post_count": 1,
+  "slugs": [
+   "breaking-through-with-the-next-generation-on-firearms"
+  ],
+  "slug": "vinik-nina",
+  "bio": "is the founder of Project Unloaded and a two-decade veteran of the gun violence prevention movement. She lives in Chicago.",
+  "url": "https://www.vitalcitynyc.org/author/vinik-nina/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Charles Buckhanan",
+  "post_count": 1,
+  "slugs": [
+   "my-seven-guns-a-personal-inventory"
+  ],
+  "slug": "buckhanan-charles",
+  "bio": "is a street outreach worker on Chicago\u2019s West Side, where he supports street-involved youth in turning their lives around. A justice-impacted former gang member, he draws on his own lived experience to help young people choose a different path.",
+  "url": "https://www.vitalcitynyc.org/author/buckhanan-charles/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Daniel Semenza",
   "post_count": 1,
   "slugs": [
@@ -4234,6 +4212,30 @@
   "slug": "lickenbrock-greg",
   "bio": "is the senior firearms analyst at Everytown for Gun Safety, where he uses his experience in the gun industry to support policy, education and public safety initiatives.",
   "url": "https://www.vitalcitynyc.org/author/lickenbrock-greg/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Kate Daugherty",
+  "post_count": 1,
+  "slugs": [
+   "what-we-know-and-dont-know-about-guns"
+  ],
+  "slug": "daugherty-kate",
+  "bio": "is a data project associate at the University of Chicago Crime and Education Lab.",
+  "url": "https://www.vitalcitynyc.org/author/daugherty-kate/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Samantha J. Simon",
+  "post_count": 1,
+  "slugs": [
+   "the-good-gun-owner"
+  ],
+  "slug": "simon-samantha-j",
+  "bio": "is a professor of sociology at The University of Arizona and an expert on the police, gender, race and organizational inequality. She is the author of \"Before the Badge: How Academy Training Shapes Police Violence.\"",
+  "url": "https://www.vitalcitynyc.org/author/simon-samantha-j/",
   "twitter": null,
   "website": null
  },
@@ -4575,18 +4577,6 @@
   "website": null
  },
  {
-  "name": "Richard Schragger",
-  "post_count": 1,
-  "slugs": [
-   "is-it-time-for-cities-to-go-it-alone"
-  ],
-  "slug": "schragger-richard",
-  "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
-  "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Adam Cohen",
   "post_count": 1,
   "slugs": [
@@ -4607,6 +4597,18 @@
   "slug": "chertoff-meryl",
   "bio": "is adjunct professor of law at Georgetown University Law Center.",
   "url": "https://www.vitalcitynyc.org/author/chertoff-meryl/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Richard Schragger",
+  "post_count": 1,
+  "slugs": [
+   "is-it-time-for-cities-to-go-it-alone"
+  ],
+  "slug": "schragger-richard",
+  "bio": "is the Walter L. Brown Professor at the University of Virginia School of Law and the author of \"City Power: Urban Governance in a Global Age.\"",
+  "url": "https://www.vitalcitynyc.org/author/schragger-richard/",
   "twitter": null,
   "website": null
  },
@@ -5331,30 +5333,6 @@
   "website": null
  },
  {
-  "name": "Philip Mark Plotch",
-  "post_count": 1,
-  "slugs": [
-   "hate-the-mta-beware-the-alternatives"
-  ],
-  "slug": "plotch-philip-mark",
-  "bio": "is the principal researcher at the Eno Center for Transportation and a fellow at the NYU Marron Institute of Urban Management. He is the author of three books: \"Politics Across the Hudson,\" \"Last Subway\" and \"Mobilizing the Metropolis.\"",
-  "url": "https://www.vitalcitynyc.org/author/plotch-philip-mark/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Betsy Plum",
-  "post_count": 1,
-  "slugs": [
-   "the-congestion-pricing-meltdown-and-its-aftermath"
-  ],
-  "slug": "plum-betsy",
-  "bio": "is the executive director of Riders Alliance, New York City\u2019s grassroots organization of public transit riders. Before joining Riders Alliance, she served as the vice president of policy for the New York Immigration Coalition. ",
-  "url": "https://www.vitalcitynyc.org/author/plum-betsy/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Zakhary Mallett",
   "post_count": 1,
   "slugs": [
@@ -5391,6 +5369,18 @@
   "website": null
  },
  {
+  "name": "Betsy Plum",
+  "post_count": 1,
+  "slugs": [
+   "the-congestion-pricing-meltdown-and-its-aftermath"
+  ],
+  "slug": "plum-betsy",
+  "bio": "is the executive director of Riders Alliance, New York City\u2019s grassroots organization of public transit riders. Before joining Riders Alliance, she served as the vice president of policy for the New York Immigration Coalition. ",
+  "url": "https://www.vitalcitynyc.org/author/plum-betsy/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Jodi Shapiro",
   "post_count": 1,
   "slugs": [
@@ -5411,6 +5401,18 @@
   "slug": "skogan-wesley-g",
   "bio": "is professor emeritus in the Institute for Policy Research at Northwestern University, where he researches crime, policing and the role of the public and community organizations in crime prevention and police reform.",
   "url": "https://www.vitalcitynyc.org/author/skogan-wesley-g/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Philip Mark Plotch",
+  "post_count": 1,
+  "slugs": [
+   "hate-the-mta-beware-the-alternatives"
+  ],
+  "slug": "plotch-philip-mark",
+  "bio": "is the principal researcher at the Eno Center for Transportation and a fellow at the NYU Marron Institute of Urban Management. He is the author of three books: \"Politics Across the Hudson,\" \"Last Subway\" and \"Mobilizing the Metropolis.\"",
+  "url": "https://www.vitalcitynyc.org/author/plotch-philip-mark/",
   "twitter": null,
   "website": null
  },
@@ -5439,18 +5441,6 @@
   "website": null
  },
  {
-  "name": "Rachel Meltzer",
-  "post_count": 1,
-  "slugs": [
-   "the-45-minute-city"
-  ],
-  "slug": "meltzer-rachel",
-  "bio": "is the Plimpton Associate Professor of Planning and Urban Economics at Harvard\u2019s Graduate School of Design. ",
-  "url": "https://www.vitalcitynyc.org/author/meltzer-rachel/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Renae Reynolds",
   "post_count": 1,
   "slugs": [
@@ -5459,6 +5449,18 @@
   "slug": "reynolds-renae",
   "bio": "is the executive director of the Tri-State Transportation Campaign, a nonprofit advocacy organization dedicated to advancing sustainable and equitable transportation to reduce climate emissions and increase accessibility and mobility options.",
   "url": "https://www.vitalcitynyc.org/author/reynolds-renae/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Rachel Meltzer",
+  "post_count": 1,
+  "slugs": [
+   "the-45-minute-city"
+  ],
+  "slug": "meltzer-rachel",
+  "bio": "is the Plimpton Associate Professor of Planning and Urban Economics at Harvard\u2019s Graduate School of Design. ",
+  "url": "https://www.vitalcitynyc.org/author/meltzer-rachel/",
   "twitter": null,
   "website": null
  },
@@ -5547,18 +5549,6 @@
   "website": null
  },
  {
-  "name": "Kirsten Burr",
-  "post_count": 1,
-  "slugs": [
-   "how-were-really-doing"
-  ],
-  "slug": "burr-kirsten",
-  "bio": "is a PhD student at Columbia Business School in the finance division with a research focus on household finance, asset pricing, and public policy.",
-  "url": "https://www.vitalcitynyc.org/author/burr-kirsten/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Andrew Rein",
   "post_count": 1,
   "slugs": [
@@ -5567,6 +5557,18 @@
   "slug": "rein-andrew",
   "bio": "is president of the Citizens Budget Commission.",
   "url": "https://www.vitalcitynyc.org/author/rein-andrew/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Kirsten Burr",
+  "post_count": 1,
+  "slugs": [
+   "how-were-really-doing"
+  ],
+  "slug": "burr-kirsten",
+  "bio": "is a PhD student at Columbia Business School in the finance division with a research focus on household finance, asset pricing, and public policy.",
+  "url": "https://www.vitalcitynyc.org/author/burr-kirsten/",
   "twitter": null,
   "website": null
  },
@@ -5859,19 +5861,6 @@
   "website": null
  },
  {
-  "name": "Kerri M. Raissian",
-  "post_count": 1,
-  "slugs": [
-   "causal-research-more-not-less"
-  ],
-  "slug": "raissian-kerri-m",
-  "bio": "is an associate professor of public policy at the University of Connecticut and director of the ARMS Center for gun-injury prevention. She is a senior fellow at the Niskanen Center.",
-  "url": "https://www.vitalcitynyc.org/author/raissian-kerri-m/",
-  "twitter": null,
-  "website": null,
-  "senior": true
- },
- {
   "name": "Richard Hahn",
   "post_count": 1,
   "slugs": [
@@ -5884,16 +5873,17 @@
   "website": null
  },
  {
-  "name": "Alex Tabarrok",
+  "name": "Kerri M. Raissian",
   "post_count": 1,
   "slugs": [
-   "its-hard-to-change-people"
+   "causal-research-more-not-less"
   ],
-  "slug": "tabarrok-alex",
-  "bio": "is the Bartley J. Madden Chair in Economics at the Mercatus Center and a professor of economics at George Mason University.",
-  "url": "https://www.vitalcitynyc.org/author/tabarrok-alex/",
+  "slug": "raissian-kerri-m",
+  "bio": "is an associate professor of public policy at the University of Connecticut and director of the ARMS Center for gun-injury prevention. She is a senior fellow at the Niskanen Center.",
+  "url": "https://www.vitalcitynyc.org/author/raissian-kerri-m/",
   "twitter": null,
-  "website": null
+  "website": null,
+  "senior": true
  },
  {
   "name": "Tracy Palandjian",
@@ -5920,14 +5910,14 @@
   "website": null
  },
  {
-  "name": "John Arnold",
+  "name": "Mark M. Gray",
   "post_count": 1,
   "slugs": [
-   "raising-the-bar-and-ending-an-era-of-low-expectations"
+   "how-the-sausage-gets-made-a-primer"
   ],
-  "slug": "arnold-john",
-  "bio": "is co-founder of Arnold Ventures LLC.",
-  "url": "https://www.vitalcitynyc.org/author/arnold-john/",
+  "slug": "gray-mark-m",
+  "bio": "is a research associate professor at Georgetown University and the Director of CARA Catholic Polls at Georgetown\u2019s Center for Applied Research in the Apostolate.",
+  "url": "https://www.vitalcitynyc.org/author/gray-mark-m/",
   "twitter": null,
   "website": null
  },
@@ -5944,14 +5934,26 @@
   "website": null
  },
  {
-  "name": "Mark M. Gray",
+  "name": "Alex Tabarrok",
   "post_count": 1,
   "slugs": [
-   "how-the-sausage-gets-made-a-primer"
+   "its-hard-to-change-people"
   ],
-  "slug": "gray-mark-m",
-  "bio": "is a research associate professor at Georgetown University and the Director of CARA Catholic Polls at Georgetown\u2019s Center for Applied Research in the Apostolate.",
-  "url": "https://www.vitalcitynyc.org/author/gray-mark-m/",
+  "slug": "tabarrok-alex",
+  "bio": "is the Bartley J. Madden Chair in Economics at the Mercatus Center and a professor of economics at George Mason University.",
+  "url": "https://www.vitalcitynyc.org/author/tabarrok-alex/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "John Arnold",
+  "post_count": 1,
+  "slugs": [
+   "raising-the-bar-and-ending-an-era-of-low-expectations"
+  ],
+  "slug": "arnold-john",
+  "bio": "is co-founder of Arnold Ventures LLC.",
+  "url": "https://www.vitalcitynyc.org/author/arnold-john/",
   "twitter": null,
   "website": null
  },
@@ -6004,14 +6006,14 @@
   "website": null
  },
  {
-  "name": "Miriam Popper",
+  "name": "Patsy Yang",
   "post_count": 1,
   "slugs": [
-   "letting-more-people-await-trial-outside-jail"
+   "improving-carceral-care"
   ],
-  "slug": "popper-miriam",
-  "bio": "is the former executive director of the Office of Pretrial Justice Initiatives in the New York City Mayor\u2019s Office of Criminal Justice.",
-  "url": "https://www.vitalcitynyc.org/author/popper-miriam/",
+  "slug": "yang-patsy",
+  "bio": "is senior vice president for NYC Health + Hospitals Correctional Health Services.",
+  "url": "https://www.vitalcitynyc.org/author/yang-patsy/",
   "twitter": null,
   "website": null
  },
@@ -6028,14 +6030,14 @@
   "website": null
  },
  {
-  "name": "Patsy Yang",
+  "name": "Miriam Popper",
   "post_count": 1,
   "slugs": [
-   "improving-carceral-care"
+   "letting-more-people-await-trial-outside-jail"
   ],
-  "slug": "yang-patsy",
-  "bio": "is senior vice president for NYC Health + Hospitals Correctional Health Services.",
-  "url": "https://www.vitalcitynyc.org/author/yang-patsy/",
+  "slug": "popper-miriam",
+  "bio": "is the former executive director of the Office of Pretrial Justice Initiatives in the New York City Mayor\u2019s Office of Criminal Justice.",
+  "url": "https://www.vitalcitynyc.org/author/popper-miriam/",
   "twitter": null,
   "website": null
  },
@@ -6088,18 +6090,6 @@
   "website": null
  },
  {
-  "name": "Don Levy",
-  "post_count": 1,
-  "slugs": [
-   "crime-perceptions-and-reality-in-new-york"
-  ],
-  "slug": "levy-don",
-  "bio": "is director of the Siena College Research Institute.",
-  "url": "https://www.vitalcitynyc.org/author/levy-don/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Rafael Mangual",
   "post_count": 1,
   "slugs": [
@@ -6108,6 +6098,18 @@
   "slug": "mangual-rafael",
   "bio": "is the Nick Ohnell fellow at the Manhattan Institute for Policy Research, a contributing editor of City Journal and the author of \"Criminal (In)Justice: What the Push for Decarceration and Depolicing Gets Wrong and Who It Hurts Most.\"",
   "url": "https://www.vitalcitynyc.org/author/mangual-rafael/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Don Levy",
+  "post_count": 1,
+  "slugs": [
+   "crime-perceptions-and-reality-in-new-york"
+  ],
+  "slug": "levy-don",
+  "bio": "is director of the Siena College Research Institute.",
+  "url": "https://www.vitalcitynyc.org/author/levy-don/",
   "twitter": null,
   "website": null
  },
@@ -6148,38 +6150,14 @@
   "website": null
  },
  {
-  "name": "Michelle Priest",
+  "name": "David Courtwright",
   "post_count": 1,
   "slugs": [
-   "are-psychedelics-the-next-frontier-of-legalization"
+   "history-of-opioids-in-new-york-city"
   ],
-  "slug": "priest-michelle",
-  "bio": "is an assistant policy researcher and a Ph.D. candidate at Pardee RAND Graduate School.",
-  "url": "https://www.vitalcitynyc.org/author/priest-michelle/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Harold Pollack",
-  "post_count": 1,
-  "slugs": [
-   "putting-the-humility-back-in-harm-reduction"
-  ],
-  "slug": "pollack-harold",
-  "bio": "is the Helen Ross Professor at the University of Chicago\u2019s Crown Family School of Social Work, Policy and Practice.",
-  "url": "https://www.vitalcitynyc.org/author/pollack-harold/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "David Jernigan",
-  "post_count": 1,
-  "slugs": [
-   "the-failures-of-alcohol-regulation"
-  ],
-  "slug": "jernigan-david",
-  "bio": "is a professor of health law, policy and management at Boston University\u2019s School of Public Health, where he serves as assistant dean for public health practice.",
-  "url": "https://www.vitalcitynyc.org/author/jernigan-david/",
+  "slug": "courtwright-david",
+  "bio": "is presidential professor emeritus at the University of North Florida. Since 2018, he has served as an expert consultant in the national prescription opioid litigation.",
+  "url": "https://www.vitalcitynyc.org/author/courtwright-david/",
   "twitter": null,
   "website": null
  },
@@ -6208,38 +6186,14 @@
   "website": null
  },
  {
-  "name": "David Courtwright",
+  "name": "Morgan Godvin",
   "post_count": 1,
   "slugs": [
-   "history-of-opioids-in-new-york-city"
+   "learning-from-decriminalization-portland-and-portugal"
   ],
-  "slug": "courtwright-david",
-  "bio": "is presidential professor emeritus at the University of North Florida. Since 2018, he has served as an expert consultant in the national prescription opioid litigation.",
-  "url": "https://www.vitalcitynyc.org/author/courtwright-david/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Bridget G. Brennan",
-  "post_count": 1,
-  "slugs": [
-   "law-enforcement-against-fentanyl"
-  ],
-  "slug": "brennan-bridget-g",
-  "bio": "is the special narcotics prosecutor of New York City, a role she has held since 1998.",
-  "url": "https://www.vitalcitynyc.org/author/brennan-bridget-g/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Terrence D. Walton",
-  "post_count": 1,
-  "slugs": [
-   "paving-pathways-to-recovery-for-all"
-  ],
-  "slug": "walton-terrence-d",
-  "bio": "is the incoming executive director of NAADAC, the Association for Addiction Professionals.",
-  "url": "https://www.vitalcitynyc.org/author/walton-terrence-d/",
+  "slug": "godvin-morgan",
+  "bio": "is a drug policy researcher from Portland, Oregon and the founder of BeatsOverdose, an organization that provides overdose prevention services to the music and entertainment industry.",
+  "url": "https://www.vitalcitynyc.org/author/godvin-morgan/",
   "twitter": null,
   "website": null
  },
@@ -6256,14 +6210,26 @@
   "website": null
  },
  {
-  "name": "Morgan Godvin",
+  "name": "David Jernigan",
   "post_count": 1,
   "slugs": [
-   "learning-from-decriminalization-portland-and-portugal"
+   "the-failures-of-alcohol-regulation"
   ],
-  "slug": "godvin-morgan",
-  "bio": "is a drug policy researcher from Portland, Oregon and the founder of BeatsOverdose, an organization that provides overdose prevention services to the music and entertainment industry.",
-  "url": "https://www.vitalcitynyc.org/author/godvin-morgan/",
+  "slug": "jernigan-david",
+  "bio": "is a professor of health law, policy and management at Boston University\u2019s School of Public Health, where he serves as assistant dean for public health practice.",
+  "url": "https://www.vitalcitynyc.org/author/jernigan-david/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Harold Pollack",
+  "post_count": 1,
+  "slugs": [
+   "putting-the-humility-back-in-harm-reduction"
+  ],
+  "slug": "pollack-harold",
+  "bio": "is the Helen Ross Professor at the University of Chicago\u2019s Crown Family School of Social Work, Policy and Practice.",
+  "url": "https://www.vitalcitynyc.org/author/pollack-harold/",
   "twitter": null,
   "website": null
  },
@@ -6276,6 +6242,42 @@
   "slug": "szalavitz-maia",
   "bio": "is the author of \"Undoing Drugs: How Harm Reduction is Changing the Future of Drugs and Addiction\" and a contributing opinion writer for the New York Times.",
   "url": "https://www.vitalcitynyc.org/author/szalavitz-maia/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Terrence D. Walton",
+  "post_count": 1,
+  "slugs": [
+   "paving-pathways-to-recovery-for-all"
+  ],
+  "slug": "walton-terrence-d",
+  "bio": "is the incoming executive director of NAADAC, the Association for Addiction Professionals.",
+  "url": "https://www.vitalcitynyc.org/author/walton-terrence-d/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Bridget G. Brennan",
+  "post_count": 1,
+  "slugs": [
+   "law-enforcement-against-fentanyl"
+  ],
+  "slug": "brennan-bridget-g",
+  "bio": "is the special narcotics prosecutor of New York City, a role she has held since 1998.",
+  "url": "https://www.vitalcitynyc.org/author/brennan-bridget-g/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Michelle Priest",
+  "post_count": 1,
+  "slugs": [
+   "are-psychedelics-the-next-frontier-of-legalization"
+  ],
+  "slug": "priest-michelle",
+  "bio": "is an assistant policy researcher and a Ph.D. candidate at Pardee RAND Graduate School.",
+  "url": "https://www.vitalcitynyc.org/author/priest-michelle/",
   "twitter": null,
   "website": null
  },
@@ -6400,6 +6402,18 @@
   "website": null
  },
  {
+  "name": "Alicia Modestino",
+  "post_count": 1,
+  "slugs": [
+   "the-difference-summer-youth-employment-programs-make"
+  ],
+  "slug": "modestino-alicia",
+  "bio": "is the executive director of Community to Community, a new research initiative at Northeastern University that uses data and analysis to design, implement and evaluate urban public policies.",
+  "url": "https://www.vitalcitynyc.org/author/modestino-alicia/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Clare Miflin",
   "post_count": 1,
   "slugs": [
@@ -6420,18 +6434,6 @@
   "slug": "miller-benjamin",
   "bio": "is the former director of policy planning for the city\u2019s Department of Sanitation and author of \"Fat of the Land: Garbage of New York \u2014 The Last 200 Years.\"",
   "url": "https://www.vitalcitynyc.org/author/miller-benjamin/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Alicia Modestino",
-  "post_count": 1,
-  "slugs": [
-   "the-difference-summer-youth-employment-programs-make"
-  ],
-  "slug": "modestino-alicia",
-  "bio": "is the executive director of Community to Community, a new research initiative at Northeastern University that uses data and analysis to design, implement and evaluate urban public policies.",
-  "url": "https://www.vitalcitynyc.org/author/modestino-alicia/",
   "twitter": null,
   "website": null
  },
@@ -6472,6 +6474,18 @@
   "website": null
  },
  {
+  "name": "Deborah Marton",
+  "post_count": 1,
+  "slugs": [
+   "maintaining-the-built-environment"
+  ],
+  "slug": "marton-deborah",
+  "bio": "is a commissioner with the New York City Public Design Commission. She serves as executive director of Van Alen Institute, an independent nonprofit working to create equitable cities through inclusive design.",
+  "url": "https://www.vitalcitynyc.org/author/marton-deborah/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Seth A. Williams",
   "post_count": 1,
   "slugs": [
@@ -6480,42 +6494,6 @@
   "slug": "williams-seth-a",
   "bio": "is a postdoctoral fellow in the department of sociology and Baker Institute Center for Health and Biosciences at Rice University.",
   "url": "https://www.vitalcitynyc.org/author/williams-seth-a/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Jonathan Soffer",
-  "post_count": 1,
-  "slugs": [
-   "brownsville-and-bay-ridge"
-  ],
-  "slug": "soffer-jonathan",
-  "bio": "is a professor of history at NYU Tandon School of Engineering and the author of \"Ed Koch and the Rebuilding of New York.\"",
-  "url": "https://www.vitalcitynyc.org/author/soffer-jonathan/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Eve Kessler",
-  "post_count": 1,
-  "slugs": [
-   "why-walkability-matters"
-  ],
-  "slug": "kessler-eve",
-  "bio": "is a longtime journalist who lives in the Bronx. She was the community editor of StreetsblogNYC from 2019 to 2022.",
-  "url": "https://www.vitalcitynyc.org/author/kessler-eve/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Bobbito Garcia",
-  "post_count": 1,
-  "slugs": [
-   "pickup-basketball"
-  ],
-  "slug": "garcia-bobbito",
-  "bio": "is a DJ, author and filmmaker.",
-  "url": "https://www.vitalcitynyc.org/author/garcia-bobbito/",
   "twitter": null,
   "website": null
  },
@@ -6532,18 +6510,6 @@
   "website": null
  },
  {
-  "name": "Frank Greene",
-  "post_count": 1,
-  "slugs": [
-   "public-space-and-security"
-  ],
-  "slug": "greene-frank",
-  "bio": "is a New York City-based architect with more than 40 years of experience in the justice industry. He is a leader in the courts and corrections field across North America.",
-  "url": "https://www.vitalcitynyc.org/author/greene-frank/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Jacob William Faber",
   "post_count": 1,
   "slugs": [
@@ -6552,6 +6518,18 @@
   "slug": "faber-jacob-william",
   "bio": "is associate professor of sociology and public service at New York University, where he teaches and conducts research on racial inequality and segregation.",
   "url": "https://www.vitalcitynyc.org/author/faber-jacob-william/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Eve Kessler",
+  "post_count": 1,
+  "slugs": [
+   "why-walkability-matters"
+  ],
+  "slug": "kessler-eve",
+  "bio": "is a longtime journalist who lives in the Bronx. She was the community editor of StreetsblogNYC from 2019 to 2022.",
+  "url": "https://www.vitalcitynyc.org/author/kessler-eve/",
   "twitter": null,
   "website": null
  },
@@ -6568,14 +6546,14 @@
   "website": null
  },
  {
-  "name": "Deborah Marton",
+  "name": "Bobbito Garcia",
   "post_count": 1,
   "slugs": [
-   "maintaining-the-built-environment"
+   "pickup-basketball"
   ],
-  "slug": "marton-deborah",
-  "bio": "is a commissioner with the New York City Public Design Commission. She serves as executive director of Van Alen Institute, an independent nonprofit working to create equitable cities through inclusive design.",
-  "url": "https://www.vitalcitynyc.org/author/marton-deborah/",
+  "slug": "garcia-bobbito",
+  "bio": "is a DJ, author and filmmaker.",
+  "url": "https://www.vitalcitynyc.org/author/garcia-bobbito/",
   "twitter": null,
   "website": null
  },
@@ -6588,6 +6566,30 @@
   "slug": "a-photo-essay",
   "bio": null,
   "url": "https://www.vitalcitynyc.org/author/a-photo-essay/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Frank Greene",
+  "post_count": 1,
+  "slugs": [
+   "public-space-and-security"
+  ],
+  "slug": "greene-frank",
+  "bio": "is a New York City-based architect with more than 40 years of experience in the justice industry. He is a leader in the courts and corrections field across North America.",
+  "url": "https://www.vitalcitynyc.org/author/greene-frank/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Jonathan Soffer",
+  "post_count": 1,
+  "slugs": [
+   "brownsville-and-bay-ridge"
+  ],
+  "slug": "soffer-jonathan",
+  "bio": "is a professor of history at NYU Tandon School of Engineering and the author of \"Ed Koch and the Rebuilding of New York.\"",
+  "url": "https://www.vitalcitynyc.org/author/soffer-jonathan/",
   "twitter": null,
   "website": null
  },
@@ -6664,18 +6666,6 @@
   "website": null
  },
  {
-  "name": "Marlon Peterson",
-  "post_count": 1,
-  "slugs": [
-   "brooklyn-summers-steelpan"
-  ],
-  "slug": "peterson-marlon",
-  "bio": "is the author of \"Bird Uncaged: An Abolitionist\u2019s Freedom Song,\" host of the Decarcerated Podcast and owner of his own social impact endeavor, The Precedential Group Social Enterprises, and its nonprofit arm, Be Precedential, Inc.",
-  "url": "https://www.vitalcitynyc.org/author/peterson-marlon/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Tamara Greenfield",
   "post_count": 1,
   "slugs": [
@@ -6696,6 +6686,18 @@
   "slug": "lee-layman",
   "bio": "is the project director of Neighborhood Safety Initiative (NSI) at the Center for Court Innovation, a lead implementation partner in the Mayor\u2019s Action Plan for Neighborhood Safety (MAP).",
   "url": "https://www.vitalcitynyc.org/author/lee-layman/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Marlon Peterson",
+  "post_count": 1,
+  "slugs": [
+   "brooklyn-summers-steelpan"
+  ],
+  "slug": "peterson-marlon",
+  "bio": "is the author of \"Bird Uncaged: An Abolitionist\u2019s Freedom Song,\" host of the Decarcerated Podcast and owner of his own social impact endeavor, The Precedential Group Social Enterprises, and its nonprofit arm, Be Precedential, Inc.",
+  "url": "https://www.vitalcitynyc.org/author/peterson-marlon/",
   "twitter": null,
   "website": null
  },

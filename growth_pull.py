@@ -3100,7 +3100,10 @@ def pull_ghost():
     while True:
         try:
             url = (f"{GHOST_API}/posts/?key={GHOST_CONTENT_KEY}&filter={flt}"
-                   f"&include=authors,tags&limit=100&page={page}&fields=id,title,slug,url,published_at,reading_time")
+                   f"&include=authors,tags&limit=100&page={page}&fields=id,title,slug,url,published_at,reading_time,primary_author"
+                   # id breaks published_at ties; without it offset paging skips
+                   # and repeats posts that share a timestamp (see scrape.py).
+                   f"&order=published_at%20desc%2Cid%20desc")
             data = json.loads(http_get(url))
         except Exception as e:
             log(f"  ghost posts failed: {e}")
@@ -4642,7 +4645,7 @@ def pull_all_ghost_titles():
     while True:
         try:
             url = (f"{GHOST_API}/posts/?key={GHOST_CONTENT_KEY}"
-                   f"&limit=100&page={page}&fields=title")
+                   f"&limit=100&page={page}&fields=title&order=id%20asc")
             data = json.loads(http_get(url, timeout=30))
         except Exception as e:
             log(f"  ghost title catalog page {page} failed: {e}"); break

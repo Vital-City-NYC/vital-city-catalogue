@@ -73,7 +73,7 @@ BEATS = {
   # pieces as often as to cultural ones — so folding it into Culture would
   # overstate culture coverage by about half. 102 of its 142 pieces carry no
   # other cultural tag. Its overlap with every other beat is reported separately.
-  "History & the long view": ["History", "Historical Lessons"],
+  "History & the long view": ["History", "Historical Lessons", "9/11"],
   "Culture & city life": [
     "culture", "Sports", "Museums", "Film & TV", "Music & Entertainment",
     "Arts", "Theater", "Photography", "Food and Drink", "Religion", "Libraries",
@@ -100,6 +100,7 @@ META = {
   "Press Releases", "Events", "About This Project", "In Memoriam", "Report",
   "Overview", "terminology", "policy", "Context: Politics and Data",
   "The Research That Changed My Thinking", "Reflections", "The Long View",
+  "New York Editorial Board",
 }
 
 # --- Bucket 3: issue section rubrics ---------------------------------------
@@ -121,6 +122,8 @@ RUBRICS = {
   "Connecting Dots", "What It Looks Like Up Close", "Repercussions", "What's The Plan?",
   "What the Future Holds", "Where We’ve Been", "Dreams of the Future",
   "Sweating the Small Stuff", "What Else Can Be Done",
+  "Looking Back, Looking Forward", "The Culture Around Us",
+  "What We Know and Don't Know", "When Women Wield Guns",
 }
 
 # --- Rubrics, sorted again by the JOB they name -----------------------------
@@ -136,7 +139,8 @@ STANCES = {
     "Setting the Stage", "Defining the Challenge", "What Makes a Great City Work?",
     "Currents", "Connecting Dots", "What Do We Know?",
     "Public Perception and Statistical Realities", "Beyond False Simplicity",
-    "What It Looks Like Up Close", "What Does It All Mean?"],
+    "What It Looks Like Up Close", "What Does It All Mean?",
+    "The Culture Around Us", "What We Know and Don't Know", "When Women Wield Guns"],
   "Diagnosing what's broken": [
     "How Did It Get This Bad?", "Mugged by Reality", "Persistent Problems Inside",
     "The Causes", "What Doesn’t Work", "Wrenches in the Gears", "Repercussions",
@@ -152,7 +156,7 @@ STANCES = {
   "Looking ahead": [
     "Where We’re Headed", "What the Future Holds", "Dreams of the Future",
     "What Opportunities Await?", "What Could Go Wrong?", "The Upside — Yes, Really"],
-  "Looking back": ["Looking Back", "Where We’ve Been"],
+  "Looking back": ["Looking Back", "Where We’ve Been", "Looking Back, Looking Forward"],
   "Staging a debate": ["The Great Debate"],
   "Unsorted": ["Etc."],
 }

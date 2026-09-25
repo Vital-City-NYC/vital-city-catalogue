@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-09-25T11:12:43.283358+00:00",
+    "generated_at": "2026-09-25T16:59:10.183680+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 948,
     "total_authors": 512,
@@ -133,11 +133,11 @@
     ],
     [
       "City Planning",
-      112
+      111
     ],
     [
       "Housing",
-      82
+      81
     ],
     [
       "Justice",
@@ -152,12 +152,12 @@
       72
     ],
     [
-      "Police Reform",
+      "Economics",
       56
     ],
     [
-      "Economics",
-      55
+      "Police Reform",
+      56
     ],
     [
       "Politics",
@@ -220,7 +220,7 @@
   "by_credential_pieces": [
     [
       "Academic",
-      226
+      225
     ],
     [
       "Journalist / media",
@@ -228,14 +228,14 @@
     ],
     [
       "Nonprofit / advocacy",
-      113
-    ],
-    [
-      "Other / unclassified",
-      98
+      114
     ],
     [
       "Vital City (institutional)",
+      98
+    ],
+    [
+      "Other / unclassified",
       97
     ],
     [
@@ -359,13 +359,13 @@
       "2022": 6,
       "2023": 17,
       "2024": 32,
-      "2025": 40,
+      "2025": 39,
       "2026": 17
     },
     "Housing": {
       "2023": 5,
       "2024": 11,
-      "2025": 38,
+      "2025": 37,
       "2026": 28
     },
     "Justice": {
@@ -386,15 +386,15 @@
   "wc_stats": {
     "n": 941,
     "median": 1635,
-    "mean": 2168,
-    "p90": 3240,
+    "mean": 2170,
+    "p90": 3259,
     "max": 30332,
     "p10": 911,
     "p25": 1282,
-    "p75": 2230,
+    "p75": 2233,
     "p95": 5728,
     "no_count": 7,
-    "core_1000_2499": 669,
+    "core_1000_2499": 668,
     "under_500": 46,
     "over_5000": 53
   },
@@ -413,11 +413,11 @@
     ],
     [
       "2,000-2,999",
-      191
+      190
     ],
     [
       "3,000-4,999",
-      56
+      57
     ],
     [
       "5,000+",
@@ -471,7 +471,7 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 70
+        "n": 69
       },
       {
         "floor": 2250,
@@ -496,7 +496,7 @@
       {
         "floor": 3250,
         "label": "3,250",
-        "n": 10
+        "n": 11
       },
       {
         "floor": 3500,
@@ -535,7 +535,7 @@
       "n": 304,
       "p25": 1316,
       "median": 1671,
-      "p75": 2206,
+      "p75": 2228,
       "max": 14800
     },
     {
@@ -558,7 +558,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 97,
+      "posts": 98,
       "credential": "Vital City (institutional)"
     },
     {
