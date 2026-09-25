@@ -148,6 +148,15 @@
   html.dark a{color:#6fb3e8}
   /* "Who should hear about this": recent pieces, each with reporters to pitch and
      draft posts. Scrolls inside its own box so it never takes over the page. */
+  #evergreen{margin:0 0 12px;border:1px solid var(--vc-cloud);background:var(--vc-paper);padding:10px 14px 4px}
+  .evg-h{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+  .evg-h span{font-weight:400;text-transform:none;letter-spacing:0;color:var(--vc-charcoal);font-size:11.5px;margin-left:6px}
+  .evg-h a{color:var(--vc-cerulean)}
+  .amp.evg{border-bottom:0;border-top:1px solid var(--vc-cloud);padding:10px 0 12px}
+  .amp.evg:first-of-type{border-top:0}
+  .amp.evg details.evgd{margin-top:6px}
+  .amp.evg details.evgd>summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--vc-cerulean)}
+  .amp.evg .why{font-size:12px;line-height:1.5;color:var(--vc-black);margin-top:4px;max-width:880px}
   .amp-box{max-height:560px;overflow-y:auto;border:1px solid var(--vc-cloud);background:var(--vc-white);padding:4px 14px}
   .amp{padding:14px 0 16px;border-bottom:1px solid var(--vc-cloud)}
   .amp:last-child{border-bottom:0}
@@ -244,6 +253,7 @@
   <section class="sect" id="amplify">
     <h2>Who should hear about this</h2>
     <div class="note" id="ampNote">Every piece from the last 30 days, with the reporters whose own bylines cover its subject and three draft posts to start from. Tick a reporter to add them to the people you are contacting.</div>
+    <div id="evergreen" hidden></div>
     <div class="amp-box" id="ampBox"><div class="empty">Loading recent pieces…</div></div>
   </section>
 
@@ -359,6 +369,7 @@ async function unlock(fromStore){
   fetch("signer.enc",{cache:"no-cache"}).then(r=>r.ok?r.json():null).then(b=>b&&decryptBlob(pass,b)).then(o=>{ if(o) DEFAULT_SIGNER=o; }).catch(()=>{});
   $("#gate").style.display="none"; $("#app").style.display="block";
   init();
+  loadReshare(pass);
 }
 $("#unlock").addEventListener("click",()=>unlock(false));
 $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false);});
@@ -649,6 +660,75 @@ function card(r,i){
 // Reporters come from the same ranking as "Find a reporter", run on each piece's
 // headline, dek and tags. Drafts come from the tweet suggester
 // (data/tweet_suggestions.json, rebuilt when a new piece appears).
+// Six reporters for a piece: the press list first, then major outlets, then the rest.
+function ampRank(query){
+  const q=readQuery(query);
+  const ranked=filtered(rank(q)).filter(r=>r.clips>=minFor(r.p));
+  const top=[...ranked.filter(r=>isFriend(r.p)),...ranked.filter(r=>!isFriend(r.p)&&tierOf(r.p)===1),
+             ...ranked.filter(r=>!isFriend(r.p)&&tierOf(r.p)!==1)].slice(0,6);
+  return {q, top, beat:Object.values(q.beats).sort((a,b)=>b.n-a.n)[0]};
+}
+function ampRepHTML(top){
+  return top.length?top.map(r=>{ const p=r.p; const w=(r.why||[]).find(x=>x.kind==="beat");
+    return `<div class="rp ${p.vc&&p.vc.person?"vc":""}">${box(p)}<span class="n">${esc(p.name)}</span> <span class="o">&middot; ${esc(outletName(p))}${w?` &middot; ${w.count} on ${esc(String(w.label).toLowerCase())}`:""}</span>
+      <div class="e">${p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:`<span class="o">no published address</span>`}${p.x?` &middot; <a href="https://x.com/${esc(p.x)}" target="_blank" rel="noopener">@${esc(p.x)}</a>`:""}</div></div>`; }).join("")
+    :`<div class="rp o">No reporter's file matches this subject closely.</div>`;
+}
+
+/* Worth resharing this week. The resharing calendar (resharing/, built nightly)
+   pairs archive pieces with dated events and says why. Only its strongest
+   suggestions come here: an editor-reviewed hook or moment, with a written
+   reason, tied to an event of real weight in the next ten days, or a season
+   that is on now. Keyword-only matches stay on the calendar page. */
+let RESHARE=null;
+const EVG_BASE=1000, EVG_DAYS=10, EVG_MAX=3;
+async function loadReshare(pass){
+  try{
+    const b=await fetch("../resharing/data.enc",{cache:"no-cache"}).then(r=>r.ok?r.json():null);
+    if(!b) return;
+    RESHARE=await decryptBlob(pass,b);
+    renderEvergreen();
+  }catch(e){}
+}
+const AP_MON_S=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+const apShort=d=>{ const [y,m,dd]=String(d||"").split("-").map(Number); return m?`${AP_MON_S[m-1]} ${dd}`:""; };
+function evergreenPicks(){
+  if(!RESHARE) return [];
+  const t0=new Date().toISOString().slice(0,10), t1=new Date(Date.now()+EVG_DAYS*864e5).toISOString().slice(0,10);
+  const out=[], seen=new Set();
+  for(const u of RESHARE.upcoming||[]){
+    const d=u.post_on||u.date, p=(u.picks||[])[0];
+    if(!d||d<t0||d>t1||!["hook","moment"].includes(u.kind)||!u.why||!p||p.reviewed===false) continue;
+    if(((u.event||{}).significance||0)<60||seen.has(p.slug)) continue;
+    seen.add(p.slug); out.push({date:d, event:(u.event||{}).title||u.label, why:u.why, pick:p});
+  }
+  for(const sn of RESHARE.seasonal||[]){
+    const p=(sn.picks||[])[0];
+    if(!sn.active_now||!sn.why||!p||seen.has(p.slug)) continue;
+    seen.add(p.slug); out.push({date:null, event:sn.label, why:sn.why, pick:p});
+  }
+  return out.slice(0,EVG_MAX);
+}
+function renderEvergreen(){
+  const host=$("#evergreen"); if(!host) return;
+  const picks=evergreenPicks();
+  if(!picks.length){ host.hidden=true; return; }
+  host.hidden=false;
+  host.innerHTML=`<div class="evg-h">Worth resharing this week <span>from the <a href="../resharing/">resharing calendar</a>, only its strongest dated suggestions</span></div>`+
+    picks.map((x,i)=>{
+      const idx=EVG_BASE+i, p=x.pick;
+      AMP[idx]={evergreen:true,title:p.title,url:p.url,author:"",tags:p.topics||[],event:x.event,date:x.date};
+      const {top}=ampRank([p.title,p.summary,x.event].filter(Boolean).join(". "));
+      return `<div class="amp evg" data-idx="${idx}">
+        <div class="m">${x.date?`For ${esc(apShort(x.date))} &middot; `:"Now &middot; "}${esc(x.event)}</div>
+        <div class="t"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>${p.published?` <span class="o" style="font-weight:400;font-size:11.5px">&middot; published ${esc(String(p.published).slice(0,4))}</span>`:""}</div>
+        <div class="why">${esc(String(x.why).replace(/^Why (this one|now):\s*/,""))}</div>
+        <details class="evgd"><summary>Reporters to pitch (${top.length}) and email</summary>${ampRepHTML(top)}
+        <button class="more ampmail" type="button" data-idx="${idx}">Email the ticked reporters &rsaquo;</button></details></div>`;
+    }).join("");
+  updateSelbar();
+}
+
 async function renderAmplify(){
   const host=$("#ampBox");
   let d;
@@ -663,16 +743,9 @@ async function renderAmplify(){
   const KIND={claim:"Claim",writer:"Writer",quote:"Quote",finding:"Claim",argument:"Writer",hook:"Hook",title:"Title"};
   host.innerHTML=pieces.map((pc,idx)=>{
     const query=[pc.title,pc.dek,(pc.tags||[]).join(" ")].filter(Boolean).join(". ");
-    const q=readQuery(query);
-    const ranked=filtered(rank(q)).filter(r=>r.clips>=minFor(r.p));
-    const top=[...ranked.filter(r=>isFriend(r.p)),...ranked.filter(r=>!isFriend(r.p)&&tierOf(r.p)===1),
-               ...ranked.filter(r=>!isFriend(r.p)&&tierOf(r.p)!==1)].slice(0,6);
-    const beat=Object.values(q.beats).sort((a,b)=>b.n-a.n)[0];
+    const {q,top,beat}=ampRank(query);
     AMP[idx]={title:pc.title,url:pc.url,author:pc.author||"",tags:pc.tags||[],topic:beat?beat.label:""};
-    const rep=top.length?top.map(r=>{ const p=r.p; const w=(r.why||[]).find(x=>x.kind==="beat");
-      return `<div class="rp ${p.vc&&p.vc.person?"vc":""}">${box(p)}<span class="n">${esc(p.name)}</span> <span class="o">&middot; ${esc(outletName(p))}${w?` &middot; ${w.count} on ${esc(String(w.label).toLowerCase())}`:""}</span>
-        <div class="e">${p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:`<span class="o">no published address</span>`}${p.x?` &middot; <a href="https://x.com/${esc(p.x)}" target="_blank" rel="noopener">@${esc(p.x)}</a>`:""}</div></div>`; }).join("")
-      :`<div class="rp o">No reporter's file matches this subject closely.</div>`;
+    const rep=ampRepHTML(top);
     const drafts=(pc.posts||[]).map((x,j)=>`<div class="dp"><span class="k">${esc(KIND[x.kind]||x.kind)}</span><span class="x">${esc(x.text)}${(x.flags||[]).length?` <span class="fl">(${esc(x.flags.join(", "))})</span>`:""}</span><button type="button" data-copy="${idx}:${j}" title="Copy the post with the link">Copy</button></div>`).join("");
     return `<div class="amp" data-idx="${idx}">
       <div class="t"><a href="${esc(pc.url)}" target="_blank" rel="noopener">${esc(pc.title)}</a></div>
@@ -1049,6 +1122,13 @@ function pitchFor(i){
   const me=signer()||{};
   const topic=tagTopic(pc.tags)||topicPhrase(pc.topic);
   const on=topic?` on ${topic}`:"";
+  if(pc.evergreen){
+    const ev=String(pc.event||"").replace(/^[A-Z](?![A-Z])/,c=>c.toLowerCase());
+    const title=String(pc.title||"").replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"');
+    // archive pieces carry broad tags ("history"), so the note points at the date instead of a topic
+    return {subject:`A piece from our archive that might interest you`,
+      body:`Hi. I thought this piece we published might be useful for what's coming up${pc.date?` on ${apShort(pc.date)}`:""}${ev?` (${ev})`:""}. Please call me${me.phone?` at ${me.phone}`:""} with any questions or if you want to connect with the author.\n\n${title}\n${pc.url}${me.sign?`\n\n${me.sign}`:""}`};
+  }
   // "Anthony A. Braga, Marianna Mitchem" reads as a list; say it as a sentence would
   const names=String(pc.author||"").split(/\s*,\s*|\s+and\s+/).filter(n=>n&&n!=="Vital City");
   const by=names.length?` by ${names.length>1?names.slice(0,-1).join(", ")+" and "+names.slice(-1):names[0]}`:"";
