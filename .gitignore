@@ -21,3 +21,6 @@ growth/live/live.enc
 
 # resharing tool: built payload and run state are private/, already ignored;
 # the encrypted bundle IS published, so it is explicitly not ignored here.
+
+# local preview of the influence page with plaintext data injected: never publish
+influence/preview.html

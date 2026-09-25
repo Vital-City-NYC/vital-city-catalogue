@@ -1,0 +1,127 @@
+name: influence-refresh
+
+# Weekly rebuild of the influence index (influence/). Runs on GitHub's servers.
+# Re-pulls press and government pages for the current year (and the previous
+# year in the first week of each month, since indexes keep filling in), checks
+# new Vital City hits page by page, re-reads CourtListener and Wikipedia, adds
+# any new Common Crawl release, recounts government readers, rebuilds and
+# republishes. Google Scholar refuses scripts, so its counts are refreshed by
+# hand (influence_pull.py scholar-import); see influence/methodology.md.
+#
+# The evidence store rides along encrypted as influence/raw.enc, so each run
+# picks up where the last one stopped. Manual runs can pass a year range to
+# re-pull (the first full backfill used 2022-2026).
+
+on:
+  schedule:
+    - cron: "30 13 * * 1"   # Mondays 13:30 UTC = 9:30am ET (EDT)
+  workflow_dispatch:
+    inputs:
+      years:
+        description: "Years to re-pull for press and government pages, e.g. 2022-2026 (blank = automatic)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: influence-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet cryptography
+
+      - name: Unpack the evidence store and the subscriber file
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: python3 encrypt_influence.py unpack
+
+      - name: Choose years
+        run: |
+          Y="${{ inputs.years }}"
+          if [ -z "$Y" ]; then
+            yr=$(date -u +%Y)
+            if [ "$(date -u +%-d)" -le 7 ]; then Y="$((yr-1))-$yr"; else Y="$yr"; fi
+          fi
+          echo "YEARS=$Y" >> "$GITHUB_ENV"
+          echo "Re-pulling press and government pages for $Y"
+
+      # Each collector is allowed to fail without stopping the others, so one
+      # blocked source never freezes the whole index; the last step fails the
+      # run if any did, which sends the usual GitHub failure email.
+      - name: Press (Google News, 27 outlets)
+        id: press
+        continue-on-error: true
+        timeout-minutes: 150
+        run: python3 influence_pull.py press --years "$YEARS" && python3 influence_pull.py verify-press
+
+      - name: Government pages
+        id: record
+        continue-on-error: true
+        timeout-minutes: 90
+        run: python3 influence_pull.py record --years "$YEARS" && python3 influence_pull.py verify-record
+
+      - name: Federal court filings (CourtListener)
+        id: courts
+        continue-on-error: true
+        run: python3 influence_pull.py courts
+
+      - name: Wikipedia
+        id: wiki
+        continue-on-error: true
+        timeout-minutes: 60
+        run: python3 influence_pull.py wiki
+
+      - name: New Common Crawl web-graph releases
+        id: web
+        continue-on-error: true
+        timeout-minutes: 40
+        run: python3 influence_pull.py webgraph-new
+
+      - name: Government readers
+        id: readers
+        continue-on-error: true
+        run: python3 influence_pull.py readers
+
+      - name: Build and encrypt
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: |
+          # a source with no data at all (only possible before the first full
+          # backfill lands) is left out and named on the page, not faked
+          python3 influence_build.py || python3 influence_build.py --allow-missing
+          python3 encrypt_influence.py
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name "Vital City Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add influence/data.enc influence/raw.enc
+          if git diff --cached --quiet; then echo "no changes to publish"; exit 0; fi
+          git commit -m "Influence index refresh $(date -u '+%Y-%m-%d')"
+          ok=
+          for i in 1 2 3 4 5; do
+            if git push; then ok=1; break; fi
+            git pull --rebase --autostash -X theirs origin main || git rebase --abort || true
+            sleep 8
+          done
+          [ -n "$ok" ] || { echo "ERROR: could not push after 5 attempts."; exit 1; }
+
+      - name: Fail the run if any source failed
+        if: steps.press.outcome == 'failure' || steps.record.outcome == 'failure' || steps.courts.outcome == 'failure' || steps.wiki.outcome == 'failure' || steps.web.outcome == 'failure' || steps.readers.outcome == 'failure'
+        run: |
+          echo "press=${{ steps.press.outcome }} record=${{ steps.record.outcome }} courts=${{ steps.courts.outcome }} wiki=${{ steps.wiki.outcome }} web=${{ steps.web.outcome }} readers=${{ steps.readers.outcome }}"
+          echo "The page was republished with the sources that worked; the rest carry their last good data (dates in the page footer)."
+          exit 1

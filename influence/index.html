@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../app/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VC Toolkit">
+<meta name="robots" content="noindex,nofollow">
+<title>Vital City — influence index</title>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
+<style>
+  @font-face{font-family:"GascogneTS";src:url("../growth/fonts/GascogneTS-Light.ttf") format("truetype");font-weight:200 900;font-display:swap}
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-paper2:#eeeeec; --vc-cerulean:#217ebe; --vc-magenta:#e7466d;
+    --vc-chartreuse:#dde44c; --vc-orange:#ff7c53;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --vc-serif:"GascogneTS",Georgia,serif;
+    /* chart tokens: Vital City magenta, peers cerulean, the peer median in ink.
+       Validated with the dataviz palette checker (light and dark surfaces). */
+    --c-vc:#e7466d; --c-vc-band:rgba(231,70,109,.16); --c-peer:#217ebe; --c-peer-line:rgba(33,126,190,.30);
+    --c-med:#050507; --c-grid:#e6e6e3; --c-axis:#707175; --c-ref:#050507;
+    --ease:cubic-bezier(.22,.8,.24,1);
+  }
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1d1e21;
+    --c-peer:#4e98cb;--c-peer-line:rgba(78,152,203,.34);--c-med:#e8e8e5;--c-grid:#2c2e34;--c-axis:#9a9ca2;--c-ref:#e8e8e5}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--vc-cerulean)}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+  .gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500;padding:16px}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px;max-width:440px;width:100%;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gateerr{color:#c8102e;font-size:12.5px;min-height:18px;margin-top:8px}
+  .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  header.mast{border-bottom:1px solid var(--vc-black);padding:22px 30px 16px;background:var(--vc-white);position:relative}
+  .mastlinks{position:absolute;right:30px;top:20px;display:flex;align-items:center;gap:14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .mastlinks a{color:var(--vc-cerulean);text-decoration:none;white-space:nowrap;cursor:pointer}
+  @media(max-width:700px){.mastlinks{position:static;flex-wrap:wrap;gap:10px 14px;margin:0 0 10px}}
+  .jump{position:sticky;top:0;z-index:40;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:8px 30px;display:flex;gap:16px;flex-wrap:wrap;font-size:11px}
+  .jump a{color:var(--vc-charcoal);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .jump a:hover,.jump a.on{color:var(--vc-black)}
+  .jump a.on{box-shadow:inset 0 -2px 0 var(--c-vc)}
+
+  /* ---------- hero: the one section that inverts, as on the site's Data page */
+  .hero{background:#050507;color:#f4f4f1;padding:44px 30px 34px;position:relative;overflow:hidden}
+  .hero .in{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:40px;align-items:start}
+  .kick{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a9aaad}
+  .bignum{font-family:var(--vc-serif);font-weight:300;font-size:118px;line-height:.9;letter-spacing:-.03em;color:var(--vc-chartreuse);margin:18px 0 4px;font-variant-numeric:proportional-nums;white-space:nowrap}
+  .bignum small{font-size:.42em;letter-spacing:0;margin-left:4px;color:#f4f4f1}
+  .bigcap{font-size:15px;font-weight:700;margin:0 0 16px;color:#f4f4f1}
+  .hero h2{font-size:22px;font-weight:900;line-height:1.22;margin:0 0 12px;letter-spacing:-.01em}
+  .hero p{font-size:13.5px;line-height:1.55;color:#c9c9c6;margin:0 0 10px}
+  .hero .pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .pill{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:14px;background:#1c1d21;color:#e8e8e5;white-space:nowrap}
+  .pill b{color:var(--vc-chartreuse);font-weight:900}
+  .hero .chartwrap{min-height:320px}
+  .hero .cap{font-size:11.5px;color:#a9aaad;margin-top:8px;line-height:1.5}
+  .hero svg text{fill:#a9aaad}
+  .hero .c-grid{stroke:#232428}.hero .c-ref{stroke:#f4f4f1}
+  .hero .c-peer{stroke:rgba(120,170,215,.34)}
+  @media(max-width:900px){.hero .in{grid-template-columns:1fr;gap:18px}.bignum{font-size:92px}}
+  @media(max-width:640px){.hero{padding:30px 16px 24px}.bignum{font-size:76px}}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:30px 30px 60px}
+  @media(max-width:640px){.wrap{padding:22px 16px 50px}header.mast,.jump,.confbar{padding-left:16px;padding-right:16px}}
+  section.blk{margin:0 0 44px;scroll-margin-top:48px}
+  .blk > h2{font-size:24px;font-weight:900;line-height:1.2;margin:0 0 6px;letter-spacing:-.01em;max-width:860px}
+  .blk > .dek{font-size:14px;color:var(--vc-charcoal);margin:0 0 18px;max-width:820px;font-weight:300}
+  .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:20px 22px 18px}
+  html.dark .card{border-color:#2e3036}
+  .src{font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5}
+  .src a{color:var(--vc-charcoal)}
+
+  /* controls */
+  .ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 14px}
+  .ctl button{font:inherit;font-size:12px;font-weight:700;padding:6px 12px;border:1.5px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);cursor:pointer;border-radius:18px;min-height:32px}
+  .ctl button.on{background:var(--vc-black);color:var(--vc-white)}
+  .ctl button.play{border-color:var(--c-vc);color:var(--c-vc);min-width:84px}
+  .ctl button.play.on{background:var(--c-vc);color:#fff}
+  .ctl .sep{width:1px;height:22px;background:var(--vc-cloud);margin:0 4px}
+  .ctl .note{font-size:11.5px;color:var(--vc-charcoal);margin-left:6px}
+
+  /* league race */
+  .race{position:relative}
+  .rrow{position:absolute;left:0;right:0;height:34px;display:grid;grid-template-columns:30px minmax(120px,250px) 1fr;align-items:center;gap:10px;
+        transition:transform .75s var(--ease),opacity .4s;will-change:transform}
+  .rrow .rk{font-size:13px;font-weight:900;color:var(--vc-charcoal);text-align:right;font-variant-numeric:tabular-nums}
+  .rrow .nm{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rrow.vc .nm,.rrow.vc .rk{color:var(--c-vc);font-weight:900}
+  .rrow .track{position:relative;height:100%}
+  .rrow .bar{position:absolute;top:9px;height:16px;background:var(--c-peer);border-radius:0 4px 4px 0;transition:left .75s var(--ease),width .75s var(--ease),border-radius .2s}
+  .rrow .bar.neg{border-radius:4px 0 0 4px}
+  .rrow.vc .bar{background:var(--c-vc)}
+  .rrow .val{position:absolute;top:8px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;transition:left .75s var(--ease);white-space:nowrap}
+  .rrow.vc{background:linear-gradient(90deg,rgba(231,70,109,.07),rgba(231,70,109,0))}
+  .race .axis{position:absolute;top:0;bottom:0;border-left:1px solid var(--c-ref);opacity:.55}
+  .race .axlab{position:absolute;top:-20px;font-size:11px;color:var(--vc-charcoal);transform:translateX(-50%);white-space:nowrap}
+  .race .yearbig{position:absolute;right:4px;bottom:4px;font-family:var(--vc-serif);font-weight:300;font-size:92px;line-height:1;color:var(--vc-black);opacity:.09;pointer-events:none;font-variant-numeric:tabular-nums}
+  @media(max-width:640px){.rrow{grid-template-columns:22px 110px 1fr;gap:6px}.rrow .nm{font-size:12px}.race .yearbig{font-size:60px}}
+
+  /* measures */
+  .grid5{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px}
+  @media(max-width:420px){.grid5{grid-template-columns:1fr}}
+  .meas h3{margin:0;font-size:17px;font-weight:900;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+  .meas h3 .w{font-size:11px;font-weight:700;color:var(--vc-charcoal);white-space:nowrap}
+  .meas .what{font-size:12.5px;color:var(--vc-charcoal);margin:3px 0 10px;min-height:36px}
+  .meas .rat{display:flex;align-items:baseline;gap:10px;margin:0 0 4px}
+  .meas .rat .n{font-family:var(--vc-serif);font-weight:300;font-size:46px;line-height:1;color:var(--c-vc);font-variant-numeric:proportional-nums}
+  .meas .rat .l{font-size:12px;line-height:1.35;color:var(--vc-charcoal)}
+  .meas .rat .l b{color:var(--vc-black)}
+  .meas .line{font-size:12.5px;margin:4px 0 6px}
+  .meas .ratios{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+  .meas .ratios span{font-size:11px;padding:2px 7px;border-radius:10px;background:var(--vc-paper2);font-variant-numeric:tabular-nums}
+  .meas .ratios span.up{background:rgba(231,70,109,.12)}
+  .tgl{font:inherit;font-size:11px;font-weight:700;color:var(--vc-cerulean);background:none;border:0;padding:6px 0;cursor:pointer}
+  table.tbl{border-collapse:collapse;width:100%;font-size:12px;margin-top:6px}
+  table.tbl th{text-align:right;font-size:10.5px;font-weight:700;color:var(--vc-charcoal);border-bottom:1px solid var(--vc-black);padding:4px 6px}
+  table.tbl th:first-child,table.tbl td:first-child{text-align:left}
+  table.tbl td{padding:4px 6px;border-bottom:1px solid var(--vc-paper2);text-align:right;font-variant-numeric:tabular-nums}
+  table.tbl tr.vc td{color:var(--c-vc);font-weight:700}
+  .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  /* evidence */
+  .lanes svg .lane-lab{font-size:12px;font-weight:700;fill:var(--vc-black)}
+  .lanes svg .lane-n{font-size:11px;fill:var(--vc-charcoal)}
+  .dot{cursor:pointer;transition:opacity .2s}
+  .dot:hover{stroke:var(--vc-black);stroke-width:1.5}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 10px;align-items:center}
+  .chips button{font:inherit;font-size:12px;font-weight:700;padding:5px 11px;border-radius:16px;border:1px solid var(--vc-cloud);background:var(--vc-white);color:var(--vc-black);cursor:pointer}
+  .chips button.on{background:var(--vc-black);color:var(--vc-white);border-color:var(--vc-black)}
+  .chips input{font:inherit;font-size:12.5px;padding:6px 10px;border:1px solid var(--vc-cloud);background:var(--vc-white);color:var(--vc-black);min-width:200px;flex:1;max-width:320px}
+  .evlist{max-height:560px;overflow:auto;border-top:1px solid var(--vc-black)}
+  .ev{display:grid;grid-template-columns:92px 150px 1fr;gap:4px 14px;padding:9px 2px;border-bottom:1px solid var(--vc-paper2);font-size:12.5px;line-height:1.45}
+  .ev .d{color:var(--vc-charcoal);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ev .o{font-weight:700}
+  .ev .t a{color:var(--vc-black);text-decoration:none;font-weight:700}
+  .ev .t a:hover{color:var(--vc-cerulean)}
+  .ev .q{color:var(--vc-charcoal);margin-top:3px;padding-left:9px;box-shadow:inset 2px 0 0 var(--vc-chartreuse)}
+  .ev .k{font-size:10.5px;font-weight:700;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.05em}
+  @media(max-width:640px){.ev{grid-template-columns:1fr}}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.two{grid-template-columns:1fr}}
+  .obar{display:grid;grid-template-columns:150px 1fr 34px;gap:8px;align-items:center;font-size:12.5px;margin:3px 0}
+  .obar .b{height:14px;background:var(--c-vc);border-radius:0 4px 4px 0;width:0;transition:width 1s var(--ease)}
+  .obar .v{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+
+  /* method */
+  .method{max-width:820px}
+  .method h3{font-size:17px;font-weight:900;margin:26px 0 6px}
+  .method p,.method li{font-size:14px;line-height:1.62}
+  .method code{font-size:12.5px;background:var(--vc-paper2);padding:1px 4px}
+  .method .formula{font-family:var(--vc-serif);font-size:19px;padding:10px 14px;background:var(--vc-white);border-left:3px solid var(--vc-chartreuse);margin:10px 0}
+  details.acc{border-top:1px solid var(--vc-cloud);padding:10px 0}
+  details.acc summary{cursor:pointer;font-weight:900;font-size:15px;list-style:none}
+  details.acc summary::before{content:"+";display:inline-block;width:18px;color:var(--c-vc)}
+  details.acc[open] summary::before{content:"\2212"}
+
+  /* tooltip */
+  #tip{position:fixed;z-index:700;pointer-events:none;background:#050507;color:#f4f4f1;font-size:12px;line-height:1.45;padding:8px 10px;max-width:320px;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+  #tip.on{opacity:1;transform:none}
+  #tip b{color:#fff}
+  #tip .m{color:#b8b8b4}
+
+  /* chart primitives (colors from tokens so dark mode follows) */
+  svg{display:block;overflow:visible}
+  svg text{font-family:var(--vc-sans);fill:var(--c-axis);font-size:11px}
+  .c-grid{stroke:var(--c-grid);stroke-width:1}
+  .c-ref{stroke:var(--c-ref);stroke-width:1;opacity:.5}
+  .c-peer{stroke:var(--c-peer-line);stroke-width:1.2;fill:none}
+  .c-med{stroke:var(--c-med);stroke-width:1.6;fill:none}
+  .c-vc{stroke:var(--c-vc);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .c-band{fill:var(--c-vc-band)}
+  .c-vcdot{fill:var(--c-vc);stroke:var(--vc-white);stroke-width:2}
+  .hero .c-vcdot{stroke:#050507}
+  .c-vcdot.partial{fill:#050507;stroke:var(--c-vc);stroke-width:2.5}
+  .meas .c-vcdot.partial,.card .c-vcdot.partial{fill:var(--vc-white)}
+  .lab-vc{fill:var(--c-vc) !important;font-weight:900;font-size:12px !important}
+  .lab-med{fill:var(--c-med) !important;font-weight:700}
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.rrow,.rrow .bar,.rrow .val,.obar .b{transition:none}}
+
+  .foot{border-top:1px solid var(--vc-cloud);padding-top:16px;margin-top:30px;font-size:11.5px;color:var(--vc-charcoal);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+  .aic{position:relative;display:inline-block}
+  .aic button{font:inherit;font-size:10.5px;font-weight:700;background:#7a1f2b;color:#fff;border:0;padding:4px 9px;cursor:pointer}
+  .aic .pop{display:none;position:absolute;bottom:130%;right:0;width:min(420px,86vw);background:#14213d;color:#fff;font-size:12px;line-height:1.5;padding:12px 14px;z-index:60}
+  .aic:hover .pop,.aic.open .pop{display:block}
+  .loading{padding:40px;text-align:center;color:var(--vc-charcoal)}
+</style>
+<link rel="stylesheet" href="../toolkit.css">
+<script src="../toolkit.js" data-tool="influence" defer></script>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>Influence index</h1>
+    <p>How much of New York City's policy conversation runs through Vital City, measured against eleven peer organizations the same way every year. Enter the shared passphrase.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="current-password">
+    <button id="unlock">Unlock</button>
+    <div class="gateerr" id="err"></div>
+    <div class="conf">Confidential · internal use only</div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+<div class="confbar"><span>Confidential &middot; influence index &middot; internal</span><span id="stamp"></span></div>
+<div data-toolkit-nav></div>
+<header class="mast">
+  <div class="mastlinks">
+    <a href="#method">How it works</a>
+    <a href="#" id="themeToggle">Dark mode</a>
+    <a href="#" id="lock" title="Forget the saved passphrase on this device.">Lock</a>
+  </div>
+  <h1>Influence index</h1>
+  <div class="sub">Vital City's footprint in New York City's policy conversation, measured the same way for Vital City and eleven peer organizations, by year since 2022. Press, the official record, scholarship, Wikipedia and the web's link graph, combined into one number, with every step shown.</div>
+</header>
+<nav class="jump" id="jump">
+  <a href="#top">The index</a><a href="#league">The twelve</a><a href="#measures">Five measures</a>
+  <a href="#evidence">The evidence</a><a href="#readers">Government readers</a><a href="#robust">Robustness</a><a href="#method">Method</a>
+</nav>
+
+<div class="hero" id="top">
+  <div class="in">
+    <div>
+      <div class="kick" id="heroKick"></div>
+      <div class="bignum" id="bigNum">&nbsp;</div>
+      <div class="bigcap" id="bigCap"></div>
+      <h2 id="heroHed"></h2>
+      <p id="heroDek"></p>
+      <div class="pills" id="heroPills"></div>
+      <p id="heroMissing" style="display:none;margin-top:14px;font-size:12px;color:#dde44c"></p>
+    </div>
+    <div class="chartwrap">
+      <div id="heroChart"></div>
+      <div class="cap" id="heroCap"></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="blk" id="league">
+    <h2 id="leagueHed"></h2>
+    <div class="dek">Each organization scored against the other eleven with the same five measures and weights. Bars run right of the line when an organization drew more than the typical peer that year, left when it drew less. Press play to watch the order change.</div>
+    <div class="card">
+      <div class="ctl" id="raceCtl"></div>
+      <div class="race" id="race"></div>
+      <div class="src">City Limits has no press or official-record count (its name is ordinary English, see Method), so its score rests on the other three measures.</div>
+    </div>
+  </section>
+
+  <section class="blk" id="measures">
+    <h2>Five measures, each against the same eleven peers</h2>
+    <div class="dek">Magenta is Vital City. The thin blue lines are the eleven peers, the dark line their median. Counts are drawn on a scale that gives each doubling the same height, so a small organization's growth reads as clearly as a large one's.</div>
+    <div class="grid5" id="grid5"></div>
+  </section>
+
+  <section class="blk" id="evidence">
+    <h2 id="evHed"></h2>
+    <div class="dek">Every item Vital City's counts rest on, by month. Each dot is one story, government page, court case, Wikipedia article or scholarly work. Hover for the source; click to open it.</div>
+    <div class="card">
+      <div class="lanes" id="lanes"></div>
+      <div class="chips" id="evChips"></div>
+      <div class="evlist" id="evList"></div>
+    </div>
+  </section>
+
+  <section class="blk">
+    <div class="two">
+      <div class="card">
+        <h3 style="margin:0 0 4px;font-size:17px;font-weight:900" id="outHed"></h3>
+        <div style="font-size:12.5px;color:var(--vc-charcoal);margin-bottom:10px">Stories confirmed on the page, 2022 to date.</div>
+        <div id="outlets"></div>
+      </div>
+      <div class="card">
+        <h3 style="margin:0 0 4px;font-size:17px;font-weight:900">How each Vital City hit was checked</h3>
+        <div style="font-size:12.5px;color:var(--vc-charcoal);margin-bottom:6px">"Vital City" is also ordinary English, so every press and government hit was opened and read. Unreadable pages (paywalls, bot walls) are counted at the rate confirmed on readable ones.</div>
+        <div class="tblwrap" id="audit"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk" id="readers">
+    <h2 id="rdHed"></h2>
+    <div class="dek">Newsletter subscribers with a New York government work address, month by month. This is Vital City's own list, so it has no peer comparison and is not part of the index. It is reach into government, one step removed from influence.</div>
+    <div class="card">
+      <div id="rdChart"></div>
+      <div class="src" id="rdSrc"></div>
+    </div>
+  </section>
+
+  <section class="blk" id="robust">
+    <h2 id="rbHed"></h2>
+    <div class="dek" id="rbDek"></div>
+    <div class="card">
+      <div id="rbChart"></div>
+      <div class="src">The shaded band on the index chart is the separate question of counting noise: every count redrawn 3,000 times as random variation around what was observed.</div>
+    </div>
+  </section>
+
+  <section class="blk method" id="method">
+    <h2>Method</h2>
+    <div class="dek" style="font-weight:300">Everything needed to rebuild these numbers. The code is <code>influence_pull.py</code> (collection) and <code>influence_build.py</code> (scoring) in the toolkit repository; <code>influence/methodology.md</code> carries the same text.</div>
+    <div id="methodBody"></div>
+  </section>
+
+  <div class="foot">
+    <span id="asof"></span>
+    <span class="aic" id="aic"><button type="button">And please read this AI caution.</button>
+      <span class="pop">The concept, the choice of peers and measures, and the editorial judgments here are the author's. The collection code, the scoring code and this page were written mostly by Anthropic's Claude (Claude Code) under close direction. Quality checks performed on this project: every Vital City press and government hit was opened and read by script and classified with a capitalized-name test; the court count was deduplicated by case after one filing's attachments were found to repeat nine times; Scholar counts are copied from Scholar's own result line and kept with the text it printed; Common Crawl ranks were read from Common Crawl's published files for every release; and the index was recomputed under nine alternative choices of weights, measures and peers. The risks of using AI remain, and we would be grateful to hear of any red flags you notice.</span>
+    </span>
+  </div>
+</div>
+</div>
+<div id="tip"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const PASSKEY="vc_net_pass", TTL=90*24*3600*1000;
+const REDUCED=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+TTL}))}catch(e){}}
+function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
+  const o=JSON.parse(r);if(o&&o.pass&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null}catch(e){return null}}
+function b64d(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+async function unlock(fromStore){
+  $("#err").textContent="";
+  const pass=$("#pw").value.trim(); if(!pass){$("#err").textContent="Enter the passphrase.";return}
+  try{
+    const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
+    const data=await decryptBlob(pass,blob);
+    savePass(pass); $("#gate").style.display="none"; $("#app").style.display="";
+    boot(data);
+  }catch(e){console.error(e);$("#err").textContent="Wrong passphrase, or data unavailable.";if(fromStore)try{localStorage.removeItem(PASSKEY)}catch(e2){}}
+}
+$("#unlock").addEventListener("click",()=>unlock(false));
+$("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
+document.addEventListener("click",e=>{if(e.target.id==="lock"){e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch(e2){};location.reload()}});
+function applyTheme(t){document.documentElement.classList.toggle("dark",t==="dark");const b=$("#themeToggle");if(b)b.textContent=t==="dark"?"Light mode":"Dark mode"}
+(function(){let t=null;try{t=localStorage.getItem("vc_theme")}catch(e){}
+  if(!t)t=(window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light";applyTheme(t);
+  $("#themeToggle").addEventListener("click",e=>{e.preventDefault();const n=document.documentElement.classList.contains("dark")?"light":"dark";
+    try{localStorage.setItem("vc_theme",n)}catch(e2){};applyTheme(n);if(window.__rerender)window.__rerender()});})();
+// deferred: boot() reads bindings declared further down this script
+setTimeout(async()=>{if(window.__INFLUENCE_DATA__){$("#gate").style.display="none";$("#app").style.display="";boot(window.__INFLUENCE_DATA__);return}
+  const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}},0);
+
+/* ------------------------------------------------------------ helpers */
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs||{})e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function svgIn(host,w,h){host.innerHTML="";const s=el("svg",{width:w,height:h,viewBox:`0 0 ${w} ${h}`,role:"img"});host.appendChild(s);return s}
+const AP=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+function apDate(iso){const d=new Date(iso.length===10?iso+"T12:00:00":iso);return isNaN(d)?iso:`${AP[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`}
+function apMonth(ym){const [y,m]=ym.split("-").map(Number);return `${AP[m-1]} ${y}`}
+function fx(v){if(v==null||!isFinite(v))return "–";return v>=10?v.toFixed(0)+"×":v>=1?v.toFixed(1)+"×":v>=0.1?v.toFixed(2).replace(/0$/,"")+"×":v.toFixed(2)+"×"}
+function ord(n){const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
+const NUMW=["zero","one","two","three","four","five","six","seven","eight","nine"];
+const nw=n=>n<10?NUMW[n]:n.toLocaleString("en-US");
+function logScale(d0,d1,r0,r1){const a=Math.log(d0),b=Math.log(d1);return v=>r0+(Math.log(v)-a)/(b-a)*(r1-r0)}
+function linScale(d0,d1,r0,r1){return v=>r0+(v-d0)/(d1-d0)*(r1-r0)}
+// counts: log(1+v), so zero has a place on the axis
+function sym(d1,r0,r1){const b=Math.log1p(d1);return v=>r0+Math.log1p(Math.max(0,v))/b*(r1-r0)}
+function ratioTicks(lo,hi){return [0.02,0.05,0.1,0.2,0.5,1,2,5,10].filter(t=>t>=lo*0.98&&t<=hi*1.02)}
+function countTicks(max){return [0,1,3,10,30,100,300,1000,3000].filter(t=>t<=max*1.05)}
+const tip=$("#tip");
+function showTip(html,ev){tip.innerHTML=html;tip.classList.add("on");moveTip(ev)}
+function moveTip(ev){const x=ev.clientX,y=ev.clientY,w=tip.offsetWidth,h=tip.offsetHeight;
+  tip.style.left=Math.min(window.innerWidth-w-8,Math.max(8,x+14))+"px";tip.style.top=(y+h+22>window.innerHeight?y-h-12:y+14)+"px"}
+function hideTip(){tip.classList.remove("on")}
+function drawIn(path,ms,delay){if(REDUCED)return;const L=path.getTotalLength();path.style.strokeDasharray=L;path.style.strokeDashoffset=L;
+  path.getBoundingClientRect();path.style.transition=`stroke-dashoffset ${ms}ms cubic-bezier(.22,.8,.24,1) ${delay||0}ms`;
+  requestAnimationFrame(()=>{path.style.strokeDashoffset=0});setTimeout(()=>{path.style.strokeDasharray="";path.style.transition=""},ms+(delay||0)+60)}
+function fadeIn(node,ms,delay){if(REDUCED)return;node.style.opacity=0;node.style.transition=`opacity ${ms}ms ease ${delay||0}ms`;requestAnimationFrame(()=>requestAnimationFrame(()=>{node.style.opacity=""}))}
+function popIn(node,delay){if(REDUCED)return;node.style.transformBox="fill-box";node.style.transformOrigin="center";node.style.transform="scale(0)";
+  node.style.transition=`transform 420ms cubic-bezier(.3,1.6,.5,1) ${delay||0}ms`;requestAnimationFrame(()=>requestAnimationFrame(()=>{node.style.transform=""}))}
+function countUp(node,to,fmt,ms){if(REDUCED){node.innerHTML=fmt(to);return}const t0=performance.now();
+  (function step(t){const p=Math.min(1,(t-t0)/ms),e=1-Math.pow(1-p,3);node.innerHTML=fmt(to*e);if(p<1)requestAnimationFrame(step)})(t0)}
+// run fn once when host scrolls into view (charts animate on arrival)
+const seen=new WeakSet();
+function onView(host,fn){if(REDUCED||!("IntersectionObserver" in window)){fn(false);return}
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){io.disconnect();seen.add(host);fn(true)}})},{threshold:.25});io.observe(host)}
+
+/* ------------------------------------------------------------ boot */
+let D, YEARS, LAST, FIRST, NAMES, VCCOMP;
+const RENDER=[];
+function boot(data){
+  D=data; YEARS=D.years.map(String); LAST=YEARS[YEARS.length-1]; FIRST=YEARS[0];
+  NAMES=Object.fromEntries(D.orgs.map(o=>[o.id,o.name]));
+  const stamp=()=>window.vcStamp&&window.vcStamp("#stamp",D.generated); stamp(); window.addEventListener("load",stamp);
+  const partial=String(D.partial_year)===LAST;
+  window.PARTIAL_LABEL=partial?`${LAST} to ${apDate(D.as_of).replace(/, \d{4}$/,"")}`:LAST;
+  heroText(); raceBuild(); measuresBuild(); evidenceBuild(); outletsBuild(); auditBuild(); readersText(); robustText(); methodBuild();
+  RENDER.push(()=>heroChart(false),()=>raceLayout(),()=>measuresCharts(false),()=>lanesChart(false),()=>readersChart(false),()=>robustChart(false));
+  // first paint animates as each chart arrives on screen
+  onView($("#heroChart"),a=>heroChart(a));
+  onView($("#race"),a=>{raceLayout();if(a)racePlay(true)});
+  document.querySelectorAll(".meas").forEach(c=>onView(c,a=>measureChart(c.dataset.id,a)));
+  onView($("#lanes"),a=>lanesChart(a));
+  onView($("#outlets"),a=>outletsGrow());
+  onView($("#rdChart"),a=>readersChart(a));
+  onView($("#rbChart"),a=>robustChart(a));
+  let lastW=window.innerWidth;
+  window.__rerender=()=>RENDER.forEach(f=>f());
+  window.__ro=new ResizeObserver(()=>{if(Math.abs(window.innerWidth-lastW)>4){lastW=window.innerWidth;clearTimeout(window.__rt);window.__rt=setTimeout(window.__rerender,120)}});
+  window.__ro.observe(document.body);
+  $("#asof").innerHTML=`Built ${apDate(D.generated)}. Sources as of: `+Object.entries(D.sources_as_of).filter(([k,v])=>v).map(([k,v])=>`${esc(k)} ${apDate(String(v).slice(0,10))}`).join(" · ");
+  $("#aic").addEventListener("click",e=>{e.currentTarget.classList.toggle("open")});
+  jumpSpy();
+}
+function comp(id){return D.components.find(c=>c.id===id)}
+function vcRank(y){const L=D.league;const vals=Object.keys(L).map(k=>[k,L[k][y]]).filter(x=>x[1]!=null).sort((a,b)=>b[1]-a[1]);return {rank:vals.findIndex(x=>x[0]==="vc")+1,of:vals.length}}
+
+/* ------------------------------------------------------------ hero */
+function heroText(){
+  const c=D.composite, v1=c[LAST].value, v0=c[FIRST].value, r1=vcRank(LAST), r0=vcRank(FIRST);
+  $("#heroKick").textContent=`Influence index · ${PARTIAL_LABEL}`;
+  $("#bigCap").textContent="the typical peer's footprint";
+  const dir=v1>v0*1.1?"up from":v1<v0/1.1?"down from":"about the same as";
+  $("#heroHed").textContent=`Vital City's footprint is ${fx(v1).replace("×"," times")} the typical New York policy shop's, ${dir} ${fx(v0).replace("×"," times")} in ${FIRST}`;
+  const b=c[LAST].band;
+  $("#heroDek").innerHTML=`Among the twelve organizations compared, Vital City ranks <b>${ord(r1.rank)}</b> in ${LAST} so far and ranked ${ord(r0.rank)} in ${FIRST}. `+
+    (b&&b.length?`Counting noise alone would move this year's figure between ${fx(b[0])} and ${fx(b[1])} nine times in ten.`:"");
+  const parts=c[LAST].parts, order=D.components.map(x=>x.id).filter(k=>k in parts);
+  if((D.missing||[]).length){const lab={press:"press",record:"official record",scholar:"scholarship",wiki:"Wikipedia",web:"web standing"};
+    const m=$("#heroMissing");m.style.display="";m.textContent=`Not yet included: ${D.missing.map(k=>lab[k]||k).join(" and ")}. Collection is under way; until it lands the index rests on the other measures.`}
+  $("#heroPills").innerHTML=order.map(k=>`<span class="pill">${esc(comp(k).label)} <b>${fx(parts[k])}</b></span>`).join("");
+  $("#heroCap").innerHTML=`Magenta: Vital City's index, with its 90 percent band for counting noise. Blue: each peer's index, scored the same way. 1× is the typical (median) peer. ${esc(PARTIAL_LABEL)} is a partial year, shown hollow.`;
+  countUp($("#bigNum"),v1,v=>(v>=1?v.toFixed(1):v.toFixed(2))+"<small>×</small>",1600);
+}
+function heroChart(animate){
+  const host=$("#heroChart"), W=host.clientWidth||600, H=W<520?250:320, m={l:44,r:92,t:16,b:30};
+  const s=svgIn(host,W,H);
+  const all=[]; Object.values(D.league).forEach(o=>YEARS.forEach(y=>{if(o[y])all.push(o[y])}));
+  YEARS.forEach(y=>{const b=D.composite[y].band||[];b.forEach(v=>all.push(v))});
+  const lo=Math.min(...all)*0.85, hi=Math.max(...all)*1.15;
+  const x=i=>m.l+(W-m.l-m.r)*(YEARS.length===1?.5:i/(YEARS.length-1)), y=logScale(lo,hi,H-m.b,m.t);
+  ratioTicks(lo,hi).forEach(t=>{el("line",{x1:m.l,x2:W-m.r,y1:y(t),y2:y(t),class:t===1?"c-ref":"c-grid"},s);
+    const tx=el("text",{x:m.l-8,y:y(t)+4,"text-anchor":"end"},s);tx.textContent=t+"×"});
+  const ref=el("text",{x:W-m.r+6,y:y(1)+4},s);ref.textContent="typical peer";ref.style.fill="#f4f4f1";
+  YEARS.forEach((yr,i)=>{const t=el("text",{x:x(i),y:H-8,"text-anchor":"middle"},s);t.textContent=yr===LAST&&D.partial_year==yr?yr+" to date":yr});
+  // peers
+  const gp=el("g",{},s);
+  Object.keys(D.league).filter(k=>k!=="vc").forEach((k,j)=>{const pts=YEARS.map((yr,i)=>[x(i),D.league[k][yr]]).filter(p=>p[1]);
+    if(pts.length<2)return;const p=el("path",{d:"M"+pts.map(p=>p[0]+","+y(p[1])).join("L"),class:"c-peer"},gp);if(animate)drawIn(p,900,120+j*60)});
+  // band
+  const bands=YEARS.map((yr,i)=>[x(i),D.composite[yr].band]).filter(p=>p[1]&&p[1].length);
+  if(bands.length>1){const d="M"+bands.map(p=>p[0]+","+y(p[1][1])).join("L")+"L"+bands.slice().reverse().map(p=>p[0]+","+y(p[1][0])).join("L")+"Z";
+    const bp=el("path",{d,class:"c-band"},s);if(animate)fadeIn(bp,900,900)}
+  const pts=YEARS.map((yr,i)=>[x(i),D.composite[yr].value]).filter(p=>p[1]);
+  const vp=el("path",{d:"M"+pts.map(p=>p[0]+","+y(p[1])).join("L"),class:"c-vc"},s);if(animate)drawIn(vp,1500,500);
+  pts.forEach((p,i)=>{const partial=i===pts.length-1&&String(D.partial_year)===LAST;const c=el("circle",{cx:p[0],cy:y(p[1]),r:partial?5.5:5,class:"c-vcdot"+(partial?" partial":"")},s);if(animate)popIn(c,650+i*260)});
+  const lp=pts[pts.length-1];let ly=y(lp[1])-8;if(Math.abs(ly-(y(1)+4))<14)ly=y(1)+(lp[1]>=1?-12:22);
+  const lab=el("text",{x:lp[0]+10,y:ly,class:"lab-vc"},s);lab.textContent="Vital City "+fx(lp[1]);if(animate)fadeIn(lab,500,1900);
+  // hover columns
+  YEARS.forEach((yr,i)=>{const r=el("rect",{x:x(i)-(W-m.l-m.r)/(YEARS.length-1||1)/2,y:m.t,width:(W-m.l-m.r)/(YEARS.length-1||1),height:H-m.t-m.b,fill:"transparent"},s);
+    r.addEventListener("mousemove",ev=>{const c=D.composite[yr],rk=vcRank(yr);
+      const peers=Object.keys(D.league).filter(k=>k!=="vc"&&D.league[k][yr]).sort((a,b)=>D.league[b][yr]-D.league[a][yr]);
+      showTip(`<b>${yr}${yr===LAST&&D.partial_year==yr?" to date":""}</b><br>Vital City <b>${fx(c.value)}</b> <span class="m">(band ${c.band.map(fx).join(" to ")})</span><br>Rank ${rk.rank} of ${rk.of}<br><span class="m">Top peer: ${esc(NAMES[peers[0]])} ${fx(D.league[peers[0]][yr])}</span>`,ev)});
+    r.addEventListener("mouseleave",hideTip)});
+}
+
+/* ------------------------------------------------------------ the race */
+let raceYear, raceTimer=null;
+const ROWH=34;
+function raceBuild(){
+  const ctl=$("#raceCtl");
+  ctl.innerHTML=`<button class="play" id="rPlay">Play</button><span class="sep"></span>`+YEARS.map(y=>`<button data-y="${y}">${y===LAST&&D.partial_year==y?y+"*":y}</button>`).join("")+
+    `<span class="note">${D.partial_year==LAST?"* to "+esc(apDate(D.as_of)):""}</span>`;
+  ctl.querySelectorAll("button[data-y]").forEach(b=>b.addEventListener("click",()=>{raceStop();raceSet(b.dataset.y)}));
+  $("#rPlay").addEventListener("click",()=>{raceTimer?raceStop():racePlay(false)});
+  const race=$("#race"); race.style.height=(Object.keys(D.league).length*ROWH+8)+"px"; race.style.marginTop="26px";
+  race.innerHTML=`<div class="axis" id="rAxis"></div><div class="axlab" id="rAxlab">1× = typical peer</div><div class="yearbig" id="rYear"></div>`+
+    Object.keys(D.league).map(k=>`<div class="rrow${k==="vc"?" vc":""}" data-k="${k}"><div class="rk"></div><div class="nm" title="${esc(NAMES[k])}">${esc(NAMES[k])}</div><div class="track"><div class="bar"></div><div class="val"></div></div></div>`).join("");
+  race.querySelectorAll(".rrow").forEach(r=>{r.addEventListener("mousemove",ev=>{const k=r.dataset.k,v=D.league[k][raceYear];
+    showTip(`<b>${esc(NAMES[k])}</b>, ${raceYear}<br>${v?fx(v)+" the median of the other eleven":"no score"}<br><span class="m">${YEARS.map(y=>y+": "+fx(D.league[k][y])).join(" · ")}</span>`,ev)});r.addEventListener("mouseleave",hideTip)});
+  raceYear=LAST; $("#leagueHed").textContent=leagueHed();
+}
+function leagueHed(){const a=vcRank(FIRST),b=vcRank(LAST);return `Vital City ranks ${ord(b.rank)} of ${b.of} in ${LAST} so far, ${b.rank<a.rank?"up from":b.rank>a.rank?"down from":"the same as"} ${ord(a.rank)} in ${FIRST}`}
+function raceScale(){const all=[];Object.values(D.league).forEach(o=>YEARS.forEach(y=>{if(o[y])all.push(o[y])}));return [Math.min(...all)*0.9,Math.max(...all)*1.1]}
+function raceLayout(){
+  const race=$("#race"), rows=[...race.querySelectorAll(".rrow")];
+  if(!rows.length)return;
+  const track=rows[0].querySelector(".track"), tw=track.clientWidth||400, tx=track.offsetLeft;
+  const [lo,hi]=raceScale(), sx=logScale(lo,hi,0,tw-54), x1=sx(1);
+  $("#rAxis").style.left=(tx+x1)+"px"; $("#rAxlab").style.left=(tx+x1)+"px";
+  $("#rYear").textContent=raceYear;
+  const order=rows.map(r=>[r,D.league[r.dataset.k][raceYear]]).sort((a,b)=>(b[1]||0)-(a[1]||0));
+  order.forEach(([r,v],i)=>{r.style.transform=`translateY(${i*ROWH}px)`;r.style.opacity=v?1:.35;
+    r.querySelector(".rk").textContent=v?i+1:"";
+    const bar=r.querySelector(".bar"),val=r.querySelector(".val");
+    if(!v){bar.style.width="0px";val.textContent="";return}
+    const xv=sx(v), left=Math.min(xv,x1), w=Math.max(2,Math.abs(xv-x1));
+    bar.style.left=left+"px"; bar.style.width=w+"px"; bar.classList.toggle("neg",v<1);
+    val.textContent=fx(v); val.style.left=(v>=1?xv+6:Math.max(0,xv-6-val.offsetWidth))+"px"});
+  $("#raceCtl").querySelectorAll("button[data-y]").forEach(b=>b.classList.toggle("on",b.dataset.y===raceYear));
+}
+function raceSet(y){raceYear=y;raceLayout()}
+function raceStop(){clearInterval(raceTimer);raceTimer=null;const p=$("#rPlay");p.textContent="Play";p.classList.remove("on")}
+function racePlay(auto){
+  if(REDUCED){raceSet(LAST);return}
+  let i=0; raceSet(YEARS[0]); const p=$("#rPlay"); p.textContent="Pause"; p.classList.add("on");
+  raceTimer=setInterval(()=>{i++;if(i>=YEARS.length){raceStop();return}raceSet(YEARS[i])},auto?1300:1500);
+}
+
+/* ------------------------------------------------------------ five measures */
+function measuresBuild(){
+  $("#grid5").innerHTML=D.components.map(c=>{
+    const r=c.years[LAST]||{}, first=c.years[FIRST]||{};
+    return `<div class="card meas reveal" data-id="${c.id}">
+      <h3>${esc(c.label)}<span class="w">${Math.round(c.weight*100)} percent of the index</span></h3>
+      <div class="what">${esc(c.what)}.</div>
+      <div class="rat"><span class="n" data-n="${r.ratio||0}">${fx(r.ratio)}</span><span class="l">the typical peer in ${esc(PARTIAL_LABEL)}<br><b>${r.rank?ord(r.rank)+" of "+r.of:""}</b>${first.rank?`, from ${ord(first.rank)} in ${FIRST}`:""}</span></div>
+      <div class="line">${measureLine(c)}</div>
+      <div class="mchart"></div>
+      <div class="ratios">${YEARS.filter(y=>c.years[y]).map(y=>`<span class="${c.years[y].ratio>=1?"up":""}">${y} ${fx(c.years[y].ratio)}</span>`).join("")}</div>
+      <button class="tgl" type="button">Show the numbers</button><div class="tblwrap" hidden></div>
+    </div>`}).join("");
+  document.querySelectorAll(".meas").forEach(card=>{
+    const c=comp(card.dataset.id), b=card.querySelector(".tgl"), t=card.querySelector(".tblwrap");
+    b.addEventListener("click",()=>{if(t.hidden){t.innerHTML=measureTable(c);t.hidden=false;b.textContent="Hide the numbers"}else{t.hidden=true;b.textContent="Show the numbers"}});
+  });
+}
+function fmtVal(c,v){if(v==null)return "–";if(c.id==="web")return rankFmt(1/v);return c.id==="press"||c.id==="record"?(Math.round(v*10)/10).toLocaleString("en-US"):Math.round(v).toLocaleString("en-US")}
+function rankFmt(p){return p>=1e6?(p/1e6).toFixed(1)+" million":p>=1e3?Math.round(p/1e3)+",000":Math.round(p)}
+function measureLine(c){const r=c.years[LAST];if(!r)return "";
+  if(c.id==="web")return `Vital City's domain ranks around <b>${rankFmt(1/r.vc)}</b> on the web; the typical peer's, around ${rankFmt(1/r.median)}.`;
+  const one=Math.round(r.vc*10)/10===1, noun={press:one?"story":"stories",record:one?"official page or court case":"official pages and court cases",scholar:one?"scholarly work":"scholarly works",wiki:one?"article":"articles"}[c.id];
+  return `Vital City: <b>${fmtVal(c,r.vc)}</b> ${noun}${c.id==="press"||c.id==="record"?" (estimate)":""}. Typical peer: ${fmtVal(c,r.median)}.`}
+function measureTable(c){const orgs=["vc",...D.orgs.map(o=>o.id).filter(k=>k!=="vc")];
+  return `<table class="tbl"><thead><tr><th>Organization</th>${YEARS.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`+
+    orgs.filter(k=>YEARS.some(y=>c.years[y]&&c.years[y].orgs[k]!=null)).map(k=>`<tr class="${k==="vc"?"vc":""}"><td>${esc(NAMES[k])}</td>${YEARS.map(y=>`<td>${c.years[y]?fmtVal(c,c.years[y].orgs[k]):"–"}</td>`).join("")}</tr>`).join("")+
+    `<tr><td><b>Peer median</b></td>${YEARS.map(y=>`<td><b>${c.years[y]?fmtVal(c,c.years[y].median):"–"}</b></td>`).join("")}</tr>`+
+    `<tr><td><b>Ratio</b></td>${YEARS.map(y=>`<td><b>${c.years[y]?fx(c.years[y].ratio):"–"}</b></td>`).join("")}</tr></tbody></table>`+
+    (c.id==="web"?`<div class="src">Web figures are rank positions (geometric mean of PageRank and harmonic-centrality ranks; lower is better), medians over the year's releases.</div>`:"")}
+function measuresCharts(animate){document.querySelectorAll(".meas").forEach(c=>{if(seen.has(c)||REDUCED)measureChart(c.dataset.id,false)})}
+function measureChart(id,animate){
+  const card=document.querySelector(`.meas[data-id="${id}"]`);card.classList.add("in");
+  const host=card.querySelector(".mchart"), c=comp(id), W=host.clientWidth||320, H=170, m={l:40,r:66,t:10,b:22};
+  const s=svgIn(host,W,H), ys=YEARS.filter(y=>c.years[y]);
+  const x=i=>m.l+(W-m.l-m.r)*(ys.length===1?.5:i/(ys.length-1));
+  let y, ticks, tfmt;
+  if(id==="web"){ // rank positions, best at top
+    const ps=[];ys.forEach(yy=>Object.values(c.years[yy].orgs).forEach(v=>ps.push(1/v)));
+    const lo=Math.min(...ps)*0.8,hi=Math.max(...ps)*1.25; y=logScale(lo,hi,m.t,H-m.b);
+    ticks=[1e4,3e4,1e5,3e5,1e6,3e6,1e7].filter(t=>t>=lo&&t<=hi); tfmt=t=>t>=1e6?(t/1e6)+"m":(t/1e3)+"k";
+    const val=v=>y(1/v); var Y=val;
+  } else {
+    let mx=0;ys.forEach(yy=>Object.values(c.years[yy].orgs).forEach(v=>{if(v>mx)mx=v}));
+    y=sym(mx*1.1,H-m.b,m.t); ticks=countTicks(mx); tfmt=t=>t.toLocaleString("en-US"); var Y=v=>y(v);
+  }
+  ticks.forEach(t=>{el("line",{x1:m.l,x2:W-m.r,y1:y(t),y2:y(t),class:"c-grid"},s);const tx=el("text",{x:m.l-6,y:y(t)+4,"text-anchor":"end"},s);tx.textContent=tfmt(t)});
+  if(id==="web"){const t=el("text",{x:m.l-6,y:m.t-1,"text-anchor":"end"},s);t.textContent="rank";t.style.fontSize="10px"}
+  ys.forEach((yy,i)=>{if(ys.length>5&&i%2)return;const t=el("text",{x:x(i),y:H-5,"text-anchor":"middle"},s);t.textContent="’"+yy.slice(2)});
+  const peers=D.orgs.map(o=>o.id).filter(k=>k!=="vc");
+  peers.forEach((k,j)=>{const pts=ys.map((yy,i)=>[x(i),c.years[yy].orgs[k]]).filter(p=>p[1]!=null);if(pts.length<2)return;
+    const p=el("path",{d:"M"+pts.map(p=>p[0]+","+Y(p[1])).join("L"),class:"c-peer"},s);
+    p.addEventListener("mousemove",ev=>showTip(`<b>${esc(NAMES[k])}</b><br>${ys.map(yy=>yy+": "+fmtVal(c,c.years[yy].orgs[k])).join("<br>")}`,ev));p.addEventListener("mouseleave",hideTip);
+    p.style.pointerEvents="stroke";p.style.strokeWidth=1.2;if(animate)drawIn(p,700,j*40)});
+  const med=ys.map((yy,i)=>[x(i),c.years[yy].median]);
+  const mp=el("path",{d:"M"+med.map(p=>p[0]+","+Y(p[1])).join("L"),class:"c-med"},s);if(animate)drawIn(mp,800,300);
+  const ml=el("text",{x:W-m.r+6,y:Y(med[med.length-1][1])+4,class:"lab-med"},s);ml.textContent="median";
+  const vp=ys.map((yy,i)=>[x(i),c.years[yy].vc]);
+  const v=el("path",{d:"M"+vp.map(p=>p[0]+","+Y(p[1])).join("L"),class:"c-vc"},s);if(animate)drawIn(v,1100,600);
+  vp.forEach((p,i)=>{const partial=i===vp.length-1&&String(D.partial_year)===ys[i];const d=el("circle",{cx:p[0],cy:Y(p[1]),r:4,class:"c-vcdot"+(partial?" partial":"")},s);if(animate)popIn(d,800+i*140)});
+  let ly=Y(vp[vp.length-1][1]), my=Y(med[med.length-1][1]); if(Math.abs(ly-my)<13)ly=my+(ly<my?-13:13);
+  const vl=el("text",{x:W-m.r+6,y:ly+4,class:"lab-vc"},s);vl.textContent="Vital City";
+  ys.forEach((yy,i)=>{const r=el("rect",{x:x(i)-12,y:m.t,width:24,height:H-m.t-m.b,fill:"transparent"},s);
+    r.addEventListener("mousemove",ev=>{const q=c.years[yy];showTip(`<b>${esc(c.label)}, ${yy}</b><br>Vital City <b>${fmtVal(c,q.vc)}</b> · median ${fmtVal(c,q.median)}<br>${fx(q.ratio)} the typical peer · ${ord(q.rank)} of ${q.of}`,ev)});r.addEventListener("mouseleave",hideTip)});
+  if(animate){const n=card.querySelector(".rat .n");countUp(n,+n.dataset.n,v=>fx(v),1200)}
+}
+
+/* ------------------------------------------------------------ evidence */
+let EV=[], evKind="all";
+const LANES=[["press","Press"],["record","Official record"],["courts","Court filings"],["wiki","Wikipedia"],["scholar","Scholarship"]];
+function evidenceBuild(){
+  const E=D.evidence; EV=[];
+  (E.press||[]).forEach(i=>EV.push({k:"press",date:i.date,src:outletName(i.domain),title:i.title,url:i.url,q:i.context,side:i.where==="side"}));
+  (E.record||[]).forEach(i=>EV.push({k:"record",date:i.date,src:recordName(i.domain,i.url),title:i.title,url:i.url,q:i.context}));
+  (E.courts||[]).forEach(c=>c.filings.forEach(f=>EV.push({k:"courts",date:f.date,src:c.case,title:f.desc,url:f.url,q:""})));
+  (E.wiki||[]).forEach(w=>{if(w.date)EV.push({k:"wiki",date:w.date,src:"Wikipedia",title:w.title,url:"https://en.wikipedia.org/wiki/"+encodeURIComponent(String(w.title).replace(/ /g,"_")),q:w.user?"Link added by "+w.user:""})});
+  const sch=comp("scholar"); YEARS.forEach(y=>{const n=Math.round((sch.years[y]||{}).vc||0);for(let i=0;i<n;i++)EV.push({k:"scholar",date:`${y}-${String(1+Math.floor((i+.5)/n*(y===LAST&&D.partial_year==y?+D.as_of.slice(5,7):12))).padStart(2,"0")}-15`,src:"Google Scholar",title:"A work published in "+y+" that cites vitalcitynyc.org",url:`https://scholar.google.com/scholar?q=%22vitalcitynyc.org%22&as_ylo=${y}&as_yhi=${y}`,q:"",approx:true})});
+  EV.sort((a,b)=>a.date<b.date?1:-1);
+  const since=EV.filter(e=>e.k!=="scholar"), thisYr=since.filter(e=>e.date.startsWith(LAST));
+  $("#evHed").textContent=`${since.length.toLocaleString("en-US")} confirmed citations of Vital City since ${FIRST}, ${thisYr.length} of them in ${LAST}`;
+  const counts=Object.fromEntries(LANES.map(([k])=>[k,EV.filter(e=>e.k===k).length]));
+  $("#evChips").innerHTML=`<button class="on" data-k="all">All</button>`+LANES.map(([k,l])=>`<button data-k="${k}">${l} ${counts[k]}</button>`).join("")+`<input id="evQ" type="search" placeholder="Search titles and outlets">`;
+  $("#evChips").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{evKind=b.dataset.k;$("#evChips").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));evListRender()}));
+  $("#evQ").addEventListener("input",evListRender); evListRender();
+}
+function outletName(d){const o={"nytimes.com":"The New York Times","politico.com":"Politico","gothamist.com":"Gothamist","wnyc.org":"WNYC","thecity.nyc":"The City","nydailynews.com":"Daily News","nypost.com":"New York Post","cityandstateny.com":"City & State","ny1.com":"NY1","amny.com":"amNewYork","crainsnewyork.com":"Crain's","streetsblog.org":"Streetsblog","citylimits.org":"City Limits","gothamgazette.com":"Gotham Gazette","therealdeal.com":"The Real Deal","nymag.com":"New York Magazine","newyorker.com":"The New Yorker","wsj.com":"The Wall Street Journal","hellgatenyc.com":"Hell Gate","nysfocus.com":"New York Focus","chalkbeat.org":"Chalkbeat","silive.com":"Staten Island Advance","brooklynpaper.com":"Brooklyn Paper","documentedny.com":"Documented","newsday.com":"Newsday","timesunion.com":"Times Union","law.com":"Law.com"};return o[d]||d}
+function recordName(d,url){const u=String(url||"");if(/comptroller/.test(u))return "Comptroller";if(/council\.nyc/.test(u))return "City Council";if(/advocate/.test(u))return "Public Advocate";if(/ibo\.nyc/.test(u))return "Independent Budget Office";if(/nysenate/.test(u))return "State Senate";if(/nyassembly/.test(u))return "State Assembly";if(/nycourts/.test(u))return "State courts";if(/ny\.gov/.test(u)&&!/nyc\.gov/.test(u))return "New York State";return "City of New York"}
+function evListRender(){
+  const q=($("#evQ").value||"").toLowerCase();
+  const rows=EV.filter(e=>(evKind==="all"||e.k===evKind)&&!(e.approx&&evKind==="all")&&(!q||(e.title+" "+e.src).toLowerCase().includes(q)));
+  const lab=Object.fromEntries(LANES);
+  $("#evList").innerHTML=(evKind==="scholar"?`<div class="ev"><div></div><div></div><div class="q">Google Scholar gives a count per year, not dates. Each link opens that year's search.</div></div>`:"")+
+    rows.slice(0,400).map(e=>`<div class="ev"><div class="d">${e.approx?e.date.slice(0,4):esc(apDate(e.date))}</div><div><div class="k">${esc(lab[e.k])}</div><div class="o">${esc(e.src)}</div></div><div class="t"><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)}</a>${e.side?` <span class="k">(in a sidebar or card)</span>`:""}${e.q?`<div class="q">${esc(e.q)}</div>`:""}</div></div>`).join("")||`<div class="loading">Nothing matches.</div>`;
+}
+function lanesChart(animate){
+  const host=$("#lanes"), W=host.clientWidth||800, compact=W<640, labW=compact?0:132, m={l:labW+8,r:8,t:8,b:24};
+  const t0=new Date(FIRST+"-01-01T00:00:00"), t1=new Date(D.as_of+"T23:00:00");
+  const months=[];{const d=new Date(t0);while(d<=t1){months.push(d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"));d.setMonth(d.getMonth()+1)}}
+  const colW=(W-m.l-m.r)/months.length, r=Math.max(1.6,Math.min(3.4,colW/2-0.6)), step=r*2+1.2;
+  const byLane=LANES.map(([k,l])=>{const cols={};EV.filter(e=>e.k===k&&e.date>=FIRST).forEach(e=>{const mo=e.date.slice(0,7);(cols[mo]=cols[mo]||[]).push(e)});
+    const mx=Math.max(1,...Object.values(cols).map(a=>a.length));return {k,l,cols,mx,n:EV.filter(e=>e.k===k).length}});
+  let yCur=m.t; const laneY={};
+  byLane.forEach(L=>{const h=Math.max(28,Math.min(L.mx,24)*step+(compact?20:10));laneY[L.k]=[yCur,h];yCur+=h+8});
+  const H=yCur+m.b, s=svgIn(host,W,H);
+  months.forEach((mo,i)=>{if(mo.endsWith("-01")){const xx=m.l+i*colW;el("line",{x1:xx,x2:xx,y1:m.t,y2:H-m.b,class:"c-grid"},s);const t=el("text",{x:xx+3,y:H-8},s);t.textContent=mo.slice(0,4)}});
+  let order=0;
+  byLane.forEach(L=>{const [ly,lh]=laneY[L.k];const base=ly+lh-4;
+    el("line",{x1:m.l,x2:W-m.r,y1:base+2,y2:base+2,class:"c-grid"},s);
+    const lt=el("text",{x:compact?m.l:0,y:compact?ly+11:ly+lh/2,class:"lane-lab"},s);lt.textContent=L.l;
+    const ln=el("text",{x:compact?m.l+lt.getComputedTextLength()+8:0,y:compact?ly+11:ly+lh/2+15,class:"lane-n"},s);ln.textContent=L.n+(L.k==="scholar"?" (by year)":"");
+    months.forEach((mo,i)=>{const arr=(L.cols[mo]||[]).slice(0,24);arr.forEach((e,j)=>{
+      const cx=m.l+i*colW+colW/2, cy=base-r-j*step;
+      const d=el("circle",{cx,cy,r,class:"dot",fill:e.k==="scholar"?"var(--c-peer)":"var(--c-vc)"},s);
+      if(e.side)d.setAttribute("fill-opacity",".45");
+      d.addEventListener("mousemove",ev=>showTip(`<b>${esc(e.src)}</b> · <span class="m">${e.approx?e.date.slice(0,4):esc(apDate(e.date))}</span><br>${esc(e.title)}${e.q?`<br><span class="m">${esc(e.q.slice(0,180))}</span>`:""}`,ev));
+      d.addEventListener("mouseleave",hideTip);d.addEventListener("click",()=>window.open(e.url,"_blank","noopener"));
+      if(animate&&!REDUCED){d.style.transform=`translateY(${-(cy-m.t)-20}px)`;d.style.opacity=0;
+        d.style.transition=`transform 700ms cubic-bezier(.3,1.25,.5,1) ${i*14+j*25}ms, opacity 200ms ${i*14+j*25}ms`;
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.transform="";d.style.opacity=""}))}})})});
+}
+function outletsBuild(){
+  const O=D.press_outlets||[], mx=Math.max(1,...O.map(o=>o.n));
+  $("#outHed").textContent=O.length?`Where the press mentions ran: ${O.length} outlets`:"Where the press mentions ran";
+  $("#outlets").innerHTML=O.slice(0,16).map(o=>`<div class="obar"><div>${esc(outletName(o.domain))}</div><div><div class="b" data-w="${o.n/mx*100}"></div></div><div class="v">${o.n}</div></div>`).join("")||`<div class="loading">No confirmed press yet.</div>`;
+}
+function outletsGrow(){document.querySelectorAll("#outlets .b").forEach((b,i)=>setTimeout(()=>{b.style.width=b.dataset.w+"%"},REDUCED?0:i*60))}
+function auditBuild(){
+  const P=D.press_vc||{}, R=D.record_vc||{};
+  const row=(lab,a)=>`<tr><td>${lab}</td>${YEARS.map(y=>`<td>${a[y]?a[y].confirmed+a[y].generic+a[y].absent+a[y].unreadable:"–"}</td>`).join("")}</tr>`;
+  const line=(lab,a,f)=>`<tr><td>${lab}</td>${YEARS.map(y=>`<td>${a[y]?f(a[y]):"–"}</td>`).join("")}</tr>`;
+  $("#audit").innerHTML=`<table class="tbl"><thead><tr><th>Press</th>${YEARS.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`+
+    row("Hits found",P)+line("Confirmed",P,a=>a.confirmed)+line("Generic use",P,a=>a.generic)+line("Not on page",P,a=>a.absent)+line("Unreadable",P,a=>a.unreadable)+
+    line("<b>Counted</b>",P,a=>"<b>"+a.estimate+"</b>")+`</tbody></table>`+
+    `<table class="tbl" style="margin-top:14px"><thead><tr><th>Government pages</th>${YEARS.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`+
+    row("Hits found",R)+line("Confirmed",R,a=>a.confirmed)+line("Generic use",R,a=>a.generic)+line("Unreadable",R,a=>a.unreadable)+line("<b>Counted</b>",R,a=>"<b>"+a.estimate+"</b>")+`</tbody></table>`;
+}
+
+/* ------------------------------------------------------------ readers */
+function readersText(){
+  const R=D.readers||[]; if(!R.length){$("#rdHed").textContent="Government readers";return}
+  const last=R[R.length-1], jan=R.find(r=>r.month===FIRST+"-01")||R[0];
+  $("#rdHed").textContent=`${last.all} New York government addresses receive the newsletter, up from ${jan.all} in ${apMonth(jan.month)}`;
+  $("#rdSrc").innerHTML=`Counted from the newsletter list (Ghost, with Mailchimp unsubscribes): every subscriber on a New York City or New York State government domain, the state courts, the district attorneys, the NYPD and the regional authorities, counted in a month if subscribed by its end and not yet unsubscribed. ${last.nyc} of the ${last.all} are city addresses. Officials who read on personal addresses are invisible here.`;
+}
+function readersChart(animate){
+  const R=(D.readers||[]).filter(r=>r.month>=FIRST+"-01"); if(!R.length)return;
+  const host=$("#rdChart"), W=host.clientWidth||700, H=W<520?220:260, m={l:40,r:84,t:14,b:26}, s=svgIn(host,W,H);
+  const mx=Math.max(...R.map(r=>r.all))*1.1, x=i=>m.l+(W-m.l-m.r)*i/(R.length-1), y=linScale(0,mx,H-m.b,m.t);
+  const tk=mx>200?100:50; for(let t=0;t<=mx;t+=tk){el("line",{x1:m.l,x2:W-m.r,y1:y(t),y2:y(t),class:"c-grid"},s);const tx=el("text",{x:m.l-6,y:y(t)+4,"text-anchor":"end"},s);tx.textContent=t}
+  R.forEach((r,i)=>{if(r.month.endsWith("-01")){const t=el("text",{x:x(i),y:H-8,"text-anchor":"middle"},s);t.textContent=r.month.slice(0,4)}});
+  const marks=[["2026-01","New mayor takes office"]];
+  marks.forEach(([mo,lab])=>{const i=R.findIndex(r=>r.month===mo);if(i<0)return;const l=el("line",{x1:x(i),x2:x(i),y1:m.t,y2:H-m.b,stroke:"var(--c-axis)","stroke-dasharray":"2 3"},s);
+    const t=el("text",{x:x(i)-5,y:m.t+4,transform:`rotate(-90 ${x(i)-5} ${m.t+4})`,"text-anchor":"end"},s);t.textContent=lab;t.style.fontSize="10.5px"});
+  const area="M"+x(0)+","+y(0)+"L"+R.map((r,i)=>x(i)+","+y(r.all)).join("L")+"L"+x(R.length-1)+","+y(0)+"Z";
+  const a=el("path",{d:area,fill:"var(--c-vc-band)"},s); if(animate)fadeIn(a,1200,700);
+  const pa=el("path",{d:"M"+R.map((r,i)=>x(i)+","+y(r.all)).join("L"),class:"c-vc"},s);if(animate)drawIn(pa,1600,0);
+  const pn=el("path",{d:"M"+R.map((r,i)=>x(i)+","+y(r.nyc)).join("L"),class:"c-med"},s);if(animate)drawIn(pn,1600,300);
+  const L=R[R.length-1];
+  const l1=el("text",{x:W-m.r+6,y:y(L.all)+4,class:"lab-vc"},s);l1.textContent="All "+L.all;
+  let ny=y(L.nyc)+4; if(Math.abs(ny-y(L.all)-4)<14)ny=y(L.all)+18;
+  const l2=el("text",{x:W-m.r+6,y:ny,class:"lab-med"},s);l2.textContent="City "+L.nyc;
+  const hov=el("line",{x1:0,x2:0,y1:m.t,y2:H-m.b,stroke:"var(--c-axis)",opacity:0},s);
+  const ov=el("rect",{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:"transparent"},s);
+  ov.addEventListener("mousemove",ev=>{const bb=s.getBoundingClientRect(),i=Math.max(0,Math.min(R.length-1,Math.round((ev.clientX-bb.left-m.l)/(W-m.l-m.r)*(R.length-1))));
+    hov.setAttribute("x1",x(i));hov.setAttribute("x2",x(i));hov.setAttribute("opacity",.5);
+    showTip(`<b>${apMonth(R[i].month)}</b><br>New York government addresses: <b>${R[i].all}</b><br>City addresses: ${R[i].nyc}`,ev)});
+  ov.addEventListener("mouseleave",()=>{hideTip();hov.setAttribute("opacity",0)});
+}
+
+/* ------------------------------------------------------------ robustness */
+function robustRows(){const base={label:"The index as published",values:Object.fromEntries(YEARS.map(y=>[y,D.composite[y].value]))};return [base,...(D.sensitivity||[])]}
+function robustText(){const rows=robustRows(),up=rows.filter(r=>r.values[LAST]>r.values[FIRST]).length;
+  $("#rbHed").textContent=`Vital City's index is higher in ${LAST} than in ${FIRST} in ${nw(up)} of ${nw(rows.length)} versions`;
+  $("#rbDek").textContent=`The index rests on choices: which measures, which weights, which peers. Here it is recomputed under ${nw(rows.length-1)} other reasonable choices. Hollow dot is ${FIRST}, solid dot ${PARTIAL_LABEL}.`}
+function robustChart(animate){
+  const rows=robustRows(), host=$("#rbChart"), W=host.clientWidth||700, rowH=30, m={l:Math.min(300,W*.46),r:56,t:22,b:10}, H=m.t+rows.length*rowH+m.b, s=svgIn(host,W,H);
+  const all=[];rows.forEach(r=>[FIRST,LAST].forEach(y=>{if(r.values[y])all.push(r.values[y])}));
+  const lo=Math.min(...all,1)*0.8,hi=Math.max(...all,1)*1.2, x=logScale(lo,hi,m.l,W-m.r);
+  ratioTicks(lo,hi).forEach(t=>{el("line",{x1:x(t),x2:x(t),y1:m.t-4,y2:H-m.b,class:t===1?"c-ref":"c-grid"},s);const tx=el("text",{x:x(t),y:m.t-8,"text-anchor":"middle"},s);tx.textContent=t+"×"});
+  rows.forEach((r,i)=>{const yy=m.t+i*rowH+rowH/2, a=r.values[FIRST], b=r.values[LAST];
+    const t=el("text",{x:m.l-10,y:yy+4,"text-anchor":"end"},s);t.textContent=r.label;t.style.fill=i===0?"var(--vc-black)":"";if(i===0)t.style.fontWeight=800;t.style.fontSize="12px";
+    if(!a||!b)return;
+    const ln=el("line",{x1:x(a),x2:x(a),y1:yy,y2:yy,stroke:"var(--c-vc)","stroke-width":2,opacity:.55},s);
+    el("circle",{cx:x(a),cy:yy,r:4.5,fill:"var(--vc-white)",stroke:"var(--c-vc)","stroke-width":2},s);
+    const d=el("circle",{cx:x(a),cy:yy,r:5.5,fill:"var(--c-vc)"},s);
+    const vl=el("text",{x:x(b)+10,y:yy+4},s);vl.textContent=fx(b);vl.style.fill="var(--c-vc)";vl.style.fontWeight=800;
+    const go=()=>{ln.setAttribute("x2",x(b));d.setAttribute("cx",x(b))};
+    if(animate&&!REDUCED){vl.style.opacity=0;const t0=performance.now(),dur=1100,delay=i*90;
+      (function st(now){const p=Math.max(0,Math.min(1,(now-t0-delay)/dur)),e=1-Math.pow(1-p,3),cx=x(a)+(x(b)-x(a))*e;ln.setAttribute("x2",cx);d.setAttribute("cx",cx);if(p<1)requestAnimationFrame(st);else vl.style.opacity=1})(t0)}
+    else go();
+    const hit=el("rect",{x:0,y:yy-rowH/2,width:W,height:rowH,fill:"transparent"},s);
+    hit.addEventListener("mousemove",ev=>showTip(`<b>${esc(r.label)}</b><br>${YEARS.map(y=>y+": "+fx(r.values[y])).join("<br>")}`,ev));hit.addEventListener("mouseleave",hideTip)});
+}
+
+/* ------------------------------------------------------------ method */
+function methodBuild(){
+  const W=D.weights, P=D.press_vc||{}, pct=v=>Math.round(v*100);
+  const peers=D.orgs.filter(o=>o.id!=="vc");
+  const conf=YEARS.map(y=>P[y]?`${y}: ${P[y].confirmed} confirmed of ${P[y].confirmed+P[y].generic+P[y].absent} readable (${pct(P[y].rate)} percent), ${P[y].unreadable} unreadable`:"").filter(Boolean).join("; ");
+  $("#methodBody").innerHTML=`
+<h3>What the index measures</h3>
+<p>Influence on policy cannot be observed directly. What can be observed is uptake: the places where people who make, argue about or study New York City policy use an organization's work in public. The index counts that uptake in five places and compares Vital City with eleven peer organizations counted identically. It measures how much of the observable policy conversation runs through Vital City. It does not measure whether any policy changed because of it.</p>
+<p>Three things it leaves out on purpose. Private access (a meeting with a commissioner, a call from a Council staffer) leaves no public trace. Podcasts, radio and television are not searchable at scale for peers, so they cannot be compared. And Vital City's own activity (pieces published, events held, newsletters sent) is input, not uptake. Those belong in the impact ledger on the Prospects page, which records cases by hand; the index uses only sources that can be queried the same way every year, because a hand-kept count rises with the effort put into keeping it.</p>
+
+<h3>Why a comparison, and why these peers</h3>
+<p>Every source here changes over time on its own. Google News indexes three times as many Politico items naming the Citizens Budget Commission in 2025 as in 2023; the commission did not triple. Google Scholar's coverage of recent years fills in for months after they end. A count of Vital City mentions alone would mix Vital City's growth with the sources' growth. Asking the identical question about peers, and dividing, cancels whatever affects all of them alike.</p>
+<p>The eleven peers were chosen before any counts were pulled, on three tests: the organization publishes policy analysis or argument about New York City; the city is its main subject; and it is an independent nonprofit (government bodies such as the Independent Budget Office are cited as authorities rather than as voices, so they are left out). Two are publications, as Vital City partly is; the rest are research and advocacy shops, as it partly is. They are: ${peers.map(o=>`${esc(o.name)} (${o.domains.map(esc).join(", ")})`).join("; ")}. The Center for Justice Innovation was the Center for Court Innovation until 2023; both names and addresses are counted.</p>
+
+<h3>The five measures</h3>
+<details class="acc" open><summary>Press (${pct(W.press)} percent)</summary>
+<p><b>Source:</b> Google News, which indexes news sites' articles by date. <b>Query:</b> the organization's name as an exact phrase, limited to one outlet's site and one calendar year, for each of 27 outlets that cover New York City government (listed in <code>influence_pull.py</code>). A query that returns Google's maximum of 100 items is split in half by date and re-asked until none is truncated, so a large peer is never undercounted. <b>Unit:</b> one story, once per outlet (duplicates by title removed). An outlet is never counted for the organization that publishes it.</p>
+<p><b>Vital City's name problem.</b> "Vital City" is also ordinary English ("remains a vital city"), and Google's phrase match ignores capitalization. So every Vital City hit was resolved to the real article and read by script. A hit is <i>confirmed</i> when the page contains "Vital City" capitalized and not preceded by a word like "a," "our" or "the," or links to vitalcitynyc.org; <i>generic</i> when the phrase is there only as English; <i>not on page</i> when a readable page lacks it; <i>unreadable</i> when a paywall or bot wall hides the text. Unreadable hits are counted at the confirmation rate seen on readable ones that year. By year: ${esc(conf)}. The page shows the whole audit under "How each Vital City hit was checked." Peers' names are unambiguous and are not checked; City Limits, whose name is ordinary English, has no press count at all.</p></details>
+<details class="acc"><summary>Official record (${pct(W.record)} percent)</summary>
+<p>Two sources added together. <b>Government web pages:</b> the same Google News method, over the sites of the City of New York, the City Council, the Comptroller, the Public Advocate, the Independent Budget Office, New York State, the State Senate and Assembly and the state courts; Vital City hits checked the same way as press. <b>Federal court filings:</b> CourtListener's archive of federal court records (RECAP), searched for each organization's web address. A filing that cites a report nearly always carries its address, and an address cannot be ordinary English. Counted once per case per year, because the archive indexes every attachment separately; one congestion-pricing filing carries Vital City's address in nine attachments. State court filings are not publicly searchable and are missing for every organization.</p></details>
+<details class="acc"><summary>Scholarship (${pct(W.scholar)} percent)</summary>
+<p><b>Source:</b> Google Scholar, which indexes the full text of academic papers, law reviews, theses and working papers. <b>Query:</b> the organization's web address in quotation marks, limited to one publication year, run in a browser because Scholar refuses scripts. The number is the one Scholar prints ("About 40 results"), stored with the text it printed. Scholar's counts are estimates, and works cited by name without an address are missed; both apply to every organization. Recent years are incomplete while indexing catches up, for everyone. The Scholar counts were taken on Sept. 25, 2026, and are refreshed by hand (see Refresh).</p></details>
+<details class="acc"><summary>Wikipedia (${pct(W.wiki)} percent)</summary>
+<p><b>Source:</b> the English Wikipedia's own record of which articles link to a web address. <b>Method:</b> take the articles that cite the organization's address today, then read each article as it stood on Jan. 1 and July 1 of each year, finding (by binary search over those dates) the first on which the address was present. <b>Unit:</b> articles citing the organization at the end of each year; for the current year, today. Citations added and later removed are missed; that applies to everyone. Wikipedia editors are volunteers deciding what counts as a reliable source, which is why this is in the index, and also why its weight is low: anyone, including an organization's own staff, can add a link.</p></details>
+<details class="acc"><summary>Web standing (${pct(W.web)} percent)</summary>
+<p><b>Source:</b> Common Crawl's domain-level web graph, published every few months, which ranks about 100 million domains by PageRank and by harmonic centrality from the links in its crawl. The ranks files (2 to 3.5 gigabytes each) are streamed and filtered, one release per quarter since mid-2021. <b>Unit:</b> an organization's standing in a release is the geometric mean of its two rank positions; a year's value is the median over that year's releases, which keeps one odd crawl (mid-2024 ranked Vital City five times higher than the releases on either side) from carrying the year. This measures prominence on the web at large, not in policy circles, which is why its weight is modest.</p></details>
+
+<h3>From counts to one number</h3>
+<p>For each measure and year, Vital City's count is divided by the median of the eleven peers' counts:</p>
+<div class="formula">ratio = (Vital City + 1) ÷ (peer median + 1)</div>
+<p>Adding one keeps a year of zeros from producing an undefined or infinite ratio and damps the swings of very small counts. Web standing uses its standing values directly, without the one. A ratio of 1 means Vital City drew as much of that kind of attention as the typical peer. The median is used rather than the mean so that City Journal and the Furman Center, far larger than the rest on some measures, do not set the bar alone.</p>
+<p>The five ratios are combined with a weighted geometric mean:</p>
+<div class="formula">index = exp( Σ weight × ln(ratio) )</div>
+<p>A geometric mean treats "half the typical peer" and "twice the typical peer" as equal and opposite, which an ordinary average does not, and it keeps one huge ratio from swamping the rest. If a measure has no data for a year, its weight is spread over the others.</p>
+
+<h3>Weights</h3>
+<p>Press ${pct(W.press)} percent, official record ${pct(W.record)}, scholarship ${pct(W.scholar)}, web standing ${pct(W.web)}, Wikipedia ${pct(W.wiki)}. The weights say how directly each measure reaches New York City policy. Press is where the city's policy argument is conducted in public. The official record is government and the courts using an organization's work, the closest thing to influence that can be counted, but it is sparse, so its counts are noisier. Scholarship is permanent and cannot be lobbied for, but much of it is written for other scholars. Web standing and Wikipedia measure prominence in general more than in policy. The robustness chart shows the index under equal weights and with each measure removed.</p>
+
+<h3>Uncertainty</h3>
+<p>Small counts move by chance. The band on the index chart comes from redrawing every count 3,000 times as random variation (a Poisson draw) around what was observed and recomputing the index each time; the band holds the middle 90 percent of results. Web standing is held fixed. The band answers "could this year's change be luck?" It says nothing about whether the method is right; the robustness chart speaks to that.</p>
+
+<h3>Other known limits</h3>
+<p>The current year is partial. Ratios compare Vital City and peers over the same partial window, so they are comparable to full years, but they will move as the year fills in, and Scholar in particular lags. Google News reaches back unevenly, thinner in 2022 than in 2025, which affects counts for everyone but adds noise to early years. A mention in a newsletter roundup counts the same as a paragraph in a feature. Self-citation is counted for everyone alike: one of Vital City's court cases is an amicus brief filed by its founder with other former officials, and peers' own filings count the same way.</p>
+
+<h3>Refresh</h3>
+<p>A weekly cloud job re-runs press and government pages for the current year, checks new Vital City hits, re-reads CourtListener and Wikipedia, adds any new Common Crawl release, recounts government readers, rebuilds the index and republishes this page. Past years are re-pulled monthly, since indexes keep filling in. Google Scholar cannot be queried by a script, so its counts are refreshed by hand in a browser each quarter; the date sits in the footer. Any change to the peers, weights or queries will be written here with its date.</p>
+<p><b>Changes.</b> Sept. 25, 2026: first version.</p>`;
+}
+
+function jumpSpy(){const links=[...document.querySelectorAll("#jump a")],ids=links.map(a=>a.getAttribute("href").slice(1));
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id))}})},{rootMargin:"-40% 0px -55% 0px"});
+  ids.forEach(id=>{const t=document.getElementById(id);if(t)io.observe(t)})}
+</script>
+</body>
+</html>

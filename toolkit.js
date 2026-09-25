@@ -28,6 +28,9 @@
       blurb: "Foundations and individual donors worth approaching, ranked by the evidence in our own data." },
     { id: "press",      label: "Press",      path: "press/",             gated: true,  data: "press/data.enc",
       blurb: "Who covers New York City government: reporters, the beats their own bylines prove, and how to reach them." },
+    // Rebuilt weekly, not nightly, so the home page allows it eight days before calling it stale.
+    { id: "influence",  label: "Influence",  path: "influence/",         gated: true,  data: "influence/data.enc", staleHours: 192,
+      blurb: "Vital City's footprint in New York City policy (press, the official record, scholarship, Wikipedia, the web), measured against eleven peers the same way every year since 2022." },
     // Documents, not nightly datasets: "static" keeps the home page from
     // calling them stale. Both are rebuilt by build_manual.py when a source changes.
     { id: "manual",     label: "Manuals",    path: "manual/",            gated: true,
