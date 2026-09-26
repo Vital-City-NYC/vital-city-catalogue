@@ -1,7 +1,9 @@
 name: influence-refresh
 
 # Weekly rebuild of the influence index (influence/). Runs on GitHub's servers.
-# Re-pulls press and government pages for the current year (and the previous
+# Council hearings are counted on the Mac from the nyc-council-hearings corpus
+# (influence_pull.py council) and ride along in raw.enc.
+# Re-pulls the press for the current year (and the previous
 # year in the first week of each month, since indexes keep filling in), checks
 # new Vital City hits page by page, re-reads CourtListener and Wikipedia, adds
 # any new Common Crawl release, recounts government readers, rebuilds and
@@ -19,6 +21,10 @@ on:
     inputs:
       years:
         description: "Years to re-pull for press and government pages, e.g. 2022-2026 (blank = automatic)"
+        required: false
+        default: ""
+      recheck:
+        description: "Re-read Vital City press hits with this status, e.g. generic (blank = only new hits)"
         required: false
         default: ""
 
@@ -65,13 +71,18 @@ jobs:
         id: press
         continue-on-error: true
         timeout-minutes: 150
-        run: python3 influence_pull.py press --years "$YEARS" && python3 influence_pull.py verify-press
+        run: python3 influence_pull.py press --years "$YEARS" && python3 influence_pull.py verify-press ${{ inputs.recheck }}
 
-      - name: Government pages
-        id: record
+      - name: City Hall (mayor's office newsroom)
+        id: cityhall
         continue-on-error: true
-        timeout-minutes: 90
-        run: python3 influence_pull.py record --years "$YEARS" && python3 influence_pull.py verify-record
+        timeout-minutes: 60
+        run: python3 influence_pull.py cityhall
+
+      - name: Comptroller
+        id: comptroller
+        continue-on-error: true
+        run: python3 influence_pull.py comptroller
 
       - name: Federal court filings (CourtListener)
         id: courts
@@ -84,11 +95,11 @@ jobs:
         timeout-minutes: 60
         run: python3 influence_pull.py wiki
 
-      - name: New Common Crawl web-graph releases
+      - name: Links from the newest Common Crawl release
         id: web
         continue-on-error: true
-        timeout-minutes: 40
-        run: python3 influence_pull.py webgraph-new
+        timeout-minutes: 60
+        run: python3 influence_pull.py weblinks-new
 
       - name: Government readers
         id: readers
@@ -120,8 +131,8 @@ jobs:
           [ -n "$ok" ] || { echo "ERROR: could not push after 5 attempts."; exit 1; }
 
       - name: Fail the run if any source failed
-        if: steps.press.outcome == 'failure' || steps.record.outcome == 'failure' || steps.courts.outcome == 'failure' || steps.wiki.outcome == 'failure' || steps.web.outcome == 'failure' || steps.readers.outcome == 'failure'
+        if: steps.press.outcome == 'failure' || steps.cityhall.outcome == 'failure' || steps.comptroller.outcome == 'failure' || steps.courts.outcome == 'failure' || steps.wiki.outcome == 'failure' || steps.web.outcome == 'failure' || steps.readers.outcome == 'failure'
         run: |
-          echo "press=${{ steps.press.outcome }} record=${{ steps.record.outcome }} courts=${{ steps.courts.outcome }} wiki=${{ steps.wiki.outcome }} web=${{ steps.web.outcome }} readers=${{ steps.readers.outcome }}"
+          echo "press=${{ steps.press.outcome }} cityhall=${{ steps.cityhall.outcome }} comptroller=${{ steps.comptroller.outcome }} courts=${{ steps.courts.outcome }} wiki=${{ steps.wiki.outcome }} web=${{ steps.web.outcome }} readers=${{ steps.readers.outcome }}"
           echo "The page was republished with the sources that worked; the rest carry their last good data (dates in the page footer)."
           exit 1

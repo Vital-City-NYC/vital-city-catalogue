@@ -5,11 +5,11 @@ Reads  private/influence_raw.json   (written by influence_pull.py)
 Writes private/influence.json       (the page payload; encrypt_influence.py
                                      turns it into influence/data.enc)
 
-The index in one paragraph. For each of five kinds of evidence, count Vital
+The index in one paragraph. For each of six kinds of evidence, count Vital
 City and each of eleven peer organizations over the same calendar year, the
 same way. Divide Vital City's count by the peers' median count: 1.0 means Vital
 City drew as much of that kind of attention as the typical peer, 2.0 twice as
-much. Combine the five ratios with a weighted geometric mean. Every formula,
+much. Combine the six ratios with a weighted geometric mean. Every formula,
 weight and exclusion is written out in influence/methodology.md; this file is
 the reference implementation, and the two must agree.
 """
@@ -22,7 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
-from influence_pull import ORGS, OUTLETS, RECORD_DOMAINS, release_end, RAW  # noqa: E402
+from influence_pull import ORGS, OUTLETS, TIER, release_end, link_kind, RAW  # noqa: E402
 
 OUT = ROOT / "private" / "influence.json"
 FIRST_YEAR = 2022           # Vital City's first full year of publishing
@@ -30,18 +30,24 @@ PEERS = [o["id"] for o in ORGS if o["id"] != "vc"]
 NAME = {o["id"]: o["name"] for o in ORGS}
 
 # Weights: how much each kind of evidence says about influence on New York
-# City policy, not how easy it is to count. See methodology.md, "Weights".
+# City policy, not how easy it is to count. They follow the ranking of evidence
+# Vital City already uses with funders: scholarship (permanent, cannot be
+# lobbied for) and use in government and the courts first, then major outlets,
+# then the rest of the press, then general prominence on the web. See
+# methodology.md, "Weights".
 COMPONENTS = [
-    {"id": "press",   "label": "Press",           "weight": 0.30, "group": "noticed",
-     "what": "Stories in 27 New York news outlets that name the organization"},
+    {"id": "major",   "label": "Major outlets",   "weight": 0.15, "group": "noticed",
+     "what": "Stories naming the organization in 14 national and major outlets, from the Times to Gothamist"},
+    {"id": "nypress", "label": "New York press",  "weight": 0.15, "group": "noticed",
+     "what": "Stories naming it in 20 New York City news outlets, from the Daily News to City & State"},
     {"id": "record",  "label": "Official record", "weight": 0.25, "group": "used",
-     "what": "Government web pages and federal court filings that name or link to it"},
-    {"id": "scholar", "label": "Scholarship",     "weight": 0.20, "group": "used",
+     "what": "Mayor's office releases and transcripts, Comptroller publications and federal court cases that name or cite it"},
+    {"id": "scholar", "label": "Scholarship",     "weight": 0.25, "group": "used",
      "what": "Academic and legal works, by year published, that cite its website"},
     {"id": "wiki",    "label": "Wikipedia",       "weight": 0.10, "group": "noticed",
      "what": "English Wikipedia articles citing its website at year's end"},
-    {"id": "web",     "label": "Web standing",    "weight": 0.15, "group": "noticed",
-     "what": "Rank of its domain in Common Crawl's web graph (PageRank and harmonic centrality)"},
+    {"id": "links",   "label": "Links from policy sites", "weight": 0.10, "group": "noticed",
+     "what": "Government, university and news websites that link to its site, from Common Crawl's link graph"},
 ]
 CMP = {c["id"]: c for c in COMPONENTS}
 
@@ -56,27 +62,43 @@ def years_through(today):
 
 # ----------------------------------------------------------- vc press math
 def vc_estimate(items):
-    """Vital City's count from page-checked items.
+    """Vital City's count from page-checked items: CONFIRMED ONLY, a floor.
 
-    confirmed  counted in full
-    unreadable counted at the confirmation rate seen on readable pages
-               (confirmed / (confirmed + generic + absent)) for the same set
-    generic, absent  not counted
-    Returns (estimate, low, high, breakdown): low counts confirmed only, high
-    counts every unreadable page as a mention."""
+    An earlier version counted unreadable pages at the confirmation rate seen
+    on readable ones. The Times showed why that fails: its unreadable hits mix
+    Rikers and subway-crime stories with war reports from Ukraine ("a vital
+    city in the south"), so a rate borrowed from other outlets would have
+    counted the war reports too. Unreadable hits are reported as possible
+    additions and counted only once a person reads them (status set to
+    confirmed or generic by hand). Returns (count, low, high, breakdown)."""
     c = Counter(i.get("status", "unchecked") for i in items)
     readable = c["confirmed"] + c["generic"] + c["absent"]
-    rate = (c["confirmed"] / readable) if readable else 0.5
+    rate = (c["confirmed"] / readable) if readable else 0
     unread = c["unreadable"] + c["unchecked"]
-    return (c["confirmed"] + unread * rate, c["confirmed"], c["confirmed"] + unread,
+    return (c["confirmed"], c["confirmed"], c["confirmed"] + unread,
             {"confirmed": c["confirmed"], "generic": c["generic"], "absent": c["absent"],
              "unreadable": unread, "rate": round(rate, 3)})
 
 
 # ------------------------------------------------------ component counts
+def complete_domains(raw, section, years, domains):
+    """Outlets pulled for every organization and year. An outlet still being
+    collected would otherwise count for the organizations queried first and not
+    the rest (Vital City is queried first), which would tilt every ratio."""
+    pulled = raw.get(section, {}).get("pulled", {})
+    from influence_pull import SELF_OUTLET
+    ok = []
+    for dom in domains:
+        if all(f"{o['id']}|{dom}|{y}" in pulled for o in ORGS if o["press"]
+               for y in years if SELF_OUTLET.get(o["id"]) != dom):
+            ok.append(dom)
+    return ok
+
+
 def press_counts(raw, section, years, domains):
     """{org: {year: count}} plus Vital City's audit trail."""
     cells = raw.get(section, {}).get("items", {})
+    domains = complete_domains(raw, section, years, domains)
     counts = {o["id"]: {} for o in ORGS if o["press"]}
     vc_detail = {}
     for oid in counts:
@@ -141,6 +163,48 @@ def courts_counts(raw, years):
                 seen.add(key)
                 counts[oid][y] += 1
     return counts
+
+
+def dated_counts(rows_by_org, years):
+    """{org: {year: n}} from {org: [{"date": ...}, ...]}."""
+    out = {oid: {y: 0 for y in years} for oid in NAME}
+    for oid, rows in (rows_by_org or {}).items():
+        for r in rows:
+            y = int(r["date"][:4]) if r.get("date") else None
+            if y in out[oid]:
+                out[oid][y] += 1
+    return out
+
+
+def links_counts(raw, years):
+    """Per year: distinct government, university and news domains linking to
+    each organization's site, from the year's Common Crawl domain graph (the
+    latest release ending in that year). Also the full breakdown."""
+    wl = raw.get("weblinks", {})
+    by_year = {}
+    for rel in wl:
+        y = release_end(rel)[0]
+        if y in years and (y not in by_year or release_end(rel) > release_end(by_year[y])):
+            by_year[y] = rel
+    counts = {oid: {} for oid in NAME}
+    detail = {}
+    for y, rel in by_year.items():
+        for oid in NAME:
+            ds = wl[rel]["orgs"].get(oid, [])
+            kinds = Counter(link_kind(d) for d in ds)
+            counts[oid][y] = kinds["gov"] + kinds["edu"] + kinds["news"]
+            detail.setdefault(y, {})[oid] = {"all": len(ds), **{k: kinds[k] for k in ("gov", "edu", "news")},
+                                             "release": rel}
+    return counts, detail
+
+
+def cityhall_rows(raw):
+    """{org: [items]} from the City Hall store (items keyed by link)."""
+    out = {}
+    for link, it in raw.get("cityhall", {}).get("items", {}).items():
+        for oid in it["orgs"]:
+            out.setdefault(oid, []).append({**it, "link": link})
+    return out
 
 
 def court_cases(raw, oid="vc"):
@@ -324,19 +388,29 @@ def main():
     raw = json.loads(RAW.read_text())
     today = datetime.now(timezone.utc).date()
     years = years_through(today)
-    outlet_domains = [d for d, _ in OUTLETS]
-    record_domains = [d for d, _ in RECORD_DOMAINS]
 
-    press, press_vc = press_counts(raw, "press", years, outlet_domains)
-    record_web, record_vc = press_counts(raw, "record", years, record_domains)
+    major, major_vc = press_counts(raw, "press", years, [d for d, t in TIER.items() if t == "major"])
+    nypress, nypress_vc = press_counts(raw, "press", years, [d for d, t in TIER.items() if t == "ny"])
+    _, press_vc = press_counts(raw, "press", years, list(TIER))
     courts = courts_counts(raw, years)
-    record = {oid: {y: record_web.get(oid, {}).get(y, 0) + courts[oid].get(y, 0) for y in years}
-              for oid in record_web}          # City Limits has no phrase query, so no record count
+    ch = dated_counts(cityhall_rows(raw), years)
+    comp = dated_counts(raw.get("comptroller", {}).get("orgs", {}), years)
+    have_record = bool(raw.get("cityhall", {}).get("done")) and "comptroller" in raw
+    record = {oid: {y: courts[oid][y] + ch[oid][y] + comp[oid][y] for y in years} for oid in NAME}
+    record_parts = {"courts": courts, "cityhall": ch, "comptroller": comp}
     scholar = scholar_counts(raw, years)
     wiki = wiki_counts(raw, years, today)
     web, web_rel = web_values(raw, years)
+    links, links_detail = links_counts(raw, years)
+    # Council hearings: shown beside the index, not in it, until the corpus
+    # reaches back to 2022 (it starts with the 2024 session), because a measure
+    # that joins mid-series would move the index for reasons that are not news
+    council_cov = raw.get("council", {}).get("coverage", {})
+    council = dated_counts(raw.get("council", {}).get("orgs", {}),
+                           [int(y) for y, n in council_cov.items() if n >= 100 and int(y) >= FIRST_YEAR])
 
-    comp_counts = {"press": press, "record": record, "scholar": scholar, "wiki": wiki, "web": web}
+    comp_counts = {"major": major, "nypress": nypress, "record": record if have_record else {},
+                   "scholar": scholar, "wiki": wiki, "links": links}
     missing = [cid for cid, c in comp_counts.items() if not any((c.get("vc") or {}).values())]
     if missing and "--allow-missing" not in sys.argv:
         raise SystemExit(f"build: no Vital City data for {missing}; run those collectors first "
@@ -358,7 +432,14 @@ def main():
                      for cid, c in comp_counts.items()}
         peer_ids = ["_vc" if p == "vc" else p for p in others]
         s = score(relabeled, years, weights, peer_ids)
-        league[oid] = {y: (round(r["value"], 3) if r["value"] else None) for y, r in s.items()}
+        # ranked only when the measures covering it carry at least 75 percent
+        # of the weight: City Limits has no press counts (its name is ordinary
+        # English), and without them it ranked second on the strength of
+        # Wikipedia and web links
+        tot = sum(weights[c] for c in comp_counts)
+        league[oid] = {y: (round(r["value"], 3) if r["value"] and
+                           sum(weights[c] for c in r["parts"]) >= 0.75 * tot else None)
+                       for y, r in s.items()}
 
     # sensitivity: does the story survive other reasonable choices?
     variants = [("Equal weights", {k: 0.2 for k in weights}, None)]
@@ -395,14 +476,23 @@ def main():
 
     # the press detail the page draws: Vital City by quarter, and by outlet
     vc_press = vc_items(raw, "press")
-    vc_record = vc_items(raw, "record")
+    for it in vc_press:
+        it["tier"] = TIER.get(it["domain"], "ny")
+    # companion: Council hearings, scored the same way for the years covered
+    council_rows = {}
+    for y in sorted(next(iter(council.values()), {})):
+        peers = {p: council[p][y] for p in PEERS}
+        r, med = ratio(council["vc"][y], list(peers.values()), 1)
+        council_rows[y] = {"vc": council["vc"][y], "median": med, "ratio": r,
+                           "rank": rank_of(council["vc"][y], list(peers.values())), "of": len(peers) + 1,
+                           "orgs": {"vc": council["vc"][y], **peers}}
     q = Counter()
     for it in vc_press:
         if it["status"] == "confirmed":
             d = it["date"]
             q[f"{d[:4]}-Q{(int(d[5:7]) - 1) // 3 + 1}"] += 1
     by_outlet = Counter(it["domain"] for it in vc_press if it["status"] == "confirmed")
-    outlet_names = dict(OUTLETS)
+    outlet_names = {d: n for d, n, _ in OUTLETS}
 
     payload = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -420,28 +510,41 @@ def main():
         "league": league,
         "sensitivity": sens,
         "press_vc": press_vc,
-        "record_vc": record_vc,
+        "press_vc_tier": {"major": major_vc, "ny": nypress_vc},
+        "press_outlets_counted": complete_domains(raw, "press", years, list(TIER)),
+        "record_parts": {part: {oid: {y: c[oid][y] for y in years} for oid in NAME}
+                         for part, c in record_parts.items()},
+        "council": {"years": council_rows, "coverage": council_cov,
+                    "what": "City Council hearings (transcripts and written testimony) that name the organization"},
         "press_quarters": dict(sorted(q.items())),
         "press_outlets": [{"domain": d, "name": outlet_names.get(d, d), "n": n}
                           for d, n in by_outlet.most_common()],
         "evidence": {
             "press": [i for i in vc_press if i["status"] == "confirmed"],
             "press_unreadable": [i for i in vc_press if i["status"] in ("unreadable", "unchecked")],
-            "record": [i for i in vc_record if i["status"] == "confirmed"],
+            "cityhall": sorted(cityhall_rows(raw).get("vc", []), key=lambda x: x["date"], reverse=True),
+            "comptroller": raw.get("comptroller", {}).get("orgs", {}).get("vc", []),
+            "council": raw.get("council", {}).get("orgs", {}).get("vc", []),
             "courts": court_cases(raw),
             "wiki": raw.get("wiki", {}).get("first_adds_vc", [])
                     or [{"title": t} for t in raw.get("wiki", {}).get("pages", {}).get("vc", [])],
             "scholar": raw.get("scholar", {}).get("list", []),
         },
+        "links_detail": links_detail,
+        "links_vc": {k: [d for d in raw.get("weblinks", {}).get(max(raw.get("weblinks", {}) or {"": 0},
+                        key=lambda r: release_end(r) if r else (0, 0)), {}).get("orgs", {}).get("vc", [])
+                         if link_kind(d) == k] for k in ("gov", "edu", "news")},
         "web_releases": [{"release": rel, **v} for rel, v in sorted(web_rel.items(), key=lambda kv: kv[1]["end"])],
         "readers": readers_series(raw, today),
         "sources_as_of": {
             "press": max(raw.get("press", {}).get("pulled", {}).values(), default=""),
-            "record": max(raw.get("record", {}).get("pulled", {}).values(), default=""),
+            "city hall": raw.get("cityhall", {}).get("pulled", ""),
+            "comptroller": raw.get("comptroller", {}).get("pulled", ""),
+            "council": raw.get("council", {}).get("pulled", ""),
             "courts": raw.get("courts", {}).get("pulled", ""),
             "scholar": max(raw.get("scholar", {}).get("pulled", {}).values(), default=""),
             "wiki": raw.get("wiki", {}).get("pulled", ""),
-            "web": max((v.get("pulled", "") for v in raw.get("webgraph", {}).values()), default=""),
+            "links": max((v.get("pulled", "") for v in raw.get("weblinks", {}).values()), default=""),
             "readers": raw.get("readers", {}).get("pulled", ""),
         },
     }

@@ -93,24 +93,32 @@ ORGS = [
 ]
 ORG = {o["id"]: o for o in ORGS}
 
-# The press panel: outlets that cover New York City government and policy. An
-# outlet is skipped for the organization that publishes it (Gotham Gazette in
-# Gotham Gazette, City Limits in City Limits), since a masthead is not a citation.
+# The press panel: outlets that cover New York City government and policy,
+# in two tiers. "major": the national papers and magazines and the city's
+# largest public-radio newsroom, the outlets Vital City's own ranking of
+# evidence puts first (Times, New Yorker, Gothamist, Politico). "ny": the rest
+# of the city's policy press. An outlet is skipped for the organization that
+# publishes it (Gotham Gazette in Gotham Gazette), since a masthead is not a
+# citation.
 OUTLETS = [
-    ("nytimes.com", "The New York Times"), ("politico.com", "Politico"),
-    ("gothamist.com", "Gothamist"), ("wnyc.org", "WNYC"),
-    ("thecity.nyc", "The City"), ("nydailynews.com", "New York Daily News"),
-    ("nypost.com", "New York Post"), ("cityandstateny.com", "City & State"),
-    ("ny1.com", "NY1"), ("amny.com", "amNewYork"), ("crainsnewyork.com", "Crain's New York"),
-    ("streetsblog.org", "Streetsblog"), ("citylimits.org", "City Limits"),
-    ("gothamgazette.com", "Gotham Gazette"), ("therealdeal.com", "The Real Deal"),
-    ("nymag.com", "New York Magazine"), ("newyorker.com", "The New Yorker"),
-    ("wsj.com", "The Wall Street Journal"), ("hellgatenyc.com", "Hell Gate"),
-    ("nysfocus.com", "New York Focus"), ("chalkbeat.org", "Chalkbeat"),
-    ("silive.com", "Staten Island Advance"), ("brooklynpaper.com", "Brooklyn Paper"),
-    ("documentedny.com", "Documented"), ("newsday.com", "Newsday"),
-    ("timesunion.com", "Times Union"), ("law.com", "Law.com"),
+    ("nytimes.com", "The New York Times", "major"), ("wsj.com", "The Wall Street Journal", "major"),
+    ("washingtonpost.com", "The Washington Post", "major"), ("politico.com", "Politico", "major"),
+    ("newyorker.com", "The New Yorker", "major"), ("nymag.com", "New York Magazine", "major"),
+    ("bloomberg.com", "Bloomberg", "major"), ("theatlantic.com", "The Atlantic", "major"),
+    ("npr.org", "NPR", "major"), ("economist.com", "The Economist", "major"),
+    ("theguardian.com", "The Guardian", "major"), ("axios.com", "Axios", "major"),
+    ("gothamist.com", "Gothamist", "major"), ("wnyc.org", "WNYC", "major"),
+    ("thecity.nyc", "The City", "ny"), ("nydailynews.com", "New York Daily News", "ny"),
+    ("nypost.com", "New York Post", "ny"), ("cityandstateny.com", "City & State", "ny"),
+    ("ny1.com", "NY1", "ny"), ("amny.com", "amNewYork", "ny"), ("crainsnewyork.com", "Crain's New York", "ny"),
+    ("streetsblog.org", "Streetsblog", "ny"), ("citylimits.org", "City Limits", "ny"),
+    ("gothamgazette.com", "Gotham Gazette", "ny"), ("therealdeal.com", "The Real Deal", "ny"),
+    ("hellgatenyc.com", "Hell Gate", "ny"), ("nysfocus.com", "New York Focus", "ny"),
+    ("chalkbeat.org", "Chalkbeat", "ny"), ("silive.com", "Staten Island Advance", "ny"),
+    ("brooklynpaper.com", "Brooklyn Paper", "ny"), ("documentedny.com", "Documented", "ny"),
+    ("newsday.com", "Newsday", "ny"), ("timesunion.com", "Times Union", "ny"), ("law.com", "Law.com", "ny"),
 ]
+TIER = {d: t for d, _, t in OUTLETS}
 SELF_OUTLET = {"gg": "gothamgazette.com", "cl": "citylimits.org", "cj": "city-journal.org"}
 
 # The official record: government and court sites, same query shapes.
@@ -139,6 +147,21 @@ def save_part(key, value):
         fcntl.flock(lk, fcntl.LOCK_EX)
         cur = load_raw()
         cur[key] = value
+        tmp = RAW.with_suffix(".tmp")
+        tmp.write_text(json.dumps(cur, ensure_ascii=False, indent=1))
+        tmp.replace(RAW)
+
+
+def save_sub(key, sub, value):
+    """Write one entry inside a section (one release of the link graph),
+    re-reading the section under the lock, so two pulls of different
+    releases running at once cannot erase each other."""
+    import fcntl
+    PRIV.mkdir(exist_ok=True)
+    with open(PRIV / ".influence_raw.lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        cur = load_raw()
+        cur.setdefault(key, {})[sub] = value
         tmp = RAW.with_suffix(".tmp")
         tmp.write_text(json.dumps(cur, ensure_ascii=False, indent=1))
         tmp.replace(RAW)
@@ -271,7 +294,7 @@ def _collect_gn(section, jobs, fresh_days):
 
 def collect_press(years, fresh_days=5):
     jobs = [(o["id"], shape, dom, y) for o in ORGS for shape in (o["press"] or [])
-            for dom, _ in OUTLETS if SELF_OUTLET.get(o["id"]) != dom for y in years]
+            for dom, _, _t in OUTLETS if SELF_OUTLET.get(o["id"]) != dom for y in years]
     _collect_gn("press", jobs, fresh_days)
 
 
@@ -286,22 +309,51 @@ _GENERIC_BEFORE = re.compile(
     r"(?:truly\s+|really\s+|very\s+|so\s+|especially\s+)?$", re.I)
 _GENERIC_AFTER = re.compile(
     r"^\s+(?:services?|agenc(?:y|ies)|employees?|workers?|staff|infrastructure|functions?|"
-    r"departments?|operations?|programs?|budgets?|centres?|centers?|streets?|blocks?|neighou?rhoods?)\b")
+    r"departments?|operations?|programs?|budgets?|centres?|centers?|streets?|blocks?|neighou?rhoods?)\b",
+    re.I)   # headlines are title case: "Protect Vital City Services" is the English phrase
 # Outlets whose article text sits behind a hard paywall or bot wall. A page from
 # one of these that does not show our name tells us nothing, so it is
 # "unreadable", not "absent".
 _WALLED = ("nytimes.com", "wsj.com", "newyorker.com", "nymag.com", "crainsnewyork.com",
-           "newsday.com", "law.com", "timesunion.com", "bloomberg.com", "politico.com")
+           "newsday.com", "law.com", "timesunion.com", "bloomberg.com", "politico.com",
+           "washingtonpost.com", "theatlantic.com", "economist.com")
 
 
-def names_us(text):
+# Words that make "Vital City" the organization whatever comes before it: "a
+# Vital City analysis," "the Vital City report," "Vital City's founder." The
+# earlier rule rejected any "a" or "the" before the name and so threw away
+# exactly these references to the journal's work.
+_ORG_AFTER = re.compile(
+    r"^(?:'s|\u2019s|\s+(?:NYC|report|reports|analysis|analyses|piece|pieces|essay|essays|article|"
+    r"articles|op-ed|column|story|study|studies|data|survey|podcast|newsletter|founder|co-founder|"
+    r"cofounder|editor|editors|contributor|contributors|writer|writers|journal|magazine|publication|"
+    r"team|staff|board|event|forum|panel|conference|fellow|series|issue|investigation|memo|"
+    r"interview|findings|research|researchers|debate|poll))\b", re.I)
+
+
+def first_us(text):
+    """The first occurrence of "Vital City" used as the organization's name
+    (a regex match), or None. Case-sensitive: our name is both words
+    capitalized."""
     for m in _PROPER.finditer(text):
         before = text[max(0, m.start() - 60):m.start()]
         after = text[m.end():m.end() + 40]
+        if _ORG_AFTER.match(after):
+            return m
         if _GENERIC_BEFORE.search(before) or _GENERIC_AFTER.match(after):
             continue
-        return True
-    return False
+        return m
+    return None
+
+
+def names_us(text):
+    return first_us(text) is not None
+
+
+def us_context(text):
+    """About 380 characters around the reference that counted."""
+    m = first_us(text) or re.search(r"vitalcitynyc\.org", text)
+    return re.sub(r"\s+", " ", text[max(0, m.start() - 220):m.end() + 160]).strip() if m else ""
 
 
 def check_page(item):
@@ -337,10 +389,11 @@ def check_page(item):
     return {**out, "status": "absent", "why": "phrase not on the page"}
 
 
-def _verify_section(section, workers=8):
+def _verify_section(section, workers=8, recheck=()):
     raw = load_raw()
     cells = raw.get(section, {}).get("items", {})
-    todo = [i for k, v in cells.items() if k.startswith("vc|") for i in v if "status" not in i]
+    todo = [i for k, v in cells.items() if k.startswith("vc|") for i in v
+            if "status" not in i or i.get("status") in recheck]
     log(f"verify {section}: {len(todo)} Vital City items to check")
     with ThreadPoolExecutor(max_workers=workers) as ex:
         for i, (item, res) in enumerate(zip(todo, ex.map(check_page, todo))):
@@ -351,11 +404,12 @@ def _verify_section(section, workers=8):
     log(f"verify {section}: " + ", ".join(f"{k} {v}" for k, v in Counter(i["status"] for i in todo).items()))
 
 
-def verify_press(workers=8):
+def verify_press(workers=8, recheck=()):
     """Check each Vital City press hit on the page itself. "Vital City" is
     ordinary English and Google's phrase match ignores case, so every hit is
-    read. Peers' names are unambiguous and are not checked."""
-    _verify_section("press", workers)
+    read. Peers' names are unambiguous and are not checked. recheck=("generic",)
+    re-reads items an older, stricter name rule had set aside."""
+    _verify_section("press", workers, recheck)
 
 
 # ----------------------------------------------------------------- record
@@ -637,6 +691,85 @@ def collect_webgraph(releases):
         log(f"  {rel}: {len(rows)} domains in {round(time.time() - t0)}s")
 
 
+# Linking domains that signal policy attention. Government and universities
+# by their suffixes; news by a fixed list (the press panel plus other outlets
+# that cover cities and policy). Applied identically to every organization.
+NEWS_DOMAINS = {d for d, _, _ in OUTLETS} | {
+    "cbsnews.com", "nbcnews.com", "abc7ny.com", "nbcnewyork.com", "pix11.com", "cnn.com", "foxnews.com",
+    "usatoday.com", "latimes.com", "bostonglobe.com", "vox.com", "slate.com", "reuters.com", "apnews.com",
+    "semafor.com", "thetrace.org", "themarshallproject.org", "propublica.org", "bloomberg.com", "nextcity.org",
+    "fastcompany.com", "newsweek.com", "thenation.com", "nationalreview.com", "reason.com", "theintercept.com",
+    "motherjones.com", "time.com", "forbes.com", "businessinsider.com", "huffpost.com", "thedailybeast.com",
+    "thecityreporter.nyc", "bklyner.com", "brownstoner.com", "patch.com", "spectrumnews.com",
+    "news12.com", "westsiderag.com", "commercialobserver.com", "bisnow.com", "governing.com",
+    "route-fifty.com", "citylandnyc.org", "queenseagle.com", "brooklyneagle.com", "bronxtimes.com",
+    "riverdalepress.com", "nj.com", "northjersey.com", "courthousenews.com", "niemanlab.org",
+    "washingtonmonthly.com", "prospect.org", "newrepublic.com", "theverge.com", "wired.com"}
+
+
+def link_kind(d):
+    if re.search(r"\.gov$|\.gov\.[a-z]{2}$|\.mil$|\.[a-z]{2}\.us$", d):
+        return "gov"
+    if re.search(r"\.edu$|\.edu\.[a-z]{2}$|\.ac\.[a-z]{2}$", d):
+        return "edu"
+    if d in NEWS_DOMAINS:
+        return "news"
+    return "other"
+
+
+def collect_weblinks(release):
+    """Which domains link to each organization's site, from Common Crawl's
+    domain-level link graph (vertices = domains, edges = "this domain links to
+    that one somewhere in the crawl"). Three streamed passes over about 10 GB:
+    find the organizations' vertex ids, keep the edges pointing at them, then
+    name the domains those edges come from. Stored per release as the list of
+    linking domains, so the build can sort them into government, universities,
+    news outlets and the rest."""
+    import tempfile
+    raw = load_raw()
+    store = raw.setdefault("weblinks", {})
+    if release in store and store[release].get("orgs"):
+        return
+    base = f"{CC_BASE}{release}/domain/{release}-domain-"
+    want = {".".join(reversed(d.split("."))): (o["id"], d) for o in ORGS for d in o["domains"]}
+    pat = "|".join(re.escape(k) for k in want)
+    t0 = time.time()
+    run = lambda cmd: subprocess.run(["bash", "-o", "pipefail", "-c", cmd], capture_output=True, text=True)
+    r = run(f"curl -sf {base}vertices.txt.gz | gunzip -c | awk -F'\\t' '$2 ~ /^({pat})$/ {{print $1\"\\t\"$2}}'")
+    if r.returncode or not r.stdout.strip():
+        raise SystemExit(f"weblinks: vertex pass failed for {release}: {r.stderr[:200]}")
+    ids = dict(line.split("\t") for line in r.stdout.strip().splitlines())      # id -> reversed domain
+    log(f"weblinks {release}: {len(ids)} target ids ({round(time.time() - t0)}s)")
+    with tempfile.NamedTemporaryFile("w", delete=False, suffix=".ids") as f:
+        f.write("\n".join(ids))
+        idfile = f.name
+    r = run(f"curl -sf {base}edges.txt.gz | gunzip -c | "
+            f"awk -F'\\t' 'NR==FNR {{t[$1]=1; next}} ($2 in t) {{print $1\"\\t\"$2}}' {idfile} -")
+    if r.returncode:
+        raise SystemExit(f"weblinks: edge pass failed for {release}: {r.stderr[:200]}")
+    edges = [line.split("\t") for line in r.stdout.strip().splitlines() if line]
+    log(f"weblinks {release}: {len(edges)} edges ({round(time.time() - t0)}s)")
+    with open(idfile, "w") as f:
+        f.write("\n".join(sorted({a for a, _ in edges})))
+    r = run(f"curl -sf {base}vertices.txt.gz | gunzip -c | "
+            f"awk -F'\\t' 'NR==FNR {{t[$1]=1; next}} ($1 in t) {{print $1\"\\t\"$2}}' {idfile} -")
+    names = dict(line.split("\t") for line in r.stdout.strip().splitlines() if line)
+    os.unlink(idfile)
+    orgs = {}
+    for a, b in edges:
+        oid, _ = want[ids[b]]
+        src = ".".join(reversed(names.get(a, "").split(".")))
+        if src:
+            orgs.setdefault(oid, set()).add(src)
+    # an organization's own domains are not links from elsewhere
+    own = {d for o in ORGS for d in o["domains"]}
+    store[release] = {"pulled": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                      "seconds": round(time.time() - t0),
+                      "orgs": {k: sorted(v - own) for k, v in orgs.items()}}
+    save_sub("weblinks", release, store[release])
+    log(f"weblinks {release}: " + ", ".join(f"{k} {len(v)}" for k, v in store[release]["orgs"].items()))
+
+
 def import_webgraph_tsv(folder):
     """Load release files already filtered by the same awk pattern (backfill)."""
     raw = load_raw()
@@ -659,6 +792,194 @@ def import_webgraph_tsv(folder):
                           .isoformat(timespec="seconds"), "source": "backfill"}
     save_part("webgraph", raw["webgraph"])
     log(f"webgraph: {len(store)} releases stored")
+
+
+# ----------------------------------------------------------------- city hall
+# Exact, capitalized names for full-text sources (City Hall, Council hearings).
+# Case-sensitive, so "within city limits" does not count for City Limits;
+# Vital City additionally goes through names_us() to drop "a Vital City ..."
+TEXT_NAMES = {
+    "cbc": r"Citizens Budget Commission", "cuf": r"Center for an Urban Future",
+    "css": r"Community Service Society", "fpi": r"Fiscal Policy Institute",
+    "furman": r"Furman Center", "rpa": r"Regional Plan Association", "cj": r"City Journal",
+    "gg": r"Gotham Gazette", "cl": r"City Limits",
+    "cji": r"Center for (?:Justice|Court) Innovation", "dcj": r"Data Collaborative for Justice",
+}
+
+
+def orgs_named(text):
+    """Organizations a text names, with a snippet for Vital City."""
+    found = [k for k, p in TEXT_NAMES.items() if re.search(p, text)]
+    ctx = ""
+    if names_us(text) or "vitalcitynyc.org" in text:
+        found.append("vc")
+        ctx = us_context(text)
+    return found, ctx
+
+
+def _flatten(o, out):
+    if isinstance(o, dict):
+        for k, v in o.items():
+            if isinstance(v, str) and k in ("text", "description", "title"):
+                out.append(v)
+            else:
+                _flatten(v, out)
+    elif isinstance(o, list):
+        for v in o:
+            _flatten(v, out)
+    return out
+
+
+def collect_cityhall():
+    """Every item in the mayor's office newsroom since 2022 (press releases and
+    verbatim transcripts; nyc.gov's own index), read in full and checked for
+    each organization's name. Unit: one item. Transcripts and releases are kept
+    apart in the store so the page can show which is which."""
+    raw = load_raw()
+    store = raw.setdefault("cityhall", {"items": {}, "done": []})
+    done = set(store["done"])
+    idx = json.loads(http_get("https://www.nyc.gov/bin/nyc/articlesearch.json?path=/content/nycgov/"
+                              "mayors-office/en/news&page=0&limit=5&year=2023", timeout=120))
+    res = idx.get("results") or []
+    if len(res) < 1000:
+        raise SystemExit(f"cityhall: the newsroom index returned {len(res)} items; expected thousands")
+    todo = []
+    for r in res:
+        try:
+            d = datetime.strptime(r["articleDate"].strip(), "%B %d, %Y").date()
+        except (KeyError, ValueError):
+            continue
+        if d.year >= 2022 and r["link"] not in done:
+            todo.append((r["link"], d.isoformat(), r.get("title", "")))
+    log(f"cityhall: {len(res)} newsroom items, {len(todo)} to read")
+    fails = [0]
+
+    def read(job):
+        link, day, title = job
+        path = link.split("/mayors-office/news/", 1)[-1].rsplit(".html", 1)[0]
+        url = f"https://www.nyc.gov/content/nycgov/mayors-office/en/news/{path}.model.json"
+        for attempt in range(3):
+            try:
+                txt = " ".join(_flatten(json.loads(http_get(url, timeout=40)), []))
+                txt = html_mod.unescape(re.sub(r"<[^>]+>", " ", txt))
+                return job, orgs_named(txt)
+            except Exception:
+                time.sleep(2 * (attempt + 1))
+        fails[0] += 1
+        return job, None
+
+    n = 0
+    with ThreadPoolExecutor(max_workers=4) as ex:
+        for (link, day, title), got in ex.map(read, todo):
+            n += 1
+            if got is None:
+                continue
+            found, ctx = got
+            done.add(link)
+            if found:
+                store["items"][link] = {"date": day, "title": title, "orgs": found,
+                                        "kind": "transcript" if "ranscript" in title else "release",
+                                        "context": ctx, "url": "https://www.nyc.gov" + link}
+            if n % 250 == 0:
+                store["done"] = sorted(done)
+                save_part("cityhall", store)
+                log(f"  {n}/{len(todo)} read")
+    store["done"] = sorted(done)
+    store["pulled"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    save_part("cityhall", store)
+    if todo and fails[0] > 0.2 * len(todo):
+        raise SystemExit(f"cityhall: {fails[0]} of {len(todo)} items could not be read")
+    log(f"cityhall: {len(store['items'])} items name at least one organization; {fails[0]} unreadable")
+
+
+# -------------------------------------------------------------- comptroller
+def collect_comptroller():
+    """The New York City Comptroller's site (reports, testimony, statements),
+    searched through its own WordPress index for each organization's exact
+    name, then confirmed in the post's text with the same case-sensitive test
+    used for City Hall. Unit: one post, dated by publication."""
+    raw = load_raw()
+    out = {}
+    base = "https://comptroller.nyc.gov/wp-json/wp/v2/"
+    for o in ORGS:
+        pat = TEXT_NAMES.get(o["id"])
+        phrases = {"cji": ['"Center for Justice Innovation"', '"Center for Court Innovation"']}.get(
+            o["id"], ['"' + (o["name"].replace("NYU ", "")) + '"'])
+        seen = {}
+        for ph in phrases:
+            for kind in ("posts", "pages"):
+                page = 1
+                while True:
+                    url = (f"{base}{kind}?search={urllib.parse.quote(ph)}&per_page=100&page={page}"
+                           "&_fields=date,link,title,content")
+                    try:
+                        items = json.loads(http_get(url, timeout=60))
+                    except urllib.error.HTTPError as e:
+                        if e.code == 400:      # past the last page
+                            break
+                        raise
+                    for it in items:
+                        text = html_mod.unescape(re.sub(r"<[^>]+>", " ", it["content"]["rendered"]))
+                        if o["id"] == "vc":
+                            hit = names_us(text) or "vitalcitynyc.org" in text
+                        else:
+                            hit = bool(re.search(pat, text))
+                        if hit:
+                            ctx = us_context(text) if o["id"] == "vc" else ""
+                            seen[it["link"]] = {"date": it["date"][:10], "url": it["link"], "context": ctx.strip(),
+                                                "title": html_mod.unescape(it["title"]["rendered"])}
+                    if len(items) < 100:
+                        break
+                    page += 1
+                    time.sleep(0.5)
+        out[o["id"]] = sorted(seen.values(), key=lambda x: x["date"])
+        log(f"comptroller: {o['id']} {len(seen)} posts")
+    if not any(out.values()):
+        raise SystemExit("comptroller: nothing found for any organization; the search is broken")
+    raw["comptroller"] = {"pulled": datetime.now(timezone.utc).isoformat(timespec="seconds"), "orgs": out}
+    save_part("comptroller", raw["comptroller"])
+
+
+# ----------------------------------------------------------------- council
+def collect_council(corpus=None):
+    """City Council hearings: every transcript and written-testimony file in
+    the nyc-council-hearings corpus (Legistar, 2024 session onward), checked
+    for each organization's exact name. Unit: one hearing (all of its files),
+    dated by the hearing. Stated meetings are left out; they are the Council's
+    floor votes, not hearings. Runs on the Mac, where the corpus lives."""
+    corpus = Path(corpus or ROOT.parent / "nyc-council-hearings")
+    hearings = json.loads((corpus / "docs" / "data" / "hearings.json").read_text())
+    by_file = {}
+    for h in hearings:
+        if h.get("stated"):
+            continue
+        for d in h["docs"]:
+            m = re.search(r"ID=(\d+)", d["u"])
+            if m:
+                by_file.setdefault(m.group(1), []).append((h, d))
+    hits = {}
+    for f in (corpus / "data" / "text").glob("*.txt"):
+        fid = f.name.split(".")[0]
+        if fid not in by_file:
+            continue
+        found, ctx = orgs_named(f.read_text(errors="replace"))
+        for h, d in by_file[fid]:
+            for oid in found:
+                row = hits.setdefault(oid, {}).setdefault(h["id"], {
+                    "date": h["date"], "subject": h.get("subject", ""), "committees": h.get("committees", []),
+                    "kinds": [], "url": d["u"], "context": ""})
+                if d["k"] not in row["kinds"]:
+                    row["kinds"].append(d["k"])
+                if oid == "vc" and ctx and not row["context"]:
+                    row["context"] = ctx
+    years = sorted({h["date"][:4] for h in hearings if not h.get("stated")})
+    raw = load_raw()
+    raw["council"] = {"pulled": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                      "coverage": {y: sum(1 for h in hearings if h["date"][:4] == y and not h.get("stated"))
+                                   for y in years},
+                      "orgs": {k: sorted(v.values(), key=lambda x: x["date"]) for k, v in hits.items()}}
+    save_part("council", raw["council"])
+    log("council: " + ", ".join(f"{k} {len(v)}" for k, v in hits.items()))
 
 
 # ----------------------------------------------------------------- scholar
@@ -748,7 +1069,7 @@ def main():
     if a.what == "press":
         collect_press(ys)
     elif a.what == "verify-press":
-        verify_press()
+        verify_press(recheck=tuple(a.arg))
     elif a.what == "record":
         collect_record(ys)
     elif a.what == "verify-record":
@@ -769,10 +1090,25 @@ def main():
         stored = load_raw().get("webgraph", {})
         newest = max((release_end(r) for r in stored), default=(2021, 1))
         collect_webgraph([r for r in cc_releases() if release_end(r) > newest])
+    elif a.what == "weblinks":
+        for rel in a.arg:
+            collect_weblinks(rel)
+    elif a.what == "weblinks-new":
+        # the newest release, if it is not stored yet: the build uses the
+        # latest release ending in each year, so this keeps the current year fresh
+        newest = cc_releases()[-1]
+        if newest not in load_raw().get("weblinks", {}):
+            collect_weblinks(newest)
     elif a.what == "webgraph-import":
         import_webgraph_tsv(a.arg[0])
     elif a.what == "scholar-import":
         import_scholar(a.arg[0])
+    elif a.what == "comptroller":
+        collect_comptroller()
+    elif a.what == "cityhall":
+        collect_cityhall()
+    elif a.what == "council":
+        collect_council(a.arg[0] if a.arg else None)
     elif a.what == "readers":
         collect_readers()
     else:

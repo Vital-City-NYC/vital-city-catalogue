@@ -225,7 +225,7 @@
 </header>
 <nav class="jump" id="jump">
   <a href="#top">The index</a><a href="#league">The twelve</a><a href="#measures">Five measures</a>
-  <a href="#evidence">The evidence</a><a href="#readers">Government readers</a><a href="#robust">Robustness</a><a href="#method">Method</a>
+  <a href="#evidence">The evidence</a><a href="#council">Council hearings</a><a href="#readers">Government readers</a><a href="#robust">Robustness</a><a href="#method">Method</a>
 </nav>
 
 <div class="hero" id="top">
@@ -253,12 +253,12 @@
     <div class="card">
       <div class="ctl" id="raceCtl"></div>
       <div class="race" id="race"></div>
-      <div class="src">City Limits has no press or official-record count (its name is ordinary English, see Method), so its score rests on the other three measures.</div>
+      <div class="src">An organization is ranked only when the measures that cover it carry at least 75 percent of the weight. City Limits has no press counts (its name is ordinary English; see Method), so it is listed without a rank, though it still counts as a peer on the measures that do cover it.</div>
     </div>
   </section>
 
   <section class="blk" id="measures">
-    <h2>Five measures, each against the same eleven peers</h2>
+    <h2 id="measHed">Each measure against the same eleven peers</h2>
     <div class="dek">Magenta is Vital City. The thin blue lines are the eleven peers, the dark line their median. Counts are drawn on a scale that gives each doubling the same height, so a small organization's growth reads as clearly as a large one's.</div>
     <div class="grid5" id="grid5"></div>
   </section>
@@ -281,10 +281,21 @@
         <div id="outlets"></div>
       </div>
       <div class="card">
-        <h3 style="margin:0 0 4px;font-size:17px;font-weight:900">How each Vital City hit was checked</h3>
-        <div style="font-size:12.5px;color:var(--vc-charcoal);margin-bottom:6px">"Vital City" is also ordinary English, so every press and government hit was opened and read. Unreadable pages (paywalls, bot walls) are counted at the rate confirmed on readable ones.</div>
+        <h3 style="margin:0 0 4px;font-size:17px;font-weight:900">How each Vital City press hit was checked</h3>
+        <div style="font-size:12.5px;color:var(--vc-charcoal);margin-bottom:6px">"Vital City" is also ordinary English, so every press hit was opened and read. Only confirmed hits count. Pages behind paywalls and bot walls (mostly the Times and Politico) are listed as possible additions until someone reads them, so Vital City's press count is a floor.</div>
         <div class="tblwrap" id="audit"></div>
       </div>
+    </div>
+  </section>
+
+  <section class="blk" id="council">
+    <h2 id="coHed"></h2>
+    <div class="dek">Hearing transcripts and written testimony, read in full. Shown beside the index rather than in it: the corpus starts with the Council's 2024 session, and a measure that joins partway through would move the index for reasons that are not news.</div>
+    <div class="card meas" data-id="council" id="coCard">
+      <div class="rat"><span class="n" id="coRatio"></span><span class="l" id="coLab"></span></div>
+      <div class="line" id="coLine"></div>
+      <div class="mchart"></div>
+      <div class="src" id="coSrc"></div>
     </div>
   </section>
 
@@ -404,12 +415,12 @@ function boot(data){
   const stamp=()=>window.vcStamp&&window.vcStamp("#stamp",D.generated); stamp(); window.addEventListener("load",stamp);
   const partial=String(D.partial_year)===LAST;
   window.PARTIAL_LABEL=partial?`${LAST} to ${apDate(D.as_of).replace(/, \d{4}$/,"")}`:LAST;
-  heroText(); raceBuild(); measuresBuild(); evidenceBuild(); outletsBuild(); auditBuild(); readersText(); robustText(); methodBuild();
+  heroText(); raceBuild(); measuresBuild(); evidenceBuild(); outletsBuild(); auditBuild(); councilText(); readersText(); robustText(); methodBuild();
   RENDER.push(()=>heroChart(false),()=>raceLayout(),()=>measuresCharts(false),()=>lanesChart(false),()=>readersChart(false),()=>robustChart(false));
   // first paint animates as each chart arrives on screen
   onView($("#heroChart"),a=>heroChart(a));
   onView($("#race"),a=>{raceLayout();if(a)racePlay(true)});
-  document.querySelectorAll(".meas").forEach(c=>onView(c,a=>measureChart(c.dataset.id,a)));
+  document.querySelectorAll(".meas").forEach(c=>{if(c.dataset.id!=="council"||councilComp())onView(c,a=>measureChart(c.dataset.id,a))});
   onView($("#lanes"),a=>lanesChart(a));
   onView($("#outlets"),a=>outletsGrow());
   onView($("#rdChart"),a=>readersChart(a));
@@ -422,7 +433,16 @@ function boot(data){
   $("#aic").addEventListener("click",e=>{e.currentTarget.classList.toggle("open")});
   jumpSpy();
 }
-function comp(id){return D.components.find(c=>c.id===id)}
+function comp(id){return id==="council"?councilComp():D.components.find(c=>c.id===id)}
+function councilComp(){const C=D.council||{};const ys=C.years||{};if(!Object.keys(ys).length)return null;return {id:"council",label:"Council hearings",what:C.what,years:ys}}
+function councilText(){const c=councilComp(),sec=$("#council");if(!c){sec.style.display="none";return}
+  const ys=Object.keys(c.years).sort(),L=ys[ys.length-1],r=c.years[L],tot=ys.reduce((a,y)=>a+c.years[y].vc,0);
+  $("#coHed").textContent=`Vital City is named in ${nw(tot)} Council hearing${tot===1?"":"s"} since ${ys[0]}; the typical peer, about ${Math.round(ys.reduce((a,y)=>a+c.years[y].median,0))}`;
+  const n=$("#coRatio");n.dataset.n=r.ratio;n.textContent=fx(r.ratio);
+  $("#coLab").innerHTML=`the typical peer in ${esc(L===LAST?PARTIAL_LABEL:L)}<br><b>${ord(r.rank)} of ${r.of}</b>`;
+  $("#coLine").innerHTML=ys.map(y=>`${y}: Vital City <b>${c.years[y].vc}</b>, typical peer ${c.years[y].median}`).join(" · ");
+  const cov=(D.council||{}).coverage||{};
+  $("#coSrc").innerHTML=`Source: the New York City Council's hearing records on Legistar, via the nyc-council-hearings corpus (hearings covered: ${Object.entries(cov).filter(([y,n])=>n>=100).map(([y,n])=>y+" "+n).join(", ")}). Stated meetings (floor votes) are left out. Unit: one hearing, counting its transcript and written testimony together.`}
 function vcRank(y){const L=D.league;const vals=Object.keys(L).map(k=>[k,L[k][y]]).filter(x=>x[1]!=null).sort((a,b)=>b[1]-a[1]);return {rank:vals.findIndex(x=>x[0]==="vc")+1,of:vals.length}}
 
 /* ------------------------------------------------------------ hero */
@@ -436,7 +456,7 @@ function heroText(){
   $("#heroDek").innerHTML=`Among the twelve organizations compared, Vital City ranks <b>${ord(r1.rank)}</b> in ${LAST} so far and ranked ${ord(r0.rank)} in ${FIRST}. `+
     (b&&b.length?`Counting noise alone would move this year's figure between ${fx(b[0])} and ${fx(b[1])} nine times in ten.`:"");
   const parts=c[LAST].parts, order=D.components.map(x=>x.id).filter(k=>k in parts);
-  if((D.missing||[]).length){const lab={press:"press",record:"official record",scholar:"scholarship",wiki:"Wikipedia",web:"web standing"};
+  if((D.missing||[]).length){const lab={major:"major outlets",nypress:"New York press",record:"official record",scholar:"scholarship",wiki:"Wikipedia",links:"links from policy sites"};
     const m=$("#heroMissing");m.style.display="";m.textContent=`Not yet included: ${D.missing.map(k=>lab[k]||k).join(" and ")}. Collection is under way; until it lands the index rests on the other measures.`}
   $("#heroPills").innerHTML=order.map(k=>`<span class="pill">${esc(comp(k).label)} <b>${fx(parts[k])}</b></span>`).join("");
   $("#heroCap").innerHTML=`Magenta: Vital City's index, with its 90 percent band for counting noise. Blue: each peer's index, scored the same way. 1× is the typical (median) peer. ${esc(PARTIAL_LABEL)} is a partial year, shown hollow.`;
@@ -487,7 +507,7 @@ function raceBuild(){
   race.innerHTML=`<div class="axis" id="rAxis"></div><div class="axlab" id="rAxlab">1× = typical peer</div><div class="yearbig" id="rYear"></div>`+
     Object.keys(D.league).map(k=>`<div class="rrow${k==="vc"?" vc":""}" data-k="${k}"><div class="rk"></div><div class="nm" title="${esc(NAMES[k])}">${esc(NAMES[k])}</div><div class="track"><div class="bar"></div><div class="val"></div></div></div>`).join("");
   race.querySelectorAll(".rrow").forEach(r=>{r.addEventListener("mousemove",ev=>{const k=r.dataset.k,v=D.league[k][raceYear];
-    showTip(`<b>${esc(NAMES[k])}</b>, ${raceYear}<br>${v?fx(v)+" the median of the other eleven":"no score"}<br><span class="m">${YEARS.map(y=>y+": "+fx(D.league[k][y])).join(" · ")}</span>`,ev)});r.addEventListener("mouseleave",hideTip)});
+    showTip(`<b>${esc(NAMES[k])}</b>, ${raceYear}<br>${v?fx(v)+" the median of the other eleven":"not ranked: too few measures cover it"}<br><span class="m">${YEARS.map(y=>y+": "+fx(D.league[k][y])).join(" · ")}</span>`,ev)});r.addEventListener("mouseleave",hideTip)});
   raceYear=LAST; $("#leagueHed").textContent=leagueHed();
 }
 function leagueHed(){const a=vcRank(FIRST),b=vcRank(LAST);return `Vital City ranks ${ord(b.rank)} of ${b.of} in ${LAST} so far, ${b.rank<a.rank?"up from":b.rank>a.rank?"down from":"the same as"} ${ord(a.rank)} in ${FIRST}`}
@@ -519,6 +539,7 @@ function racePlay(auto){
 
 /* ------------------------------------------------------------ five measures */
 function measuresBuild(){
+  const nm=nw(D.components.length);$("#measHed").textContent=nm[0].toUpperCase()+nm.slice(1)+" measures, each against the same eleven peers";
   $("#grid5").innerHTML=D.components.map(c=>{
     const r=c.years[LAST]||{}, first=c.years[FIRST]||{};
     return `<div class="card meas reveal" data-id="${c.id}">
@@ -528,19 +549,24 @@ function measuresBuild(){
       <div class="line">${measureLine(c)}</div>
       <div class="mchart"></div>
       <div class="ratios">${YEARS.filter(y=>c.years[y]).map(y=>`<span class="${c.years[y].ratio>=1?"up":""}">${y} ${fx(c.years[y].ratio)}</span>`).join("")}</div>
+      ${c.id==="links"?linksNote():""}
       <button class="tgl" type="button">Show the numbers</button><div class="tblwrap" hidden></div>
     </div>`}).join("");
-  document.querySelectorAll(".meas").forEach(card=>{
+  document.querySelectorAll("#grid5 .meas").forEach(card=>{
     const c=comp(card.dataset.id), b=card.querySelector(".tgl"), t=card.querySelector(".tblwrap");
     b.addEventListener("click",()=>{if(t.hidden){t.innerHTML=measureTable(c);t.hidden=false;b.textContent="Hide the numbers"}else{t.hidden=true;b.textContent="Show the numbers"}});
   });
 }
-function fmtVal(c,v){if(v==null)return "–";if(c.id==="web")return rankFmt(1/v);return c.id==="press"||c.id==="record"?(Math.round(v*10)/10).toLocaleString("en-US"):Math.round(v).toLocaleString("en-US")}
+function linksNote(){const L=D.links_vc||{},det=(D.links_detail||{})[LAST]||{},v=det.vc||{};
+  const lab={gov:"Government",edu:"Universities",news:"News"};
+  return `<div class="src">${v.all?`${v.all.toLocaleString("en-US")} websites link to vitalcitynyc.org in the latest crawl; ${v.gov+v.edu+v.news} are government, university or news sites. `:""}`+
+    Object.entries(lab).filter(([k])=>(L[k]||[]).length).map(([k,l])=>`<b>${l}:</b> ${L[k].map(esc).join(", ")}`).join(". ")+`.</div>`}
+function fmtVal(c,v){if(v==null)return "–";if(c.id==="web")return rankFmt(1/v);return c.id==="major"||c.id==="nypress"?(Math.round(v*10)/10).toLocaleString("en-US"):Math.round(v).toLocaleString("en-US")}
 function rankFmt(p){return p>=1e6?(p/1e6).toFixed(1)+" million":p>=1e3?Math.round(p/1e3)+",000":Math.round(p)}
 function measureLine(c){const r=c.years[LAST];if(!r)return "";
   if(c.id==="web")return `Vital City's domain ranks around <b>${rankFmt(1/r.vc)}</b> on the web; the typical peer's, around ${rankFmt(1/r.median)}.`;
-  const one=Math.round(r.vc*10)/10===1, noun={press:one?"story":"stories",record:one?"official page or court case":"official pages and court cases",scholar:one?"scholarly work":"scholarly works",wiki:one?"article":"articles"}[c.id];
-  return `Vital City: <b>${fmtVal(c,r.vc)}</b> ${noun}${c.id==="press"||c.id==="record"?" (estimate)":""}. Typical peer: ${fmtVal(c,r.median)}.`}
+  const one=Math.round(r.vc*10)/10===1, noun={major:one?"story":"stories",nypress:one?"story":"stories",record:one?"item":"items",scholar:one?"scholarly work":"scholarly works",wiki:one?"article":"articles",council:one?"hearing":"hearings",links:one?"linking site":"linking sites"}[c.id];
+  return `Vital City: <b>${fmtVal(c,r.vc)}</b> ${noun}${c.id==="major"||c.id==="nypress"?" confirmed on the page":""}. Typical peer: ${fmtVal(c,r.median)}.`}
 function measureTable(c){const orgs=["vc",...D.orgs.map(o=>o.id).filter(k=>k!=="vc")];
   return `<table class="tbl"><thead><tr><th>Organization</th>${YEARS.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`+
     orgs.filter(k=>YEARS.some(y=>c.years[y]&&c.years[y].orgs[k]!=null)).map(k=>`<tr class="${k==="vc"?"vc":""}"><td>${esc(NAMES[k])}</td>${YEARS.map(y=>`<td>${c.years[y]?fmtVal(c,c.years[y].orgs[k]):"–"}</td>`).join("")}</tr>`).join("")+
@@ -548,9 +574,10 @@ function measureTable(c){const orgs=["vc",...D.orgs.map(o=>o.id).filter(k=>k!=="
     `<tr><td><b>Ratio</b></td>${YEARS.map(y=>`<td><b>${c.years[y]?fx(c.years[y].ratio):"–"}</b></td>`).join("")}</tr></tbody></table>`+
     (c.id==="web"?`<div class="src">Web figures are rank positions (geometric mean of PageRank and harmonic-centrality ranks; lower is better), medians over the year's releases.</div>`:"")}
 function measuresCharts(animate){document.querySelectorAll(".meas").forEach(c=>{if(seen.has(c)||REDUCED)measureChart(c.dataset.id,false)})}
+
 function measureChart(id,animate){
-  const card=document.querySelector(`.meas[data-id="${id}"]`);card.classList.add("in");
-  const host=card.querySelector(".mchart"), c=comp(id), W=host.clientWidth||320, H=170, m={l:40,r:66,t:10,b:22};
+  const card=document.querySelector(`.meas[data-id="${id}"]`), c=comp(id); if(!card||!c)return; card.classList.add("in");
+  const host=card.querySelector(".mchart"), W=host.clientWidth||320, H=id==="council"?200:170, m={l:40,r:66,t:10,b:22};
   const s=svgIn(host,W,H), ys=YEARS.filter(y=>c.years[y]);
   const x=i=>m.l+(W-m.l-m.r)*(ys.length===1?.5:i/(ys.length-1));
   let y, ticks, tfmt;
@@ -586,11 +613,13 @@ function measureChart(id,animate){
 
 /* ------------------------------------------------------------ evidence */
 let EV=[], evKind="all";
-const LANES=[["press","Press"],["record","Official record"],["courts","Court filings"],["wiki","Wikipedia"],["scholar","Scholarship"]];
+const LANES=[["major","Major outlets"],["nypress","New York press"],["cityhall","City Hall"],["comptroller","Comptroller"],["courts","Court filings"],["council","Council hearings"],["wiki","Wikipedia"],["scholar","Scholarship"]];
 function evidenceBuild(){
   const E=D.evidence; EV=[];
-  (E.press||[]).forEach(i=>EV.push({k:"press",date:i.date,src:outletName(i.domain),title:i.title,url:i.url,q:i.context,side:i.where==="side"}));
-  (E.record||[]).forEach(i=>EV.push({k:"record",date:i.date,src:recordName(i.domain,i.url),title:i.title,url:i.url,q:i.context}));
+  (E.press||[]).forEach(i=>EV.push({k:i.tier==="major"?"major":"nypress",date:i.date,src:outletName(i.domain),title:i.title,url:i.url,q:i.context,side:i.where==="side"}));
+  (E.cityhall||[]).forEach(i=>EV.push({k:"cityhall",date:i.date,src:i.kind==="transcript"?"Mayor's office transcript":"Mayor's office release",title:i.title,url:i.url,q:i.context}));
+  (E.comptroller||[]).forEach(i=>EV.push({k:"comptroller",date:i.date,src:"Comptroller",title:i.title,url:i.url,q:i.context}));
+  (E.council||[]).forEach(i=>EV.push({k:"council",date:i.date,src:(i.committees||[])[0]||"City Council",title:i.subject||"Council hearing",url:i.url,q:i.context}));
   (E.courts||[]).forEach(c=>c.filings.forEach(f=>EV.push({k:"courts",date:f.date,src:c.case,title:f.desc,url:f.url,q:""})));
   (E.wiki||[]).forEach(w=>{if(w.date)EV.push({k:"wiki",date:w.date,src:"Wikipedia",title:w.title,url:"https://en.wikipedia.org/wiki/"+encodeURIComponent(String(w.title).replace(/ /g,"_")),q:w.user?"Link added by "+w.user:""})});
   const sch=comp("scholar"); YEARS.forEach(y=>{const n=Math.round((sch.years[y]||{}).vc||0);for(let i=0;i<n;i++)EV.push({k:"scholar",date:`${y}-${String(1+Math.floor((i+.5)/n*(y===LAST&&D.partial_year==y?+D.as_of.slice(5,7):12))).padStart(2,"0")}-15`,src:"Google Scholar",title:"A work published in "+y+" that cites vitalcitynyc.org",url:`https://scholar.google.com/scholar?q=%22vitalcitynyc.org%22&as_ylo=${y}&as_yhi=${y}`,q:"",approx:true})});
@@ -602,7 +631,7 @@ function evidenceBuild(){
   $("#evChips").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{evKind=b.dataset.k;$("#evChips").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));evListRender()}));
   $("#evQ").addEventListener("input",evListRender); evListRender();
 }
-function outletName(d){const o={"nytimes.com":"The New York Times","politico.com":"Politico","gothamist.com":"Gothamist","wnyc.org":"WNYC","thecity.nyc":"The City","nydailynews.com":"Daily News","nypost.com":"New York Post","cityandstateny.com":"City & State","ny1.com":"NY1","amny.com":"amNewYork","crainsnewyork.com":"Crain's","streetsblog.org":"Streetsblog","citylimits.org":"City Limits","gothamgazette.com":"Gotham Gazette","therealdeal.com":"The Real Deal","nymag.com":"New York Magazine","newyorker.com":"The New Yorker","wsj.com":"The Wall Street Journal","hellgatenyc.com":"Hell Gate","nysfocus.com":"New York Focus","chalkbeat.org":"Chalkbeat","silive.com":"Staten Island Advance","brooklynpaper.com":"Brooklyn Paper","documentedny.com":"Documented","newsday.com":"Newsday","timesunion.com":"Times Union","law.com":"Law.com"};return o[d]||d}
+function outletName(d){const o={"nytimes.com":"The New York Times","politico.com":"Politico","gothamist.com":"Gothamist","wnyc.org":"WNYC","thecity.nyc":"The City","nydailynews.com":"Daily News","nypost.com":"New York Post","cityandstateny.com":"City & State","ny1.com":"NY1","amny.com":"amNewYork","crainsnewyork.com":"Crain's","streetsblog.org":"Streetsblog","citylimits.org":"City Limits","gothamgazette.com":"Gotham Gazette","therealdeal.com":"The Real Deal","nymag.com":"New York Magazine","newyorker.com":"The New Yorker","wsj.com":"The Wall Street Journal","hellgatenyc.com":"Hell Gate","nysfocus.com":"New York Focus","chalkbeat.org":"Chalkbeat","silive.com":"Staten Island Advance","brooklynpaper.com":"Brooklyn Paper","documentedny.com":"Documented","newsday.com":"Newsday","timesunion.com":"Times Union","law.com":"Law.com","washingtonpost.com":"The Washington Post","bloomberg.com":"Bloomberg","theatlantic.com":"The Atlantic","npr.org":"NPR","economist.com":"The Economist","theguardian.com":"The Guardian","axios.com":"Axios"};return o[d]||d}
 function recordName(d,url){const u=String(url||"");if(/comptroller/.test(u))return "Comptroller";if(/council\.nyc/.test(u))return "City Council";if(/advocate/.test(u))return "Public Advocate";if(/ibo\.nyc/.test(u))return "Independent Budget Office";if(/nysenate/.test(u))return "State Senate";if(/nyassembly/.test(u))return "State Assembly";if(/nycourts/.test(u))return "State courts";if(/ny\.gov/.test(u)&&!/nyc\.gov/.test(u))return "New York State";return "City of New York"}
 function evListRender(){
   const q=($("#evQ").value||"").toLowerCase();
@@ -649,9 +678,7 @@ function auditBuild(){
   const line=(lab,a,f)=>`<tr><td>${lab}</td>${YEARS.map(y=>`<td>${a[y]?f(a[y]):"–"}</td>`).join("")}</tr>`;
   $("#audit").innerHTML=`<table class="tbl"><thead><tr><th>Press</th>${YEARS.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`+
     row("Hits found",P)+line("Confirmed",P,a=>a.confirmed)+line("Generic use",P,a=>a.generic)+line("Not on page",P,a=>a.absent)+line("Unreadable",P,a=>a.unreadable)+
-    line("<b>Counted</b>",P,a=>"<b>"+a.estimate+"</b>")+`</tbody></table>`+
-    `<table class="tbl" style="margin-top:14px"><thead><tr><th>Government pages</th>${YEARS.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`+
-    row("Hits found",R)+line("Confirmed",R,a=>a.confirmed)+line("Generic use",R,a=>a.generic)+line("Unreadable",R,a=>a.unreadable)+line("<b>Counted</b>",R,a=>"<b>"+a.estimate+"</b>")+`</tbody></table>`;
+    line("<b>Counted</b>",P,a=>"<b>"+a.estimate+"</b>")+line("Possible additions",P,a=>a.unreadable)+`</tbody></table>`;
 }
 
 /* ------------------------------------------------------------ readers */
@@ -715,49 +742,56 @@ function robustChart(animate){
 function methodBuild(){
   const W=D.weights, P=D.press_vc||{}, pct=v=>Math.round(v*100);
   const peers=D.orgs.filter(o=>o.id!=="vc");
-  const conf=YEARS.map(y=>P[y]?`${y}: ${P[y].confirmed} confirmed of ${P[y].confirmed+P[y].generic+P[y].absent} readable (${pct(P[y].rate)} percent), ${P[y].unreadable} unreadable`:"").filter(Boolean).join("; ");
+  const conf=YEARS.map(y=>P[y]?`${y}: ${P[y].confirmed} confirmed of ${P[y].confirmed+P[y].generic+P[y].absent} readable, ${P[y].unreadable} unreadable`:"").filter(Boolean).join("; ");
   $("#methodBody").innerHTML=`
 <h3>What the index measures</h3>
-<p>Influence on policy cannot be observed directly. What can be observed is uptake: the places where people who make, argue about or study New York City policy use an organization's work in public. The index counts that uptake in five places and compares Vital City with eleven peer organizations counted identically. It measures how much of the observable policy conversation runs through Vital City. It does not measure whether any policy changed because of it.</p>
+<p>Influence on policy cannot be observed directly. What can be observed is uptake: the places where people who make, argue about or study New York City policy use an organization's work in public. The index counts that uptake in six places and compares Vital City with eleven peer organizations counted identically. It measures how much of the observable policy conversation runs through Vital City. It does not measure whether any policy changed because of it.</p>
 <p>Three things it leaves out on purpose. Private access (a meeting with a commissioner, a call from a Council staffer) leaves no public trace. Podcasts, radio and television are not searchable at scale for peers, so they cannot be compared. And Vital City's own activity (pieces published, events held, newsletters sent) is input, not uptake. Those belong in the impact ledger on the Prospects page, which records cases by hand; the index uses only sources that can be queried the same way every year, because a hand-kept count rises with the effort put into keeping it.</p>
 
 <h3>Why a comparison, and why these peers</h3>
 <p>Every source here changes over time on its own. Google News indexes three times as many Politico items naming the Citizens Budget Commission in 2025 as in 2023; the commission did not triple. Google Scholar's coverage of recent years fills in for months after they end. A count of Vital City mentions alone would mix Vital City's growth with the sources' growth. Asking the identical question about peers, and dividing, cancels whatever affects all of them alike.</p>
 <p>The eleven peers were chosen before any counts were pulled, on three tests: the organization publishes policy analysis or argument about New York City; the city is its main subject; and it is an independent nonprofit (government bodies such as the Independent Budget Office are cited as authorities rather than as voices, so they are left out). Two are publications, as Vital City partly is; the rest are research and advocacy shops, as it partly is. They are: ${peers.map(o=>`${esc(o.name)} (${o.domains.map(esc).join(", ")})`).join("; ")}. The Center for Justice Innovation was the Center for Court Innovation until 2023; both names and addresses are counted.</p>
 
-<h3>The five measures</h3>
-<details class="acc" open><summary>Press (${pct(W.press)} percent)</summary>
-<p><b>Source:</b> Google News, which indexes news sites' articles by date. <b>Query:</b> the organization's name as an exact phrase, limited to one outlet's site and one calendar year, for each of 27 outlets that cover New York City government (listed in <code>influence_pull.py</code>). A query that returns Google's maximum of 100 items is split in half by date and re-asked until none is truncated, so a large peer is never undercounted. <b>Unit:</b> one story, once per outlet (duplicates by title removed). An outlet is never counted for the organization that publishes it.</p>
-<p><b>Vital City's name problem.</b> "Vital City" is also ordinary English ("remains a vital city"), and Google's phrase match ignores capitalization. So every Vital City hit was resolved to the real article and read by script. A hit is <i>confirmed</i> when the page contains "Vital City" capitalized and not preceded by a word like "a," "our" or "the," or links to vitalcitynyc.org; <i>generic</i> when the phrase is there only as English; <i>not on page</i> when a readable page lacks it; <i>unreadable</i> when a paywall or bot wall hides the text. Unreadable hits are counted at the confirmation rate seen on readable ones that year. By year: ${esc(conf)}. The page shows the whole audit under "How each Vital City hit was checked." Peers' names are unambiguous and are not checked; City Limits, whose name is ordinary English, has no press count at all.</p></details>
+<h3>The six measures</h3>
+<details class="acc" open><summary>Major outlets (${pct(W.major)} percent) and New York press (${pct(W.nypress)} percent)</summary>
+<p><b>Source:</b> Google News, which indexes news sites' articles by date. <b>Query:</b> the organization's name as an exact phrase, limited to one outlet's site and one calendar year. <b>Major outlets</b> (14): The New York Times, The Wall Street Journal, The Washington Post, Politico, The New Yorker, New York Magazine, Bloomberg, The Atlantic, NPR, The Economist, The Guardian, Axios, Gothamist and WNYC. <b>New York press</b> (20): The City, the Daily News, the Post, City &amp; State, NY1, amNewYork, Crain's, Streetsblog, City Limits, Gotham Gazette, The Real Deal, Hell Gate, New York Focus, Chalkbeat, the Staten Island Advance, Brooklyn Paper, Documented, Newsday, the Times Union and Law.com. The two tiers are scored separately so that a Times story is not diluted by a neighborhood weekly. A query that returns Google's maximum of 100 items is split in half by date and re-asked until none is truncated, so a large peer is never undercounted. <b>Unit:</b> one story, once per outlet. An outlet is never counted for the organization that publishes it.</p>
+<p><b>Checking Vital City's hits.</b> Every Vital City hit was resolved to the real article and read by script, and only confirmed hits count. Pages the script cannot read (the Times, Politico and the Staten Island Advance block it) are held as possible additions until a person reads them. Borrowing a confirmation rate from readable outlets was tried and dropped: the Times's unreadable hits include war reports from Ukraine that call a city "vital." So Vital City's press count is a floor, while peers' counts, which need no check, are not. By year: ${esc(conf)}. The page shows the whole audit under "How each Vital City press hit was checked." Peers' names are unambiguous and are not checked; City Limits, whose name is ordinary English, has no press count.</p></details>
 <details class="acc"><summary>Official record (${pct(W.record)} percent)</summary>
-<p>Two sources added together. <b>Government web pages:</b> the same Google News method, over the sites of the City of New York, the City Council, the Comptroller, the Public Advocate, the Independent Budget Office, New York State, the State Senate and Assembly and the state courts; Vital City hits checked the same way as press. <b>Federal court filings:</b> CourtListener's archive of federal court records (RECAP), searched for each organization's web address. A filing that cites a report nearly always carries its address, and an address cannot be ordinary English. Counted once per case per year, because the archive indexes every attachment separately; one congestion-pricing filing carries Vital City's address in nine attachments. State court filings are not publicly searchable and are missing for every organization.</p></details>
+<p>Three sources, each read in full and added together. <b>City Hall:</b> every item in the mayor's office newsroom since 2022 (about 5,600 press releases and verbatim transcripts, nyc.gov's own index), each checked for each organization's exact name. <b>The Comptroller:</b> the Comptroller's reports, testimony and statements, found through the office's own site search and confirmed in the text. <b>Federal courts:</b> CourtListener's archive of federal court records (RECAP), searched for each organization's web address, counted once per case per year because the archive indexes every attachment separately (one congestion-pricing filing carries Vital City's address in nine). State court filings are not publicly searchable and are missing for everyone. The first version of this measure used Google's index of government web pages; it was dropped because Google dates those pages by when it crawled them and indexes few besides press releases.</p></details>
 <details class="acc"><summary>Scholarship (${pct(W.scholar)} percent)</summary>
-<p><b>Source:</b> Google Scholar, which indexes the full text of academic papers, law reviews, theses and working papers. <b>Query:</b> the organization's web address in quotation marks, limited to one publication year, run in a browser because Scholar refuses scripts. The number is the one Scholar prints ("About 40 results"), stored with the text it printed. Scholar's counts are estimates, and works cited by name without an address are missed; both apply to every organization. Recent years are incomplete while indexing catches up, for everyone. The Scholar counts were taken on Sept. 25, 2026, and are refreshed by hand (see Refresh).</p></details>
+<p><b>Source:</b> Google Scholar, which indexes the full text of academic papers, law reviews, theses and working papers. <b>Query:</b> the organization's web address in quotation marks, limited to one publication year, run in a browser because Scholar refuses scripts. The number is the one Scholar prints ("About 40 results"), stored with the text it printed. Scholar's counts are estimates, and works that cite by name without an address are missed; both apply to every organization. Recent years are incomplete while indexing catches up, for everyone. Taken Sept. 25, 2026, and refreshed by hand (see Refresh).</p></details>
 <details class="acc"><summary>Wikipedia (${pct(W.wiki)} percent)</summary>
-<p><b>Source:</b> the English Wikipedia's own record of which articles link to a web address. <b>Method:</b> take the articles that cite the organization's address today, then read each article as it stood on Jan. 1 and July 1 of each year, finding (by binary search over those dates) the first on which the address was present. <b>Unit:</b> articles citing the organization at the end of each year; for the current year, today. Citations added and later removed are missed; that applies to everyone. Wikipedia editors are volunteers deciding what counts as a reliable source, which is why this is in the index, and also why its weight is low: anyone, including an organization's own staff, can add a link.</p></details>
-<details class="acc"><summary>Web standing (${pct(W.web)} percent)</summary>
-<p><b>Source:</b> Common Crawl's domain-level web graph, published every few months, which ranks about 100 million domains by PageRank and by harmonic centrality from the links in its crawl. The ranks files (2 to 3.5 gigabytes each) are streamed and filtered, one release per quarter since mid-2021. <b>Unit:</b> an organization's standing in a release is the geometric mean of its two rank positions; a year's value is the median over that year's releases, which keeps one odd crawl (mid-2024 ranked Vital City five times higher than the releases on either side) from carrying the year. This measures prominence on the web at large, not in policy circles, which is why its weight is modest.</p></details>
+<p><b>Source:</b> the English Wikipedia's record of which articles link to a web address. <b>Method:</b> take the articles citing the organization's address today, then read each as it stood on Jan. 1 and July 1 of each year, finding (by binary search over those dates) the first on which the address was present. <b>Unit:</b> articles citing the organization at year's end; for the current year, today. Vital City's 14 citations were added by 14 different editors. Low weight because anyone, including an organization's own staff, can add a link, and because Wikipedia favors publications (cited as news sources) over research shops.</p></details>
+<details class="acc"><summary>Links from policy sites (${pct(W.links)} percent)</summary>
+<p><b>Source:</b> Common Crawl's domain-level link graph, which records, for each crawl, which web domains link to which (about 100 million domains). For each organization, the domains that link to its site anywhere in the crawl were pulled (three streamed passes over about 10 gigabytes per release), using one release per year. <b>Unit:</b> distinct government (.gov, .mil, state .us), university (.edu, .ac) and news domains linking to the organization's site; the news list is the press panel plus about 60 other outlets that cover cities and policy, the same list for everyone. All other linking domains (blogs, directories, aggregators, spam) are shown for context but not counted. Domain level means nyc.gov counts once however many agencies link. This replaced a measure of rank in the whole web graph, which moved with Wikipedia and said little about policy audiences.</p></details>
+<details class="acc"><summary>Beside the index: Council hearings and government readers</summary>
+<p><b>Council hearings:</b> every hearing transcript and written-testimony file in the Council's Legistar records from the 2024 session on (the nyc-council-hearings corpus), checked for each organization's exact name. It is the most direct policy venue measured here, and Vital City trails most peers on it. It stays outside the index until the corpus reaches back to 2022, because a measure added partway through the series would shift the index for reasons that have nothing to do with Vital City. <b>Government readers:</b> newsletter subscribers on New York government work addresses; Vital City's own list, with no peer equivalent.</p></details>
 
+<h3>What counts as a mention of Vital City</h3>
+<p>Any form of the name: "Vital City," "Vital City's," "Vital City NYC," "the policy journal Vital City," "a nonprofit, Vital City." A reference to the journal's work ("a Vital City analysis," "the Vital City report") and to the organization ("Vital City's founder," "Vital City's forum") both count, as does any link to vitalcitynyc.org. The name is also ordinary English, so a hit counts only when both words are capitalized and the phrase is not being used as English: "remains a vital city," "our vital city" and "vital city services" do not count. An earlier version of this test also threw out "a Vital City analysis" and "the Vital City report" because of the "a" and "the"; that was fixed on Sept. 25, 2026, and the affected hits were re-read.</p>
+<p>Not captured: a story that quotes Elizabeth Glazer or another contributor without naming Vital City; a press story that links to vitalcitynyc.org without using the name (press is searched by name; the other sources catch links); scholarship that cites Vital City by name but without its web address; and podcasts, radio and television, which are not searchable at scale for the peers. Each of these misses applies to the peers in the same way, except the first, which may undercount Vital City a little more than the institutional peers, whose staff are usually identified by their organization.</p>
+
+<h3>Do the measures agree?</h3>
+<p>If the measures captured one underlying thing (standing in New York City's policy conversation), organizations that rank high on one should tend to rank high on the others. Across the twelve organizations in 2024 and 2025, every pair of measures ranks them in the same direction (rank correlations from 0.26 to 0.93). Wikipedia and the web measures agree most closely with each other, which is why web measures carry little weight. The league table passes the plain test too: City Journal and the Furman Center, the largest and most cited, lead most measures.</p>
 <h3>From counts to one number</h3>
 <p>For each measure and year, Vital City's count is divided by the median of the eleven peers' counts:</p>
 <div class="formula">ratio = (Vital City + 1) ÷ (peer median + 1)</div>
-<p>Adding one keeps a year of zeros from producing an undefined or infinite ratio and damps the swings of very small counts. Web standing uses its standing values directly, without the one. A ratio of 1 means Vital City drew as much of that kind of attention as the typical peer. The median is used rather than the mean so that City Journal and the Furman Center, far larger than the rest on some measures, do not set the bar alone.</p>
+<p>Adding one keeps a year of zeros from producing an undefined or infinite ratio and damps the swings of very small counts. A ratio of 1 means Vital City drew as much of that kind of attention as the typical peer. The median is used rather than the mean so that City Journal and the Furman Center, far larger than the rest on some measures, do not set the bar alone.</p>
 <p>The five ratios are combined with a weighted geometric mean:</p>
 <div class="formula">index = exp( Σ weight × ln(ratio) )</div>
 <p>A geometric mean treats "half the typical peer" and "twice the typical peer" as equal and opposite, which an ordinary average does not, and it keeps one huge ratio from swamping the rest. If a measure has no data for a year, its weight is spread over the others.</p>
 
 <h3>Weights</h3>
-<p>Press ${pct(W.press)} percent, official record ${pct(W.record)}, scholarship ${pct(W.scholar)}, web standing ${pct(W.web)}, Wikipedia ${pct(W.wiki)}. The weights say how directly each measure reaches New York City policy. Press is where the city's policy argument is conducted in public. The official record is government and the courts using an organization's work, the closest thing to influence that can be counted, but it is sparse, so its counts are noisier. Scholarship is permanent and cannot be lobbied for, but much of it is written for other scholars. Web standing and Wikipedia measure prominence in general more than in policy. The robustness chart shows the index under equal weights and with each measure removed.</p>
-
+<p>Official record ${pct(W.record)} percent, scholarship ${pct(W.scholar)}, major outlets ${pct(W.major)}, New York press ${pct(W.nypress)}, Wikipedia ${pct(W.wiki)}, links from policy sites ${pct(W.links)}. They follow the order of evidence Vital City already uses with funders. Use by government and the courts, and citation by scholars (permanent, and impossible to lobby for), come first. Major outlets come before the rest of the press. Wikipedia and links count least, since anyone can add a link. The robustness chart shows the index under equal weights and with each measure removed.</p>
 <h3>Uncertainty</h3>
-<p>Small counts move by chance. The band on the index chart comes from redrawing every count 3,000 times as random variation (a Poisson draw) around what was observed and recomputing the index each time; the band holds the middle 90 percent of results. Web standing is held fixed. The band answers "could this year's change be luck?" It says nothing about whether the method is right; the robustness chart speaks to that.</p>
+<p>Small counts move by chance. The band on the index chart comes from redrawing every count 3,000 times as random variation (a Poisson draw) around what was observed and recomputing the index each time; the band holds the middle 90 percent of results. The band answers "could this year's change be luck?" It says nothing about whether the method is right; the robustness chart speaks to that.</p>
 
 <h3>Other known limits</h3>
 <p>The current year is partial. Ratios compare Vital City and peers over the same partial window, so they are comparable to full years, but they will move as the year fills in, and Scholar in particular lags. Google News reaches back unevenly, thinner in 2022 than in 2025, which affects counts for everyone but adds noise to early years. A mention in a newsletter roundup counts the same as a paragraph in a feature. Self-citation is counted for everyone alike: one of Vital City's court cases is an amicus brief filed by its founder with other former officials, and peers' own filings count the same way.</p>
 
 <h3>Refresh</h3>
-<p>A weekly cloud job re-runs press and government pages for the current year, checks new Vital City hits, re-reads CourtListener and Wikipedia, adds any new Common Crawl release, recounts government readers, rebuilds the index and republishes this page. Past years are re-pulled monthly, since indexes keep filling in. Google Scholar cannot be queried by a script, so its counts are refreshed by hand in a browser each quarter; the date sits in the footer. Any change to the peers, weights or queries will be written here with its date.</p>
-<p><b>Changes.</b> Sept. 25, 2026: first version.</p>`;
+<p>A weekly cloud job re-runs the press for the current year (the previous year too in each month's first week, since indexes keep filling in), checks new Vital City hits, reads new City Hall items and the Comptroller's site, re-reads CourtListener and Wikipedia, adds any new Common Crawl release, recounts government readers, rebuilds the index and republishes this page. Google Scholar refuses scripts, so its counts are refreshed by hand in a browser each quarter; Council hearings are recounted when the hearings corpus is updated. Dates for every source sit in the footer. Any change to the peers, weights or queries will be written here with its date.</p>
+<p><b>Changes.</b> Sept. 25, 2026: first version. Same day, after review: press split into major outlets and New York press, with seven national outlets added; official record rebuilt from City Hall, the Comptroller and federal courts in place of Google's index of government pages; web rank replaced by links from government, university and news sites; weights moved toward scholarship and the official record; the name test widened to accept "a Vital City analysis" and "the Vital City report"; Council hearings added beside the index; organizations ranked only when measures carrying 75 percent of the weight cover them.</p>`;
 }
 
 function jumpSpy(){const links=[...document.querySelectorAll("#jump a")],ids=links.map(a=>a.getAttribute("href").slice(1));

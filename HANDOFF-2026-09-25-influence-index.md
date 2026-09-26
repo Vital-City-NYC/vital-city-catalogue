@@ -63,3 +63,40 @@ NOT written yet: copy that text into it.
   runs press and record). Check private/influence_raw.json for "press"/"record" sections before rerunning.
 - Known page nits: City Limits ranks 2nd on three measures only (caveat is on the page; consider
   requiring 4 of 5 measures for the league); gov-readers chart and evidence lanes not yet eyeballed.
+
+## Update, Sept. 25, 2026, ~6:35 p.m.
+- Josh: "make it a new tab, and update it when you're able to." Done: Influence tab is LIVE at
+  https://vitalcity-nyc.github.io/vital-city-catalogue/influence/ (commit 67492d8), in toolkit.js
+  TOOLS with staleHours 192 (home page allows a weekly tool eight days).
+- Wikipedia merged (VC 0 -> 14 articles; 14 different editors, no single account) and
+  first-adds stored. Published with press left out ("Not yet included" note on the page).
+- Press + government pages are being collected in the cloud: workflow influence-refresh.yml,
+  run 36196864424 (years 2022-2026). When it lands it commits influence/data.enc + raw.enc.
+  NEXT: `git pull`, unpack raw (`python3 encrypt_influence.py unpack`), spot-check 5 confirmed
+  press items and the verification audit, eyeball the page, tell Josh the new numbers.
+- Weekly schedule: Mondays 13:30 UTC. Scholar is by hand, quarterly (browser; Google flagged this
+  Mac on Sept. 25, so wait a while before the next Scholar pass).
+
+## Update, ~7:50 p.m.: Josh asked to rethink the measures ("ensure these metrics make sense"),
+## about NYT/major outlets, whether all references are caught, and links to our pieces.
+Changes made locally (NOT yet pushed; push after the cloud press run lands and is merged):
+- Six measures: major outlets .15 (14 outlets incl. 7 new national ones), New York press .15,
+  official record .25 (City Hall newsroom 2022+ read in full + Comptroller WP search + CourtListener
+  cases; Google-News gov pages dropped), scholarship .25, Wikipedia .10, links from policy sites .10
+  (Common Crawl domain link graph: distinct gov/edu/news domains linking; replaces PageRank rank).
+- Council hearings (local corpus, 2024+) shown beside the index, not in it, until backfilled to 2022.
+- names_us() fixed: accepts "a/the Vital City <report|analysis|founder...>" and 's; generic-noun
+  check is case-insensitive ("Protect Vital City Services" headline). Recheck press hits marked
+  generic: `python3 influence_pull.py verify-press generic` (uses stored resolved_url; no Google).
+- League ranks only orgs covered by >=75% of weight (City Limits unranked).
+- New collectors: cityhall, comptroller, council, weblinks <release>, weblinks-new.
+- Link backfill running locally: 2022-may-jun-aug, 2023-may-sep-nov, 2024-aug-sep-oct,
+  2025-aug-sep-oct (+2026-jul-aug-sep done). ~16 min each.
+- After the cloud run: git pull; decrypt its raw.enc to a temp file and copy ONLY its "press"
+  section into the local private/influence_raw.json (local has cityhall/comptroller/council/weblinks);
+  verify-press generic; spot-check NYT hits in the browser pane; build; encrypt; push; then dispatch
+  the workflow again (years 2022-2026) to pull the 7 new national outlets (existing cells are skipped
+  as fresh).
+- Candidate measures not built, for Josh: Council backfill 2022-23 (Legistar calendar via browser),
+  Bluesky shares (api.bsky.app searchPosts q=domain:<site> works without auth, 2023+ only),
+  Search Console "Latest links" export for page-level links to VC pieces (manual export).
