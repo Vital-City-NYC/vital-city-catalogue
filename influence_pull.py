@@ -440,7 +440,14 @@ def collect_courts():
                    + urllib.parse.quote(f'"{dom}"'))
             pages = 0
             while url and pages < 20:
-                d = json.loads(http_get(url, ua=UA_BOT, headers={"Accept": "application/json"}))
+                for attempt in range(6):      # CourtListener answers bursts with 429
+                    try:
+                        d = json.loads(http_get(url, ua=UA_BOT, headers={"Accept": "application/json"}))
+                        break
+                    except urllib.error.HTTPError as e:
+                        if e.code != 429 or attempt == 5:
+                            raise
+                        time.sleep(30 * (attempt + 1))
                 for r in d.get("results", []):
                     key = r.get("id") or r.get("absolute_url")
                     docs[key] = {
@@ -451,7 +458,7 @@ def collect_courts():
                         "domain": dom}
                 url = d.get("next")
                 pages += 1
-                time.sleep(1.0)
+                time.sleep(3.0)
         out[o["id"]] = list(docs.values())
         log(f"courts: {o['id']} {len(docs)} filings")
     raw["courts"] = {"pulled": datetime.now(timezone.utc).isoformat(timespec="seconds"), "orgs": out}
