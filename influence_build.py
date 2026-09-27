@@ -77,7 +77,7 @@ def vc_estimate(items):
     unread = c["unreadable"] + c["unchecked"]
     return (c["confirmed"], c["confirmed"], c["confirmed"] + unread,
             {"confirmed": c["confirmed"], "generic": c["generic"], "absent": c["absent"],
-             "unreadable": unread, "rate": round(rate, 3)})
+             "duplicate": c["duplicate"], "unreadable": unread, "rate": round(rate, 3)})
 
 
 # ------------------------------------------------------ component counts

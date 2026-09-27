@@ -60,9 +60,12 @@ returns Google's 100-item maximum is split by date and re-asked. Unit: one story
 
 Vital City hits are resolved to the article and read (`check_page`): *confirmed*, *generic*,
 *absent* or *unreadable* (paywall, bot wall, failed fetch; pages from hard-paywalled outlets that do
-not show the name are unreadable, not absent). Only confirmed hits count, so Vital City's press count is a floor. Unreadable hits (the Times,
-Politico and the Staten Island Advance block scripts) are listed as possible additions and count
-once a person reads them and sets their status by hand. Borrowing the readable-page confirmation
+not show the name are unreadable, not absent). Only confirmed hits count. Outlets that block scripts (the Times, Politico, the Post, the
+Atlantic, the Staten Island Advance and a few others) were read in a subscriber's Chrome on Sept.
+27, 2026, with the same name test run inside the page: of 81 such hits, 49 were citations (23 of 37
+in the Times after dropping two live-blog copies, status `duplicate`), the rest ordinary English or
+not about Vital City; 4 could not be opened and count as zero. Walled hits from later weekly runs
+wait as possible additions until the next reading. Borrowing the readable-page confirmation
 rate was tried first and dropped: the Times's unreadable hits include war reports from Ukraine that
 call a city "vital."
 
