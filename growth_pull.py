@@ -2661,6 +2661,7 @@ def pull_ghost_traffic():
             out["reason"] = "staff token works but no Tinybird token/site id in config"
             return out
         today = datetime.now(timezone.utc).date()
+        yday = today - timedelta(days=1)          # last complete day
         def tbq(date_from, date_to=None):
             q = urllib.parse.urlencode({"site_uuid": site, "date_from": str(date_from),
                                         "date_to": str(date_to or today)})
@@ -2671,12 +2672,17 @@ def pull_ghost_traffic():
             v = sum((r.get("visits") or r.get("visitors") or 0) for r in rows)
             pv = sum((r.get("pageviews") or r.get("page_views") or 0) for r in rows)
             return int(v), int(pv)
-        rows30  = tbq(today - timedelta(days=30))
-        rows365 = tbq(today - timedelta(days=365))
+        # Windows end YESTERDAY: today is still filling in, and a window that
+        # included it (and a prior window that shared its first day with this
+        # one) made the 30-day change read low. 30 full days against the 30
+        # before them, no overlap.
+        rows30  = tbq(today - timedelta(days=30), yday)
+        rows365 = tbq(today - timedelta(days=365), yday)
         out["visitors_30d"],  out["pageviews_30d"]  = agg(rows30)
         out["visitors_365d"], out["pageviews_365d"] = agg(rows365)
-        # Prior 30 days (days 30-60 ago) so the dashboard can show % change.
-        prev30 = tbq(today - timedelta(days=60), today - timedelta(days=30))
+        out["window_end"] = yday.isoformat()
+        # Prior 30 days (days 31-60 ago) so the dashboard can show % change.
+        prev30 = tbq(today - timedelta(days=60), today - timedelta(days=31))
         out["visitors_prev_30d"], out["pageviews_prev_30d"] = agg(prev30)
         # First month with REAL traffic. Tinybird has a trickle back to
         # 2025-08 (6-36 visits/month — staging/preview hits during the Ghost
@@ -2776,9 +2782,10 @@ def pull_ghost_traffic():
                 pages.append({"title": title, "path": path, "visits": v, "prev": prev.get(path, 0)})
                 if len(pages) >= limit: break
             return pages
-        cur30  = pages_map(today - timedelta(days=30), today)
-        prev30p = pages_map(today - timedelta(days=60), today - timedelta(days=30))
-        cur7   = pages_map(today - timedelta(days=7), today)
+        # Same boundaries as the 30-day totals: end yesterday, no overlap.
+        cur30  = pages_map(today - timedelta(days=30), yday)
+        prev30p = pages_map(today - timedelta(days=60), today - timedelta(days=31))
+        cur7   = pages_map(today - timedelta(days=7), yday)
         # Topic rollups from the FULL page map, not the top-12 slice: the API
         # already returns 300 rows per window, so this costs no extra call.
         # Window note: Ghost analytics only begins 2026-03-01 -- everything
@@ -2819,8 +2826,8 @@ def pull_ghost_traffic():
                 m[name] = m.get(name, 0) + int(r.get("visits") or r.get("hits") or 0)
             return m
         try:
-            cur_src  = sources_map(today - timedelta(days=30), today)
-            prev_src = sources_map(today - timedelta(days=60), today - timedelta(days=30))
+            cur_src  = sources_map(today - timedelta(days=30), yday)
+            prev_src = sources_map(today - timedelta(days=60), today - timedelta(days=31))
             srcs = [{"source": n, "visits": v, "prev": prev_src.get(n, 0)}
                     for n, v in sorted(cur_src.items(), key=lambda kv: -kv[1]) if v > 0]
             # 40, not 10: AI assistants (ChatGPT, Perplexity, Copilot, Gemini)

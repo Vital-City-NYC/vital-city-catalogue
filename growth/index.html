@@ -1125,6 +1125,9 @@ function overlapsBot(a,b){ return !(b<SIGNUP_BOT.from || a>SIGNUP_BOT.to); }
 // from the first full month on Ghost so a week is judged against the same
 // signup system; the before-and-after change is stated on its own (pxSignupEras).
 const SIGNUP_NORM_FROM="2026-04-01";
+// Online giving (Donorbox) opened Nov. 11, 2025. Fixed here because the
+// pull keeps only a rolling year of daily rows, which will soon start later.
+const GIVING_START="2025-11-11";
 function pxSignupEras(data){
   const act=((data.mailchimp||{}).daily_activity)||[];
   const per=(a,b)=>{ const r=act.filter(x=>x.d>=a&&x.d<=b&&!isBotDay(x.d)); if(r.length<60) return null; return r.reduce((s,x)=>s+(+x.subs||0),0)/r.length*30.4; };
@@ -1365,7 +1368,7 @@ function boot(data){
       return {tier:"also",lbl: gt.available && startLbl ? `Website visitors · since ${startLbl}` : "Website visitors · 1y",
               num: n!=null ? fmtN(n) : "—", delta: sub,
               cls: n!=null ? "flat" : "na",
-              tip:`Cumulative unique visitors since Ghost analytics began recording${startLbl ? ` (first traffic: ${esc(start)})` : " at the April 2026 cutover"}.\n\nNote: this understates the true 12-month audience; connect GA4 for a real trailing year (it tracked the old site too).`};
+              tip:`Readers since Ghost analytics began recording${startLbl ? ` (first traffic: ${esc(start)})` : " at the March 2026 move to Ghost"}, each counted once a day and summed, so a regular reader counts many times; this is not a count of distinct people.\n\nNote: this understates the true 12-month audience; connect GA4 for a real trailing year (it tracked the old site too).`};
     })(),
     (function(){
       // Site-wide avg engaged time PER VIEW: audience-weighted across the
@@ -2758,11 +2761,11 @@ function cardPeek(id, d){
     case 'fundraising': return fw.amount!=null ? B('$'+F(Math.round(fw.amount)))+' raised YTD · '+F(fw.donors)+' donors · '+F(fw.count)+' gifts.' : '';
     case 'engagementExtras': return 'Who really reads — by mailbox provider and influence weight (post-Apple-privacy).';
     case 'perf':        return yt.open_pct!=null ? B(yt.open_pct+'%')+' open · '+B(yt.click_pct+'%')+' click · '+F(yt.sends)+' sends (YTD).' : '';
-    case 'campaignsTrend': return yt.open_pct!=null ? 'Last sends average '+B(yt.open_pct+'%')+' open · '+B(yt.click_pct+'%')+' click (recipient-weighted, YTD).' : '';
+    case 'campaignsTrend': return yt.open_pct!=null ? 'Year to date: '+B(yt.open_pct+'%')+' open · '+B(yt.click_pct+'%')+' click (recipient-weighted).' : '';
     case 'campaigns':   return 'The most recent 12 newsletter sends, with open and click rate per send.';
     case 'quality':     return 'Mailchimp engagement ratings — most subscribers cluster at 2★ (Apple Mail privacy skews this).';
     case 'lifecycle':   { const ar=(lc.at_risk||{}).count, su=(lc.sunset_candidates||{}).count; return (ar!=null?B(F(ar))+' at-risk (lapsed but reachable)':'')+(su!=null?' · '+B(F(su))+' sunset candidates':'')+'.'; }
-    case 'trafficCard': return gt.visitors_30d!=null ? B(F(gt.visitors_30d))+' visits · '+B(F(gt.pageviews_30d))+' page views · last 30 days (Ghost).' : '';
+    case 'trafficCard': return gt.visitors_30d!=null ? B(F(gt.visitors_30d))+' readers · '+B(F(gt.pageviews_30d))+' page views · last 30 days (Ghost).' : '';
     case 'searchConsole': return scT.clicks!=null ? B(F(scT.clicks))+' clicks from '+B(F(scT.impressions))+' impressions · avg position '+(scT.position||'?')+' (28-day window).' : '';
     case 'social':      { const f={X:(d.x_profile||{}).followers,LinkedIn:(d.linkedin||{}).followers,Bluesky:(d.bluesky||{}).followers,Instagram:(d.instagram||{}).followers}; const tot=Object.values(f).reduce((s,v)=>s+(v||0),0); return B(F(tot))+' followers — '+Object.entries(f).filter(([,v])=>v).map(([k,v])=>k+' '+F(v)).join(' · ')+'.'; }
     default: return '';
@@ -3053,7 +3056,7 @@ function renderPieceBenchmarks(data){
     ${typeRows?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:20px 0 6px">Bands differ by format — judge like against like</div>
     <table class="tbl" style="width:100%"><thead><tr><th>Format</th><th class="num">Pieces</th><th class="num">Median</th><th class="num">Top 10% starts</th></tr></thead><tbody>${typeRows}</tbody></table>`:""}
 
-    <div class="flagnote" style="margin-top:12px"><b>Read these as rules of thumb, not targets.</b> Views are GA4 page views, which count devices rather than people (one reader on phone and laptop counts twice), and the first-${bm.first_days}-day window deliberately ignores the long tail &mdash; evergreen explainers keep earning readers for years, so a modest opening is not the same as a weak piece. Pieces published in the last ${bm.first_days} days are excluded because their window hasn't closed yet. Search-driven pieces also ramp slowly as Google indexes them.</div>`;
+    <div class="flagnote" style="margin-top:12px"><b>Read these as rules of thumb, not targets.</b> Views are Google Analytics page views: every page load counts, so one reader who opens a piece on a phone and again on a laptop counts twice, and the first-${bm.first_days}-day window deliberately ignores the long tail &mdash; evergreen explainers keep earning readers for years, so a modest opening is not the same as a weak piece. Pieces published in the last ${bm.first_days} days are excluded because their window hasn't closed yet. Search-driven pieces also ramp slowly as Google indexes them.</div>`;
 }
 
 // Look up any published piece and get its full performance report — reach,
@@ -3485,52 +3488,71 @@ function aiPrimer(d){
   const mc = d.mailchimp || {}, sw = mc.signup_windows || {};
   const gen = (d.generated_at || "").slice(0,10);
   const mauBroken = !((mc.mau||{}).active_users);
+  // Figures quoted in the guide are read from the data, so they can't go stale.
+  const bs=((d.ghost_signup_attribution||{}).by_source)||[], bsT=bs.reduce((t,r)=>t+(+r.n||0),0);
+  const unk=bs.filter(r=>/^\(?unknown\)?$|^$/i.test(String(r.src||""))).reduce((t,r)=>t+(+r.n||0),0);
+  const unkPct = bsT ? Math.round(unk/bsT*100) : null;
+  const firstSub=((mc.daily_activity||[]).filter(r=>(+r.subs||0)>0).map(r=>r.d).sort()[0])||"";
   return `You are analyzing the Vital City growth dataset (vitalcitynyc.org — a New York City
 urban-policy journal). The attached JSON is the complete feed behind their internal growth
 dashboard, generated ${gen}.
 
 WHAT'S IN IT (top-level keys)
-- ga4 ................ Google Analytics 4. by_year.years[] = visitors per year;
-                       traffic_weekly[] = weekly visits; top_pages_by_year[year][];
+- ga4 ................ Google Analytics 4. by_year.years[] = users per year;
+                       traffic_weekly[] = weekly SESSIONS (visits); top_pages_by_year[year][];
                        piece_index.pieces[] = EVERY published piece with lifetime views,
                        engaged seconds, first-30-day views (views30), newsletter clicks,
                        attributed signups; piece_benchmarks = percentile bands.
 - mailchimp .......... total_subscribers; monthly_signups[] (new_signups = NET adds from
                        Mailchimp; ghost_signups = GROSS organic; cum_subs = list size at
                        month end); windows.ytd / .prior_ytd = send counts and open/click
-                       RATES (not totals); campaigns[]; daily_activity[].
+                       RATES (not totals); campaigns[]; daily_activity[] = one row per
+                       day: subs = gross signups dated by each person's real signup day
+                       (from ${firstSub||"about two years back"}), unsubs/opens/clicks from Mailchimp.
+- ghost_traffic ...... Ghost's own site analytics, from ${(d.ghost_traffic||{}).history_start||"March 2026"}: kpi_rows_30d (daily),
+                       traffic_series (weekly), visitors_30d/365d = readers counted once
+                       a day and SUMMED, top_pages_*, top_sources_30d.
 - search_console ..... windows["28"|"90"|"365"].totals = clicks, impressions, ctr, position.
                        topic_searches = top New York City policy queries. Also page-2
                        "opportunities" per window.
 - ghost_signup_attribution ... where signups came from (by_source, by_medium).
 - engagement_extras .. influence_weighted_reach = notable / government readers.
 - donorbox ........... giving. x_followers / linkedin / bluesky / instagram = social.
-- news_mentions ...... third-party press citations.
+- news_mentions ...... third-party press, government and republication mentions. Count one
+                       as a citation ONLY if verified is true, incidental is not true,
+                       roundup is false and own_post is false; the rest are unconfirmed.
 
 READ THESE CAVEATS BEFORE CONCLUDING ANYTHING
-1. BOT SIGNUPS. May–September 2025 net additions were inflated by bot signups (~4,981 above
-   the ~184/month organic baseline), and ~575 were purged in May 2026. So ANY 2025-vs-2026
-   signup comparison is invalid — it compares real humans to humans plus bots. Do not report
-   a "decline" in signups on that basis. The list falling from its April 2026 peak is
-   deliberate hygiene, not shrinkage. Use mailchimp.signup_windows.ytd_ghost (real organic
-   signups) rather than net figures when judging genuine growth.
-2. GROSS vs NET. monthly_signups[].ghost_signups = real organic signups (reliable from about
-   April 2026 only). new_signups = net of churn AND includes bulk/imported additions.
-3. ${mauBroken ? "ACTIVE-SUBSCRIBER COUNT IS UNAVAILABLE. mailchimp.mau.active_users reads 0 — this is a\n   data gap, NOT zero readers. Mailchimp does not report per-member opens for A/B split-test\n   sends, and recent newsletters were all A/B tests. Use total clicks or the 1-year figure\n   (mailchimp.aau) instead; never report 0 active subscribers."
+1. BOT SIGNUPS. About half of May–September 2025 signups were bots (roughly 4,981 above the
+   ~184/month organic baseline). Leave 2025-05-01 to 2025-09-30 out of any signup average or
+   comparison, and never compare a period against one that includes those months. About
+   500 inactive addresses were removed in May 2026; the list falling from its April 2026 peak
+   is that cleanup, not shrinkage.
+2. SIGNUPS BEFORE AND AFTER THE MOVE TO GHOST. Since March 2026 every signup comes through the
+   Ghost form and reaches Mailchimp in weekly batches; daily_activity.subs dates each signup
+   by the real day, not the batch. Signups have run at about half the earlier rate since the
+   move, so judge recent periods against April 2026 onward. monthly_signups[].new_signups is
+   NET of churn and includes bulk imports (including a March 2026 catch-up import); use
+   daily_activity.subs or ghost_signups for gross signups.
+3. ${mauBroken ? "ACTIVE-SUBSCRIBER COUNT IS UNAVAILABLE. mailchimp.mau.active_users reads 0 — that is a\n   failure in the data pull, NOT zero readers. Use total clicks or the 1-year figure\n   (mailchimp.aau) instead; never report 0 active subscribers."
    : "mailchimp.mau.active_users is the deduped 30-day active-reader count."}
 4. OPEN RATES ARE NOT COMPARABLE ACROSS YEARS. Apple Mail privacy protection auto-opens mail,
    inflating older rates; bots on the list depressed 2026 rates before the cleanup. Click rate
    and TOTAL opens/clicks (rate x recipients) are the honest measures.
-5. GA4 COUNTS BROWSERS, NOT PEOPLE. One person on a phone and laptop counts twice. Visitor
-   figures are directional. Yearly uniques cannot be summed into an all-time headcount.
+5. TWO TRAFFIC RECORDS THAT DIFFER. Google Analytics (ga4) counts every visit and runs about
+   30% above Ghost (ghost_traffic) week for week, because Ghost counts each reader once a
+   day; Ghost starts in March 2026. Never compare, add or splice the two; name the source of
+   every traffic figure. Google Analytics also counts browsers, not people (one person on a
+   phone and a laptop counts twice), and yearly users cannot be summed into a headcount.
+   A/B-tested newsletters are reported in full: campaign rates cover every send in a test.
 6. SOME PUBLISH DATES ARE WRONG. Pieces with date_suspect:true had their date mis-assigned in
    a CMS migration; their views30 is absent and they must not be judged on it.
 7. PARTIAL PERIODS. The current year, month and week are incomplete — annualize explicitly or
    compare like-for-like windows, and say which you did.
-8. ATTRIBUTION IS PARTIAL. About 54% of signups carry no source, and the attribution window is
-   ~180 days. Absence of attribution is not evidence of zero.
+8. ATTRIBUTION IS PARTIAL. ${unkPct!=null?`About ${unkPct}% of attributed signups carry no source`:"Many signups carry no source"}, and the attribution
+   window is ~180 days. Absence of attribution is not evidence of zero.
 9. Search Console impressions are NOT total Google search volume — only times a Vital City page
-   appeared. Per-piece search query data exists for only ~24 pieces.
+   appeared. Per-piece search query data exists for only a minority of pieces.
 
 HOUSE RULES FOR YOUR ANALYSIS
 - State a confidence level for every significant claim, and name the source field.
@@ -3831,7 +3853,7 @@ function renderWhyLeave(mc){
       `<table class="tbl"><tbody>`+
       given.map(([r,n])=>`<tr><td>${esc(r)}</td><td class="num">${fmtN(n)}</td><td class="num">${Math.round(100*n/gtot)}%</td></tr>`).join("")+
       `</tbody></table>`+
-      `<div style="font-size:10.5px;color:var(--vc-charcoal);margin-top:6px;line-height:1.5">"Spammy content" is Mailchimp's category for readers who felt the email was unwanted — its prominence (especially on appeals) tracks with the higher spam-complaint rate on fundraising sends.</div>`;
+      `<div style="font-size:10.5px;color:var(--vc-charcoal);margin-top:6px;line-height:1.5">"Spammy content" is Mailchimp's category for readers who felt the email was unwanted.</div>`;
   } else {
     html+=`<div style="font-size:12px;color:var(--vc-charcoal);line-height:1.6">Unsubscribe-reason data populates on the next refresh (pulled from Mailchimp's reports).</div>`;
   }
@@ -3876,7 +3898,7 @@ function renderABTests(mc){
       <td class="num">${c.click_pct}%</td></tr>`;
   }).join("");
   host.innerHTML=`<table class="tbl"><thead><tr><th>Sent</th><th>Winner ✓ vs runner-up</th><th class="num">Open</th><th class="num">Click</th></tr></thead><tbody>${rows}</tbody></table>
-    <div style="font-size:10.5px;line-height:1.6;margin-top:10px;color:var(--vc-charcoal)">Mailchimp reports the winning subject only — not each variant's open rate — so margins aren't shown; open/click are whole-campaign aggregates. Patterns so far (n=${tests.length}): plain language beats "=" / "??" gimmicks; New York City-local and named (Mamdani, the Knicks) beats national or abstract; clarity beats insider jargon.</div>`;
+    <div style="font-size:10.5px;line-height:1.6;margin-top:10px;color:var(--vc-charcoal)">Open and click rates here cover every send in each test (both test groups and the winner's send). Each variant's own rate isn't pulled yet, so the margin between subjects isn't shown and no pattern about which kind of subject wins can be read from this table (n=${tests.length}).</div>`;
 }
 
 function renderDonors(db){
@@ -4163,11 +4185,11 @@ function renderEngagementExtras(ex){
     <div style="margin-bottom:22px">
       <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">Influence-weighted reach</div>
       <div style="font-size:12px;color:var(--vc-charcoal);margin-bottom:8px;line-height:1.5">
-        <b style="color:var(--vc-black)">What it is:</b> A composite reach score that weights each active reader by how influential they likely are in NYC policy circles. The formula: each subscriber starts at 1.0; we add <b>+0.4 per Mailchimp star</b> (so a 5★ reader counts as 3.0), <b>+2.0 if Wikipedia-notable</b>, and <b>+1.5 if their email puts them in government, the judiciary, or a policy agency</b>. Track whether this number grows over time — it answers "are we reaching the right rooms?" better than raw subscriber count.
+        <b style="color:var(--vc-black)">What it is:</b> A composite reach score that weights each active reader by how influential they likely are in NYC policy circles. The formula: each subscriber starts at 1.0; we add <b>+0.4 per Mailchimp star</b> (so a 5★ reader counts as 3.0), <b>+2.0 if Wikipedia-notable</b>, and <b>+1.5 if the contacts data places them in government or the judiciary</b>. Track whether this number grows over time — it answers "are we reaching the right rooms?" better than raw subscriber count.
       </div>
       <div class="perfgrid">
         <div class="perfcell"><div class="pl">Influence score (total)</div><div class="pn">${fmtN(iwr.score)}</div><div class="pd flat">summed across the ${fmtN(iwr.raw_mau||0)} active readers</div></div>
-        <div class="perfcell"><div class="pl">Score per reader (avg)</div><div class="pn">${iwr.score_per_reader}</div><div class="pd flat">1.0 = baseline, 5.0 ≈ max</div></div>
+        <div class="perfcell"><div class="pl">Score per reader (avg)</div><div class="pn">${iwr.score_per_reader}</div><div class="pd flat">1.0 = baseline, 6.5 = max</div></div>
         
         
       </div>
@@ -4267,7 +4289,7 @@ function renderTraffic(data){
   // ---- Site-visitor total, with change vs the prior 30 days ----
   const vNow = gt.visitors_30d||0, vPrev = gt.visitors_prev_30d;
   const header = `<div style="margin-bottom:16px;font-size:13px;color:var(--vc-charcoal)">
-    <b style="color:var(--vc-black);font-size:16px;font-variant-numeric:tabular-nums">${fmtN(vNow)}</b> unique site visitors · last 30 days
+    <b style="color:var(--vc-black);font-size:16px;font-variant-numeric:tabular-nums">${fmtN(vNow)}</b> readers (Ghost, each counted once a day, summed) · last 30 days
     ${vPrev!=null ? `&nbsp; ${pctBadge(vNow, vPrev)} <span style="opacity:.7">vs prior 30 days (${fmtN(vPrev)})</span>` : ""}</div>`;
 
   // ---- Overall website-traffic TREND (weekly visitors + page views) ----
@@ -4307,7 +4329,7 @@ function renderTraffic(data){
     }
     trend = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 6px" title="Total visitors and page views to vitalcitynyc.org, bucketed by week, since Ghost analytics began recording. The whole-site trend — the top of the funnel.">Overall website traffic · weekly, whole site</div>
       <div class="chartwrap"><svg class="chart" id="trafficTrendSvg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="height:auto;aspect-ratio:${W}/${H}">${hh}</svg></div>
-      <div style="font-size:11px;color:var(--vc-charcoal);margin:4px 0 2px"><span style="color:#217ebe">■</span> unique visitors &nbsp;&nbsp; <span style="color:#ff7c53">■</span> page views</div>`;
+      <div style="font-size:11px;color:var(--vc-charcoal);margin:4px 0 2px"><span style="color:#217ebe">■</span> readers (Ghost, once a day each, summed by week) &nbsp;&nbsp; <span style="color:#ff7c53">■</span> page views</div>`;
     trendPts = series.map((s,i)=>({x:x(i),
       html:`<div class="tipwk">Week of ${esc(s.wk)}${s.partial?' · in progress':''}</div><div><span style="color:#9fd0ef">■</span> ${fmtN(s.visitors||0)} visitors</div><div><span style="color:#f3b48c">■</span> ${fmtN(s.pageviews||0)} page views</div>${s.partial?'<div style="opacity:.75;margin-top:2px">partial — this week isn\'t over yet</div>':''}`}));
     trendGeo = {padT, innerH};
@@ -4330,7 +4352,7 @@ function renderTraffic(data){
     </tr>`).join("")}
     </tbody></table>` : `<div style="font-size:12px;color:var(--vc-charcoal);margin-top:14px">No per-page traffic in the window yet.</div>`;
 
-  // ---- Most-read pieces by year. GA4 tracked the site before the April 2026
+  // ---- Most-read pieces by year. GA4 tracked the site before the March 2026
   // Ghost handoff (back to 2023), so it can build per-year leaderboards Ghost's
   // analytics can't. A year toggle switches between the current year-to-date
   // and full prior years. Falls back to a single "since Jan 1" / Ghost list if
@@ -4361,7 +4383,7 @@ function renderTraffic(data){
     const lbl = (k)=> k==="all" ? "All time" : (k===curYr ? k+" · YTD" : k);
     const toggle = `<div id="topAllToggle" style="display:flex;gap:6px;margin-bottom:8px">${keys.map((k,i)=>`<button class="winbtn${i===0?' on':''}" data-y="${k}">${lbl(k)}</button>`).join("")}</div>`;
     topAll = `
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Most-read articles by unique visitors, by calendar year (plus all-time), from GA4 (which tracked the site before the April 2026 Ghost handoff, back to 2023). A piece that lived at both an old and new URL is merged and its visitors summed; titles come from the Ghost catalogue, and a few older URLs show a tidied-up slug. The current year is year-to-date and not comparable to full years.">Most-read pieces · ranked by unique visitors <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span></div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Most-read articles by unique visitors, by calendar year (plus all-time), from Google Analytics (which also tracked the site before the March 2026 move to Ghost, back to 2023). A piece that lived at both an old and new URL is merged and its visitors summed; titles come from the Ghost catalogue, and a few older URLs show a tidied-up slug. The current year is year-to-date and not comparable to full years.">Most-read pieces · ranked by unique visitors <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span></div>
       ${toggle}
       <div id="topAllBody">${topAllTable(pagesFor(keys[0]), keys[0])}</div>`;
   } else {
@@ -4371,7 +4393,7 @@ function renderTraffic(data){
       ? new Date((ga4.top_pages_since_date||"2026-01-01")+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"})
       : (gt.top_pages_since ? new Date(gt.top_pages_since+"T12:00:00Z").toLocaleDateString("en-US",{month:"long",year:"numeric",timeZone:"UTC"}) : "launch");
     topAll = allPages.length ? `
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Most-read articles by unique visitors since ${esc(sinceLbl)}.${allViaGA4 ? " From GA4, which tracked the site before the April 2026 Ghost handoff. A piece that lived at both an old and new URL is merged." : " From Ghost analytics."}">Most-read pieces · since ${esc(sinceLbl)}, ranked by unique visitors${allViaGA4 ? ' <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span>' : ''}</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:22px 0 8px" title="Most-read articles by unique visitors since ${esc(sinceLbl)}.${allViaGA4 ? " From Google Analytics, which also tracked the site before the March 2026 move to Ghost. A piece that lived at both an old and new URL is merged." : " From Ghost analytics."}">Most-read pieces · since ${esc(sinceLbl)}, ranked by unique visitors${allViaGA4 ? ' <span style="font-weight:400;text-transform:none;letter-spacing:0">· via GA4</span>' : ''}</div>
       ${topAllTable(allPages, null)}` : "";
   }
 
@@ -4477,7 +4499,7 @@ function renderTraffic(data){
   }
 
   const caveat = `<div style="font-size:11px;color:var(--vc-charcoal);line-height:1.55;border-top:1px dashed var(--vc-cloud);margin-top:18px;padding-top:10px">
-    <b style="color:var(--vc-black)">About these numbers — two sources:</b> the weekly trend, the 30-day top pieces, the sources, and the 30-day visitor tile come from <b>Ghost</b>; the 1-year tile, the "since Jan 1" list and the engagement times come from <b>Google Analytics 4</b> (which tracked the site before the April handoff). Don't compare the two head to head — watch each for direction over time. In general <b>Ghost reads higher</b>: it's first-party and cookieless, so ad blockers, Safari/Firefox tracking protection and consent banners don't suppress it the way they block GA4's third-party script. And because Ghost counts a returning reader once per 24-hour window (no cookies), its "unique visitors" drift above GA4's deduplicated users over longer ranges. Neither is "wrong" — they answer different questions. <a href="https://plausible.io/blog/why-analytics-numbers-dont-match" target="_blank" style="color:var(--vc-cerulean)">Why no two analytics tools agree &#8599;</a></div>`;
+    <b style="color:var(--vc-black)">About these numbers — two sources:</b> the weekly trend, the 30-day top pieces, the sources, and the 30-day visitor tile come from <b>Ghost</b>; the 1-year tile, the most-read-by-year list and the engagement times come from <b>Google Analytics 4</b> (which also tracked the site before the March 2026 move to Ghost). Don't compare the two head to head — watch each for direction over time. <b>Week for week, Google Analytics reads about 30% higher</b>, because it counts every visit (a reader who comes back later the same day counts twice) while Ghost counts each reader once a day. Ad blockers and browser tracking protection hide some readers from Google Analytics and not from Ghost, but the repeat visits outweigh that. Over long ranges the pattern can flip: Ghost adds up its daily counts, so someone who reads on 20 days counts 20 times, while Google Analytics' yearly users count each device once. Neither is "wrong" — they answer different questions. <a href="https://plausible.io/blog/why-analytics-numbers-dont-match" target="_blank" style="color:var(--vc-cerulean)">Why no two analytics tools agree &#8599;</a></div>`;
   host.innerHTML = header + trend + cadence + topPieces + topAll + engBlock + sources + caveat;
   if(trendPts){ const tsvg = document.querySelector("#trafficTrendSvg");
     if(tsvg) attachChartHover(tsvg, trendGeo.padT, trendGeo.innerH, trendPts); }
@@ -4621,7 +4643,7 @@ function renderTopSearches(data){
       <th class="num" title="Whether this search is growing or fading — impressions in the second half of the year to date versus the first. Blank where there is too little history to say.">Trend</th>
       <th title="The Vital City piece that ranks for this search, if the automated matcher found one.">Piece that ranks</th>
     </tr></thead><tbody id="tsBody"></tbody></table>
-    <div class="flagnote" style="margin-top:10px"><b>How to read this.</b> <b>NO MATCH</b> = the automated matcher found no Vital City piece for that search. <b>UNDER PAR</b> = a piece ranks but click-through is under half what that position typically earns. <b>Gap</b> is the estimated difference between the two, built from a standard click-through-by-position curve &mdash; a yardstick for sizing, not a forecast. These describe the data; what they are worth editorially is a separate judgment. <b>Two cautions.</b> The piece matcher is automated: &ldquo;nothing matched&rdquo; can mean the match failed rather than the subject is uncovered, so check before commissioning &mdash; <i>mamdani approval rating</i> is marked uncovered yet earns thousands of clicks, which means something is ranking. And related searches are counted separately, so the several Mamdani variants below understate that topic&rsquo;s true combined demand. Source: Google Search Console, ${yr} to date; only searches Vital City already appears for, so a subject the site has never ranked for cannot show up here at all.</div>`;
+    <div class="flagnote" style="margin-top:10px"><b>How to read this.</b> <b>NO MATCH</b> = the automated matcher found no Vital City piece for that search. <b>UNDER PAR</b> = a piece ranks but click-through is under half what that position typically earns. <b>Gap</b> is the estimated difference between the two, built from a standard click-through-by-position curve &mdash; a yardstick for sizing, not a forecast. These describe the data; what they are worth editorially is a separate judgment. <b>Two cautions.</b> The piece matcher is automated: &ldquo;nothing matched&rdquo; can mean the match failed rather than the subject is uncovered, so check before commissioning &mdash; a search marked uncovered that still earns many clicks means something is ranking. And related searches are counted separately, so several variants of one topic understate its combined demand. Source: Google Search Console, ${yr} to date; only searches Vital City already appears for, so a subject the site has never ranked for cannot show up here at all.</div>`;
 
   const inp = host.querySelector("#tsFilter"), tb = host.querySelector("#tsBody"), cnt = host.querySelector("#tsCount");
   let filt="all", sortK="missed";
@@ -5332,7 +5354,10 @@ function renderWeekPulse(data, span){
     signups:  sumField(act,"d","subs",a,b),
     unsubs:   sumField(act,"d","unsubs",a,b),
     opens:    sumField(act,"d","opens",a,b),
-    sends:    countWhere(mc.campaigns,"sent",a,b,c=>c.sent),
+    // Newsletters only (the Thursday sends to the full list), matching the
+    // tile's label and the report's newsletter section; appeals, resends and
+    // small automations are left out.
+    sends:    countWhere((mc.campaigns||[]).filter(c=>c.kind==="newsletter" && (c.sent_to||0)>=1000),"sent",a,b,c=>c.sent),
     raised:   sumField(db.daily_series,"d","amt",a,b),
     gifts:    sumField(db.daily_series,"d","gifts",a,b),
     articles: countWhere(pubRows,"published",a,b,p=>p.published),
@@ -5357,7 +5382,7 @@ function renderWeekPulse(data, span){
     signups:  ((act||[]).filter(r=>(+r.subs||0)>0).map(r=>r.d).sort()[0]) || firstOf(act,"d"),
     visitors: firstOf(gt.kpi_rows_30d,"date"),
     articles: firstOf(pubRows,"published"),
-    money:    firstOf(db.daily_series,"d"),
+    money:    GIVING_START,     // Donorbox keeps a rolling year; online giving began here
   };
   // Visitors have a second, coarser source: weekly rows going back further.
   const weekFirst = firstOf(gt.traffic_series,"wk");
@@ -5388,12 +5413,15 @@ function renderWeekPulse(data, span){
   if(useGA){
     const g=gaVisitsIn(curStart,curEnd);
     cur.visitors=g.v; cur.visitorsEst=g.est; cur.visitorsThrough=(g.through&&g.through<curEnd)?g.through:null;
+    // When visits stop short of the window's end, signups per visit uses the
+    // signups over the same days, and the visits norm covers the same days.
+    if(cur.visitorsThrough) cur.signupsForSpv=sumField(act,"d","subs",curStart,cur.visitorsThrough);
     prev.visitors=gaVisitsIn(prevStart,prevEnd).v;
   }
   cur.net=cur.signups-cur.unsubs; prev.net=prev.signups-prev.unsubs;
   // Conversion: signups per 1,000 visitors over the same window. The number
   // still under our control when traffic falls, so it sits with the list tiles.
-  const spv=o=> (o.visitors!=null && o.visitors>0) ? o.signups/o.visitors*1000 : null;
+  const spv=o=> (o.visitors!=null && o.visitors>0) ? (o.signupsForSpv!=null?o.signupsForSpv:o.signups)/o.visitors*1000 : null;
   cur.spv=spv(cur); prev.spv=spv(prev);
 
   // A typical week, not last week. The prior-7-days comparison has the same
@@ -5421,22 +5449,26 @@ function renderWeekPulse(data, span){
   // "average week" reads ~$2,500 and every quiet week shows as -100%. The
   // median week is the honest "typical week" for campaign-driven series.
   function medianN(rows,dateKey,valKey){
-    const seq=(rows||[]).filter(r=>r[dateKey]&&String(r[dateKey]).slice(0,10)<curStart)
-      .sort((a,b)=>String(a[dateKey]).localeCompare(String(b[dateKey])));
-    let start=0;
-    while(start<seq.length && !((+seq[start][valKey]||0)>0)) start++;
-    const hist=seq.slice(start).slice(-365);
-    if(hist.length<28) return null;
-    const wk={};
-    hist.forEach(r=>{const d=new Date(String(r[dateKey]).slice(0,10)+"T00:00:00Z");
-      const k=Math.floor(d.getTime()/(N*86400000)); wk[k]=(wk[k]||0)+(+r[valKey]||0);});
-    const vals=Object.values(wk).sort((a,b)=>a-b);
-    // Three 90-day blocks, one of them December, is not a "typical quarter".
-    // Under eight blocks the tile shows the count alone.
+    // Donorbox keeps rows only for days with a gift, so blocks are laid out on
+    // the calendar (consecutive N-day stretches ending the day before this
+    // window, back to online giving's start or a year) and a stretch with no
+    // gifts counts as zero. Building blocks from gift rows alone skipped the
+    // empty stretches and set the "typical" figure too high.
+    const floor = [GIVING_START, shift(curStart,-365)].sort().pop();
+    const byDay={}; (rows||[]).forEach(r=>{ const d=String(r[dateKey]||"").slice(0,10); if(d) byDay[d]=(byDay[d]||0)+(+r[valKey]||0); });
+    const vals=[];
+    for(let e=shift(curStart,-1);;){
+      const b=shift(e,-(N-1)); if(b<floor) break;
+      let t=0; for(let d=b; d<=e; d=shift(d,1)) t+=byDay[d]||0;
+      vals.push(t); e=shift(b,-1);
+    }
+    // Under eight blocks (e.g. three 90-day stretches, one of them December)
+    // is not a "typical" anything; the tile shows the count alone.
     if(vals.length<8) return null;
+    vals.sort((a,b)=>a-b);
     const mid=vals.length>>1;
     const med=vals.length%2?vals[mid]:(vals[mid-1]+vals[mid])/2;
-    return {val:med, months:Math.round(hist.length/30), median:true};
+    return {val:med, months:Math.round(vals.length*N/30), median:true};
   }
   const norms={
     signups: normN(act,"d","subs"),
@@ -5452,7 +5484,8 @@ function renderWeekPulse(data, span){
       if(ser.length<4) return null;
       // weekly rows -> per-day -> scaled to this window
       const perDay=ser.reduce((s,w)=>s+(w.visitors||0),0)/(ser.length*7);
-      return {val:perDay*N, months:Math.round(ser.length*7/30)};
+      const nDays = (useGA && cur.visitorsThrough) ? (Date.parse(cur.visitorsThrough)-Date.parse(curStart))/86400000+1 : N;
+      return {val:perDay*nDays, months:Math.round(ser.length*7/30)};
     })(),
   };
   // Net change is signups minus unsubscribes over ONE shared stretch of
@@ -5481,7 +5514,8 @@ function renderWeekPulse(data, span){
       norms.articles={val:inYear.length/spanDays*N, months:Math.round(spanDays/30)};
   }
   if(norms.signups&&norms.visitors&&norms.visitors.val>0)
-    norms.spv={val:norms.signups.val/norms.visitors.val*1000, months:Math.min(norms.signups.months,norms.visitors.months)};
+    norms.spv={val:norms.signups.val/(norms.visitors.val*N/((useGA&&cur.visitorsThrough)?((Date.parse(cur.visitorsThrough)-Date.parse(curStart))/86400000+1):N))*1000,
+      months:Math.min(norms.signups.months,norms.visitors.months), thin:!!norms.signups.thin};
 
   // Build tiles. goodDown=true means a DECREASE is the good outcome (unsubs).
   const fmtMoney=v=>"$"+fmtN(Math.round(v));
@@ -5491,7 +5525,7 @@ function renderWeekPulse(data, span){
     {k:"signups", lbl:"New signups", fmt:fmtN},
     {k:"unsubs",  lbl:"Unsubscribes", fmt:fmtN, goodDown:true},
   ];
-  if(gt.available) TILES.push({k:"spv", lbl:"Signups per 1,000 visitors", fmt:v=>(+v).toFixed(2), dec:true});
+  if(gt.available) TILES.push({k:"spv", lbl: useGA ? "Signups per 1,000 visits (Google Analytics)" : "Signups per 1,000 visitors (Ghost)", fmt:v=>(+v).toFixed(2), dec:true});
   TILES.push(
     {k:"raised",  lbl:"Raised", fmt:fmtMoney},
     {k:"gifts",   lbl:"Gifts", fmt:fmtN},
@@ -5507,12 +5541,17 @@ function renderWeekPulse(data, span){
   const sg=(data.ghost_signup_attribution||{}).recent_signups||[];
   const un=data.recent_unsubs||[];
   const gf=(db.recent_gifts||[]);
+  // The name lists are short recent feeds, not the full record behind the
+  // tiles, so a list is offered only when its feed covers the whole window,
+  // and it is titled with the window's own dates.
+  const perShort=`${pxDay(curStart)} to ${pxDay(curEnd)}`;
+  const feedStart=rows=>(rows||[]).map(r=>String(r.date||"").slice(0,10)).filter(Boolean).sort()[0]||"9999";
   window._weekNames={
-    signups:{title:"New signups · last 7 days", cols:["date","name","email","source"],
-             list: sg.filter(r=>inWin(r.date))},
-    unsubs:{title:"Unsubscribes · last 7 days", cols:["date","name","email"],
-            list: un.filter(r=>inWin(r.date))},
-    gifts:{title:"Gifts · last 7 days", cols:["date","donor","amount","email"],
+    signups:{title:`New signups · ${perShort}`, period:perShort, cols:["date","name","email","source"],
+             list: feedStart(sg)<=curStart ? sg.filter(r=>inWin(r.date)) : []},
+    unsubs:{title:`Unsubscribes · ${perShort}`, period:perShort, cols:["date","name","email"],
+            list: feedStart(un)<=curStart ? un.filter(r=>inWin(r.date)) : []},
+    gifts:{title:`Gifts · ${perShort}`, period:perShort, cols:["date","donor","amount","email"],
            list: gf.filter(r=>inWin(r.date))},
   };
   const CLICK_MAX=200;   // safety; weekly counts are far below this
@@ -5607,7 +5646,7 @@ function renderWeekPulse(data, span){
     const nm=clickable[t.k] && window._weekNames[t.k];
     const canClick = nm && nm.list.length>0 && nm.list.length<=CLICK_MAX;
     const numHtml = canClick
-      ? `<span class="wpclick" onclick="showWeekNames('${t.k}')" title="Click to see the ${nm.list.length} ${esc(t.lbl.toLowerCase())} behind this number">${t.fmt(now)}</span>`
+      ? `<span class="wpclick" onclick="showWeekNames('${t.k}')" title="Click to see the ${nm.list.length} names on record for ${esc(nm.period)} (from the recent-names feed, which can differ slightly from the count)">${t.fmt(now)}</span>`
       : t.fmt(now);
     return `<div class="perfcell${t.hero?' hero':''}"><div class="pl">${esc(t.lbl)}</div><div class="pn">${numHtml}</div><div class="pd ${cls}">${esc(dtxt)}</div></div>`;
   }).join("");
@@ -5708,7 +5747,7 @@ function renderWeekPulse(data, span){
   if(h) h.textContent = period + ` · against a typical ${pxStretch(span,N)}`;
   const nEl=$("#weekPulseNote");
   if(nEl) nEl.innerHTML = `Each tile covers ${esc(period)}, against a typical `+
-    `${pxStretch(span,N)} — the average over the trailing year of real data, this window excluded, falling back to the ` +
+    `${pxStretch(span,N)} — the average over up to a year of history before this window (signups from April 2026, the first full month on the Ghost form; Ghost readers from March 2026), falling back to the ` +
     `prior ${N} days where no history exists. Fundraising uses the median rather than the mean, because giving is lumpy ` +
     `and one campaign would otherwise set the bar. For unsubscribes, down is good (shown green). Underlined numbers are ` +
     `clickable — see exactly who. A tile reading &ldquo;—&rdquo; means this window starts before that data does. ` +
@@ -5753,14 +5792,27 @@ function scorecardModel(data){
   const mc=data.mailchimp||{}, ga4=data.ga4||{}, db=data.donorbox||{}, gh=data.ghost||{};
   const act=mc.daily_activity||[];
   const lastDay=act.map(r=>r.d).filter(Boolean).sort().pop() || new Date().toISOString().slice(0,10);
-  const nextDay=new Date(Date.parse(lastDay+"T00:00:00Z")+86400000).toISOString().slice(0,10);
-  const full = nextDay.slice(8,10)==="01" ? lastDay.slice(0,7) : scAdd(lastDay.slice(0,7),-1);
+  // The latest day in the feed is today, still filling in, so the month it
+  // falls in is never complete (on Sept. 30 this used to call September full).
+  const full = scAdd(lastDay.slice(0,7),-1);
   const months=[]; for(let k=23;k>=0;k--) months.push(scAdd(full,-k));
   const ms={}; (mc.monthly_signups||[]).forEach(r=>ms[r.month]=r);
-  const mcp={}; (mc.monthly_campaigns||[]).forEach(r=>mcp[r.month]=r);
+  // Newsletter measures use the Thursday newsletters to the full list only;
+  // appeals, resends and small automations have different open and
+  // unsubscribe patterns. Rates are weighted by emails delivered.
+  const mcp={};
+  (mc.campaigns||[]).filter(c=>c.kind==="newsletter" && (c.sent_to||0)>=1000 && c.sent).forEach(c=>{
+    const m=String(c.sent).slice(0,7), dl=c.delivered||c.sent_to||0;
+    const e=mcp[m]=mcp[m]||{month:m, recipients:0, o:0, k:0, unsubs:0};
+    e.recipients+=dl; e.o+=(+c.open_pct||0)*dl; e.k+=(+c.click_pct||0)*dl; e.unsubs+=(+c.unsubs||0); });
+  Object.values(mcp).forEach(e=>{ e.open_pct=e.recipients?Math.round(e.o/e.recipients*10)/10:null; e.click_pct=e.recipients?Math.round(e.k/e.recipients*10)/10:null;
+    e.ctor_pct=(e.open_pct&&e.click_pct!=null)?Math.round(e.click_pct/e.open_pct*1000)/10:null; });
   // Visits: each GA4 weekly total is spread evenly over its seven days and then
   // summed by calendar month, so a month with five Mondays doesn't read as a jump.
-  const vis={}; const tw=(ga4.traffic_weekly||[]).filter(w=>w.wk&&w.visits!=null);
+  // Complete weeks only: the week in progress holds a partial total, which
+  // spread over seven days would understate a month it straddles.
+  const gAsof=String(ga4.as_of||"").slice(0,10);
+  const vis={}; const tw=(ga4.traffic_weekly||[]).filter(w=>w.wk&&w.visits!=null&&(!gAsof||new Date(Date.parse(w.wk+"T00:00:00Z")+6*86400000).toISOString().slice(0,10)<gAsof));
   tw.forEach(w=>{ for(let i=0;i<7;i++){ const m=new Date(Date.parse(w.wk+"T00:00:00Z")+i*86400000).toISOString().slice(0,7); vis[m]=(vis[m]||0)+w.visits/7; } });
   const visStart = tw.length ? scAdd(tw[0].wk.slice(0,7), tw[0].wk.slice(8)==="01"?0:1) : null;
   const cites={}; (data.news_mentions||[]).forEach(x=>{ if(x.own_post||x.roundup||!["media","republication","gov"].includes(x.kind)) return; if(x.kind!=="media"&&!x.verified) return;
@@ -5825,8 +5877,8 @@ function scorecardModel(data){
    {k:"conv", name:"Signups per 1,000 visits", unit:"new subscribers per 1,000 visits,", kind:"rate", good:1,
     def:"How well the site turns readers into subscribers.",
     vals:S(m=>{ if(SC_CONV_SKIP.has(m)) return null; const v=vis[m], r=ms[m]; if(!v||!r) return null;
-      const s = m>="2026-04" ? (r.ghost_signups||0) : r.new_signups; return s/v*1000; }, visStart), fmt:v=>(+v).toFixed(1),
-    note:"From April 2026 signups are counted on the Ghost form, where they now happen. May to September 2025 (bot signups) and March 2026 (a one-time catch-up import) are left out; they show as gaps in the line.",
+      const s = r.ghost_signups; if(!s) return null; return s/v*1000; }, visStart), fmt:v=>(+v).toFixed(1),
+    note:"Signups are gross, dated by each person's real signup day (the Mailchimp form before the March 2026 move to Ghost, the Ghost form since), set against Google Analytics visits. May to September 2025 (bot signups) and March 2026 (the site move) are left out; they show as gaps in the line.",
     std:()=>"No reliable public standard for a free newsletter, so this is compared with Vital City's own recent average."},
    {k:"dm", name:"Decision-makers joining", unit:"joined in", kind:"flow", good:1, waiting: !rf.available,
     def:"New subscribers from government, universities, the press, and nonprofit and foundation leadership, as tagged in the contacts database (with .gov and .edu addresses as a fallback).",
@@ -6152,14 +6204,18 @@ function pulseExtras(w, data){
     const hist=(rf.monthly||[]).filter(r=>r.m<am).slice(-12);
     const per=hist.length>=6 ? hist.reduce((s,r)=>s+K.reduce((t,k)=>t+(+(r.join||{})[k]||0),0),0)/hist.length : null;
     const f=day(rw.join.from), t=day(rw.join.to);
-    ex.dm={n, base: per!=null ? per*N/30.4 : null, months:hist.length, from:f, to:t, other:(f!==a||t!==b),
+    const spanDays=(Date.parse(t)-Date.parse(f))/86400000+1;
+    ex.dm={n, base: per!=null ? per*spanDays/30.4 : null, months:hist.length, from:f, to:t, other:(f!==a||t!==b), spanDays,
       parts:K.filter(k=>c[k]).map(k=>`${c[k]} ${String(lab[k]||k).toLowerCase()}`)};
   }
 
   // 3. Citations: verified press, government and republication mentions only
   //    (the same rule as the impact ledger: the page was read and the mention
   //    is substantive, not a passing reference or a roundup).
-  const cite=x=>!x.own_post && !x.roundup && ["media","republication","gov"].includes(x.kind) && x.verified===true && x.incidental!==true;
+  // Same rule as the key indicators: never a page that was read and found
+  // not to cite us, never a passing mention or roundup; government and
+  // republication items must be confirmed.
+  const cite=x=>!x.own_post && !x.roundup && ["media","republication","gov"].includes(x.kind) && x.verified!==false && x.incidental!==true && (x.kind==="media" || x.verified===true);
   const seen={}; const cs=[];
   (data.news_mentions||[]).filter(cite).forEach(x=>{ const d=day(x.published_iso); const k=(x.title||"").toLowerCase().slice(0,60)+"|"+(x.source||"");
     if(seen[k]) return; seen[k]=1; cs.push({...x, _d:d}); });
@@ -6175,13 +6231,12 @@ function pulseExtras(w, data){
   //    and Google Analytics give these for the last 30 days and no other span).
   if(w.span===28){
     const src=(gt.top_sources_30d||[]).filter(r=>(r.visits||0)+(r.prev||0)>=300).slice(0,7);
-    const gEnd=String(ga4.as_of||b).slice(0,10); ex.srcTo=gEnd; ex.srcFrom=shift(gEnd,-29);
+    const gEnd=String(gt.window_end||shift(String(ga4.as_of||b).slice(0,10),-1)).slice(0,10); ex.srcTo=gEnd; ex.srcFrom=shift(gEnd,-29);
     if(src.length) ex.sources=src.map(r=>({s:r.source, n:r.visits||0, prev:r.prev||0,
       pct:(r.prev||0)>=200 ? Math.round(((r.visits||0)-r.prev)/r.prev*100) : null}));
     const rt=(ga4.returning||{}), d30=rt.d30, by=rt.by_year||{};
     const lastYear=String(+a.slice(0,4)-1);
-    if(d30 && d30.returning_pct!=null) ex.returning={pct:d30.returning_pct, n:d30.returning||0,
-      prior: by[lastYear] ? {y:lastYear, pct:by[lastYear].returning_pct} : null};
+    if(d30 && d30.returning_pct!=null) ex.returning={pct:d30.returning_pct, n:d30.returning||0, prior:null};
   }
 
   // 5. New work versus the archive among the most-read pieces, and each
@@ -6329,8 +6384,8 @@ function pulseExtraInsights(w){
   if(ex.dm && ex.dm.base!=null && ex.dm.base>=3){
     const d=(ex.dm.n-ex.dm.base)/ex.dm.base*100;
     const dmP=ex.dm.other?` (${pxDay(ex.dm.from)} to ${pxDay(ex.dm.to)})`:"";
-    if(d<=-30) add("watch", `Decision-makers joining${dmP}: ${ex.dm.n}, against a typical ${Math.round(ex.dm.base)} for ${pxFor(w.span,w.N)}.`);
-    else if(d>=30) add("good", `Decision-makers joining${dmP}: ${ex.dm.n}, against a typical ${Math.round(ex.dm.base)} for ${pxFor(w.span,w.N)}.`);
+    if(d<=-30) add("watch", `Decision-makers joining${dmP}: ${ex.dm.n}, against a typical ${Math.round(ex.dm.base)} for ${ex.dm.spanDays===7?"a week":ex.dm.spanDays+" days"}.`);
+    else if(d>=30) add("good", `Decision-makers joining${dmP}: ${ex.dm.n}, against a typical ${Math.round(ex.dm.base)} for ${ex.dm.spanDays===7?"a week":ex.dm.spanDays+" days"}.`);
   }
   if(ex.cites && ex.cites.base!=null && ex.cites.base>=2){
     const d=(ex.cites.n-ex.cites.base)/ex.cites.base*100;
@@ -6367,11 +6422,11 @@ function pulseReportModel(all){
     pxSignupEras(data),
     `Since March 2026 every signup happens on the Ghost form and is synced to Mailchimp weekly, so signup counts here, dated by the day each person signed up, can differ from Mailchimp's monthly totals by timing.`,
     `The May–September 2025 signup surge was roughly half bots; about 2,400 of those accounts are still on the list. No signup comparison is made against a period that includes those months.`,
-    `Norms: each window is set against the average of the trailing year of real data with the window itself excluded, falling back to the same number of days immediately before where no history exists. Money uses the median. A norm built on less than twice the window's history is shown without a percentage. Under 20 gifts, no rate is given.`,
+    `Norms: each window is set against the average over up to a year of history before it (signups and net change from April 2026, the first full month on the Ghost form; Ghost readers from March 2026; the window itself never included), falling back to the same number of days immediately before where no history exists. Money uses the median. A norm built on less than twice the window's history is shown without a percentage. Under 20 gifts, no rate is given.`,
     `"Active subscribers" counts people who opened at least one email in the last 30 days. Subject-line tests are read from each of their separate sends, so they are counted in full.`,
   ];
   const mo=(mc.monthly_campaigns||[]).filter(r=>r.open_pct).slice(-1)[0];
-  if(mo) context.push(`Latest month with sends (${mo.month}, ${mo.month===String(asof).slice(0,7)?"partial":"full"}): open rate ${mo.open_pct}%, click rate ${mo.click_pct}%${mo.ctor_pct?`, click-to-open ${mo.ctor_pct}%`:""}. Subject-line tests are counted across all their sends; checked against Mailchimp's per-send reports, Sept. 27, 2026.`);
+  if(mo) context.push(`Latest month with sends (${mo.month}, ${mo.month===String(data.generated_at||"").slice(0,7)?"month still in progress":"full month"}): open rate ${mo.open_pct}%, click rate ${mo.click_pct}%${mo.ctor_pct?`, click-to-open ${mo.ctor_pct}%`:""}. Subject-line tests are counted across all their sends; checked against Mailchimp's per-send reports, Sept. 27, 2026.`);
   if(gt.available) context.push(`Site (Ghost): ${fmtN(gt.visitors_30d||0)} readers and ${fmtN(gt.pageviews_30d||0)} page views in the last 30 days; ${fmtN(gt.visitors_365d||0)} readers since Ghost's record began (${gt.history_start||""}).`);
   if(db.active_recurring_donors!=null) context.push(`Recurring giving: ${fmtN(db.active_recurring_donors)} active recurring donors, about $${fmtN(Math.round(db.mrr_estimate||0))} a month.`);
   windows.forEach(w=>{ w.extra=pulseExtras(w, data); w.rows=pulseRows(w);
@@ -6428,14 +6483,14 @@ function pulseInsights(w, data){
   if(V){
     const pv=pc(V); const top=(w.top||[])[0];
     const sinceM=/since (\S+?)(?:\s|$|—)/.exec(w.topLbl||"");
-    if(pv!=null&&pv>=20) add("good", `Site visitors: ${V.value}, ${sgn(pv)}${pv}%${vs(V)}${top?`. The most-read piece${sinceM?` since ${sinceM[1]} (Ghost keeps no list for this exact window)`:""} was "${top.t}" (${top.v})`:""}.`);
-    else if(pv!=null&&pv<=-20) add("watch", `Site visitors: ${V.value}, ${pv}%${vs(V)}.`);
+    if(pv!=null&&pv>=20) add("good", `${V.lbl}: ${V.value}, ${sgn(pv)}${pv}%${vs(V)}${top?`. The most-read piece${sinceM?` since ${sinceM[1]} (Ghost keeps no list for this exact window)`:""} was "${top.t}" (${top.v})`:""}.`);
+    else if(pv!=null&&pv<=-20) add("watch", `${V.lbl}: ${V.value}, ${pv}%${vs(V)}.`);
   }
   if(R){
     const pr=pc(R), pv=V?pc(V):null;
     if(pr!=null&&pr<=-20&&pv!=null&&pv>=10) add("watch", `Visitors rose faster than signups: ${R.value} signups per 1,000 visitors, ${pr}%${vs(R)}. More people arrived without subscribing, so the signup prompt and the gated pieces are where to look.`);
-    else if(pr!=null&&pr>=20) add("good", `Signups per 1,000 visitors: ${R.value}, ${sgn(pr)}${pr}%${vs(R)}.`);
-    else if(pr!=null&&pr<=-20) add("watch", `Signups per 1,000 visitors: ${R.value}, ${pr}%${vs(R)}.`);
+    else if(pr!=null&&pr>=20) add("good", `${R.lbl}: ${R.value}, ${sgn(pr)}${pr}%${vs(R)}.`);
+    else if(pr!=null&&pr<=-20) add("watch", `${R.lbl}: ${R.value}, ${pr}%${vs(R)}.`);
   }
   // 3. publishing pace and sends
   if(A){ const pa=pc(A);
@@ -6474,7 +6529,13 @@ function pulseBenchmarks(m, data){
   // most recent sends are often A/B splits whose per-member opens Mailchimp
   // does not report), averaged.
   const thisMonth=String(m.asof||"").slice(0,7);
-  const full=(mc.monthly_campaigns||[]).filter(r=>r.open_pct&&r.month&&r.month<thisMonth).slice(-3);
+  // Newsletters only, weighted by delivered emails, as in the key indicators.
+  const nm={};
+  (mc.campaigns||[]).filter(c=>c.kind==="newsletter" && (c.sent_to||0)>=1000 && c.sent).forEach(c=>{
+    const m=String(c.sent).slice(0,7), dl=c.delivered||c.sent_to||0, e=nm[m]=nm[m]||{month:m,r:0,o:0,k:0};
+    e.r+=dl; e.o+=(+c.open_pct||0)*dl; e.k+=(+c.click_pct||0)*dl; });
+  const nrows=Object.values(nm).sort((a,b)=>a.month.localeCompare(b.month)).map(e=>({month:e.month, open_pct:e.o/e.r, click_pct:e.k/e.r, ctor_pct:e.o?e.k/e.o*100:null}));
+  const full=nrows.filter(r=>r.open_pct&&r.month&&r.month<String(data&&data.generated_at||m.asof||"").slice(0,7)).slice(-3);
   const avg=k=>{const v=full.map(r=>+r[k]).filter(x=>x>0); return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length*10)/10:null;};
   const MON=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
   const fm=ym=>{const p=String(ym||"").split("-"); return p.length>1?`${MON[+p[1]-1]} ${p[0]}`:ym;};
@@ -6489,7 +6550,7 @@ function pulseBenchmarks(m, data){
     norm:"~3.3% nonprofit average (M+R 2025); 2.27% all-industry; 3–6% media band (Letterhead / ClickMinded / Brevo 2026 compilations).",
     read: mo.click_pct!=null ? `${band(mo.click_pct,3,6)} the media band` : ""});
   rows.push({k:"Click-to-open", vc: mo.ctor_pct!=null?`${mo.ctor_pct}% (${mo.month})`:"—",
-    norm:"5.3–8.6% cross-industry band; the one email metric Apple's auto-opens cannot inflate.",
+    norm:"5.3–8.6% cross-industry band. Apple Mail's automatic opens swell the opens it divides by, so they push it down rather than up; read it as a floor.",
     read: mo.ctor_pct!=null ? `${band(mo.ctor_pct,5.3,8.6)} the band` : ""});
   // Churn from the actual last 30 days of the daily series, whatever window
   // the report covers (scaling a single week up to a month is too noisy).
@@ -6538,7 +6599,7 @@ function pxMD(w){
   if(ex.email){ o+=`\n**Newsletters sent** — ${pxEmailLine(ex.email)}\n`;
     ex.email.rows.forEach(r=>{ o+=`- ${r.d}: ${r.s} — ${fmtN(r.to)} delivered, ${r.open}% opened, ${r.click}% clicked, ${r.unsubs} unsubscribed${r.ab?" (subject-line test)":""}\n`; });
     if(ex.email.more) o+=`- and ${ex.email.more} earlier\n`; }
-  if(ex.dm) o+=`\n**Decision-makers joining${ex.dm.other?` (${pxDay(ex.dm.from)} to ${pxDay(ex.dm.to)}, the latest period the contacts data covers)`:""}:** ${ex.dm.n}${ex.dm.parts.length?` (${ex.dm.parts.join(", ")})`:""}${ex.dm.base!=null?`; a typical ${pxStretch(w.span,w.N)} brings about ${Math.round(ex.dm.base)}`:""}.\n`;
+  if(ex.dm) o+=`\n**Decision-makers joining${ex.dm.other?` (${pxDay(ex.dm.from)} to ${pxDay(ex.dm.to)}, the latest period the contacts data covers)`:""}:** ${ex.dm.n}${ex.dm.parts.length?` (${ex.dm.parts.join(", ")})`:""}${ex.dm.base!=null?`; a typical ${ex.dm.spanDays===7?"week":ex.dm.spanDays+" days"} brings about ${Math.round(ex.dm.base)}`:""}.\n`;
   if(ex.cites){ o+=`\n**Press and policy citations** — ${ex.cites.n} verified${ex.cites.base!=null?`; a typical ${pxStretch(w.span,w.N)} brings about ${Math.round(ex.cites.base)}`:""}\n`;
     ex.cites.rows.forEach(r=>{ o+=`- ${r.d}, ${r.src}${r.kind?` (${r.kind})`:""}: ${r.t}\n`; });
     if(ex.cites.more) o+=`- and ${ex.cites.more} more\n`; }
@@ -6554,7 +6615,7 @@ function pxHTML(w){
   if(ex.email){ b+=`<h3>Newsletters sent</h3><p class="pxs">${esc(pxEmailLine(ex.email))}</p><table class="px"><tr class="hd"><td>Sent</td><td class="l">Subject</td><td class="num">Delivered</td><td class="num">Opened</td><td class="num">Clicked</td><td class="num">Unsubscribed</td></tr>`+
     ex.email.rows.map(r=>`<tr><td style="white-space:nowrap">${esc(r.d)}</td><td class="l">${esc(r.s)}${r.ab?` <span class="tag">subject test</span>`:""}</td><td class="num">${fmtN(r.to)}</td><td class="num">${r.open}%</td><td class="num">${r.click}%</td><td class="num">${r.unsubs}</td></tr>`).join("")+`</table>`+
     (ex.email.more?`<p class="pxn">and ${ex.email.more} earlier</p>`:""); }
-  if(ex.dm) b+=`<h3>Decision-makers joining${ex.dm.other?` · ${esc(pxDay(ex.dm.from))} to ${esc(pxDay(ex.dm.to))}, the latest period the contacts data covers`:""}</h3><p class="pxs"><b>${ex.dm.n}</b>${ex.dm.parts.length?` (${esc(ex.dm.parts.join(", "))})`:""}${ex.dm.base!=null?`; a typical ${pxStretch(w.span,w.N)} brings about ${Math.round(ex.dm.base)}`:""}. Government, university, press and nonprofit or foundation leaders, as tagged in the contacts database.</p>`;
+  if(ex.dm) b+=`<h3>Decision-makers joining${ex.dm.other?` · ${esc(pxDay(ex.dm.from))} to ${esc(pxDay(ex.dm.to))}, the latest period the contacts data covers`:""}</h3><p class="pxs"><b>${ex.dm.n}</b>${ex.dm.parts.length?` (${esc(ex.dm.parts.join(", "))})`:""}${ex.dm.base!=null?`; a typical ${ex.dm.spanDays===7?"week":ex.dm.spanDays+" days"} brings about ${Math.round(ex.dm.base)}`:""}. Government, university, press and nonprofit or foundation leaders, as tagged in the contacts database.</p>`;
   if(ex.cites){ b+=`<h3>Press and policy citations</h3><p class="pxs"><b>${ex.cites.n}</b> verified${ex.cites.base!=null?`; a typical ${pxStretch(w.span,w.N)} brings about ${Math.round(ex.cites.base)}`:""}. Counted only where the page was read and Vital City is cited for its work, not mentioned in passing.</p>`;
     if(ex.cites.rows.length) b+=`<table class="px">`+ex.cites.rows.map(r=>`<tr><td style="white-space:nowrap">${esc(r.d)}</td><td class="l"><b>${esc(r.src)}</b>${r.kind?` (${esc(r.kind)})`:""}: ${esc(r.t)}</td></tr>`).join("")+`</table>`+(ex.cites.more?`<p class="pxn">and ${ex.cites.more} more</p>`:""); }
   if(ex.sources) b+=`<h3>Where visits came from · Ghost's latest 30 days, ${esc(pxDay(ex.srcFrom))} to ${esc(pxDay(ex.srcTo))}, against the 30 days before</h3><table class="px">`+ex.sources.map(r=>`<tr><td class="l">${esc(r.s)}</td><td class="num">${fmtN(r.n)}</td><td class="num" style="color:${r.pct==null?"#707175":r.pct<0?"#a0432d":"#3d7a35"}">${r.pct!=null?esc(pxPct(r.pct)):""}</td><td class="num" style="color:#707175">${r.pct!=null?`from ${fmtN(r.prev)}`:""}</td></tr>`).join("")+`</table>`;
@@ -6733,11 +6794,14 @@ function rptCompute(from, to){
   const ga4wk = (d.ga4||{}).traffic_weekly || [];
   const ghostStart = gt.history_start || "9999-99-99";
   const freshest = act.length ? act[act.length-1].d : to;
-  // Unified weekly traffic: GA4 (one consistent counter, full history) for weeks
-  // before Ghost's own analytics began; Ghost analytics after. GA4 reads lower
-  // (ad blockers / ITP), so the chart marks where the source changes.
-  const wkAll = ga4wk.filter(w=>w.wk < ghostStart).map(w=>({wk:w.wk, visitors:w.visits, pageviews:w.pageviews, src:"ga4"}))
-    .concat(wk.map(w=>({wk:w.wk, visitors:w.visitors, pageviews:w.pageviews, src:"ghost"})))
+  // Weekly traffic from ONE record per range. The two records count
+  // differently (Google Analytics counts every visit and runs about 30% above
+  // Ghost's once-a-day readers), so they are never spliced: a range that starts
+  // before Ghost's record began is counted wholly in Google Analytics.
+  const rangeSrc = from < ghostStart ? "ga4" : "ghost";
+  const wkAll = (rangeSrc==="ga4"
+      ? ga4wk.map(w=>({wk:w.wk, visitors:w.visits, pageviews:w.pageviews, src:"ga4"}))
+      : wk.map(w=>({wk:w.wk, visitors:w.visitors, pageviews:w.pageviews, src:"ghost"})))
     .sort((a,b)=>a.wk<b.wk?-1:(a.wk>b.wk?1:0));
   const dailyAgg=()=>{ const ink=kpi.filter(r=>r.date>=from && r.date<=to); if(!ink.length) return null;
     const tv=ink.reduce((s,r)=>s+(r.visits||0),0);
@@ -6748,13 +6812,16 @@ function rptCompute(from, to){
     const inw=wkAll.filter(w=>{const we=rptWeekEnd(w.wk); return we>=from && w.wk<=to;})
       .map(w=>({...w, end:rptWeekEnd(w.wk), partial:(w.wk<from || rptWeekEnd(w.wk)>to || rptWeekEnd(w.wk)>freshest)}));
     if(!inw.length) return null;
-    const srcs=[...new Set(inw.map(w=>w.src))];
-    return {mode:"weekly", series:inw, weeks:inw.length, mixed:srcs.length>1,
-      ghostStart: srcs.length>1 ? ghostStart : null, anyPartial: inw.some(w=>w.partial),
-      visits:inw.reduce((s,w)=>s+(w.visitors||0),0), pageviews:inw.reduce((s,w)=>s+(w.pageviews||0),0)}; };
+    // Part-weeks at either end count only the days inside the range (prorated
+    // from the week's total), not the whole week.
+    const share=w=>{ const a=w.wk>from?w.wk:from, b=w.end<to?w.end:to; return Math.max(0,(Date.parse(b)-Date.parse(a))/86400000+1)/7; };
+    return {mode:"weekly", src:rangeSrc, series:inw, weeks:inw.length, mixed:false, ghostStart:null,
+      anyPartial: inw.some(w=>w.partial), prorated: inw.some(w=>share(w)<1),
+      visits:Math.round(inw.reduce((s,w)=>s+(w.visitors||0)*Math.min(1,share(w)),0)),
+      pageviews:Math.round(inw.reduce((s,w)=>s+(w.pageviews||0)*Math.min(1,share(w)),0))}; };
   let traffic;
-  if(kcov && from>=kcov.min && to<=kcov.max) traffic=dailyAgg();   // recent: precise daily Ghost
-  else traffic=weeklyAgg() || dailyAgg();                         // longer/older: combined weekly (GA4+Ghost)
+  if(kcov && from>=kcov.min && to<=kcov.max){ traffic=dailyAgg(); if(traffic) traffic.src="ghost"; }   // recent: precise daily Ghost
+  else traffic=weeklyAgg() || dailyAgg();                         // longer/older: weekly, one record for the whole range
   if(!traffic) traffic={mode:"none"};
 
   const inR=(iso)=>{const x=(iso||"").slice(0,10); return x>=from && x<=to;};
@@ -6805,7 +6872,7 @@ function rptTopStories(from,to,N){
   const yF=from.slice(0,4), yT=to.slice(0,4), curY=String(new Date().getUTCFullYear());
   let list=null, label='';
   if(yF===yT && eby[yF]){ list=eby[yF]; label=(yF===curY ? yF+' year-to-date' : 'calendar year '+yF); }
-  else if((g.engagement_alltime||[]).length){ list=g.engagement_alltime; label='all time (since 2020)'; }
+  else if((g.engagement_alltime||[]).length){ list=g.engagement_alltime; label=`all time (since ${((g.by_year||{}).years||[{}])[0].year||"Google Analytics began"})`; }
   else if((g.engagement||[]).length){ list=g.engagement; label='since '+(g.engagement_since||'2026-01-01'); }
   if(!list||!list.length) return null;
   const rows=list.slice().sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,N)
@@ -6849,7 +6916,7 @@ function rptModel(r){
   }
   const sigTip = sigBasis==="mc"
     ? "Mailchimp all-source new list adds for this range (monthly figures prorated to your dates). Shown because the range predates Ghost signup tracking, which began "+sigCov+". Counts every list add including bulk imports, so it runs higher than Ghost newsletter-form signups."
-    : "Counted by each person's real Ghost signup date and current to the last refresh — gross signups, including anyone who has since unsubscribed. The Thursday Ghost-to-Mailchimp batch doesn't delay this count."+(sigBasis==="mc-cmp"?" The % comparison uses Mailchimp's all-source history because the comparison period predates Ghost (which began recording signups "+sigCov+").":"");
+    : "Counted by each person's real signup date (the Mailchimp form before the March 2026 move to Ghost, the Ghost form since) and current to the last refresh — gross signups, including anyone who has since unsubscribed. The Thursday Ghost-to-Mailchimp batch doesn't delay this count."+(sigBasis==="mc-cmp"?" The % comparison uses Mailchimp's all-source history because the comparison period predates Ghost (which began recording signups "+sigCov+").":"");
   // Unsubs are Mailchimp, reliable back to actCov.min — only gate truly ancient ranges.
   const unsubPriorOK=!r.actCov || r.pFrom>=r.actCov.min;
 
@@ -6879,13 +6946,13 @@ function rptModel(r){
     {l:"Avg session", v:fmtDur(t.avgSession), note:"visit-weighted average (Ghost analytics)"},
   ];
   else if(t.mode==="weekly") tRows=[
-    {l:"Website visits", v:fmtN(t.visits), note:"range total, summed from weekly data"+(t.anyPartial?" (boundary weeks counted whole — faded on the chart)":"")+(t.mixed?" · GA4 before "+t.ghostStart+", Ghost after — different counters, GA4 reads lower":" · Ghost analytics")},
+    {l:(t.src==="ga4"?"Site visits (Google Analytics)":"Website readers (Ghost)"), v:fmtN(t.visits), note:"range total, summed from weekly data"+(t.prorated?"; part-weeks at the ends counted only for the days inside the range":"")+(t.src==="ga4"?" · Google Analytics, used for the whole range because it starts before Ghost's record (March 2026)":" · Ghost analytics")},
     {l:"Page views", v:fmtN(t.pageviews), note:"range total, summed from weekly data"},
   ];
   else tRows=[{l:"Website traffic", v:"not available", note:"daily traffic history starts "+(gt.history_start||"recently")+"; older ranges can't be sliced"}];
   S.push({name:"Website traffic", rows:tRows, chart: rptChartTraffic(r.from, r.to, r.traffic)});
 
-  const givStart = r.fr.cov ? r.fr.cov.min : null;
+  const givStart = GIVING_START;
   const givPriorOK = !!(givStart && r.pFrom >= givStart);
   const raisedNote = "online Donorbox gifts only"
     + ((r.fr.cov && r.fr.cov.max < r.to)?"; counted through "+r.fr.cov.max+" (Donorbox lag — recent days not yet in)":"")
@@ -6903,9 +6970,9 @@ function rptModel(r){
   ];
 
   const cav=[
-    "Exact from daily data: newsletter signups, unsubscribes, email opens and clicks"+(r.actCov?" (history since "+r.actCov.min+")":"")+", newsletter sends and rates, and online giving"+(r.fr.cov?" (since "+r.fr.cov.min+")":"")+".",
-    "Signups are dated by their real Ghost signup date and unsubscribes by their Mailchimp date — each on the system that records it in real time, so the counts here aren't distorted by the weekly cross-sync. (Ghost signups only batch into Mailchimp on Thursdays, so the headline \"Subscribers\" total can trail recent signups by up to a week; unsubscribes hit Mailchimp at once but reflect in the contact tool on Thursdays.)",
-    "Website traffic comes from Ghost analytics; daily detail only since "+(gt.history_start||"recently")+" and it won't exactly match the GA4 figures elsewhere (different counters).",
+    "Exact from daily data: newsletter signups, unsubscribes, email opens and clicks"+(r.actCov?" (history since "+r.actCov.min+")":"")+", newsletter sends and rates, and online giving (since "+GIVING_START+").",
+    "Signups are dated by each person's real signup date and unsubscribes by their Mailchimp date — each on the system that records it in real time, so the counts here aren't distorted by the weekly cross-sync. (Ghost signups only batch into Mailchimp on Thursdays, so the headline \"Subscribers\" total can trail recent signups by up to a week; unsubscribes hit Mailchimp at once but reflect in the contact tool on Thursdays.)",
+    pxTwoRecords(window.__GD||{}),
     "Online gifts only — checks, wires and fiscal-sponsor gifts aren't counted, and Donorbox data can lag a few days.",
     "The \"who\" lists draw from recent-activity feeds covering roughly the last 3-4 weeks"+(namesShow?"; for ranges that reach further back than that they may be partial":"; this range reaches further back, so they're omitted")+".",
     "Not sliceable to custom dates (fixed-window only, see their own cards): Google search queries, per-piece engaged-time, social-follower counts and most-read rankings.",
@@ -7034,8 +7101,8 @@ function rptChartTraffic(from,to,traffic){
   if(traffic.mode==='daily'){ const {buckets}=rptBuckets(from,to); return rptBarsSVG(buckets,rptSumInto(buckets,(gt.kpi_rows_30d||[]),'date','visits'),'#217ebe','Website visits',fmtN,from,to); }
   const ser=traffic.series||[]; if(!ser.length) return '';
   const buckets=ser.map(w=>({s:w.wk, e:w.end||rptWeekEnd(w.wk), partial:w.partial, color:(w.src==='ga4'?'#90bfdf':'#217ebe')}));
-  const note=traffic.mixed ? ('before '+traffic.ghostStart+': GA4 (lighter); after: Ghost analytics — different counters') : 'Ghost analytics, weekly';
-  return rptBarsSVG(buckets, ser.map(w=>+(w.visitors||0)), '#217ebe','Website visits · weekly',fmtN,from,to,note);
+  const note=traffic.src==='ga4' ? 'Google Analytics visits, weekly' : 'Ghost readers, weekly';
+  return rptBarsSVG(buckets, ser.map(w=>+(w.visitors||0)), '#217ebe',(traffic.src==='ga4'?'Site visits (Google Analytics)':'Website readers (Ghost)')+' · weekly',fmtN,from,to,note);
 }
 function rptChartGiving(from,to){
   const ds=((window.__GD||{}).donorbox||{}).daily_series||[];
@@ -7184,7 +7251,7 @@ function showWeekNames(key){
   document.getElementById("peopleModalBody").innerHTML = rows.length
     ? `<table style="width:auto;max-width:100%"><thead><tr>${spec.cols.map(c=>`<th${(c==='amount')?' class="r"':''}>${hd[c]}</th>`).join("")}</tr></thead>
        <tbody>${rows.map(r=>`<tr>${spec.cols.map(c=>`<td${(c==='amount')?' class="r"':''} style="font-size:12.5px;white-space:nowrap">${cell(r,c)}</td>`).join("")}</tr>`).join("")}</tbody></table>
-       <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px">${rows.length} in the last 7 days. ${key==='unsubs'?'Names come from Mailchimp and are often blank — email is the reliable identifier.':''}</div>`
+       <div style="font-size:11px;color:var(--vc-charcoal);margin-top:10px">${rows.length} from ${esc(spec.period||"this window")}. ${key==='unsubs'?'Names come from Mailchimp and are often blank — email is the reliable identifier.':''}</div>`
     : '<div style="color:var(--vc-charcoal);padding:8px 0">Nobody in this window.</div>';
   document.getElementById("peopleModal").classList.add("on");
 }
