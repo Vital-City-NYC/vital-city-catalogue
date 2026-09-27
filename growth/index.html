@@ -6055,21 +6055,7 @@ function pulseTrend(data){
   const nls=(mc.campaigns||[]).filter(c=>c.kind==="newsletter" && (c.sent_to||0)>=1000);
   const pubs=((data.ghost||{}).pub_dates||[]).map(d=>String(d).slice(0,10));
   const piecesIn=(a,b)=>pubs.reduce((n,d)=>(d>=a&&d<=b)?n+1:n,0);
-  // Do busier publishing weeks draw more visits? Measured over every full
-  // week Google Analytics holds, then said in words: the gap between weeks
-  // above and below the median piece count, and how tight the link is.
-  let pubLink=null;
-  if(pubs.length){
-    const rows=tw.filter(w=>!asof || shift(w.wk,6)<asof).map(w=>({v:w.visits, p:piecesIn(w.wk,shift(w.wk,6))}));
-    if(rows.length>=26){
-      const ps=rows.map(r=>r.p).sort((a,b)=>a-b), med=ps[ps.length>>1];
-      const hi=rows.filter(r=>r.p>med), lo=rows.filter(r=>r.p<med);
-      const mean=a=>a.reduce((s,x)=>s+x,0)/a.length;
-      const mv=mean(rows.map(r=>r.v)), mp=mean(rows.map(r=>r.p));
-      const cov=rows.reduce((s,r)=>s+(r.v-mv)*(r.p-mp),0), sv=Math.sqrt(rows.reduce((s,r)=>s+(r.v-mv)**2,0)), sp=Math.sqrt(rows.reduce((s,r)=>s+(r.p-mp)**2,0));
-      if(hi.length>=5 && lo.length>=5 && sv && sp) pubLink={n:rows.length, med, hiN:hi.length, loN:lo.length, hi:mean(hi.map(r=>r.v)), lo:mean(lo.map(r=>r.v)), r:cov/(sv*sp)};
-    }
-  }
+  const pubLink=pxPubLink(data);
   const weeks=tw.slice(-12).map(w=>{
     const end=shift(w.wk,6);
     const ly=byWk[shift(w.wk,-364)]||null;
@@ -6092,6 +6078,38 @@ function pulseTrend(data){
     avg4:avg(last4,"visits"), avg8:avg(prior8,"visits"),
     peak: full.slice().sort((a,b)=>b.visits-a.visits)[0]||null, from:(full[0]||{}).wk, to:(full[full.length-1]||{}).end};
 }
+// Do weeks with fewer new pieces draw fewer visits and views? Measured over
+// every full Monday-to-Sunday week Google Analytics holds: weeks above the
+// median piece count against weeks below it, plus how tight the link is.
+function pxPubLink(data){
+  if(pxPubLink._d===data) return pxPubLink._v;
+  const ga4=data.ga4||{}, asof=String(ga4.as_of||"").slice(0,10);
+  const shift=(iso,d)=>{const x=new Date(iso+"T00:00:00Z"); x.setUTCDate(x.getUTCDate()+d); return x.toISOString().slice(0,10);};
+  const pubs=((data.ghost||{}).pub_dates||[]).map(d=>String(d).slice(0,10));
+  const tw=(ga4.traffic_weekly||[]).filter(w=>w.wk && w.visits!=null && (!asof || shift(w.wk,6)<asof));
+  let out=null;
+  if(pubs.length && tw.length>=26){
+    const rows=tw.map(w=>{const e=shift(w.wk,6); return {v:w.visits, pv:w.pageviews||0, p:pubs.reduce((n,d)=>(d>=w.wk&&d<=e)?n+1:n,0)};});
+    const ps=rows.map(r=>r.p).sort((a,b)=>a-b), med=ps[ps.length>>1];
+    const hi=rows.filter(r=>r.p>med), lo=rows.filter(r=>r.p<med);
+    const mean=a=>a.reduce((s,x)=>s+x,0)/a.length;
+    const mv=mean(rows.map(r=>r.v)), mp=mean(rows.map(r=>r.p));
+    const cov=rows.reduce((s,r)=>s+(r.v-mv)*(r.p-mp),0), sv=Math.sqrt(rows.reduce((s,r)=>s+(r.v-mv)**2,0)), sp=Math.sqrt(rows.reduce((s,r)=>s+(r.p-mp)**2,0));
+    if(hi.length>=5 && lo.length>=5 && sv && sp){
+      const k={n:rows.length, med, hi:mean(hi.map(r=>r.v)), lo:mean(lo.map(r=>r.v)), hiPv:mean(hi.map(r=>r.pv)), loPv:mean(lo.map(r=>r.pv)), r:cov/(sv*sp)};
+      k.fewer=Math.round((k.hi-k.lo)/k.hi*100);          // visits, low weeks against high weeks
+      k.fewerPv=Math.round((k.hiPv-k.loPv)/k.hiPv*100);
+      out=k;
+    }
+  }
+  pxPubLink._d=data; pxPubLink._v=out; return out;
+}
+// The plain conclusion, said the same way wherever it appears.
+function pxPubSentence(k){
+  if(!k) return "";
+  if(k.fewer>=10) return `Fewer pieces published means fewer visits and views. Over the last ${k.n} weeks, weeks with fewer than ${k.med} new pieces averaged ${fmtN(Math.round(k.lo))} visits and ${fmtN(Math.round(k.loPv))} page views, ${k.fewer}% and ${k.fewerPv}% fewer than weeks with more than ${k.med} (${fmtN(Math.round(k.hi))} and ${fmtN(Math.round(k.hiPv))}).`;
+  return `Over the last ${k.n} weeks, the number of pieces published has not made a clear difference to visits: weeks with fewer than ${k.med} new pieces averaged ${fmtN(Math.round(k.lo))} visits, weeks with more than ${k.med} ${fmtN(Math.round(k.hi))}.`;
+}
 function pxTrendLines(t){
   const pc=(a,b)=> b ? Math.round((a-b)/b*100) : null;
   const s=v=>v>0?`+${v}`:`${v}`;
@@ -6101,11 +6119,8 @@ function pxTrendLines(t){
     (t.prevVisits?`, and ${s(pc(t.visits,t.prevVisits))}% on the ${t.nFull} weeks before (${fmtN(t.prevVisits)})`:"")+".");
   if(t.avg4!=null && t.avg8!=null) L.push(`The last four full weeks averaged ${fmtN(Math.round(t.avg4))} visits a week, against ${fmtN(Math.round(t.avg8))} in the eight weeks before them (${s(pc(t.avg4,t.avg8))}%).`+
     (t.peak?` The busiest week was ${pxDay(t.peak.wk)} (${fmtN(t.peak.visits)}).`:""));
-  if(t.pubLink){ const k=t.pubLink, gap=Math.round((k.hi-k.lo)/k.lo*100), r=Math.abs(k.r);
-    const tight = r>=0.5 ? "close" : r>=0.3 ? "moderate" : "loose";
-    L.push(gap>=10
-      ? `Visits do rise with the number of pieces published. Over the last ${k.n} weeks, weeks with more than ${k.med} new pieces averaged ${fmtN(Math.round(k.hi))} visits; weeks with fewer than ${k.med} averaged ${fmtN(Math.round(k.lo))}, ${gap}% less. Week to week the link is ${tight}${r<0.5?": a single piece that catches on moves a week more than the count does":""}.`
-      : `Over the last ${k.n} weeks, visits have not tracked the number of pieces published: weeks with more than ${k.med} new pieces averaged ${fmtN(Math.round(k.hi))} visits, weeks with fewer than ${k.med} ${fmtN(Math.round(k.lo))}.`); }
+  if(t.pubLink){ const k=t.pubLink;
+    L.splice(1,0, pxPubSentence(k)+(k.fewer>=10 && Math.abs(k.r)<0.5 ? " That holds on average, not in every week: one piece that catches on can outweigh the count." : "")); }
   // Where the latest weeks sit against last year: a run of weeks below the
   // same week a year earlier is the signal a single weekly drop is not.
   const full=t.weeks.filter(x=>!x.partial && x.lyVisits!=null);
@@ -6259,7 +6274,8 @@ function pulseInsights(w, data){
   // 3. publishing pace and sends
   if(A){ const pa=pc(A);
     if(pa!=null&&pa>=25) add("good", `New pieces published: ${A.value}, ${sgn(pa)}${pa}%${vs(A)}.`);
-    else if(pa!=null&&pa<=-25) add("watch", `New pieces published: ${A.value}, ${pa}%${vs(A)}. The twelve-week trend below shows how closely visits have tracked the publishing pace.`); }
+    else if(pa!=null&&pa<=-25){ const k=pxPubLink(data);
+      add("watch", `New pieces published: ${A.value}, ${pa}%${vs(A)}.`+(k&&k.fewer>=10?` Fewer pieces published means fewer visits and views: weeks with fewer than ${k.med} new pieces have averaged ${k.fewer}% fewer visits than weeks with more than ${k.med}.`:"")); } }
   if(E&&E.base!=null&&E.base>=2&&(E.now<E.base*0.6||E.now>E.base*1.6)){
     // How many of the comparison period's sends were the same subject going
     // out again (a resend, or the same issue to two segments)? Those inflate
