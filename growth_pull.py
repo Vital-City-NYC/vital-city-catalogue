@@ -170,7 +170,7 @@ def pull_mailchimp():
         log(f"  mailchimp growth-history failed: {e}")
         out["monthly_signups"] = []
 
-    # Daily activity (subs/unsubs by day) — last 180 days.
+    # Daily activity (subs/unsubs by day) — about the last two years.
     # Subs: computed from people.json `since` dates (Mailchimp's /activity endpoint
     # only counts direct-MC-form signups and grossly understates the real number
     # because most VC signups arrive via the Ghost signup form). Unsubs/opens/clicks
@@ -197,8 +197,16 @@ def pull_mailchimp():
     if pj.exists():
         try:
             people = json.loads(pj.read_text())
-            today = datetime.now(timezone.utc).date()
-            cutoff = (today - timedelta(days=180)).isoformat()
+            # Full history, back to the start of the Mailchimp activity rows
+            # (about two years). `since` is each person's real signup date in
+            # the fused Ghost+Mailchimp record, before and after the March 2026
+            # move to Ghost; checked against the weekly analytics sheet (week of
+            # Sept. 15, 2025: 530 here, 528 there; Nov. 3, 2025: 126 and 129).
+            # A 180-day cutoff here used to blank every signup figure older
+            # than six months. The dashboard keeps the May-Sept. 2025 bot
+            # surge out of its baselines itself.
+            cutoff = min(rows_by_day) if rows_by_day else \
+                (datetime.now(timezone.utc).date() - timedelta(days=730)).isoformat()
             for p in people:
                 # Count a signup for anyone who joined the newsletter in-window,
                 # dated by their real Ghost signup date (`since`) — INCLUDING people
