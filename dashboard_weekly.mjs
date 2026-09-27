@@ -14,6 +14,12 @@
 // Output folder: $VC_WEEKLY_OUT if set (used for tests), else ~/Desktop.
 // On failure it writes a short "...-FAILED.txt" note to the same folder, so a
 // broken run is visible instead of silent.
+//
+// $VC_EXPORT_DIR switches to export mode, used by the weekly written-summary
+// job: instead of the PDF, it writes the Markdown report for every view that
+// carries a summary (full weeks: last week, 4, 8, 13 weeks, year to date;
+// calendar days: 30, 60, 90 days, year to date) plus views.json listing each
+// view's key, dates and label, into that folder.
 import { spawn, execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir, homedir } from "node:os";
@@ -90,6 +96,29 @@ async function main() {
       }
     }
     if (!ready) throw new Error("the dashboard did not finish loading within 45 seconds");
+    // Wait for the written summaries to load (or be found missing), so the
+    // report includes this week's paragraph.
+    for (let i = 0; i < 100; i++) { if (await js("!!window.__analysisLoaded")) break; await sleep(200); }
+
+    if (process.env.VC_EXPORT_DIR) {
+      const dir = process.env.VC_EXPORT_DIR;
+      const views = await js(`(() => {
+        const out = [], data = renderWeekPulse._data;
+        for (const mode of ["weeks","days"]) for (const span of [7,28,56,91,"ytd"]) {
+          if (!pxHasBrief(mode, span)) continue;
+          renderWeekPulse._mode = mode; renderWeekPulse(data, span);
+          const m = pulseReportModel(false), w = m.windows[0];
+          out.push({ key: mode+":"+span, label: w.label, period: w.period, start: w.curStart, end: w.curEnd, md: pulseReportMD(m) });
+        }
+        renderWeekPulse._mode = "weeks"; renderWeekPulse(data, 7);
+        return out;
+      })()`);
+      for (const v of views) writeFileSync(join(dir, v.key.replace(":", "-") + ".md"), v.md);
+      writeFileSync(join(dir, "views.json"), JSON.stringify(views.map(({ md, ...rest }) => rest), null, 1));
+      console.log(`${new Date().toISOString()} exported ${views.length} views to ${dir}`);
+      ws.close();
+      return;
+    }
 
     const rep = await js(`(() => {
       const b = document.querySelector('#pulseWin button[data-w="7"]'); if (b) b.click();

@@ -223,6 +223,12 @@
   .pulsectl .pclbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--vc-charcoal)}
   .pulsectl .pcgrp{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;margin-right:14px}
   .pulseperiod{font-size:13px;font-weight:700;margin:0 0 10px}
+  .pbrief{margin:0 0 12px;padding:10px 14px;background:var(--vc-cloud,#f1f1ef)}
+  .pbrief .pbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:var(--vc-cerulean,#217ebe)}
+  .pbrief p{font-size:14px;line-height:1.55;margin:4px 0}
+  .pbrief .pbw{font-size:11px;color:var(--vc-charcoal)}
+  #pulseWin .winbtn.brief{border-color:var(--vc-cerulean,#217ebe);color:var(--vc-cerulean,#217ebe)}
+  #pulseWin .winbtn.brief.on{background:var(--vc-cerulean,#217ebe);border-color:var(--vc-cerulean,#217ebe);color:#fff}
   .winbtn.on{background:var(--vc-black);border-color:var(--vc-black);color:var(--vc-paper)}
   .card h2{font-family:var(--vc-sans);font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--vc-black);font-weight:800;margin:0 0 13px;padding-bottom:9px;border-bottom:1px solid var(--vc-cloud);display:flex;align-items:center;gap:8px}
   .card h2 .hint{margin-left:auto;text-align:right;font-size:10px;color:var(--vc-charcoal);text-transform:none;letter-spacing:0;font-weight:400}
@@ -709,6 +715,7 @@
           </span></span>
         </div>
         <div class="pulseperiod" id="weekPulseHint"></div>
+        <div id="weekPulseBrief"></div>
         <div class="perfgrid" id="weekPulseGrid"></div>
         <div id="weekPulseTop" style="margin-top:14px"></div>
         <div id="weekPulseNote" style="font-size:11px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
@@ -1092,6 +1099,30 @@ async function decryptBlob(pass,blob){
   return JSON.parse(new TextDecoder().decode(pt));
 }
 
+// The written summaries: plain-language paragraphs for each report view,
+// written once a week (Tuesday mornings, after the Monday-to-Sunday week is
+// complete everywhere) and published encrypted with the same passphrase. The
+// page makes no AI call; it only shows what was written.
+async function loadAnalysis(pass){
+  window.__analysis=null;
+  try{
+    const r=await fetch("analysis.enc",{cache:"no-cache"});
+    if(r.ok) window.__analysis=await decryptBlob(pass, await r.json());
+  }catch(e){ console.warn("written summaries unavailable", e); }
+  window.__analysisLoaded=true;
+  if(renderWeekPulse._data) renderWeekPulse(renderWeekPulse._data, renderWeekPulse._win||7);
+}
+// Which views carry a written summary: all but the rolling last seven days.
+function pxHasBrief(mode, span){ return !(mode==="days" && String(span)==="7"); }
+function pxBrief(w){
+  const a=window.__analysis; if(!a||!a.items) return null;
+  const mode=w.mode||"weeks"; if(!pxHasBrief(mode,w.span)) return null;
+  const it=a.items[`${mode}:${w.span}`]; if(!it||!it.text) return null;
+  // A summary is shown only for the period it was written about, so a
+  // summary never sits on top of numbers it didn't see.
+  const same = it.end===w.curEnd;
+  return {...it, same, written:a.written_at||""};
+}
 async function unlock(fromStore){
   $("#err").textContent="";
   const pass=$("#pw").value.trim();
@@ -1102,6 +1133,7 @@ async function unlock(fromStore){
     savePass(pass);
     window._vcData = data;      // used by the "analyze with AI" export below
     boot(data);
+    loadAnalysis(pass);
   }catch(e){
     console.error(e);
     $("#err").textContent="Wrong passphrase, or data unavailable.";
@@ -5801,6 +5833,12 @@ function renderWeekPulse(data, span){
       : `Monday, ${pxDay(curStart)}${y0}, to Sunday, ${pxDay(curEnd)}, ${yr}${span===7?"":` (${N/7} weeks)`}`;
   const h=$("#weekPulseHint");
   if(h) h.textContent = period + ` · against a typical ${pxStretch(span,N)}`;
+  // The written summary for this view, if there is one for this exact period.
+  const brEl=$("#weekPulseBrief");
+  if(brEl){ const br=pxBrief({mode, span, curEnd});
+    brEl.innerHTML = br ? `<div class="pbrief"><div class="pbl">In brief</div><p>${esc(br.text)}</p><div class="pbw">Written ${esc(pxDay(String(br.written).slice(0,10)))}, ${esc(String(br.written).slice(0,4))}${br.same?", from the numbers below":`, about the period ending ${esc(pxDay(br.end))}; the numbers below now run through ${esc(pxDay(curEnd))}`}.</div></div>` : ""; }
+  document.querySelectorAll("#pulseWin button[data-w]").forEach(b=>{ const k=b.dataset.w==="ytd"?"ytd":Number(b.dataset.w);
+    b.classList.toggle("brief", pxHasBrief(mode,k)); b.title = pxHasBrief(mode,k) ? "This view has a written summary, updated weekly" : "No written summary for the rolling last seven days"; });
   const nEl=$("#weekPulseNote");
   if(nEl) nEl.innerHTML = `Each figure covers ${esc(period)} and is set against a typical ${pxStretch(span,N)}: the average over up to a year before this period (signups from April 2026, the first full month on the Ghost signup form; Ghost's reader counts from March 2026), or the stretch just before it where there isn't that much history. ` +
     `For giving, "typical" is the middle value rather than the average, because one big campaign would otherwise set the bar. ` +
@@ -6710,6 +6748,7 @@ function pulseReportMD(m){
   let o=`# Vital City — ${m.title}\n\n_${m.all?"Each section names the dates it covers":`Covers ${(m.windows[0]||{}).period||m.asof}`}. Data last updated ${m.generated}._\n`;
   m.windows.forEach(w=>{
     o+=`\n## ${w.label}: ${w.period||(w.curStart+" to "+w.curEnd)}\n`;
+    const br=pxBrief(w); if(br) o+=`\n**In brief**\n\n${br.text}\n\n_Written ${pxDay(String(br.written).slice(0,10))}, ${String(br.written).slice(0,4)}${br.same?"":`, about the period ending ${pxDay(br.end)}; the numbers below now run through ${pxDay(w.curEnd)}`}._\n`;
     o+=`\n### The numbers that matter most\n`;
     if((w.insights||[]).length){ o+=`\n**What moved**\n`; w.insights.forEach(i=>{ o+=`- ${i.tone==="good"?"▲":i.tone==="watch"?"▼":"•"} ${i.text}\n`; }); o+=`\n`; }
     pxHeadRows(w).forEach(t=>{ o+=`- ${t.lbl}: ${t.value} — ${t.delta}\n`; });
@@ -6740,6 +6779,7 @@ function pulseReportHTML(m){
   let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">${esc(m.all?"Each section names the dates it covers":`Covers ${(m.windows[0]||{}).period||m.asof}`)} · data last updated ${esc(m.generated)}</p>`;
   m.windows.forEach(w=>{
     b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.period||(w.curStart+" to "+w.curEnd))}</span></h2>`;
+    { const br=pxBrief(w); if(br) b+=`<div class="brief"><div class="bl">In brief</div><p>${esc(br.text)}</p><div class="bw">Written ${esc(pxDay(String(br.written).slice(0,10)))}, ${esc(String(br.written).slice(0,4))}${br.same?"":`, about the period ending ${esc(pxDay(br.end))}; the numbers below now run through ${esc(pxDay(w.curEnd))}`}.</div></div>`; }
     b+=`<div class="tier">The numbers that matter most</div>`;
     if((w.insights||[]).length) b+=`<h3>What moved</h3><ul class="ins">`+w.insights.map(i=>`<li class="${i.tone}"><span class="m">${i.tone==="good"?"▲":i.tone==="watch"?"▼":"•"}</span>${esc(i.text)}</li>`).join("")+`</ul><h3>The numbers</h3>`;
     b+=`<table>`+pxHeadRows(w).map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
@@ -6797,6 +6837,7 @@ function pulseReportHTML(m){
     +'@page{margin:0.4in 0.4in 0.45in; @top-left{content:""} @top-center{content:""} @top-right{content:""} @bottom-left{content:""} @bottom-center{content:""} @bottom-right{content:""}}'
     +'.also{font-size:11px;color:#505050;margin:6px 0 0}@media print{h2.kibig{margin-top:22px}.ki-sum,.ki-rh{break-after:avoid}}'
     +'@media print{h2,h3{break-after:avoid}table tr,ol li,.ins li,.ki-who{break-inside:avoid}body>h2:first-of-type{margin-top:12px}.ki-sum{padding:5px 8px;margin-bottom:5px}}'
+    +'.brief{margin:10px 0 14px;padding:10px 14px;background:#f1f1ef}.brief .bl,.brief .bw{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:#217ebe}.brief .bw{text-transform:none;letter-spacing:0;font-weight:400;color:#707175}.brief p{font-size:13.5px;line-height:1.55;margin:4px 0}'
     +'.tier{font-size:11px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;margin:10px 0 2px;color:#217ebe}'
     +'.below{font-size:11px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:#707175;margin:26px 0 8px;padding-top:10px;border-top:3px solid #050507}'
     +'.tag{font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;border:1px solid #050507;padding:0 4px;margin-left:4px;vertical-align:1px}'
