@@ -2334,7 +2334,11 @@ def pull_search_console():
         if not site:
             return {"available": False, "reason": "service account can't see any Search Console property", "setup": GSC_SETUP}
         today = datetime.now(timezone.utc).date()
-        end = today.isoformat()
+        # Search Console runs about two days behind, so windows end three days
+        # back, on the last day it has fully counted; a "28 days" window that
+        # ended today really held about 26 days of data.
+        end_d = today - timedelta(days=3)
+        end = end_d.isoformat()
         enc = urllib.parse.quote(site, safe="")
 
         # ---- Catalogue matcher: link each page-2 opportunity query to the
@@ -2419,7 +2423,7 @@ def pull_search_console():
             with urllib.request.urlopen(req, timeout=30) as r:
                 return json.loads(r.read()).get("rows", []) or []
         def window(days):
-            start = (today - timedelta(days=days)).isoformat()
+            start = (end_d - timedelta(days=days - 1)).isoformat()
             tr = query({"startDate": start, "endDate": end})
             t0 = tr[0] if tr else {}
             totals = {"clicks": int(t0.get("clicks", 0)), "impressions": int(t0.get("impressions", 0)),
@@ -2524,6 +2528,8 @@ def pull_search_console():
         try:
             drows = query({"startDate": ytd_start, "endDate": end,
                            "dimensions": ["query", "date"], "rowLimit": 25000})
+            _y0 = datetime.strptime(ytd_start, "%Y-%m-%d").date()
+            ytd_mid = (_y0 + (end_d - _y0) / 2).isoformat()
             from collections import defaultdict as _dd
             byq = _dd(list)
             for r in drows:
@@ -2532,9 +2538,11 @@ def pull_search_console():
                 if len(pts) < 6:
                     continue                      # too little history to call
                 pts.sort()
-                half = len(pts) // 2
-                a = sum(v for _, v in pts[:half]) or 0
-                b = sum(v for _, v in pts[half:]) or 0
+                # First half of the year to date against the second, split at
+                # the calendar midpoint (rows exist only on days with
+                # impressions, so splitting by row count was not a midpoint).
+                a = sum(v for d, v in pts if d < ytd_mid) or 0
+                b = sum(v for d, v in pts if d >= ytd_mid) or 0
                 if a < 100:
                     continue                      # tiny base makes the ratio noise
                 trend[q] = round((b - a) / a * 100)

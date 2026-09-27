@@ -797,17 +797,17 @@
       </div>
 
       <div class="card" id="growthChart">
-        <h2>Newsletter growth &amp; reach <span class="hint">weekly, since Jan 2025 · list size and reach per week</span></h2>
+        <h2>Newsletter growth &amp; reach <span class="hint">weekly, the last 18 months · list size and reach per week</span></h2>
         <div class="chartwrap"><svg class="chart" id="growthSvg" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
         <div class="legend">
-          <span title="Organic signups from Ghost `since` dates, counted the week they happened. Real-time, not netted against unsubscribes."><span class="sw" style="background:var(--vc-green)"></span>New signups per week (Ghost, real-time)</span>
+          <span title="Signups counted the week each person signed up, from the combined Ghost and Mailchimp record (the Mailchimp form before the March 2026 move to Ghost). Not netted against unsubscribes. May–September 2025 weeks were about half bots and are shown grey."><span class="sw" style="background:var(--vc-green)"></span>New signups per week, by signup date (grey: 2025 bot weeks)</span>
           <span title="Total Mailchimp list size, interpolated weekly from monthly anchors. Net of unsubscribes and includes any manual imports — so it can move differently from the green signup bars."><span class="sw" style="background:var(--vc-cerulean)"></span>List size — net of churn &amp; imports</span>
-          <span id="rsLegend"><span class="sw" style="background:var(--vc-orange);opacity:.6"></span>Total opens per week (right axis)</span>
+          <span id="rsLegend"><span class="sw" style="background:var(--vc-orange);opacity:.6"></span>Openers per week, all sends added up (right axis)</span>
           <span style="display:inline-flex;align-items:center;gap:6px">
             <span style="font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700">Right axis</span>
             <span id="rsTog" style="display:inline-flex;gap:4px">
-              <button class="winbtn on" data-s="opens" title="Weekly total opens. Inflated by Apple Mail's privacy auto-opens — directional only.">Opens</button>
+              <button class="winbtn on" data-s="opens" title="People who opened, each send's count added up for the week (resends and welcome emails since Feb. 2026 included). Inflated by Apple Mail's privacy auto-opens — directional only.">Opens</button>
               <button class="winbtn" data-s="clicks" title="Weekly total clicks. Apple Mail's auto-opens can't generate clicks, so this is the honest engagement trend. Shown on its own full-height scale — clicks run roughly a fifth of opens, so sharing one axis would flatten the line.">Clicks</button>
             </span>
           </span>
@@ -824,7 +824,7 @@
           <span><span class="sw" style="background:var(--vc-charcoal);opacity:.5"></span>Subscribers reached (delivered)</span>
         </div>
         <div id="engagedInsight" style="font-size:11.5px;color:var(--vc-charcoal);margin-top:10px;line-height:1.5"></div>
-        <div class="flagnote" style="margin-top:10px"><b>Read the shape, not the level:</b> "opened" is Mailchimp's unique-open count, inflated industry-wide by Apple Mail privacy loads and corporate mail scanners. The inflation is roughly steady over time, so the trend is trustworthy even though the absolute count runs high. Campaign-level rates, so the 2026 A/B-test reporting gap that broke per-member opens does not affect this chart.</div>
+        <div class="flagnote" style="margin-top:10px"><b>Read the shape, not the level:</b> "opened" is Mailchimp's unique-open count, inflated industry-wide by Apple Mail privacy loads and corporate mail scanners. The inflation is roughly steady over time, so the trend is trustworthy even though the absolute count runs high. Campaign-level rates, which cover every send in a subject-line test.</div>
       </div>
 
       <div class="card" id="acquisition">
@@ -917,13 +917,13 @@
           <div class="legend">
             <span><span class="sw" style="background:var(--vc-cerulean)"></span>Open rate</span>
             <span><span class="sw" style="background:var(--vc-orange)"></span>Click rate</span>
-            <span><span class="sw" style="background:var(--vc-charcoal);opacity:.4;width:14px;height:1px;margin-top:4px"></span>Trend break (Apple Mail privacy / list growth around Jul 2025)</span>
+            <span><span class="sw" style="background:var(--vc-charcoal);opacity:.4;width:14px;height:1px;margin-top:4px"></span>Bot signups, May–Sept. 2025 (about half of new signups; they diluted open and click rates)</span>
           </div>
         </div>
-        <div class="flagnote" style="margin-top:12px"><b>Benchmark:</b> nonprofit email averages ~28-29% open and ~3.3% click (<a href="https://mrbenchmarks.com/" target="_blank" style="color:var(--vc-cerulean)">M+R Benchmarks 2025</a>). Vital City runs above the norm on opens and about average on clicks. Open rate is Apple-Mail-inflated across the whole industry, so click rate is the cleaner comparison.</div>
+        <div class="flagnote" style="margin-top:12px"><b>Benchmark:</b> nonprofit email averages ~28-29% open and ~3.3% click (<a href="https://mrbenchmarks.com/" target="_blank" style="color:var(--vc-cerulean)">M+R Benchmarks 2025</a>). The tiles above set Vital City's own rates against these. Open rate is Apple-Mail-inflated across the whole industry, so click rate is the cleaner comparison.</div>
         <div id="perfByYear"></div>
       
-        <h3 class="subh">Send-by-send performance <span class="hint">last 20 sends charted and tabled · one point = one send (A/B tests counted once)</span></h3>
+        <h3 class="subh">Send-by-send performance <span class="hint">last 20 sends charted, every send in the table · one point = one send (A/B tests counted once)</span></h3>
         <div class="chartwrap"><svg class="chart" id="sendChart" viewBox="0 0 800 200" preserveAspectRatio="none"></svg></div>
         <div class="legend">
           <span><span class="sw" style="background:var(--vc-cerulean)"></span>Open rate</span>
@@ -1322,7 +1322,7 @@ function boot(data){
         ? ` ${manual.map(m=>m.n).join(" and ")} ${manual.length>1?"are":"is"} hand-entered (as of ${manual[0].as_of||"a recent date"}) — their live counts aren't free to read (X's API is paid, Instagram's public count isn't reliably scrapeable); LinkedIn and Bluesky are pulled live.`
         : "";
       return {lbl:"Social followers", num: counts.length ? fmtN(total) : "—",
-              delta: counts.map(([k,n])=>`${fmtN(n)} ${k}`).join(" · "),
+              delta: counts.map(([k,n])=>`${fmtN(n)} ${k}`).join(" · ")+(manual.length?`; ${manual.map(m=>m.n).join(" and ")} hand-entered as of ${manual[0].as_of||"a recent date"}`:""),
               cls:"flat",
               tip:`Combined followers across ${included.join(" + ")}.${manualTxt}\n\nWhy it matters: Followers are owned amplification reach beyond the inbox — the audience that can share Vital City's work into networks email never touches.\n\nPer-platform detail and coverage notes are in the Social reach card below.`};
     })(),
@@ -1588,7 +1588,7 @@ function boot(data){
   // Top signup movers (direct from Ghost member-events when available)
   const movers = allPosts.filter(p=>p.mover).slice(0,5);
   const moverTipHeader = isReal
-    ? "Posts that directly attracted notably more newsletter signups than the typical attributed post (≥3× the median, with at least 8 absolute signups). Numbers are exact — pulled from Ghost's signup-event attribution, which records the page each new subscriber signed up on."
+    ? "Posts that directly attracted notably more newsletter signups than the typical attributed post (≥3× the median, with at least 4 signups). Numbers are exact — pulled from Ghost's signup-event attribution, which records the page each new subscriber signed up on."
     : "Posts whose first-4-day signup window cleared 1.35× the typical active 4-day window — a correlational proxy because per-event attribution wasn't available.";
   const moverBadgeLabel = (p) => isReal
     ? `+${p.direct_signups} signups · ${p.lift}× median`
@@ -1650,14 +1650,14 @@ function boot(data){
         <li><b>2★</b> — rarely opens (or too new to score), but hasn't unsubscribed. This bucket is usually the largest by far.</li>
         <li><b>1★</b> — almost never opens. Candidate for a re-engagement campaign before pruning.</li>
       </ul>
-      <div style="margin-top:6px">Apple Mail's privacy-protection feature auto-opens emails on the user's behalf to fetch tracking pixels. That can inflate ratings for Apple Mail users without real engagement, and depress ratings industry-wide as a baseline shift since July 2025. Click rate (separate from open rate) is the honest signal — Apple Mail's auto-opens don't generate clicks.</div>
+      <div style="margin-top:6px">Apple Mail's privacy-protection feature auto-opens emails on the user's behalf to fetch tracking pixels. That can inflate ratings for Apple Mail users without real engagement. Ratings across the list were also pulled down by the bot accounts that joined from May to September 2025, about 2,400 of which are still on the list. Click rate (separate from open rate) is the honest signal — Apple Mail's auto-opens don't generate clicks.</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
       <div>
         <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">Rating distribution</div>
         ${ratingRow}
-        <div class="flagnote"><b>Don't read the 2★ pile as disengagement.</b> Mailchimp starts everyone at 2★ and Apple Mail's privacy auto-opens jam the scoring, so the ratings bunch at 2★ regardless of real interest. The active-subscriber (MAU/AAU) tiles up top are the truer engagement read.</div>
-        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">The 4–5★ slice = your <b style="color:var(--vc-black)">"will-open-the-next-email"</b> core. Compare against the MAU tile up top — should be roughly the same order of magnitude.</div>
+        <div class="flagnote"><b>Don't read the 2★ pile as disengagement.</b> Mailchimp starts everyone at 2★ and Apple Mail's privacy auto-opens jam the scoring, so the ratings bunch at 2★ regardless of real interest. These ratings come from a saved Mailchimp member export that isn't refreshed automatically, so they can be months old. The count of active subscribers (people who opened in the last 30 days, in the key indicators' "Also today" line) is the truer engagement read.</div>
+        <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px">The 4–5★ slice = your <b style="color:var(--vc-black)">"will-open-the-next-email"</b> core. Compare it with the 30-day active-subscriber count in the key indicators; they should be roughly the same order of magnitude.</div>
       </div>
       <div>
         <div style="font-size:11px;color:var(--vc-charcoal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">Top email domains</div>
@@ -1670,7 +1670,7 @@ function boot(data){
   const news = data.news_mentions || [];
   // Hits the page check rejected are left out: named only in a related-story
   // card or sidebar, not on the page at all, or an author or section page.
-  const realPress = news.filter(it => it.kind === 'media' && it.incidental !== true
+  const realPress = news.filter(it => it.kind === 'media' && it.incidental !== true && it.verified !== false && !it.own_post
     && !['phrase not found on the page','phrase present but used generically'].includes(it.verify_note)
     && !/(?:^|, )Vital City$|^Story Archive|^(Public Safety|Criminal Justice) News$/.test(it.title||''));
   const socialItems = news.filter(it => it.kind === 'social');
@@ -1897,7 +1897,10 @@ function renderGrowthChart(mc){
   const W = Math.max(360, Math.round(svg.clientWidth || (svg.parentElement && svg.parentElement.clientWidth) || 800));
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   const innerW=W-padL-padR, innerH=H-padT-padB;
-  const maxNew  = Math.max(1, ...weeks.map(w=>w.signups));
+  // Bot-surge weeks (May–Sept. 2025) are drawn hatched and don't set the
+  // scale, so they can't squash the real weeks around them.
+  const botWk=w=>isBotDay(w.wk)||isBotDay(new Date(Date.parse(w.wk+"T00:00:00Z")+6*86400000).toISOString().slice(0,10));
+  const maxNew  = Math.max(1, ...weeks.filter(w=>!botWk(w)).map(w=>w.signups));
   const maxSubs = Math.max(1, ...weeks.map(w=>w.cum_subs));
   // Right-axis series is switchable: opens and clicks differ ~5x in magnitude,
   // so sharing one scale would squash clicks into the bottom fifth of the plot
@@ -1973,8 +1976,8 @@ function renderGrowthChart(mc){
   // Bars: weekly new signups
   weeks.forEach((w, i) => {
     if(w.signups <= 0) return;
-    const h = Math.max(0, (w.signups/maxNew) * (innerH * 0.45));
-    html += `<rect x="${x(i)-bw/2}" y="${yBar(w.signups)}" width="${bw}" height="${h}" fill="#57AA4A" opacity=".7"><title>Week of ${w.wk}: +${w.signups} new signups · ${w.unsubs} unsubs</title></rect>`;
+    const v = Math.min(w.signups, maxNew*1.1), h = Math.max(0, (v/maxNew) * (innerH * 0.45)), bot=botWk(w);
+    html += `<rect x="${x(i)-bw/2}" y="${yBar(v)}" width="${bw}" height="${h}" fill="${bot?"#b9b9bd":"#57AA4A"}" opacity=".7"><title>Week of ${w.wk}: +${w.signups} new signups${bot?" (bot-surge week: about half were bots; bar capped)":""} · ${w.unsubs} unsubs</title></rect>`;
   });
   // Cumulative subscribers line (interpolated weekly)
   const subPts = weeks.map((w,i) => `${x(i)},${ySubs(w.cum_subs)}`).join(" ");
@@ -2073,7 +2076,7 @@ function renderGrowthChart(mc){
     rsLeg.innerHTML = `<span class="sw" style="background:${rsColor};opacity:.6"></span>`+
       (RS === "clicks"
         ? `Total clicks per week (right axis) — the honest signal`
-        : `Total opens per week (right axis)`);
+        : `Openers per week, all sends added up (right axis)`);
   }
   const rsTog = document.getElementById("rsTog");
   if(rsTog && !rsTog._bound){
@@ -2119,16 +2122,16 @@ function renderGrowthChart(mc){
       const lateAvg  = completeOpens.slice(-8).reduce((s,v)=>s+v,0)/8;
       const lift = ((lateAvg - earlyAvg) / earlyAvg) * 100;
       if(lift >= 0){
-        openLine = ` Avg total opens per <i>week</i> is up ${lift.toFixed(0)}% comparing the first 8 weeks of the window to the last 8 complete weeks — even though per-email open rate fell with Apple Mail's privacy changes, the list grew enough that more total eyeballs reach VC content week-to-week.`;
+        openLine = ` Avg total opens per <i>week</i> is up ${lift.toFixed(0)}% comparing the first 8 weeks of the window to the last 8 complete weeks — even though the per-email open rate fell (bot accounts from the 2025 surge, which never open, diluted it), the list grew enough that more people open each week.`;
       } else {
         openLine = ` Avg total opens per week is ${Math.abs(lift).toFixed(0)}% lower comparing the first 8 weeks to the last 8 complete weeks — list growth wasn't enough to offset the per-email engagement drop. The Newsletter performance card below has click rate, the honest engagement signal (clicks aren't inflated by Apple Mail auto-opens).`;
       }
     }
     const grossLine = gYtd > 0
-      ? ` Organic signups tracked in Ghost run about <b>${gYtd.toLocaleString()}</b> so far in ${gYear} (real-time, before any unsubscribes) — the green bars show them week by week; the blue line is the net list total after churn and imports.`
+      ? ` Signups so far in ${gYear}: about <b>${gYtd.toLocaleString()}</b>, each dated by the day the person signed up (the Mailchimp form before the March move to Ghost, the Ghost form since), before any unsubscribes — the green bars show them week by week (grey bars are the May–Sept. 2025 bot weeks); the blue line is the net list total after churn and imports.`
       : '';
     $("#growthInsight").innerHTML =
-      `<b style="color:var(--vc-black)">The long view:</b> Subscribers went from ${fmtN(first.cum_subs)} (${esc(first.month)}) to ${fmtN(last.cum_subs)} (today) — that's ${growthMult}× the list, a net gain of ${netGain.toLocaleString()} subscribers over 18 months (after unsubscribes, including any list imports).${grossLine}${openLine}`;
+      `<b style="color:var(--vc-black)">The long view:</b> Subscribers went from ${fmtN(first.cum_subs)} (${esc(first.month)}) to ${fmtN(last.cum_subs)} (today) — that's ${growthMult}× the list, a net gain of ${netGain.toLocaleString()} subscribers since the end of ${esc(first.month)} (after unsubscribes, including list imports and about 2,400 bot accounts from 2025 still on the list).${grossLine}${openLine}`;
   }
 }
 
@@ -2148,14 +2151,29 @@ function renderPerf(mc){
   // 12-month norm (those 90 days excluded, so a window cannot grade itself).
   // Direction over the last two quarters is shown alongside, because for a
   // trending series the direction IS the finding.
-  const monthly = (mc.monthly_campaigns||[]).filter(r=>(r.recipients||0)>0);
+  // Newsletters to the full list only (appeals, resends and automations
+  // behave differently), by month, weighted by delivered emails; the month in
+  // progress is left out so a half-counted month can't set the level.
+  const curMo=new Date().toISOString().slice(0,7);
+  const nlm={};
+  (mc.campaigns||[]).filter(c=>c.kind==="newsletter" && (c.sent_to||0)>=1000 && c.sent && String(c.sent).slice(0,7)<curMo).forEach(c=>{
+    const m=String(c.sent).slice(0,7), dl=c.delivered||c.sent_to||0, e=nlm[m]=nlm[m]||{month:m,recipients:0,o:0,k:0};
+    e.recipients+=dl; e.o+=(+c.open_pct||0)*dl; e.k+=(+c.click_pct||0)*dl; });
+  const monthly = Object.values(nlm).sort((a,b)=>a.month.localeCompare(b.month))
+    .map(e=>({month:e.month, recipients:e.recipients, open_pct:e.o/e.recipients, click_pct:e.k/e.recipients}));
+  const MON3=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+  const mName=ym=>{const p=String(ym||"").split("-"); return p.length>1?MON3[+p[1]-1]:ym;};
   const wavg=(rows,f)=>{
     const t=rows.reduce((s,r)=>s+(r.recipients||0),0);
     return t? rows.reduce((s,r)=>s+(r[f]||0)*(r.recipients||0),0)/t : null;
   };
   const q0 = monthly.slice(-3);        // most recent 3 months
   const q1 = monthly.slice(-6,-3);     // the 3 before that
-  const norm = monthly.slice(-15,-3);  // 12 months, ending where q0 starts
+  // 12 months before q0, leaving out the May–Sept. 2025 bot surge, when
+  // never-opening accounts pulled both rates down and would flatter any
+  // comparison against them.
+  const norm = monthly.slice(-15,-3).filter(r=>!(r.month>="2025-05"&&r.month<="2025-09"));
+  const q0Lbl = q0.length ? `${mName(q0[0].month)}–${mName(q0[q0.length-1].month)}` : "";
   const cmp=(f)=>{
     if(q0.length<2 || norm.length<6) return null;
     const now=wavg(q0,f), base=wavg(norm,f), prev=wavg(q1,f);
@@ -2174,17 +2192,17 @@ function renderPerf(mc){
   const dOpen30   = yoy30.sends ? pctDelta(l30.open_pct,  yoy30.open_pct)  : null;
   const dClick30  = yoy30.sends ? pctDelta(l30.click_pct, yoy30.click_pct) : null;
   const cells=[
-    (oc ? {lbl:"Open rate · last 90d", n:oc.now.toFixed(1)+"%",
+    (oc ? {lbl:`Open rate · ${q0Lbl}`, n:oc.now.toFixed(1)+"%",
       d:`${fmtPctDelta(oc.d)} vs ${oc.months}-mo norm (~${oc.base.toFixed(1)}%)${trendTxt(oc)}`,
       cls:deltaPctClass(oc.d,true),
-      tip:`Recipient-weighted open rate over the last 90 days, against the average of the trailing ${oc.months} months (those 90 days excluded so the window can't grade itself). Year to date is ${ytd.open_pct||0}%; the same window last year was ${prior.open_pct||0}%.\n\nWhy the norm and not last year: this metric trends hard. It ran 62% in early 2025, fell to 29% by October as bot signups diluted the list, and has climbed back since. A year-to-date average sits in the middle of that curve and describes no month that ever happened — comparing two such averages reports a decline while the rate is rising.\n\nRead the level with care in both directions: Apple Mail's privacy auto-opens inflate it, while roughly 2,400 never-opening bot accounts still on the list depress it (bot-adjusted it is about 42.6%). Click-to-open below is the cut that survives both. Benchmark: nonprofit email averages ~28-29% (M+R Benchmarks 2025).`}
+      tip:`Newsletter open rate over the last three full months (${q0Lbl}), weighted by emails delivered, against the ${oc.months} months before them, leaving out the May–September 2025 bot surge. Year to date is ${ytd.open_pct||0}%; the same window last year was ${prior.open_pct||0}%.\n\nWhy the norm and not last year: this metric trends hard. It ran 62% in early 2025, fell to 29% by October as bot signups diluted the list, and has climbed back since. A year-to-date average sits in the middle of that curve and describes no month that ever happened — comparing two such averages reports a decline while the rate is rising.\n\nRead the level with care in both directions: Apple Mail's privacy auto-opens inflate it, while roughly 2,400 never-opening bot accounts still on the list depress it (bot-adjusted it is about 42.6%). Click rate is the steadier cut: automatic opens don't click. Benchmark: nonprofit email averages ~28-29% (M+R Benchmarks 2025).`}
         : {lbl:"Open rate · YTD", n:(ytd.open_pct||0)+"%",
       d:fmtPctDelta(dOpenYtd)+" vs YTD '25", cls:deltaPctClass(dOpenYtd,true),
       tip:"Year-to-date open rate, recipient-weighted. (Not enough monthly history yet for the trailing-norm comparison.)"}),
-    (cc ? {lbl:"Click rate · last 90d", n:cc.now.toFixed(1)+"%",
+    (cc ? {lbl:`Click rate · ${q0Lbl}`, n:cc.now.toFixed(1)+"%",
       d:`${fmtPctDelta(cc.d)} vs ${cc.months}-mo norm (~${cc.base.toFixed(1)}%)${trendTxt(cc)}`,
       cls:deltaPctClass(cc.d,true),
-      tip:`Recipient-weighted click rate over the last 90 days, against the trailing ${cc.months}-month average. Year to date is ${ytd.click_pct||0}%; the same window last year was ${prior.click_pct||0}%.\n\nWhy it matters: the honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens. Same caveat as the open rate on the composition side: the never-opening accounts don't click either, so the raw level runs low. Benchmark: nonprofit email averages ~3.3% (M+R Benchmarks 2025).`}
+      tip:`Newsletter click rate over the last three full months (${q0Lbl}), weighted by emails delivered, against the ${cc.months} months before them, leaving out the May–September 2025 bot surge. Year to date is ${ytd.click_pct||0}%; the same window last year was ${prior.click_pct||0}%.\n\nWhy it matters: the honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens. Same caveat as the open rate on the composition side: the never-opening accounts don't click either, so the raw level runs low. Benchmark: nonprofit email averages ~3.3% (M+R Benchmarks 2025).`}
         : {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
       d:fmtPctDelta(dClickYtd)+" vs YTD '25", cls:deltaPctClass(dClickYtd,true),
       tip:"Year-to-date click rate, recipient-weighted across every send.\n\nWhy it matters: The honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens, so this is the truest read on whether content is landing. If one performance number deserves your attention, it's this one."+interpretInsight("click_rate", dClickYtd)}),
@@ -2196,13 +2214,13 @@ function renderPerf(mc){
       d:fmtPctDelta(dSendsYtd)+" vs YTD '25", cls:deltaPctClass(dSendsYtd,true),
       tip:"Total newsletter sends so far this year vs the same period last year. Includes automations and manual sends.\n\nWhy it matters: Publishing cadence. More sends mean more reach and more signup touchpoints — but read it alongside unsubscribes and click rate to be sure volume isn't fatiguing the list rather than serving it."+interpretInsight("sends", dSendsYtd)},
     {lbl:"Open rate · last 30d", n:(l30.open_pct||0)+"%",
-      d:yoy30.sends? fmtPctDelta(dOpen30)+" vs same window '25" : "no YoY data",
-      cls:yoy30.sends? deltaPctClass(dOpen30,true):"na",
-      tip:"Recipient-weighted open rate over the last 30 days, vs the same 30-day window one year ago.\n\nWhy it matters: The recent read on subject-line pull, compared year-over-year so seasonal swings don't mislead. The YoY framing is what makes a single month's number meaningful."+(dOpen30!=null?interpretInsight("open_rate", dOpen30):"")},
+      d:oc? `${fmtPctDelta(pctDelta(l30.open_pct,oc.base))} vs the ${oc.months}-month newsletter norm (~${oc.base.toFixed(1)}%)` : "no norm yet",
+      cls:oc? deltaPctClass(pctDelta(l30.open_pct,oc.base),true):"na",
+      tip:"Open rate over the last 30 days, all sends, against the newsletter norm above. (A year ago was the 2025 bot surge, so that comparison is not made.)\n\nWhy it matters: the most recent read on subject-line pull."},
     {lbl:"Click rate · last 30d", n:(l30.click_pct||0)+"%",
-      d:yoy30.sends? fmtPctDelta(dClick30)+" vs same window '25" : "no YoY data",
-      cls:yoy30.sends? deltaPctClass(dClick30,true):"na",
-      tip:"Recipient-weighted click rate over the last 30 days, vs the same 30-day window one year ago.\n\nWhy it matters: The recent, un-inflated measure of whether content is resonating right now. A drop here is a real signal — unlike open rate, it can't be papered over by Apple's auto-opens."+(dClick30!=null?interpretInsight("click_rate", dClick30):"")},
+      d:cc? `${fmtPctDelta(pctDelta(l30.click_pct,cc.base))} vs the ${cc.months}-month newsletter norm (~${cc.base.toFixed(1)}%)` : "no norm yet",
+      cls:cc? deltaPctClass(pctDelta(l30.click_pct,cc.base),true):"na",
+      tip:"Click rate over the last 30 days, all sends, against the newsletter norm above. (A year ago was the 2025 bot surge, so that comparison is not made.)\n\nWhy it matters: the most recent measure of whether content is landing. Apple Mail's automatic opens don't produce clicks, so this is steadier than the open rate."},
     {lbl:"Recipients · last 30d", n:fmtN(l30.recipients||0),
       d:`${fmtN(l30.sends||0)} sends`,cls:"flat",
       tip:"Total emails sent in the last 30 days — recipients summed across all sends, so the same person counts once per campaign they received.\n\nWhy it matters: Raw reach generated by the newsletter, and the denominator behind every rate above. Rising recipients with steady rates means the list is growing without diluting engagement."},
@@ -2246,12 +2264,12 @@ function renderPerfChart(monthly){
   const cl=last.map((r,i)=>`${x(i)},${y(r.click_pct)}`).join(" ");
   html+=`<polyline points="${cl}" fill="none" stroke="#ff7c53" stroke-width="1.4" opacity=".9"/>`;
   last.forEach((r,i)=>{html+=`<circle cx="${x(i)}" cy="${y(r.click_pct)}" r="2.5" fill="#ff7c53"><title>${r.month}: click ${r.click_pct}% · open ${r.open_pct}% · ${r.sends} sends</title></circle>`;});
-  // Mark Apple Mail privacy "break" if Jul 2025 falls in the window
-  const brkIdx=last.findIndex(r=>r.month==="2025-07");
-  if(brkIdx>=0){
-    const bx=x(brkIdx);
-    html+=`<line x1="${bx}" x2="${bx}" y1="${padT}" y2="${padT+innerH}" stroke="#707175" stroke-dasharray="3 3" opacity=".4"/>`;
-    html+=`<text x="${bx+4}" y="${padT+11}" font-size="9" fill="#707175">Jul '25 break</text>`;
+  // Mark the 2025 bot-signup surge (May–Sept.), which diluted both rates
+  const b0=last.findIndex(r=>r.month>="2025-05"&&r.month<="2025-09"), b1=last.map(r=>r.month>="2025-05"&&r.month<="2025-09").lastIndexOf(true);
+  if(b0>=0){
+    const bx=x(b0), bw=Math.max(2,x(b1)-x(b0));
+    html+=`<rect x="${bx}" y="${padT}" width="${bw}" height="${innerH}" fill="#707175" opacity=".08"/>`;
+    html+=`<text x="${bx+4}" y="${padT+11}" font-size="9" fill="#707175">bot signups</text>`;
   }
   svg.innerHTML=html;
 
@@ -2286,7 +2304,9 @@ function renderYTD(mc, signups){
     let t=0;
     for(let m=(fromM||1); m<=M; m++){
       const r=rowOf(y,m); if(!r) continue;
-      const frac = (m===M) ? D/dim(y,m) : 1;            // prorate the current month
+      // The current month's row is month-to-date already in this year; only
+      // last year's full month is cut back to the same day.
+      const frac = (m===M && y<Y) ? D/dim(y,m) : 1;
       const share = adj ? (1-(BOT[r.month]||0)) : 1;
       t += (r.new_signups||0)*share*frac;
     }
@@ -2299,18 +2319,26 @@ function renderYTD(mc, signups){
     return Math.round(endVal - start.cum_subs);
   };
   const CUT=4;   // Ghost became the signup intake in April 2026
+  // Signups by each person's real signup day, from the same daily record in
+  // both years, over the same calendar window (April 1 to yesterday); 2025's
+  // May–September days keep only the 47% that weren't bots.
+  const actD=(mc.daily_activity||[]);
+  const yday=new Date(Date.now()-86400000).toISOString().slice(0,10);
+  const sinceCut=(y)=>{ const a=`${y}-${String(CUT).padStart(2,"0")}-01`, b=`${y}${yday.slice(4)}`;
+    const rows=actD.filter(r=>r.d>=a && r.d<=b); if(!rows.length || !actD.some(r=>r.d<=a)) return null;
+    return Math.round(rows.reduce((t,r)=>t+(+r.subs||0)*(isBotDay(r.d)?0.47:1),0)); };
   const rows=[
     {label:"New signups, all sources (Mailchimp)", now:sumYTD(Y,false), prev:sumYTD(Y-1,false), ok:true, positiveGood:true,
      na:"Every addition to the Mailchimp list, January 1 to today, both years. Since April 2026 these are Ghost-form signups arriving on the weekly sync; before that the form posted straight to Mailchimp. Includes any manual import."},
     {label:"Same, with the 2025 bot cohort removed", now:sumYTD(Y,false), prev:sumYTD(Y-1,true), ok:true, positiveGood:true,
      na:"2025 with 53% of May–September signups removed, per the 17 August 2026 audit that found the bot cohort was 50–56% of signups still on the list from those months. The fairer year-over-year signup comparison."},
-    {label:"Signups since the Ghost cutover (Apr 1 → today), vs the same window last year", now:signups.ytd_ghost, prev:sumYTD(Y-1,true,CUT), ok:signups.ytd_ghost!=null, positiveGood:true,
-     na:"2026: signups counted the day they happened on the Ghost form, from the April cutover. 2025: the same calendar window on the Mailchimp form, bots removed. The same population measured at the point of signup in both years — this is the like-for-like organic comparison."},
+    {label:"Signups by signup date, Apr. 1 → yesterday, same window both years", now:sinceCut(Y), prev:sinceCut(Y-1), ok:sinceCut(Y-1)!=null, positiveGood:true,
+     na:"Both years from the same record: each subscriber dated by the day they signed up (the Mailchimp form in 2025, the Ghost form since the 2026 move), April 1 to yesterday. 2025's May–September days count only the 47% that weren't bots."},
     {label:"Net list change (list size, Jan 1 → today)", now:netYTD(Y), prev:netYTD(Y-1), ok:netYTD(Y-1)!=null, positiveGood:true,
      na:"Change in Mailchimp list size from January 1 to today — additions minus unsubscribes minus cleanings. 2025's figure includes the bots that had not yet left; 2026's includes the May cleaning that removed about 500."},
     {label:"Unsubscribes", now:signups.unsub_ytd, prev:signups.unsub_prior_ytd, ok:true, positiveGood:false, na:""},
     {label:"Newsletter sends", now:ytd.sends, prev:prior.sends, ok:true, positiveGood:true, na:""},
-    {label:"Total opens (per-send)", now:Math.round((ytd.open_pct||0)*(ytd.recipients||0)/100), prev:Math.round((prior.open_pct||0)*(prior.recipients||0)/100), ok:true, positiveGood:true, na:""},
+    {label:"Openers, all sends added up", now:Math.round((ytd.open_pct||0)*(ytd.recipients||0)/100), prev:Math.round((prior.open_pct||0)*(prior.recipients||0)/100), ok:true, positiveGood:true, na:""},
     {label:"Avg open rate", now:(ytd.open_pct||0), prev:(prior.open_pct||0), ok:true, positiveGood:true, suffix:"%", na:"Diluted in 2026 by the bot cohort still on the list (about a fifth of it), and inflated in both years by Apple Mail auto-opens."},
     {label:"Avg click rate", now:(ytd.click_pct||0), prev:(prior.click_pct||0), ok:true, positiveGood:true, suffix:"%", na:"The cleaner engagement signal, but also diluted by the bot cohort, which never clicks."},
   ];
@@ -2352,7 +2380,7 @@ function interpretInsight(metric, deltaPct, ctx){
   if(ad < 15) return "";   // ignore noise
   const sign = deltaPct>=0 ? "+" : "";
   if(metric==="open_rate" && deltaPct<-20){
-    return ` Likely driver: Apple Mail's privacy-protection feature inflates older open rates and depresses newer ones, plus list growth dilutes the engaged-core share. Click rate is the more honest signal — check whether it dropped a similar amount.`;
+    return ` Open rates move for reasons besides reading: Apple Mail's automatic opens, never-opening bot accounts on the list (the May–Sept. 2025 surge), and whether the email lands in the inbox. Click rate is the more honest signal — check whether it moved the same way.`;
   }
   if(metric==="open_rate" && deltaPct>20){
     return ` Likely driver: list cleanup (removing unengaged subscribers) or a stretch of unusually compelling subject lines. Cross-check with subscribers count — if it went down at the same time, you trimmed disengaged readers.`;
@@ -2446,14 +2474,19 @@ function renderEngagedTrend(camps){
     x:x(i), y:y(r.openers),
     html:`<b>${r.m}</b><br>~${fmtN(r.openers)} opened · ~${fmtN(r.clickers)} clicked<br>${fmtN(r.delivered)} delivered · ${r.n} send${r.n>1?"s":""}`
   })));
-  // Insight: latest 6 full months vs the same 6 months a year earlier.
-  if(rows.length>=18){
-    const rec=rows.slice(-6), prior=rows.slice(-18,-12);
+  // Insight: the latest 6 full months (the month in progress left out) against
+  // the 6 before them, naming the months; the May–Sept. 2025 bot surge is
+  // left out of the comparison months.
+  const curM=new Date().toISOString().slice(0,7);
+  const fullRows=rows.filter(r=>String(r.m)<curM);
+  if(fullRows.length>=12){
+    const rec=fullRows.slice(-6), prior=fullRows.slice(-12,-6).filter(r=>!(r.m>="2025-05"&&r.m<="2025-09"));
+    if(!prior.length) return;
     const avg=a=>a.reduce((s,r)=>s+r.openers,0)/a.length;
     const ra=avg(rec), pa=avg(prior), d=pa?((ra-pa)/pa)*100:0;
     const avgC=a=>a.reduce((s,r)=>s+r.clickers,0)/a.length;
     const rc=avgC(rec), pc=avgC(prior), dc=pc?((rc-pc)/pc)*100:0;
-    $("#engagedInsight").innerHTML=`Readers per send, last 6 months: <b>~${fmtN(Math.round(ra))}</b> opened (${d>=0?"+":""}${d.toFixed(0)}% year over year) &middot; <b>~${fmtN(Math.round(rc))}</b> clicked through (${dc>=0?"+":""}${dc.toFixed(0)}%). First month on record (${rows[0].m}): ~${fmtN(rows[0].openers)} opened, ~${fmtN(rows[0].clickers)} clicked. Clicks are the cleaner signal &mdash; Apple Mail&rsquo;s privacy loads inflate opens but not clicks &mdash; though not a pure one: corporate security gateways follow links too, and this list&rsquo;s own audit found gateway addresses with near-100% click rates.`;
+    $("#engagedInsight").innerHTML=`Readers per send, last 6 months: <b>~${fmtN(Math.round(ra))}</b> opened (${d>=0?"+":""}${d.toFixed(0)}% on ${esc(prior[0].m)} to ${esc(prior[prior.length-1].m)}) &middot; <b>~${fmtN(Math.round(rc))}</b> clicked through (${dc>=0?"+":""}${dc.toFixed(0)}%), for ${esc(rec[0].m)} to ${esc(rec[rec.length-1].m)}. First month on record (${rows[0].m}): ~${fmtN(rows[0].openers)} opened, ~${fmtN(rows[0].clickers)} clicked. Clicks are the cleaner signal &mdash; Apple Mail&rsquo;s privacy loads inflate opens but not clicks &mdash; though not a pure one: corporate security gateways follow links too, and this list&rsquo;s own audit found gateway addresses with near-100% click rates.`;
   }
 }
 
@@ -2505,15 +2538,18 @@ function renderSendChart(camps){
   })));
 
   // Insight line: compare last 5 vs prior 5
-  if(last.length>=10){
-    const recent5=last.slice(-5), prior5=last.slice(-10,-5);
+  // Full-list sends only (at least 60% of the biggest send, as in the engaged
+  // chart), and only sends at least three days old, whose opens are mostly in.
+  const bigSend=Math.max(0,...last.map(c=>c.sent_to||0)), cutoff=new Date(Date.now()-3*86400000).toISOString().slice(0,10);
+  const mains=last.filter(c=>(c.sent_to||0)>=bigSend*0.6 && String(c.sent||"")<=cutoff);
+  if(mains.length>=10){
+    const recent5=mains.slice(-5), prior5=mains.slice(-10,-5);
     const recAvg=recent5.reduce((s,c)=>s+(c.open_pct||0),0)/5;
     const prioAvg=prior5.reduce((s,c)=>s+(c.open_pct||0),0)/5;
     const d=prioAvg ? ((recAvg-prioAvg)/prioAvg)*100 : 0;
-    const tip = interpretInsight("open_rate", d);
     const dir = d>0 ? "up" : (d<0 ? "down" : "flat");
     $("#sendInsight").innerHTML =
-      `<b>Last 5 sends</b> average ${recAvg.toFixed(1)}% open, ${dir==='flat'?'≈ ':''}${d>0?'+':''}${d.toFixed(1)}% vs the prior 5 (${prioAvg.toFixed(1)}%).${esc(tip)}`;
+      `<b>Last 5 full-list sends</b> (at least three days old) average ${recAvg.toFixed(1)}% open, ${dir==='flat'?'≈ ':''}${d>0?'+':''}${d.toFixed(1)}% vs the 5 before (${prioAvg.toFixed(1)}%).`;
   } else {
     $("#sendInsight").innerHTML = "";
   }
@@ -2728,12 +2764,16 @@ function cardSpark(id, d){
   const last=(a,k,n)=>(a||[]).slice(-n).map(x=>x[k]);
   switch(id){
     case 'growthChart': return sparkSVG(last(mc.monthly_signups,'cum_subs',18),{color:'#217ebe'});
-    case 'bigPicture':  return sparkSVG(((ga.by_year||{}).years||[]).map(y=>y.users),{color:'#217ebe',bars:true});
-    case 'trend':       return sparkSVG(last(mc.monthly_signups,'new_signups',12),{color:'#57aa4a',bars:true});
+    case 'bigPicture':  { const yr=new Date().getUTCFullYear(); return sparkSVG(((ga.by_year||{}).years||[]).filter(y=>+y.year<yr).map(y=>y.users),{color:'#217ebe',bars:true}); }   // complete years only
+    case 'trend':       return sparkSVG(last(mc.monthly_signups,'ghost_signups',12),{color:'#57aa4a',bars:true});   // gross, by signup date, like the number beside it
     case 'trafficCard': return sparkSVG((gt.traffic_series||[]).filter(w=>!w.partial).map(w=>w.visitors),{color:'#217ebe'});
     case 'perf':        return sparkSVG(last(mc.monthly_campaigns,'open_pct',12),{color:'#217ebe'});
     case 'campaignsTrend': return sparkSVG((mc.campaigns||[]).slice().sort((a,b)=>((a.sent||'')<(b.sent||'')?-1:1)).slice(-20).map(c=>c.open_pct),{color:'#217ebe'});
-    case 'fundraising': { const ds=(db.daily_series||[]).map(r=>r.amt||0), wk=[]; for(let i=0;i<ds.length;i+=7) wk.push(ds.slice(i,i+7).reduce((s,v)=>s+v,0)); return sparkSVG(wk,{color:'#ff7c53',bars:true}); }
+    case 'fundraising': { // calendar weeks (Donorbox only has rows for days with gifts)
+      const byW={}; (db.daily_series||[]).forEach(r=>{ const d=new Date(r.d+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)); const k=d.toISOString().slice(0,10); byW[k]=(byW[k]||0)+(r.amt||0); });
+      const ks=Object.keys(byW).sort(); if(!ks.length) return '';
+      const wk=[]; for(let d=new Date(ks[0]+"T00:00:00Z"); d.toISOString().slice(0,10)<=ks[ks.length-1]; d.setUTCDate(d.getUTCDate()+7)) wk.push(byW[d.toISOString().slice(0,10)]||0);
+      return sparkSVG(wk,{color:'#ff7c53',bars:true}); }
     default: return '';
   }
 }
@@ -2744,20 +2784,21 @@ function cardSpark(id, d){
 function cardPeek(id, d){
   const mc=d.mailchimp||{}, act=mc.daily_activity||[], gt=d.ghost_traffic||{}, sc=d.search_console||{}, lc=d.lifecycle||{}, db=d.donorbox||{};
   const F=fmtN, B=(x)=>'<b>'+x+'</b>';
-  const r=(k,n)=>sumRange(act,daysAgo(n-1),daysAgo(0),k);
+  // Complete days only: n days ending yesterday (today is still filling in).
+  const r=(k,n)=>sumRange(act,daysAgo(n),daysAgo(1),k);
   const yt=(mc.windows||{}).ytd||{}, fw=(db.windows||{}).ytd||{};
   const scT=sc.totals||((sc.windows&&sc.windows['28'])||{}).totals||{};
   switch(id){
-    case 'weekPulse':   return 'Last 7 days: '+B('+'+F(r('subs',7)))+' signups · '+B('−'+F(r('unsubs',7)))+' unsubscribes';
+    case 'weekPulse':   return '7 days to yesterday: '+B('+'+F(r('subs',7)))+' signups · '+B('−'+F(r('unsubs',7)))+' unsubscribes';
     case 'rangeReport': return 'Pick any two dates → a full indicator report, with PDF / CSV / Markdown export.';
     case 'bigPicture':  return 'The whole-history picture — subscribers and website traffic by year.';
     case 'audienceQuality': return 'The on-mission cuts — visitor → subscriber → engaged → donor, and who is reading.';
     case 'perspective': return 'How the field is trending — email is the retention engine; clicks beat opens.';
-    case 'growthChart': return B(F(mc.total_subscribers||0))+' subscribers · weekly list size and reach since Jan 2025.';
+    case 'growthChart': return B(F(mc.total_subscribers||0))+' subscribers · weekly list size and reach over the last 18 months.';
     case 'acquisition': return 'Where new subscribers come from — Direct and Google lead recent signups (Ghost attribution).';
     case 'contentCard': return 'Which published pieces convert readers into newsletter subscribers.';
-    case 'trend':       { const s=r('subs',30),u=r('unsubs',30); return 'Last 30 days: '+B('+'+F(s))+' signups · '+B('−'+F(u))+' unsubscribes (net '+(s-u>=0?'+':'−')+F(Math.abs(s-u))+').'; }
-    case 'ytd':         return 'Signups, opens and clicks — 2026 year-to-date vs the same window in 2025.';
+    case 'trend':       { const s=r('subs',30),u=r('unsubs',30); return '30 days to yesterday: '+B('+'+F(s))+' signups · '+B('−'+F(u))+' unsubscribes (net '+(s-u>=0?'+':'−')+F(Math.abs(s-u))+').'; }
+    case 'ytd':         return 'Signups, opens and clicks — this year to date against the same window last year, with the 2025 bot signups taken out where they would distort it.';
     case 'fundraising': return fw.amount!=null ? B('$'+F(Math.round(fw.amount)))+' raised YTD · '+F(fw.donors)+' donors · '+F(fw.count)+' gifts.' : '';
     case 'engagementExtras': return 'Who really reads — by mailbox provider and influence weight (post-Apple-privacy).';
     case 'perf':        return yt.open_pct!=null ? B(yt.open_pct+'%')+' open · '+B(yt.click_pct+'%')+' click · '+F(yt.sends)+' sends (YTD).' : '';
@@ -3125,7 +3166,12 @@ function renderPieceLookup(data){
     const h30 = p.secs30!=null ? tierOf(p.secs30/3600, hb) : null;
     const spv = p.views ? Math.round(p.secs / p.views) : 0;
     const dTier = tierOf(spv, db);
-    const rank = pctRank(p.views30, allViews30);
+    // Rank against pieces published the same year (reach grew a lot over the
+    // years); fall back to every piece, and say so, when the year is thin.
+    const yr=String(p.pub||"").slice(0,4);
+    const sameYr=pieces.filter(q=>q.views30!=null && String(q.pub||"").slice(0,4)===yr).map(q=>q.views30).sort((a,b)=>a-b);
+    const rankBase = sameYr.length>=10 ? `pieces published in ${yr}` : "all pieces";
+    const rank = pctRank(p.views30, sameYr.length>=10 ? sameYr : allViews30);
     const fmt = bt[p.type];
     const vsFmt = (fmt && p.views30!=null) ? Math.round(p.views30 / fmt.p50 * 100) : null;
     const qs = p.queries || [];
@@ -3145,7 +3191,7 @@ function renderPieceLookup(data){
         <table class="tbl" style="width:100%;margin-top:14px"><tbody>
           <tr><td style="width:150px"><b>Impact band</b></td><td>${badge(iTier)}${iRank!=null?` <span style="font-size:11px;color:var(--vc-charcoal)">· more total reader-time than ${iRank}% of pieces</span>`:""} <span style="font-size:11px;color:var(--vc-charcoal)">· ${hrs(p.secs)} lifetime reader-hours</span></td></tr>
           <tr><td>Depth band</td><td>${badge(dTier)} <span style="font-size:11px;color:var(--vc-charcoal)">· how hard it held each reader (${spv?spv+"s":"—"}/view)</span></td></tr>
-          <tr><td>Launch reach</td><td style="font-size:12px">${p.views30!=null?`<b>${fmtN(p.views30)}</b> views in its first 30 days${rank!=null?` <span style="color:var(--vc-charcoal)">· beat ${rank}% of same-era pieces</span>`:""}`:(p.date_suspect?`<span class="warnflag" style="font-weight:700">date looks wrong</span> <span style="color:var(--vc-charcoal)">&mdash; GA4 saw no traffic in the 30 days after its stated date (${esc(p.pub||"")})${p.first_seen?`, first readers ${esc(p.first_seen)}`:""}; likely a migration mis-assignment.</span>`:`<span style="color:var(--vc-charcoal)">no first-30-day figure (published before GA4 coverage or in the last 30 days)</span>`)}</td></tr>
+          <tr><td>Launch reach</td><td style="font-size:12px">${p.views30!=null?`<b>${fmtN(p.views30)}</b> views in its first 30 days${rank!=null?` <span style="color:var(--vc-charcoal)">· beat ${rank}% of ${rankBase}</span>`:""}`:(p.date_suspect?`<span class="warnflag" style="font-weight:700">date looks wrong</span> <span style="color:var(--vc-charcoal)">&mdash; GA4 saw no traffic in the 30 days after its stated date (${esc(p.pub||"")})${p.first_seen?`, first readers ${esc(p.first_seen)}`:""}; likely a migration mis-assignment.</span>`:`<span style="color:var(--vc-charcoal)">no first-30-day figure (published before GA4 coverage or in the last 30 days)</span>`)}</td></tr>
           ${fmt?`<tr><td>vs its format</td><td style="font-size:12px">${vsFmt!=null?`<b>${vsFmt}%</b> of the median <b>${esc(p.type)}</b> (${fmtN(fmt.p50)} views, n=${fmtN(fmt.n)})`:`median ${esc(p.type)} = ${fmtN(fmt.p50)} views`}</td></tr>`:""}
           ${p.nl_clicks?`<tr><td>Newsletter clicks</td><td style="font-size:12px"><b>${fmtN(p.nl_clicks)}</b> clicks${p.nl_unique?` · ${fmtN(p.nl_unique)} unique`:""}${p.nl_sends?` · linked in ${fmtN(p.nl_sends)} send${p.nl_sends===1?"":"s"}`:""} <span style="color:var(--vc-charcoal)">(last ${fmtN(idx.link_click_sends||0)} sends scanned)</span></td></tr>`:""}
           ${p.signups?`<tr><td>Newsletter signups</td><td style="font-size:12px"><b>${fmtN(p.signups)}</b> attributed as landing page <span style="color:var(--vc-charcoal)">(only a ~${fmtN(idx.signup_window_days||0)}-day attribution window &mdash; absence here is not evidence of zero)</span></td></tr>`:""}
@@ -3168,7 +3214,7 @@ function renderPieceLookup(data){
         ["Views · first 30d", p.views30!=null?p.views30:"", p.views30!=null?`house median ${b.p50}`:"no first-30d figure"],
         ["Impact band", iTier?iTier[0]:"", `lifetime reader-hours vs the catalogue`],
         ["Impact percentile", iRank!=null?iRank+"% of pieces beaten (total reader-time)":"", ""],
-        ["Launch reach (first 30d views)", p.views30!=null?p.views30:"", p.views30!=null?`beat ${rank}% of same-era pieces`:"no first-30d figure"],
+        ["Launch reach (first 30d views)", p.views30!=null?p.views30:"", p.views30!=null?`beat ${rank}% of ${rankBase}`:"no first-30d figure"],
         ["Reader-hours · first 30d", p.secs30!=null?(p.secs30/3600).toFixed(1):"", h30?h30[0]:""],
         ["Depth (secs/view)", spv||"", dTier?dTier[0]:""],
         ["Lifetime views", p.views||0, `${p.users||0} users`],
@@ -3369,7 +3415,7 @@ function renderAuthorLookup(data){
         <div style="font-size:17px;font-weight:700">${esc(name)}</div>
         <div style="font-size:11.5px;color:var(--vc-charcoal);margin-top:3px">${fmtN(ps.length)} piece${ps.length===1?"":"s"} with analytics${nCo?` · ${fmtN(nCo)} co-authored`:""} · ${esc(typeStr)}</div>
         <div class="perfgrid" style="margin-top:12px">
-          ${kpi("Median opening", withOpen.length?fmtN(medOpen):"—", withOpen.length?`vs ${fmtN(b.p50)} house median`:"no first-30d data","Median first-30-day views across this author's pieces — the fairest single number for a body of work, since it isn't skewed by one hit.")}
+          ${kpi("Median opening", withOpen.length?fmtN(medOpen):"—", withOpen.length?`vs ${fmtN(b.p50)} house median for recent pieces`:"no first-30d data","Median first-30-day views across this author's pieces — the fairest single number for a body of work, since it isn't skewed by one hit.")}
           ${kpi("Lifetime views", fmtN(totalViews), `${fmtN(ps.length)} pieces`,"Total GA4 page views across everything they've written.")}
           ${kpi("Total reader-hours", hrs(totalSecs), `${fmtN(depth)}s per view`,"Total time readers spent with their work, and the average depth per view.")}
           ${kpi("Newsletter clicks", nlClicks?fmtN(nlClicks):"—", nlClicks?`across their pieces`:"none in scanned sends","Clicks their articles drew from newsletter sends (per-link Mailchimp data).")}
@@ -3469,7 +3515,7 @@ function renderPreferredSource(data){
     <div class="perfgrid">
       <div class="perfcell" title="Times the preferred-source link was clicked (GA4 event ${esc((ps.events||[]).join(', '))})."><div class="pl">Clicks</div><div class="pn">${fmtN(ps.clicks)}</div><div class="pd flat">${ps.first_seen?`since ${esc(ps.first_seen)}`:`last ${fmtN(ps.window_days)} days`}</div></div>
       <div class="perfcell" title="Distinct people who clicked. A click is not a confirmed add — see the note below."><div class="pl">People</div><div class="pn">${fmtN(ps.users)}</div><div class="pd flat">${perPerson?`${perPerson.toFixed(1)} clicks each`:"&mdash;"}</div></div>
-      <div class="perfcell" title="Clicks in the last 30 days."><div class="pl">Last 30 days</div><div class="pn">${fmtN(ps.clicks_30d)}</div><div class="pd flat">of ${fmtN(ps.clicks)} all-time</div></div>
+      <div class="perfcell" title="Clicks in the last 30 days, through today (today's count is still coming in)."><div class="pl">Last 30 days, through today</div><div class="pn">${fmtN(ps.clicks_30d)}</div><div class="pd flat">of ${fmtN(ps.clicks)} all-time</div></div>
     </div>
     ${bars?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 4px">Clicks by day</div>${bars}`:""}
     ${pageRows?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Which placement is working</div>
@@ -3935,7 +3981,7 @@ function renderDonors(db){
     {tier:"also",lbl:"Raised · YTD", n:fmtUSD(ytd.amount||0),
       d:drYtd.label, cls:drYtd.cls,
       tip:`Total raised through Donorbox so far this year (gross — before processor fees). Net YTD: $${fmtN(Math.round(ytd.net||0))}.`+
-          (yoyOk?interpretInsight("sends", ((ytd.amount-prior.amount)/Math.max(prior.amount,1))*100):` Donorbox history in this account starts ${esc((db.history_starts||'').slice(0,10))}, so a like-for-like YoY isn't possible yet.`)},
+          (yoyOk?"":` Donorbox history in this account starts ${esc((db.history_starts||'').slice(0,10))}, so a like-for-like YoY isn't possible yet.`)},
     {lbl:"Unique donors · YTD", n:fmtN(ytd.donors||0),
       d:drD.label, cls:drD.cls,
       tip:"Distinct donors who gave at least once this year, deduped by email.\n\nWhy it matters: Breadth of support, not just dollars. A rising donor count means the base is widening — which boards and funders read as institutional health and lower dependence on any single large gift."},
@@ -4112,7 +4158,7 @@ function renderAcquisition(attr){
   host.innerHTML = `
     <div style="font-size:12px;color:var(--vc-charcoal);margin:0 0 14px;line-height:1.55">
       <b style="color:var(--vc-black)">What this is:</b> Ghost attaches an attribution record to every newsletter signup — the page the visitor was on and the referring source (Google, Direct, an email campaign tag, a partner site, etc.). This is the exact data the Ghost admin Analytics tab uses for "Top Sources"; we pull the raw events and roll them up here so the dashboard is always in sync.
-      <br><b>What it doesn't show:</b> total page views or unique visitors — that's the anonymous-traffic side, which now lives in the "Website visitors" tiles in the top banner (Ghost's own analytics, unlocked via the staff token). This card is the conversion side: of the people who signed up, where did they come from?
+      <br><b>What it doesn't show:</b> total page views or unique visitors — that's the anonymous-traffic side, which lives in the Website traffic card (Ghost's own analytics since March 2026) and the Big picture card (Google Analytics, by year). This card is the conversion side: of the people who signed up, where did they come from?
     </div>
     <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:24px">
       <div>
@@ -4791,7 +4837,13 @@ function renderAudienceQuality(data){
 
   // ---- 1) Visitor → subscriber conversion, by year (the funnel's first gate).
   const usersByYear = {}; ((ga4.by_year && ga4.by_year.years) || []).forEach(y=> usersByYear[y.year] = y.users);
-  const newByYear = {}; (mc.monthly_signups || []).forEach(r=>{ const y=+String(r.month||"").slice(0,4); if(y) newByYear[y]=(newByYear[y]||0)+(r.new_signups||0); });
+  // Signups by real signup date where the record has them (no bulk imports,
+  // such as the March 2026 catch-up), Mailchimp's adds before that; the
+  // May–Sept. 2025 bot months count only the 47% that weren't bots.
+  const newByYear = {}; (mc.monthly_signups || []).forEach(r=>{ const mo=String(r.month||""), y=+mo.slice(0,4); if(!y) return;
+    const n = (r.ghost_signups>0 ? r.ghost_signups : (r.new_signups||0)) * ((mo>="2025-05"&&mo<="2025-09")?0.47:1);
+    newByYear[y]=(newByYear[y]||0)+n; });
+  Object.keys(newByYear).forEach(y=>newByYear[y]=Math.round(newByYear[y]));
   const convYrs = Object.keys(usersByYear).map(Number).filter(y=> newByYear[y] && usersByYear[y]).sort((a,b)=>a-b);
   if(convYrs.length){
     const rows = convYrs.map(y=>{
@@ -4806,7 +4858,7 @@ function renderAudienceQuality(data){
     blocks.push(`
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:2px 0 8px">Visitor &rarr; subscriber conversion, by year</div>
       <table class="tbl" style="width:100%"><thead><tr><th>Year</th><th class="num">Visitors</th><th class="num">New signups</th><th class="num">Conversion</th></tr></thead><tbody>${rows}</tbody></table>
-      <div class="flagnote"><b>Cross-source estimate.</b> Signups are counted in Ghost/Mailchimp and visitors in GA4, which tally people differently (see the traffic caveats below), so read the direction over the years, not the exact decimal. ${curYr} is a year in progress.</div>`);
+      <div class="flagnote"><b>Cross-source estimate.</b> Signups are gross, by each person's signup date, with 2025's bot signups (May–September, about half) taken out and bulk imports left out; visitors are Google Analytics users, which tally people differently (see the traffic caveats below), so read the direction over the years, not the exact decimal. ${curYr} is a year in progress.</div>`);
   }
 
   // ---- 2) Returning vs new readers (loyalty — engagement over raw reach).
@@ -5023,7 +5075,7 @@ function renderBigPicture(data){
     const arBlock = arYears.length>=2 ? `
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:24px 0 10px">Active readers per send, by year</div>
       <div style="display:flex;gap:14px;align-items:flex-end;height:180px">${arBars}</div>
-      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the average number of people who opened a send that year (delivered × unique open rate); the figure under it is the average who clicked, the honest signal. Per-send averages are comparable across a year in progress, unlike totals. Opens are Apple Mail–inflated from 2022 on, so read the openers bar as directional and the clickers figure as the truth.</div>` : "";
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the average number of people who opened a send that year (emails delivered × the share who opened); the percentage inside a bar is the change from the year before; the figure under it is the average who clicked, the honest signal. Per-send averages are comparable across a year in progress, unlike totals. Opens are Apple Mail–inflated from 2022 on, so read the openers bar as directional and the clickers figure as the truth.</div>` : "";
 
     listBlock = `
       <div style="border-top:1px solid var(--vc-cloud);margin-top:26px;padding-top:20px"></div>
@@ -5032,7 +5084,7 @@ function renderBigPicture(data){
       </div>
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:10px">Newsletter subscribers by year-end</div>
       <div style="display:flex;gap:14px;align-items:flex-end;height:180px">${lbars}</div>
-      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the total list size at that year's end; the number under it is new signups during the year. ${curYear} is in progress. Source: Mailchimp growth history — the list's system of record (a clean cumulative count, unlike the cookie-based visitor numbers above).</div>
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the total list size at that year's end; the number under it is new signups during the year. The percentage inside a bar is the change from the year before. ${curYear} is in progress. Source: Mailchimp growth history, the list's system of record. The counts include the 2025 bot signups (May–September, about half of that year's new signups) and about 2,400 bot accounts still on the list.</div>
 `;
     // The newsletter-by-year blocks live in the Newsletter performance card
     // (merged Sept. 23, 2026); The long view keeps visitors and list size.
@@ -5044,7 +5096,7 @@ function renderBigPicture(data){
   const baseYr = years[0];
   const lastFull = fullYrs.length ? fullYrs[fullYrs.length-1] : years[years.length-1];
   const vMult = (baseYr.users && lastFull.users) ? lastFull.users/baseYr.users : 0;
-  const ppv = at.users ? at.pageviews/at.users : 0;
+  const ppv = at.sessions ? at.pageviews/at.sessions : 0;    // pages per visit (session), not per user
   const sFirst = listYears.length ? listYears[0] : null;
   const sLast  = listYears.length ? listYears[listYears.length-1] : null;
   const sMult  = (sFirst && sFirst.cum && sLast) ? sLast.cum/sFirst.cum : 0;
@@ -5067,7 +5119,7 @@ function renderBigPicture(data){
         <div class="pd flat">${sFirst?fmtN(sFirst.cum):"—"} (${sFirst?sFirst.year:""}) &rarr; ${sLast?fmtN(sLast.cum):"—"} today</div>
       </div>
     </div>
-    <div class="flagnote"><b>Multiples are off a small ${baseYr.year} base.</b> Going from a few thousand to tens of thousands produces a big "×", but it doesn't mean that pace continues — growth has slowed sharply since; the year-by-year bars below are the truer read.</div>`;
+    <div class="flagnote"><b>Multiples are off a small ${baseYr.year} base.</b> Going from a few thousand to tens of thousands produces a big "×", but it doesn't mean that pace continues — growth has slowed since; the year-by-year bars below are the truer read.</div>`;
   host.innerHTML = summary + `
     <div style="font-size:13px;color:var(--vc-charcoal);margin-bottom:18px;line-height:1.5">
       <b style="color:var(--vc-black);font-size:21px;font-variant-numeric:tabular-nums">${fmtN(at.users||0)}</b> unique visitors all-time ·
@@ -5110,12 +5162,12 @@ function renderLifecycle(lc, stayHTML){
       </div>
       <div class="perfcell" title="Subscribers who opened at least one email in the past year but nothing in the last 30 days. They've drifted but you've earned their attention before — the highest-ROI re-engagement target. Click the number to see who they are.">
         <div class="pl">At-risk · lapsed but reachable</div>
-        <div class="pn"><span class="clickable-num" onclick="showPeople('at_risk','At-risk subscribers (lapsed but reachable)','Subscribers who opened at least one Vital City email in the past year but nothing in the last 30 days. They\\'ve drifted but you\\'ve earned their attention before — the highest-ROI re-engagement target. A re-engagement send specifically to this segment usually has the best open rate of any campaign you run. Top 500 shown here, sorted by Mailchimp star rating descending (highest-value first).')">${fmtN(atRisk.count||0)}</span></div>
+        <div class="pn"><span class="clickable-num" onclick="showPeople('at_risk','At-risk subscribers (lapsed but reachable)','Subscribers who opened at least one Vital City email in the past year but nothing in the last 30 days. They\\'ve drifted but you\\'ve earned their attention before — the highest-ROI re-engagement target. A re-engagement send specifically to this segment usually has the best open rate of any campaign you run. Up to 500 shown here, sorted by last name. (highest-value first).')">${fmtN(atRisk.count||0)}</span></div>
         <div class="pd flat">opened &lt;1yr ago, nothing in 30d <span style="color:var(--vc-cerulean)">· click to view</span></div>
       </div>
       <div class="perfcell" title="Subscribers who Mailchimp rates 1-2 stars AND have been on the list for more than 6 months AND haven't opened in 30 days. Pruning them improves deliverability. Click the number to see who they are.">
         <div class="pl">Sunset candidates <span class="flag">a prune definition, not dead weight</span></div>
-        <div class="pn"><span class="clickable-num" onclick="showPeople('sunset_candidates','Sunset candidates (low-engagement, long-tenured, no recent opens)','Subscribers who Mailchimp rates 1-2 stars AND have been on the list 6+ months AND haven\\'t opened in 30 days. Pruning them improves deliverability (Gmail/Outlook reduce inbox priority for senders with low engagement rates) and the open-rate denominator. Standard practice: send a single 'still want to hear from us?' campaign to this segment; remove non-responders after 14 days. Top 500 shown here, sorted by longest-tenure first.')">${fmtN(sunset.count||0)}</span></div>
+        <div class="pn"><span class="clickable-num" onclick="showPeople('sunset_candidates','Sunset candidates (low-engagement, long-tenured, no recent opens)','Subscribers who Mailchimp rates 1-2 stars AND have been on the list 6+ months AND haven\\'t opened in 30 days. Pruning them improves deliverability (Gmail/Outlook reduce inbox priority for senders with low engagement rates) and the open-rate denominator. Standard practice: send a single 'still want to hear from us?' campaign to this segment; remove non-responders after 14 days. Up to 500 shown here, sorted by last name.')">${fmtN(sunset.count||0)}</span></div>
         <div class="pd ${sunset.count > 1000 ? 'down' : 'flat'}">1-2★ · 6mo+ tenure · no recent open <span style="color:var(--vc-cerulean)">· click to view</span></div>
       </div>
     </div>`;
@@ -5126,7 +5178,7 @@ function renderLifecycle(lc, stayHTML){
   // ---- Retention curve chart ----
   const W=800, H=200, padL=46, padR=14, padT=14, padB=36;
   const innerW=W-padL-padR, innerH=H-padT-padB;
-  const valid = cohorts.filter(c => c.subs >= 5);   // ignore tiny cohorts
+  const valid = cohorts.filter(c => c.subs >= 5 && c.retention_pct!=null);   // the pull leaves the rate empty under 20 people
   let chart = '';
   if(valid.length){
     const maxX = valid.length;
@@ -5155,7 +5207,7 @@ function renderLifecycle(lc, stayHTML){
     valid.forEach((c, i) => {
       h += `<circle cx="${x(i)}" cy="${y(c.retention_pct||0)}" r="3.5" fill="#217ebe"><title>${c.label}: ${c.retention_pct}% of ${fmtN(c.subs)} subscribers still opening (n=${c.engaged} engaged)</title></circle>`;
     });
-    chart = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="For each signup cohort (grouped by how long ago they joined), the % whose email address shows up in this month's MAU set. The curve should slope down — newer subscribers should be more engaged. A flat or rising curve at the right end of the chart means new signups are LESS engaged than older ones, which is a recruitment-quality problem.">Retention curve: still engaged 30 days later?</div>
+    chart = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px" title="For each signup cohort (grouped by how long ago they joined), the % whose email address shows up in this month's MAU set. The curve should slope down — newer subscribers should be more engaged. A flat or rising curve at the right end of the chart means new signups are LESS engaged than older ones, which is a recruitment-quality problem.">Who is still reading: share of each signup cohort that opened in the last 30 days</div>
       <div class="chartwrap" style="max-width:${W}px"><svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="height:auto;aspect-ratio:${W}/${H}">${h}</svg></div>`;
   }
 
@@ -5200,12 +5252,14 @@ function renderLifecycle(lc, stayHTML){
     insight = `Not enough recent signups to measure activation yet (each new-subscriber cohort needs at least 20 people, and brand-new signups can't show opens until they reach Mailchimp on the weekly reconcile and receive their first send). Check back after the next few sends.`;
   } else if(r90 != null){
     const qual = `(measured on the ${youngLabel} cohort, n=${fmtN(youngest.subs)})`;
-    if(r30 >= 40 && r90 >= 25){
+    if(r30 >= 40 && r90 >= 25 && r30 >= r90){
       insight = `Healthy curve: newer cohorts open more than older ones ${qual}, and your year-old subscribers still come back at ~${Math.round(r365||0)}%. This is what list-health looks like.`;
     } else if(r30 < 30){
       insight = `Activation looks weak — ${r30}% of the ${youngLabel} cohort ${qual} has opened anything. Before acting on this, note the caveat: very recent signups undercount until they reach Mailchimp and receive a send. If the number stays low after a few sends, look at the welcome flow and at whether recent signups were qualified traffic.`;
-    } else {
+    } else if(r30 > r90){
       insight = `Mid-funnel drop-off: ${r30}% of the ${youngLabel} cohort ${qual} is engaged but only ${r90}% of 3-month subscribers. The first 90 days are where you lose people — invest in nurture content during that window.`;
+    } else {
+      insight = `${r30}% of the ${youngLabel} cohort ${qual} opened in the last 30 days, and ${r90}% of 3-month subscribers did; no clear drop-off in the first months.`;
     }
   }
 
@@ -7374,18 +7428,22 @@ function renderTrendChart(act,posts,windowDays){
     html+=`<line x1="${mx}" x2="${mx}" y1="${padT}" y2="${padT+innerH}" stroke="#bbb" stroke-width="1" stroke-dasharray="2 3"><title>Per-day signup detail starts here (${rows[firstSub].d}) — earlier signups happened but aren't broken out daily. The unsubscribe line is complete for the whole window.</title></line>`;
   }
   if(legend && firstSub>2){
-    legend.innerHTML+=`<span title="Per-day signup counts come from Ghost's member-events feed, which begins December 2025. Earlier signups happened — they're just not broken out by day. The unsubscribe line (from Mailchimp) is complete for the whole window."><span class="sw" style="background:repeating-linear-gradient(180deg,#bbb 0 2px,transparent 2px 5px)"></span>Dashed line: signup detail starts ${esc(rows[firstSub].d.slice(0,7))}</span>`;
+    legend.innerHTML+=`<span title="Signups are dated by each person's real signup day, from the combined Ghost and Mailchimp record, which goes back to ${esc(rows[firstSub].d)}. The unsubscribe line (from Mailchimp) is complete for the whole window."><span class="sw" style="background:repeating-linear-gradient(180deg,#bbb 0 2px,transparent 2px 5px)"></span>Dashed line: signup detail starts ${esc(rows[firstSub].d.slice(0,7))}</span>`;
   }
   // signup bars
   rows.forEach((r,i)=>{
     const h=Math.max(0,((+r.subs||0)/yTop)*innerH);
-    if(r.subs>0) html+=`<rect x="${x(i)-bw/2}" y="${y(r.subs)}" width="${bw}" height="${h}" fill="#57AA4A"><title>${weekly?'Week of ':''}${r.d}: ${r.subs} new signups · ${r.unsubs} unsubs</title></rect>`;
+    const bot=isBotDay(r.d);
+    if(r.subs>0) html+=`<rect x="${x(i)-bw/2}" y="${y(r.subs)}" width="${bw}" height="${h}" fill="${bot?"#b9b9bd":"#57AA4A"}"><title>${weekly?'Week of ':''}${r.d}: ${r.subs} new signups${bot?" (May–Sept. 2025: about half were bots)":""} · ${r.unsubs} unsubs</title></rect>`;
   });
   // Dashed reference line at the average signups per period (over the window
   // with real per-period detail), so each bar reads against "typical".
   let _avgSubV=null;
   {
-    const sr=rows.slice(firstSub>0?firstSub:0);
+    // Typical = since April 2026 (the first full month on the Ghost form),
+    // complete periods only; the bot months and today's partial day stay out.
+    const todayIso=new Date().toISOString().slice(0,10);
+    const sr=rows.slice(firstSub>0?firstSub:0).filter(r=>r.d>=SIGNUP_NORM_FROM && !isBotDay(r.d) && (weekly ? new Date(Date.parse(r.d+"T00:00:00Z")+6*86400000).toISOString().slice(0,10)<todayIso : r.d<todayIso));
     if(sr.length){
       _avgSubV=sr.reduce((a,r)=>a+(+r.subs||0),0)/sr.length;
       html+=`<line x1="${padL}" x2="${W-padR}" y1="${y(_avgSubV)}" y2="${y(_avgSubV)}" stroke="#57AA4A" stroke-width="1" stroke-dasharray="4 4" opacity=".5"/>`;
@@ -7396,7 +7454,7 @@ function renderTrendChart(act,posts,windowDays){
   html+=`<polyline points="${pts}" fill="none" stroke="#e7466d" stroke-width="1.6" opacity=".85"/>`;
   // avg label drawn LAST (with a background pill) so neither the bars nor the unsub line cross it
   if(_avgSubV!=null){
-    const _l=`avg ${fmtN(Math.round(_avgSubV))} signups/${weekly?'wk':'day'}`, _ly=Math.max(padT+9,y(_avgSubV)-4), _lw=_l.length*5.3+8;
+    const _l=`avg ${fmtN(Math.round(_avgSubV))} signups/${weekly?'wk':'day'} since April 2026`, _ly=Math.max(padT+9,y(_avgSubV)-4), _lw=_l.length*5.3+8;
     html+=`<rect class="avgbg" x="${(W-padR-2-_lw).toFixed(1)}" y="${(_ly-9.5).toFixed(1)}" width="${_lw.toFixed(1)}" height="13" rx="2.5"/>`;
     html+=`<text class="avglbl" x="${W-padR-2}" y="${_ly}" text-anchor="end" font-size="9.5" fill="#3b7d2f">${_l}</text>`;
   }
