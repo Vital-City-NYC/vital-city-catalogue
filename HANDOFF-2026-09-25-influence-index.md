@@ -100,3 +100,13 @@ Changes made locally (NOT yet pushed; push after the cloud press run lands and i
 - Candidate measures not built, for Josh: Council backfill 2022-23 (Legistar calendar via browser),
   Bluesky shares (api.bsky.app searchPosts q=domain:<site> works without auth, 2023+ only),
   Search Console "Latest links" export for page-level links to VC pieces (manual export).
+
+## Update, Sept. 27, 2026
+- Everything above is pushed and live (commits 4e85205, 3a30dac, 7fab41d). Six measures, full press
+  backfill (34 outlets, all cells), links for 2022-2026, City Hall, Comptroller, Council beside.
+- Josh approved reading paywalled hits in his Chrome. 81 walled hits read: 49 confirmed (NYT 23 of 37
+  after 2 live-blog duplicates), 4 unreadable (WSJ op-ed, Economist podcast page, one WaPo page, a dead
+  Politico link). Status values now include "duplicate".
+- Current: index 0.94x typical peer in 2026 (0.20 in 2022), 6th of 11; 191 confirmed citations.
+- Open: Council backfill 2022-23; Bluesky shares; Search Console "Latest links" export (needs a person);
+  quarterly Scholar refresh by hand; periodic hand-read of new walled hits.
