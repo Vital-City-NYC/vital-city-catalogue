@@ -1181,6 +1181,18 @@ function pxTwoRecords(data){
     (both?`: for the week of ${day(both.wk)}, ${fmtN(both.ga)} visits in Google Analytics against ${fmtN(both.gh)} readers in Ghost`:"")+
     ". Each figure names its source; compare figures only within the same source.";
 }
+// Which sends are the newsletter. The pull tags only Thursday sends as
+// "newsletter", but in 2025 the newsletter went out on Fridays. So: any
+// non-appeal send on a Thursday or Friday that went to the full list (at
+// least 60% of that month's biggest send, which leaves out resends to
+// non-openers and small automations).
+function vcIsNewsletter(c, mc){
+  if(!c || !c.sent || c.kind==="appeal" || (c.sent_to||0)<1000) return false;
+  const all=(mc&&mc.campaigns)||[];
+  if(!all._mmax){ const mm={}; all.forEach(x=>{ const m=String(x.sent||"").slice(0,7); if(x.kind!=="appeal") mm[m]=Math.max(mm[m]||0, x.sent_to||0); }); all._mmax=mm; }
+  const m=String(c.sent).slice(0,7), dow=new Date(String(c.sent).slice(0,10)+"T00:00:00Z").getUTCDay();
+  return (dow===4||dow===5) && (c.sent_to||0) >= 0.6*(all._mmax[m]||0);
+}
 function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function fmtN(n){return Number(n||0).toLocaleString();}
 function fmtPct(n){return (n>=0?"":"")+Math.round(n)+"%";}
@@ -2188,7 +2200,7 @@ function renderPerf(mc){
   // progress is left out so a half-counted month can't set the level.
   const curMo=new Date().toISOString().slice(0,7);
   const nlm={};
-  (mc.campaigns||[]).filter(c=>c.kind==="newsletter" && (c.sent_to||0)>=1000 && c.sent && String(c.sent).slice(0,7)<curMo).forEach(c=>{
+  (mc.campaigns||[]).filter(c=>vcIsNewsletter(c,mc) && String(c.sent).slice(0,7)<curMo).forEach(c=>{
     const m=String(c.sent).slice(0,7), dl=c.delivered||c.sent_to||0, e=nlm[m]=nlm[m]||{month:m,recipients:0,o:0,k:0};
     e.recipients+=dl; e.o+=(+c.open_pct||0)*dl; e.k+=(+c.click_pct||0)*dl; });
   const monthly = Object.values(nlm).sort((a,b)=>a.month.localeCompare(b.month))
@@ -5443,7 +5455,7 @@ function renderWeekPulse(data, span){
     // Newsletters only (the Thursday sends to the full list), matching the
     // tile's label and the report's newsletter section; appeals, resends and
     // small automations are left out.
-    sends:    countWhere((mc.campaigns||[]).filter(c=>c.kind==="newsletter" && (c.sent_to||0)>=1000),"sent",a,b,c=>c.sent),
+    sends:    countWhere((mc.campaigns||[]).filter(c=>vcIsNewsletter(c,mc)),"sent",a,b,c=>c.sent),
     raised:   sumField(db.daily_series,"d","amt",a,b),
     gifts:    sumField(db.daily_series,"d","gifts",a,b),
     articles: countWhere(pubRows,"published",a,b,p=>p.published),
@@ -5893,7 +5905,7 @@ function scorecardModel(data){
   // appeals, resends and small automations have different open and
   // unsubscribe patterns. Rates are weighted by emails delivered.
   const mcp={};
-  (mc.campaigns||[]).filter(c=>c.kind==="newsletter" && (c.sent_to||0)>=1000 && c.sent).forEach(c=>{
+  (mc.campaigns||[]).filter(c=>vcIsNewsletter(c,mc)).forEach(c=>{
     const m=String(c.sent).slice(0,7), dl=c.delivered||c.sent_to||0;
     const e=mcp[m]=mcp[m]||{month:m, recipients:0, o:0, k:0, unsubs:0};
     e.recipients+=dl; e.o+=(+c.open_pct||0)*dl; e.k+=(+c.click_pct||0)*dl; e.unsubs+=(+c.unsubs||0); });
@@ -6273,7 +6285,7 @@ function pulseExtras(w, data){
 
   // 1. Newsletters. Recipient-weighted, so a small resend can't swing the rate;
   //    compared with every newsletter in the twelve months before the window.
-  const isNL=c=>c.kind==="newsletter" && (c.sent_to||0)>=1000;
+  const isNL=c=>vcIsNewsletter(c,mc);
   const nls=(mc.campaigns||[]).filter(isNL);
   const wavg=(rows,k)=>{ const r=rows.reduce((s,c)=>s+(c.sent_to||0),0); return r? rows.reduce((s,c)=>s+(+c[k]||0)*(c.sent_to||0),0)/r : null; };
   const inWin=nls.filter(c=>day(c.sent)>=a && day(c.sent)<=b).sort((x,y)=>day(y.sent).localeCompare(day(x.sent)));
@@ -6359,7 +6371,7 @@ function pulseTrend(data){
   const act=mc.daily_activity||[];
   const firstSub=act.filter(r=>(+r.subs||0)>0).map(r=>r.d).sort()[0]||"9999";
   const byWk={}; tw.forEach(w=>byWk[w.wk]=w);
-  const nls=(mc.campaigns||[]).filter(c=>c.kind==="newsletter" && (c.sent_to||0)>=1000);
+  const nls=(mc.campaigns||[]).filter(c=>vcIsNewsletter(c,mc));
   const pubs=((data.ghost||{}).pub_dates||[]).map(d=>String(d).slice(0,10));
   const piecesIn=(a,b)=>pubs.reduce((n,d)=>(d>=a&&d<=b)?n+1:n,0);
   const pubLink=pxPubLink(data);
@@ -6472,7 +6484,7 @@ function pulseExtraInsights(w){
   if(ex.sources){
     const g=ex.sources.find(r=>/^google$/i.test(r.s));
     const up=ex.sources.filter(r=>r.pct!=null && r.pct>=50 && r.n-r.prev>=1000).sort((x,y)=>(y.n-y.prev)-(x.n-x.prev))[0];
-    if(g && g.pct!=null && g.pct<=-20) add("watch", `Visits from Google: ${fmtN(g.n)}, ${g.pct}% on the 30 days before (${fmtN(g.prev)})${up?`. ${up.s} (${fmtN(up.n)}, up from ${fmtN(up.prev)}) made up much of the gap, and that kind of spike rarely lasts`:""}.`);
+    if(g && g.pct!=null && g.pct<=-20) add("watch", `Visits from Google: ${fmtN(g.n)} in Ghost's latest 30 days, ${Math.abs(g.pct)}% fewer than the 30 days before (${fmtN(g.prev)})${up?`. ${up.s} (${fmtN(up.n)}, up from ${fmtN(up.prev)}) made up much of the gap, and that kind of spike rarely lasts`:""}.`);
     else if(up) add("good", `Visits from ${up.s}: ${fmtN(up.n)}, up from ${fmtN(up.prev)} in the 30 days before.`);
   }
   if(ex.dm && ex.dm.base!=null && ex.dm.base>=3){
@@ -6629,7 +6641,7 @@ function pulseBenchmarks(m, data){
   const thisMonth=String(m.asof||"").slice(0,7);
   // Newsletters only, weighted by delivered emails, as in the key indicators.
   const nm={};
-  (mc.campaigns||[]).filter(c=>c.kind==="newsletter" && (c.sent_to||0)>=1000 && c.sent).forEach(c=>{
+  (mc.campaigns||[]).filter(c=>vcIsNewsletter(c,mc)).forEach(c=>{
     const m=String(c.sent).slice(0,7), dl=c.delivered||c.sent_to||0, e=nm[m]=nm[m]||{month:m,r:0,o:0,k:0};
     e.r+=dl; e.o+=(+c.open_pct||0)*dl; e.k+=(+c.click_pct||0)*dl; });
   const nrows=Object.values(nm).sort((a,b)=>a.month.localeCompare(b.month)).map(e=>({month:e.month, open_pct:e.o/e.r, click_pct:e.k/e.r, ctor_pct:e.o?e.k/e.o*100:null}));
