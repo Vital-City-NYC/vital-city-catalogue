@@ -5221,11 +5221,20 @@ function renderWeekPulse(data, span){
   // have data for, so it lengthens through the year; the fixed windows are
   // rolling. The comparison window is always the same length immediately
   // before, so a 30-day figure is never compared against a 7-day one.
+  // Every window ends on a COMPLETE day. The latest day in the feed is today,
+  // still filling in (the refresh runs at 7 a.m. and 7 p.m. New York time),
+  // so windows end the day before. The 7-day view is the last full Monday-to-
+  // Sunday week, the same weeks the weekly analytics sheet uses, so the two
+  // can be read side by side.
+  const lastFull = shift(maxDate,-1);
+  const dow = new Date(lastFull+"T00:00:00Z").getUTCDay();          // 0 = Sunday
+  const lastSunday = shift(lastFull, -dow);
+  const endDay = (span===7) ? lastSunday : lastFull;
   const N = (span==="ytd")
-    ? (Math.round((Date.parse(maxDate+"T00:00:00Z") - Date.parse(maxDate.slice(0,4)+"-01-01T00:00:00Z"))/86400000) + 1)
+    ? (Math.round((Date.parse(endDay+"T00:00:00Z") - Date.parse(endDay.slice(0,4)+"-01-01T00:00:00Z"))/86400000) + 1)
     : Number(span);
-  const curStart = (span==="ytd") ? maxDate.slice(0,4)+"-01-01" : shift(maxDate,-(N-1));
-  const curEnd   = maxDate;
+  const curStart = (span==="ytd") ? endDay.slice(0,4)+"-01-01" : shift(endDay,-(N-1));
+  const curEnd   = endDay;
   const prevStart=shift(curStart,-N), prevEnd=shift(curStart,-1);
   const inRange=(iso,a,b)=> iso && iso.slice(0,10)>=a && iso.slice(0,10)<=b;
   // sum a numeric field over a date-keyed series within [a,b]
@@ -5498,12 +5507,22 @@ function renderWeekPulse(data, span){
   // is no 90-day or year-to-date list, so those windows borrow the since-March
   // one and the heading says so rather than implying it matches the window.
   let tpSrc=gt.top_pages_7d||[], tpLbl="by site visits, excluding the homepage";
-  if(span===30){ tpSrc=gt.top_pages_30d||[]; }
+  const swk=(data.ga4||{}).story_weekly||{};
+  let tpWeek=null;
+  if(span===7 && (swk.rows||[]).length){
+    const pg=swk.pages||[]; const agg={};
+    swk.rows.forEach(r=>{ if(r[1]===curStart) agg[r[0]]=(agg[r[0]]||0)+(+r[2]||0); });
+    const top=Object.entries(agg).map(([i,v])=>({title:(pg[+i]||{}).t||(pg[+i]||{}).p||"", path:(pg[+i]||{}).p||"", visits:v}))
+      .filter(x=>x.title && !/^\/(data|issues?|topics?|subscribe|donate|search)\/?$/.test(x.path)).sort((a,b)=>b.visits-a.visits);
+    if(top.length){ tpWeek=top; tpSrc=top; tpLbl="by page views that week, excluding the homepage and section pages (Google Analytics)"; }
+  }
+  if(span===7 && !tpWeek) tpLbl=`by site visits, excluding the homepage · Ghost's rolling seven-day list, which runs to ${pxDay(maxDate)}, not the week above`;
+  if(span===30){ tpSrc=gt.top_pages_30d||[]; tpLbl=`by site visits, excluding the homepage · Ghost's rolling 30-day list, which runs to ${pxDay(maxDate)}`; }
   else if(span===60||span===90||span==="ytd"){
     tpSrc=gt.top_pages_since_launch||gt.top_pages_30d||[];
     tpLbl=`by site visits since ${esc(gt.top_pages_since||"launch")} — Ghost has no list matching this window`;
   }
-  const tp=tpSrc.slice(0,5).map(p=>({t:p.title, path:p.path, n:p.visits, v:fmtN(p.visits)+" views"}));
+  const tp=tpSrc.slice(0,5).map(p=>({t:p.title, path:p.path, n:p.visits, v:fmtN(p.visits)+(tpWeek?" page views":" visits")}));
   // (b) signups driven, grouped from this week's recent_signups by landing piece
   // The per-signup rows behind this list are a capped recent feed, not the full
   // history, so beyond about three weeks it undercounts. Say so instead of
@@ -5545,28 +5564,31 @@ function renderWeekPulse(data, span){
     let html="";
     if(rollHtml) html += rollHtml + `<div style="margin-top:14px"></div>`;
     if(span===7){ const wh=whoHTML(data,"week"); if(wh) html += wh; }
-    if(tp.length) html += lbl(span===7?"Top pieces this week":"Top pieces", tpLbl) + olist(tp);
+    if(tp.length) html += lbl(span===7?"Top pieces that week":"Top pieces", tpLbl) + olist(tp);
     if(convTop.length) html += `<div style="margin-top:14px"></div>` +
       lbl("Most subscriber-converting pieces", convLbl) + olist(convTop);
     tpEl.innerHTML = html;
   }
-  const LBL={7:"Last 7 days",30:"Last 30 days",60:"Last 60 days",90:"Last 90 days",ytd:"Year to date"};
+  const LBL={7:"Last full week",30:"Last 30 days",60:"Last 60 days",90:"Last 90 days",ytd:"Year to date"};
   const tt=$("#weekPulseTitle"); if(tt) tt.textContent=LBL[span]||`Last ${span} days`;
+  const yr=curEnd.slice(0,4);
+  const period = (span===7)
+    ? `Monday, ${pxDay(curStart)}, to Sunday, ${pxDay(curEnd)}, ${yr}`
+    : `${pxDay(curStart)}${curStart.slice(0,4)!==yr?", "+curStart.slice(0,4):""} to ${pxDay(curEnd)}, ${yr} (${N} days)`;
   const h=$("#weekPulseHint");
-  if(h) h.textContent = (span==="ytd")
-    ? `${curStart} → ${curEnd} (${N} days), vs the ${N} days before`
-    : `rolling · ${curStart} → ${curEnd}, vs the ${N} days before`;
+  if(h) h.textContent = period + (span===7 ? " · against a typical week" : ` · against a typical ${N}-day stretch`);
   const nEl=$("#weekPulseNote");
-  if(nEl) nEl.innerHTML = `Each tile shows the ${(span==="ytd")?"year so far":"rolling last "+N+" days"} against a typical `+
-    `${N}-day stretch — the average over the trailing year of real data, this window excluded, falling back to the ` +
+  if(nEl) nEl.innerHTML = `Each tile covers ${esc(period)}, against a typical `+
+    `${span===7?"week":N+"-day stretch"} — the average over the trailing year of real data, this window excluded, falling back to the ` +
     `prior ${N} days where no history exists. Fundraising uses the median rather than the mean, because giving is lumpy ` +
     `and one campaign would otherwise set the bar. For unsubscribes, down is good (shown green). Underlined numbers are ` +
     `clickable — see exactly who. A tile reading &ldquo;—&rdquo; means this window starts before that data does. ` +
+    `Today is left out because its figures are still coming in. ` +
     `Social-follower change isn't included: we don't capture daily follower counts, so a delta there would be guesswork.`;
   card.style.display="";
-  renderWeekPulse._model={span, label:LBL[span]||`Last ${span} days`, curStart, curEnd, N,
+  renderWeekPulse._model={span, label:LBL[span]||`Last ${span} days`, curStart, curEnd, N, period, weekViews:tpWeek,
     range:(h?h.textContent:""), tiles:_pm,
-    top:tp, topLbl:(span===7?"Top pieces this week":"Top pieces")+" · "+String(tpLbl).replace(/&mdash;/g,"—").replace(/<[^>]+>/g,""),
+    top:tp, topLbl:(span===7?"Top pieces that week":"Top pieces")+" · "+String(tpLbl).replace(/&mdash;/g,"—").replace(/<[^>]+>/g,""),
     conv:convTop, convLbl:"Most subscriber-converting pieces · "+String(convLbl).replace(/<[^>]+>/g,""),
     roll4: roll4 ? {now:roll4.now, week:roll4.week, pts:roll4.pts.map(p=>({end:p.end, lbl:r4md(p.end), s:Math.round(p.s), u:Math.round(p.u)}))} : null,
     // The card's footnote, minus the line about clicking numbers, which means
@@ -5932,7 +5954,7 @@ function whoHTML(data, which){
     const parts=keys.filter(k=>k!=="other"&&(s.counts||{})[k]).map(k=>`${s.counts[k]} ${lab[k].toLowerCase()}`);
     const nb=(s.notable||[]).slice(0,8).map(p=>`${p.n}${p.org?` (${p.org})`:` (${p.role.toLowerCase()})`}`);
     return `<div><b>${fmtN(s.total)} ${verb}</b>${parts.length?`: ${parts.join(", ")}, and ${fmtN((s.counts||{}).other||0)} others`:""}.${nb.length?` Notable: ${nb.join("; ")}.`:""}</div>`; };
-  const period = which==="week" ? "this week" : "the last 30 days";
+  const period = which==="week" ? "the latest seven days" : "the latest 30 days";
   return `<div class="ki-who"><div class="ki-whohd">Who joined and who left, ${period} (${esc((w.join||{}).from||"")} to ${esc((w.join||{}).to||"")})</div>${line("join","joined")}${line("leave","left")}<div class="ki-fine">Roles come from the contacts database. Notable means a Wikipedia-notable person or a government address.</div></div>`;
 }
 function whoMD(data, which){
@@ -5942,7 +5964,7 @@ function whoMD(data, which){
     const parts=keys.filter(k=>k!=="other"&&(s.counts||{})[k]).map(k=>`${s.counts[k]} ${lab[k].toLowerCase()}`);
     const nb=(s.notable||[]).slice(0,8).map(p=>`${p.n}${p.org?` (${p.org})`:` (${p.role.toLowerCase()})`}`);
     return `- **${fmtN(s.total)} ${verb}**${parts.length?`: ${parts.join(", ")}, and ${fmtN((s.counts||{}).other||0)} others`:""}.${nb.length?` Notable: ${nb.join("; ")}.`:""}\n`; };
-  const period = which==="week" ? "this week" : "the last 30 days";
+  const period = which==="week" ? "the latest seven days" : "the latest 30 days";
   return `\n**Who joined and who left, ${period} (${(w.join||{}).from||""} to ${(w.join||{}).to||""})**\n\n`+line("join","joined")+line("leave","left");
 }
 function kiNotesHTML(sc){
@@ -5994,7 +6016,8 @@ function pulseExtras(w, data){
     const am=a.slice(0,7);
     const hist=(rf.monthly||[]).filter(r=>r.m<am).slice(-12);
     const per=hist.length>=6 ? hist.reduce((s,r)=>s+K.reduce((t,k)=>t+(+(r.join||{})[k]||0),0),0)/hist.length : null;
-    ex.dm={n, base: per!=null ? per*N/30.4 : null, months:hist.length,
+    const f=day(rw.join.from), t=day(rw.join.to);
+    ex.dm={n, base: per!=null ? per*N/30.4 : null, months:hist.length, from:f, to:t, other:(f!==a||t!==b),
       parts:K.filter(k=>c[k]).map(k=>`${c[k]} ${String(lab[k]||k).toLowerCase()}`)};
   }
 
@@ -6029,8 +6052,8 @@ function pulseExtras(w, data){
   //    converting piece's signups per 1,000 of its views where both are known.
   const pub={}; (gh.posts||[]).forEach(p=>{ if(p.title) pub[p.title.trim()]=day(p.published); });
   (w.top||[]).forEach(p=>{ const d=pub[(p.t||"").trim()]; p.fresh = !!(d && d>=a && d<=b); p.pub=d||null; });
-  if((N===7||N===30) && !/only complete back to/.test(w.convLbl||"")){
-    const pages=(N===7?gt.top_pages_7d:gt.top_pages_30d)||[];
+  if(w.span===7 && w.weekViews && !/only complete back to/.test(w.convLbl||"")){
+    const pages=w.weekViews;
     const views={}; pages.forEach(p=>{ if(p.path) views[p.path.replace(/\/$/,"")]=p.visits||0; });
     (w.conv||[]).forEach(p=>{ if(!p.u) return; let path=""; try{ path=new URL(p.u).pathname.replace(/\/$/,""); }catch(e){}
       const v=views[path]; if(v && v>=200) p.rate=p.n/v*1000; });
@@ -6056,7 +6079,7 @@ function pulseTrend(data){
   const pubs=((data.ghost||{}).pub_dates||[]).map(d=>String(d).slice(0,10));
   const piecesIn=(a,b)=>pubs.reduce((n,d)=>(d>=a&&d<=b)?n+1:n,0);
   const pubLink=pxPubLink(data);
-  const weeks=tw.slice(-12).map(w=>{
+  const weeks=tw.filter(w=>!asof || shift(w.wk,6)<asof).slice(-12).map(w=>{
     const end=shift(w.wk,6);
     const ly=byWk[shift(w.wk,-364)]||null;
     const sum=k=>act.reduce((s,r)=>(r.d>=w.wk&&r.d<=end)?s+(+r[k]||0):s,0);
@@ -6159,6 +6182,8 @@ function pulseExtraInsights(w){
     if(d<=-15) add("watch", t+". Look at the subjects and lead stories of the sends below.");
     else if(d>=15) add("good", t+".");
   }
+  if(ex.email && ex.email.openBase!=null && ex.email.open<=ex.email.openBase-8)
+    add("watch", `Newsletter opens: ${f1(ex.email.open)}% of recipients, against ${f1(ex.email.openBase)}% over the ${ex.email.baseN} newsletters in the year before. A drop this size in opens usually reflects where the email is landing or how opens are recorded more than reader interest; Mailchimp's report by email provider shows where it happened.`);
   if(ex.sources){
     const g=ex.sources.find(r=>/^google$/i.test(r.s));
     const up=ex.sources.filter(r=>r.pct!=null && r.pct>=50 && r.n-r.prev>=1000).sort((x,y)=>(y.n-y.prev)-(x.n-x.prev))[0];
@@ -6167,13 +6192,14 @@ function pulseExtraInsights(w){
   }
   if(ex.dm && ex.dm.base!=null && ex.dm.base>=3){
     const d=(ex.dm.n-ex.dm.base)/ex.dm.base*100;
-    if(d<=-30) add("watch", `Decision-makers joining: ${ex.dm.n}, against a typical ${Math.round(ex.dm.base)} for ${w.N} days.`);
-    else if(d>=30) add("good", `Decision-makers joining: ${ex.dm.n}, against a typical ${Math.round(ex.dm.base)} for ${w.N} days.`);
+    const dmP=ex.dm.other?` (${pxDay(ex.dm.from)} to ${pxDay(ex.dm.to)})`:"";
+    if(d<=-30) add("watch", `Decision-makers joining${dmP}: ${ex.dm.n}, against a typical ${Math.round(ex.dm.base)} for ${w.span===7?"a week":w.N+" days"}.`);
+    else if(d>=30) add("good", `Decision-makers joining${dmP}: ${ex.dm.n}, against a typical ${Math.round(ex.dm.base)} for ${w.span===7?"a week":w.N+" days"}.`);
   }
   if(ex.cites && ex.cites.base!=null && ex.cites.base>=2){
     const d=(ex.cites.n-ex.cites.base)/ex.cites.base*100;
-    if(d>=40) add("good", `Verified press and policy citations: ${ex.cites.n}, against a typical ${Math.round(ex.cites.base)} for ${w.N} days.`);
-    else if(d<=-40) add("watch", `Verified press and policy citations: ${ex.cites.n}, against a typical ${Math.round(ex.cites.base)} for ${w.N} days.`);
+    if(d>=40) add("good", `Verified press and policy citations: ${ex.cites.n}, against a typical ${Math.round(ex.cites.base)} for ${w.span===7?"a week":w.N+" days"}.`);
+    else if(d<=-40) add("watch", `Verified press and policy citations: ${ex.cites.n}, against a typical ${Math.round(ex.cites.base)} for ${w.span===7?"a week":w.N+" days"}.`);
   }
   return out;
 }
@@ -6185,6 +6211,7 @@ function pulseRows(w){
   return order.filter(k=>T[k]).map(k=>{
     const t=T[k];
     if(k==="raised" && T.gifts && !t.missing) return {...t, lbl:"Online giving", value:`${t.value} · ${T.gifts.value} gift${T.gifts.now===1?"":"s"}`};
+    if(k==="visitors") return {...t, lbl:"Website visitors (Ghost)"};
     return t;
   });
 }
@@ -6216,7 +6243,7 @@ function pulseReportModel(all){
     // Movers first, so the reader meets what changed before the full table.
     const rank={watch:0, good:1, neutral:2}; w.insights.sort((x,y)=>rank[x.tone]-rank[y.tone]); });
   const model={generated:gen, asof, all, stocks:window._stocksModel||[], windows, context,
-          title: all ? "Growth summary · all windows" : `Growth summary · ${(windows[0]||{}).label||""}`};
+          title: all ? "Growth summary · all windows" : (windows[0]&&windows[0].span===7 ? `Growth summary · week of ${pxDay(windows[0].curStart)} to ${pxDay(windows[0].curEnd)}, ${windows[0].curEnd.slice(0,4)}` : `Growth summary · ${(windows[0]||{}).label||""}`)};
   model.benchmarks=pulseBenchmarks(model, data);
   try{ model.scorecard=scorecardModel(data); }catch(e){ model.scorecard=null; }
   // The key indicators already set open and click rates, churn and traffic
@@ -6234,11 +6261,12 @@ function pulseInsights(w, data){
   const pc=t=>t&&t.pct!=null&&!t.thin ? Math.round(t.pct*100) : null;
   const sgn=v=>v>0?"+":"";
   const fb=(t,v)=> t.k==="raised" ? "$"+Math.round(v).toLocaleString("en-US") : t.k==="spv" ? (+v).toFixed(2) : Math.round(v).toLocaleString("en-US");
-  const span=w.span==="ytd"?"the year so far":`this ${w.N}-day window`;
+  const span=w.span==="ytd"?"the year so far":w.span===7?"the week":`these ${w.N} days`;
+  const stretch = w.span===7 ? "week" : `${w.N}-day stretch`;
   // Always name the basis and its figure, exactly as the tile does: a norm
   // (trailing-year average, this window excluded) or the same number of
   // days immediately before.
-  const vs=t=> t.base==null ? "" : (t.normed ? ` against a typical ${w.N}-day stretch (about ${fb(t,t.base)})` : ` against the ${w.N} days before (${fb(t,t.base)})`);
+  const vs=t=> t.base==null ? "" : (t.normed ? ` against a typical ${stretch} (about ${fb(t,t.base)})` : ` against the ${w.span===7?"week":w.N+" days"} before (${fb(t,t.base)})`);
   const N=T.net, S=T.signups, U=T.unsubs, V=T.visitors, R=T.spv, G=T.gifts, M=T.raised, A=T.articles, E=T.sends;
   // 1. the list
   if(N){
@@ -6253,7 +6281,7 @@ function pulseInsights(w, data){
   }
   if(S&&U){
     const ps=pc(S), pu=pc(U);
-    if(ps!=null&&pu!=null&&ps<=-5&&pu<=-15&&N&&N.now>0) add("neutral", `Signups (${S.value}) ran ${Math.abs(ps)}% below their norm (about ${fb(S,S.base)}) while unsubscribes (${U.value}) ran ${Math.abs(pu)}% below theirs (about ${fb(U,U.base)}). That is why the net figure reads positive: fewer departures, not more arrivals.`);
+    if(ps!=null&&pu!=null&&ps<=-5&&pu<=-15&&N&&N.now>0&&(pc(N)==null||pc(N)>-10)) add("neutral", `Signups (${S.value}) ran ${Math.abs(ps)}% below their norm (about ${fb(S,S.base)}) while unsubscribes (${U.value}) ran ${Math.abs(pu)}% below theirs (about ${fb(U,U.base)}). That is why the net figure reads positive: fewer departures, not more arrivals.`);
     else if(ps!=null&&ps>=15) add("good", `New signups: ${S.value}, ${sgn(ps)}${ps}%${vs(S)}.`);
     else if(ps!=null&&ps<=-15) add("watch", `New signups: ${S.value}, ${ps}%${vs(S)}.`);
     if(pu!=null&&pu>=25) add("watch", `Unsubscribes: ${U.value}, ${sgn(pu)}${pu}%${vs(U)}. Worth checking which sends they followed.`);
@@ -6364,8 +6392,8 @@ function pxMD(w){
   if(ex.email){ o+=`\n**Newsletters sent** — ${pxEmailLine(ex.email)}\n`;
     ex.email.rows.forEach(r=>{ o+=`- ${r.d}: ${r.s} — ${fmtN(r.to)} delivered, ${r.open}% opened, ${r.click}% clicked, ${r.unsubs} unsubscribed${r.ab?" (subject-line test)":""}\n`; });
     if(ex.email.more) o+=`- and ${ex.email.more} earlier\n`; }
-  if(ex.dm) o+=`\n**Decision-makers joining:** ${ex.dm.n}${ex.dm.parts.length?` (${ex.dm.parts.join(", ")})`:""}${ex.dm.base!=null?`; a typical ${w.N} days brings about ${Math.round(ex.dm.base)}`:""}.\n`;
-  if(ex.cites){ o+=`\n**Press and policy citations** — ${ex.cites.n} verified${ex.cites.base!=null?`; a typical ${w.N} days brings about ${Math.round(ex.cites.base)}`:""}\n`;
+  if(ex.dm) o+=`\n**Decision-makers joining${ex.dm.other?` (${pxDay(ex.dm.from)} to ${pxDay(ex.dm.to)}, the latest period the contacts data covers)`:""}:** ${ex.dm.n}${ex.dm.parts.length?` (${ex.dm.parts.join(", ")})`:""}${ex.dm.base!=null?`; ${w.span===7?"a typical week":"a typical "+w.N+" days"} brings about ${Math.round(ex.dm.base)}`:""}.\n`;
+  if(ex.cites){ o+=`\n**Press and policy citations** — ${ex.cites.n} verified${ex.cites.base!=null?`; ${w.span===7?"a typical week":"a typical "+w.N+" days"} brings about ${Math.round(ex.cites.base)}`:""}\n`;
     ex.cites.rows.forEach(r=>{ o+=`- ${r.d}, ${r.src}${r.kind?` (${r.kind})`:""}: ${r.t}\n`; });
     if(ex.cites.more) o+=`- and ${ex.cites.more} more\n`; }
   if(ex.sources){ o+=`\n**Where visits came from** (against the 30 days before)\n`;
@@ -6378,17 +6406,17 @@ function pxHTML(w){
   if(ex.email){ b+=`<h3>Newsletters sent</h3><p class="pxs">${esc(pxEmailLine(ex.email))}</p><table class="px"><tr class="hd"><td>Sent</td><td class="l">Subject</td><td class="num">Delivered</td><td class="num">Opened</td><td class="num">Clicked</td><td class="num">Unsubscribed</td></tr>`+
     ex.email.rows.map(r=>`<tr><td style="white-space:nowrap">${esc(r.d)}</td><td class="l">${esc(r.s)}${r.ab?` <span class="tag">subject test</span>`:""}</td><td class="num">${fmtN(r.to)}</td><td class="num">${r.open}%</td><td class="num">${r.click}%</td><td class="num">${r.unsubs}</td></tr>`).join("")+`</table>`+
     (ex.email.more?`<p class="pxn">and ${ex.email.more} earlier</p>`:""); }
-  if(ex.dm) b+=`<h3>Decision-makers joining</h3><p class="pxs"><b>${ex.dm.n}</b>${ex.dm.parts.length?` (${esc(ex.dm.parts.join(", "))})`:""}${ex.dm.base!=null?`; a typical ${w.N} days brings about ${Math.round(ex.dm.base)}`:""}. Government, university, press and nonprofit or foundation leaders, as tagged in the contacts database.</p>`;
-  if(ex.cites){ b+=`<h3>Press and policy citations</h3><p class="pxs"><b>${ex.cites.n}</b> verified${ex.cites.base!=null?`; a typical ${w.N} days brings about ${Math.round(ex.cites.base)}`:""}. Counted only where the page was read and Vital City is cited for its work, not mentioned in passing.</p>`;
+  if(ex.dm) b+=`<h3>Decision-makers joining${ex.dm.other?` · ${esc(pxDay(ex.dm.from))} to ${esc(pxDay(ex.dm.to))}, the latest period the contacts data covers`:""}</h3><p class="pxs"><b>${ex.dm.n}</b>${ex.dm.parts.length?` (${esc(ex.dm.parts.join(", "))})`:""}${ex.dm.base!=null?`; ${w.span===7?"a typical week":"a typical "+w.N+" days"} brings about ${Math.round(ex.dm.base)}`:""}. Government, university, press and nonprofit or foundation leaders, as tagged in the contacts database.</p>`;
+  if(ex.cites){ b+=`<h3>Press and policy citations</h3><p class="pxs"><b>${ex.cites.n}</b> verified${ex.cites.base!=null?`; ${w.span===7?"a typical week":"a typical "+w.N+" days"} brings about ${Math.round(ex.cites.base)}`:""}. Counted only where the page was read and Vital City is cited for its work, not mentioned in passing.</p>`;
     if(ex.cites.rows.length) b+=`<table class="px">`+ex.cites.rows.map(r=>`<tr><td style="white-space:nowrap">${esc(r.d)}</td><td class="l"><b>${esc(r.src)}</b>${r.kind?` (${esc(r.kind)})`:""}: ${esc(r.t)}</td></tr>`).join("")+`</table>`+(ex.cites.more?`<p class="pxn">and ${ex.cites.more} more</p>`:""); }
   if(ex.sources) b+=`<h3>Where visits came from · against the 30 days before</h3><table class="px">`+ex.sources.map(r=>`<tr><td class="l">${esc(r.s)}</td><td class="num">${fmtN(r.n)}</td><td class="num" style="color:${r.pct==null?"#707175":r.pct<0?"#a0432d":"#3d7a35"}">${r.pct!=null?esc(pxPct(r.pct)):""}</td><td class="num" style="color:#707175">${r.pct!=null?`from ${fmtN(r.prev)}`:""}</td></tr>`).join("")+`</table>`;
   if(ex.returning) b+=`<p class="pxs" style="margin-top:8px"><b>Returning readers:</b> ${ex.returning.pct}% of visitors in the last 30 days had visited before${ex.returning.prior?`, against ${ex.returning.prior.pct}% across ${ex.returning.prior.y}`:""} (Google Analytics). The loyal core is what turns into subscribers and donors.</p>`;
   return b;
 }
 function pulseReportMD(m){
-  let o=`# Vital City — ${m.title}\n\n_As of ${m.asof}. Data refreshed ${m.generated}._\n`;
+  let o=`# Vital City — ${m.title}\n\n_${m.all?"Each section names the dates it covers":`Covers ${(m.windows[0]||{}).period||m.asof}`}. Data refreshed ${m.generated}._\n`;
   m.windows.forEach(w=>{
-    o+=`\n## ${w.label} (${w.curStart} to ${w.curEnd}, ${w.N} days)\n`;
+    o+=`\n## ${w.label}: ${w.period||(w.curStart+" to "+w.curEnd)}\n`;
     if((w.insights||[]).length){ o+=`\n**What moved**\n`; w.insights.forEach(i=>{ o+=`- ${i.tone==="good"?"▲":i.tone==="watch"?"▼":"•"} ${i.text}\n`; }); o+=`\n`; }
     (w.rows||w.tiles).forEach(t=>{ o+=`- ${t.lbl}: ${t.value} — ${t.delta}\n`; });
     if(w.trend){ const t=w.trend; o+=`\n**Twelve-week trend** (weeks run Monday to Sunday)\n`; pxTrendLines(t).forEach(l=>{ o+=`- ${l}\n`; });
@@ -6413,9 +6441,9 @@ function pulseReportMD(m){
 }
 function pulseReportHTML(m){
   const cls=c=>c==="up"?"up":c==="down"?"down":"";
-  let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">As of ${esc(m.asof)} · data refreshed ${esc(m.generated)}</p>`;
+  let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">${esc(m.all?"Each section names the dates it covers":`Covers ${(m.windows[0]||{}).period||m.asof}`)} · data refreshed ${esc(m.generated)}</p>`;
   m.windows.forEach(w=>{
-    b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.curStart)} → ${esc(w.curEnd)} · ${w.N} days · against a typical ${w.N}-day stretch</span></h2>`;
+    b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.period||(w.curStart+" to "+w.curEnd))}</span></h2>`;
     if((w.insights||[]).length) b+=`<h3>What moved</h3><ul class="ins">`+w.insights.map(i=>`<li class="${i.tone}"><span class="m">${i.tone==="good"?"▲":i.tone==="watch"?"▼":"•"}</span>${esc(i.text)}</li>`).join("")+`</ul><h3>The numbers</h3>`;
     b+=`<table>`+(w.rows||w.tiles).map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
     if(m.scorecard&&m.scorecard.also&&w===m.windows[0]) b+=`<p class="also">${esc(m.scorecard.also)}</p>`;
@@ -6477,7 +6505,7 @@ function pulseReportHTML(m){
     +'.ctx{font-size:11.5px;color:#333;padding-left:18px}.ctx li{margin:3px 0}.cav{font-size:10.5px;color:#707175;margin-top:18px;border-top:1px solid #ddd;padding-top:10px}'
     +'.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.bar button{font:inherit;font-size:12px;font-weight:700;padding:7px 12px;border:1.5px solid #050507;background:#fff;border-radius:3px;cursor:pointer}.bar button.p{background:#050507;color:#fff}'
     +'@media print{.bar{display:none}body{margin:0;max-width:none}h1{font-size:22px;margin:2px 0}.period{margin:0 0 4px}}';
-  const subject=`Vital City ${m.title.toLowerCase()} · ${m.asof}`;
+  const subject=`Vital City ${m.title.replace(/^Growth/,"growth")}`;
   const script=`<script>const MD=${JSON.stringify(md)};const SUBJ=${JSON.stringify(subject)};const NAME=${JSON.stringify("Vital-City-"+m.title.replace(/[^A-Za-z0-9]+/g,"-")+"-"+m.asof)};
 function dl(){const b=new Blob([MD],{type:"text/markdown;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=NAME+".md";document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500);}
 function cp(btn){navigator.clipboard.writeText(MD).then(()=>{const o=btn.textContent;btn.textContent="Copied";setTimeout(()=>btn.textContent=o,1400);},()=>prompt("Copy this report:",MD));}
