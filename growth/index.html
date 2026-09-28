@@ -6232,6 +6232,11 @@ function scorecardModel(data){
     if(x.verified===false||x.incidental===true) return; const m=String(x.published_iso||"").slice(0,7); if(m) cites[m]=(cites[m]||0)+1; });
   const giving={}; (db.monthly_series||[]).forEach(r=>{giving[r.m]=r.amt;});
   const pieces={}; (gh.pub_dates||[]).forEach(d=>{const m=String(d).slice(0,7); pieces[m]=(pieces[m]||0)+1;});
+  // Signups and unsubscribes by calendar month from the same daily record the
+  // period tiles use, so both panels count people the same way.
+  const actM={}; const actFirst=(act.filter(r=>(+r.subs||0)>0).map(r=>r.d).sort()[0])||"9999";
+  act.forEach(r=>{ const m=String(r.d).slice(0,7); if(!m||r.d<actFirst.slice(0,7)+"-01") return; const e=actM[m]=actM[m]||{s:0,u:0}; e.s+=(+r.subs||0); e.u+=(+r.unsubs||0); });
+  if(actFirst!=="9999" && actFirst.slice(8)!=="01") delete actM[actFirst.slice(0,7)];   // a partial first month
   // GA4 by month and channel (from the nightly pull): time per visit, search share.
   const chRows=ga4.monthly_channels||[]; const chM={};
   chRows.forEach(r=>{ const e=chM[r.m]=chM[r.m]||{s:0,eng:0,ch:{}}; e.s+=r.sessions||0; e.eng+=r.eng_secs||0; e.ch[r.ch]=(e.ch[r.ch]||0)+(r.sessions||0); });
@@ -6281,10 +6286,21 @@ function scorecardModel(data){
     vals:S(m=>mcp[m]&&mcp[m].click_pct!=null?+mcp[m].click_pct:null), fmt:v=>(+v).toFixed(1)+"%",
     std:(x)=>{ const op=avgOf(m=>mcp[m]&&mcp[m].open_pct!=null?+mcp[m].open_pct:null,CUR);
       return `Industry: nonprofits average about 3.3% clicks and 28–29% opens (M+R Benchmarks 2025); media newsletters run about 3–6% clicks. ${pos(x.cur,[{v:3.3},{v:6}])}`+(op!=null?` Opens: ${op.toFixed(1)}%.`:""); }},
-   {k:"unsub", name:"Unsubscribes per 1,000 emails", unit:"per 1,000 emails delivered,", kind:"rate", good:-1,
-    def:"Readers who leave for every 1,000 newsletter emails delivered: whether sends are wearing people out.",
-    vals:S(m=>{const c=mcp[m]; return c&&c.recipients? c.unsubs/c.recipients*1000 : null;}), fmt:v=>(+v).toFixed(2),
-    std:(x)=>`Industry: about 1.2 per 1,000 emails for media and publishing and 2.6 across all industries (Mailchimp's published averages). ${pos(x.cur,[{v:1.2},{v:2.6}])}`},
+   {k:"active", name:"Active newsletter readers", unit:"opened an email in the 30 days to the end of", kind:"level", good:1,
+    def:"People who opened at least one Vital City email sent in the 30 days up to the last day of the month. Some email apps open messages automatically, which inflates it; it also moves with how many emails went out.",
+    vals:S(m=>{ const [yy,mm]=m.split("-").map(Number); const e=new Date(Date.UTC(yy,mm,0)).toISOString().slice(0,10); const v=(mc.mau_series||{})[e]; return v==null?null:v; }), fmt:n0,
+    note:"Counted day by day from late October 2025; earlier months are blank.",
+    std:(x)=>{ const tot=+mc.total_subscribers||0; return (x.now!=null&&tot)?`${Math.round(x.now/tot*100)}% of the ${fmtN(tot)} on the list. No reliable public standard; compared with Vital City's own recent average.`:""; }},
+   {k:"signups", name:"New signups", unit:"people signed up in", kind:"flow", good:1,
+    def:"People who joined the newsletter, dated by the day they signed up (the Ghost form since March 2026, Mailchimp's before).",
+    vals:S(m=>actM[m]?actM[m].s:null), fmt:n0,
+    note:"May to September 2025 (about half bots) and March 2026 (a one-time import) are left out of the comparison. Signups have run at about half their earlier rate since the site moved to the Ghost signup form in March 2026, so a comparison reaching back before then is partly a comparison of two signup systems.",
+    std:()=>"No reliable public standard for a free newsletter, so this is compared with Vital City's own recent average."},
+   {k:"unsub", name:"Unsubscribes", unit:"people unsubscribed in", kind:"flow", good:-1,
+    def:"People who left the newsletter.",
+    vals:S(m=>actM[m]?actM[m].u:null), fmt:n0,
+    std:(x)=>{ const r=avgOf(m=>{const c=mcp[m]; return c&&c.recipients? c.unsubs/c.recipients*1000 : null;},CUR);
+      return r==null?"":`Per 1,000 emails delivered: ${r.toFixed(2)} (${curLbl}). Industry: about 1.2 per 1,000 for media and publishing and 2.6 across all industries (Mailchimp's published averages). ${pos(r,[{v:1.2},{v:2.6}])}`; }},
    {k:"conv", name:"New subscribers per 1,000 visits", unit:"new subscribers per 1,000 visits,", kind:"rate", good:1,
     def:"How well the site turns readers into subscribers.",
     vals:S(m=>{ if(SC_CONV_SKIP.has(m)) return null; const v=vis[m], r=ms[m]; if(!v||!r) return null;
@@ -6322,9 +6338,11 @@ function scorecardModel(data){
   // related to readership and growth... I don't need the $$ reports").
   // Decision-makers, search share and citations stay in the reports below the
   // line; giving is left out.
-  const SC_KEEP=new Set(["list","visits","click","unsub","conv","time"]);
-  for(let i=M.length-1;i>=0;i--) if(!SC_KEEP.has(M[i].k)) M.splice(i,1);
-  const SKIP={ list:new Set([...SC_CONV_SKIP,"2026-05"]), conv:SC_CONV_SKIP, giving:new Set(["2025-11","2025-12"]) };
+  // The same seven measures as the period tiles, in the same order.
+  const SC_ORDER=["list","active","signups","unsub","click","visits","conv"];
+  for(let i=M.length-1;i>=0;i--) if(!SC_ORDER.includes(M[i].k)) M.splice(i,1);
+  M.sort((a,b)=>SC_ORDER.indexOf(a.k)-SC_ORDER.indexOf(b.k));
+  const SKIP={ list:new Set([...SC_CONV_SKIP,"2026-05"]), conv:SC_CONV_SKIP, signups:SC_CONV_SKIP, giving:new Set(["2025-11","2025-12"]) };
   const avg=a=>a.length?a.reduce((t,q)=>t+q,0)/a.length:null;
   const rng=idx=>idx.length===1? scName(months[idx[0]]) : `${scName(months[idx[0]])} to ${scName(months[idx[idx.length-1]])}`;
   M.forEach(x=>{
@@ -6348,7 +6366,7 @@ function scorecardModel(data){
     const skipped=[...skip].filter(m=>m>=months[9]&&m<=months[20]).length;
     x.baseText = bIdx.length ? `Compared with ${rng(bIdx)}${skipped?(x.k==="giving"?", leaving out the launch month and the December matching campaign":", leaving out months the data can't support"):""}.` : "";
     const fmtS = q => x.kind==="stock" ? ((q>=0?"+":"−")+fmtN(Math.round(Math.abs(q)))) : x.fmt(q);
-    const per = x.kind==="rate" ? "" : " a month";
+    const per = (x.kind==="rate"||x.kind==="level") ? "" : " a month";
     x.unitLine = x.waiting ? "" : `${x.unit} ${scName(full)}`+(x.extra?` · ${x.extra}`:"");
     if(x.waiting){ x.tone="neutral"; x.cmpShort=WAIT; }
     else if(x.cur==null || x.base==null){
@@ -6373,7 +6391,9 @@ function scorecardModel(data){
     list:  {good:"The list is growing faster than it had been.", watch:"The list is growing more slowly than it had been.", flat:"The list is growing at its usual pace."},
     visits:{good:"More visits than the site's recent average.", watch:"Fewer visits than the site's recent average. Check whether one big piece carried the earlier months, or whether search traffic fell.", flat:"Visits are in line with the recent average."},
     click: {good:"Recipients are clicking more than they had been.", watch:"Recipients are clicking less than they had been. Look at what each newsletter leads with and how many links it carries.", flat:"Clicking is in line with the recent average."},
-    unsub: {good:"Fewer readers leave per email than over the past year.", watch:"More readers leave per email than over the past year. Check send frequency and the appeal emails.", flat:"Readers leave at about their usual rate."},
+    unsub: {good:"Fewer readers are leaving than over the past year.", watch:"More readers are leaving than over the past year. Check send frequency and the appeal emails.", flat:"Readers leave at about their usual rate."},
+    signups:{good:"More people are signing up than over the past year.", watch:"Fewer people are signing up than over the past year. Check the signup prompts on the most-read pieces.", flat:"Signups are at their usual pace."},
+    active:{good:"More subscribers are opening emails than they had been.", watch:"Fewer subscribers are opening emails than they had been. This count also moves with how many emails went out.", flat:"About as many subscribers are opening emails as usual."},
     conv:  {good:"The site is turning more of its visitors into subscribers than it had been.", watch:"The site converts fewer visitors than it had been. Check the signup form and where the prompts appear.", flat:"The site converts visitors at its usual rate."},
     dm:    {good:"More decision-makers are joining than usual.", watch:"Fewer decision-makers are joining than usual. Check whether outreach to government and universities has paused.", flat:"Decision-makers are joining at the usual pace."},
     time:  {good:"Readers are spending more time per visit than they had been.", watch:"Readers are spending less time per visit than they had been.", flat:"Time per visit is in line with the recent average."},
@@ -6415,7 +6435,7 @@ function scorecardModel(data){
   const summary=[];
   if(better.length) summary.push(`Better than their recent average: ${scList(better)}.`);
   if(worse.length) summary.push(`Worse than their recent average: ${scList(worse)}.`);
-  const order=["conv","dm","click","unsub","list","visits","time","cites","giving"];
+  const order=["list","signups","active","conv","click","unsub","visits"];
   const first=order.map(k=>B[k]).find(x=>x&&x.tone==="watch");
   if(first) summary.push(`Where to look first: ${lc(first.name)}. ${first.reading}`);
   // Dated events to mark on the lines.
@@ -6425,9 +6445,9 @@ function scorecardModel(data){
   // "Also today": the two stock tiles the indicators don't already carry.
   const st=window._stocksModel||[]; const pick=re=>st.find(k=>re.test(k.lbl));
   const act30=pick(/Active subscribers/i), soc=pick(/Social followers/i);
-  const also=[act30?`${act30.num} subscribers opened at least one email in the last 30 days (${act30.delta})`:"", soc?`${soc.num} social-media followers (${String(soc.delta).replace(/ LI\b/," LinkedIn").replace(/ Bsky\b/," Bluesky").replace(/ IG\b/," Instagram")})`:""].filter(Boolean).join(" · ");
+  const also=[soc?`${soc.num} social-media followers (${String(soc.delta).replace(/ LI\b/," LinkedIn").replace(/ Bsky\b/," Bluesky").replace(/ IG\b/," Instagram")})`:""].filter(Boolean).join(" · ");
   return {full, fullLbl:scName(full), months, measures:M, summary, marks, also: also?`Also, as of today: ${also}.`:"",
-    lede:`${M.length} measures of readership and growth, on full calendar months. Each shows the latest month and a line of the last 24 months, compares the latest three months (${curLbl}) with the months before them, gives the direction over the last six months, and sets the figure against a published industry standard where a reliable one exists.`};
+    lede:`${["No","One","Two","Three","Four","Five","Six","Seven","Eight","Nine"][M.length]||M.length} measures of readership and growth, on full calendar months. Each shows the latest month and a line of the last 24 months, compares the latest three months (${curLbl}) with the months before them, gives the direction over the last six months, and sets the figure against a published industry standard where a reliable one exists.`};
 }
 function scNowText(x){
   if(x.waiting) return "—";
