@@ -1281,12 +1281,19 @@ function pxSignupBands(data){
 function pxSignupDef(data){
   const sb=pxSignupBands(data); if(!sb) return "";
   const pct=Math.round(sb.zero/sb.n*100);
-  return `Newsletter signups: people who subscribed on the piece's own page in its first 30 days (recorded since ${pxDay(sb.since)}, ${sb.since.slice(0,4)}). ${pct}% of pieces bring in none this way; the top 10% bring in ${fmtN(Math.max(1,sb.p90))} or more. Most people subscribe elsewhere on the site, so this undercounts.`;
+  const pp=(((data.ga4||{}).piece_index||{}).pieces||[]).filter(p=>p.signups30!=null);
+  const k=[pp.filter(p=>p.signups30===0).length, pp.filter(p=>p.signups30===1).length, pp.filter(p=>p.signups30>=2&&p.signups30<=4).length, pp.filter(p=>p.signups30>=5).length];
+  return `Newsletter signups: people who subscribed on the piece's own page in its first 30 days, recorded since ${pxDay(sb.since)}, ${sb.since.slice(0,4)}. Of the ${fmtN(sb.n)} pieces with a full 30 days since then, ${k[0]} brought in none this way, ${k[1]} brought in one, ${k[2]} brought in two to four and ${k[3]} brought in five or more. Most people subscribe elsewhere on the site, so this undercounts.`;
 }
 function pxWellDef(data){
   const bm=((data.ga4||{}).piece_benchmarks)||{}, b=bm.bands||{};
   if(!bm.available||b.p50==null) return "";
-  return `What "did well" means: the top quarter of the past year's ${fmtN(bm.n_pieces)} pieces by page views in the first 30 days, ${fmtN(b.p75)} or more. The typical piece gets ${fmtN(b.p50)}; the top 10% get ${fmtN(b.p90)} or more. ${pxSignupDef(data)}`.trim();
+  const P=(((data.ga4||{}).piece_index||{}).pieces||[]).filter(p=>p.views30!=null && p.pub>=bm.window_start && p.pub<=bm.window_end);
+  const c=[0,0,0,0,0]; P.forEach(p=>c[pwBand(p.views30,b)]++);
+  const n=P.length||bm.n_pieces, r=v=>fmtN(Math.round(v));
+  return `What "did well" means: a piece is rated by its page views in its first 30 days, against the ${fmtN(n)} pieces published ${pwDate(bm.window_start)}, to ${pwDate(bm.window_end)}. `+
+    `Exceptional, the top 5%: ${r(b.p95)} or more (${c[4]} pieces). Great, the next 5%: ${r(b.p90)} to ${r(b.p95-1)} (${c[3]}). Strong, the rest of the top quarter: ${r(b.p75)} to ${r(b.p90-1)} (${c[2]}). `+
+    `Typical, the middle half: ${r(b.p25)} to ${r(b.p75-1)} (${c[1]}). Under-performing, the bottom quarter: under ${r(b.p25)} (${c[0]}). "Did well" means strong or better, ${c[2]+c[3]+c[4]} pieces; the typical piece gets ${r(b.p50)}. ${pxSignupDef(data)}`.trim();
 }
 // Pieces whose first 30 days ended inside [a,b]: published 30 days before.
 function pxPiecesWell(data, a, b){
