@@ -8,7 +8,7 @@
    reading; they are useless without the passphrase, which is never stored here.
    Cross-origin requests (fonts, the edit sheet, Slack, Google) pass straight
    through. */
-const VERSION = "vc-toolkit-v1";
+const VERSION = "vc-toolkit-v2";
 const SHELL = ["./", "./index.html", "./toolkit.css", "./toolkit.js", "./manifest.webmanifest",
                "./app/icon-192.png", "./app/icon-512.png", "./app/apple-touch-icon.png"];
 
@@ -28,8 +28,12 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+  // Pages and the files that carry their text are always checked against the
+  // server (the browser may otherwise reuse a copy for up to 10 minutes), so a
+  // correction is visible on the next load.
+  const fresh = req.mode === "navigate" || /\.(html|js|enc|json)$/.test(url.pathname) || url.pathname.endsWith("/");
   e.respondWith(
-    fetch(req).then(res => {
+    fetch(fresh ? new Request(req, { cache: "no-cache" }) : req).then(res => {
       if (res.ok && res.type === "basic") {
         const copy = res.clone();
         caches.open(VERSION).then(c => c.put(req, copy)).catch(() => {});
