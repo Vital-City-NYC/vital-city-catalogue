@@ -170,7 +170,10 @@ let RAW=null, SHOWALL={};
 
 function model(){
   const I=RAW.influence||{}, T=texts();
-  const paras=(I.paragraphs||[]).map((p,i)=>{ const e=T["influence-p"+i]; return {tid:"influence-p"+i, text:(e&&typeof e.text==="string")?e.text:p, edited:e?e.at:""}; })
+  // Standing correction (Sept. 28, 2026): no Moskos or Abt quotes, even in
+  // data built before the change or in an older saved edit.
+  const noQuotes=t=>String(t).replace(/The people best positioned to judge its quality have been its loudest champions: criminologist Peter Moskos called it by far the best journal for anyone interested in urban issues, Thomas Abt dubbed it "the crime nerds' New Yorker," and opinion leaders like Matt Yglesias and Chris Hayes have amplified its work — with Ravi Gupta/,"Opinion leaders like Matt Yglesias and Chris Hayes have amplified its work, with Ravi Gupta");
+  const paras=(I.paragraphs||[]).map((p,i)=>{ const e=T["influence-p"+i]; return {tid:"influence-p"+i, text:noQuotes((e&&typeof e.text==="string")?e.text:p), edited:e?e.at:""}; })
     .filter(p=>p.text);
   const win=$("#win").value;
   const since=win==="doc"?(I.doc_date||""):new Date(Date.now()-(+win)*864e5).toISOString().slice(0,10);

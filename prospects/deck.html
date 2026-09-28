@@ -413,7 +413,7 @@ async function exportPptx(){
   { const s=slide("Media influence, continued","Cited from City Journal to Mother Jones.");
     let y=lede(s,s._bodyY||2.2,"Vital City is cited approvingly by City Journal and Mother Jones alike — read closely by the correction commissioner, quoted by the mayor. The analyses are built to be usable by people who disagree with each other, and they are.",{h:1.0});
     y=pull(s,y,"When reporters dig into the city's crime numbers, it is often Vital City's analyses they build on.");
-    const TQ=(FF.testimonials||[]).slice(0,3);
+    const TQ=(FF.testimonials||[]).filter(t=>!/Moskos|Abt/.test(t.who||"")).slice(0,3);
     if(TQ.length){ const tw=(CW-0.4)/TQ.length; TQ.forEach((t,i)=>{ const x=L+i*(tw+0.2);
         s.addShape(pptx.ShapeType.rect,{x,y:y+0.05,w:tw,h:1.35,fill:{color:WHT},line:{color:CLOUD,width:0.75}});
         TX(s,"\u201c"+t.q+"\u201d",{x:x+0.15,y:y+0.12,w:tw-0.3,h:0.8,fontSize:11,italic:false,color:BLK,fontFace:SERIF,valign:"top",fit:"shrink"});
@@ -605,7 +605,7 @@ function slides(){
     <h2>Cited from City Journal to Mother Jones.</h2>
     <p class="lede">Vital City is cited approvingly by City Journal and Mother Jones alike — read closely by the correction commissioner, quoted by the mayor. The analyses are built to be usable by people who disagree with each other, and they are.</p>
     <p class="pull">When reporters dig into the city's crime numbers, it is often Vital City's analyses they build on.</p>
-    ${(FF.testimonials||[]).length?`<div class="tq">${(FF.testimonials||[]).slice(0,3).map(t=>`<div class="tqi"><div class="tqq">&ldquo;${esc(t.q)}&rdquo;</div><div class="tqw">${esc(t.who)}${t.role?`, ${esc(t.role)}`:""}</div></div>`).join("")}</div>
+    ${(FF.testimonials||[]).filter(t=>!/Moskos|Abt/.test(t.who||"")).length?`<div class="tq">${(FF.testimonials||[]).filter(t=>!/Moskos|Abt/.test(t.who||"")).slice(0,3).map(t=>`<div class="tqi"><div class="tqq">&ldquo;${esc(t.q)}&rdquo;</div><div class="tqw">${esc(t.who)}${t.role?`, ${esc(t.role)}`:""}</div></div>`).join("")}</div>
     ${(FF.cited_by_notable||[]).length?`<div class="bf-cap">Cited by ${(FF.cited_by_notable||[]).map(esc).join(", ")}.</div>`:""}`
     :`<p class="lede">That is a deliberate product choice: the data work is published with methods attached, at the speed of the news cycle, under a name both sides can print.</p>`}`});
 
