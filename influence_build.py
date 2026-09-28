@@ -165,6 +165,27 @@ def courts_counts(raw, years):
     return counts
 
 
+def drop_retired(raw):
+    """Evidence stored for an organization that is no longer a peer stays in
+    raw.enc (so it could come back) but is left out of every count: any "orgs"
+    map or list anywhere in the store is limited to the current peer set.
+    Gotham Gazette was dropped Sept. 28, 2026."""
+    def walk(o):
+        if isinstance(o, dict):
+            for k, v in list(o.items()):
+                if k == "orgs" and isinstance(v, dict):
+                    o[k] = {i: x for i, x in v.items() if i in NAME}
+                elif k == "orgs" and isinstance(v, list):
+                    o[k] = [i for i in v if not isinstance(i, str) or i in NAME]
+                else:
+                    walk(v)
+        elif isinstance(o, list):
+            for x in o:
+                walk(x)
+        return o
+    return walk(raw)
+
+
 def dated_counts(rows_by_org, years):
     """{org: {year: n}} from {org: [{"date": ...}, ...]}."""
     out = {oid: {y: 0 for y in years} for oid in NAME}
@@ -385,7 +406,7 @@ def readers_series(raw, today):
 
 # ------------------------------------------------------------------- main
 def main():
-    raw = json.loads(RAW.read_text())
+    raw = drop_retired(json.loads(RAW.read_text()))
     today = datetime.now(timezone.utc).date()
     years = years_through(today)
 
