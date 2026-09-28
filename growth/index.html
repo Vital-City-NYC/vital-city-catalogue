@@ -6537,7 +6537,7 @@ function kiStayHTML(data){
   const rows=(cl.channels||[]).filter(r=>r.stayed_pct!=null&&r.matched>=10);
   if(!rows.length) return "";
   const start=((data.ghost_signup_attribution||{}).coverage_start)||"";
-  return `<div class="ki-stay" style="margin-top:16px"><b>Do new subscribers stay?</b> Signups since ${esc(start)} by how they arrived, and the share still subscribed today.
+  return `<div class="ki-stay" style="margin-top:16px"><b>Do new subscribers stay?</b> Signups since ${esc(start?pwDate(start):"")} by how they arrived, and the share still subscribed today.
     <table><tr><th>Arrived from</th><th>Signups</th><th>Still subscribed</th></tr>${rows.map(r=>`<tr><td>${esc(kiSrc(r.source))}</td><td>${fmtN(r.signups)}</td><td>${Math.round(r.stayed_pct)}%</td></tr>`).join("")}</table>
     <div class="ki-fine">Event registrations are added to the list outside Ghost, so they aren't in this table yet.</div></div>`;
 }
@@ -6559,7 +6559,8 @@ function renderScorecard(data){
   try{
     const sc=scorecardModel(data); window._scorecard=sc;
     el.innerHTML=`<h2>Key indicators <span class="hint">readership and growth · monthly, through ${esc(sc.fullLbl)}, the latest full month</span>`+
-      `<button class="winbtn ki-ctxbtn noprint" type="button" onclick="this.closest('#scorecard').classList.toggle('ki-full');this.textContent=this.closest('#scorecard').classList.contains('ki-full')?'Hide context and benchmarks':'Show context and benchmarks'">Show context and benchmarks</button></h2>`+
+      `<button class="winbtn ki-ctxbtn noprint" type="button" onclick="openScorecardReport()" title="The seven indicators as a report: print or save as PDF, download as Markdown, copy or email.">⎙ Report</button>`+
+      `<button class="winbtn ki-ctxbtn noprint" style="margin-left:6px" type="button" onclick="this.closest('#scorecard').classList.toggle('ki-full');this.textContent=this.closest('#scorecard').classList.contains('ki-full')?'Hide context and benchmarks':'Show context and benchmarks'">Show context and benchmarks</button></h2>`+
       kiBodyHTML(sc,230);
   }catch(e){ el.innerHTML=`<h2>Key indicators</h2><div class="hint">The indicators could not be built from this data: ${esc(e.message)}</div>`; }
 }
@@ -7167,48 +7168,8 @@ function pulseReportMD(m){
   if(m.windows[0]) o+=`\n_${m.windows[0].note}_\n`;
   return o;
 }
-function pulseReportHTML(m){
-  const cls=c=>c==="up"?"up":c==="down"?"down":"";
-  let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">${esc(m.all?"Each section names the dates it covers":`Covers ${(m.windows[0]||{}).period||m.asof}`)} · data last updated ${esc(m.generated)}</p>`;
-  m.windows.forEach(w=>{
-    b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.period||(w.curStart+" to "+w.curEnd))}</span></h2>`;
-    { const br=pxBrief(w); if(br) b+=`<div class="brief"><div class="bl">In brief</div><p>${esc(br.text)}</p><div class="bw">Written ${esc(pxDay(String(br.written).slice(0,10)))}, ${esc(String(br.written).slice(0,4))}${br.same?"":`, about the period ending ${esc(pxDay(br.end))}; the numbers below now run through ${esc(pxDay(w.curEnd))}`}.</div></div>`; }
-    b+=`<div class="tier">The numbers that matter most</div>`;
-    if((w.insights||[]).length) b+=`<h3>What moved</h3><ul class="ins">`+w.insights.map(i=>`<li class="${i.tone}"><span class="m">${i.tone==="good"?"▲":i.tone==="watch"?"▼":"•"}</span>${esc(i.text)}</li>`).join("")+`</ul><h3>The numbers</h3>`;
-    b+=`<table>`+pxHeadRows(w).map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}${t.ly?`<div class="ly">${esc(t.ly)}</div>`:""}</td></tr>`).join("")+`</table>`;
-    if(w.trend){ const t=w.trend;
-      b+=`<h3>Twelve-week trend · weeks run Monday to Sunday</h3><ul class="ctx" style="padding-left:18px;margin:2px 0 6px">`+pxTrendLines(t).map(l=>`<li>${esc(l)}</li>`).join("")+`</ul>`+pxTrendSVG(t);
-      b+=`<table class="px wk"><tr class="hd"><td class="l" style="text-align:left">Week of</td>${t.weeks.map(x=>`<td class="num" style="white-space:normal">${esc(x.lbl).replace(" ","<br>")}${x.partial?"*":""}</td>`).join("")}</tr>`+
-        [["Visits (Google Analytics)",x=>fmtN(x.visits)],["Last year",x=>x.lyVisits!=null?fmtN(x.lyVisits):"—"],["Page views",x=>fmtN(x.pv)],["Pieces published",x=>x.pieces!=null?String(x.pieces):"—"],["Signups",x=>x.signups!=null?fmtN(x.signups):"—"],["Unsubscribes",x=>fmtN(x.unsubs)],["Email recipients who clicked",x=>x.clicks!=null?(Math.round(x.clicks*10)/10).toFixed(1)+"%":"—"]]
-        .map(([k,f])=>`<tr><td class="l">${k}</td>${t.weeks.map(x=>`<td class="num">${f(x)}</td>`).join("")}</tr>`).join("")+`</table>`+
-        `<p class="pxn">Visits and page views: Google Analytics, used here because it has the full year of history the comparison needs. ${esc(pxTwoRecords(m.data||{}))} Signups and unsubscribes: Mailchimp's daily record. Newsletter clicks: share of recipients who clicked, for that week's newsletter.${t.weeks.some(x=>x.partial)?" * Week in progress.":""}</p>`; }
-    if(w.pieces||(w===m.windows[0]&&w.patterns)) b+=`<h3>Pieces that did well, and what that means</h3><div class="pwbox">`+pxPiecesHTML(w.pieces, w===m.windows[0]?w.patterns:null, m.data||{}, false)+`</div>`;
-    if(w===m.windows[0] && m.longView && m.longView.rows.length) b+=`<h3>The long view · each measure by calendar year since 2022, then the same months of this year and last</h3>`+pxLongViewHTML(m.longView);
-    b+=`<div class="below">Everything else worth watching</div>`;
-    const rest=pxRestRows(w);
-    if(rest.length) b+=`<table>`+rest.map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
-    if(m.scorecard&&m.scorecard.also&&w===m.windows[0]) b+=`<p class="also">${esc(m.scorecard.also)}</p>`;
-    if(w.roll4){ const r=w.roll4;
-      b+=`<h3>Four-week average · to smooth out one unusual week, each figure is the four weeks ending that date, divided by four</h3>`+
-        `<p class="r4">Signups: <b>${Math.round(r.now.s)}</b> a week over the last four weeks (this week: ${r.week.s}). Unsubscribes: <b>${Math.round(r.now.u)}</b> a week (this week: ${r.week.u}).</p>`+
-        `<table class="r4t"><tr><td class="l">Week ending</td>${r.pts.map(p=>`<td>${esc(p.lbl)}</td>`).join("")}</tr>`+
-        `<tr><td class="l">Signups</td>${r.pts.map(p=>`<td>${p.s}</td>`).join("")}</tr>`+
-        `<tr><td class="l">Unsubscribes</td>${r.pts.map(p=>`<td>${p.u}</td>`).join("")}</tr></table>`; }
-    b+=pxHTML(w);
-    if(w.conv.length) b+=`<h3>${esc(w.convLbl)}</h3><ol>`+w.conv.map(p=>`<li><span>${esc(p.t)}</span><span class="v">${esc(p.v)}${p.rate?` · ${pxRate(p.rate)} for every 1,000 page views`:""}</span></li>`).join("")+`</ol>`;
-    if(w.top.length) b+=`<h3>${esc(w.topLbl)}</h3><ol>`+w.top.map(p=>`<li><span>${esc(p.t)}${p.fresh?` <span class="tag">new</span>`:""}</span><span class="v">${esc(p.v)}</span></li>`).join("")+`</ol>`;
-  });
-  // The report is named for its window, so it opens with that window. The ten
-  // monthly indicators are the same in every report; they follow as context,
-  // on a page of their own, saying which months they cover.
-  if(m.scorecard) b+=`<h2 class="kibig">The bigger picture: key indicators <span class="sub">monthly, through ${esc(m.scorecard.fullLbl)}, the latest full month · the same in every report</span></h2>`+kiBodyHTML(m.scorecard,210,{layout:"rows",noNotes:true,noLede:true,noAlso:true});
-  if(m.data){ const w=whoHTML(m.data,"week")+whoHTML(m.data,"month")+kiStayHTML(m.data); if(w) b+=`<h2>Who is joining and leaving</h2>`+w; }
-  if((m.benchmarks||[]).length) b+=`<h2>Industry context</h2><table class="bm">`+m.benchmarks.map(x=>`<tr><td class="l">${esc(x.k)}</td><td class="v">${esc(x.vc)}${x.read?`<div class="r">${esc(x.read)}</div>`:""}</td><td class="n">${esc(x.norm)}</td></tr>`).join("")+`</table><div class="cav" style="margin-top:6px;border:0;padding:0">Benchmarks are static orientation (last reviewed June 2026), not live data; sectors and methods differ. Sources: M+R Benchmarks 2025; Letterhead, ClickMinded and Brevo 2026 email compilations; INMA 2025; Chartbeat via Press Gazette; Reuters Institute Digital News Report 2025.</div>`;
-  if(m.scorecard) b+=`<h2>Notes on the key indicators</h2><div class="ki-notes">`+kiNotesHTML(m.scorecard)+`</div>`;
-  b+=`<h2>Context</h2><ul class="ctx">`+m.context.map(c=>`<li>${esc(c)}</li>`).join("")+`</ul>`;
-  if(m.windows[0]) b+=`<div class="cav">${esc(m.windows[0].note)}</div>`;
-  const md=pulseReportMD(m);
-  const css='body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#050507;max-width:760px;margin:28px auto;padding:0 24px;line-height:1.5}'
+function pxReportCSS(){
+  return 'body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#050507;max-width:760px;margin:28px auto;padding:0 24px;line-height:1.5}'
     +'.wm{font-size:11px;text-transform:uppercase;letter-spacing:.18em;font-weight:700;color:#707175}'
     +'h1{font-family:Georgia,serif;font-size:30px;margin:4px 0 2px}.period{color:#707175;font-size:13px;margin:0 0 14px}'
     +'h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid #050507;padding-bottom:4px;margin:24px 0 6px}h2 .sub{font-weight:400;text-transform:none;letter-spacing:0;color:#707175;margin-left:8px}'
@@ -7249,8 +7210,11 @@ function pulseReportHTML(m){
     +'.ctx{font-size:11.5px;color:#333;padding-left:18px}.ctx li{margin:3px 0}.cav{font-size:10.5px;color:#707175;margin-top:18px;border-top:1px solid #ddd;padding-top:10px}'
     +'.bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.bar button{font:inherit;font-size:12px;font-weight:700;padding:7px 12px;border:1.5px solid #050507;background:#fff;border-radius:3px;cursor:pointer}.bar button.p{background:#050507;color:#fff}'
     +'@media print{.bar{display:none}body{margin:0;max-width:none}h1{font-size:22px;margin:2px 0}.period{margin:0 0 4px}}';
-  const subject=`Vital City ${m.title.replace(/^Growth/,"growth")}`;
-  const script=`<script>const MD=${JSON.stringify(md)};const SUBJ=${JSON.stringify(subject)};const NAME=${JSON.stringify("Vital-City-"+m.title.replace(/[^A-Za-z0-9]+/g,"-")+"-"+m.asof)};
+}
+function pxReportDoc(b, md, title, asof){
+  const css=pxReportCSS();
+  const subject=`Vital City ${title.replace(/^Growth/,"growth")}`;
+  const script=`<script>const MD=${JSON.stringify(md)};const SUBJ=${JSON.stringify(subject)};const NAME=${JSON.stringify("Vital-City-"+title.replace(/[^A-Za-z0-9]+/g,"-")+"-"+asof)};
 function dl(){const b=new Blob([MD],{type:"text/markdown;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=NAME+".md";document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500);}
 function cp(btn){navigator.clipboard.writeText(MD).then(()=>{const o=btn.textContent;btn.textContent="Copied";setTimeout(()=>btn.textContent=o,1400);},()=>prompt("Copy this report:",MD));}
 function em(){if(MD.length<=6000){location.href="mailto:?subject="+encodeURIComponent(SUBJ)+"&body="+encodeURIComponent(MD);return;}
@@ -7259,6 +7223,67 @@ function em(){if(MD.length<=6000){location.href="mailto:?subject="+encodeURIComp
 <\/script>`;
   const bar=`<div class="bar"><button class="p" onclick="window.print()">⎙ Print / save as PDF</button><button onclick="dl()">⬇ Download .md</button><button onclick="cp(this)">⧉ Copy as text</button><button onclick="em()">✉ Email</button></div>`;
   return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(subject)}</title><style>${css}</style></head><body>${bar}${b}${script}</body></html>`;
+}
+// The monthly key indicators as a report of their own: the seven measures
+// with their lines, comparisons and standards, the long view and the notes,
+// with the same print, Markdown, copy and email bar as the period reports.
+function openScorecardReport(){
+  const data=renderWeekPulse._data||window.__GD, sc=window._scorecard;
+  if(!data||!sc){ alert("The dashboard has not finished loading."); return; }
+  const t=Date.parse(data.generated_at||"");
+  const gen=t? new Date(t).toLocaleString("en-US",{timeZone:"America/New_York",month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"}).replace(/ AM$/," a.m.").replace(/ PM$/," p.m.").replace(/^Sep /,"Sept. ").replace(/^(Jan|Feb|Aug|Oct|Nov|Dec) /,"$1. ")+" New York time" : String(data.generated_at||"");
+  const title=`Key indicators, monthly through ${sc.fullLbl}`;
+  let lv=null; try{ lv=pxLongView(data); }catch(e){}
+  let b=`<div class="wm">Vital City</div><h1>Key indicators</h1><p class="period">Monthly, through ${esc(sc.fullLbl)}, the latest full month · ${esc(sc.curLbl)} against ${esc(sc.baseLbl)} · data last updated ${esc(gen)}</p>`+
+    kiBodyHTML(sc,210,{layout:"rows",printNotes:true,stay:kiStayHTML(data)});
+  if(lv&&lv.rows.length) b+=`<h2>The long view <span class="sub">each measure by calendar year since 2022, then the same months of this year and last</span></h2>`+pxLongViewHTML(lv);
+  let md=`# Vital City — ${title}\n\n_Data last updated ${gen}._\n`+scReportMD(sc,data);
+  if(lv&&lv.rows.length) md+=`\n## The long view: each measure by calendar year since 2022\n\n`+pxLongViewMD(lv);
+  const w=window.open("","_blank");
+  if(!w){ alert("Allow pop-ups for this page to open the report."); return; }
+  w.document.write(pxReportDoc(b, md, title, sc.full)); w.document.close(); w.focus();
+}
+function pulseReportHTML(m){
+  const cls=c=>c==="up"?"up":c==="down"?"down":"";
+  let b=`<div class="wm">Vital City</div><h1>${esc(m.title)}</h1><p class="period">${esc(m.all?"Each section names the dates it covers":`Covers ${(m.windows[0]||{}).period||m.asof}`)} · data last updated ${esc(m.generated)}</p>`;
+  m.windows.forEach(w=>{
+    b+=`<h2>${esc(w.label)} <span class="sub">${esc(w.period||(w.curStart+" to "+w.curEnd))}</span></h2>`;
+    { const br=pxBrief(w); if(br) b+=`<div class="brief"><div class="bl">In brief</div><p>${esc(br.text)}</p><div class="bw">Written ${esc(pxDay(String(br.written).slice(0,10)))}, ${esc(String(br.written).slice(0,4))}${br.same?"":`, about the period ending ${esc(pxDay(br.end))}; the numbers below now run through ${esc(pxDay(w.curEnd))}`}.</div></div>`; }
+    b+=`<div class="tier">The numbers that matter most</div>`;
+    if((w.insights||[]).length) b+=`<h3>What moved</h3><ul class="ins">`+w.insights.map(i=>`<li class="${i.tone}"><span class="m">${i.tone==="good"?"▲":i.tone==="watch"?"▼":"•"}</span>${esc(i.text)}</li>`).join("")+`</ul><h3>The numbers</h3>`;
+    b+=`<table>`+pxHeadRows(w).map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}${t.ly?`<div class="ly">${esc(t.ly)}</div>`:""}</td></tr>`).join("")+`</table>`;
+    if(w.trend){ const t=w.trend;
+      b+=`<h3>Twelve-week trend · weeks run Monday to Sunday</h3><ul class="ctx" style="padding-left:18px;margin:2px 0 6px">`+pxTrendLines(t).map(l=>`<li>${esc(l)}</li>`).join("")+`</ul>`+pxTrendSVG(t);
+      b+=`<table class="px wk"><tr class="hd"><td class="l" style="text-align:left">Week of</td>${t.weeks.map(x=>`<td class="num" style="white-space:normal">${esc(x.lbl).replace(" ","<br>")}${x.partial?"*":""}</td>`).join("")}</tr>`+
+        [["Visits (Google Analytics)",x=>fmtN(x.visits)],["Last year",x=>x.lyVisits!=null?fmtN(x.lyVisits):"—"],["Page views",x=>fmtN(x.pv)],["Pieces published",x=>x.pieces!=null?String(x.pieces):"—"],["Signups",x=>x.signups!=null?fmtN(x.signups):"—"],["Unsubscribes",x=>fmtN(x.unsubs)],["Email recipients who clicked",x=>x.clicks!=null?(Math.round(x.clicks*10)/10).toFixed(1)+"%":"—"]]
+        .map(([k,f])=>`<tr><td class="l">${k}</td>${t.weeks.map(x=>`<td class="num">${f(x)}</td>`).join("")}</tr>`).join("")+`</table>`+
+        `<p class="pxn">Visits and page views: Google Analytics, used here because it has the full year of history the comparison needs. ${esc(pxTwoRecords(m.data||{}))} Signups and unsubscribes: Mailchimp's daily record. Newsletter clicks: share of recipients who clicked, for that week's newsletter.${t.weeks.some(x=>x.partial)?" * Week in progress.":""}</p>`; }
+    if(w.pieces||(w===m.windows[0]&&w.patterns)) b+=`<h3>Pieces that did well, and what that means</h3><div class="pwbox">`+pxPiecesHTML(w.pieces, w===m.windows[0]?w.patterns:null, m.data||{}, false)+`</div>`;
+    if(w===m.windows[0] && m.longView && m.longView.rows.length) b+=`<h3>The long view · each measure by calendar year since 2022, then the same months of this year and last</h3>`+pxLongViewHTML(m.longView);
+    b+=`<div class="below">Everything else worth watching</div>`;
+    const rest=pxRestRows(w);
+    if(rest.length) b+=`<table>`+rest.map(t=>`<tr><td class="l">${esc(t.lbl)}</td><td class="v">${esc(t.value)}</td><td class="n ${cls(t.cls)}">${esc(t.delta)}</td></tr>`).join("")+`</table>`;
+    if(m.scorecard&&m.scorecard.also&&w===m.windows[0]) b+=`<p class="also">${esc(m.scorecard.also)}</p>`;
+    if(w.roll4){ const r=w.roll4;
+      b+=`<h3>Four-week average · to smooth out one unusual week, each figure is the four weeks ending that date, divided by four</h3>`+
+        `<p class="r4">Signups: <b>${Math.round(r.now.s)}</b> a week over the last four weeks (this week: ${r.week.s}). Unsubscribes: <b>${Math.round(r.now.u)}</b> a week (this week: ${r.week.u}).</p>`+
+        `<table class="r4t"><tr><td class="l">Week ending</td>${r.pts.map(p=>`<td>${esc(p.lbl)}</td>`).join("")}</tr>`+
+        `<tr><td class="l">Signups</td>${r.pts.map(p=>`<td>${p.s}</td>`).join("")}</tr>`+
+        `<tr><td class="l">Unsubscribes</td>${r.pts.map(p=>`<td>${p.u}</td>`).join("")}</tr></table>`; }
+    b+=pxHTML(w);
+    if(w.conv.length) b+=`<h3>${esc(w.convLbl)}</h3><ol>`+w.conv.map(p=>`<li><span>${esc(p.t)}</span><span class="v">${esc(p.v)}${p.rate?` · ${pxRate(p.rate)} for every 1,000 page views`:""}</span></li>`).join("")+`</ol>`;
+    if(w.top.length) b+=`<h3>${esc(w.topLbl)}</h3><ol>`+w.top.map(p=>`<li><span>${esc(p.t)}${p.fresh?` <span class="tag">new</span>`:""}</span><span class="v">${esc(p.v)}</span></li>`).join("")+`</ol>`;
+  });
+  // The report is named for its window, so it opens with that window. The ten
+  // monthly indicators are the same in every report; they follow as context,
+  // on a page of their own, saying which months they cover.
+  if(m.scorecard) b+=`<h2 class="kibig">The bigger picture: key indicators <span class="sub">monthly, through ${esc(m.scorecard.fullLbl)}, the latest full month · the same in every report</span></h2>`+kiBodyHTML(m.scorecard,210,{layout:"rows",noNotes:true,noLede:true,noAlso:true});
+  if(m.data){ const w=whoHTML(m.data,"week")+whoHTML(m.data,"month")+kiStayHTML(m.data); if(w) b+=`<h2>Who is joining and leaving</h2>`+w; }
+  if((m.benchmarks||[]).length) b+=`<h2>Industry context</h2><table class="bm">`+m.benchmarks.map(x=>`<tr><td class="l">${esc(x.k)}</td><td class="v">${esc(x.vc)}${x.read?`<div class="r">${esc(x.read)}</div>`:""}</td><td class="n">${esc(x.norm)}</td></tr>`).join("")+`</table><div class="cav" style="margin-top:6px;border:0;padding:0">Benchmarks are static orientation (last reviewed June 2026), not live data; sectors and methods differ. Sources: M+R Benchmarks 2025; Letterhead, ClickMinded and Brevo 2026 email compilations; INMA 2025; Chartbeat via Press Gazette; Reuters Institute Digital News Report 2025.</div>`;
+  if(m.scorecard) b+=`<h2>Notes on the key indicators</h2><div class="ki-notes">`+kiNotesHTML(m.scorecard)+`</div>`;
+  b+=`<h2>Context</h2><ul class="ctx">`+m.context.map(c=>`<li>${esc(c)}</li>`).join("")+`</ul>`;
+  if(m.windows[0]) b+=`<div class="cav">${esc(m.windows[0].note)}</div>`;
+  return pxReportDoc(b, pulseReportMD(m), m.title, m.asof);
 }
 function openPulseReport(all){
   const m=pulseReportModel(all); if(!m){ alert("The dashboard has not finished loading."); return; }
