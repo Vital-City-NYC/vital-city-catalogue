@@ -718,6 +718,24 @@ def build_impact_ledger(growth, people, receipts, cat_titles=None):
             "; ".join(l.get("t", "") for l in x.get("links") or []), x.get("note") or "",
             links=[{"t": l.get("t", ""), "u": l.get("u", "")} for l in x.get("links") or []])
 
+    # Appearances must be substantive (see _check_appearances): the per-person
+    # search also finds newsletter items, roundups and passing mentions.
+    apps = [r for r in rows if r["kind"] == "appearance"]
+    if apps:
+        try:
+            keep = _check_appearances(apps)
+        except Exception as e:
+            print(f"  ledger: appearance check failed ({e}); leaving searched appearances out")
+            keep = {id(r): {"url": r["url"], "context": ""} for r in apps if "news.google.com" not in (r.get("url") or "")}
+        for r in apps:
+            v = keep.get(id(r))
+            if v:
+                r["url"], r["checked"] = v["url"], True
+                if v["context"] and not r.get("context"):
+                    r["context"] = v["context"]
+        rows = [r for r in rows if r["kind"] != "appearance" or keep.get(id(r))]
+        print(f"  ledger: {len(keep)} of {len(apps)} appearances pass the page check")
+
     # newest first; the undated curated outcomes go last (they lead the case above)
     rows.sort(key=lambda r: r["date"] or "0", reverse=True)
 
@@ -797,11 +815,17 @@ def _page_title(u):
         raw = http_get_title(u)
     except Exception:
         return ""
-    m = re.search(r"<title[^>]*>(.*?)</title>", raw or "", re.S | re.I)
-    if not m:
-        return ""
     import html as _h
-    t = re.sub(r"\s+", " ", _h.unescape(m.group(1))).strip()
+    # The share-preview title is complete where <title> is cut short (Apple
+    # Podcasts: "Elizabeth Glazer on How Left P… - Blue City Blues").
+    og = re.search(r"<meta[^>]+property=[\"']og:title[\"'][^>]+content=[\"']([^\"']+)", raw or "", re.I) \
+        or re.search(r"<meta[^>]+content=[\"']([^\"']+)[\"'][^>]+property=[\"']og:title", raw or "", re.I)
+    m = re.search(r"<title[^>]*>(.*?)</title>", raw or "", re.S | re.I)
+    if not (m or og):
+        return ""
+    t = re.sub(r"\s+", " ", _h.unescape(m.group(1) if m else "")).strip()
+    if og and (not t or "…" in t or "..." in t or len(_h.unescape(og.group(1))) > len(t) - 25):
+        t = re.sub(r"\s+", " ", _h.unescape(og.group(1))).strip()
     seg = re.split(r"\s+[|\-–—]\s+", t)
     if len(seg) > 1 and len(seg[-1]) <= 40 and len(" - ".join(seg[:-1])) >= 20:
         t = " - ".join(seg[:-1])
@@ -817,13 +841,74 @@ def http_get_title(u):
         return r.read(300_000).decode("utf8", "replace")
 
 
+# Podcast, radio and video pages: a guest appearance is real when the page
+# (its description included) names the guest or Vital City, since the audio
+# itself can't be read.
+_AIR_HOSTS = ("podcasts.apple.com", "open.spotify.com", "wnycstudios.org", "wnyc.org", "youtube.com", "youtu.be",
+              "boomplay.com", "ny1.com", "1010wins", "economist.com", "probablecausation", "iheart.com", "pca.st",
+              "overcast.fm", "soundcloud.com", "buzzsprout.com", "libsyn.com", "simplecast.com", "podbean.com")
+
+
+def _check_appearances(rows):
+    """For outside readers, an appearance must be substantive: the article's own
+    text names the person or Vital City (not a roundup, a newsletter item or a
+    link list), or, for a podcast or broadcast page, the page names them.
+    Name-search hits arrive as Google News links: each is resolved and read,
+    and one that can't be resolved or read is left out. A hand-logged
+    appearance whose page can't be read is kept (the log is someone's own
+    record). Returns a dict of row id -> {"url", "context"} for rows to keep."""
+    from growth_pull import resolve_gnews_url, http_get, body_mention
+    import html as _h
+    from concurrent.futures import ThreadPoolExecutor
+
+    def one(r):
+        u, name = r.get("url") or "", (r.get("who") or "").strip()
+        searched = "news.google.com" in u
+        try:
+            ru = resolve_gnews_url(u) if searched else u
+        except Exception:
+            ru = u
+        if not ru or "news.google.com" in ru:
+            return None if searched else {"url": u, "context": ""}
+        if _is_roundup(r.get("title"), ru):
+            return None
+        try:
+            raw = http_get(ru, timeout=20)
+            raw = raw.decode("utf8", "replace") if isinstance(raw, bytes) else raw
+        except Exception:
+            return None if searched else {"url": ru, "context": ""}
+        def names(t):
+            return "Vital City" in t or "vitalcitynyc" in t or bool(name and name in t)
+        body = re.sub(r"<head\b.*?</head>", " ", raw, flags=re.S | re.I)
+        body = re.sub(r"<(nav|aside|footer)\b.*?</\1>", " ", body, flags=re.S | re.I)
+        sent, where = body_mention(body, names)
+        if where == "body":
+            return {"url": ru, "context": sent}
+        if any(h in ru for h in _AIR_HOSTS) and names(_h.unescape(raw)):
+            return {"url": ru, "context": ""}
+        # A page whose own title names the person is about them (an interview
+        # or profile), however its text is laid out.
+        tm = re.search(r"<title[^>]*>(.*?)</title>", raw, re.S | re.I)
+        og = re.search(r"property=[\"']og:title[\"'][^>]+content=[\"']([^\"']+)", raw, re.I)
+        ptitle = _h.unescape(" ".join(x.group(1) for x in (tm, og) if x))
+        if name and name in ptitle:
+            return {"url": ru, "context": ""}
+        return None
+
+    with ThreadPoolExecutor(max_workers=10) as ex:
+        res = list(ex.map(one, rows))
+    return {id(r): v for r, v in zip(rows, res) if v}
+
+
 def build_influence(growth, ledger_rows):
     slack = (load(SLACK_FILE) or {})
     # For outside readers only citations whose page was read and found to cite
     # us in the article itself; appearances come from the hand log and the
     # per-editor search. Press rows whose page could not be read stay in the
     # internal ledger but not here.
-    feed = [r for r in ledger_rows if r["kind"] in ("appearance", "scholarly")
+    # Appearances were page-checked in the ledger (_check_appearances).
+    feed = [r for r in ledger_rows if r["kind"] == "scholarly"
+            or (r["kind"] == "appearance" and r.get("checked") is True)
             or (r["kind"] in ("press", "government", "policy", "republished") and r.get("checked") is True)]
     by_url = {_canon(r["url"]): r for r in feed if r.get("url")}
 
