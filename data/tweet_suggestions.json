@@ -1,7 +1,37 @@
 {
- "generated": "2026-09-24T13:46:21+00:00",
+ "generated": "2026-09-28T18:25:06+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "nikole-hannah-jones-biggest-blind-spot",
+   "title": "Nikole Hannah-Jones’ Biggest Blind Spot",
+   "url": "https://www.vitalcitynyc.org/nikole-hannah-jones-biggest-blind-spot/",
+   "date": "2026-09-28",
+   "author": "Derrell Bradford",
+   "handle": null,
+   "dek": "She and her husband exercised school choice. Other families should have that right.",
+   "tags": [
+    "Education",
+    "Integration",
+    "Charter Schools"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Derrell Bradford: She and her husband exercised school choice. Other families should have that right."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Derrell Bradford: \"Nikole Hannah-Jones' Biggest Blind Spot\""
+    },
+    {
+     "kind": "quote",
+     "text": "Derrell Bradford writes: \"The sequel essay admits that, in actuality, this hypothesis was deeply mistaken.\""
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "making-micromobility-work-nyc",
    "title": "Making Micromobility Work",
@@ -607,151 +637,6 @@
     {
      "kind": "quote",
      "text": "Daniel Garodnick writes: \"In the two decades since I first joined the New York City Council, I have seen a significant transformation — for the better — in our city's conversation around housing.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "mamdani-universal-childcare-equity",
-   "title": "Mamdani’s Childcare Strategy Should Focus on Equity",
-   "url": "https://www.vitalcitynyc.org/mamdani-universal-childcare-equity/",
-   "date": "2026-08-27",
-   "author": "Bruce Fuller",
-   "handle": null,
-   "dek": "Quality and access matter especially for the lower-income families whose kids benefit most.",
-   "tags": [
-    "Education",
-    "City Government"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Bruce Fuller: Quality and access matter especially for the lower-income families whose kids benefit most."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Bruce Fuller: \"Mamdani's Childcare Strategy Should Focus on Equity\""
-    },
-    {
-     "kind": "quote",
-     "text": "Bruce Fuller writes: \"Central to the rise of democratic socialists from New York to Seattle is the promise of free childcare and pre-K for all families.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "nathan-straus-philanthropy-andrew-fisher-book-review",
-   "title": "Pragmatic Philanthropy: Appreciating Nathan Straus",
-   "url": "https://www.vitalcitynyc.org/nathan-straus-philanthropy-andrew-fisher-book-review/",
-   "date": "2026-08-26",
-   "author": "Leslie Lenkowsky",
-   "handle": null,
-   "dek": "What can today's do-gooders learn from a department store magnate from the Gilded Age? A recent biography suggests quite a lot.",
-   "tags": [
-    "Book Review",
-    "culture",
-    "History"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Leslie Lenkowsky: What can today's do-gooders learn from a department store magnate from the Gilded Age? A recent biography suggests quite a lot."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Leslie Lenkowsky: \"Pragmatic Philanthropy: Appreciating Nathan Straus\""
-    },
-    {
-     "kind": "quote",
-     "text": "Leslie Lenkowsky writes: \"Sure, that must be a wholesale sort of a job: had you not better try your hand at a town or neighborhood first?\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "small-business-insurance-reform-nyc",
-   "title": "Time to Take on Small Business Insurance Premiums",
-   "url": "https://www.vitalcitynyc.org/small-business-insurance-reform-nyc/",
-   "date": "2026-08-26",
-   "author": "Lisa Chamberlain, John Fout",
-   "handle": null,
-   "dek": "How New York City can drive down rising costs",
-   "tags": [
-    "Economics",
-    "Labor"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Lisa Chamberlain and John Fout: How New York City can drive down rising costs"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Lisa Chamberlain and John Fout: \"Time to Take on Small Business Insurance Premiums\""
-    },
-    {
-     "kind": "quote",
-     "text": "Lisa Chamberlain and John Fout writes: \"Rents are high, competition from online retailers is fierce and the government holds up too many hoops to jump through.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "why-nyc-needs-open-primaries-elections",
-   "title": "Will New York City Ever Get Open Primaries?",
-   "url": "https://www.vitalcitynyc.org/why-nyc-needs-open-primaries-elections/",
-   "date": "2026-08-26",
-   "author": "Jeremy Gruber",
-   "handle": null,
-   "dek": "A diagnosis of why a democratic reform that has succeeded in so many other places has failed to gain traction in New York",
-   "tags": [
-    "Elections"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Jeremy Gruber: A diagnosis of why a democratic reform that has succeeded in so many other places has failed to gain traction in New York"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Jeremy Gruber: \"Will New York City Ever Get Open Primaries?\""
-    },
-    {
-     "kind": "quote",
-     "text": "Jeremy Gruber writes: \"When the Charter Revision Commission decided not to place open primaries before New York City voters this year, it was a disappointment for the city's 1.2 million independent voters.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "nyc-crime-midyear-2026-felony-assaults-rape-murder",
-   "title": "The State of Crime in New York City, Midyear 2026: The Detailed Picture",
-   "url": "https://www.vitalcitynyc.org/nyc-crime-midyear-2026-felony-assaults-rape-murder/",
-   "date": "2026-08-25",
-   "author": "Vital City, Paul Reeping",
-   "handle": "@paulreeping",
-   "dek": "What to know about trends in murder, assault, rape and more",
-   "tags": [
-    "Crime",
-    "Justice"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Paul Reeping (@paulreeping): What to know about trends in murder, assault, rape and more"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Paul Reeping (@paulreeping): \"The State of Crime in New York City, Midyear 2026: The Detailed Picture\""
-    },
-    {
-     "kind": "quote",
-     "text": "Paul Reeping writes: \"New York City is now in its fourth consecutive year of declining major crime following the pandemic-era surge.\""
     }
    ],
    "attempts": 1
