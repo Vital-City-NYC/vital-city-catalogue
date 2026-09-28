@@ -2164,7 +2164,17 @@ def _ga4_by_year(prop, token):
         alltime = {"users": int(v[0]["value"]), "pageviews": int(v[1]["value"]), "sessions": int(v[2]["value"])}
     else:
         alltime = {"users": 0, "pageviews": 0, "sessions": 0}
-    return {"years": years, "alltime": alltime}
+    # Month by month, for the long view: where the record starts and how each
+    # year's visits built up (a partial first year shows as fewer months).
+    mo = runrep({"dateRanges": RANGE, "dimensions": [{"name": "yearMonth"}], "metrics": METRICS,
+                 "orderBys": [{"dimension": {"dimensionName": "yearMonth"}}], "limit": 200})
+    months = []
+    for row in (mo.get("rows") or []):
+        ym = row["dimensionValues"][0]["value"]
+        v = row["metricValues"]
+        months.append({"m": f"{ym[:4]}-{ym[4:6]}", "users": int(v[0]["value"]),
+                       "pageviews": int(v[1]["value"]), "sessions": int(v[2]["value"])})
+    return {"years": years, "alltime": alltime, "months": months}
 
 
 def _ga4_returning(prop, token):
@@ -2954,7 +2964,7 @@ def by_topic(counts, topic_map, label):
             "unmatched": tot - matched}
 
 
-def pull_ghost_signup_attribution(days_back=180):
+def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
     """REAL per-post signup attribution from Ghost's member-events feed.
     Each signup_event carries the exact page the person signed up on plus
     referrer_source/medium. This is the actual answer — not a 4-day
@@ -2966,6 +2976,12 @@ def pull_ghost_signup_attribution(days_back=180):
     if not tok:
         return {"available": False, "reason": "no Ghost admin key"}
     since_iso = (datetime.now(timezone.utc) - timedelta(days=days_back)).isoformat()
+    # Per-piece signup dates go back further, to the March 2026 move to Ghost,
+    # so every piece published on Ghost has a full count (the report rates a
+    # piece by signups in its first 30 days). Everything else keeps the
+    # days_back window.
+    url_since_iso = min(since_iso, url_since + "T00:00:00+00:00")
+    url_days = {}          # post url -> [signup day, ...] since url_since
     by_url = {}
     by_day = {}            # day -> count of signup events (canonical signup source-of-truth)
     by_source = {}         # referrer_source -> count (Direct, Google, newsletter, LinkedIn, etc.)
@@ -3003,8 +3019,16 @@ def pull_ghost_signup_attribution(days_back=180):
             d = e.get("data") or {}
             ts = (d.get("created_at") or "")
             if ts and ts < since_iso:
-                stop = True
+                if ts < url_since_iso:
+                    stop = True
+                    continue
+                _a = d.get("attribution") or {}
+                if _a.get("type") == "post" and _a.get("url"):
+                    url_days.setdefault(_a["url"].rstrip("/"), []).append(ts[:10])
                 continue
+            _a0 = d.get("attribution") or {}
+            if ts and _a0.get("type") == "post" and _a0.get("url"):
+                url_days.setdefault(_a0["url"].rstrip("/"), []).append(ts[:10])
             # Daily total — every signup, regardless of attribution
             if ts:
                 day = ts[:10]
@@ -3100,6 +3124,8 @@ def pull_ghost_signup_attribution(days_back=180):
         "window_days":    days_back,
         "recent_signups": sorted(recent, key=lambda r: r["date"], reverse=True),
         "_by_email":      by_email,   # internal — used for channel-LTV join, stripped before JSON write
+        "_url_days":      url_days,   # internal — per-piece signup days since url_since, for the piece index
+        "url_since":      url_since,
     }
 
 
@@ -5290,15 +5316,36 @@ def main():
                 rows = sorted(qs.values(), key=lambda r: -(r.get("impr") or 0))[:6]
                 by_slug[slug]["queries"] = rows
                 by_slug[slug]["search_impr"] = sum(r.get("impr") or 0 for r in rows)
-            # 2) Newsletter signups attributed to the piece as landing page
+            # 2) Newsletter signups that happened on the piece (Ghost records the
+            #    page each new subscriber signed up on), from the March 2026
+            #    move to Ghost: the total, and the count in the piece's first
+            #    30 days, the same window its page views are judged on.
             att = out.get("ghost_signup_attribution") or {}
-            sig = {}
-            for s in (att.get("recent_signups") or []):
-                t = (s.get("landing_title") or "").strip().lower()
-                if t: sig[t] = sig.get(t, 0) + 1
-            for t, n in sig.items():
-                tgt = by_title.get(t)
-                if tgt: tgt["signups"] = n
+            ud = (signup_attr or {}).get("_url_days") or {}
+            usince = (signup_attr or {}).get("url_since") or ""
+            if ud:
+                for p in idx.get("pieces") or []:
+                    u = (p.get("url") or "").rstrip("/")
+                    days = ud.get(u) or []
+                    if usince and str(p.get("pub") or "") < usince:
+                        if days: p["signups"] = len(days)
+                        continue
+                    p["signups"] = len(days)
+                    try:
+                        end30 = (datetime.fromisoformat(p["pub"]) + timedelta(days=29)).date().isoformat()
+                        if end30 < datetime.now(timezone.utc).date().isoformat():
+                            p["signups30"] = sum(1 for d0 in days if p["pub"] <= d0 <= end30)
+                    except Exception:
+                        pass
+                idx["signups_since"] = usince
+            else:
+                sig = {}
+                for s in (att.get("recent_signups") or []):
+                    t = (s.get("landing_title") or "").strip().lower()
+                    if t: sig[t] = sig.get(t, 0) + 1
+                for t, n in sig.items():
+                    tgt = by_title.get(t)
+                    if tgt: tgt["signups"] = n
             idx["signup_window_days"] = att.get("window_days")
             # 3) Newsletter clicks per piece, from the per-link click details
             lc = (out.get("mailchimp") or {}).get("link_clicks") or {}
