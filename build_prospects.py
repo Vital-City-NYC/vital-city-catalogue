@@ -1231,7 +1231,8 @@ def main():
       # Borrowed from the editable donor-deck text (Sept 2026). Quotations are
       # as delivered publicly or in writing, per Vital City's influence record.
       "testimonials": [
-        {"q": "It gives space to sharp, well-articulated arguments backed up with data that can even move a hack like me.", "who": "Patrick Gaspard", "role": "adviser to the mayor, December 2025"},
+        {"q": "One of the things I love about Vital City is its ability to give space to sharp, well-articulated argument that's backed up with data that can even move a hack like me on an issue.", "who": "Patrick Gaspard", "role": "adviser to Zohran Mamdani, December 2025"},
+        {"q": "The publication Vital City over the weekend brought two magnificent essays that I strongly recommend, one from Harry Siegel and another from Asad Dandia.", "who": "Spencer Ackerman", "role": "Forever Wars, September 2026"},
       ],
       "cited_by_notable": ["The New York Times", "The Atlantic", "The Guardian", "City Journal", "Reason", "Mother Jones", "Last Week Tonight"],
       "republished_by": ["the New York Daily News", "Crain's New York Business", "The City Reporter", "Next City"],

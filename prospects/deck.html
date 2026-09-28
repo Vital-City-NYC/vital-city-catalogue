@@ -105,11 +105,11 @@
   .bf-view{position:relative;height:430px;overflow:hidden;background:var(--vc-paper)}
   .bf-view iframe{width:200%;height:860px;border:0;transform:scale(.5);transform-origin:0 0;pointer-events:none}
   .bf-cap{font-size:11px;color:var(--vc-charcoal);margin-top:8px}
-  .tq{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin-top:12px}
+  .tq{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin-top:12px}
   .tqi{background:var(--vc-white);padding:14px 16px}
   .tqq{font-family:var(--vc-serif);font-size:17px;line-height:1.3}
   .tqw{font-size:11px;color:var(--vc-charcoal);margin-top:8px}
-  @media(max-width:700px){.tq{grid-template-columns:1fr}}
+  @media(max-width:700px){.tq{grid-auto-flow:row}}
   .clogo{width:230px;margin-bottom:30px;filter:brightness(0) invert(1)}   /* black art -> paper white on the cover */
   .slide:not(.cover) .slogo{position:absolute;top:46px;right:54px;width:110px;opacity:.85}
 
@@ -199,6 +199,14 @@
 <script>
 const $=s=>document.querySelector(s);
 const PASSKEY="vc_net_pass", TTL=90*24*3600*1000;
+// Quotes on the "cited across the spectrum" slide. Verbatim only, each with
+// its source; checked Sept. 28, 2026. (Moskos and Abt quotes removed at
+// Josh's request.) Gaspard: Vital City's influence record, December 2025.
+// Ackerman: Forever Wars, Sept. 7, 2026, https://www.forever-wars.com/return-to-little-pakistan-the-reign-of-terror-in-brooklyn-after-9-11-reprise/
+const DECK_QUOTES=[
+  {q:"One of the things I love about Vital City is its ability to give space to sharp, well-articulated argument that's backed up with data that can even move a hack like me on an issue.", who:"Patrick Gaspard", role:"adviser to Zohran Mamdani, December 2025"},
+  {q:"The publication Vital City over the weekend brought two magnificent essays that I strongly recommend, one from Harry Siegel and another from Asad Dandia.", who:"Spencer Ackerman", role:"Forever Wars, September 2026"},
+];
 function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+TTL}))}catch{}}
 function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
   const o=JSON.parse(r);if(o&&o.pass&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null}catch{return null}}
@@ -413,7 +421,7 @@ async function exportPptx(){
   { const s=slide("Media influence, continued","Cited from City Journal to Mother Jones.");
     let y=lede(s,s._bodyY||2.2,"Vital City is cited approvingly by City Journal and Mother Jones alike — read closely by the correction commissioner, quoted by the mayor. The analyses are built to be usable by people who disagree with each other, and they are.",{h:1.0});
     y=pull(s,y,"When reporters dig into the city's crime numbers, it is often Vital City's analyses they build on.");
-    const TQ=(FF.testimonials||[]).filter(t=>!/Moskos|Abt/.test(t.who||"")).slice(0,3);
+    const TQ=DECK_QUOTES.slice(0,3);
     if(TQ.length){ const tw=(CW-0.4)/TQ.length; TQ.forEach((t,i)=>{ const x=L+i*(tw+0.2);
         s.addShape(pptx.ShapeType.rect,{x,y:y+0.05,w:tw,h:1.35,fill:{color:WHT},line:{color:CLOUD,width:0.75}});
         TX(s,"\u201c"+t.q+"\u201d",{x:x+0.15,y:y+0.12,w:tw-0.3,h:0.8,fontSize:11,italic:false,color:BLK,fontFace:SERIF,valign:"top",fit:"shrink"});
@@ -605,7 +613,7 @@ function slides(){
     <h2>Cited from City Journal to Mother Jones.</h2>
     <p class="lede">Vital City is cited approvingly by City Journal and Mother Jones alike — read closely by the correction commissioner, quoted by the mayor. The analyses are built to be usable by people who disagree with each other, and they are.</p>
     <p class="pull">When reporters dig into the city's crime numbers, it is often Vital City's analyses they build on.</p>
-    ${(FF.testimonials||[]).filter(t=>!/Moskos|Abt/.test(t.who||"")).length?`<div class="tq">${(FF.testimonials||[]).filter(t=>!/Moskos|Abt/.test(t.who||"")).slice(0,3).map(t=>`<div class="tqi"><div class="tqq">&ldquo;${esc(t.q)}&rdquo;</div><div class="tqw">${esc(t.who)}${t.role?`, ${esc(t.role)}`:""}</div></div>`).join("")}</div>
+    ${DECK_QUOTES.length?`<div class="tq">${DECK_QUOTES.slice(0,3).map(t=>`<div class="tqi"><div class="tqq">&ldquo;${esc(t.q)}&rdquo;</div><div class="tqw">${esc(t.who)}${t.role?`, ${esc(t.role)}`:""}</div></div>`).join("")}</div>
     ${(FF.cited_by_notable||[]).length?`<div class="bf-cap">Cited by ${(FF.cited_by_notable||[]).map(esc).join(", ")}.</div>`:""}`
     :`<p class="lede">That is a deliberate product choice: the data work is published with methods attached, at the speed of the news cycle, under a name both sides can print.</p>`}`});
 
