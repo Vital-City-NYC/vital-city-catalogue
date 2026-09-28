@@ -40,7 +40,6 @@ Independent Budget Office are cited as authorities, not voices, and are excluded
 | NYU Furman Center | furmancenter.org | "Furman Center" |
 | Regional Plan Association | rpa.org | "Regional Plan Association" |
 | City Journal | city-journal.org | "City Journal" |
-| Gotham Gazette | gothamgazette.com | "Gotham Gazette" |
 | City Limits | citylimits.org | none (name is ordinary English) |
 | Center for Justice Innovation | innovatingjustice.org, courtinnovation.org | either name (renamed 2023) |
 | Data Collaborative for Justice | datacollaborativeforjustice.org | "Data Collaborative for Justice" |
@@ -186,3 +185,7 @@ the Mac (`influence_pull.py council`) when the hearings corpus is updated. Schol
   record .25, scholarship .25, major .15, New York press .15, Wikipedia .10, links .10 (were press .30, record .25, scholarship .20, web .15, Wikipedia .10); name test widened for
   "a/the Vital City <noun>"; Council hearings added beside the index; league requires 75 percent
   weight coverage.
+- 2026-09-28: Gotham Gazette dropped from the peers; it no longer publishes, so it is not a
+  comparable organization. It stays in the New York press panel, where its past stories still
+  count as citations of others. City Journal is counted by its own name and web address only;
+  mentions of its publisher, the Manhattan Institute, are not counted for it.

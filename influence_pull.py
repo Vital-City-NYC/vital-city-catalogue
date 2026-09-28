@@ -55,8 +55,9 @@ def log(msg):
 # New York City is its main subject rather than one market among many, and it
 # is an independent nonprofit (government bodies such as the Independent Budget
 # Office are left out because they are cited as authorities, not as voices).
-# Two are publications (City Journal, Gotham Gazette), the rest research and
-# advocacy shops, because Vital City is both. Changing this list changes every
+# One is a publication (City Journal), the rest research and advocacy shops,
+# because Vital City is both. Gotham Gazette was dropped Sept. 28, 2026: it no
+# longer publishes, so it isn't a peer (Josh). Changing this list changes every
 # share, so a change belongs in methodology.md with a date.
 #
 # press: Google News phrase queries. None for City Limits, whose name is
@@ -81,8 +82,6 @@ ORGS = [
      "domains": ["rpa.org"]},
     {"id": "cj",     "name": "City Journal",                   "press": ['"City Journal"'],
      "domains": ["city-journal.org"]},
-    {"id": "gg",     "name": "Gotham Gazette",                 "press": ['"Gotham Gazette"'],
-     "domains": ["gothamgazette.com"]},
     {"id": "cl",     "name": "City Limits",                    "press": None,
      "domains": ["citylimits.org"]},
     {"id": "cji",    "name": "Center for Justice Innovation",
@@ -98,7 +97,7 @@ ORG = {o["id"]: o for o in ORGS}
 # largest public-radio newsroom, the outlets Vital City's own ranking of
 # evidence puts first (Times, New Yorker, Gothamist, Politico). "ny": the rest
 # of the city's policy press. An outlet is skipped for the organization that
-# publishes it (Gotham Gazette in Gotham Gazette), since a masthead is not a
+# publishes it (City Journal in City Journal), since a masthead is not a
 # citation.
 OUTLETS = [
     ("nytimes.com", "The New York Times", "major"), ("wsj.com", "The Wall Street Journal", "major"),
@@ -119,7 +118,7 @@ OUTLETS = [
     ("newsday.com", "Newsday", "ny"), ("timesunion.com", "Times Union", "ny"), ("law.com", "Law.com", "ny"),
 ]
 TIER = {d: t for d, _, t in OUTLETS}
-SELF_OUTLET = {"gg": "gothamgazette.com", "cl": "citylimits.org", "cj": "city-journal.org"}
+SELF_OUTLET = {"cl": "citylimits.org", "cj": "city-journal.org"}
 
 # The official record: government and court sites, same query shapes.
 RECORD_DOMAINS = [
@@ -809,7 +808,7 @@ TEXT_NAMES = {
     "cbc": r"Citizens Budget Commission", "cuf": r"Center for an Urban Future",
     "css": r"Community Service Society", "fpi": r"Fiscal Policy Institute",
     "furman": r"Furman Center", "rpa": r"Regional Plan Association", "cj": r"City Journal",
-    "gg": r"Gotham Gazette", "cl": r"City Limits",
+    "cl": r"City Limits",
     "cji": r"Center for (?:Justice|Court) Innovation", "dcj": r"Data Collaborative for Justice",
 }
 
