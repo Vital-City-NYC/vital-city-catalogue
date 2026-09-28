@@ -5741,8 +5741,36 @@ function renderWeekPulse(data, span){
       ? `<span class="wpclick" onclick="showWeekNames('${t.k}')" title="Click to see the ${nm.list.length} names on record for ${esc(nm.period)} (from the recent-names feed, which can differ slightly from the count)">${t.fmt(now)}</span>`
       : t.fmt(now);
     return `<div class="perfcell${t.hero?' hero':''}"><div class="pl">${esc(t.lbl)}</div><div class="pn">${numHtml}</div><div class="pd ${cls}">${esc(dtxt)}</div></div>`;
-  }).join("");
-  $("#weekPulseGrid").innerHTML=cells;
+  });
+  // Active newsletter readers: a count of people, not a flow, so it is given
+  // as of the day the period ends and set against the day before it began.
+  // The pull keeps the 30-day count for each past day (mailchimp.mau_series).
+  (function(){
+    const ser=mc.mau_series||{};
+    const lbl="Active newsletter readers (opened an email in the last 30 days)";
+    const onList = Math.round((+mc.total_subscribers||0) - (act||[]).filter(r=>r.d>curEnd).reduce((t,r)=>t+(+r.subs||0)-(+r.unsubs||0),0));
+    const share = n => onList>0 ? `; ${Math.round(n/onList*100)}% of the ${fmtN(onList)} on the list` : "";
+    const tip = `People who opened at least one Vital City email sent in the 30 days up to the date given. It rises and falls with how many emails went out in those 30 days. Some email apps (Apple Mail especially) open messages automatically, which inflates it, so the click rate is the stricter measure of reading. From Mailchimp.`;
+    const endV=ser[curEnd], before=shift(curStart,-1), startV=ser[before];
+    let value, dtxt, cls="flat", now=null, base=null;
+    if(endV!=null){
+      now=endV; value=fmtN(endV);
+      if(startV!=null){
+        base=startV; const d=endV-startV;
+        const pct=startV>0?Math.abs(d)/startV:0;
+        if(pct<0.01) dtxt=`about the same as on ${pxDay(before)} (${fmtN(startV)})`;
+        else { cls=d>0?"up":"down"; dtxt=`${d>0?"▲":"▼"} ${fmtN(Math.abs(d))} ${d>0?"more":"fewer"} than on ${pxDay(before)}, the day before this period (${fmtN(startV)}), ${Math.round(pct*100)}% ${d>0?"higher":"lower"}`; }
+      } else dtxt=`counted on ${pxDay(curEnd)}; the daily record doesn't reach back to the start of this period`;
+      dtxt += share(endV);
+    } else {
+      const n=(mc.mau||{}).active_users;
+      if(!n){ value="—"; dtxt="not available in this data refresh"; }
+      else { now=n; value=fmtN(n); dtxt=`counted today, not on ${pxDay(curEnd)}: the count by day arrives with the next data refresh`+share(n); }
+    }
+    _pm.splice(1,0,{k:"active", lbl, value, delta:dtxt, cls, now, base, pct:(base?(now-base)/base:null), stock:true});
+    cells.splice(1,0,`<div class="perfcell"><div class="pl">${esc(lbl)}</div><div class="pn" title="${esc(tip)}">${value}</div><div class="pd ${cls}" title="${esc(tip)}">${esc(dtxt)}</div></div>`);
+  })();
+  $("#weekPulseGrid").innerHTML=cells.join("");
 
   // Top pieces of the week, two ways:
   //  (a) by site visits — what got read (Ghost analytics).
@@ -6234,7 +6262,7 @@ function whoHTML(data, which){
     const nb=(s.notable||[]).slice(0,8).map(p=>`${p.n}${p.org?` (${p.org})`:` (${p.role.toLowerCase()})`}`);
     return `<div><b>${fmtN(s.total)} ${verb}</b>${parts.length?`: ${parts.join(", ")}, and ${fmtN((s.counts||{}).other||0)} others`:""}.${nb.length?` Notable: ${nb.join("; ")}.`:""}</div>`; };
   const period = which==="week" ? "the latest seven days" : "the latest 30 days";
-  return `<div class="ki-who"><div class="ki-whohd">Who joined and who left, ${period} (${esc((w.join||{}).from||"")} to ${esc((w.join||{}).to||"")})</div>${line("join","joined")}${line("leave","left")}<div class="ki-fine">Roles come from the contacts database. Notable means a Wikipedia-notable person or a government address.</div></div>`;
+  return `<div class="ki-who"><div class="ki-whohd">Who joined and who left, ${period} (${esc(pxDay((w.join||{}).from||""))} to ${esc(pxDay((w.join||{}).to||""))})</div>${line("join","joined")}${line("leave","left")}<div class="ki-fine">Roles come from the contacts database. Notable means a Wikipedia-notable person or a government address.</div></div>`;
 }
 function whoMD(data, which){
   const rf=data.role_flows||{}; if(!rf.available) return "";
@@ -6244,7 +6272,7 @@ function whoMD(data, which){
     const nb=(s.notable||[]).slice(0,8).map(p=>`${p.n}${p.org?` (${p.org})`:` (${p.role.toLowerCase()})`}`);
     return `- **${fmtN(s.total)} ${verb}**${parts.length?`: ${parts.join(", ")}, and ${fmtN((s.counts||{}).other||0)} others`:""}.${nb.length?` Notable: ${nb.join("; ")}.`:""}\n`; };
   const period = which==="week" ? "the latest seven days" : "the latest 30 days";
-  return `\n**Who joined and who left, ${period} (${(w.join||{}).from||""} to ${(w.join||{}).to||""})**\n\n`+line("join","joined")+line("leave","left");
+  return `\n**Who joined and who left, ${period} (${pxDay((w.join||{}).from||"")} to ${pxDay((w.join||{}).to||"")})**\n\n`+line("join","joined")+line("leave","left");
 }
 function kiNotesHTML(sc){
   return `<p>${esc(sc.lede)}</p>`+sc.measures.map(x=>`<p><b>${esc(x.name)}.</b> ${esc(x.def)} ${esc(x.baseText||"")} ${esc(x.note||"")}</p>`).join("")+`<p>${esc(SC_LEGEND)}</p>`;
@@ -6520,7 +6548,7 @@ function pulseExtraInsights(w){
 // the rows run outcome first: the list, reach, money, then output.
 function pulseRows(w){
   const T={}; (w.tiles||[]).forEach(t=>T[t.k]=t);
-  const order=["net","signups","unsubs","spv","visitors","raised","articles","sends"];
+  const order=["net","active","signups","unsubs","spv","visitors","raised","articles","sends"];
   return order.filter(k=>T[k]).map(k=>{
     const t=T[k];
     if(k==="raised" && T.gifts && !t.missing) return {...t, lbl:"Online giving", value:`${t.value} · ${T.gifts.value} gift${T.gifts.now===1?"":"s"}`};
@@ -6559,7 +6587,7 @@ function pulseReportModel(all){
     // In order of what matters most to Vital City: the list first, then who
     // is joining, whether readers engage, whether the work is cited, then
     // traffic, publishing and giving. Good or bad is shown by the marker.
-    const IMP=[/^The list|^Signups \(/, /^New signups/, /^Unsubscribes/, /^Decision-makers/, /^Email recipients/, /^Verified press|^Times Vital City/,
+    const IMP=[/^The list|^Signups \(/, /^Active newsletter readers/, /^New signups/, /^Unsubscribes/, /^Decision-makers/, /^Email recipients/, /^Verified press|^Times Vital City/,
       /^New subscribers per|^Visitors rose faster/, /^Website visitors|^Site visits/, /^Visits from/, /^New pieces/, /^Giving/, /^Emails sent/, /^The piece that brought/];
     const imp=t=>{ const i=IMP.findIndex(re=>re.test(t)); return i<0?IMP.length:i; };
     const rank={watch:0, good:1, neutral:2};
@@ -6603,6 +6631,13 @@ function pulseInsights(w, data){
     else if(N.now>0) add("neutral", `The list grew by ${grew} people in ${span} (new signups minus unsubscribes), about the same as ${ref(N)}.`);
     else if(N.now<0) add("watch", `The list shrank by ${Math.abs(N.now).toLocaleString("en-US")} in ${span}: unsubscribes outran signups.`);
     else add("neutral", `The list ended ${span} where it started.`);
+  }
+  // Active readers: a count on a day, set against the day before the period.
+  const AC=T.active;
+  if(AC && AC.base!=null && AC.pct!=null){
+    const p=Math.round(AC.pct*100), fromD=pxDay(new Date(Date.parse(w.curStart+"T00:00:00Z")-86400000).toISOString().slice(0,10)), toD=pxDay(w.curEnd);
+    if(p>=5) add("good", `Active newsletter readers (people who opened an email in the previous 30 days) rose from ${fmtN(AC.base)} on ${fromD} to ${AC.value} on ${toD}, up ${p}%.`);
+    else if(p<=-5) add("watch", `Active newsletter readers (people who opened an email in the previous 30 days) fell from ${fmtN(AC.base)} on ${fromD} to ${AC.value} on ${toD}, down ${Math.abs(p)}%. This count moves with how many emails went out in those 30 days.`);
   }
   if(S&&U){
     const ps=pc(S), pu=pc(U);
@@ -6733,7 +6768,7 @@ function pxMissing(w){
 // audience the publication exists for), are subscribers engaging, is the work
 // being cited, is the site reaching and converting readers, and is anyone
 // giving. Everything else in a report goes below the line.
-const PX_HEAD=["net","signups","dm","clicks","cites","visitors","spv","raised"];
+const PX_HEAD=["net","active","signups","dm","clicks","cites","visitors","spv","raised"];
 function pxHeadRows(w){
   const T={}; (w.rows||w.tiles||[]).forEach(t=>T[t.k]=t);
   const ex=w.extra||{}, f1=v=>(Math.round(v*10)/10).toFixed(1), out=[];

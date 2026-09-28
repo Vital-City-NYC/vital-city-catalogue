@@ -587,7 +587,7 @@ def pull_mailchimp():
     # Re-issue the pulls but capture the sets too (re-uses Mailchimp data we
     # already paid the API cost for; about doubles AAU pull time, but worth
     # it since lifecycle is the single highest-leverage analysis).
-    def _union_openers_with_set(days_back):
+    def _union_openers_with_set(days_back, keep=None):
         since_iso = (datetime.now(timezone.utc) - timedelta(days=days_back)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
         url = (f"/campaigns?status=sent&list_id={list_id}"
                f"&since_send_time={urllib.parse.quote(since_iso)}"
@@ -727,6 +727,8 @@ def pull_mailchimp():
             if not got:
                 problems.append(f"{cid} ({ctype}, sent {c.get('send_time','?')[:10]}): 0 openers")
             openers |= got
+            if keep is not None and got:
+                keep.append((c.get("send_time") or "", got))
         for p in problems[:12]:
             log(f"    opener-pull: {p}")
         return (openers, {"regulars_counted": len(regulars), "variate_counted": len(variate),
@@ -735,7 +737,35 @@ def pull_mailchimp():
     log("  computing MAU (30d) openers set…")
     mau_set, mau_meta = _union_openers_with_set(30)
     log("  computing AAU (365d) openers set…")
-    aau_set, aau_meta = _union_openers_with_set(365)
+    per_send = []
+    aau_set, aau_meta = _union_openers_with_set(365, keep=per_send)
+    # The 30-day active count for each past day, so a report can give it as of
+    # the day its period ends: the people who opened at least one email sent
+    # in the 30 days up to and including that day (New York dates). Opens are
+    # counted as of this pull, so the last few days can still rise a little.
+    try:
+        from zoneinfo import ZoneInfo
+        ny = ZoneInfo("America/New_York")
+        sends = []
+        for st, got in per_send:
+            try:
+                d = datetime.fromisoformat(st.replace("Z", "+00:00")).astimezone(ny).date()
+            except Exception:
+                continue
+            sends.append((d, got))
+        today_ny = datetime.now(ny).date()
+        series = {}
+        for back in range(1, 336):          # yesterday back ~11 months (each needs 30 days of sends)
+            e = today_ny - timedelta(days=back)
+            s0 = e - timedelta(days=29)
+            u = set()
+            for d, got in sends:
+                if s0 <= d <= e:
+                    u |= got
+            series[e.isoformat()] = len(u)
+        out["mau_series"] = dict(sorted(series.items()))
+    except Exception as e:
+        log(f"  30-day active series failed: {e}")
     out["mau"] = {"active_users": len(mau_set), **mau_meta}
     out["aau"] = {"active_users": len(aau_set), **aau_meta}
     # Stash the sets internally so build_lifecycle() can use them
