@@ -315,7 +315,7 @@
   .pwb.b0{background:#c8102e}.pwb.b1{background:#707175}.pwb.b2{background:#57aa4a}.pwb.b3{background:#217ebe}.pwb.b4{background:#e7466d}
   .pwp li.good:before{content:"▲ ";color:#3d7a35}.pwp li.watch:before{content:"▼ ";color:#a0432d}
   .lv{overflow-x:auto}.lvt{border-collapse:collapse;font-size:12px;min-width:560px;width:100%}.lvt th,.lvt td{padding:5px 8px;text-align:right;border-bottom:1px solid var(--vc-cloud,#e6e6e3);font-variant-numeric:tabular-nums;white-space:nowrap}
-  .lvt th{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--vc-charcoal);border-bottom:1px solid var(--vc-black)}.lvt td.l{text-align:left;white-space:normal;min-width:200px}
+  .lvt th{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--vc-charcoal);border-bottom:1px solid var(--vc-black);font-variant-numeric:normal}.lvt td.l{text-align:left;white-space:normal;min-width:200px;font-variant-numeric:normal}
   .lvt .pr{background:rgba(33,126,190,.08)}.lvn{font-size:11px;color:var(--vc-charcoal);padding-left:16px;margin:6px 0 0}.lvn li{margin:2px 0}
   table.tbl tr:has(+ tr.bmex) td{border-bottom:0}
   table.tbl th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--vc-black)}
@@ -1247,15 +1247,10 @@ function pxLongView(data){
       if(Object.keys(gaM).length){ const v=c.ms.filter(k=>gaM[k]>0).map(k=>gaM[k]); return v.length? f0(avg(v))+(v.length<c.ms.length&&!c.pair?"*":"") : "—"; }
       return (!c.pair && gaY[c.year]) ? f0(gaY[c.year]/12) : "—"; }},
     {lbl:"Pieces published a month, on average", f:c=>{ const v=c.ms.map(k=>pubBy[k]||0); return (gh.pub_dates||[]).length? avg(v).toFixed(1) : "—"; }},
-    {lbl:"The typical piece's page views in its first 30 days", f:c=>{ const set=new Set(c.ms); const v=pcs.filter(p=>p.views30!=null&&set.has(String(p.pub).slice(0,7))).map(p=>p.views30); const x=med(v); return x==null?"—":fmtN(Math.round(x)); }},
+    {lbl:"The typical piece's page views in its first 30 days", f:c=>{ if(gaFirst && c.ms[0]<gaFirst) return "—"; const set=new Set(c.ms); const v=pcs.filter(p=>p.views30!=null&&set.has(String(p.pub).slice(0,7))).map(p=>p.views30); const x=med(v); return x==null?"—":fmtN(Math.round(x)); }},
   ].map(r=>({lbl:r.lbl, vals:cols.map(r.f)}));
-  notes.push("Averages are per calendar month. The last two columns set the same months of this year and last side by side.");
-  notes.push("New subscribers leave out May to September 2025, when about half of signups were bots, and March 2026, when a one-time import landed. About 2,400 of those bot accounts are still counted in the 2025 and later subscriber totals, and bot addresses that never read also pulled down 2025's click rate.");
-  notes.push("Signups have come through the Ghost form since the March 2026 site move; before that, through Mailchimp's form.");
-  notes.push("Click rates ran higher when the list was small: it held about 4,000 people at the end of 2024 and about 10,000 by the end of 2025, after the bot surge and a year of growth. A larger list includes more people who seldom click, so the rate can fall while more people click; the row below the rate gives the number of people clicking. Every email to readers counts, including appeals, which draw fewer clicks.");
-  if(gaFirst) notes.push(`Google Analytics' record starts in ${LV_MON[+gaFirst.slice(5,7)-1]} ${gaFirst.slice(0,4)}${cols.some(c=>c.ms.some(k=>k<gaFirst)&&c.ms.some(k=>k>=gaFirst))?"; a year marked * averages only the months it covers":""}. Google Analytics counts every visit, so it runs higher than Ghost's count of readers.`);
-  else notes.push("Google Analytics visits for full years are the year's total divided by 12.");
-  notes.push("The typical piece is the middle one of the pieces published in those months, by page views in its first 30 days (Google Analytics). Active newsletter readers aren't here: that count is kept day by day only from late 2025.");
+  notes.push("Monthly averages. The last two columns compare the same months this year and last. New subscribers leave out May to September 2025, when about half of signups were bots, and March 2026, a one-time import; about 2,400 bot accounts remain in the subscriber totals.");
+  notes.push("The click rate fell partly because the list grew; the row below it counts the people clicking. Visits and piece views are from Google Analytics, which counts every visit and runs higher than Ghost.");
   return {cols:cols.map(c=>c.lbl), pair:cols.map(c=>!!c.pair), rows, notes};
 }
 function pxLongViewHTML(lv, cls){
@@ -1286,12 +1281,12 @@ function pxSignupBands(data){
 function pxSignupDef(data){
   const sb=pxSignupBands(data); if(!sb) return "";
   const pct=Math.round(sb.zero/sb.n*100);
-  return `Newsletter signups count the people who subscribed on the piece's own page in its first 30 days (Ghost records the page; the record starts ${pxDay(sb.since)}, ${sb.since.slice(0,4)}, so only pieces published since then are rated). Of the ${fmtN(sb.n)} pieces rated, ${pct}% brought in none that way; ${sb.p50===0?"":`the typical piece brought in ${fmtN(sb.p50)}; `}the top quarter brought in ${fmtN(Math.max(1,sb.p75))} or more and the top 10% ${fmtN(Math.max(1,sb.p90))} or more. Most people subscribe on the homepage or another page, so this undercounts what a piece does for the list.`;
+  return `Newsletter signups: people who subscribed on the piece's own page in its first 30 days (recorded since ${pxDay(sb.since)}, ${sb.since.slice(0,4)}). ${pct}% of pieces bring in none this way; the top 10% bring in ${fmtN(Math.max(1,sb.p90))} or more. Most people subscribe elsewhere on the site, so this undercounts.`;
 }
 function pxWellDef(data){
   const bm=((data.ga4||{}).piece_benchmarks)||{}, b=bm.bands||{};
   if(!bm.available||b.p50==null) return "";
-  return `What "did well" means here: a piece's page views in its first 30 days, set against everything published over the past year (${fmtN(bm.n_pieces)} pieces). The typical piece gets ${fmtN(b.p50)}. Strong, the top quarter, starts at ${fmtN(b.p75)}; Great, the top 10%, at ${fmtN(b.p90)}; Exceptional, the top 5%, at ${fmtN(b.p95)}. Under-performing is the bottom quarter, under ${fmtN(b.p25)}. ${pxSignupDef(data)}`.trim();
+  return `What "did well" means: the top quarter of the past year's ${fmtN(bm.n_pieces)} pieces by page views in the first 30 days, ${fmtN(b.p75)} or more. The typical piece gets ${fmtN(b.p50)}; the top 10% get ${fmtN(b.p90)} or more. ${pxSignupDef(data)}`.trim();
 }
 // Pieces whose first 30 days ended inside [a,b]: published 30 days before.
 function pxPiecesWell(data, a, b){
@@ -1332,8 +1327,8 @@ function pxPatterns(data){
   // Several tags from one single-day issue: keep the largest.
   const bigDay={}; groups.forEach(g=>{ if(g.oneDay){ const c=bigDay[g.oneDay.d]; if(!c||g.n>c.n) bigDay[g.oneDay.d]=g; } });
   for(let i=groups.length-1;i>=0;i--){ const g=groups[i]; if(g.oneDay && bigDay[g.oneDay.d]!==g) groups.splice(i,1); }
-  const hi=pick(groups.filter(x=>x.med>=overall*1.4).sort((x,y)=>y.med-x.med),6);
-  const lo=pick(groups.filter(x=>x.med<=overall*0.6).sort((x,y)=>x.med-y.med),4);
+  const hi=pick(groups.filter(x=>x.med>=overall*1.4).sort((x,y)=>y.med-x.med),3);
+  const lo=pick(groups.filter(x=>x.med<=overall*0.6).sort((x,y)=>x.med-y.med),2);
   const bt=bm.by_type||{};
   const types=Object.entries(bt).filter(([k,v])=>v.n>=10).map(([k,v])=>({t:k, n:v.n, med:v.p50})).sort((x,y)=>y.med-x.med);
   const subs=((ga4.piece_index||{}).pieces||[]).filter(p=>(p.signups30||0)>0).sort((x,y)=>(y.signups30||0)-(x.signups30||0)).slice(0,5).map(p=>({t:p.title, pub:p.pub, n:p.signups30, v:p.views30}));
@@ -1342,12 +1337,12 @@ function pxPatterns(data){
 function pwDate(iso){ return `${pxDay(iso)}, ${String(iso).slice(0,4)}`; }
 function pxPatternLines(pt){
   if(!pt) return [];
-  const x=v=>{ const r=v/pt.overall; return r>=1.95 ? `${(Math.round(r*10)/10).toFixed(1).replace(/\.0$/,"")} times the typical piece` : `${Math.round((r-1)*100)}% more than the typical piece`; };
+  const x=v=>{ const r=v/pt.overall; return r>=1.95 ? `about ${(Math.round(r*2)/2).toFixed(1).replace(/\.0$/,"")} times the views of the typical piece` : `${Math.round((r-1)*100)}% more views than the typical piece`; };
   const out=[];
-  const one=g=> g.oneDay ? ` ${g.oneDay.n} of the ${g.n} came out on one day, ${pwDate(g.oneDay.d)}, as a single issue.` : "";
-  const ex=a=>a.map(p=>`"${p.t}" (${pwDate(p.pub)}, ${fmtN(p.v)})`).join("; ");
-  pt.hi.forEach(g=>out.push({tone:"good", text:`${g.t} (${g.n} pieces): the middle one drew ${fmtN(Math.round(g.med))} page views in its first 30 days, ${x(g.med)} (${fmtN(Math.round(pt.overall))}).${one(g)} Biggest: ${ex(g.top)}. Most recent: ${ex(g.recent.filter(p=>!g.top.some(q=>q.t===p.t)).slice(0,1))||"the same"}.`.replace(" Most recent: the same.","")}));
-  pt.lo.forEach(g=>out.push({tone:"watch", text:`${g.t} (${g.n} pieces): the middle one drew ${fmtN(Math.round(g.med))}, ${Math.round((1-g.med/pt.overall)*100)}% fewer than the typical piece.${one(g)} Most recent: ${ex(g.recent)}.`}));
+  const one=g=> g.oneDay ? `, mostly one issue on ${pwDate(g.oneDay.d)}` : "";
+  const ex=p=>`"${p.t}" (${fmtN(p.v)})`;
+  pt.hi.forEach(g=>out.push({tone:"good", text:`${g.t}, ${g.n} pieces: ${x(g.med)}. Biggest: ${ex(g.top[0])}.`}));
+  pt.lo.forEach(g=>out.push({tone:"watch", text:`${g.t}, ${g.n} pieces${one(g)}: ${Math.round((1-g.med/pt.overall)*100)}% fewer views than the typical piece.`}));
   return out;
 }
 function pxPiecesHTML(pw, pt, data, compact){
@@ -1368,8 +1363,7 @@ function pxPiecesHTML(pw, pt, data, compact){
   if(def) h+=`<p class="pwdef">${esc(def)}</p>`;
   if(pt){
     const lines=pxPatternLines(pt);
-    if(lines.length) h+=`<div class="pwhd">What tends to do well <span>series and subjects with five or more pieces, ${esc(pwDate(pt.from))} to ${esc(pwDate(pt.to))}</span></div><ul class="pwp">${lines.map(l=>`<li class="${l.tone}">${esc(l.text)}</li>`).join("")}</ul>`;
-    if(pt.types.length) h+=`<p class="pws">By format, the middle piece's first-30-day page views: ${pt.types.map(t=>`${t.t} ${fmtN(t.med)} (${t.n} pieces)`).join("; ")}.</p>`;
+    if(lines.length) h+=`<div class="pwhd">What tends to do well <span>series and subjects, first-30-day views of the middle piece, past year</span></div><ul class="pwp">${lines.map(l=>`<li class="${l.tone}">${esc(l.text)}</li>`).join("")}</ul>`;
     if(pt.subs.length) h+=`<p class="pws">Most newsletter signups on the piece's own page in its first 30 days${pt.since?`, among pieces published since ${esc(pwDate(pt.since))}`:""}: ${pt.subs.map(p=>`"${esc(p.t)}" (${esc(pwDate(p.pub))}), ${fmtN(p.n)}`).join("; ")}.</p>`;
   }
   return h;
@@ -1388,8 +1382,7 @@ function pxPiecesMD(pw, pt, data){
   const def=pxWellDef(data); if(def) o+=`\n_${def}_\n`;
   if(pt){
     const lines=pxPatternLines(pt);
-    if(lines.length){ o+=`\n**What tends to do well** (series and subjects with five or more pieces, ${pwDate(pt.from)} to ${pwDate(pt.to)})\n\n`; lines.forEach(l=>{ o+=`- ${l.tone==="good"?"▲":"▼"} ${l.text}\n`; }); }
-    if(pt.types.length) o+=`\nBy format, the middle piece's first-30-day page views: ${pt.types.map(t=>`${t.t} ${fmtN(t.med)} (${t.n} pieces)`).join("; ")}.\n`;
+    if(lines.length){ o+=`\n**What tends to do well** (series and subjects, first-30-day views of the middle piece, past year)\n\n`; lines.forEach(l=>{ o+=`- ${l.tone==="good"?"▲":"▼"} ${l.text}\n`; }); }
     if(pt.subs.length) o+=`\nMost newsletter signups on the piece's own page in its first 30 days${pt.since?`, among pieces published since ${pwDate(pt.since)}`:""}: ${pt.subs.map(p=>`"${p.t}" (${pwDate(p.pub)}), ${fmtN(p.n)}`).join("; ")}.\n`;
   }
   return o;
@@ -7213,7 +7206,7 @@ function pulseReportHTML(m){
     +'.pwl,.pwp{list-style:none;padding:0;margin:2px 0 5px}.pwl li,.pwp li{padding:3px 0;border-bottom:1px solid #eee;break-inside:avoid}.pwl a{color:#050507;text-decoration:none}.pwv,.pwmore{color:#707175;font-size:10.5px}'
     +'.pwb{display:inline-block;font-size:8.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:800;padding:0 4px;border-radius:2px;color:#fff;margin-right:3px}.pwb.b0{background:#c8102e}.pwb.b1{background:#707175}.pwb.b2{background:#57aa4a}.pwb.b3{background:#217ebe}.pwb.b4{background:#e7466d}'
     +'.pwp li.good:before{content:"▲ ";color:#3d7a35}.pwp li.watch:before{content:"▼ ";color:#a0432d}'
-    +'.lvt{border-collapse:collapse;font-size:10.5px;width:100%}.lvt th,.lvt td{padding:3px 5px;text-align:right;border-bottom:1px solid #ddd;font-variant-numeric:tabular-nums;white-space:nowrap;width:auto}.lvt th{font-size:9px;text-transform:uppercase;color:#707175;border-bottom:1px solid #050507}.lvt td.l{text-align:left;white-space:normal;color:#050507;width:30%}.lvt .pr{background:#eef4fa}.lvn{font-size:9.5px;color:#707175;padding-left:14px;margin:4px 0 0}'
+    +'.lvt{border-collapse:collapse;font-size:10.5px;width:100%}.lvt th,.lvt td{padding:3px 5px;text-align:right;border-bottom:1px solid #ddd;font-variant-numeric:tabular-nums;white-space:nowrap;width:auto}.lvt th{font-size:9px;text-transform:uppercase;color:#707175;border-bottom:1px solid #050507;font-variant-numeric:normal}.lvt td.l{font-variant-numeric:normal;text-align:left;white-space:normal;color:#050507;width:30%}.lvt .pr{background:#eef4fa}.lvn{font-size:9.5px;color:#707175;padding-left:14px;margin:4px 0 0}'
     +'.tier{font-size:11px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;margin:10px 0 2px;color:#217ebe}'
     +'.below{font-size:11px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:#707175;margin:26px 0 8px;padding-top:10px;border-top:3px solid #050507}'
     +'.tag{font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;border:1px solid #050507;padding:0 4px;margin-left:4px;vertical-align:1px}'
