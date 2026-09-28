@@ -1289,9 +1289,12 @@ function pxWellDef(data){
   const bm=((data.ga4||{}).piece_benchmarks)||{}, b=bm.bands||{};
   if(!bm.available||b.p50==null) return "";
   const P=(((data.ga4||{}).piece_index||{}).pieces||[]).filter(p=>p.views30!=null && p.pub>=bm.window_start && p.pub<=bm.window_end);
+  const yb=bm.year_bands||{}, ys=Object.keys(yb).sort(), yl=ys[ys.length-1], y0=ys.find(y=>+y===+yl-2);
+  const ybTxt=(yl&&y0&&yb[yl].p50&&yb[y0].p50) ? ` (the typical piece drew ${fmtN(yb[y0].p50)} views in ${y0} and ${fmtN(yb[yl].p50)} in ${yl} so far)` : "";
   const c=[0,0,0,0,0]; P.forEach(p=>c[pwBand(p.views30,b)]++);
   const n=P.length||bm.n_pieces, r=v=>fmtN(Math.round(v));
   return `What "did well" means: a piece is rated by its page views in its first 30 days, against the ${fmtN(n)} pieces published ${pwDate(bm.window_start)}, to ${pwDate(bm.window_end)}. `+
+    `How the lines were drawn: there is no industry standard for one publication's pieces, so the bands measure Vital City against itself. Those ${fmtN(n)} pieces, the most recent year with a full 30 days of numbers, are ranked by first-30-day page views and cut at fixed shares: the bottom quarter, the middle half, then the top quarter split into its top 5%, next 5% and the rest. The first 30 days puts a new piece and an old one on the same footing, and a single recent year keeps the bar in step with today's traffic${ybTxt}. The bands update with each data refresh as new pieces finish their 30 days. `+
     `Exceptional, the top 5%: ${r(b.p95)} or more (${c[4]} pieces). Great, the next 5%: ${r(b.p90)} to ${r(b.p95-1)} (${c[3]}). Strong, the rest of the top quarter: ${r(b.p75)} to ${r(b.p90-1)} (${c[2]}). `+
     `Typical, the middle half: ${r(b.p25)} to ${r(b.p75-1)} (${c[1]}). Under-performing, the bottom quarter: under ${r(b.p25)} (${c[0]}). "Did well" means strong or better, ${c[2]+c[3]+c[4]} pieces; the typical piece gets ${r(b.p50)}. ${pxSignupDef(data)}`.trim();
 }
@@ -1451,7 +1454,7 @@ function boot(data){
     if (field==="subs") hist = hist.filter(r=>!isBotDay(r.d) && r.d>=SIGNUP_NORM_FROM);
     if (hist.length < 90) return null;   // under 3 months of real history is not a norm
     const tot = hist.reduce((s,r)=>s+(r[field]||0),0);
-    return {val: tot/hist.length*30, months: Math.round(hist.length/30)};
+    return {val: tot/hist.length*30, months: Math.round(hist.length/30), from: hist[0].d, to: hist[hist.length-1].d};
   }
   const da = mc.daily_activity||[];
   const subsNorm = norm30(da,"subs");
@@ -1505,11 +1508,11 @@ function boot(data){
       if (subsNorm!=null){
         const d=subs30-subsNorm.val;
         return {tier:"also",lbl:"New signups · 30d",num:fmtN(subs30),
-          delta:`${fmtDelta(Math.round(d))}${pctChg(subs30,subsNorm.val)} vs ${subsNorm.months}-mo norm (~${fmtN(Math.round(subsNorm.val))}/30d)`,
+          delta:`${fmtDelta(Math.round(d))}${pctChg(subs30,subsNorm.val)} against the average 30 days from ${pxDay(subsNorm.from)} to ${pxDay(subsNorm.to)}, ${String(subsNorm.to).slice(0,4)} (about ${fmtN(Math.round(subsNorm.val))})`,
           cls:deltaClass(d),
           tip:`New subscribers in the last 30 days, against the norm: the average 30-day signup total across the trailing ${subsNorm.months} months of real data (current window excluded; the feed is zero-filled before Feb 2026 and those dead days are not counted). Prior 30 days for reference: ${fmtN(subsPrev30)}.\n\nWhy the norm and not last month: a single prior window is noisy -- one strong piece swings it by half. The norm says whether this month is unusual.\n\nSource: merged Ghost+Mailchimp dataset (signups land in Ghost first, reconciled to Mailchimp weekly).`};
       }
-      return {tier:"also",lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)}${pctChg(subs30,subsPrev30)} vs prior 30d`,flag:"noisy window",cls:deltaClass(subs30-subsPrev30),
+      return {tier:"also",lbl:"New signups · 30d",num:fmtN(subs30),delta:`${fmtDelta(subs30-subsPrev30)}${pctChg(subs30,subsPrev30)} against the 30 days before`,flag:"noisy window",cls:deltaClass(subs30-subsPrev30),
        tip:"New subscribers in the last 30 days vs the 30 days before.\n\nSource: merged Ghost+Mailchimp dataset."};
     })(),
     (function(){
@@ -1584,9 +1587,10 @@ function boot(data){
       if (ser.length>=13){
         const tot=ser.reduce((s,w)=>s+(w.visitors||0),0);
         vNorm=tot/ser.length/7*30; vMonths=Math.round(ser.length*7/30);
+        var vFrom=ser[0].wk, vTo=new Date(Date.parse(ser[ser.length-1].wk+"T00:00:00Z")+6*86400000).toISOString().slice(0,10);
       }
-      const chg = (vNorm!=null) ? `${fmtDelta(Math.round(n-vNorm))}${pctChg(n,vNorm)} vs ${vMonths}-mo norm · `
-                : (vp!=null) ? `${fmtDelta(n-vp)}${pctChg(n,vp)} vs prior 30d · ` : "";
+      const chg = (vNorm!=null) ? `${fmtDelta(Math.round(n-vNorm))}${pctChg(n,vNorm)} against the average 30 days from ${pxDay(vFrom)} to ${pxDay(vTo)}, ${vTo.slice(0,4)} · `
+                : (vp!=null) ? `${fmtDelta(n-vp)}${pctChg(n,vp)} against the 30 days before · ` : "";
       const sub = gt.available ? `${chg}${fmtN(gt.pageviews_30d||0)} page views` :
                   (ga4.mau!=null ? `${fmtN(ga4.sessions_30||0)} sessions` : "needs Ghost staff token ↗ · free");
       return {tier:"also",lbl:"Website visitors · 30d", num: n!=null ? fmtN(n) : "—", delta: sub,
@@ -2419,6 +2423,8 @@ function renderPerf(mc){
   // comparison against them.
   const norm = monthly.slice(-15,-3).filter(r=>!(r.month>="2025-05"&&r.month<="2025-09"));
   const q0Lbl = q0.length ? `${mName(q0[0].month)}–${mName(q0[q0.length-1].month)}` : "";
+  const q1Lbl = q1.length ? `${scName(q1[0].month)} to ${scName(q1[q1.length-1].month)}` : "";
+  const normLbl = norm.length ? `${scName(norm[0].month)} to ${scName(norm[norm.length-1].month)}${norm[0].month<"2025-10"&&norm[norm.length-1].month>"2025-04"?", leaving out May–Sept. 2025":""}` : "";
   const cmp=(f)=>{
     if(q0.length<2 || norm.length<6) return null;
     const now=wavg(q0,f), base=wavg(norm,f), prev=wavg(q1,f);
@@ -2429,7 +2435,7 @@ function renderPerf(mc){
   };
   const oc=cmp("open_pct"), cc=cmp("click_pct");
   const trendTxt=(c)=> c && c.trend!=null
-    ? ` · ${c.trend>=0?"rising":"falling"} ${Math.abs(c.trend).toFixed(0)}% vs the prior quarter`
+    ? ` · ${c.trend>=0?"up":"down"} ${Math.abs(c.trend).toFixed(0)}% from ${q1Lbl}`
     : "";
   const dOpenYtd  = pctDelta(ytd.open_pct,  prior.open_pct);
   const dClickYtd = pctDelta(ytd.click_pct, prior.click_pct);
@@ -2438,25 +2444,25 @@ function renderPerf(mc){
   const dClick30  = yoy30.sends ? pctDelta(l30.click_pct, yoy30.click_pct) : null;
   const cells=[
     (oc ? {lbl:`Open rate · ${q0Lbl}`, n:oc.now.toFixed(1)+"%",
-      d:`${fmtPctDelta(oc.d)} vs ${oc.months}-mo norm (~${oc.base.toFixed(1)}%)${trendTxt(oc)}`,
+      d:`${fmtPctDelta(oc.d)} against the average from ${normLbl} (about ${oc.base.toFixed(1)}%)${trendTxt(oc)}`,
       cls:deltaPctClass(oc.d,true),
       tip:`Newsletter open rate over the last three full months (${q0Lbl}), weighted by emails delivered, against the ${oc.months} months before them, leaving out the May–September 2025 bot surge. Year to date is ${ytd.open_pct||0}%; the same window last year was ${prior.open_pct||0}%.\n\nWhy the norm and not last year: this metric trends hard. It ran 62% in early 2025, fell to 29% by October as bot signups diluted the list, and has climbed back since. A year-to-date average sits in the middle of that curve and describes no month that ever happened — comparing two such averages reports a decline while the rate is rising.\n\nRead the level with care in both directions: Apple Mail's privacy auto-opens inflate it, while roughly 2,400 never-opening bot accounts still on the list depress it (bot-adjusted it is about 42.6%). Click rate is the steadier cut: automatic opens don't click. Benchmark: nonprofit email averages ~28-29% (M+R Benchmarks 2025).`}
         : {lbl:"Open rate · YTD", n:(ytd.open_pct||0)+"%",
-      d:fmtPctDelta(dOpenYtd)+" vs YTD '25", cls:deltaPctClass(dOpenYtd,true),
+      d:fmtPctDelta(dOpenYtd)+" against the same dates in 2025", cls:deltaPctClass(dOpenYtd,true),
       tip:"Year-to-date open rate, recipient-weighted. (Not enough monthly history yet for the trailing-norm comparison.)"}),
     (cc ? {lbl:`Click rate · ${q0Lbl}`, n:cc.now.toFixed(1)+"%",
-      d:`${fmtPctDelta(cc.d)} vs ${cc.months}-mo norm (~${cc.base.toFixed(1)}%)${trendTxt(cc)}`,
+      d:`${fmtPctDelta(cc.d)} against the average from ${normLbl} (about ${cc.base.toFixed(1)}%)${trendTxt(cc)}`,
       cls:deltaPctClass(cc.d,true),
       tip:`Newsletter click rate over the last three full months (${q0Lbl}), weighted by emails delivered, against the ${cc.months} months before them, leaving out the May–September 2025 bot surge. Year to date is ${ytd.click_pct||0}%; the same window last year was ${prior.click_pct||0}%.\n\nWhy it matters: the honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens. Same caveat as the open rate on the composition side: the never-opening accounts don't click either, so the raw level runs low. Benchmark: nonprofit email averages ~3.3% (M+R Benchmarks 2025).`}
         : {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
-      d:fmtPctDelta(dClickYtd)+" vs YTD '25", cls:deltaPctClass(dClickYtd,true),
+      d:fmtPctDelta(dClickYtd)+" against the same dates in 2025", cls:deltaPctClass(dClickYtd,true),
       tip:"Year-to-date click rate, recipient-weighted across every send.\n\nWhy it matters: The honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens, so this is the truest read on whether content is landing. If one performance number deserves your attention, it's this one."+interpretInsight("click_rate", dClickYtd)}),
     {lbl:"Click-to-open · YTD", n:(ytd.ctor_pct||0)+"%",
-      d:`${fmtPctDelta(pctDelta(ytd.ctor_pct, prior.ctor_pct))} vs YTD '25 · the comparable one`,
+      d:`${fmtPctDelta(pctDelta(ytd.ctor_pct, prior.ctor_pct))} against the same dates in 2025`,
       cls:deltaPctClass(pctDelta(ytd.ctor_pct, prior.ctor_pct), true),
       tip:"Click-to-Open Ratio (CTOR) = clicks ÷ opens. THE quality signal in the post-Apple-Mail-privacy era: 'of the people who actually opened the email, what % engaged with it enough to click something?' Healthy editorial newsletters typically run 8-18% CTOR. Above 18% means subjects + content are well-aligned with audience interest. This number doesn't get inflated by Apple's privacy auto-opens the way the raw open rate does, so it's the honest read on content quality.\n\nIt is also the one rate whose year-over-year comparison is trustworthy: both its numerator and its denominator are drawn from people who opened, so a list stuffed with accounts that never open cannot move it. Open rate and click rate both fell year over year partly because the list changed; CTOR falling from 16.0% to 11.6% is a real decline in how many readers act on what they read."},
     {lbl:"Sends · YTD", n:fmtN(ytd.sends||0),
-      d:fmtPctDelta(dSendsYtd)+" vs YTD '25", cls:deltaPctClass(dSendsYtd,true),
+      d:fmtPctDelta(dSendsYtd)+" against the same dates in 2025", cls:deltaPctClass(dSendsYtd,true),
       tip:"Total newsletter sends so far this year vs the same period last year. Includes automations and manual sends.\n\nWhy it matters: Publishing cadence. More sends mean more reach and more signup touchpoints — but read it alongside unsubscribes and click rate to be sure volume isn't fatiguing the list rather than serving it."+interpretInsight("sends", dSendsYtd)},
     {lbl:"Open rate · last 30d", n:(l30.open_pct||0)+"%",
       d:oc? `${fmtPctDelta(pctDelta(l30.open_pct,oc.base))} vs the ${oc.months}-month newsletter norm (~${oc.base.toFixed(1)}%)` : "no norm yet",
@@ -3353,6 +3359,7 @@ function renderPieceBenchmarks(data){
     </div>
 
     <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin:14px 0 10px">Every piece is scored over <b>its own first ${bm.first_days} days</b>, so a new piece and a two-year-old one are judged the same way. Bands come from the <b>${fmtN(bm.n_pieces)} pieces</b> published between ${pxDay(bm.window_start)}, ${String(bm.window_start).slice(0,4)}, and ${pxDay(bm.window_end)}, ${String(bm.window_end).slice(0,4)}. Three lenses, deliberately: <b>reach</b> (who showed up), <b>attention</b> (reader-hours &mdash; whether they stayed) and <b>depth</b> (seconds per view). A piece that clears one and misses another is telling you something real.</div>
+    <div style="font-size:12.5px;color:var(--vc-black);line-height:1.55;margin:0 0 10px"><b>How the bands are drawn.</b> There is no industry standard for one publication's pieces, so the bands measure Vital City against itself. The ${fmtN(bm.n_pieces)} pieces are ranked by page views in their first ${bm.first_days} days and cut at fixed shares: the bottom quarter is under-performing, the middle half typical, and the top quarter is split into strong (the rest of it), great (the next 5%) and exceptional (the top 5%). So by design about a quarter of pieces land at each end. A single recent year keeps the bar in step with today's traffic, and the bands update with each data refresh as new pieces finish their ${bm.first_days} days.</div>
 
     <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:16px 0 6px">Reach &mdash; page views in the first ${bm.first_days} days</div>
 
@@ -4247,7 +4254,7 @@ function renderDonors(db){
   function yoyDelta(now, prev, posGood){
     if(!yoyOk || !prev) return {label:`N/A — Donorbox data starts ${esc((db.history_starts||'recently').slice(0,7))}`, cls:"na"};
     const d=((now-prev)/prev)*100;
-    return {label: fmtPctDelta(d) + " vs YTD '25", cls: deltaPctClass(d, posGood!==false)};
+    return {label: fmtPctDelta(d) + " against the same dates in 2025", cls: deltaPctClass(d, posGood!==false)};
   }
   const drYtd  = yoyDelta(ytd.amount,  prior.amount,  true);
   const drD    = yoyDelta(ytd.donors,  prior.donors,  true);
@@ -5773,7 +5780,7 @@ function renderWeekPulse(data, span){
     const days= skipBots ? hist.length : (new Date(String(hist[hist.length-1][dateKey]).slice(0,10))-new Date(String(hist[0][dateKey]).slice(0,10)))/86400000+1;
     if(days<28) return null;
     const tot=hist.reduce((s,r)=>s+(+r[valKey]||0),0);
-    return {val:tot/days*N, months:Math.round(days/30), thin: days < 2*N};
+    return {val:tot/days*N, months:Math.round(days/30), thin: days < 2*N, from:String(hist[0][dateKey]).slice(0,10), to:String(hist[hist.length-1][dateKey]).slice(0,10)};
   }
   // Fundraising is lumpy -- one launch campaign dominates the mean, so the
   // "average week" reads ~$2,500 and every quiet week shows as -100%. The
@@ -5798,7 +5805,7 @@ function renderWeekPulse(data, span){
     vals.sort((a,b)=>a-b);
     const mid=vals.length>>1;
     const med=vals.length%2?vals[mid]:(vals[mid-1]+vals[mid])/2;
-    return {val:med, months:Math.round(vals.length*N/30), median:true};
+    return {val:med, months:Math.round(vals.length*N/30), median:true, from:shift(curStart,-vals.length*N), to:shift(curStart,-1)};
   }
   const norms={
     signups: normN(act,"d","subs"),
@@ -5815,7 +5822,7 @@ function renderWeekPulse(data, span){
       // weekly rows -> per-day -> scaled to this window
       const perDay=ser.reduce((s,w)=>s+(w.visitors||0),0)/(ser.length*7);
       const nDays = (useGA && cur.visitorsThrough) ? (Date.parse(cur.visitorsThrough)-Date.parse(curStart))/86400000+1 : N;
-      return {val:perDay*nDays, months:Math.round(ser.length*7/30)};
+      return {val:perDay*nDays, months:Math.round(ser.length*7/30), from:String(ser[0].wk||"").slice(0,10), to:shift(curStart,-1)};
     })(),
   };
   // Net change is signups minus unsubscribes over ONE shared stretch of
@@ -5830,7 +5837,7 @@ function renderWeekPulse(data, span){
     if(hist.length<28) return;
     const days=hist.length;
     const s=hist.reduce((t,r)=>t+(+r.subs||0),0), u=hist.reduce((t,r)=>t+(+r.unsubs||0),0);
-    norms.net={val:(s-u)/days*N, months:Math.round(days/30), thin: days < 2*N};
+    norms.net={val:(s-u)/days*N, months:Math.round(days/30), thin: days < 2*N, from:hist[0].d, to:hist[hist.length-1].d};
   })();
   // Articles get a norm only when the full history is present; the 90-day
   // feed cannot support one.
@@ -5841,11 +5848,11 @@ function renderWeekPulse(data, span){
     const first=hist.length?hist[0]:null;
     const spanDays = first ? Math.min(365,(new Date(curStart)-new Date(first))/86400000) : 0;
     if(spanDays>=90 && inYear.length>=10)
-      norms.articles={val:inYear.length/spanDays*N, months:Math.round(spanDays/30)};
+      norms.articles={val:inYear.length/spanDays*N, months:Math.round(spanDays/30), from:shift(curStart,-Math.round(spanDays)), to:shift(curStart,-1)};
   }
   if(norms.signups&&norms.visitors&&norms.visitors.val>0)
     norms.spv={val:norms.signups.val/(norms.visitors.val*N/((useGA&&cur.visitorsThrough)?((Date.parse(cur.visitorsThrough)-Date.parse(curStart))/86400000+1):N))*1000,
-      months:Math.min(norms.signups.months,norms.visitors.months), thin:!!norms.signups.thin};
+      months:Math.min(norms.signups.months,norms.visitors.months), thin:!!norms.signups.thin, from:[norms.signups.from,norms.visitors.from].sort().pop(), to:shift(curStart,-1)};
 
   // Build tiles. goodDown=true means a DECREASE is the good outcome (unsubs).
   const fmtMoney=v=>"$"+fmtN(Math.round(v));
@@ -5971,8 +5978,8 @@ function renderWeekPulse(data, span){
     // from, "more"/"fewer" rather than signs, and the percentage in words.
     const fmtB=v=> t.fmt===fmtMoney ? fmtMoney(v) : t.dec ? (+v).toFixed(2) : fmtN(Math.round(v));
     const typical = nm7
-      ? `a typical ${pxStretch(span,N)} (about ${fmtB(nm7.val)}; ${nm7.median?"the middle value":"the average"} over the last ${nm7.months} month${nm7.months===1?"":"s"})`
-      : `the ${pxLen(span,N)} before (${t.fmt(was)})`;
+      ? `a typical ${pxStretch(span,N)} (about ${fmtB(nm7.val)}; ${nm7.median?"the middle value":"the average"} from ${pxSpan(nm7.from,nm7.to)})`
+      : `the ${pxLen(span,N)} before, ${pxSpan(prevStart,prevEnd)} (${t.fmt(was)})`;
     const d=now-base;
     let cls="flat", dtxt;
     if(Math.abs(d)<(t.dec?0.05:0.5)){ dtxt = `about the same as ${typical}`; }
@@ -5999,7 +6006,7 @@ function renderWeekPulse(data, span){
     if(t.k==="visitors" && cur.visitorsEst) dtxt += "; the first few days are estimated from that week's total";
     if((t.k==="visitors"||t.k==="spv") && cur.visitorsThrough) dtxt += ` · visits counted through ${pxDay(cur.visitorsThrough)}, the last full week Google Analytics has`;
     _pm.push({k:t.k, lbl:t.lbl, value:t.fmt(now), delta:dtxt, cls, now:+now||0, base:(base!=null&&isFinite(base))?+base:null,
-      pct:(base&&isFinite(base)&&base!==0)?(now-base)/Math.abs(base):null, thin:!!(nm7&&nm7.thin), normed:!!nm7, months:nm7?nm7.months:null, ly:LY[t.k]||""});
+      pct:(base&&isFinite(base)&&base!==0)?(now-base)/Math.abs(base):null, thin:!!(nm7&&nm7.thin), normed:!!nm7, months:nm7?nm7.months:null, nFrom:nm7?nm7.from:null, nTo:nm7?nm7.to:null, ly:LY[t.k]||""});
     const nm=clickable[t.k] && window._weekNames[t.k];
     const canClick = nm && nm.list.length>0 && nm.list.length<=CLICK_MAX;
     const numHtml = canClick
@@ -6371,6 +6378,7 @@ function scorecardModel(data){
       const sl=six.reduce((t,p)=>t+(p[0]-mx)*(p[1]-my),0)/six.reduce((t,p)=>t+(p[0]-mx)**2,0);
       const rel = my ? sl/Math.abs(my) : 0; x.trend = rel>0.04 ? "rising" : rel<-0.04 ? "falling" : "steady"; }
     const skipped=[...skip].filter(m=>m>=months[9]&&m<=months[20]).length;
+    x.baseLbl = bIdx.length ? rng(bIdx) : "";
     x.baseText = bIdx.length ? `Compared with ${rng(bIdx)}${skipped?(x.k==="giving"?", leaving out the launch month and the December matching campaign":", leaving out months the data can't support"):""}.` : "";
     const fmtS = q => x.kind==="stock" ? ((q>=0?"+":"−")+fmtN(Math.round(Math.abs(q)))) : x.fmt(q);
     const per = (x.kind==="rate"||x.kind==="level") ? "" : " a month";
@@ -6378,36 +6386,32 @@ function scorecardModel(data){
     if(x.waiting){ x.tone="neutral"; x.cmpShort=WAIT; }
     else if(x.cur==null || x.base==null){
       x.tone="neutral";
-      x.cmpShort = x.cur!=null ? `${curLbl}: ${fmtS(x.cur)}${per} on average. Not enough earlier months to compare with.` : "Not enough usable months to compare.";
+      x.cmpShort = x.cur!=null ? `${curLbl}: ${fmtS(x.cur)}${per} on average. Not enough months before ${scName(months[21])} to compare with.` : "Not enough usable months to compare.";
     } else if(x.kind==="stock"){
       x.tone = x.cur<0 ? "watch" : (x.base>0 && x.cur>x.base*1.05) ? "good" : (x.base>0 && x.cur<x.base*0.95) ? "watch" : "flat";
-      x.cmpShort = `${curLbl}: ${fmtS(x.cur)} a month, against ${fmtS(x.base)} a month before.`;
+      x.cmpShort = `${curLbl}: ${fmtS(x.cur)} a month, against ${fmtS(x.base)} a month from ${x.baseLbl}.`;
     } else {
       const pc=Math.round(x.pct*100);
       x.tone = Math.abs(x.pct)<0.05 ? "flat" : (x.good===0 ? "neutral" : ((x.pct>0)===(x.good>0) ? "good" : "watch"));
-      x.cmpShort = `${curLbl}: ${fmtS(x.cur)}${per} on average, ${Math.abs(x.pct)<0.05?"about the same as":(pc>0?"up "+pc+"% on":"down "+Math.abs(pc)+"% on")} the months before (${fmtS(x.base)}).`;
+      x.cmpShort = `${curLbl}: ${fmtS(x.cur)}${per} on average, ${Math.abs(x.pct)<0.05?"about the same as":(pc>0?"up "+pc+"% from":"down "+Math.abs(pc)+"% from")} ${fmtS(x.base)}${per} on average from ${x.baseLbl}.`;
     }
     x.trendText = (!x.trend||x.waiting) ? "" : x.kind==="stock"
       ? `Monthly growth over the last six months: ${x.trend==="rising"?"speeding up":x.trend==="falling"?"slowing":"steady"}.`
       : `Last six months: ${x.trend}.`;
-    x.stdText = x.waiting ? "" : (x.std ? x.std(x) : "");
+    x.stdText = x.waiting ? "" : (x.std ? x.std(x) : "").replace(/Vital City's own recent average/g, x.baseLbl ? `Vital City's own average from ${x.baseLbl}` : "Vital City's own earlier months");
   });
   const B=Object.fromEntries(M.map(x=>[x.k,x]));
   const T=k=>B[k]&&B[k].tone;
   const R={
-    list:  {good:"The list is growing faster than it had been.", watch:"The list is growing more slowly than it had been.", flat:"The list is growing at its usual pace."},
-    visits:{good:"More visits than the site's recent average.", watch:"Fewer visits than the site's recent average. Check whether one big piece carried the earlier months, or whether search traffic fell.", flat:"Visits are in line with the recent average."},
-    click: {good:"Recipients are clicking more than they had been.", watch:"Recipients are clicking less than they had been. Look at what each newsletter leads with and how many links it carries.", flat:"Clicking is in line with the recent average."},
-    unsub: {good:"Fewer readers are leaving than over the past year.", watch:"More readers are leaving than over the past year. Check send frequency and the appeal emails.", flat:"Readers leave at about their usual rate."},
-    signups:{good:"More people are signing up than over the past year.", watch:"Fewer people are signing up than over the past year. Check the signup prompts on the most-read pieces.", flat:"Signups are at their usual pace."},
-    active:{good:"More subscribers are opening emails than they had been.", watch:"Fewer subscribers are opening emails than they had been. This count also moves with how many emails went out.", flat:"About as many subscribers are opening emails as usual."},
-    conv:  {good:"The site is turning more of its visitors into subscribers than it had been.", watch:"The site converts fewer visitors than it had been. Check the signup form and where the prompts appear.", flat:"The site converts visitors at its usual rate."},
-    dm:    {good:"More decision-makers are joining than usual.", watch:"Fewer decision-makers are joining than usual. Check whether outreach to government and universities has paused.", flat:"Decision-makers are joining at the usual pace."},
-    time:  {good:"Readers are spending more time per visit than they had been.", watch:"Readers are spending less time per visit than they had been.", flat:"Time per visit is in line with the recent average."},
-    cites: {good:"Cited more often than over the past year.", watch:"Cited less often than over the past year. Worth checking which kinds of pieces drew citations.", flat:"Cited about as often as over the past year."},
-    giving:{good:"Online giving is running above its level since the December campaign.", watch:"Online giving is running below its level since the December campaign.", flat:"Online giving is holding at its level since the December campaign."},
+    list:  {good:"The list is growing faster than it did from {B}.", watch:"The list is growing more slowly than it did from {B}.", flat:"The list is growing at about its pace from {B}."},
+    visits:{good:"More visits than the average from {B}.", watch:"Fewer visits than the average from {B}. Check whether one big piece carried those months, or whether search traffic fell.", flat:"Visits are in line with the average from {B}."},
+    click: {good:"Recipients are clicking more than they did from {B}.", watch:"Recipients are clicking less than they did from {B}. Look at what each newsletter leads with and how many links it carries.", flat:"Clicking is in line with the average from {B}."},
+    unsub: {good:"Fewer readers are leaving than did from {B}.", watch:"More readers are leaving than did from {B}. Check send frequency and the appeal emails.", flat:"Readers are leaving at about the rate they did from {B}."},
+    signups:{good:"More people are signing up than did from {B}.", watch:"Fewer people are signing up than did from {B}. Check the signup prompts on the most-read pieces.", flat:"Signups are at about their pace from {B}."},
+    active:{good:"More subscribers are opening emails than did from {B}.", watch:"Fewer subscribers are opening emails than did from {B}. This count also moves with how many emails went out.", flat:"About as many subscribers are opening emails as did from {B}."},
+    conv:  {good:"The site is turning more of its visitors into subscribers than it did from {B}.", watch:"The site converts fewer visitors than it did from {B}. Check the signup form and where the prompts appear.", flat:"The site converts visitors at about its rate from {B}."},
   };
-  M.forEach(x=>{ x.reading = x.waiting ? "" : ((R[x.k]&&R[x.k][x.tone])||""); });
+  M.forEach(x=>{ x.reading = x.waiting ? "" : ((R[x.k]&&R[x.k][x.tone])||"").replace(/\{B\}/g, x.baseLbl||"the months before"); });
   // The indicators stop at the last complete month, so a report run mid-month
   // would otherwise say nothing about the month in progress. Giving is the one
   // where a single gift matters, so it gets a so-far line with the largest gift.
@@ -6420,7 +6424,7 @@ function scorecardModel(data){
   if(B.click){
     const c=avgOf(per1k,CUR), bse=avgOf(per1k,BASE);
     if(c!=null) B.click.extra=`Visits to the site from email: ${n0(Math.round(c))} for every 1,000 emails sent (${curLbl})`+
-      (bse!=null?`, against ${n0(Math.round(bse))} over the twelve months before`:"")+".";
+      (bse!=null?`, against ${n0(Math.round(bse))} from ${rng(BASE)}`:"")+".";
   }
   const curM=lastDay.slice(0,7);
   if(B.giving && curM!==full){
@@ -6440,8 +6444,8 @@ function scorecardModel(data){
   const better=M.filter(x=>x.tone==="good").map(x=>lc(x.name));
   const worse=M.filter(x=>x.tone==="watch").map(x=>lc(x.name));
   const summary=[];
-  if(better.length) summary.push(`Better than their recent average: ${scList(better)}.`);
-  if(worse.length) summary.push(`Worse than their recent average: ${scList(worse)}.`);
+  if(better.length) summary.push(`Better in ${curLbl} than in the months before (${rng(BASE)}, less any months a measure's data can't support; each names its months): ${scList(better)}.`);
+  if(worse.length) summary.push(`Worse in ${curLbl} than in the months before: ${scList(worse)}.`);
   const order=["list","signups","active","conv","click","unsub","visits"];
   const first=order.map(k=>B[k]).find(x=>x&&x.tone==="watch");
   if(first) summary.push(`Where to look first: ${lc(first.name)}. ${first.reading}`);
@@ -6453,7 +6457,7 @@ function scorecardModel(data){
   const st=window._stocksModel||[]; const pick=re=>st.find(k=>re.test(k.lbl));
   const act30=pick(/Active subscribers/i), soc=pick(/Social followers/i);
   const also=[soc?`${soc.num} social-media followers (${String(soc.delta).replace(/ LI\b/," LinkedIn").replace(/ Bsky\b/," Bluesky").replace(/ IG\b/," Instagram")})`:""].filter(Boolean).join(" · ");
-  return {full, fullLbl:scName(full), months, measures:M, summary, marks, also: also?`Also, as of today: ${also}.`:"",
+  return {full, fullLbl:scName(full), curLbl, baseLbl:rng(BASE), months, measures:M, summary, marks, also: also?`Also, as of today: ${also}.`:"",
     lede:`${["No","One","Two","Three","Four","Five","Six","Seven","Eight","Nine"][M.length]||M.length} measures of readership and growth, on full calendar months. Each shows the latest month and a line of the last 24 months, compares the latest three months (${curLbl}) with the months before them, gives the direction over the last six months, and sets the figure against a published industry standard where a reliable one exists.`};
 }
 function scNowText(x){
@@ -6517,7 +6521,7 @@ function kiRowsHTML(sc, w, marks, h){
       <div class="ki-std${own?" own":""}">${esc(x.stdText||"No published standard; compared with Vital City's own recent average.")}</div>
     </div>`;
   };
-  return `<div class="ki-rows"><div class="ki-rh"><div>Measure · latest month</div><div>Latest three months, against the months before</div><div>Last 24 months · blue = latest three, grey = compared with</div><div>Industry standard, or context</div></div>${sc.measures.map(row).join("")}</div>`;
+  return `<div class="ki-rows"><div class="ki-rh"><div>Measure · latest month</div><div>${esc(sc.curLbl||"Latest three months")}, against ${esc(sc.baseLbl||"the months before")}</div><div>Last 24 months · blue = latest three, grey = compared with</div><div>Industry standard, or context</div></div>${sc.measures.map(row).join("")}</div>`;
 }
 // Do new subscribers stay? Ghost-era signups by how they arrived, matched to
 // the contacts database (engagement_extras.channel_ltv, built nightly).
@@ -6614,6 +6618,7 @@ const PX_MON=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","
 function pxStretch(span,N){ return span==="ytd" ? `${N}-day stretch` : N===7 ? "week" : N%7===0 ? `${N/7}-week stretch` : `${N}-day stretch`; }
 function pxFor(span,N){ return span==="ytd" ? `${N} days` : N===7 ? "a week" : N%7===0 ? `${N/7} weeks` : `${N} days`; }
 function pxLen(span,N){ return span==="ytd" ? `${N} days` : N===7 ? "week" : N%7===0 ? `${N/7} weeks` : `${N} days`; }
+function pxSpan(a,b){ a=String(a||"").slice(0,10); b=String(b||"").slice(0,10); if(!a||!b) return "the months before"; return a.slice(0,4)===b.slice(0,4) ? `${pxDay(a)} to ${pxDay(b)}, ${b.slice(0,4)}` : `${pxDay(a)}, ${a.slice(0,4)}, to ${pxDay(b)}, ${b.slice(0,4)}`; }
 function pxDay(iso){ const p=String(iso||"").slice(0,10).split("-"); return p.length<3?iso:`${PX_MON[+p[1]-1]} ${+p[2]}`; }
 function pulseExtras(w, data){
   const mc=data.mailchimp||{}, gt=data.ghost_traffic||{}, ga4=data.ga4||{}, rf=data.role_flows||{}, gh=data.ghost||{};
@@ -6937,9 +6942,9 @@ function pulseInsights(w, data){
   // Always name the basis and its figure, exactly as the tile does: a norm
   // (trailing-year average, this window excluded) or the same number of
   // days immediately before.
-  const vs=t=> t.base==null ? "" : (t.normed ? ` against a typical ${stretch} (about ${fb(t,t.base)})` : ` against the ${pxLen(w.span,w.N)} before (${fb(t,t.base)})`);
+  const vs=t=> t.base==null ? "" : (t.normed ? ` against a typical ${stretch} (about ${fb(t,t.base)}, the average from ${pxSpan(t.nFrom,t.nTo)})` : ` against the ${pxLen(w.span,w.N)} before (${fb(t,t.base)})`);
   // "40% below a typical week (about 18)" — the percentage in words.
-  const ref=t=> t.normed ? `a typical ${stretch} (about ${fb(t,t.base)})` : `the ${pxLen(w.span,w.N)} before (${fb(t,t.base)})`;
+  const ref=t=> t.normed ? `a typical ${stretch} (about ${fb(t,t.base)}, the average from ${pxSpan(t.nFrom,t.nTo)})` : `the ${pxLen(w.span,w.N)} before (${fb(t,t.base)})`;
   const pw=(pp,t)=> `${Math.abs(pp)}% ${pp>=0?"above":"below"} ${ref(t)}`;
   const N=T.net, S=T.signups, U=T.unsubs, V=T.visitors, R=T.spv, G=T.gifts, M=T.raised, A=T.articles, E=T.sends;
   // 1. the list
