@@ -1333,9 +1333,9 @@ def main():
                f"{sum(1 for x in press if x.get('kind') == 'social'):,} on social media, since {_ym(p_first)}; "
                "an undercount, since only a fixed set of outlets is watched")},
         {"n": f"{p_out.get('nytimes.com', 0)}", "l": "New York Times citations",
-         "s": "no outlet cites Vital City more often"},
+         "s": "more than any other national outlet"},
       ] + ([{"n": f"{ytd_users:,}", "l": f"Visitors, Jan. 1 to {_md(TODAY)}, {TODAY.year}",
-             "s": (f"visits up {ytd_visits_pct}% on the same dates in {TODAY.year-1}" if ytd_visits_pct is not None
+             "s": (f"visits up {ytd_visits_pct}% from the same dates in {TODAY.year-1}" if ytd_visits_pct is not None
                    else "unique visitors, Google Analytics")}] if ytd_users else []) + [
         {"n": f"{gt.get('visitors_30d') or 0:,}", "l": f"Site visitors, {_md(TODAY - timedelta(days=29))} to {_md(TODAY)}",
          "s": (f"{'up' if _v30_pct >= 0 else 'down'} {abs(_v30_pct)}% on the same four weeks of {TODAY.year-1}" if _v30_pct is not None else "the last 30 days, Ghost analytics")},
@@ -1360,13 +1360,13 @@ def main():
          "links": [{"t":"the case","u":"https://www.vitalcitynyc.org/the-rikers-receivership-risk-and-opportunity/"},
                    {"t":"the order (THE CITY)","u":"https://www.thecity.nyc/2025/05/13/federal-judge-rikers-oversight-remediation-manager/"},
                    {"t":"the receiver's powers (Queens Eagle)","u":"https://queenseagle.com/all/2025/12/22/judge-details-sweeping-powers-of-receiver-set-to-run-rikers"}]},
-        {"head": "Subway safety", "claim": "Recommendations drove New York Times coverage and were adopted in part by the governor and the MTA",
+        {"head": "Subway safety", "claim": "Recommendations drove New York Times coverage and were adopted in part by the governor and the transit authority",
          "note": "",
          "links": [{"t":"the recommendations","u":"https://www.vitalcitynyc.org/what-to-do-about-subway-safety-nyc-policy-recommendations/"},
                    {"t":"NYT, March 2025","u":"https://www.nytimes.com/2025/03/14/nyregion/subway-crime-nyc.html"},
                    {"t":"NYT, September 2025","u":"https://www.nytimes.com/2025/09/10/nyregion/nyc-subway-hochul-white-house.html"},
                    {"t":"the governor's program","u":"https://www.governor.ny.gov/news/safer-subways-one-year-after-deploying-additional-law-enforcement-and-safety-measures-governor"}]},
-        {"head": "Permitting", "claim": "Days after publishing fixes for the permitting mess, City Hall released a report echoing them", "note": "",
+        {"head": "Permitting", "claim": "Days after Vital City published fixes for the permitting mess, City Hall released a report echoing them", "note": "",
          "links": [{"t":"the 8 fixes","u":"https://www.vitalcitynyc.org/nyc-housing-permits-fast-track-construction-mamdani/"}]},
         {"head": "Crime data", "claim": f"When reporters dig into the city's numbers, they often build on Vital City's analyses, including {p_out.get('gothamist.com',0)} Gothamist and {p_out.get('politico.com',0)} Politico stories",
          "note": "",
@@ -1428,7 +1428,7 @@ def main():
         {"name": "Quarterly Crime Explorer", "u": "https://www.vitalcitynyc.org/quarterly-crime-explorer/",
          "desc": "the city's detailed quarterly crime statistics, through the latest quarter"},
         {"name": "CompStat Decoder", "u": "https://www.vitalcitynyc.org/compstat-decoder/",
-         "desc": "the NYPD's weekly precinct numbers, decoded for any neighborhood"},
+         "desc": "the Police Department's weekly precinct numbers, decoded for any neighborhood"},
       ],
       "products": [
         {"name": "Just Fix It", "desc": "A standing series pressing specific, doable fixes on City Hall — permitting, government efficiency, a 100-day scorecard.",
