@@ -371,14 +371,20 @@ VARIANTS = {
 GIVING_OPENED = "November 2025"
 
 SHAPED = [
-    {"slug": "nyc-grocery-cost-explained", "who": "Stephen Smith", "what": "why groceries cost so much in New York City",
+    {"slug": "nyc-grocery-cost-explained", "who": "Stephen Smith", "what": "why groceries cost so much",
      "u": "https://www.vitalcitynyc.org/nyc-grocery-cost-explained/"},
     {"slug": "mamdani-hochul-nyc-budget-bailout", "who": "Paul Francis", "what": "the state bailout of the city budget",
      "u": "https://www.vitalcitynyc.org/mamdani-hochul-nyc-budget-bailout/"},
-    {"slug": "mamdani-rent-freeze-agenda-nyc", "who": "Arpit Gupta", "what": "what the city should do after the rent freeze",
+    {"slug": "mamdani-rent-freeze-agenda-nyc", "who": "Arpit Gupta", "what": "what comes after the rent freeze",
      "u": "https://www.vitalcitynyc.org/mamdani-rent-freeze-agenda-nyc/",
      "also": {"t": "a public conversation on it led by Errol Louis",
               "u": "https://www.vitalcitynyc.org/mamdani-rent-freeze-conversation/"}},
+    {"slug": "what-has-mamdani-done-so-far", "who": "Aaron Short", "what": "what Mamdani has done so far",
+     "u": "https://www.vitalcitynyc.org/what-has-mamdani-done-so-far/"},
+    {"slug": "new-yorks-mamdani-ny-civil-service-system", "who": "Robert Gordon and Gabe Paley", "what": "the civil service and public-sector progress",
+     "u": "https://www.vitalcitynyc.org/new-yorks-mamdani-ny-civil-service-system/"},
+    {"slug": "a-housing-roadmap-for-new-yorks-next-mayor", "who": "Alex Armlovich", "what": "a housing roadmap for the next mayor",
+     "u": "https://www.vitalcitynyc.org/a-housing-roadmap-for-new-yorks-next-mayor/"},
     {"slug": "zohran-mamdanis-real-world-constraints", "who": "Carl Weisbrod", "what": "the limits any mayor works within",
      "u": "https://www.vitalcitynyc.org/zohran-mamdanis-real-world-constraints/"},
     {"slug": "nyc-crime-midyear-2026-felony-assaults-rape-murder", "who": "Vital City", "what": "the midyear 2026 crime report",

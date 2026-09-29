@@ -66,7 +66,7 @@
   .chip b{font-weight:900}
   .cite{font-size:9.5px;line-height:1.3;margin:2px 0;padding-left:8px;border-left:2px solid var(--vc-chartreuse)}
   .cite .co{font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:9px;margin-right:5px}
-  .block{margin-top:10px}
+  .block{margin-top:8px}
   .senior{font-size:10px;line-height:1.5;color:var(--vc-black)}
   .senior b{font-weight:900}
   .aud{font-size:10px;line-height:1.4}
@@ -181,7 +181,12 @@ function build(d){
   const shLine=x=>x.report
     ? `<div class="wk"><b>Our latest crime report</b>: <a href="${esc(x.u)}">${esc(x.t||x.what)}</a> (${esc(ym(x.pub))})</div>`
     : `<div class="wk"><b>${esc(x.who)}</b> on <a href="${esc(x.u)}">${esc(x.what)}</a> (${esc(ym(x.pub))})${x.also?`, and <a href="${esc(x.also.u)}">${esc(x.also.t)}</a>`:""}</div>`;
-  const shaped=SH.length?`<div class="block"><div class="sec">Work that shaped the debate${allTop5?`<span class="secn">each among the top 5% of everything Vital City published, by readers in its first month</span>`:""}</div>${SH.map(shLine).join("")}</div>`:"";
+  // The essays run together as one paragraph (eight bordered rows cost the
+  // page its second half); the crime report keeps a line of its own.
+  const shIn=x=>`<b>${esc(x.who)}</b> on <a href="${esc(x.u)}">${esc(x.what)}</a> (${esc(ym(x.pub))})${x.also?`, and <a href="${esc(x.also.u)}">${esc(x.also.t)}</a>`:""}`;
+  const shEss=SH.filter(x=>!x.report), shRep=SH.filter(x=>x.report);
+  const shaped=SH.length?`<div class="block"><div class="sec">Work that shaped the debate${allTop5?`<span class="secn">each in our top 5% by first-month readers</span>`:""}</div>`+
+    (shEss.length?`<div class="wk">${shEss.map(shIn).join("; ")}.</div>`:"")+shRep.map(shLine).join("")+`</div>`:"";
   const TSHORT={"Historical Crime Explorer":"30-plus years of city crime data found nowhere else","Quarterly Crime Explorer":"the city's detailed quarterly figures","CompStat Decoder":"the NYPD's weekly precinct numbers, made readable"};
   const tools=(FF.tools||[]).length?`<div class="block"><div class="sec">Three crime data tools</div><div class="wk">${FF.tools.map(t=>`<a href="${esc(t.u)}"><b>${esc(t.name)}</b></a> (${esc(TSHORT[t.name]||t.desc)})`).join(", ").replace(/, ([^,]*)$/," and $1")}.</div></div>`:"";
   const PSHORT={"Just Fix It":"doable fixes to the mechanics of city government","What To Do (and Not To Do)":"playbooks on what works, from subway safety to people in crisis","Rubber Meets Road":"how the city gets things done, starting with street lighting"};
