@@ -226,7 +226,11 @@ jobs:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
         run: |
           if [ -f build_press.py ]; then
-            python3 build_press.py && python3 encrypt_press.py || echo "WARNING: press build failed; the press page will be stale"
+            # Capped inside the step: when an outlet stalls, the harvest used to
+            # run into the step's timeout, which fails the whole job and blocks
+            # the commit of every other dataset (four runs in a row, Sept. 28-29,
+            # 2026). Killed at 20 minutes, it fails softly like any other error.
+            timeout 20m python3 -u build_press.py && python3 encrypt_press.py || echo "WARNING: press build failed or ran past 20 minutes; the press page will be stale"
           else
             echo "no build_press.py yet — skipping"
           fi
