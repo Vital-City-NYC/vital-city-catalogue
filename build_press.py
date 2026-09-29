@@ -25,7 +25,7 @@ Nothing is ever inferred from a pattern.
 Dependencies beyond the standard library: feedparser, beautifulsoup4. Fetching
 is done with curl, so no requests dependency.
 """
-import argparse, collections, csv, html as H, json, os, re, subprocess, sys, unicodedata
+import argparse, collections, csv, html as H, json, os, re, subprocess, sys, threading, time, unicodedata
 import concurrent.futures as cf
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -546,7 +546,12 @@ def harvest_mastheads(outlets):
     return people, review, fails
 
 # ---------------------------------------------------------------- harvest: byline blocks
-AUTHORPATH = re.compile(r'href="([^"]*/(?:author|authors|staff|people|profile|contributor|contributors|by|reporters?)/[^"?#]+)"', re.I)
+# Both patterns are bounded. Unbounded, a long run of address characters with no
+# "@" in it (a URL-encoded blob in a page's script, say) costs time that grows
+# with the square of its length, and one such page can hold the parser for
+# minutes. No real address has a local part over 64 characters.
+AUTHORPATH = re.compile(r'href="([^"]{0,400}/(?:author|authors|staff|people|profile|contributor|contributors|by|reporters?)/[^"?#]{1,400})"', re.I)
+PAGE_EMAIL = re.compile(r"(?:mailto:)?([A-Za-z0-9._%+\-]{1,64}@[A-Za-z0-9.\-]{1,200}\.[A-Za-z]{2,24})")
 
 def slugs(name):
     parts = re.sub(r"[^a-z\s\-]", "", norm(name)).split()
@@ -557,7 +562,7 @@ def slugs(name):
 def read_byline_block(job):
     pid, name, url = job
     out = {"id": pid}
-    src = curl(url, 25)
+    src = curl(url, PAGE_TIMEOUT)
     if not src:
         out["error"] = "story page did not load"
         return out
@@ -572,7 +577,7 @@ def read_byline_block(job):
             if href.startswith("http"):
                 out["author_page"] = href
                 break
-    for em in re.finditer(r"(?:mailto:)?([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})", s):
+    for em in PAGE_EMAIL.finditer(s):
         email = em.group(1).lower()
         if GENERIC_LOCAL.match(email.split("@")[0]) or email.endswith((".png", ".jpg", ".gif", ".svg", ".webp")):
             continue
@@ -596,11 +601,12 @@ def read_byline_block(job):
 def read_author_page(job, plain_user_agent=False):
     pid, name, url = job
     out = {"id": pid}
-    src = curl(url, 25, user_agent=None) if plain_user_agent else curl(url, 25)
+    src = curl(url, PAGE_TIMEOUT, user_agent=None) if plain_user_agent else curl(url, PAGE_TIMEOUT)
     if not src:
+        out["error"] = "author page did not load"
         return out
     s = src.replace('\\"', '"').replace("\\/", "/")
-    for em in re.finditer(r"(?:mailto:)?([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})", s):
+    for em in PAGE_EMAIL.finditer(s):
         email = em.group(1).lower()
         if GENERIC_LOCAL.match(email.split("@")[0]) or email.endswith((".png", ".jpg", ".gif", ".svg", ".webp")):
             continue
@@ -617,6 +623,93 @@ def read_author_page(job, plain_user_agent=False):
         if name.split()[0].lower() in low or " covers " in low or " reports " in low:
             out["bio"] = bio[:400]
     return out
+
+PAGE_TIMEOUT = 15      # seconds per story or author page; a healthy one loads in under 2
+PER_HOST = 4           # concurrent fetches at any one site
+HOST_GIVE_UP = 4       # consecutive dead fetches before a site is left alone for the build
+
+def host_of(url):
+    m = re.match(r"https?://([^/]+)", url or "")
+    return re.sub(r"^www\.", "", m.group(1).lower()) if m else ""
+
+def fetch_many(fn, jobs, deadline, dead_hosts, stats, workers=16):
+    """Run fn over (id, name, url) jobs, at most PER_HOST at a time per site.
+
+    In one flat pool, a site that stops answering can hold every worker for the
+    full timeout, page after page, and the workflow kills the build at 20
+    minutes. Here a site that fails HOST_GIVE_UP times running is dropped for
+    the rest of the build (the set is shared by all three passes), and no fetch
+    starts after the deadline. Skipped jobs return {"id": ...} with a skipped
+    reason, the same shape as a page that did not load, so the merge below
+    needs no special case."""
+    queues = collections.OrderedDict()
+    for j in jobs:
+        queues.setdefault(host_of(j[2]), collections.deque()).append(j)
+    results, busy, streak = {}, collections.Counter(), collections.Counter()
+    lock = threading.Condition()
+
+    def take():
+        # round-robin over sites with a free slot, so no one site sets the pace
+        with lock:
+            while True:
+                if time.time() >= deadline:
+                    return None
+                ready = None
+                for h in list(queues):
+                    if not queues[h]:
+                        del queues[h]
+                    elif h in dead_hosts:
+                        for j in queues.pop(h):
+                            results[j] = {"id": j[0], "skipped": f"{h} stopped answering"}
+                            stats[h]["skipped"] += 1
+                    elif busy[h] < PER_HOST and ready is None:
+                        ready = h
+                if ready:
+                    queues.move_to_end(ready)
+                    busy[ready] += 1
+                    return ready, queues[ready].popleft()
+                if not queues:
+                    return None
+                lock.wait(1)
+
+    def worker():
+        while True:
+            got = take()
+            if not got:
+                return
+            h, j = got
+            t = time.time()
+            try:
+                r = fn(j)
+            except Exception as e:
+                r = {"id": j[0], "error": str(e)[:80]}
+            dt = time.time() - t
+            ok = not r.get("error") and dt < PAGE_TIMEOUT - 1
+            with lock:
+                busy[h] -= 1
+                results[j] = r
+                s = stats[h]
+                s["n"] += 1; s["seconds"] += dt; s["failed"] += 0 if ok else 1
+                streak[h] = 0 if ok else streak[h] + 1
+                if streak[h] >= HOST_GIVE_UP and h not in dead_hosts:
+                    dead_hosts.add(h)
+                    print(f"  {h}: {HOST_GIVE_UP} dead fetches in a row, leaving it alone for this build")
+                lock.notify_all()
+
+    threads = [threading.Thread(target=worker, daemon=True) for _ in range(workers)]
+    for th in threads:
+        th.start()
+    for th in threads:
+        th.join()
+    late = 0
+    for j in jobs:
+        if j not in results:
+            results[j] = {"id": j[0], "skipped": "out of time"}
+            stats[host_of(j[2])]["skipped"] += 1
+            late += 1
+    if late:
+        print(f"  {late} fetches not started: the byline time budget ran out")
+    return [results[j] for j in jobs]
 
 def read_contact_sources(people):
     """Recheck reviewed contact pages that the feed/byline crawl does not reach.
@@ -1044,14 +1137,22 @@ def main():
         st = [s for s in p["stories"] if (s.get("url") or "").startswith("http")]
         if st:
             jobs.append((p["id"], p["name"], sorted(st, key=lambda s: s.get("date") or "", reverse=True)[0]["url"]))
+    # The workflow kills the build at 20 minutes. Feeds, WordPress and mastheads
+    # take about six; page fetches stop starting at FETCH_MINUTES after launch,
+    # split across the three passes, which leaves the rest for the build itself.
+    fetch_stop = started.timestamp() + 60 * float(os.environ.get("PRESS_FETCH_MINUTES", "14"))
+    def share(frac):
+        now = datetime.now(timezone.utc).timestamp()
+        return now + max(0, fetch_stop - now) * frac
+    dead_hosts, fstats = set(), collections.defaultdict(collections.Counter)
     print(f"reading {len(jobs)} byline blocks…")
-    blocks = cached("blocks", lambda: [r for r in cf.ThreadPoolExecutor(max_workers=12).map(read_byline_block, jobs)])
+    blocks = cached("blocks", lambda: fetch_many(read_byline_block, jobs, share(0.6), dead_hosts, fstats))
     by_id = {r["id"]: r for r in blocks}
 
     apjobs = [(r["id"], people[r["id"]]["name"], r["author_page"])
               for r in blocks if r.get("author_page") and r["id"] in people]
     print(f"reading {len(apjobs)} author pages…")
-    apages = cached("apages", lambda: [r for r in cf.ThreadPoolExecutor(max_workers=12).map(read_author_page, apjobs)])
+    apages = cached("apages", lambda: fetch_many(read_author_page, apjobs, share(0.5), dead_hosts, fstats))
     ap_id = {r["id"]: r for r in apages}
 
     # One story is often the wrong story: The Real Deal signs off "Let me know at
@@ -1066,7 +1167,18 @@ def main():
         for s_ in st[1:3]:
             more_jobs.append((p["id"], p["name"], s_["url"]))
     print(f"reading {len(more_jobs)} more stories for people still without an address…")
-    more = cached("more", lambda: [r for r in cf.ThreadPoolExecutor(max_workers=12).map(read_byline_block, more_jobs)])
+    more = cached("more", lambda: fetch_many(read_byline_block, more_jobs, share(1), dead_hosts, fstats))
+    if fstats:
+        slow = sorted(fstats.items(), key=lambda kv: -kv[1]["seconds"])[:6]
+        print("  slowest sites: " + "; ".join(
+            f"{h} {int(c['seconds'])}s over {c['n']} pages, {c['failed']} failed, {c['skipped']} skipped"
+            for h, c in slow))
+        skipped = sum(c["skipped"] for c in fstats.values())
+        if dead_hosts or skipped:
+            report["notes"].append(
+                f"byline pages: {skipped} not read"
+                + (f"; stopped calling sites that stopped answering: {', '.join(sorted(dead_hosts))}" if dead_hosts else "")
+                + ("; the fetch time budget ran out" if any(c["skipped"] for h, c in fstats.items() if h not in dead_hosts) else ""))
     more_id = {}
     for r in more:
         if r.get("email") and r["id"] not in more_id:
