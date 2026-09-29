@@ -305,6 +305,22 @@
 
   /* Table */
   table.tbl{width:100%;border-collapse:collapse;font-size:13px}
+  #sources .ssum{font-size:15px;line-height:1.45;margin:0 0 8px;max-width:820px;font-weight:600}
+  #sources .slede{font-size:12.5px;line-height:1.5;margin:0 0 10px;max-width:760px}
+  #sources .shd,#sources .srow{display:grid;grid-template-columns:minmax(200px,1.6fr) 2fr 96px 84px;gap:12px;align-items:center}
+  #sources .shd{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;padding-bottom:4px;border-bottom:1px solid var(--vc-black)}
+  #sources .srow{padding:7px 0;border-bottom:1px solid var(--vc-cloud)}
+  #sources .sl{font-size:12.5px;line-height:1.35}#sources .sl b{display:block}
+  #sources .sn{display:block;font-size:10.5px;color:var(--vc-charcoal);font-weight:400}
+  #sources .ss{display:block;font-size:11px;color:var(--vc-black);margin-top:2px}
+  #sources .sb{height:12px;background:var(--vc-paper2,#eeeeec);border-radius:2px;overflow:hidden}#sources .sb span{display:block;height:100%}
+  #sources .sv{text-align:right;font-weight:800;font-size:14px;font-variant-numeric:tabular-nums}#sources .sv .sn{font-weight:400}
+  #sources .sp{font-weight:400;color:var(--vc-charcoal);font-size:12.5px}
+  #sources .shd2{font-weight:700;font-size:12.5px;margin:18px 0 6px}#sources .shd2 span{font-weight:400;color:var(--vc-charcoal)}
+  #sources .stk{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;margin:4px 0}#sources .stl{font-size:12px;font-weight:700}
+  #sources .stb{display:flex;height:22px;border-radius:2px;overflow:hidden}#sources .stb span{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden}
+  #sources .stlg{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--vc-charcoal);margin-top:6px}#sources .stlg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+  @media (max-width:640px){#sources .shd,#sources .srow{grid-template-columns:1fr 64px 64px}#sources .sb{grid-column:1/-1;order:5}}
   table.tbl tr.bmex td{border-top:0;color:var(--vc-charcoal);padding-bottom:10px}
   .perfcell .pd.ly{margin-top:5px;font-weight:400;color:var(--vc-charcoal)}
   .pwbox{font-size:12.5px;line-height:1.5}.pwhd{font-weight:700;margin:10px 0 4px}.pwhd span{font-weight:400;color:var(--vc-charcoal)}
@@ -687,6 +703,7 @@
         <a href="#rangeReport">Reports</a>
         <a href="#bigPicture">Long view</a>
         <a href="#policyCircle">Who's reading</a>
+        <a href="#sources">Where readers come from</a>
         <a href="#audienceQuality">Funnel</a>
         <a href="#sec-growth">Growing the list</a>
         <a href="#sec-health">List health</a>
@@ -709,6 +726,10 @@
       <div class="card" id="policyCircle">
         <h2>Who's reading <span class="hint">notable and government readers active in the last 30 days &middot; the measure the mission turns on</span></h2>
         <div id="policyCircleBody"><div class="hint">Loading…</div></div>
+      </div>
+      <div class="card" id="sources">
+        <h2>Where readers come from <span class="hint">share of website visitors by source · Google, social media by platform, newsletters, AI assistants and more</span></h2>
+        <div id="sourcesBody"><div class="hint">Loading…</div></div>
       </div>
       <div class="kpis" id="kpis"></div>
 
@@ -1681,6 +1702,7 @@ function boot(data){
   // Plain copy of the stock tiles for the pulse report (no markup).
   window._stocksModel = head.map(k=>({lbl:k.lbl, num:String(k.num==null?"":k.num).replace(/<[^>]+>/g,""), delta:String(k.delta||"").replace(/<[^>]+>/g,""), flag:k.flag||""}));
   renderScorecard(data);
+  try{ renderSources(data); }catch(e){ const h=$("#sourcesBody"); if(h) h.innerHTML=`<div class="hint">Could not build the sources view: ${esc(e.message)}</div>`; }
   // ----- Last 7 days rolling scorecard (weekly pulse, all categories)
   renderWeekPulse(data);
   (function(){
@@ -3085,7 +3107,7 @@ function setupCardCollapse(data){
   // days and giving. Everything else starts folded, showing its one-line peek.
   // (Key bumped Sept. 23, 2026 so the new defaults reach devices once.)
   const KEY = "vc_growth_cards_collapsed_v2";
-  const OPEN = new Set(["scorecard","policyCircle","weekPulse","fundraising"]);
+  const OPEN = new Set(["scorecard","policyCircle","sources","weekPulse","fundraising"]);
   const cards = [...document.querySelectorAll("main .card")].filter(c=>c.id && c.querySelector(":scope > h2"));
   let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){}
   const collapsed = new Set(Array.isArray(saved) ? saved : cards.filter(c=>!OPEN.has(c.id)).map(c=>c.id));
@@ -6553,6 +6575,96 @@ function kiBodyHTML(sc, w, opts){
     (marks.length?`<div class="ki-marks"><b>Dotted lines mark:</b> ${marks.map(k=>`${esc(k.when)}: ${esc(k.label)}`).join(" · ")}</div>`:"")+
     (opts.stay||"")+
     (opts.noNotes ? "" : (opts.printNotes ? `<div class="ki-notes"><b>Notes and sources</b>${notes}</div>` : `<details class="ki-notes"><summary>Notes and sources</summary>${notes}</details>`));
+}
+// ===== Where readers come from ============================================
+// Josh, Sept. 29, 2026: "make sure somewhere on the growth site it clearly
+// states where our readers come from: what % google, what % various social
+// platforms, what % newsletter." Two views: the latest 30 days by source
+// (Ghost, every source it names, grouped), and the mix by year and in the
+// latest full month (Google Analytics channels), so a shift shows.
+const SRC_SOCIAL=[["X (Twitter)",/^(twitter|x|t\.co|x\.com)$/i],["Reddit",/^reddit/i],["LinkedIn",/^linkedin|lnkd\.in/i],["Bluesky",/^bluesky|bsky/i],
+  ["Facebook",/^facebook|fb\.com|m\.facebook/i],["Instagram",/^instagram/i],["Threads",/^threads/i],["YouTube",/^youtube/i],["TikTok",/^tiktok/i],["Mastodon",/mastodon/i]];
+const SRC_GROUPS=[
+  {k:"search", l:"Search engines", c:"var(--vc-cerulean)", re:/^(google|bing|duckduckgo|brave search|yahoo!?|ecosia|kagi|startpage|baidu|yandex|qwant|search\.[a-z.]+)$/i},
+  {k:"direct", l:"Direct", c:"#707175", re:/^direct/i, note:"typed the address, used a bookmark or came from an app that hides where the reader was, which includes many newsletter clicks"},
+  {k:"social", l:"Social media", c:"var(--vc-orange)"},
+  {k:"ours",   l:"Vital City's newsletter", c:"var(--vc-green)", re:/^(newsletter|vital city newsletter contacts)$/i, note:"clicks Ghost can trace to our emails; many more arrive as Direct"},
+  {k:"email",  l:"Other newsletters and email", c:"#8fbf7f", re:/substack|sailthru|mailing list|newsletters?\b|^gmail$|outlook|beehiiv|mailchimp|contact sheet/i},
+  {k:"news",   l:"News apps", c:"#9b9fbc", re:/^(google news|apple news|flipboard|newsbreak|smartnews|feedly)$/i},
+  {k:"ai",     l:"AI assistants", c:"#b57edc", re:/chatgpt|openai|gemini|perplexity|claude\.ai|copilot|you\.com/i},
+  {k:"self",   l:"Other Vital City pages", c:"#c9c9c6", re:/vitalcitynyc\.org/i},
+  {k:"sites",  l:"Links from other websites", c:"#d7df23"},
+];
+const SRC_NAMES=[["ChatGPT",/chatgpt|openai/i],["Gemini",/gemini/i],["Perplexity",/perplexity/i],["Claude",/claude\.ai/i],["Copilot",/copilot/i],
+  ["Microsoft Teams",/teams\..*microsoft|teams\.microsoft/i],["Chalkbeat's newsletter",/chalkbeat/i],["The Trace's newsletter",/the trace/i],["Substack",/substack/i],["Sailthru (other publishers' newsletters)",/sailthru/i]];
+function srcGroupOf(name){
+  const n=String(name||"").trim();
+  for(const [lbl,re] of SRC_SOCIAL) if(re.test(n)) return {g:"social", sub:lbl};
+  const nice=(SRC_NAMES.find(([l,re])=>re.test(n))||[])[0];
+  for(const g of SRC_GROUPS) if(g.re && g.re.test(n)) return {g:g.k, sub:nice};
+  return {g:"sites", sub:nice};
+}
+function sourcesModel(data){
+  const gt=data.ghost_traffic||{}, ga4=data.ga4||{};
+  const rows=gt.top_sources_30d||[];
+  const tot=+gt.visitors_30d||rows.reduce((s,r)=>s+(r.visits||0),0);
+  const totP=+gt.visitors_prev_30d||rows.reduce((s,r)=>s+(r.prev||0),0);
+  if(!rows.length||!tot) return null;
+  const G={}; SRC_GROUPS.forEach(g=>G[g.k]={...g, n:0, p:0, subs:{}});
+  rows.forEach(r=>{ const m=srcGroupOf(r.source), e=G[m.g]; e.n+=r.visits||0; e.p+=r.prev||0;
+    const sk=m.sub||r.source; const s=e.subs[sk]=e.subs[sk]||{l:m.sub||r.source, n:0, p:0}; s.n+=r.visits||0; s.p+=r.prev||0; });
+  const listed=rows.reduce((s,r)=>s+(r.visits||0),0), listedP=rows.reduce((s,r)=>s+(r.prev||0),0);
+  const groups=Object.values(G).filter(g=>g.n>0||g.p>0).sort((a,b)=>b.n-a.n);
+  const end=String(gt.window_end||"").slice(0,10);
+  // Google Analytics channels: 2025, this year's full months, the latest full month.
+  const CH={"Organic Search":"search","Paid Search":"search","Direct":"direct","Organic Social":"social","Paid Social":"social","Email":"email","Referral":"sites","AI Assistant":"ai"};
+  const mc=ga4.monthly_channels||[];
+  const months=[...new Set(mc.map(r=>r.m))].sort();
+  const lastFull=(()=>{ const a=String(ga4.as_of||"").slice(0,7); return months.filter(m=>m<a).pop()||months[months.length-1]; })();
+  const y=lastFull?lastFull.slice(0,4):"";
+  const per=(pred,lbl)=>{ const o={l:lbl, t:0, s:{}}; mc.forEach(r=>{ if(!pred(r.m)) return; const k=CH[r.ch]||"other"; o.s[k]=(o.s[k]||0)+(r.sessions||0); o.t+=r.sessions||0; }); return o.t?o:null; };
+  const MON=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+  const mlbl=m=>`${MON[+m.slice(5,7)-1]} ${m.slice(0,4)}`;
+  const periods=[
+    months.some(m=>m.startsWith(String(+y-1)))&&months.filter(m=>m.startsWith(String(+y-1))).length===12 ? per(m=>m.startsWith(String(+y-1)), String(+y-1)) : null,
+    lastFull ? per(m=>m.startsWith(y)&&m<=lastFull, `Jan.–${MON[+lastFull.slice(5,7)-1]} ${y}`) : null,
+    lastFull ? per(m=>m===lastFull, mlbl(lastFull)) : null,
+  ].filter(Boolean);
+  return {tot, totP, listed, listedP, groups, end, periods, lastFull};
+}
+function renderSources(data){
+  const host=$("#sourcesBody"); if(!host) return;
+  const M=sourcesModel(data);
+  if(!M){ host.innerHTML=`<div class="hint">Source data arrives with the next data refresh.</div>`; return; }
+  const pct=(n,t)=>t?(n/t*100):0, f=v=>v>=10?Math.round(v)+"%":(Math.round(v*10)/10).toFixed(1)+"%";
+  const shift=(iso,d)=>{const x=new Date(iso+"T00:00:00Z"); x.setUTCDate(x.getUTCDate()+d); return x.toISOString().slice(0,10);};
+  const from=M.end?shift(M.end,-29):"";
+  const other=M.tot-M.listed;
+  const bar=(g)=>{ const s=pct(g.n,M.tot), sp=pct(g.p,M.totP);
+    const subs=Object.values(g.subs).filter(x=>x.n>0).sort((a,b)=>b.n-a.n);
+    const subTxt = ["social","search","ai","email","sites"].includes(g.k)
+      ? subs.filter(x=>pct(x.n,M.tot)>=0.05).slice(0,g.k==="social"?8:g.k==="sites"?4:4).map(x=>`${esc(x.l)} ${f(pct(x.n,M.tot))}`).join(" · ")+(g.k==="sites"&&subs.length>4?" and others":"") : "";
+    return `<div class="srow"><div class="sl"><b>${esc(g.l)}</b>${g.note?`<span class="sn">${esc(g.note)}</span>`:""}${subTxt?`<span class="ss">${subTxt}</span>`:""}</div>
+      <div class="sb"><span style="width:${Math.max(0.6,s).toFixed(1)}%;background:${g.c}"></span></div>
+      <div class="sv">${f(s)}<span class="sn">${fmtN(g.n)} visitors</span></div>
+      <div class="sv sp">${f(sp)}</div></div>`; };
+  const legendK={search:"Search",direct:"Direct",social:"Social media",email:"Email and newsletters",sites:"Other websites",ai:"AI assistants",other:"Unclassified"};
+  const colK={search:"var(--vc-cerulean)",direct:"#707175",social:"var(--vc-orange)",email:"var(--vc-green)",sites:"#d7df23",ai:"#b57edc",other:"#c9c9c6"};
+  const order=["search","direct","social","email","sites","ai","other"];
+  const stack=M.periods.map(p=>`<div class="stk"><div class="stl">${esc(p.l)}</div><div class="stb">${order.filter(k=>p.s[k]).map(k=>{const v=pct(p.s[k],p.t); return `<span style="width:${v.toFixed(2)}%;background:${colK[k]}" title="${esc(legendK[k])}: ${f(v)}">${v>=6?f(v):""}</span>`;}).join("")}</div></div>`).join("");
+  const legend=`<div class="stlg">${order.map(k=>`<span><i style="background:${colK[k]}"></i>${esc(legendK[k])}</span>`).join("")}</div>`;
+  const G=k=>M.groups.find(x=>x.k===k)||{n:0,subs:{}};
+  const gg=Object.values(G("search").subs).find(x=>/google/i.test(x.l));
+  const xs=Object.values(G("social").subs).sort((a,b)=>b.n-a.n)[0];
+  const summary=`Search engines brought ${f(pct(G("search").n,M.tot))} of visitors${gg?` (Google alone ${f(pct(gg.n,M.tot))})`:""}; direct visits ${f(pct(G("direct").n,M.tot))}; social media ${f(pct(G("social").n,M.tot))}${xs?`, led by ${esc(xs.l.replace(" (Twitter)",""))} at ${f(pct(xs.n,M.tot))}`:""}; links from other websites ${f(pct(G("sites").n,M.tot))}; our newsletter ${f(pct(G("ours").n,M.tot))} by Ghost's count; AI assistants ${f(pct(G("ai").n,M.tot))}.`;
+  host.innerHTML=`
+    <p class="ssum">${summary}</p>
+    <p class="slede">In the 30 days from ${esc(pxDay(from))} to ${esc(pxDay(M.end))}, ${fmtN(M.tot)} people visited the site (Ghost's count of readers). Here is where they came from, with each source's share in the 30 days before for comparison.</p>
+    <div class="shd"><div></div><div></div><div class="sv">Last 30 days</div><div class="sv sp">30 days before</div></div>
+    ${M.groups.map(bar).join("")}
+    ${other>0?`<div class="srow"><div class="sl"><b>Smaller sources</b><span class="sn">each too small for Ghost to name</span></div><div class="sb"><span style="width:${Math.max(0.6,pct(other,M.tot)).toFixed(1)}%;background:#e3e3e0"></span></div><div class="sv">${f(pct(other,M.tot))}</div><div class="sv sp">${f(pct(M.totP-M.listedP,M.totP))}</div></div>`:""}
+    ${stack?`<div class="shd2">How the mix has shifted <span>share of visits by source, Google Analytics, which counts every visit</span></div>${stack}${legend}`:""}
+    <div class="flagnote" style="margin-top:12px"><b>Why the newsletter looks small here.</b> Many email apps hide where a click came from, so a reader who clicks through from the newsletter often shows up as Direct. Google Analytics catches more of it through the tracking tags on our links, which is why email is larger in the lower chart. For the newsletter's own reach, see email clicks in the key indicators. ${esc(pxTwoRecords(data))}</div>`;
 }
 function renderScorecard(data){
   const el=document.getElementById("scorecard"); if(!el) return;
