@@ -42,7 +42,7 @@
     "type_basis": "default",
     "published_date": "2026-09-28",
     "published_at": "2026-09-28T18:00:54.000+00:00",
-    "updated_at": "2026-09-28T19:50:58.000+00:00",
+    "updated_at": "2026-09-29T20:55:19.000+00:00",
     "primary_author": "Derrell Bradford",
     "authors": [
       "Derrell Bradford"
@@ -115,7 +115,7 @@
     "type_basis": "default",
     "published_date": "2026-09-24",
     "published_at": "2026-09-24T13:32:07.000+00:00",
-    "updated_at": "2026-09-24T13:32:07.000+00:00",
+    "updated_at": "2026-09-29T20:55:28.000+00:00",
     "primary_author": "Jordan McGillis",
     "authors": [
       "Jordan McGillis"
@@ -138,7 +138,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2225,
+    "word_count": 2230,
     "reading_minutes": 10,
     "id": "6aad500fd6918c00013fd4e8"
   },
@@ -150,7 +150,7 @@
     "type_basis": "series:just-fix-it",
     "published_date": "2026-09-17",
     "published_at": "2026-09-17T15:13:29.000+00:00",
-    "updated_at": "2026-09-17T15:13:29.000+00:00",
+    "updated_at": "2026-09-29T20:53:49.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -191,7 +191,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 3813,
+    "word_count": 3815,
     "reading_minutes": 17,
     "id": "6aabff69d6918c00013fd3d4"
   },
@@ -511,7 +511,7 @@
     "type_basis": "default",
     "published_date": "2026-09-09",
     "published_at": "2026-09-09T13:25:02.000+00:00",
-    "updated_at": "2026-09-09T13:25:02.000+00:00",
+    "updated_at": "2026-09-29T20:56:48.000+00:00",
     "primary_author": "Rosanna Smart",
     "authors": [
       "Rosanna Smart",
@@ -637,7 +637,7 @@
     "type_basis": "default",
     "published_date": "2026-09-05",
     "published_at": "2026-09-05T16:00:55.000+00:00",
-    "updated_at": "2026-09-05T16:00:54.000+00:00",
+    "updated_at": "2026-09-29T20:53:46.000+00:00",
     "primary_author": "Colum McCann",
     "authors": [
       "Colum McCann"
@@ -666,7 +666,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2471,
+    "word_count": 2472,
     "reading_minutes": 11,
     "id": "6a887dcee065c6000149891c"
   },
@@ -719,7 +719,7 @@
     "type_basis": "default",
     "published_date": "2026-09-05",
     "published_at": "2026-09-05T16:00:02.000+00:00",
-    "updated_at": "2026-09-05T16:00:01.000+00:00",
+    "updated_at": "2026-09-29T20:53:57.000+00:00",
     "primary_author": "Nicole Gelinas",
     "authors": [
       "Nicole Gelinas"
@@ -993,7 +993,7 @@
     "type_basis": "tag:book-review",
     "published_date": "2026-08-26",
     "published_at": "2026-08-26T16:23:00.000+00:00",
-    "updated_at": "2026-08-27T15:41:31.000+00:00",
+    "updated_at": "2026-09-29T21:09:08.000+00:00",
     "primary_author": "Leslie Lenkowsky",
     "authors": [
       "Leslie Lenkowsky"
@@ -1018,7 +1018,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1604,
+    "word_count": 1603,
     "reading_minutes": 7,
     "id": "6a8c5f1b2d025a0001ef00f1"
   },
@@ -1102,7 +1102,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2026-08-25",
     "published_at": "2026-08-25T13:00:16.000+00:00",
-    "updated_at": "2026-09-29T16:28:57.000+00:00",
+    "updated_at": "2026-09-29T21:09:11.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City",
@@ -1272,7 +1272,7 @@
     },
     "featured": true,
     "visibility": "public",
-    "word_count": 3238,
+    "word_count": 3241,
     "reading_minutes": 14,
     "id": "6a8704ffa97dd200011a593f"
   },
@@ -1284,7 +1284,7 @@
     "type_basis": "series:just-fix-it",
     "published_date": "2026-08-19",
     "published_at": "2026-08-19T16:39:47.000+00:00",
-    "updated_at": "2026-09-17T15:08:04.000+00:00",
+    "updated_at": "2026-09-29T20:55:21.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -1324,7 +1324,7 @@
     "type_basis": "default",
     "published_date": "2026-08-19",
     "published_at": "2026-08-19T16:11:34.000+00:00",
-    "updated_at": "2026-08-19T16:11:34.000+00:00",
+    "updated_at": "2026-09-29T21:09:02.000+00:00",
     "primary_author": "Matthew Burton",
     "authors": [
       "Matthew Burton"
@@ -1361,7 +1361,7 @@
     "type_basis": "default",
     "published_date": "2026-08-19",
     "published_at": "2026-08-19T01:00:36.000+00:00",
-    "updated_at": "2026-08-25T18:41:30.000+00:00",
+    "updated_at": "2026-09-29T20:54:57.000+00:00",
     "primary_author": "David L. Ortega",
     "authors": [
       "David L. Ortega"
@@ -1386,7 +1386,7 @@
     },
     "featured": true,
     "visibility": "public",
-    "word_count": 1782,
+    "word_count": 1781,
     "reading_minutes": 8,
     "id": "6a84ad686dccdd00019890a3"
   },
@@ -1434,7 +1434,7 @@
     "type_basis": "default",
     "published_date": "2026-08-12",
     "published_at": "2026-08-12T18:11:00.000+00:00",
-    "updated_at": "2026-08-25T18:42:32.000+00:00",
+    "updated_at": "2026-09-29T20:55:29.000+00:00",
     "primary_author": "Megan Gafford",
     "authors": [
       "Megan Gafford"
@@ -1588,7 +1588,7 @@
     "type_basis": "default",
     "published_date": "2026-08-06",
     "published_at": "2026-08-06T13:30:19.000+00:00",
-    "updated_at": "2026-08-26T18:04:48.000+00:00",
+    "updated_at": "2026-09-29T21:08:23.000+00:00",
     "primary_author": "Rebecca Gale",
     "authors": [
       "Rebecca Gale"
@@ -1626,7 +1626,7 @@
     "type_basis": "default",
     "published_date": "2026-08-05",
     "published_at": "2026-08-05T19:21:50.000+00:00",
-    "updated_at": "2026-08-05T19:21:50.000+00:00",
+    "updated_at": "2026-09-29T21:09:13.000+00:00",
     "primary_author": "Michael Sedillo",
     "authors": [
       "Michael Sedillo"
@@ -1650,7 +1650,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2215,
+    "word_count": 2213,
     "reading_minutes": 10,
     "id": "6a738a3a4f8fec000142f7a5"
   },
@@ -1662,7 +1662,7 @@
     "type_basis": "default",
     "published_date": "2026-08-05",
     "published_at": "2026-08-05T19:11:13.000+00:00",
-    "updated_at": "2026-08-08T15:39:25.000+00:00",
+    "updated_at": "2026-09-29T20:55:51.000+00:00",
     "primary_author": "Greg Berman",
     "authors": [
       "Greg Berman"
@@ -1853,7 +1853,7 @@
     "type_basis": "default",
     "published_date": "2026-07-29",
     "published_at": "2026-07-29T14:59:01.000+00:00",
-    "updated_at": "2026-07-30T14:26:15.000+00:00",
+    "updated_at": "2026-09-29T21:09:10.000+00:00",
     "primary_author": "Dan Hafetz",
     "authors": [
       "Dan Hafetz"
@@ -1878,7 +1878,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 3359,
+    "word_count": 3360,
     "reading_minutes": 15,
     "id": "6a6a0fa9e1c36b0001236f42"
   },
@@ -1890,7 +1890,7 @@
     "type_basis": "default",
     "published_date": "2026-07-29",
     "published_at": "2026-07-29T14:57:22.000+00:00",
-    "updated_at": "2026-08-26T18:04:49.000+00:00",
+    "updated_at": "2026-09-29T21:08:25.000+00:00",
     "primary_author": "Tahir Duckett",
     "authors": [
       "Tahir Duckett",
@@ -1917,7 +1917,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2409,
+    "word_count": 2411,
     "reading_minutes": 10,
     "id": "6a6a107ce1c36b0001236f53"
   },
@@ -1929,7 +1929,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-07-28",
     "published_at": "2026-07-28T18:59:13.000+00:00",
-    "updated_at": "2026-09-17T16:19:18.000+00:00",
+    "updated_at": "2026-09-29T21:20:42.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -1965,7 +1965,7 @@
     "type_basis": "series:just-fix-it",
     "published_date": "2026-07-23",
     "published_at": "2026-07-23T14:35:29.000+00:00",
-    "updated_at": "2026-07-30T15:49:27.000+00:00",
+    "updated_at": "2026-09-29T20:55:27.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -2001,7 +2001,7 @@
     },
     "featured": true,
     "visibility": "public",
-    "word_count": 1150,
+    "word_count": 1151,
     "reading_minutes": 5,
     "id": "6a5f80725158f00001f8b6da"
   },
@@ -2097,7 +2097,7 @@
     "type_basis": "default",
     "published_date": "2026-07-22",
     "published_at": "2026-07-22T14:43:00.000+00:00",
-    "updated_at": "2026-08-26T18:04:51.000+00:00",
+    "updated_at": "2026-09-29T20:53:45.000+00:00",
     "primary_author": "Jocelyn Strauber",
     "authors": [
       "Jocelyn Strauber"
@@ -2303,7 +2303,7 @@
     "type_basis": "default",
     "published_date": "2026-07-08",
     "published_at": "2026-07-08T13:00:45.000+00:00",
-    "updated_at": "2026-08-26T18:04:53.000+00:00",
+    "updated_at": "2026-09-29T21:09:32.000+00:00",
     "primary_author": "Sage Lattman",
     "authors": [
       "Sage Lattman"
@@ -2558,7 +2558,7 @@
     "type_basis": "html:7-chart-embeds",
     "published_date": "2026-07-02",
     "published_at": "2026-07-02T13:00:29.000+00:00",
-    "updated_at": "2026-08-26T18:04:56.000+00:00",
+    "updated_at": "2026-09-29T20:53:50.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -2632,7 +2632,7 @@
     "type_basis": "default",
     "published_date": "2026-07-01",
     "published_at": "2026-07-01T13:10:29.000+00:00",
-    "updated_at": "2026-08-07T20:44:18.000+00:00",
+    "updated_at": "2026-09-29T21:08:15.000+00:00",
     "primary_author": "Bradley Tusk",
     "authors": [
       "Bradley Tusk"
@@ -2669,7 +2669,7 @@
     "type_basis": "default",
     "published_date": "2026-06-29",
     "published_at": "2026-06-29T19:44:41.000+00:00",
-    "updated_at": "2026-08-26T18:04:57.000+00:00",
+    "updated_at": "2026-09-29T20:56:05.000+00:00",
     "primary_author": "Harold Holzer",
     "authors": [
       "Harold Holzer"
@@ -2911,7 +2911,7 @@
     "type_basis": "html:multi-speaker-transcript",
     "published_date": "2026-06-24",
     "published_at": "2026-06-24T14:50:04.000+00:00",
-    "updated_at": "2026-08-26T18:05:00.000+00:00",
+    "updated_at": "2026-09-29T20:54:48.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -3030,7 +3030,7 @@
     "type_basis": "default",
     "published_date": "2026-06-19",
     "published_at": "2026-06-19T15:33:33.000+00:00",
-    "updated_at": "2026-08-26T18:05:01.000+00:00",
+    "updated_at": "2026-09-29T20:54:54.000+00:00",
     "primary_author": "Matthew Goodman",
     "authors": [
       "Matthew Goodman"
@@ -3065,7 +3065,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-06-18",
     "published_at": "2026-06-18T18:19:39.000+00:00",
-    "updated_at": "2026-09-17T16:19:17.000+00:00",
+    "updated_at": "2026-09-29T20:53:53.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -3101,7 +3101,7 @@
     "type_basis": "default",
     "published_date": "2026-06-18",
     "published_at": "2026-06-18T16:45:34.000+00:00",
-    "updated_at": "2026-08-26T18:05:02.000+00:00",
+    "updated_at": "2026-09-29T20:55:15.000+00:00",
     "primary_author": "Terrence Watson",
     "authors": [
       "Terrence Watson"
@@ -3287,7 +3287,7 @@
     "type_basis": "html:multi-speaker-transcript",
     "published_date": "2026-06-11",
     "published_at": "2026-06-11T14:31:48.000+00:00",
-    "updated_at": "2026-08-26T18:37:14.000+00:00",
+    "updated_at": "2026-09-29T20:55:11.000+00:00",
     "primary_author": "Cara Eckholm",
     "authors": [
       "Cara Eckholm"
@@ -3377,7 +3377,7 @@
     "type_basis": "default",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T16:30:00.000+00:00",
-    "updated_at": "2026-08-26T18:34:52.000+00:00",
+    "updated_at": "2026-09-29T20:55:24.000+00:00",
     "primary_author": "Alicia Glen",
     "authors": [
       "Alicia Glen",
@@ -3419,7 +3419,7 @@
     "type_basis": "default",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T16:25:00.000+00:00",
-    "updated_at": "2026-08-26T18:34:53.000+00:00",
+    "updated_at": "2026-09-29T20:55:31.000+00:00",
     "primary_author": "Martha Stark",
     "authors": [
       "Martha Stark"
@@ -3642,7 +3642,7 @@
     "type_basis": "default",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T16:09:00.000+00:00",
-    "updated_at": "2026-06-10T16:32:04.000+00:00",
+    "updated_at": "2026-09-29T20:54:14.000+00:00",
     "primary_author": "Bill Hammond",
     "authors": [
       "Bill Hammond"
@@ -3816,7 +3816,7 @@
     "type_basis": "default",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T16:07:00.000+00:00",
-    "updated_at": "2026-08-26T18:34:54.000+00:00",
+    "updated_at": "2026-09-29T20:56:19.000+00:00",
     "primary_author": "Nicole Gelinas",
     "authors": [
       "Nicole Gelinas"
@@ -3857,7 +3857,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2381,
+    "word_count": 2382,
     "reading_minutes": 10,
     "id": "6a284e73db63ad0001922260"
   },
@@ -3869,7 +3869,7 @@
     "type_basis": "default",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T16:05:00.000+00:00",
-    "updated_at": "2026-08-26T18:34:55.000+00:00",
+    "updated_at": "2026-09-29T20:55:25.000+00:00",
     "primary_author": "Scott Winship",
     "authors": [
       "Scott Winship"
@@ -4071,7 +4071,7 @@
     "type_basis": "default",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T16:03:00.000+00:00",
-    "updated_at": "2026-08-26T18:34:55.000+00:00",
+    "updated_at": "2026-09-29T20:55:32.000+00:00",
     "primary_author": "Ingrid Gould Ellen",
     "authors": [
       "Ingrid Gould Ellen"
@@ -4244,7 +4244,7 @@
     "type_basis": "title:framing-page",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T15:58:41.000+00:00",
-    "updated_at": "2026-06-10T15:58:41.000+00:00",
+    "updated_at": "2026-09-29T21:08:35.000+00:00",
     "primary_author": "Josh Greenman",
     "authors": [
       "Josh Greenman"
@@ -4429,7 +4429,7 @@
     "type_basis": "default",
     "published_date": "2026-06-10",
     "published_at": "2026-06-10T12:59:00.000+00:00",
-    "updated_at": "2026-08-26T20:11:19.000+00:00",
+    "updated_at": "2026-09-29T21:08:34.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -4457,7 +4457,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1507,
+    "word_count": 1508,
     "reading_minutes": 7,
     "id": "6a286c49db63ad0001922567"
   },
@@ -4469,7 +4469,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-06-09",
     "published_at": "2026-06-09T17:17:24.000+00:00",
-    "updated_at": "2026-09-17T16:19:17.000+00:00",
+    "updated_at": "2026-09-29T21:09:06.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -4549,7 +4549,7 @@
     "type_basis": "default",
     "published_date": "2026-06-03",
     "published_at": "2026-06-03T18:43:47.000+00:00",
-    "updated_at": "2026-06-03T18:51:56.000+00:00",
+    "updated_at": "2026-09-29T20:55:44.000+00:00",
     "primary_author": "Lauren-Brooke Eisen",
     "authors": [
       "Lauren-Brooke Eisen"
@@ -4630,7 +4630,7 @@
     "type_basis": "default",
     "published_date": "2026-06-03",
     "published_at": "2026-06-03T13:33:06.000+00:00",
-    "updated_at": "2026-06-03T13:33:06.000+00:00",
+    "updated_at": "2026-09-29T21:08:21.000+00:00",
     "primary_author": "Richard Briffault",
     "authors": [
       "Richard Briffault"
@@ -4667,7 +4667,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1815,
+    "word_count": 1817,
     "reading_minutes": 8,
     "id": "6a1d9d31d224c200019e91f7"
   },
@@ -4817,7 +4817,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-05-26",
     "published_at": "2026-05-26T18:28:01.000+00:00",
-    "updated_at": "2026-09-17T16:19:16.000+00:00",
+    "updated_at": "2026-09-29T21:08:58.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -4853,7 +4853,7 @@
     "type_basis": "series:rubber-meets-road",
     "published_date": "2026-05-20",
     "published_at": "2026-05-20T15:00:00.000+00:00",
-    "updated_at": "2026-05-21T20:49:09.000+00:00",
+    "updated_at": "2026-09-29T20:55:46.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -4888,7 +4888,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1114,
+    "word_count": 1115,
     "reading_minutes": 5,
     "id": "6a0b2ddb687b8600010ac225"
   },
@@ -5391,7 +5391,7 @@
     "type_basis": "default",
     "published_date": "2026-05-14",
     "published_at": "2026-05-14T15:33:04.000+00:00",
-    "updated_at": "2026-08-26T20:11:20.000+00:00",
+    "updated_at": "2026-09-29T20:55:10.000+00:00",
     "primary_author": "Sayantani DasGupta",
     "authors": [
       "Sayantani DasGupta"
@@ -5501,7 +5501,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-05-13",
     "published_at": "2026-05-13T13:30:39.000+00:00",
-    "updated_at": "2026-09-17T16:19:15.000+00:00",
+    "updated_at": "2026-09-29T21:20:28.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -5581,7 +5581,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-05-08",
     "published_at": "2026-05-08T13:32:07.000+00:00",
-    "updated_at": "2026-09-17T16:19:14.000+00:00",
+    "updated_at": "2026-09-29T20:53:30.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -5617,7 +5617,7 @@
     "type_basis": "default",
     "published_date": "2026-05-07",
     "published_at": "2026-05-07T16:48:31.000+00:00",
-    "updated_at": "2026-08-26T20:30:55.000+00:00",
+    "updated_at": "2026-09-29T20:56:18.000+00:00",
     "primary_author": "Tim Tompkins",
     "authors": [
       "Tim Tompkins"
@@ -5700,7 +5700,7 @@
     "type_basis": "series:just-fix-it",
     "published_date": "2026-05-07",
     "published_at": "2026-05-07T13:14:11.000+00:00",
-    "updated_at": "2026-09-17T14:58:08.000+00:00",
+    "updated_at": "2026-09-29T21:09:12.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -5736,7 +5736,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2819,
+    "word_count": 2820,
     "reading_minutes": 12,
     "id": "69fb53cadff5f6000102d8bd"
   },
@@ -5797,7 +5797,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-04-30",
     "published_at": "2026-04-30T18:10:05.000+00:00",
-    "updated_at": "2026-08-26T18:35:06.000+00:00",
+    "updated_at": "2026-09-29T21:09:24.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -5830,7 +5830,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2582,
+    "word_count": 2583,
     "reading_minutes": 11,
     "id": "69f38594ca687f000116276a"
   },
@@ -5842,7 +5842,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-04-30",
     "published_at": "2026-04-30T13:31:08.000+00:00",
-    "updated_at": "2026-09-17T16:19:13.000+00:00",
+    "updated_at": "2026-09-29T21:20:32.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -5866,7 +5866,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 8957,
+    "word_count": 8955,
     "reading_minutes": 39,
     "id": "6aa9596f165ce00001549b77"
   },
@@ -5960,7 +5960,7 @@
     "type_basis": "default",
     "published_date": "2026-04-29",
     "published_at": "2026-04-29T13:51:09.000+00:00",
-    "updated_at": "2026-08-26T20:11:21.000+00:00",
+    "updated_at": "2026-09-29T20:55:23.000+00:00",
     "primary_author": "David Schleicher",
     "authors": [
       "David Schleicher"
@@ -6542,7 +6542,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-04-10",
     "published_at": "2026-04-10T18:05:33.000+00:00",
-    "updated_at": "2026-09-17T16:19:12.000+00:00",
+    "updated_at": "2026-09-29T21:20:31.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -6566,7 +6566,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 11423,
+    "word_count": 11421,
     "reading_minutes": 50,
     "id": "6aa9596b165ce00001549b72"
   },
@@ -6798,7 +6798,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-03-29",
     "published_at": "2026-03-29T21:48:11.000+00:00",
-    "updated_at": "2026-09-17T16:19:11.000+00:00",
+    "updated_at": "2026-09-29T20:55:56.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -6915,7 +6915,7 @@
     "type_basis": "html:multi-speaker-transcript",
     "published_date": "2026-03-25",
     "published_at": "2026-03-25T15:17:44.000+00:00",
-    "updated_at": "2026-05-21T20:09:13.000+00:00",
+    "updated_at": "2026-09-29T20:54:55.000+00:00",
     "primary_author": "Cara Eckholm",
     "authors": [
       "Cara Eckholm"
@@ -7034,7 +7034,7 @@
     "type_basis": "default",
     "published_date": "2026-03-18",
     "published_at": "2026-03-18T19:41:23.000+00:00",
-    "updated_at": "2026-04-15T13:36:23.000+00:00",
+    "updated_at": "2026-09-29T20:54:59.000+00:00",
     "primary_author": "Nestor Davidson",
     "authors": [
       "Nestor Davidson",
@@ -7145,7 +7145,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2026-03-11",
     "published_at": "2026-03-11T17:36:23.000+00:00",
-    "updated_at": "2026-08-26T18:35:13.000+00:00",
+    "updated_at": "2026-09-29T21:09:07.000+00:00",
     "primary_author": "Jamie Rubin",
     "authors": [
       "Jamie Rubin"
@@ -7365,7 +7365,7 @@
     "type_basis": "default",
     "published_date": "2026-03-03",
     "published_at": "2026-03-03T21:54:51.000+00:00",
-    "updated_at": "2026-04-15T13:36:24.000+00:00",
+    "updated_at": "2026-09-29T20:56:20.000+00:00",
     "primary_author": "Robert Joyce",
     "authors": [
       "Robert Joyce",
@@ -7390,7 +7390,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1248,
+    "word_count": 1249,
     "reading_minutes": 5,
     "id": "69a7332bb6fb820001f357c9"
   },
@@ -7555,7 +7555,7 @@
     "type_basis": "default",
     "published_date": "2026-02-25",
     "published_at": "2026-02-25T15:15:00.000+00:00",
-    "updated_at": "2026-08-26T18:35:17.000+00:00",
+    "updated_at": "2026-09-29T20:54:16.000+00:00",
     "primary_author": "Robert J. Sampson",
     "authors": [
       "Robert J. Sampson"
@@ -7592,7 +7592,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-02-24",
     "published_at": "2026-02-24T18:53:07.000+00:00",
-    "updated_at": "2026-09-17T16:19:10.000+00:00",
+    "updated_at": "2026-09-29T20:53:52.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -7616,7 +7616,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 10448,
+    "word_count": 10449,
     "reading_minutes": 45,
     "id": "6aa95963165ce00001549b68"
   },
@@ -7666,7 +7666,7 @@
     "type_basis": "default",
     "published_date": "2026-02-19",
     "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-08-26T20:11:25.000+00:00",
+    "updated_at": "2026-09-29T21:08:49.000+00:00",
     "primary_author": "Marc A. Levin",
     "authors": [
       "Marc A. Levin"
@@ -7693,7 +7693,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1168,
+    "word_count": 1169,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a42e9"
   },
@@ -7929,7 +7929,7 @@
     "type_basis": "default",
     "published_date": "2026-02-19",
     "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-06-23T14:01:03.000+00:00",
+    "updated_at": "2026-09-29T20:54:20.000+00:00",
     "primary_author": "John K. Roman",
     "authors": [
       "John K. Roman"
@@ -7943,8 +7943,8 @@
       "crime-looking-back-at-2025-and-ahead-to-2026"
     ],
     "issue_numbers": [],
-    "summary": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
-    "excerpt": "We have to understand what drove 2025 dramatic nationwide declines to build on them.",
+    "summary": "We have to understand what drove 2025’s dramatic nationwide declines to build on them.",
+    "excerpt": "We have to understand what drove 2025’s dramatic nationwide declines to build on them.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/ay-jhlwlo0xkeggt_nyc27760-auto-format-compress-1776260478549.jpg",
     "feature_image_alt": "A brick underpass lit by long strips of light at night",
     "feature_image_credit": "Alex Webb / Magnum Photos",
@@ -7968,7 +7968,7 @@
     "type_basis": "default",
     "published_date": "2026-02-19",
     "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-08-26T20:11:24.000+00:00",
+    "updated_at": "2026-09-29T20:53:48.000+00:00",
     "primary_author": "Gloria Gong",
     "authors": [
       "Gloria Gong"
@@ -7995,7 +7995,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1895,
+    "word_count": 1896,
     "reading_minutes": 8,
     "id": "69a04c0ad4006a00010a42e2"
   },
@@ -8256,7 +8256,7 @@
     "type_basis": "default",
     "published_date": "2026-02-19",
     "published_at": "2026-02-19T17:00:54.000+00:00",
-    "updated_at": "2026-08-26T18:35:17.000+00:00",
+    "updated_at": "2026-09-29T21:08:29.000+00:00",
     "primary_author": "Aaron Chalfin",
     "authors": [
       "Aaron Chalfin"
@@ -8283,7 +8283,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2962,
+    "word_count": 2963,
     "reading_minutes": 13,
     "id": "69a04c0ad4006a00010a42de"
   },
@@ -8531,7 +8531,7 @@
     "type_basis": "default",
     "published_date": "2026-02-03",
     "published_at": "2026-02-03T16:40:38.000+00:00",
-    "updated_at": "2026-08-26T18:35:22.000+00:00",
+    "updated_at": "2026-09-29T21:08:36.000+00:00",
     "primary_author": "Paul Francis",
     "authors": [
       "Paul Francis"
@@ -8569,7 +8569,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2361,
+    "word_count": 2362,
     "reading_minutes": 10,
     "id": "69a04c0ad4006a00010a42cf"
   },
@@ -8700,7 +8700,7 @@
     "type_basis": "default",
     "published_date": "2026-01-28",
     "published_at": "2026-01-28T18:13:28.000+00:00",
-    "updated_at": "2026-08-26T18:35:24.000+00:00",
+    "updated_at": "2026-09-29T21:08:44.000+00:00",
     "primary_author": "Moses Gates",
     "authors": [
       "Moses Gates"
@@ -8724,7 +8724,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1055,
+    "word_count": 1056,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a42d1"
   },
@@ -8889,7 +8889,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-01-26",
     "published_at": "2026-01-26T17:40:29.000+00:00",
-    "updated_at": "2026-09-17T16:19:10.000+00:00",
+    "updated_at": "2026-09-29T21:20:40.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -8913,7 +8913,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 11268,
+    "word_count": 11266,
     "reading_minutes": 49,
     "id": "6aa95960165ce00001549b63"
   },
@@ -9075,7 +9075,7 @@
     "type_basis": "default",
     "published_date": "2026-01-14",
     "published_at": "2026-01-14T13:09:00.000+00:00",
-    "updated_at": "2026-08-26T18:35:29.000+00:00",
+    "updated_at": "2026-09-29T21:09:02.000+00:00",
     "primary_author": "Elliot Haspel",
     "authors": [
       "Elliot Haspel"
@@ -9100,7 +9100,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1686,
+    "word_count": 1687,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a42be"
   },
@@ -9405,7 +9405,7 @@
     "type_basis": "html:4-chart-embeds",
     "published_date": "2025-12-29",
     "published_at": "2025-12-29T17:08:36.000+00:00",
-    "updated_at": "2026-08-26T18:35:32.000+00:00",
+    "updated_at": "2026-09-29T21:08:07.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -9456,7 +9456,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 845,
+    "word_count": 846,
     "reading_minutes": 4,
     "id": "69a04c0ad4006a00010a4279"
   },
@@ -9621,7 +9621,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-12-17",
     "published_at": "2025-12-17T15:18:15.000+00:00",
-    "updated_at": "2026-09-17T16:19:09.000+00:00",
+    "updated_at": "2026-09-29T21:08:56.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -9657,7 +9657,7 @@
     "type_basis": "series:what-to-do-and-not-to-do",
     "published_date": "2025-12-17",
     "published_at": "2025-12-17T11:00:00.000+00:00",
-    "updated_at": "2026-08-26T20:11:33.000+00:00",
+    "updated_at": "2026-09-29T20:56:29.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -9705,7 +9705,7 @@
     "type_basis": "series:what-to-do-and-not-to-do",
     "published_date": "2025-12-17",
     "published_at": "2025-12-17T06:30:00.000+00:00",
-    "updated_at": "2026-08-26T18:37:41.000+00:00",
+    "updated_at": "2026-09-29T21:09:47.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -9741,7 +9741,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 6140,
+    "word_count": 6139,
     "reading_minutes": 27,
     "id": "69a04c0ad4006a00010a4283"
   },
@@ -9753,7 +9753,7 @@
     "type_basis": "series:what-to-do-and-not-to-do",
     "published_date": "2025-12-16",
     "published_at": "2025-12-16T11:00:04.000+00:00",
-    "updated_at": "2026-08-26T18:35:38.000+00:00",
+    "updated_at": "2026-09-29T20:54:24.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -9789,7 +9789,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 14800,
+    "word_count": 14802,
     "reading_minutes": 64,
     "id": "69a04c0ad4006a00010a427e"
   },
@@ -9801,7 +9801,7 @@
     "type_basis": "html:10-chart-embeds",
     "published_date": "2025-12-16",
     "published_at": "2025-12-16T11:00:04.000+00:00",
-    "updated_at": "2026-04-15T13:36:31.000+00:00",
+    "updated_at": "2026-09-29T21:09:45.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -10098,7 +10098,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2025-12-09",
     "published_at": "2025-12-09T21:01:35.000+00:00",
-    "updated_at": "2026-08-26T18:35:45.000+00:00",
+    "updated_at": "2026-09-29T21:09:57.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -10178,7 +10178,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1991,
+    "word_count": 1992,
     "reading_minutes": 9,
     "id": "69a04c0ad4006a00010a3fe4"
   },
@@ -10226,7 +10226,7 @@
     "type_basis": "default",
     "published_date": "2025-12-09",
     "published_at": "2025-12-09T15:29:29.000+00:00",
-    "updated_at": "2026-04-15T13:36:35.000+00:00",
+    "updated_at": "2026-09-29T21:08:46.000+00:00",
     "primary_author": "Howard Yaruss",
     "authors": [
       "Howard Yaruss"
@@ -10249,7 +10249,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1044,
+    "word_count": 1045,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a3fe6"
   },
@@ -10261,7 +10261,7 @@
     "type_basis": "default",
     "published_date": "2025-12-09",
     "published_at": "2025-12-09T15:29:22.000+00:00",
-    "updated_at": "2026-08-26T18:36:48.000+00:00",
+    "updated_at": "2026-09-29T20:56:10.000+00:00",
     "primary_author": "Vincent Schiraldi",
     "authors": [
       "Vincent Schiraldi"
@@ -10285,8 +10285,8 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2211,
-    "reading_minutes": 10,
+    "word_count": 2008,
+    "reading_minutes": 9,
     "id": "69a04c0ad4006a00010a3fe7"
   },
   {
@@ -10297,7 +10297,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-12-08",
     "published_at": "2025-12-08T15:31:20.000+00:00",
-    "updated_at": "2026-09-17T16:19:08.000+00:00",
+    "updated_at": "2026-09-29T20:55:37.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -10479,7 +10479,7 @@
     "type_basis": "default",
     "published_date": "2025-11-25",
     "published_at": "2025-11-25T15:51:36.000+00:00",
-    "updated_at": "2026-04-15T13:36:38.000+00:00",
+    "updated_at": "2026-09-29T20:54:19.000+00:00",
     "primary_author": "Aaron Short",
     "authors": [
       "Aaron Short"
@@ -10589,7 +10589,7 @@
     "type_basis": "default",
     "published_date": "2025-11-20",
     "published_at": "2025-11-20T16:43:11.000+00:00",
-    "updated_at": "2026-08-26T18:35:47.000+00:00",
+    "updated_at": "2026-09-29T20:54:58.000+00:00",
     "primary_author": "Gloria Gong",
     "authors": [
       "Gloria Gong"
@@ -10669,7 +10669,7 @@
     "type_basis": "default",
     "published_date": "2025-11-19",
     "published_at": "2025-11-19T15:03:43.000+00:00",
-    "updated_at": "2026-08-26T18:35:48.000+00:00",
+    "updated_at": "2026-09-29T21:08:40.000+00:00",
     "primary_author": "Pedro Noguera",
     "authors": [
       "Pedro Noguera"
@@ -10854,7 +10854,7 @@
     "type_basis": "default",
     "published_date": "2025-11-07",
     "published_at": "2025-11-07T17:15:46.000+00:00",
-    "updated_at": "2026-04-15T13:36:40.000+00:00",
+    "updated_at": "2026-09-29T20:54:18.000+00:00",
     "primary_author": "Sam Roberts",
     "authors": [
       "Sam Roberts"
@@ -11273,7 +11273,7 @@
     "type_basis": "default",
     "published_date": "2025-11-06",
     "published_at": "2025-11-06T15:08:46.000+00:00",
-    "updated_at": "2026-08-26T18:35:52.000+00:00",
+    "updated_at": "2026-09-29T21:11:51.000+00:00",
     "primary_author": "Michele Bogart",
     "authors": [
       "Michele Bogart"
@@ -11453,7 +11453,7 @@
     "type_basis": "default",
     "published_date": "2025-10-29",
     "published_at": "2025-10-29T18:34:46.000+00:00",
-    "updated_at": "2026-08-26T18:35:57.000+00:00",
+    "updated_at": "2026-09-29T21:09:01.000+00:00",
     "primary_author": "Gabriel S. Tennen",
     "authors": [
       "Gabriel S. Tennen"
@@ -11477,7 +11477,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1073,
+    "word_count": 1072,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a4003"
   },
@@ -11561,7 +11561,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-10-29",
     "published_at": "2025-10-29T13:24:32.000+00:00",
-    "updated_at": "2026-09-17T16:19:07.000+00:00",
+    "updated_at": "2026-09-29T21:20:37.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -11585,7 +11585,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 13426,
+    "word_count": 13423,
     "reading_minutes": 58,
     "id": "6aa95958165ce00001549b54"
   },
@@ -11855,7 +11855,7 @@
     "type_basis": "default",
     "published_date": "2025-10-17",
     "published_at": "2025-10-17T16:02:00.000+00:00",
-    "updated_at": "2026-08-26T18:36:02.000+00:00",
+    "updated_at": "2026-09-29T20:56:55.000+00:00",
     "primary_author": "Bradley Tusk",
     "authors": [
       "Bradley Tusk"
@@ -11884,7 +11884,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2078,
+    "word_count": 2077,
     "reading_minutes": 9,
     "id": "69a04c0ad4006a00010a4028"
   },
@@ -11896,7 +11896,7 @@
     "type_basis": "default",
     "published_date": "2025-10-17",
     "published_at": "2025-10-17T16:00:00.000+00:00",
-    "updated_at": "2026-08-26T18:36:03.000+00:00",
+    "updated_at": "2026-09-29T20:53:40.000+00:00",
     "primary_author": "Richard McGahey",
     "authors": [
       "Richard McGahey"
@@ -11988,7 +11988,7 @@
     "type_basis": "default",
     "published_date": "2025-10-17",
     "published_at": "2025-10-17T13:01:00.000+00:00",
-    "updated_at": "2026-08-26T18:37:54.000+00:00",
+    "updated_at": "2026-09-29T20:54:48.000+00:00",
     "primary_author": "Vincent Cannato",
     "authors": [
       "Vincent Cannato"
@@ -12149,7 +12149,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-10-10",
     "published_at": "2025-10-10T15:05:14.000+00:00",
-    "updated_at": "2026-08-26T18:37:56.000+00:00",
+    "updated_at": "2026-09-29T21:20:33.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -12194,7 +12194,7 @@
     "type_basis": "default",
     "published_date": "2025-10-08",
     "published_at": "2025-10-08T19:31:27.000+00:00",
-    "updated_at": "2026-08-26T18:36:05.000+00:00",
+    "updated_at": "2026-09-29T21:08:31.000+00:00",
     "primary_author": "Carol Goodstein",
     "authors": [
       "Carol Goodstein"
@@ -12219,7 +12219,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1805,
+    "word_count": 1804,
     "reading_minutes": 8,
     "id": "69a04c0ad4006a00010a4243"
   },
@@ -12231,7 +12231,7 @@
     "type_basis": "default",
     "published_date": "2025-10-03",
     "published_at": "2025-10-03T14:35:06.000+00:00",
-    "updated_at": "2026-08-26T18:36:05.000+00:00",
+    "updated_at": "2026-09-29T20:55:38.000+00:00",
     "primary_author": "Basil Smikle Jr.",
     "authors": [
       "Basil Smikle Jr."
@@ -12317,7 +12317,7 @@
     "type_basis": "default",
     "published_date": "2025-10-01",
     "published_at": "2025-10-01T20:14:56.000+00:00",
-    "updated_at": "2026-08-26T18:36:07.000+00:00",
+    "updated_at": "2026-09-29T20:54:34.000+00:00",
     "primary_author": "Jere Hester",
     "authors": [
       "Jere Hester"
@@ -12465,7 +12465,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-09-22",
     "published_at": "2025-09-22T18:33:34.000+00:00",
-    "updated_at": "2026-09-17T16:19:06.000+00:00",
+    "updated_at": "2026-09-29T20:53:35.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -12489,7 +12489,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12311,
+    "word_count": 12312,
     "reading_minutes": 54,
     "id": "6aa95954165ce00001549b4f"
   },
@@ -12806,7 +12806,7 @@
     "type_basis": "default",
     "published_date": "2025-09-17",
     "published_at": "2025-09-17T16:00:15.000+00:00",
-    "updated_at": "2026-04-16T19:02:02.000+00:00",
+    "updated_at": "2026-09-29T21:09:44.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -13618,7 +13618,7 @@
     "type_basis": "default",
     "published_date": "2025-09-17",
     "published_at": "2025-09-17T15:00:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:48.000+00:00",
+    "updated_at": "2026-09-29T21:09:31.000+00:00",
     "primary_author": "Claire Weisz",
     "authors": [
       "Claire Weisz",
@@ -13648,7 +13648,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 3668,
+    "word_count": 3667,
     "reading_minutes": 16,
     "id": "69a04c0ad4006a00010a4012"
   },
@@ -13660,7 +13660,7 @@
     "type_basis": "default",
     "published_date": "2025-09-17",
     "published_at": "2025-09-17T14:41:00.000+00:00",
-    "updated_at": "2026-04-15T13:36:49.000+00:00",
+    "updated_at": "2026-09-29T20:56:09.000+00:00",
     "primary_author": "Annemarie H. Sammartino",
     "authors": [
       "Annemarie H. Sammartino"
@@ -13785,7 +13785,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-09-12",
     "published_at": "2025-09-12T13:57:32.000+00:00",
-    "updated_at": "2026-08-26T18:38:03.000+00:00",
+    "updated_at": "2026-09-29T20:56:54.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -13871,7 +13871,7 @@
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-04-15T13:36:51.000+00:00",
+    "updated_at": "2026-09-29T20:54:10.000+00:00",
     "primary_author": "Brian DeLay",
     "authors": [
       "Brian DeLay"
@@ -13900,7 +13900,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1600,
+    "word_count": 1601,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4246"
   },
@@ -14168,7 +14168,7 @@
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:34:41.000+00:00",
-    "updated_at": "2026-08-26T20:11:43.000+00:00",
+    "updated_at": "2026-09-29T20:55:39.000+00:00",
     "primary_author": "A Survey",
     "authors": [
       "A Survey"
@@ -14648,7 +14648,7 @@
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T16:32:00.000+00:00",
-    "updated_at": "2026-08-26T20:42:16.000+00:00",
+    "updated_at": "2026-09-29T20:56:07.000+00:00",
     "primary_author": "Olivia Li",
     "authors": [
       "Olivia Li"
@@ -14853,7 +14853,7 @@
     "type_basis": "default",
     "published_date": "2025-09-10",
     "published_at": "2025-09-10T08:12:00.000+00:00",
-    "updated_at": "2026-08-24T21:37:05.000+00:00",
+    "updated_at": "2026-09-29T20:54:06.000+00:00",
     "primary_author": "Nick Suplina",
     "authors": [
       "Nick Suplina"
@@ -14997,7 +14997,7 @@
     "type_basis": "tag:book-review",
     "published_date": "2025-09-04",
     "published_at": "2025-09-04T17:00:00.000+00:00",
-    "updated_at": "2026-08-26T20:11:44.000+00:00",
+    "updated_at": "2026-09-29T21:08:41.000+00:00",
     "primary_author": "Neil Barsky",
     "authors": [
       "Neil Barsky"
@@ -15023,7 +15023,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1580,
+    "word_count": 1581,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4027"
   },
@@ -15112,7 +15112,7 @@
     "type_basis": "default",
     "published_date": "2025-08-21",
     "published_at": "2025-08-21T16:19:22.000+00:00",
-    "updated_at": "2026-08-26T20:11:45.000+00:00",
+    "updated_at": "2026-09-29T21:09:51.000+00:00",
     "primary_author": "Wendell Jamieson",
     "authors": [
       "Wendell Jamieson"
@@ -15354,7 +15354,7 @@
     "type_basis": "default",
     "published_date": "2025-08-06",
     "published_at": "2025-08-06T12:38:00.000+00:00",
-    "updated_at": "2026-08-26T18:36:31.000+00:00",
+    "updated_at": "2026-09-29T20:53:39.000+00:00",
     "primary_author": "Scarlet Neath",
     "authors": [
       "Scarlet Neath",
@@ -15382,7 +15382,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1765,
+    "word_count": 1764,
     "reading_minutes": 8,
     "id": "69a04c0ad4006a00010a42b6"
   },
@@ -15708,7 +15708,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2025-07-31",
     "published_at": "2025-07-31T16:31:19.000+00:00",
-    "updated_at": "2026-04-15T13:36:55.000+00:00",
+    "updated_at": "2026-09-29T21:09:38.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -15846,7 +15846,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2960,
+    "word_count": 2961,
     "reading_minutes": 13,
     "id": "69a04c0ad4006a00010a402e"
   },
@@ -16011,7 +16011,7 @@
     "type_basis": "default",
     "published_date": "2025-07-24",
     "published_at": "2025-07-24T16:00:01.000+00:00",
-    "updated_at": "2026-04-15T13:36:57.000+00:00",
+    "updated_at": "2026-09-29T21:08:47.000+00:00",
     "primary_author": "Caryl Englander",
     "authors": [
       "Caryl Englander"
@@ -16036,7 +16036,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 812,
+    "word_count": 813,
     "reading_minutes": 4,
     "id": "69a04c0ad4006a00010a4032"
   },
@@ -16171,7 +16171,7 @@
     "type_basis": "default",
     "published_date": "2025-07-16",
     "published_at": "2025-07-16T13:00:01.000+00:00",
-    "updated_at": "2026-04-15T13:36:57.000+00:00",
+    "updated_at": "2026-09-29T20:53:55.000+00:00",
     "primary_author": "Avi Schick",
     "authors": [
       "Avi Schick"
@@ -16211,7 +16211,7 @@
     "type_basis": "default",
     "published_date": "2025-07-10",
     "published_at": "2025-07-10T20:00:40.000+00:00",
-    "updated_at": "2026-04-15T13:36:57.000+00:00",
+    "updated_at": "2026-09-29T20:54:29.000+00:00",
     "primary_author": "Marc A. Levin",
     "authors": [
       "Marc A. Levin"
@@ -16248,7 +16248,7 @@
     "type_basis": "tag:book-review",
     "published_date": "2025-07-10",
     "published_at": "2025-07-10T14:31:03.000+00:00",
-    "updated_at": "2026-08-26T18:36:37.000+00:00",
+    "updated_at": "2026-09-29T21:09:54.000+00:00",
     "primary_author": "Greg Berman",
     "authors": [
       "Greg Berman"
@@ -16474,7 +16474,7 @@
     "type_basis": "default",
     "published_date": "2025-06-20",
     "published_at": "2025-06-20T17:34:23.000+00:00",
-    "updated_at": "2026-08-26T20:11:46.000+00:00",
+    "updated_at": "2026-09-29T20:55:35.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -16510,7 +16510,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-06-18",
     "published_at": "2025-06-18T23:30:00.000+00:00",
-    "updated_at": "2026-09-17T16:19:05.000+00:00",
+    "updated_at": "2026-09-29T21:20:47.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -16534,7 +16534,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12568,
+    "word_count": 12570,
     "reading_minutes": 55,
     "id": "6aa95951165ce00001549b4a"
   },
@@ -16630,7 +16630,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-06-16",
     "published_at": "2025-06-16T20:49:01.000+00:00",
-    "updated_at": "2026-09-17T16:19:04.000+00:00",
+    "updated_at": "2026-09-29T21:20:38.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -16654,7 +16654,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 9351,
+    "word_count": 9352,
     "reading_minutes": 41,
     "id": "6aa9594d165ce00001549b45"
   },
@@ -16892,7 +16892,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-06-12",
     "published_at": "2025-06-12T14:15:15.000+00:00",
-    "updated_at": "2026-09-17T16:19:04.000+00:00",
+    "updated_at": "2026-09-29T20:53:21.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -16916,7 +16916,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 7631,
+    "word_count": 7632,
     "reading_minutes": 33,
     "id": "6aa95949165ce00001549b40"
   },
@@ -16964,7 +16964,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-06-09",
     "published_at": "2025-06-09T18:26:49.000+00:00",
-    "updated_at": "2026-09-17T16:19:03.000+00:00",
+    "updated_at": "2026-09-29T21:09:00.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -16988,7 +16988,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 10080,
+    "word_count": 10082,
     "reading_minutes": 44,
     "id": "6aa95944165ce00001549b3b"
   },
@@ -17000,7 +17000,7 @@
     "type_basis": "default",
     "published_date": "2025-06-05",
     "published_at": "2025-06-05T16:31:35.000+00:00",
-    "updated_at": "2026-08-26T20:11:47.000+00:00",
+    "updated_at": "2026-09-29T21:09:46.000+00:00",
     "primary_author": "Harry Siegel",
     "authors": [
       "Harry Siegel"
@@ -17036,7 +17036,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2025-06-04",
     "published_at": "2025-06-04T17:29:41.000+00:00",
-    "updated_at": "2026-08-26T19:40:34.000+00:00",
+    "updated_at": "2026-09-29T20:53:58.000+00:00",
     "primary_author": "Jamie Rubin",
     "authors": [
       "Jamie Rubin"
@@ -17153,7 +17153,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-06-02",
     "published_at": "2025-06-02T15:23:37.000+00:00",
-    "updated_at": "2026-09-17T16:19:02.000+00:00",
+    "updated_at": "2026-09-29T21:08:59.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -17177,7 +17177,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 6027,
+    "word_count": 6028,
     "reading_minutes": 26,
     "id": "6aa95940165ce00001549b36"
   },
@@ -17189,7 +17189,7 @@
     "type_basis": "default",
     "published_date": "2025-05-30",
     "published_at": "2025-05-30T14:00:05.000+00:00",
-    "updated_at": "2026-04-15T13:37:00.000+00:00",
+    "updated_at": "2026-09-29T20:53:27.000+00:00",
     "primary_author": "Cara Eckholm",
     "authors": [
       "Cara Eckholm"
@@ -17410,7 +17410,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2025-05-21",
     "published_at": "2025-05-21T19:00:06.000+00:00",
-    "updated_at": "2026-08-26T19:40:38.000+00:00",
+    "updated_at": "2026-09-29T21:20:43.000+00:00",
     "primary_author": "Jamie Rubin",
     "authors": [
       "Jamie Rubin"
@@ -17455,7 +17455,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-05-21",
     "published_at": "2025-05-21T15:01:07.000+00:00",
-    "updated_at": "2026-09-17T16:19:01.000+00:00",
+    "updated_at": "2026-09-29T20:55:01.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -17479,7 +17479,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 11407,
+    "word_count": 11408,
     "reading_minutes": 50,
     "id": "6aa9593b165ce00001549b31"
   },
@@ -17600,7 +17600,7 @@
     "type_basis": "default",
     "published_date": "2025-05-09",
     "published_at": "2025-05-09T14:00:06.000+00:00",
-    "updated_at": "2026-08-26T19:40:40.000+00:00",
+    "updated_at": "2026-09-29T20:53:20.000+00:00",
     "primary_author": "Andrew Weissmann",
     "authors": [
       "Andrew Weissmann"
@@ -17681,7 +17681,7 @@
     "type_basis": "default",
     "published_date": "2025-05-07",
     "published_at": "2025-05-07T19:45:39.000+00:00",
-    "updated_at": "2026-08-26T19:40:41.000+00:00",
+    "updated_at": "2026-09-29T21:08:19.000+00:00",
     "primary_author": "Roderick Hills",
     "authors": [
       "Roderick Hills"
@@ -17717,7 +17717,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2025-05-07",
     "published_at": "2025-05-07T19:18:47.000+00:00",
-    "updated_at": "2026-08-26T20:11:50.000+00:00",
+    "updated_at": "2026-09-29T21:09:04.000+00:00",
     "primary_author": "Jamie Rubin",
     "authors": [
       "Jamie Rubin"
@@ -17762,7 +17762,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2025-05-01",
     "published_at": "2025-05-01T16:15:30.000+00:00",
-    "updated_at": "2026-08-26T20:11:51.000+00:00",
+    "updated_at": "2026-09-29T21:20:29.000+00:00",
     "primary_author": "Jamie Rubin",
     "authors": [
       "Jamie Rubin"
@@ -17795,7 +17795,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 5296,
+    "word_count": 5297,
     "reading_minutes": 23,
     "id": "69a04c0ad4006a00010a4046"
   },
@@ -17807,7 +17807,7 @@
     "type_basis": "html:multi-speaker-transcript",
     "published_date": "2025-05-01",
     "published_at": "2025-05-01T14:01:57.000+00:00",
-    "updated_at": "2026-08-26T19:40:45.000+00:00",
+    "updated_at": "2026-09-29T20:54:40.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -17830,7 +17830,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 4007,
+    "word_count": 4008,
     "reading_minutes": 17,
     "id": "69a04c0ad4006a00010a4047"
   },
@@ -17842,7 +17842,7 @@
     "type_basis": "default",
     "published_date": "2025-04-30",
     "published_at": "2025-04-30T20:19:27.000+00:00",
-    "updated_at": "2026-08-26T19:40:46.000+00:00",
+    "updated_at": "2026-09-29T21:08:33.000+00:00",
     "primary_author": "Neil Barsky",
     "authors": [
       "Neil Barsky"
@@ -17957,7 +17957,7 @@
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-08-26T19:40:47.000+00:00",
+    "updated_at": "2026-09-29T21:08:32.000+00:00",
     "primary_author": "Harry Siegel",
     "authors": [
       "Harry Siegel"
@@ -17984,7 +17984,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1560,
+    "word_count": 1561,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a404b"
   },
@@ -17996,7 +17996,7 @@
     "type_basis": "default",
     "published_date": "2025-04-29",
     "published_at": "2025-04-29T19:35:30.000+00:00",
-    "updated_at": "2026-08-26T20:11:52.000+00:00",
+    "updated_at": "2026-09-29T21:09:50.000+00:00",
     "primary_author": "A Survey",
     "authors": [
       "A Survey"
@@ -18150,7 +18150,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2025-04-23",
     "published_at": "2025-04-23T14:42:37.000+00:00",
-    "updated_at": "2026-04-15T13:37:03.000+00:00",
+    "updated_at": "2026-09-29T21:09:52.000+00:00",
     "primary_author": "Jamie Rubin",
     "authors": [
       "Jamie Rubin"
@@ -18234,7 +18234,7 @@
     "type_basis": "default",
     "published_date": "2025-04-16",
     "published_at": "2025-04-16T16:02:03.000+00:00",
-    "updated_at": "2026-04-15T13:37:04.000+00:00",
+    "updated_at": "2026-09-29T20:56:42.000+00:00",
     "primary_author": "David Schleicher",
     "authors": [
       "David Schleicher"
@@ -18468,7 +18468,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-04-08",
     "published_at": "2025-04-08T16:05:33.000+00:00",
-    "updated_at": "2026-09-17T16:19:00.000+00:00",
+    "updated_at": "2026-09-29T20:55:05.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -18492,7 +18492,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 7140,
+    "word_count": 7146,
     "reading_minutes": 31,
     "id": "6aa95937165ce00001549b2c"
   },
@@ -18660,7 +18660,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-04-02",
     "published_at": "2025-04-02T14:36:36.000+00:00",
-    "updated_at": "2026-09-17T16:19:00.000+00:00",
+    "updated_at": "2026-09-29T21:20:44.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -18684,7 +18684,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12447,
+    "word_count": 12448,
     "reading_minutes": 54,
     "id": "6aa95933165ce00001549b27"
   },
@@ -18696,7 +18696,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2025-03-27",
     "published_at": "2025-03-27T17:55:01.000+00:00",
-    "updated_at": "2026-08-26T19:40:59.000+00:00",
+    "updated_at": "2026-09-29T20:53:23.000+00:00",
     "primary_author": "Jamie Rubin",
     "authors": [
       "Jamie Rubin"
@@ -18729,7 +18729,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 6990,
+    "word_count": 6992,
     "reading_minutes": 30,
     "id": "69a04c0ad4006a00010a4282"
   },
@@ -18812,7 +18812,7 @@
     "type_basis": "default",
     "published_date": "2025-03-20",
     "published_at": "2025-03-20T14:00:41.000+00:00",
-    "updated_at": "2026-08-26T19:41:00.000+00:00",
+    "updated_at": "2026-09-29T21:08:18.000+00:00",
     "primary_author": "Robert Polner",
     "authors": [
       "Robert Polner",
@@ -18886,7 +18886,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-03-11",
     "published_at": "2025-03-11T15:27:18.000+00:00",
-    "updated_at": "2026-09-17T16:18:59.000+00:00",
+    "updated_at": "2026-09-29T21:09:53.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -18922,7 +18922,7 @@
     "type_basis": "default",
     "published_date": "2025-03-06",
     "published_at": "2025-03-06T18:45:59.000+00:00",
-    "updated_at": "2026-08-26T20:11:55.000+00:00",
+    "updated_at": "2026-09-29T20:53:28.000+00:00",
     "primary_author": "Harry Siegel",
     "authors": [
       "Harry Siegel"
@@ -19036,7 +19036,7 @@
     "type_basis": "default",
     "published_date": "2025-03-04",
     "published_at": "2025-03-04T02:30:17.000+00:00",
-    "updated_at": "2026-04-15T13:37:06.000+00:00",
+    "updated_at": "2026-09-29T21:08:10.000+00:00",
     "primary_author": "Daniel Stid",
     "authors": [
       "Daniel Stid"
@@ -19118,7 +19118,7 @@
     "type_basis": "default",
     "published_date": "2025-03-04",
     "published_at": "2025-03-04T02:22:03.000+00:00",
-    "updated_at": "2026-08-26T19:41:03.000+00:00",
+    "updated_at": "2026-09-29T21:16:38.000+00:00",
     "primary_author": "Leslie Lenkowsky",
     "authors": [
       "Leslie Lenkowsky"
@@ -19148,7 +19148,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2566,
+    "word_count": 2564,
     "reading_minutes": 11,
     "id": "69a04c0ad4006a00010a4266"
   },
@@ -19201,7 +19201,7 @@
     "type_basis": "default",
     "published_date": "2025-03-04",
     "published_at": "2025-03-04T00:38:55.000+00:00",
-    "updated_at": "2026-04-15T13:37:06.000+00:00",
+    "updated_at": "2026-09-29T20:53:26.000+00:00",
     "primary_author": "Claire Dunning",
     "authors": [
       "Claire Dunning"
@@ -19530,7 +19530,7 @@
     "type_basis": "default",
     "published_date": "2025-03-03",
     "published_at": "2025-03-03T21:52:12.000+00:00",
-    "updated_at": "2026-04-15T13:37:07.000+00:00",
+    "updated_at": "2026-09-29T21:09:39.000+00:00",
     "primary_author": "John MacIntosh",
     "authors": [
       "John MacIntosh"
@@ -19559,7 +19559,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1694,
+    "word_count": 1695,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a405f"
   },
@@ -19612,7 +19612,7 @@
     "type_basis": "default",
     "published_date": "2025-03-03",
     "published_at": "2025-03-03T21:01:00.000+00:00",
-    "updated_at": "2026-08-26T19:41:05.000+00:00",
+    "updated_at": "2026-09-29T21:09:05.000+00:00",
     "primary_author": "R.A.E. Wells",
     "authors": [
       "R.A.E. Wells"
@@ -19697,7 +19697,7 @@
     "type_basis": "default",
     "published_date": "2025-03-03",
     "published_at": "2025-03-03T20:00:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:08.000+00:00",
+    "updated_at": "2026-09-29T21:08:22.000+00:00",
     "primary_author": "Robert Pondiscio",
     "authors": [
       "Robert Pondiscio"
@@ -19738,7 +19738,7 @@
     "type_basis": "default",
     "published_date": "2025-03-03",
     "published_at": "2025-03-03T19:30:00.000+00:00",
-    "updated_at": "2026-08-24T21:37:11.000+00:00",
+    "updated_at": "2026-09-29T20:54:31.000+00:00",
     "primary_author": "Justine Olderman",
     "authors": [
       "Justine Olderman"
@@ -19767,7 +19767,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1504,
+    "word_count": 1505,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a42a0"
   },
@@ -19820,7 +19820,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2025-03-03",
     "published_at": "2025-03-03T16:26:00.000+00:00",
-    "updated_at": "2026-08-26T19:41:06.000+00:00",
+    "updated_at": "2026-09-29T21:08:08.000+00:00",
     "primary_author": "Jamie Rubin",
     "authors": [
       "Jamie Rubin"
@@ -19869,7 +19869,7 @@
     "type_basis": "default",
     "published_date": "2025-03-03",
     "published_at": "2025-03-03T15:00:03.000+00:00",
-    "updated_at": "2026-08-26T19:41:07.000+00:00",
+    "updated_at": "2026-09-29T20:54:56.000+00:00",
     "primary_author": "Steven Belenko",
     "authors": [
       "Steven Belenko"
@@ -20104,7 +20104,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-02-24",
     "published_at": "2025-02-24T17:35:43.000+00:00",
-    "updated_at": "2026-09-17T16:18:58.000+00:00",
+    "updated_at": "2026-09-29T20:56:50.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -20176,7 +20176,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-02-18",
     "published_at": "2025-02-18T23:30:00.000+00:00",
-    "updated_at": "2026-09-17T16:18:57.000+00:00",
+    "updated_at": "2026-09-29T21:08:54.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -20284,7 +20284,7 @@
     "type_basis": "default",
     "published_date": "2025-02-15",
     "published_at": "2025-02-15T00:03:46.000+00:00",
-    "updated_at": "2026-08-26T20:11:57.000+00:00",
+    "updated_at": "2026-09-29T20:55:09.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer"
@@ -20320,7 +20320,7 @@
     "type_basis": "tag:podcast",
     "published_date": "2025-02-11",
     "published_at": "2025-02-11T21:25:14.000+00:00",
-    "updated_at": "2026-08-26T20:11:58.000+00:00",
+    "updated_at": "2026-09-29T20:56:15.000+00:00",
     "primary_author": "Jamie Rubin",
     "authors": [
       "Jamie Rubin"
@@ -20677,7 +20677,7 @@
     "type_basis": "default",
     "published_date": "2025-02-10",
     "published_at": "2025-02-10T22:36:27.000+00:00",
-    "updated_at": "2026-08-26T20:12:03.000+00:00",
+    "updated_at": "2026-09-29T20:56:38.000+00:00",
     "primary_author": "Edward Glaeser",
     "authors": [
       "Edward Glaeser"
@@ -20718,7 +20718,7 @@
     "type_basis": "default",
     "published_date": "2025-02-10",
     "published_at": "2025-02-10T22:25:01.000+00:00",
-    "updated_at": "2026-08-26T20:12:04.000+00:00",
+    "updated_at": "2026-09-29T20:56:00.000+00:00",
     "primary_author": "Terry Golway",
     "authors": [
       "Terry Golway"
@@ -20884,7 +20884,7 @@
     "type_basis": "default",
     "published_date": "2025-02-06",
     "published_at": "2025-02-06T21:55:17.000+00:00",
-    "updated_at": "2026-08-26T19:41:22.000+00:00",
+    "updated_at": "2026-09-29T20:55:47.000+00:00",
     "primary_author": "Harry Siegel",
     "authors": [
       "Harry Siegel"
@@ -20955,7 +20955,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-02-02",
     "published_at": "2025-02-02T23:30:00.000+00:00",
-    "updated_at": "2026-09-17T16:18:56.000+00:00",
+    "updated_at": "2026-09-29T21:20:49.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -20979,7 +20979,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12196,
+    "word_count": 12195,
     "reading_minutes": 53,
     "id": "6aa95926165ce00001549b13"
   },
@@ -21335,7 +21335,7 @@
     "type_basis": "default",
     "published_date": "2025-01-22",
     "published_at": "2025-01-22T21:20:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:05.000+00:00",
+    "updated_at": "2026-09-29T21:08:28.000+00:00",
     "primary_author": "Aaron Chalfin",
     "authors": [
       "Aaron Chalfin"
@@ -21716,7 +21716,7 @@
     "type_basis": "default",
     "published_date": "2025-01-22",
     "published_at": "2025-01-22T21:10:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:06.000+00:00",
+    "updated_at": "2026-09-29T21:08:41.000+00:00",
     "primary_author": "Peter Moskos",
     "authors": [
       "Peter Moskos"
@@ -22141,7 +22141,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-01-12",
     "published_at": "2025-01-12T23:30:00.000+00:00",
-    "updated_at": "2026-09-17T16:18:55.000+00:00",
+    "updated_at": "2026-09-29T21:20:39.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -22165,7 +22165,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 10421,
+    "word_count": 10422,
     "reading_minutes": 45,
     "id": "6aa95922165ce00001549b0e"
   },
@@ -22213,7 +22213,7 @@
     "type_basis": "default",
     "published_date": "2025-01-10",
     "published_at": "2025-01-10T15:00:00.000+00:00",
-    "updated_at": "2026-08-26T19:41:35.000+00:00",
+    "updated_at": "2026-09-29T20:55:18.000+00:00",
     "primary_author": "Aaron Short",
     "authors": [
       "Aaron Short"
@@ -22530,7 +22530,7 @@
     "type_basis": "tag:interview",
     "published_date": "2024-12-15",
     "published_at": "2024-12-15T17:27:36.000+00:00",
-    "updated_at": "2026-09-17T15:38:03.000+00:00",
+    "updated_at": "2026-09-29T21:20:30.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -22554,7 +22554,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 10411,
+    "word_count": 10413,
     "reading_minutes": 45,
     "id": "6aa958f5165ce00001549b07"
   },
@@ -22604,7 +22604,7 @@
     "type_basis": "default",
     "published_date": "2024-12-12",
     "published_at": "2024-12-12T15:08:22.000+00:00",
-    "updated_at": "2026-08-26T19:41:42.000+00:00",
+    "updated_at": "2026-09-29T20:56:12.000+00:00",
     "primary_author": "Felipe De La Hoz",
     "authors": [
       "Felipe De La Hoz"
@@ -22725,7 +22725,7 @@
     "type_basis": "default",
     "published_date": "2024-12-05",
     "published_at": "2024-12-05T17:00:32.000+00:00",
-    "updated_at": "2026-08-26T19:41:43.000+00:00",
+    "updated_at": "2026-09-29T20:55:40.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer"
@@ -22844,7 +22844,7 @@
     "type_basis": "default",
     "published_date": "2024-11-27",
     "published_at": "2024-11-27T17:00:01.000+00:00",
-    "updated_at": "2026-08-26T19:41:45.000+00:00",
+    "updated_at": "2026-09-29T20:53:43.000+00:00",
     "primary_author": "Stacy Torres",
     "authors": [
       "Stacy Torres"
@@ -22960,7 +22960,7 @@
     "type_basis": "default",
     "published_date": "2024-11-15",
     "published_at": "2024-11-15T21:27:53.000+00:00",
-    "updated_at": "2026-08-26T19:41:47.000+00:00",
+    "updated_at": "2026-09-29T21:08:26.000+00:00",
     "primary_author": "Sam Schwartz",
     "authors": [
       "Sam Schwartz"
@@ -22984,7 +22984,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1203,
+    "word_count": 1204,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a41e8"
   },
@@ -23318,7 +23318,7 @@
     "type_basis": "default",
     "published_date": "2024-10-22",
     "published_at": "2024-10-22T18:06:45.000+00:00",
-    "updated_at": "2026-08-26T19:41:53.000+00:00",
+    "updated_at": "2026-09-29T21:09:55.000+00:00",
     "primary_author": "Craig Gurian",
     "authors": [
       "Craig Gurian"
@@ -23342,7 +23342,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1614,
+    "word_count": 1613,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4092"
   },
@@ -23391,7 +23391,7 @@
     "type_basis": "default",
     "published_date": "2024-10-17",
     "published_at": "2024-10-17T16:00:06.000+00:00",
-    "updated_at": "2026-08-26T19:41:55.000+00:00",
+    "updated_at": "2026-09-29T20:54:32.000+00:00",
     "primary_author": "Joseph Richardson Jr.",
     "authors": [
       "Joseph Richardson Jr."
@@ -23427,7 +23427,7 @@
     "type_basis": "default",
     "published_date": "2024-10-16",
     "published_at": "2024-10-16T16:30:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:19.000+00:00",
+    "updated_at": "2026-09-29T20:54:07.000+00:00",
     "primary_author": "Malcolm Feeley",
     "authors": [
       "Malcolm Feeley"
@@ -23454,7 +23454,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2681,
+    "word_count": 2682,
     "reading_minutes": 12,
     "id": "69a04c0ad4006a00010a40bd"
   },
@@ -23544,7 +23544,7 @@
     "type_basis": "default",
     "published_date": "2024-10-16",
     "published_at": "2024-10-16T16:15:00.000+00:00",
-    "updated_at": "2026-08-26T19:41:56.000+00:00",
+    "updated_at": "2026-09-29T21:08:45.000+00:00",
     "primary_author": "Sarena Townsend",
     "authors": [
       "Sarena Townsend"
@@ -23623,7 +23623,7 @@
     "type_basis": "tag:interview",
     "published_date": "2024-10-16",
     "published_at": "2024-10-16T16:05:00.000+00:00",
-    "updated_at": "2026-08-26T19:41:58.000+00:00",
+    "updated_at": "2026-09-29T21:20:36.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -23872,7 +23872,7 @@
     "type_basis": "default",
     "published_date": "2024-10-16",
     "published_at": "2024-10-16T15:46:09.000+00:00",
-    "updated_at": "2026-08-26T19:41:59.000+00:00",
+    "updated_at": "2026-09-29T21:08:50.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer",
@@ -23901,7 +23901,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1165,
+    "word_count": 1158,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a4098"
   },
@@ -24072,7 +24072,7 @@
     "type_basis": "default",
     "published_date": "2024-10-16",
     "published_at": "2024-10-16T15:25:00.000+00:00",
-    "updated_at": "2026-08-26T19:42:06.000+00:00",
+    "updated_at": "2026-09-29T20:56:21.000+00:00",
     "primary_author": "Cyrus Ahalt",
     "authors": [
       "Cyrus Ahalt",
@@ -24112,7 +24112,7 @@
     "type_basis": "default",
     "published_date": "2024-10-16",
     "published_at": "2024-10-16T15:20:00.000+00:00",
-    "updated_at": "2026-08-26T19:42:08.000+00:00",
+    "updated_at": "2026-09-29T20:55:20.000+00:00",
     "primary_author": "Dana Kaplan",
     "authors": [
       "Dana Kaplan"
@@ -24150,7 +24150,7 @@
     "type_basis": "title:conversation",
     "published_date": "2024-10-15",
     "published_at": "2024-10-15T10:00:00.000+00:00",
-    "updated_at": "2026-08-26T19:42:09.000+00:00",
+    "updated_at": "2026-09-29T21:20:45.000+00:00",
     "primary_author": "Jelani Cobb",
     "authors": [
       "Jelani Cobb",
@@ -24237,7 +24237,7 @@
     "type_basis": "default",
     "published_date": "2024-10-10",
     "published_at": "2024-10-10T15:25:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:12.000+00:00",
+    "updated_at": "2026-09-29T20:54:31.000+00:00",
     "primary_author": "Richard Briffault",
     "authors": [
       "Richard Briffault"
@@ -24276,7 +24276,7 @@
     "type_basis": "default",
     "published_date": "2024-10-10",
     "published_at": "2024-10-10T15:20:00.000+00:00",
-    "updated_at": "2026-08-26T19:42:12.000+00:00",
+    "updated_at": "2026-09-29T20:56:23.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer"
@@ -24303,7 +24303,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1947,
+    "word_count": 1944,
     "reading_minutes": 8,
     "id": "69a04c0ad4006a00010a40a2"
   },
@@ -24394,7 +24394,7 @@
     "type_basis": "default",
     "published_date": "2024-10-08",
     "published_at": "2024-10-08T20:47:04.000+00:00",
-    "updated_at": "2026-04-15T13:37:22.000+00:00",
+    "updated_at": "2026-09-29T21:08:11.000+00:00",
     "primary_author": "Vishaan Chakrabarti",
     "authors": [
       "Vishaan Chakrabarti"
@@ -24419,7 +24419,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1453,
+    "word_count": 1451,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a40a4"
   },
@@ -24608,7 +24608,7 @@
     "type_basis": "default",
     "published_date": "2024-10-02",
     "published_at": "2024-10-02T15:58:37.000+00:00",
-    "updated_at": "2026-04-15T13:37:24.000+00:00",
+    "updated_at": "2026-09-29T20:54:01.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer",
@@ -24638,7 +24638,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1564,
+    "word_count": 1563,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a40b9"
   },
@@ -24650,7 +24650,7 @@
     "type_basis": "default",
     "published_date": "2024-10-02",
     "published_at": "2024-10-02T15:58:37.000+00:00",
-    "updated_at": "2026-08-26T19:42:16.000+00:00",
+    "updated_at": "2026-09-29T20:55:42.000+00:00",
     "primary_author": "Claire Weisz",
     "authors": [
       "Claire Weisz",
@@ -24875,7 +24875,7 @@
     "type_basis": "default",
     "published_date": "2024-10-02",
     "published_at": "2024-10-02T15:58:37.000+00:00",
-    "updated_at": "2026-08-26T19:42:19.000+00:00",
+    "updated_at": "2026-09-29T20:56:24.000+00:00",
     "primary_author": "Yonah Freemark",
     "authors": [
       "Yonah Freemark"
@@ -25144,7 +25144,7 @@
     "type_basis": "default",
     "published_date": "2024-10-02",
     "published_at": "2024-10-02T15:50:00.000+00:00",
-    "updated_at": "2026-08-26T19:42:23.000+00:00",
+    "updated_at": "2026-09-29T20:56:41.000+00:00",
     "primary_author": "Nolan Hicks",
     "authors": [
       "Nolan Hicks"
@@ -25186,7 +25186,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1990,
+    "word_count": 1992,
     "reading_minutes": 9,
     "id": "69a04c0ad4006a00010a40af"
   },
@@ -25198,7 +25198,7 @@
     "type_basis": "default",
     "published_date": "2024-10-02",
     "published_at": "2024-10-02T15:50:00.000+00:00",
-    "updated_at": "2026-08-26T19:42:24.000+00:00",
+    "updated_at": "2026-09-29T21:09:35.000+00:00",
     "primary_author": "Ted Alcorn",
     "authors": [
       "Ted Alcorn"
@@ -25239,7 +25239,7 @@
     "type_basis": "default",
     "published_date": "2024-10-02",
     "published_at": "2024-10-02T15:45:00.000+00:00",
-    "updated_at": "2026-08-26T19:42:25.000+00:00",
+    "updated_at": "2026-09-29T21:09:42.000+00:00",
     "primary_author": "Sasha Blair-Goldensohn",
     "authors": [
       "Sasha Blair-Goldensohn"
@@ -25276,7 +25276,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2120,
+    "word_count": 2121,
     "reading_minutes": 9,
     "id": "69a04c0ad4006a00010a40b0"
   },
@@ -25638,7 +25638,7 @@
     "type_basis": "default",
     "published_date": "2024-10-02",
     "published_at": "2024-10-02T15:20:00.000+00:00",
-    "updated_at": "2026-08-26T19:42:30.000+00:00",
+    "updated_at": "2026-09-29T21:09:49.000+00:00",
     "primary_author": "Greg Berman",
     "authors": [
       "Greg Berman"
@@ -25679,7 +25679,7 @@
     "type_basis": "default",
     "published_date": "2024-09-24",
     "published_at": "2024-09-24T12:00:00.000+00:00",
-    "updated_at": "2026-08-24T21:37:23.000+00:00",
+    "updated_at": "2026-09-29T20:54:35.000+00:00",
     "primary_author": "Jan Ransom",
     "authors": [
       "Jan Ransom",
@@ -25765,7 +25765,7 @@
     "type_basis": "default",
     "published_date": "2024-09-19",
     "published_at": "2024-09-19T17:20:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:27.000+00:00",
+    "updated_at": "2026-09-29T20:56:35.000+00:00",
     "primary_author": "Andrew Weissmann",
     "authors": [
       "Andrew Weissmann"
@@ -25846,7 +25846,7 @@
     "type_basis": "tag:interview",
     "published_date": "2024-09-19",
     "published_at": "2024-09-19T17:10:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:27.000+00:00",
+    "updated_at": "2026-09-29T20:55:49.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -25886,7 +25886,7 @@
     "type_basis": "title:conversation",
     "published_date": "2024-09-19",
     "published_at": "2024-09-19T17:05:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:18.000+00:00",
+    "updated_at": "2026-09-29T20:53:19.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -25925,7 +25925,7 @@
     "type_basis": "tag:interview",
     "published_date": "2024-09-19",
     "published_at": "2024-09-19T17:00:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:19.000+00:00",
+    "updated_at": "2026-09-29T21:20:35.000+00:00",
     "primary_author": "Bradley Tusk",
     "authors": [
       "Bradley Tusk",
@@ -25941,8 +25941,8 @@
       "the-case-against-eric-adams-corruption-issue"
     ],
     "issue_numbers": [],
-    "summary": "Deputy Mayors Meera Joshi, Maria Torres-Springer and Anne Isom-Williams discuss what it’s like in the arena amid indictments and resignations.",
-    "excerpt": "Deputy Mayors Meera Joshi, Maria Torres-Springer and Anne Isom-Williams discuss what it’s like in the arena amid indictments and resignations.",
+    "summary": "Deputy Mayors Meera Joshi, Maria Torres-Springer and Anne Williams-Isom discuss what it’s like in the arena amid indictments and resignations.",
+    "excerpt": "Deputy Mayors Meera Joshi, Maria Torres-Springer and Anne Williams-Isom discuss what it’s like in the arena amid indictments and resignations.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/04/zwu2cyf3nbkbxaz-_gettyimages-1237378191_cropped-auto-format-compress-1776259743387.jpg",
     "feature_image_alt": "Then-mayor-elect Eric Adams poses with five women to be appointed as his deputies. From L-R: Lorraine Grillo, Meera Joshi, Eric Adams, Maria Torres-Springer, Sheena Wright, Anne Williams-Isom",
     "feature_image_credit": "Then-mayor-elect Eric Adams poses with five women to be appointed as his deputies. From L-R: Lorraine Grillo, Meera Joshi, Eric Adams, Maria Torres-Springer, Sheena Wright, Anne Williams-Isom / Credit: Pacific Press / Getty Images",
@@ -25954,7 +25954,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 11189,
+    "word_count": 11188,
     "reading_minutes": 49,
     "id": "69a04c0ad4006a00010a4294"
   },
@@ -26075,7 +26075,7 @@
     "type_basis": "default",
     "published_date": "2024-09-11",
     "published_at": "2024-09-11T18:12:46.000+00:00",
-    "updated_at": "2026-08-26T19:42:35.000+00:00",
+    "updated_at": "2026-09-29T20:54:12.000+00:00",
     "primary_author": "Anthony A. Braga",
     "authors": [
       "Anthony A. Braga"
@@ -26360,7 +26360,7 @@
     "type_basis": "default",
     "published_date": "2024-08-14",
     "published_at": "2024-08-14T15:12:30.000+00:00",
-    "updated_at": "2026-04-15T13:37:29.000+00:00",
+    "updated_at": "2026-09-29T20:55:17.000+00:00",
     "primary_author": "Harry Siegel",
     "authors": [
       "Harry Siegel"
@@ -26399,7 +26399,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2024-08-13",
     "published_at": "2024-08-13T22:14:42.000+00:00",
-    "updated_at": "2026-04-15T13:37:29.000+00:00",
+    "updated_at": "2026-09-29T20:56:11.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City",
@@ -26522,7 +26522,7 @@
     "type_basis": "default",
     "published_date": "2024-08-08",
     "published_at": "2024-08-08T18:04:49.000+00:00",
-    "updated_at": "2026-04-15T13:37:29.000+00:00",
+    "updated_at": "2026-09-29T21:08:51.000+00:00",
     "primary_author": "Benjamin Schneider",
     "authors": [
       "Benjamin Schneider"
@@ -26546,7 +26546,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1581,
+    "word_count": 1580,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4252"
   },
@@ -26677,7 +26677,7 @@
     "type_basis": "default",
     "published_date": "2024-07-10",
     "published_at": "2024-07-10T16:00:19.000+00:00",
-    "updated_at": "2026-04-15T13:37:29.000+00:00",
+    "updated_at": "2026-09-29T20:54:15.000+00:00",
     "primary_author": "Anjulie Rao",
     "authors": [
       "Anjulie Rao"
@@ -26835,7 +26835,7 @@
     "type_basis": "default",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T16:01:44.000+00:00",
-    "updated_at": "2026-08-26T19:42:44.000+00:00",
+    "updated_at": "2026-09-29T20:54:08.000+00:00",
     "primary_author": "Edward Glaeser",
     "authors": [
       "Edward Glaeser"
@@ -26864,7 +26864,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1885,
+    "word_count": 1886,
     "reading_minutes": 8,
     "id": "69a04c0ad4006a00010a40d6"
   },
@@ -26876,7 +26876,7 @@
     "type_basis": "default",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T16:01:44.000+00:00",
-    "updated_at": "2026-04-15T13:37:31.000+00:00",
+    "updated_at": "2026-09-29T21:08:20.000+00:00",
     "primary_author": "Stijn Van Nieuwerburgh",
     "authors": [
       "Stijn Van Nieuwerburgh",
@@ -26931,7 +26931,7 @@
     "type_basis": "default",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T16:01:44.000+00:00",
-    "updated_at": "2026-08-26T19:42:46.000+00:00",
+    "updated_at": "2026-09-29T20:56:39.000+00:00",
     "primary_author": "Errol Louis",
     "authors": [
       "Errol Louis"
@@ -26972,7 +26972,7 @@
     "type_basis": "default",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T16:01:44.000+00:00",
-    "updated_at": "2026-08-26T20:12:22.000+00:00",
+    "updated_at": "2026-09-29T20:56:13.000+00:00",
     "primary_author": "Andrew Rein",
     "authors": [
       "Andrew Rein",
@@ -27073,7 +27073,7 @@
     "type_basis": "title:conversation",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T16:01:44.000+00:00",
-    "updated_at": "2026-08-26T19:42:48.000+00:00",
+    "updated_at": "2026-09-29T21:09:21.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -27114,7 +27114,7 @@
     "type_basis": "default",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T16:01:44.000+00:00",
-    "updated_at": "2026-05-04T19:28:55.000+00:00",
+    "updated_at": "2026-09-29T21:09:18.000+00:00",
     "primary_author": "Harry Siegel",
     "authors": [
       "Harry Siegel"
@@ -27156,7 +27156,7 @@
     "type_basis": "default",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T16:01:44.000+00:00",
-    "updated_at": "2026-08-26T20:12:21.000+00:00",
+    "updated_at": "2026-09-29T21:09:26.000+00:00",
     "primary_author": "Vicki Been",
     "authors": [
       "Vicki Been",
@@ -27194,7 +27194,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2299,
+    "word_count": 2298,
     "reading_minutes": 10,
     "id": "69a04c0ad4006a00010a40cb"
   },
@@ -27248,7 +27248,7 @@
     "type_basis": "default",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T16:01:44.000+00:00",
-    "updated_at": "2026-08-26T19:42:41.000+00:00",
+    "updated_at": "2026-09-29T21:09:34.000+00:00",
     "primary_author": "Ted Alcorn",
     "authors": [
       "Ted Alcorn"
@@ -27338,7 +27338,7 @@
     "type_basis": "html:3-chart-embeds",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T16:00:00.000+00:00",
-    "updated_at": "2026-08-26T19:42:49.000+00:00",
+    "updated_at": "2026-09-29T20:56:04.000+00:00",
     "primary_author": "John K. Roman",
     "authors": [
       "John K. Roman",
@@ -27386,7 +27386,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1934,
+    "word_count": 1933,
     "reading_minutes": 8,
     "id": "69a04c0ad4006a00010a4287"
   },
@@ -27531,7 +27531,7 @@
     "type_basis": "default",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T15:50:00.000+00:00",
-    "updated_at": "2026-05-04T19:18:20.000+00:00",
+    "updated_at": "2026-09-29T20:56:02.000+00:00",
     "primary_author": "Jesse Rifkin",
     "authors": [
       "Jesse Rifkin"
@@ -27788,7 +27788,7 @@
     "type_basis": "default",
     "published_date": "2024-06-26",
     "published_at": "2024-06-26T15:35:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:25.000+00:00",
+    "updated_at": "2026-09-29T21:09:37.000+00:00",
     "primary_author": "Julia D. Day",
     "authors": [
       "Julia D. Day"
@@ -27817,7 +27817,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1639,
+    "word_count": 1640,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a40d3"
   },
@@ -28072,7 +28072,7 @@
     "type_basis": "default",
     "published_date": "2024-06-12",
     "published_at": "2024-06-12T18:00:13.000+00:00",
-    "updated_at": "2026-08-26T19:43:00.000+00:00",
+    "updated_at": "2026-09-29T21:09:40.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -28095,7 +28095,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1130,
+    "word_count": 1132,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a40dc"
   },
@@ -28166,7 +28166,7 @@
     "type_basis": "default",
     "published_date": "2024-06-05",
     "published_at": "2024-06-05T17:30:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:29.000+00:00",
+    "updated_at": "2026-09-29T20:53:54.000+00:00",
     "primary_author": "Margery Perlmutter",
     "authors": [
       "Margery Perlmutter"
@@ -28274,7 +28274,7 @@
     "type_basis": "default",
     "published_date": "2024-05-16",
     "published_at": "2024-05-16T17:42:18.000+00:00",
-    "updated_at": "2026-08-26T20:31:20.000+00:00",
+    "updated_at": "2026-09-29T20:53:56.000+00:00",
     "primary_author": "Jens Ludwig",
     "authors": [
       "Jens Ludwig",
@@ -28314,7 +28314,7 @@
     "type_basis": "default",
     "published_date": "2024-05-15",
     "published_at": "2024-05-15T13:59:44.000+00:00",
-    "updated_at": "2026-04-15T13:37:54.000+00:00",
+    "updated_at": "2026-09-29T21:08:25.000+00:00",
     "primary_author": "Richard Hofstadter",
     "authors": [
       "Richard Hofstadter"
@@ -28346,7 +28346,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 3227,
+    "word_count": 3228,
     "reading_minutes": 14,
     "id": "69a04c0ad4006a00010a40de"
   },
@@ -28358,7 +28358,7 @@
     "type_basis": "default",
     "published_date": "2024-05-14",
     "published_at": "2024-05-14T14:17:41.000+00:00",
-    "updated_at": "2026-08-26T20:31:21.000+00:00",
+    "updated_at": "2026-09-29T21:09:15.000+00:00",
     "primary_author": "Bob Eckstein",
     "authors": [
       "Bob Eckstein"
@@ -28483,7 +28483,7 @@
     "type_basis": "default",
     "published_date": "2024-05-01",
     "published_at": "2024-05-01T13:10:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:30.000+00:00",
+    "updated_at": "2026-09-29T20:53:34.000+00:00",
     "primary_author": "Sam Schwartz",
     "authors": [
       "Sam Schwartz"
@@ -28522,7 +28522,7 @@
     "type_basis": "default",
     "published_date": "2024-05-01",
     "published_at": "2024-05-01T13:05:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:31.000+00:00",
+    "updated_at": "2026-09-29T21:08:27.000+00:00",
     "primary_author": "Josh Greenman",
     "authors": [
       "Josh Greenman"
@@ -28548,7 +28548,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1693,
+    "word_count": 1695,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a427d"
   },
@@ -28602,7 +28602,7 @@
     "type_basis": "default",
     "published_date": "2024-05-01",
     "published_at": "2024-05-01T13:00:21.000+00:00",
-    "updated_at": "2026-08-26T19:43:06.000+00:00",
+    "updated_at": "2026-09-29T21:09:31.000+00:00",
     "primary_author": "John Surico",
     "authors": [
       "John Surico"
@@ -28680,7 +28680,7 @@
     "type_basis": "default",
     "published_date": "2024-05-01",
     "published_at": "2024-05-01T13:00:21.000+00:00",
-    "updated_at": "2026-04-15T13:37:55.000+00:00",
+    "updated_at": "2026-09-29T20:54:33.000+00:00",
     "primary_author": "Alon Levy",
     "authors": [
       "Alon Levy"
@@ -28719,7 +28719,7 @@
     "type_basis": "default",
     "published_date": "2024-05-01",
     "published_at": "2024-05-01T12:55:00.000+00:00",
-    "updated_at": "2026-08-24T21:37:27.000+00:00",
+    "updated_at": "2026-09-29T20:55:33.000+00:00",
     "primary_author": "Howard Yaruss",
     "authors": [
       "Howard Yaruss"
@@ -29018,7 +29018,7 @@
     "type_basis": "default",
     "published_date": "2024-04-10",
     "published_at": "2024-04-10T16:02:34.000+00:00",
-    "updated_at": "2026-08-26T20:12:33.000+00:00",
+    "updated_at": "2026-09-29T21:09:25.000+00:00",
     "primary_author": "Nicole Gelinas",
     "authors": [
       "Nicole Gelinas"
@@ -29042,7 +29042,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 950,
+    "word_count": 951,
     "reading_minutes": 4,
     "id": "69a04c0ad4006a00010a425c"
   },
@@ -29091,7 +29091,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:15:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:35.000+00:00",
+    "updated_at": "2026-09-29T21:08:50.000+00:00",
     "primary_author": "Philip J. Cook",
     "authors": [
       "Philip J. Cook",
@@ -29121,7 +29121,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1186,
+    "word_count": 1185,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a4299"
   },
@@ -29174,7 +29174,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:10:00.000+00:00",
-    "updated_at": "2026-08-26T19:43:14.000+00:00",
+    "updated_at": "2026-09-29T20:54:00.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer",
@@ -29215,7 +29215,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:05:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:36.000+00:00",
+    "updated_at": "2026-09-29T20:56:32.000+00:00",
     "primary_author": "Greg Berman",
     "authors": [
       "Greg Berman"
@@ -29256,7 +29256,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:05:00.000+00:00",
-    "updated_at": "2026-04-15T13:37:57.000+00:00",
+    "updated_at": "2026-09-29T20:56:08.000+00:00",
     "primary_author": "Ted Alcorn",
     "authors": [
       "Ted Alcorn"
@@ -29285,7 +29285,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1599,
+    "word_count": 1598,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4267"
   },
@@ -29622,7 +29622,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:00:06.000+00:00",
-    "updated_at": "2026-08-26T19:43:23.000+00:00",
+    "updated_at": "2026-09-29T21:08:48.000+00:00",
     "primary_author": "Mark M. Gray",
     "authors": [
       "Mark M. Gray"
@@ -29651,7 +29651,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1555,
+    "word_count": 1558,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4204"
   },
@@ -29663,7 +29663,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:00:06.000+00:00",
-    "updated_at": "2026-08-26T20:12:37.000+00:00",
+    "updated_at": "2026-09-29T20:54:46.000+00:00",
     "primary_author": "Harry Siegel",
     "authors": [
       "Harry Siegel"
@@ -29917,7 +29917,7 @@
     "type_basis": "default",
     "published_date": "2024-03-27",
     "published_at": "2024-03-27T16:00:00.000+00:00",
-    "updated_at": "2026-08-24T21:37:31.000+00:00",
+    "updated_at": "2026-09-29T20:56:25.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer"
@@ -30159,7 +30159,7 @@
     "type_basis": "default",
     "published_date": "2024-03-22",
     "published_at": "2024-03-22T17:45:49.000+00:00",
-    "updated_at": "2026-08-26T20:30:56.000+00:00",
+    "updated_at": "2026-09-29T20:55:13.000+00:00",
     "primary_author": "Josh Greenman",
     "authors": [
       "Josh Greenman"
@@ -30827,7 +30827,7 @@
     "type_basis": "default",
     "published_date": "2024-03-12",
     "published_at": "2024-03-12T17:00:00.000+00:00",
-    "updated_at": "2026-08-26T20:31:24.000+00:00",
+    "updated_at": "2026-09-29T21:09:28.000+00:00",
     "primary_author": "Aubrey Fox",
     "authors": [
       "Aubrey Fox"
@@ -31187,7 +31187,7 @@
     "type_basis": "default",
     "published_date": "2024-03-12",
     "published_at": "2024-03-12T16:57:00.000+00:00",
-    "updated_at": "2026-04-15T13:38:04.000+00:00",
+    "updated_at": "2026-09-29T21:09:16.000+00:00",
     "primary_author": "Daniel Ades",
     "authors": [
       "Daniel Ades",
@@ -31223,7 +31223,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1878,
+    "word_count": 1877,
     "reading_minutes": 8,
     "id": "69a04c0ad4006a00010a40ec"
   },
@@ -31325,7 +31325,7 @@
     "type_basis": "default",
     "published_date": "2024-02-28",
     "published_at": "2024-02-28T19:53:04.000+00:00",
-    "updated_at": "2026-08-26T19:43:45.000+00:00",
+    "updated_at": "2026-09-29T21:09:03.000+00:00",
     "primary_author": "Karen Friedman Agnifilo",
     "authors": [
       "Karen Friedman Agnifilo"
@@ -31933,7 +31933,7 @@
     "type_basis": "tag:interview",
     "published_date": "2024-02-13",
     "published_at": "2024-02-13T15:01:14.000+00:00",
-    "updated_at": "2026-08-26T20:11:02.000+00:00",
+    "updated_at": "2026-09-29T20:54:02.000+00:00",
     "primary_author": "Jay K. Varma, MD",
     "authors": [
       "Jay K. Varma, MD"
@@ -32147,7 +32147,7 @@
     "type_basis": "default",
     "published_date": "2024-01-26",
     "published_at": "2024-01-26T17:00:04.000+00:00",
-    "updated_at": "2026-08-26T19:43:58.000+00:00",
+    "updated_at": "2026-09-29T20:55:59.000+00:00",
     "primary_author": "Ana Champeny",
     "authors": [
       "Ana Champeny"
@@ -32387,7 +32387,7 @@
     "type_basis": "default",
     "published_date": "2023-12-13",
     "published_at": "2023-12-13T17:01:34.000+00:00",
-    "updated_at": "2026-08-26T19:44:14.000+00:00",
+    "updated_at": "2026-09-29T21:09:30.000+00:00",
     "primary_author": "Alex Knorre",
     "authors": [
       "Alex Knorre"
@@ -32416,7 +32416,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1335,
+    "word_count": 1336,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a4231"
   },
@@ -32597,7 +32597,7 @@
     "type_basis": "default",
     "published_date": "2023-12-13",
     "published_at": "2023-12-13T17:01:34.000+00:00",
-    "updated_at": "2026-08-26T19:44:10.000+00:00",
+    "updated_at": "2026-09-29T21:09:36.000+00:00",
     "primary_author": "Robin Goldstein",
     "authors": [
       "Robin Goldstein"
@@ -33367,7 +33367,7 @@
     "type_basis": "tag:interview",
     "published_date": "2023-12-13",
     "published_at": "2023-12-13T16:58:00.000+00:00",
-    "updated_at": "2026-08-26T19:44:17.000+00:00",
+    "updated_at": "2026-09-29T21:20:41.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -33525,7 +33525,7 @@
     "type_basis": "html:multi-speaker-transcript",
     "published_date": "2023-11-21",
     "published_at": "2023-11-21T20:34:47.000+00:00",
-    "updated_at": "2026-08-26T19:44:21.000+00:00",
+    "updated_at": "2026-09-29T20:56:44.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -33561,7 +33561,7 @@
     "type_basis": "html:multi-speaker-transcript",
     "published_date": "2023-11-21",
     "published_at": "2023-11-21T20:33:19.000+00:00",
-    "updated_at": "2026-04-15T13:38:11.000+00:00",
+    "updated_at": "2026-09-29T21:20:46.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -33633,7 +33633,7 @@
     "type_basis": "default",
     "published_date": "2023-11-21",
     "published_at": "2023-11-21T20:27:25.000+00:00",
-    "updated_at": "2026-08-26T19:44:23.000+00:00",
+    "updated_at": "2026-09-29T20:53:33.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer"
@@ -33705,7 +33705,7 @@
     "type_basis": "html:multi-speaker-transcript",
     "published_date": "2023-11-20",
     "published_at": "2023-11-20T20:59:28.000+00:00",
-    "updated_at": "2026-08-26T20:41:48.000+00:00",
+    "updated_at": "2026-09-29T21:08:42.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -33813,7 +33813,7 @@
     "type_basis": "html:multi-speaker-transcript",
     "published_date": "2023-11-20",
     "published_at": "2023-11-20T20:59:28.000+00:00",
-    "updated_at": "2026-08-26T19:44:26.000+00:00",
+    "updated_at": "2026-09-29T21:20:34.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -33895,7 +33895,7 @@
     "type_basis": "default",
     "published_date": "2023-11-08",
     "published_at": "2023-11-08T18:00:03.000+00:00",
-    "updated_at": "2026-08-26T20:12:55.000+00:00",
+    "updated_at": "2026-09-29T21:08:08.000+00:00",
     "primary_author": "Vishaan Chakrabarti",
     "authors": [
       "Vishaan Chakrabarti"
@@ -33919,7 +33919,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1105,
+    "word_count": 1102,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a4230"
   },
@@ -33931,7 +33931,7 @@
     "type_basis": "default",
     "published_date": "2023-11-01",
     "published_at": "2023-11-01T17:00:11.000+00:00",
-    "updated_at": "2026-08-26T19:44:31.000+00:00",
+    "updated_at": "2026-09-29T21:09:20.000+00:00",
     "primary_author": "Josh Greenman",
     "authors": [
       "Josh Greenman"
@@ -34003,7 +34003,7 @@
     "type_basis": "default",
     "published_date": "2023-10-12",
     "published_at": "2023-10-12T18:00:08.000+00:00",
-    "updated_at": "2026-08-26T20:12:56.000+00:00",
+    "updated_at": "2026-09-29T21:08:43.000+00:00",
     "primary_author": "Amy Chester",
     "authors": [
       "Amy Chester"
@@ -34027,7 +34027,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1539,
+    "word_count": 1541,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a412b"
   },
@@ -34039,7 +34039,7 @@
     "type_basis": "default",
     "published_date": "2023-09-27",
     "published_at": "2023-09-27T16:10:00.000+00:00",
-    "updated_at": "2026-08-26T20:12:57.000+00:00",
+    "updated_at": "2026-09-29T21:09:45.000+00:00",
     "primary_author": "Anthony A. Braga",
     "authors": [
       "Anthony A. Braga",
@@ -34070,7 +34070,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1597,
+    "word_count": 1596,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4270"
   },
@@ -34397,7 +34397,7 @@
     "type_basis": "default",
     "published_date": "2023-09-27",
     "published_at": "2023-09-27T16:00:21.000+00:00",
-    "updated_at": "2026-04-15T13:38:13.000+00:00",
+    "updated_at": "2026-09-29T21:09:17.000+00:00",
     "primary_author": "Joseph Richardson Jr.",
     "authors": [
       "Joseph Richardson Jr."
@@ -34623,7 +34623,7 @@
     "type_basis": "default",
     "published_date": "2023-09-27",
     "published_at": "2023-09-27T16:00:21.000+00:00",
-    "updated_at": "2026-08-26T19:44:34.000+00:00",
+    "updated_at": "2026-09-29T20:55:50.000+00:00",
     "primary_author": "A Survey",
     "authors": [
       "A Survey"
@@ -34790,7 +34790,7 @@
     "type_basis": "default",
     "published_date": "2023-09-19",
     "published_at": "2023-09-19T16:59:42.000+00:00",
-    "updated_at": "2026-08-26T19:44:44.000+00:00",
+    "updated_at": "2026-09-29T20:54:17.000+00:00",
     "primary_author": "Richard Kahlenberg",
     "authors": [
       "Richard Kahlenberg"
@@ -34814,7 +34814,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1745,
+    "word_count": 1744,
     "reading_minutes": 8,
     "id": "69a04c0ad4006a00010a413b"
   },
@@ -35008,7 +35008,7 @@
     "type_basis": "html:multi-speaker-transcript",
     "published_date": "2023-08-07",
     "published_at": "2023-08-07T14:46:04.000+00:00",
-    "updated_at": "2026-08-26T20:12:58.000+00:00",
+    "updated_at": "2026-09-29T21:08:14.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -35032,8 +35032,8 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 30332,
-    "reading_minutes": 132,
+    "word_count": 15166,
+    "reading_minutes": 66,
     "id": "69a04c0ad4006a00010a428c"
   },
   {
@@ -35080,7 +35080,7 @@
     "type_basis": "default",
     "published_date": "2023-08-02",
     "published_at": "2023-08-02T12:00:00.000+00:00",
-    "updated_at": "2026-08-26T19:44:49.000+00:00",
+    "updated_at": "2026-09-29T20:53:33.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer",
@@ -35170,7 +35170,7 @@
     "type_basis": "default",
     "published_date": "2023-06-28",
     "published_at": "2023-06-28T14:00:02.000+00:00",
-    "updated_at": "2026-08-26T20:13:01.000+00:00",
+    "updated_at": "2026-09-29T20:56:30.000+00:00",
     "primary_author": "Greg Berman",
     "authors": [
       "Greg Berman"
@@ -35315,7 +35315,7 @@
     "type_basis": "default",
     "published_date": "2023-06-28",
     "published_at": "2023-06-28T14:00:02.000+00:00",
-    "updated_at": "2026-08-26T21:07:50.000+00:00",
+    "updated_at": "2026-09-29T20:56:45.000+00:00",
     "primary_author": "Julie Sandorf",
     "authors": [
       "Julie Sandorf"
@@ -35675,7 +35675,7 @@
     "type_basis": "default",
     "published_date": "2023-06-28",
     "published_at": "2023-06-28T14:00:02.000+00:00",
-    "updated_at": "2026-08-26T19:44:59.000+00:00",
+    "updated_at": "2026-09-29T20:55:14.000+00:00",
     "primary_author": "Clare Miflin",
     "authors": [
       "Clare Miflin",
@@ -35903,7 +35903,7 @@
     "type_basis": "default",
     "published_date": "2023-06-12",
     "published_at": "2023-06-12T20:24:39.000+00:00",
-    "updated_at": "2026-08-26T21:04:48.000+00:00",
+    "updated_at": "2026-09-29T21:09:23.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer"
@@ -35928,7 +35928,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1187,
+    "word_count": 1188,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a4293"
   },
@@ -36121,7 +36121,7 @@
     "type_basis": "default",
     "published_date": "2023-05-24",
     "published_at": "2023-05-24T14:01:46.000+00:00",
-    "updated_at": "2026-08-26T19:45:05.000+00:00",
+    "updated_at": "2026-09-29T20:55:08.000+00:00",
     "primary_author": "Vishaan Chakrabarti",
     "authors": [
       "Vishaan Chakrabarti"
@@ -36145,7 +36145,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1154,
+    "word_count": 1153,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a4155"
   },
@@ -36193,7 +36193,7 @@
     "type_basis": "default",
     "published_date": "2023-05-17",
     "published_at": "2023-05-17T15:30:15.000+00:00",
-    "updated_at": "2026-08-26T19:45:07.000+00:00",
+    "updated_at": "2026-09-29T20:55:41.000+00:00",
     "primary_author": "Brandon del Pozo",
     "authors": [
       "Brandon del Pozo"
@@ -36373,7 +36373,7 @@
     "type_basis": "default",
     "published_date": "2023-04-27",
     "published_at": "2023-04-27T16:49:30.000+00:00",
-    "updated_at": "2026-08-26T19:45:10.000+00:00",
+    "updated_at": "2026-09-29T21:09:56.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer",
@@ -36399,7 +36399,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 3893,
+    "word_count": 3892,
     "reading_minutes": 17,
     "id": "69a04c0ad4006a00010a415c"
   },
@@ -36448,7 +36448,7 @@
     "type_basis": "default",
     "published_date": "2023-04-20",
     "published_at": "2023-04-20T17:00:00.000+00:00",
-    "updated_at": "2026-04-15T13:38:19.000+00:00",
+    "updated_at": "2026-09-29T20:55:36.000+00:00",
     "primary_author": "Sam Schwartz",
     "authors": [
       "Sam Schwartz"
@@ -36528,7 +36528,7 @@
     "type_basis": "default",
     "published_date": "2023-03-30",
     "published_at": "2023-03-30T13:00:12.000+00:00",
-    "updated_at": "2026-08-26T19:45:11.000+00:00",
+    "updated_at": "2026-09-29T20:54:55.000+00:00",
     "primary_author": "John MacDonald",
     "authors": [
       "John MacDonald"
@@ -36554,7 +36554,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2003,
+    "word_count": 2004,
     "reading_minutes": 9,
     "id": "69a04c0ad4006a00010a4160"
   },
@@ -36566,7 +36566,7 @@
     "type_basis": "default",
     "published_date": "2023-03-30",
     "published_at": "2023-03-30T12:30:00.000+00:00",
-    "updated_at": "2026-08-26T19:45:12.000+00:00",
+    "updated_at": "2026-09-29T21:09:39.000+00:00",
     "primary_author": "John K. Roman",
     "authors": [
       "John K. Roman"
@@ -36593,7 +36593,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1977,
+    "word_count": 1978,
     "reading_minutes": 9,
     "id": "69a04c0ad4006a00010a412c"
   },
@@ -36605,7 +36605,7 @@
     "type_basis": "default",
     "published_date": "2023-03-30",
     "published_at": "2023-03-30T12:00:00.000+00:00",
-    "updated_at": "2026-08-26T20:13:06.000+00:00",
+    "updated_at": "2026-09-29T21:08:46.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -37080,7 +37080,7 @@
     "type_basis": "default",
     "published_date": "2023-03-28",
     "published_at": "2023-03-28T16:01:13.000+00:00",
-    "updated_at": "2026-05-11T18:28:41.000+00:00",
+    "updated_at": "2026-09-29T21:09:56.000+00:00",
     "primary_author": "Eve Kessler",
     "authors": [
       "Eve Kessler"
@@ -37113,7 +37113,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1858,
+    "word_count": 1860,
     "reading_minutes": 8,
     "id": "69a04c0ad4006a00010a416a"
   },
@@ -37927,7 +37927,7 @@
     "type_basis": "default",
     "published_date": "2023-03-16",
     "published_at": "2023-03-16T18:30:24.000+00:00",
-    "updated_at": "2026-08-26T19:45:28.000+00:00",
+    "updated_at": "2026-09-29T21:08:13.000+00:00",
     "primary_author": "Darcel Clark",
     "authors": [
       "Darcel Clark"
@@ -37951,7 +37951,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1296,
+    "word_count": 1295,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a4175"
   },
@@ -37963,7 +37963,7 @@
     "type_basis": "default",
     "published_date": "2023-03-16",
     "published_at": "2023-03-16T18:30:24.000+00:00",
-    "updated_at": "2026-08-26T19:45:27.000+00:00",
+    "updated_at": "2026-09-29T20:53:20.000+00:00",
     "primary_author": "John K. Roman",
     "authors": [
       "John K. Roman",
@@ -38001,7 +38001,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1338,
+    "word_count": 1339,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a4174"
   },
@@ -38085,7 +38085,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2023-03-03",
     "published_at": "2023-03-03T19:00:01.000+00:00",
-    "updated_at": "2026-04-15T13:42:38.000+00:00",
+    "updated_at": "2026-09-29T21:09:41.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -38206,7 +38206,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2796,
+    "word_count": 2797,
     "reading_minutes": 12,
     "id": "69a04c0ad4006a00010a417b"
   },
@@ -38218,7 +38218,7 @@
     "type_basis": "default",
     "published_date": "2023-03-02",
     "published_at": "2023-03-02T19:00:15.000+00:00",
-    "updated_at": "2026-08-26T19:45:32.000+00:00",
+    "updated_at": "2026-09-29T21:09:09.000+00:00",
     "primary_author": "Nicole Gelinas",
     "authors": [
       "Nicole Gelinas"
@@ -38257,7 +38257,7 @@
     "type_basis": "default",
     "published_date": "2023-02-24",
     "published_at": "2023-02-24T17:00:02.000+00:00",
-    "updated_at": "2026-08-26T19:45:34.000+00:00",
+    "updated_at": "2026-09-29T20:54:13.000+00:00",
     "primary_author": "Miles Marshall Lewis",
     "authors": [
       "Miles Marshall Lewis"
@@ -38282,7 +38282,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1469,
+    "word_count": 1468,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a417d"
   },
@@ -38330,7 +38330,7 @@
     "type_basis": "default",
     "published_date": "2023-02-15",
     "published_at": "2023-02-15T19:00:15.000+00:00",
-    "updated_at": "2026-08-26T19:45:36.000+00:00",
+    "updated_at": "2026-09-29T21:09:22.000+00:00",
     "primary_author": "Martha King",
     "authors": [
       "Martha King"
@@ -38354,7 +38354,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 2463,
+    "word_count": 2464,
     "reading_minutes": 11,
     "id": "69a04c0ad4006a00010a41fb"
   },
@@ -38595,7 +38595,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2023-01-27",
     "published_at": "2023-01-27T15:30:22.000+00:00",
-    "updated_at": "2026-08-26T19:45:41.000+00:00",
+    "updated_at": "2026-09-29T20:55:53.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer"
@@ -38855,7 +38855,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2022-12-13",
     "published_at": "2022-12-13T22:00:18.000+00:00",
-    "updated_at": "2026-08-26T19:45:45.000+00:00",
+    "updated_at": "2026-09-29T20:56:16.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -38941,7 +38941,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1506,
+    "word_count": 1507,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4185"
   },
@@ -38988,7 +38988,7 @@
     "type_basis": "default",
     "published_date": "2022-11-30",
     "published_at": "2022-11-30T19:40:41.000+00:00",
-    "updated_at": "2026-08-26T19:45:46.000+00:00",
+    "updated_at": "2026-09-29T21:09:27.000+00:00",
     "primary_author": "Vishaan Chakrabarti",
     "authors": [
       "Vishaan Chakrabarti"
@@ -39012,7 +39012,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1626,
+    "word_count": 1627,
     "reading_minutes": 7,
     "id": "69a04c0ad4006a00010a4186"
   },
@@ -39024,7 +39024,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2022-11-16",
     "published_at": "2022-11-16T15:02:31.000+00:00",
-    "updated_at": "2026-08-26T19:45:47.000+00:00",
+    "updated_at": "2026-09-29T20:55:53.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -39711,7 +39711,7 @@
     "type_basis": "default",
     "published_date": "2022-10-25",
     "published_at": "2022-10-25T04:53:05.000+00:00",
-    "updated_at": "2026-08-26T20:13:10.000+00:00",
+    "updated_at": "2026-09-29T20:55:58.000+00:00",
     "primary_author": "Nicole Gelinas",
     "authors": [
       "Nicole Gelinas"
@@ -39969,7 +39969,7 @@
     "type_basis": "default",
     "published_date": "2022-08-02",
     "published_at": "2022-08-02T15:31:11.000+00:00",
-    "updated_at": "2026-08-26T19:45:56.000+00:00",
+    "updated_at": "2026-09-29T21:08:16.000+00:00",
     "primary_author": "An expert roundtable",
     "authors": [
       "An expert roundtable"
@@ -40046,7 +40046,7 @@
     "type_basis": "default",
     "published_date": "2022-05-26",
     "published_at": "2022-05-26T19:47:02.000+00:00",
-    "updated_at": "2026-08-26T19:45:57.000+00:00",
+    "updated_at": "2026-09-29T21:09:17.000+00:00",
     "primary_author": "Peter Moskos",
     "authors": [
       "Peter Moskos"
@@ -40123,7 +40123,7 @@
     "type_basis": "default",
     "published_date": "2022-05-24",
     "published_at": "2022-05-24T05:52:01.000+00:00",
-    "updated_at": "2026-08-26T19:45:59.000+00:00",
+    "updated_at": "2026-09-29T21:09:14.000+00:00",
     "primary_author": "Vincent Schiraldi",
     "authors": [
       "Vincent Schiraldi"
@@ -40147,7 +40147,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1421,
+    "word_count": 1422,
     "reading_minutes": 6,
     "id": "69a04c0ad4006a00010a41aa"
   },
@@ -40159,7 +40159,7 @@
     "type_basis": "default",
     "published_date": "2022-05-19",
     "published_at": "2022-05-19T12:30:00.000+00:00",
-    "updated_at": "2026-08-24T21:37:37.000+00:00",
+    "updated_at": "2026-09-29T20:54:03.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer",
@@ -40207,7 +40207,7 @@
     "type_basis": "default",
     "published_date": "2022-05-18",
     "published_at": "2022-05-18T23:08:03.000+00:00",
-    "updated_at": "2026-08-26T20:13:18.000+00:00",
+    "updated_at": "2026-09-29T21:08:37.000+00:00",
     "primary_author": "Vincent Schiraldi",
     "authors": [
       "Vincent Schiraldi"
@@ -40279,7 +40279,7 @@
     "type_basis": "default",
     "published_date": "2022-04-06",
     "published_at": "2022-04-06T16:24:34.000+00:00",
-    "updated_at": "2026-08-26T19:46:01.000+00:00",
+    "updated_at": "2026-09-29T21:09:29.000+00:00",
     "primary_author": "Ted Alcorn",
     "authors": [
       "Ted Alcorn"
@@ -40357,7 +40357,7 @@
     "type_basis": "default",
     "published_date": "2022-01-15",
     "published_at": "2022-01-15T19:19:42.000+00:00",
-    "updated_at": "2026-08-26T20:13:19.000+00:00",
+    "updated_at": "2026-09-29T21:08:24.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer"
@@ -40386,7 +40386,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 3512,
+    "word_count": 3513,
     "reading_minutes": 15,
     "id": "69a04c0ad4006a00010a41af"
   },
@@ -40398,7 +40398,7 @@
     "type_basis": "default",
     "published_date": "2022-01-15",
     "published_at": "2022-01-15T19:11:42.000+00:00",
-    "updated_at": "2026-08-26T19:46:05.000+00:00",
+    "updated_at": "2026-09-29T21:09:43.000+00:00",
     "primary_author": "Elizabeth Glazer",
     "authors": [
       "Elizabeth Glazer",
@@ -40428,7 +40428,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1230,
+    "word_count": 1229,
     "reading_minutes": 5,
     "id": "69a04c0ad4006a00010a41b0"
   },
@@ -40482,7 +40482,7 @@
     "type_basis": "default",
     "published_date": "2022-01-15",
     "published_at": "2022-01-15T19:11:20.000+00:00",
-    "updated_at": "2026-08-26T21:09:27.000+00:00",
+    "updated_at": "2026-09-29T20:54:11.000+00:00",
     "primary_author": "Ted Alcorn",
     "authors": [
       "Ted Alcorn"
@@ -40690,7 +40690,7 @@
     "type_basis": "default",
     "published_date": "2022-01-15",
     "published_at": "2022-01-15T19:10:26.000+00:00",
-    "updated_at": "2026-04-15T13:38:32.000+00:00",
+    "updated_at": "2026-09-29T20:55:54.000+00:00",
     "primary_author": "Jennifer Doleac",
     "authors": [
       "Jennifer Doleac",
@@ -40732,7 +40732,7 @@
     "type_basis": "default",
     "published_date": "2022-01-15",
     "published_at": "2022-01-15T19:10:00.000+00:00",
-    "updated_at": "2026-08-26T19:46:09.000+00:00",
+    "updated_at": "2026-09-29T20:55:06.000+00:00",
     "primary_author": "Rod K. Brunson",
     "authors": [
       "Rod K. Brunson",
