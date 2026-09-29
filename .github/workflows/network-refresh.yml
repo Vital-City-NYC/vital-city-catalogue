@@ -221,11 +221,9 @@ jobs:
           restore-keys: press-story-history-
 
       - name: Build and encrypt the press map
-        # Paused Sept. 29, 2026 (Josh: "forget the press map for now"): the
-        # byline step stalls past its cap and costs every run 20 minutes. The
-        # press page stays as last published. Remove this line to restore it.
-        if: ${{ false }}
-        timeout-minutes: 25   # a full harvest runs 11-13 minutes of network wait across ~90 outlets
+        # Paused and restored Sept. 29, 2026: the byline step had stalled past
+        # its cap on a quadratic regex over the Post's pages (fixed in 712a847).
+        timeout-minutes: 25   # a full harvest runs about 10 minutes
         env:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
         run: |
