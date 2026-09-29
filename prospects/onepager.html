@@ -179,8 +179,8 @@ function build(d){
   const roles=(FF.roles||[]).filter(r=>r.label!=="Contributors"&&r.n).map(r=>`<span class="role"><b>${esc(r.n.toLocaleString("en-US"))}</b> ${esc(ROLE[r.label]||r.label.toLowerCase())}</span>`).join("");
   const PR=FF.power_readers;
   const audRows=(FF.audience||[]).filter(a=>/full size|Wikipedia/i.test(a.label)).slice(0,3);
-  const AUD={"Email list, full size":["Email list",null],"Wikipedia-notable subscribers":["Subscribers with their own Wikipedia page","a conservative count"],"Government readers open":["Government readers open",null]};
-  const aud=audRows.map(r=>{const m=AUD[r.label]||[r.label,null];return `<div><b>${esc(m[0])}:</b> ${esc(r.value)} <span style="color:var(--vc-charcoal)">— ${esc(m[1]||r.note)}</span></div>`}).join("")
+  const AUD={"Email list, full size":["Email list",null],"Wikipedia-notable subscribers":["Subscribers with their own Wikipedia page","","confirmed"],"Government readers open":["Government readers open",null]};
+  const aud=audRows.map(r=>{const m=AUD[r.label]||[r.label,null];const note=m[1]===""?"":(m[1]||r.note);return `<div><b>${esc(m[0])}:</b> ${esc(r.value)}${m[2]?" "+esc(m[2]):""}${note?` <span style="color:var(--vc-charcoal)">— ${esc(note)}</span>`:""}</div>`}).join("")
     +(false&&PR&&PR.count?`<div><b>Power readers:</b> ${esc(PR.count.toLocaleString("en-US"))} <span style="color:var(--vc-charcoal)">— one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${esc(String(Math.round(PR.open||0)))}% of everything sent; disproportionately government, academic and press</span></div>`:"");
   const SH=((V&&V.shaped)?V.shaped:(FF.shaped||{})).items||[];
   const allTop5=SH.length&&SH.every(x=>x.top5);
@@ -210,7 +210,7 @@ function build(d){
   const senior=(S.count? `<div class="block"><div class="sec">Who writes it</div>
       <div class="senior">${esc(String(S.pool||""))} contributors since 2021, ${esc(String(S.count))} of them senior contributors on the masthead${spotTxt?`, including ${spotTxt}`:""}.</div></div>` : "");
   window.__model={asof,V,FF,tiles:tileList,shaped:SH,tools:FF.tools||[],products:PRODS,receipts:rlist.slice(0,4),roles:(FF.roles||[]).filter(r=>r.label!=="Contributors"&&r.n).map(r=>({n:r.n,label:ROLE[r.label]||r.label.toLowerCase()})),
-    aud:audRows.map(r=>{const m=AUD[r.label]||[r.label,null];return {label:m[0],value:r.value,note:m[1]||r.note}}).concat(false&&PR&&PR.count?[{label:"Power readers",value:PR.count.toLocaleString("en-US"),note:`one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${Math.round(PR.open||0)}% of everything sent; disproportionately government, academic and press`}]:[]),
+    aud:audRows.map(r=>{const m=AUD[r.label]||[r.label,null];return {label:m[0],value:r.value+(m[2]?" "+m[2]:""),note:m[1]===""?"":(m[1]||r.note)}}).concat(false&&PR&&PR.count?[{label:"Power readers",value:PR.count.toLocaleString("en-US"),note:`one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${Math.round(PR.open||0)}% of everything sent; disproportionately government, academic and press`}]:[]),
     press:{total:P.total,social:P.social,outlets:P.outlets,since:ym(P.since),top:(P.top||[]).slice(0,3),also,republished:FF.republished_by||[],sample:null,most:null},
     spots:(V&&V.shaped)?[]:spots,writes:{pool:S.pool,count:S.count,spot},funders:{names:FU.names||[],giving:G}};
   $("#sheet").innerHTML=`
