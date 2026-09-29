@@ -41,7 +41,7 @@
   .mast .asof{font-size:10.5px;color:var(--vc-charcoal);text-align:right;line-height:1.5}
   .mast h1{font-size:30px}
   .mast .dek{font-size:11.5px;line-height:1.45;color:var(--vc-black);margin-top:7px;max-width:62ch}
-  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud)}
+  .tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud)}
   .tile{background:var(--vc-white);padding:8px 10px 7px}
   .tile .n{font-weight:900;font-size:22px;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .tile .l{font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-top:4px;line-height:1.25}
@@ -148,8 +148,10 @@ function build(d){
   const T=l=>(FF.tiles||[]).find(t=>(t.l||"").toLowerCase().startsWith(l.toLowerCase()));
   const PX=FF.press||{};
   const citeTile=(PX.media!=null)?{n:(PX.media+PX.govpol).toLocaleString("en-US"),l:"Citations in the news and by government",
-    s:`${PX.media.toLocaleString("en-US")} in news outlets, ${PX.govpol.toLocaleString("en-US")} from government and policy groups, since ${ym(PX.since)}`}:T("Press and social");
-  const tileList=[T("Newsletter subscribers"),T("Visitors, Jan. 1"),T("New York Times"),citeTile,T("Government + university"),T("Pieces published")].filter(Boolean);
+    s:`${(T("New York Times")||{}).n?`including ${T("New York Times").n} in The New York Times, more than any other outlet; `:""}since ${ym(PX.since)}`}:T("Press and social");
+  // The Times count lives inside the citations tile (Josh, Sept. 29, 2026),
+  // so the five tiles sit in one row.
+  const tileList=[T("Newsletter subscribers"),T("Visitors, Jan. 1"),citeTile,T("Government + university"),T("Pieces published")].filter(Boolean);
   const tiles=tileList.map(t=>`<div class="tile"><div class="n">${esc(t.n)}</div><div class="l">${esc(t.l)}</div><div class="s">${esc(t.s)}</div></div>`).join("");
   let rlist=(FF.receipts||[]).slice();
   if(V&&V.receipts) rlist.sort((a,b)=>{const i=V.receipts.indexOf(a.head),j=V.receipts.indexOf(b.head);return (i<0?99:i)-(j<0?99:j);});
@@ -196,8 +198,8 @@ function build(d){
   const prods=PRODS.length?`<div class="block"><div class="sec">Policy products</div><div class="wk">${semi(PRODS.map(x=>`<b>${esc(x.name)}</b>, ${esc(PSHORT[x.name]||String(x.desc||"").replace(/\.$/,""))}`))}.</div></div>`:"";
   const S=FF.senior||{};
   const spot=(V&&V.authors&&S.tags)
-    ? V.authors.filter(n=>S.tags[n]).slice(0,6).map(n=>({n,tag:S.tags[n]}))
-    : (S.spotlight||[]).slice(0,6);
+    ? V.authors.filter(n=>S.tags[n]).slice(0,4).map(n=>({n,tag:S.tags[n]}))
+    : (S.spotlight||[]).slice(0,4);
   const last=n=>n.replace(/\s+(Jr\.|Sr\.|II|III)$/,"").split(" ").slice(-1)[0];
   spot.sort((a,b)=>last(a.n).localeCompare(last(b.n)));
   const spotParts=spot.map(x=>`<b>${esc(x.n)}</b> (${esc(x.tag)})`);
@@ -220,10 +222,10 @@ function build(d){
     <div class="tiles">${tiles}</div>
     <div class="cols">
       <div>
-        <div class="sec">Where the work moved policy</div>
+        <div class="sec">Influence in action</div>
         ${receipts}
+        ${prods}
         ${shaped}
-        ${senior}
       </div>
       <div class="press">
         <div class="sec">Who reads it</div>
@@ -231,19 +233,18 @@ function build(d){
         ${roles?`<div class="roles">${roles}</div>`:""}
         <div class="aud">${aud}</div>
         <div class="block"><div class="sec">In the press</div>
-        <p>Cited <b>${esc(String(PX.media!=null?(PX.media+PX.govpol):(P.total||0)))}</b> times in the news and by government and policy groups since ${esc(ym(P.since))}, a conservative count. Most often:</p>
+        <p>Cited <b>${esc(String(PX.media!=null?(PX.media+PX.govpol):(P.total||0)))}</b> times in the news and by government since ${esc(ym(P.since))} (a conservative count), most often by:</p>
         <div class="chips">${chips}</div>
         ${alsoTxt}
         </div>
         ${tools}
-        ${prods}
+        ${senior}
         ${work}
       </div>
     </div>
     ${funders}
     <div class="foot">
       <div><b>Vital City</b> is a project of the Fund for the City of New York, a 501(c)(3), EIN 13-2612524. Editors Elizabeth Glazer and Greg Berman; managing editor Josh Greenman.</div>
-      <div style="text-align:right;white-space:nowrap">vitalcitynyc.org</div>
     </div>`;
 }
 
@@ -262,10 +263,11 @@ async function exportDocx(){
   kids.push(P([R((m.V?m.V.label+" · ":"")+"vitalcitynyc.org · Figures as of "+apDate(m.asof),{color:"707175",size:16})],{after:160}));
   // tiles as a 2x4 table
   const tiles=m.tiles; const rows=[];
-  for(let i=0;i<tiles.length;i+=3){ rows.push(new TableRow({children:tiles.slice(i,i+3).map(t=>cell([P([R(t.n,{bold:true,size:30})],{after:20}),P([R(t.l.toUpperCase(),{bold:true,size:14})],{after:20}),P([R(t.s,{size:15,color:"707175"})],{after:0})],{w:33,b:hair}))})); }
+  for(let i=0;i<tiles.length;i+=5){ rows.push(new TableRow({children:tiles.slice(i,i+5).map(t=>cell([P([R(t.n,{bold:true,size:28})],{after:20}),P([R(t.l.toUpperCase(),{bold:true,size:13})],{after:20}),P([R(t.s,{size:14,color:"707175"})],{after:0})],{w:20,b:hair}))})); }
   kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows}));
-  kids.push(H("Where the work moved policy"));
+  kids.push(H("Influence in action"));
   kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:m.receipts.map(r=>new TableRow({children:[cell([P([R(r.head,{bold:true,size:18})],{after:0})],{w:22,b:hair}),cell([P([R(r.claim,{size:18}),...(r.note?[R(" — "+r.note,{size:18,color:"707175"})]:[])],{after:0})],{w:78,b:hair})]}))}));
+  if(m.products.length){ kids.push(H("Policy products")); kids.push(P(m.products.flatMap((x,i)=>[R(x.name,{bold:true}),R(": "+String(x.desc||"").replace(/\.$/,"")+(i<m.products.length-1?". ":"."))]))); }
   if(m.shaped.length){ const all5=m.shaped.every(x=>x.top5);
     kids.push(H("Work that shaped the debate"));
     if(all5) kids.push(P([R("Each among the top 5% of everything Vital City published, by readers in its first month.",{color:"707175",size:16})],{after:40}));
@@ -284,7 +286,6 @@ async function exportDocx(){
   if(pr.also.length||pr.republished.length) kids.push(P([R((pr.also.length?`Also cited by ${pr.also.join(", ")}.`:"")+(pr.republished.length?` Essays are republished by ${pr.republished.slice(0,-1).join(", ")} and ${pr.republished.slice(-1)[0]}.`:""))]));
   if(pr.most&&pr.most.visitors) kids.push(P([R(`Most read in ${pr.most.year}: `,{bold:true}),R(`“${pr.most.title}” — ${pr.most.visitors.toLocaleString("en-US")} readers.`)]));
   if(m.tools.length){ kids.push(H("Three crime data tools")); m.tools.forEach(t=>kids.push(P([R(t.name,{bold:true}),R(": "+t.desc)],{after:40}))); }
-  if(m.products.length){ kids.push(H("Policy products")); kids.push(P(m.products.flatMap((x,i)=>[R(x.name,{bold:true}),R(": "+String(x.desc||"").replace(/\.$/,"")+(i<m.products.length-1?". ":"."))]))); }
   if(m.spots.length){ kids.push(H(m.V.spot_title||"Selected work")); m.spots.forEach(x=>kids.push(P([R(x.t),R(x.a?" — "+x.a:"",{color:"707175"})],{after:40}))); }
   if(m.funders.names.length){ kids.push(H("Who funds us")); const G=m.funders.giving||{}; const money=n=>"$"+Math.round(n||0).toLocaleString("en-US");
     kids.push(P([R("Vital City is underwritten by "+m.funders.names.slice(0,-1).join(", ")+" and "+m.funders.names.slice(-1)[0]+(G.donors?`, and by its readers: ${G.donors.toLocaleString("en-US")} individual donors since online giving opened in ${G.since||""}${G.big_gifts?`, ${G.big_gifts} gifts of $1,000 or more`:""}`:"")+".")])); }
