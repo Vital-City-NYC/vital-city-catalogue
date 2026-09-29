@@ -370,6 +370,42 @@ VARIANTS = {
 # Online giving opened in November 2025 (Donorbox; the first gift was Nov. 12, 2025).
 GIVING_OPENED = "November 2025"
 
+SHAPED = [
+    {"slug": "nyc-grocery-cost-explained", "who": "Stephen Smith", "what": "why groceries cost so much in New York City",
+     "u": "https://www.vitalcitynyc.org/nyc-grocery-cost-explained/"},
+    {"slug": "mamdani-hochul-nyc-budget-bailout", "who": "Paul Francis", "what": "the state bailout of the city budget",
+     "u": "https://www.vitalcitynyc.org/mamdani-hochul-nyc-budget-bailout/"},
+    {"slug": "mamdani-rent-freeze-agenda-nyc", "who": "Arpit Gupta", "what": "what the city should do after the rent freeze",
+     "u": "https://www.vitalcitynyc.org/mamdani-rent-freeze-agenda-nyc/",
+     "also": {"t": "a public conversation on it led by Errol Louis",
+              "u": "https://www.vitalcitynyc.org/mamdani-rent-freeze-conversation/"}},
+    {"slug": "zohran-mamdanis-real-world-constraints", "who": "Carl Weisbrod", "what": "the limits any mayor works within",
+     "u": "https://www.vitalcitynyc.org/zohran-mamdanis-real-world-constraints/"},
+    {"slug": "nyc-crime-midyear-2026-felony-assaults-rape-murder", "who": "Vital City", "what": "the midyear 2026 crime report",
+     "u": "https://www.vitalcitynyc.org/nyc-crime-midyear-2026-felony-assaults-rape-murder/", "report": True},
+]
+
+
+def _shaped_pieces(growth):
+    """The curated SHAPED list with each piece's title, date and first-30-day
+    page views from the growth data, plus the top-5% line it is judged
+    against. A piece missing from the data keeps its entry without numbers."""
+    ga4 = (growth or {}).get("ga4") or {}
+    pcs = {p.get("slug"): p for p in ((ga4.get("piece_index") or {}).get("pieces") or [])}
+    bands = ((ga4.get("piece_benchmarks") or {}).get("bands") or {})
+    p95 = bands.get("p95")
+    out = []
+    for x in SHAPED:
+        p = pcs.get(x["slug"]) or {}
+        u = x.get("u") or p.get("url")
+        if not u:
+            continue
+        v = p.get("views30")
+        out.append({"who": x["who"], "what": x["what"], "u": u, "t": p.get("title") or "", "pub": p.get("pub") or "",
+                    "v30": v, "top5": bool(v and p95 and v >= p95), "also": x.get("also"), "report": bool(x.get("report"))})
+    return {"items": out, "p95": p95}
+
+
 def _current_funders():
     """The underwriters named on vitalcitynyc.org/about. Fetched live; the last
     good list is cached so a fetch failure never blanks the section."""
@@ -1229,6 +1265,13 @@ def main():
         _mo = max(_cum); _prev = f"{int(_mo[:4])-1}{_mo[4:]}"
         yoy_now, yoy_prev = _cum.get(_mo), _cum.get(_prev)
     yoy_pct = round(100*(yoy_now-yoy_prev)/yoy_prev) if (yoy_now and yoy_prev) else None
+    # The list two years back, the growth a funder asks about (Josh, Sept. 29,
+    # 2026: "up 13% on Sept. 2025" read oddly and undersold the climb).
+    base2_mo = base2_n = None
+    if _cum:
+        base2_mo = f"{int(_mo[:4])-2}{_mo[4:]}"; base2_n = _cum.get(base2_mo)
+    list_growth_txt = (f"up from {base2_n:,} in {_ym(base2_mo)}" if base2_n else
+                       (f"up {yoy_pct}% on {_ym(_prev)}" if yoy_pct else "Mailchimp, current"))
     # Drop rows dated before Vital City existed (Sept 2021): those are social
     # profile pages whose account-creation dates leak in as publication dates,
     # not press citations. Genuine backfill from 2022 on stays.
@@ -1259,7 +1302,7 @@ def main():
       "asof": TODAY.isoformat(),
       "tiles": [
         {"n": f"{mc.get('total_subscribers', len(sub)):,}", "l": "Newsletter subscribers",
-         "s": (f"up {yoy_pct}% on {_ym(_prev)}" if yoy_pct else "Mailchimp, current")},
+         "s": list_growth_txt},
         {"n": f"{len(press):,}", "l": "Press and social citations",
          "s": (f"{sum(1 for x in press if x.get('kind') == 'media'):,} in news outlets, "
                f"{sum(1 for x in press if x.get('kind') in ('gov', 'republication')):,} from government and policy groups, "
@@ -1277,8 +1320,7 @@ def main():
         {"n": f"{len(gov)+len(edu):,}", "l": "Government + university subscribers",
          "s": f"{sum(1 for r in gov if 'nyc.gov' in dom(r)):,} on nyc.gov — City Hall, the courts, the DAs"},
         {"n": f"{len(cat):,}", "l": "Pieces published",
-         "s": (f"by {len(authors):,} contributors since 2021, {_roster_n} of them named senior contributors"
-               if _roster_n else f"by {len(authors):,} contributors since 2021")},
+         "s": f"by {len(authors):,} contributors since 2021"},
       ],
       "receipts": [
         {"head": "Zohran Mamdani", "claim": "As a candidate, called himself 'quite taken' by the annual crime analysis, then sat with Vital City for an hour on public safety. He is now the mayor",
@@ -1286,8 +1328,8 @@ def main():
          "links": [{"t":"the interview","u":"https://www.vitalcitynyc.org/zohran-mamdani-talks-public-safety/"},
                    {"t":"'quite taken' (NY Editorial Board)","u":"https://nyeditorialboard.substack.com/p/zohran-mamdani-interview-transcript"},
                    {"t":"the crime analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"}]},
-        {"head": "City Hall's safety chief", "claim": "The first deputy mayor for community safety is a Vital City contributor who previewed her office's approach in its pages",
-         "note": "Renita Francois, December 2025",
+        {"head": "City Hall's safety chief", "claim": "Renita Francois, now the first deputy mayor for community safety, previewed her office's approach in Vital City in December 2025",
+         "note": "",
          "links": [{"t":"the essay","u":"https://www.vitalcitynyc.org/nstat-should-be-key-to-mamdani-public-safety-plan/"},
                    {"t":"the interview","u":"https://www.vitalcitynyc.org/renita-francois-interview-neighborhood-safety/"}]},
         {"head": "Rikers Island", "claim": "Made the case for a federal receiver; a judge has since appointed one", "note": "",
@@ -1340,6 +1382,9 @@ def main():
                  "tags": {n: t for n, t in SHORT_TAGS.items() if n in _roster_names},
                  "pool": len(authors)},
       "press": {"total": len(press), "outlets": sum(1 for v in p_out.values() if v), "since": p_first,
+                "media": sum(1 for x in press if x.get("kind") == "media"),
+                "govpol": sum(1 for x in press if x.get("kind") in ("gov", "republication")),
+                "outlets_ns": len({x.get("domain") for x in press if x.get("kind") != "social" and x.get("domain")}),
                 "social": sum(1 for x in press if x.get("kind") == "social"),
                 "y2026": sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))),
                 "permonth": round(sum(1 for x in press if (x.get("published_iso") or "").startswith(str(TODAY.year))) / max(1, TODAY.month - 0.5), 1),
@@ -1347,6 +1392,20 @@ def main():
                 "by_year_asof": MENTIONS_ARCHIVE_ASOF,
                 "top": [{"outlet": TOP_OUT[k], "n": v} for k, v in p_out.most_common(30) if k in TOP_OUT][:8],
                 "samples": samples},
+      # Pieces that framed a live question in the city (Josh, Sept. 29, 2026).
+      # Each carries its first-30-day page views and whether that clears the
+      # top-5% line of the benchmark year, so the one-pager can say so only
+      # when it is true.
+      "shaped": _shaped_pieces(growth),
+      # The three crime data tools in the site's Data menu, in its order.
+      "tools": [
+        {"name": "Historical Crime Explorer", "u": "https://www.vitalcitynyc.org/explorer/",
+         "desc": "more than 30 years of New York City crime data available to the public nowhere else"},
+        {"name": "Quarterly Crime Explorer", "u": "https://www.vitalcitynyc.org/quarterly-crime-explorer/",
+         "desc": "the city's detailed quarterly crime statistics, through the latest quarter"},
+        {"name": "CompStat Decoder", "u": "https://www.vitalcitynyc.org/compstat-decoder/",
+         "desc": "the NYPD's weekly precinct numbers, decoded for any neighborhood"},
+      ],
       "products": [
         {"name": "Just Fix It", "desc": "A standing series pressing specific, doable fixes on City Hall — permitting, government efficiency, a 100-day scorecard.",
          "count": 5, "links": [{"t":"8 permitting fixes","u":"https://www.vitalcitynyc.org/nyc-housing-permits-fast-track-construction-mamdani/"},
@@ -1365,14 +1424,11 @@ def main():
       ],
       "audience": [
         {"label": "Email list, full size", "value": f"{mc.get('total_subscribers', len(sub)):,}",
-         "note": (f"up {yoy_pct}% year over year" if yoy_pct else "Mailchimp, current")},
+         "note": list_growth_txt},
         {"label": "Nonprofit addresses", "value": f"{len(org):,}", "note": "Vera, Osborne, Arnold Ventures, CBC, Court Innovation among the densest"},
         {"label": "Staff at grantmaking foundations", "value": "Arnold Ventures, Bloomberg Philanthropies, Robin Hood, Guggenheim, Revson, Tiger, Clark, MacArthur", "note": "counts and names in the warm-doors table"},
         {"label": "Wikipedia-notable subscribers", "value": f"{sum(1 for r in sub if r.get('wiki')):,}", "note": "conservative floor — matched, not estimated"},
-      ] + ([{"label": "Government readers open", "value": f"{_mbx['Government'].get('avg_open_pct')}% of sends",
-             "note": (f"{_mbx['Government'].get('subs'):,} government addresses" +
-                      (f"; academic addresses {_mbx['Academic'].get('avg_open_pct')}%" if _mbx.get("Academic") else ""))}]
-            if _mbx.get("Government") and _mbx["Government"].get("avg_open_pct") else []),
+      ],   # government open rates left out (Josh, Sept. 29, 2026: they can read as low)
       # Who funds Vital City: the "underwritten by" sentence on vitalcitynyc.org/about,
       # read at build time and cached in data/funders_current.json.
       "funders_current": _current_funders(),

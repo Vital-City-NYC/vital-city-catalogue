@@ -41,7 +41,7 @@
   .mast .asof{font-size:10.5px;color:var(--vc-charcoal);text-align:right;line-height:1.5}
   .mast h1{font-size:30px}
   .mast .dek{font-size:11.5px;line-height:1.45;color:var(--vc-black);margin-top:7px;max-width:62ch}
-  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud)}
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud)}
   .tile{background:var(--vc-white);padding:8px 10px 7px}
   .tile .n{font-weight:900;font-size:22px;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .tile .l{font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-top:4px;line-height:1.25}
@@ -73,6 +73,12 @@
   .aud div{padding:2.5px 0;border-bottom:1px solid var(--vc-cloud)}
   .aud div:last-child{border-bottom:0}
   .aud b{font-weight:800}
+  .atleast{font-size:9px;color:var(--vc-charcoal);margin:-3px 0 6px;line-height:1.35}
+  .wk{font-size:10px;line-height:1.38;padding:3px 0;border-bottom:1px solid var(--vc-cloud)}
+  .wk:last-child{border-bottom:0}
+  .wk b{font-weight:800}
+  .wk a{color:var(--vc-black)}
+  .secn{font-weight:400;text-transform:none;letter-spacing:0;color:var(--vc-charcoal);font-size:9px;margin-left:4px}
   .foot{border-top:1.5px solid var(--vc-black);padding-top:8px;font-size:9.5px;color:var(--vc-charcoal);line-height:1.5;display:flex;justify-content:space-between;gap:16px}
   .foot b{color:var(--vc-black);font-weight:800}
 
@@ -114,6 +120,7 @@
 <script>
 const $=s=>document.querySelector(s);
 const AP=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+const apDate=v=>{const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(v||""));return m?`${AP[+m[2]-1]} ${+m[3]}, ${m[1]}`:String(v||"")};
 const ym=v=>{const m=/^(\d{4})-(\d{2})/.exec(String(v||""));return m?`${AP[+m[2]-1]} ${m[1]}`:String(v||"")};
 const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const PASSKEY="vc_net_pass", TTL=90*24*3600*1000;
@@ -134,17 +141,26 @@ function build(d){
   const V=(d.variants||{})[VKEY]||null;
   if(V){ document.title="Vital City — at a glance · "+VKEY; const dl=$("#decklink"); if(dl) dl.href="deck.html?v="+encodeURIComponent(VKEY); }
   const asof=FF.asof||String(d.generated_at||"").slice(0,10);
-  const tiles=(FF.tiles||[]).slice(0,8).map(t=>`<div class="tile"><div class="n">${esc(t.n)}</div><div class="l">${esc(t.l)}</div><div class="s">${esc(t.s)}</div></div>`).join("");
+  // Six tiles for a funder: the list, the year's readers, the Times, citations
+  // that matter (news and government; social posts left out), who in
+  // government reads it and the body of work. The four-week visitor count and
+  // Google impressions stay on the funders page and the deck.
+  const T=l=>(FF.tiles||[]).find(t=>(t.l||"").toLowerCase().startsWith(l.toLowerCase()));
+  const PX=FF.press||{};
+  const citeTile=(PX.media!=null)?{n:(PX.media+PX.govpol).toLocaleString("en-US"),l:"Citations in the news and by government",
+    s:`${PX.media.toLocaleString("en-US")} in news outlets, ${PX.govpol.toLocaleString("en-US")} from government and policy groups, since ${ym(PX.since)}`}:T("Press and social");
+  const tileList=[T("Newsletter subscribers"),T("Visitors, Jan. 1"),T("New York Times"),citeTile,T("Government + university"),T("Pieces published")].filter(Boolean);
+  const tiles=tileList.map(t=>`<div class="tile"><div class="n">${esc(t.n)}</div><div class="l">${esc(t.l)}</div><div class="s">${esc(t.s)}</div></div>`).join("");
   let rlist=(FF.receipts||[]).slice();
   if(V&&V.receipts) rlist.sort((a,b)=>{const i=V.receipts.indexOf(a.head),j=V.receipts.indexOf(b.head);return (i<0?99:i)-(j<0?99:j);});
-  const receipts=rlist.slice(0,5).map(r=>`<div class="rcp"><div class="rh">${esc(r.head)}</div><div>${esc(r.claim)}${r.note?` <span class="rn">— ${esc(r.note)}</span>`:""}</div></div>`).join("");
+  const receipts=rlist.slice(0,4).map(r=>`<div class="rcp"><div class="rh">${esc(r.head)}</div><div>${esc(r.claim)}${r.note?` <span class="rn">— ${esc(r.note)}</span>`:""}</div></div>`).join("");
   const joinAnd=a=>a.length>1?a.slice(0,-1).join(", ")+" and "+a.slice(-1)[0]:(a[0]||"");
   const FU=FF.funders_current||{}, G=FF.giving||{};
   const money=n=>"$"+Math.round(n||0).toLocaleString("en-US");
   const funders=(FU.names||[]).length?`<div class="funds"><div class="sec">Who funds us</div>
       <div class="fx">Vital City is underwritten by ${joinAnd((FU.names||[]).map(esc))}${G.donors?`, and by its readers: <b>${esc(G.donors.toLocaleString("en-US"))}</b> individual donors since online giving opened in ${esc(G.since||"")}, median gift ${esc(money(G.median))}${G.big_gifts?`, ${esc(String(G.big_gifts))} gifts of $1,000 or more`:""}`:""}.</div></div>`:"";
   const P=FF.press||{};
-  const chips=(P.top||[]).slice(0,5).map(o=>`<span class="chip">${esc(o.outlet)} <b>${esc(String(o.n))}</b></span>`).join("");
+  const chips=(P.top||[]).slice(0,3).map(o=>`<span class="chip">${esc(o.outlet)} <b>${esc(String(o.n))}</b></span>`).join("");
   const cites=(P.samples||[]).slice(0,1).map(x=>`<div class="cite"><span class="co">${esc(x.outlet)}</span>${esc(x.title)}</div>`).join("");
   const also=(FF.cited_by_notable||[]).filter(o=>!(P.top||[]).some(t=>t.outlet===o));
   const alsoTxt=(also.length||(FF.republished_by||[]).length)?`<p>${also.length?`Also cited by ${also.map(esc).join(", ")}.`:""}${(FF.republished_by||[]).length?` Essays are republished by ${joinAnd((FF.republished_by||[]).map(esc))}.`:""}</p>`:"";
@@ -156,10 +172,20 @@ function build(d){
   const ROLE={"Journalists":"journalists","Current city government":"in city government","Nonprofit leadership":"nonprofit leaders","Academics":"academics","Foundation leadership":"foundation leaders","State government":"in state government","Judges":"judges"};
   const roles=(FF.roles||[]).filter(r=>r.label!=="Contributors"&&r.n).map(r=>`<span class="role"><b>${esc(r.n.toLocaleString("en-US"))}</b> ${esc(ROLE[r.label]||r.label.toLowerCase())}</span>`).join("");
   const PR=FF.power_readers;
-  const audRows=(FF.audience||[]).filter(a=>/full size|Government readers|Wikipedia/i.test(a.label)).slice(0,3);
+  const audRows=(FF.audience||[]).filter(a=>/full size|Wikipedia/i.test(a.label)).slice(0,3);
   const AUD={"Email list, full size":["Email list",null],"Wikipedia-notable subscribers":["Subscribers with their own Wikipedia page","matched by name, so a floor"],"Government readers open":["Government readers open",null]};
   const aud=audRows.map(r=>{const m=AUD[r.label]||[r.label,null];return `<div><b>${esc(m[0])}:</b> ${esc(r.value)} <span style="color:var(--vc-charcoal)">— ${esc(m[1]||r.note)}</span></div>`}).join("")
-    +(PR&&PR.count?`<div><b>Power readers:</b> ${esc(PR.count.toLocaleString("en-US"))} <span style="color:var(--vc-charcoal)">— one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${esc(String(Math.round(PR.open||0)))}% of everything sent; disproportionately government, academic and press</span></div>`:"");
+    +(false&&PR&&PR.count?`<div><b>Power readers:</b> ${esc(PR.count.toLocaleString("en-US"))} <span style="color:var(--vc-charcoal)">— one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${esc(String(Math.round(PR.open||0)))}% of everything sent; disproportionately government, academic and press</span></div>`:"");
+  const SH=(FF.shaped||{}).items||[];
+  const allTop5=SH.length&&SH.every(x=>x.top5);
+  const shLine=x=>x.report
+    ? `<div class="wk"><b>Our latest crime report</b>: <a href="${esc(x.u)}">${esc(x.t||x.what)}</a> (${esc(ym(x.pub))})</div>`
+    : `<div class="wk"><b>${esc(x.who)}</b> on <a href="${esc(x.u)}">${esc(x.what)}</a> (${esc(ym(x.pub))})${x.also?`, and <a href="${esc(x.also.u)}">${esc(x.also.t)}</a>`:""}</div>`;
+  const shaped=SH.length?`<div class="block"><div class="sec">Work that shaped the debate${allTop5?`<span class="secn">each among the top 5% of everything Vital City published, by readers in its first month</span>`:""}</div>${SH.map(shLine).join("")}</div>`:"";
+  const TSHORT={"Historical Crime Explorer":"30-plus years of city crime data found nowhere else","Quarterly Crime Explorer":"the city's detailed quarterly figures","CompStat Decoder":"the NYPD's weekly precinct numbers, made readable"};
+  const tools=(FF.tools||[]).length?`<div class="block"><div class="sec">Three crime data tools</div><div class="wk">${FF.tools.map(t=>`<a href="${esc(t.u)}"><b>${esc(t.name)}</b></a> (${esc(TSHORT[t.name]||t.desc)})`).join(", ").replace(/, ([^,]*)$/," and $1")}.</div></div>`:"";
+  const PSHORT={"Just Fix It":"doable fixes to the mechanics of city government","What To Do (and Not To Do)":"playbooks on what works, from subway safety to people in crisis","Rubber Meets Road":"how the city gets things done, starting with street lighting"};
+  const prods=(FF.products||[]).length?`<div class="block"><div class="sec">Policy products</div><div class="wk">${FF.products.map(x=>`<b>${esc(x.name)}</b> (${esc(PSHORT[x.name]||String(x.desc||"").replace(/\.$/,""))})`).join(", ").replace(/, ([^,]*)$/," and $1")}.</div></div>`:"";
   const S=FF.senior||{};
   const spot=(V&&V.authors&&S.tags)
     ? V.authors.filter(n=>S.tags[n]).slice(0,6).map(n=>({n,tag:S.tags[n]}))
@@ -170,9 +196,9 @@ function build(d){
   const spotTxt=joinAnd(spotParts);
   const senior=(S.count? `<div class="block"><div class="sec">Who writes it</div>
       <div class="senior">${esc(String(S.pool||""))} contributors since 2021: criminologists, economists, planners, prosecutors, agency heads, mayors. ${esc(String(S.count))} are named senior contributors on the masthead${spotTxt?`, among them ${spotTxt}`:""}.</div></div>` : "");
-  window.__model={asof,V,FF,tiles:(FF.tiles||[]).slice(0,8),receipts:rlist.slice(0,5),roles:(FF.roles||[]).filter(r=>r.label!=="Contributors"&&r.n).map(r=>({n:r.n,label:ROLE[r.label]||r.label.toLowerCase()})),
-    aud:audRows.map(r=>{const m=AUD[r.label]||[r.label,null];return {label:m[0],value:r.value,note:m[1]||r.note}}).concat(PR&&PR.count?[{label:"Power readers",value:PR.count.toLocaleString("en-US"),note:`one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${Math.round(PR.open||0)}% of everything sent; disproportionately government, academic and press`}]:[]),
-    press:{total:P.total,social:P.social,outlets:P.outlets,since:ym(P.since),top:(P.top||[]).slice(0,5),also,republished:FF.republished_by||[],sample:V?null:(P.samples||[])[0]||null,most:V?null:M},
+  window.__model={asof,V,FF,tiles:tileList,shaped:SH,tools:FF.tools||[],products:FF.products||[],receipts:rlist.slice(0,4),roles:(FF.roles||[]).filter(r=>r.label!=="Contributors"&&r.n).map(r=>({n:r.n,label:ROLE[r.label]||r.label.toLowerCase()})),
+    aud:audRows.map(r=>{const m=AUD[r.label]||[r.label,null];return {label:m[0],value:r.value,note:m[1]||r.note}}).concat(false&&PR&&PR.count?[{label:"Power readers",value:PR.count.toLocaleString("en-US"),note:`one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${Math.round(PR.open||0)}% of everything sent; disproportionately government, academic and press`}]:[]),
+    press:{total:P.total,social:P.social,outlets:P.outlets,since:ym(P.since),top:(P.top||[]).slice(0,3),also,republished:FF.republished_by||[],sample:null,most:null},
     spots,writes:{pool:S.pool,count:S.count,spot},funders:{names:FU.names||[],giving:G}};
   $("#sheet").innerHTML=`
     <div class="mast">
@@ -181,25 +207,28 @@ function build(d){
         <h1>The evidence New York runs on.</h1>
         <div class="dek">${FF.oneliner?esc(FF.oneliner)+" ":""}An independent policy journal, a data and research shop and a convener, all in one.</div>
       </div>
-      <div class="asof">${V?`<b style="color:var(--vc-black)">${esc(V.label)}</b><br>`:""}vitalcitynyc.org<br>Computed from live data as of ${esc(asof)}</div>
+      <div class="asof">${V?`<b style="color:var(--vc-black)">${esc(V.label)}</b><br>`:""}vitalcitynyc.org<br>Computed from live data as of ${esc(apDate(asof))}</div>
     </div>
     <div class="tiles">${tiles}</div>
     <div class="cols">
       <div>
         <div class="sec">The receipts — where the work moved policy</div>
         ${receipts}
+        ${shaped}
         ${senior}
       </div>
       <div class="press">
         <div class="sec">Who reads it</div>
+        <div class="atleast">At least this many: these are named subscribers we can match to a role, and most of the list can't be matched.</div>
         ${roles?`<div class="roles">${roles}</div>`:""}
         <div class="aud">${aud}</div>
         <div class="block"><div class="sec">In the press</div>
-        <p><b>${esc(String(P.total||0))}</b> citations in the press and on social media${P.social?` (${esc(String(P.social))} of them social posts)`:""}, across ${esc(String(P.outlets||0))} outlets and platforms since ${esc(ym(P.since))}, an undercount, since only a fixed set of outlets is watched.</p>
+        <p>Cited <b>${esc(String(PX.media!=null?(PX.media+PX.govpol):(P.total||0)))}</b> times in the news and by government and policy groups since ${esc(ym(P.since))}, a floor, since only a fixed set of outlets is watched. Most often:</p>
         <div class="chips">${chips}</div>
         ${alsoTxt}
-        ${V?"":cites}
-        ${V?"":most}</div>
+        </div>
+        ${tools}
+        ${prods}
         ${work}
       </div>
     </div>
@@ -222,23 +251,32 @@ async function exportDocx(){
   kids.push(P([R("VITAL CITY",{bold:true,size:18})],{after:40}));
   kids.push(P([R("The evidence New York runs on.",{size:40})],{after:60}));
   kids.push(P([R((m.FF.oneliner?m.FF.oneliner+" ":"")+"An independent policy journal, a data and research shop and a convener, all in one.")],{after:60}));
-  kids.push(P([R((m.V?m.V.label+" · ":"")+"vitalcitynyc.org · Computed from live data as of "+m.asof,{color:"707175",size:16})],{after:160}));
+  kids.push(P([R((m.V?m.V.label+" · ":"")+"vitalcitynyc.org · Computed from live data as of "+apDate(m.asof),{color:"707175",size:16})],{after:160}));
   // tiles as a 2x4 table
   const tiles=m.tiles; const rows=[];
-  for(let i=0;i<tiles.length;i+=4){ rows.push(new TableRow({children:tiles.slice(i,i+4).map(t=>cell([P([R(t.n,{bold:true,size:30})],{after:20}),P([R(t.l.toUpperCase(),{bold:true,size:14})],{after:20}),P([R(t.s,{size:15,color:"707175"})],{after:0})],{w:25,b:hair}))})); }
+  for(let i=0;i<tiles.length;i+=3){ rows.push(new TableRow({children:tiles.slice(i,i+3).map(t=>cell([P([R(t.n,{bold:true,size:30})],{after:20}),P([R(t.l.toUpperCase(),{bold:true,size:14})],{after:20}),P([R(t.s,{size:15,color:"707175"})],{after:0})],{w:33,b:hair}))})); }
   kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows}));
   kids.push(H("The receipts — where the work moved policy"));
   kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:m.receipts.map(r=>new TableRow({children:[cell([P([R(r.head,{bold:true,size:18})],{after:0})],{w:22,b:hair}),cell([P([R(r.claim,{size:18}),...(r.note?[R(" — "+r.note,{size:18,color:"707175"})]:[])],{after:0})],{w:78,b:hair})]}))}));
+  if(m.shaped.length){ const all5=m.shaped.every(x=>x.top5);
+    kids.push(H("Work that shaped the debate"));
+    if(all5) kids.push(P([R("Each among the top 5% of everything Vital City published, by readers in its first month.",{color:"707175",size:16})],{after:40}));
+    m.shaped.forEach(x=>kids.push(P(x.report
+      ? [R("Our latest crime report: ",{bold:true}),R(`${x.t||x.what} (${ym(x.pub)})`)]
+      : [R(x.who,{bold:true}),R(` on ${x.what} (${ym(x.pub)})`+(x.also?`, and ${x.also.t}`:""))],{after:40}))); }
   kids.push(H("Who writes it"));
   const w=m.writes; kids.push(P([R(`${w.pool} contributors since 2021: criminologists, economists, planners, prosecutors, agency heads, mayors. ${w.count} are named senior contributors on the masthead`+(w.spot.length?", among them ":".")),...w.spot.flatMap((x,i)=>[R(x.n,{bold:true}),R(` (${x.tag})`+(i<w.spot.length-2?", ":i===w.spot.length-2?" and ":"."))])]));
   kids.push(H("Who reads it"));
+  kids.push(P([R("At least this many: these are named subscribers we can match to a role, and most of the list can't be matched.",{color:"707175",size:16})],{after:40}));
   if(m.roles.length) kids.push(P([R(m.roles.map(r=>`${r.n.toLocaleString("en-US")} ${r.label}`).join(" · "))]));
   m.aud.forEach(a=>kids.push(P([R(a.label+": ",{bold:true}),R(a.value),R(a.note?" — "+a.note:"",{color:"707175"})],{after:40})));
   kids.push(H("In the press"));
-  const pr=m.press; kids.push(P([R(`${pr.total} citations in the press and on social media${pr.social?` (${pr.social} of them social posts)`:""}, across ${pr.outlets} outlets and platforms since ${pr.since}, an undercount, since only a fixed set of outlets is watched. `),R(pr.top.map(o=>`${o.outlet} ${o.n}`).join(" · "),{bold:true})]));
+  const pr=m.press; const nsN=(m.FF.press&&m.FF.press.media!=null)?(m.FF.press.media+m.FF.press.govpol):pr.total;
+  kids.push(P([R(`Cited ${nsN} times in the news and by government and policy groups since ${pr.since}, a floor, since only a fixed set of outlets is watched. Most often: `),R(pr.top.map(o=>`${o.outlet} ${o.n}`).join(" · "),{bold:true})]));
   if(pr.also.length||pr.republished.length) kids.push(P([R((pr.also.length?`Also cited by ${pr.also.join(", ")}.`:"")+(pr.republished.length?` Essays are republished by ${pr.republished.slice(0,-1).join(", ")} and ${pr.republished.slice(-1)[0]}.`:""))]));
-  if(pr.sample) kids.push(P([R(pr.sample.outlet.toUpperCase()+"  ",{bold:true,size:15}),R(pr.sample.title)]));
   if(pr.most&&pr.most.visitors) kids.push(P([R(`Most read in ${pr.most.year}: `,{bold:true}),R(`“${pr.most.title}” — ${pr.most.visitors.toLocaleString("en-US")} readers.`)]));
+  if(m.tools.length){ kids.push(H("Three crime data tools")); m.tools.forEach(t=>kids.push(P([R(t.name,{bold:true}),R(": "+t.desc)],{after:40}))); }
+  if(m.products.length){ kids.push(H("Policy products")); kids.push(P(m.products.flatMap((x,i)=>[R(x.name,{bold:true}),R(": "+String(x.desc||"").replace(/\.$/,"")+(i<m.products.length-1?". ":"."))]))); }
   if(m.spots.length){ kids.push(H(m.V.spot_title||"Selected work")); m.spots.forEach(x=>kids.push(P([R(x.t),R(x.a?" — "+x.a:"",{color:"707175"})],{after:40}))); }
   if(m.funders.names.length){ kids.push(H("Who funds us")); const G=m.funders.giving||{}; const money=n=>"$"+Math.round(n||0).toLocaleString("en-US");
     kids.push(P([R("Vital City is underwritten by "+m.funders.names.slice(0,-1).join(", ")+" and "+m.funders.names.slice(-1)[0]+(G.donors?`, and by its readers: ${G.donors.toLocaleString("en-US")} individual donors since online giving opened in ${G.since||""}, median gift ${money(G.median)}${G.big_gifts?`, ${G.big_gifts} gifts of $1,000 or more`:""}`:"")+".")])); }
