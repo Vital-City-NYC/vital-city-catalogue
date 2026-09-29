@@ -370,45 +370,62 @@ VARIANTS = {
 # Online giving opened in November 2025 (Donorbox; the first gift was Nov. 12, 2025).
 GIVING_OPENED = "November 2025"
 
-SHAPED = [
-    {"slug": "nyc-grocery-cost-explained", "who": "Stephen Smith", "what": "why groceries cost so much",
-     "u": "https://www.vitalcitynyc.org/nyc-grocery-cost-explained/"},
-    {"slug": "mamdani-hochul-nyc-budget-bailout", "who": "Paul Francis", "what": "the state bailout of the city budget",
-     "u": "https://www.vitalcitynyc.org/mamdani-hochul-nyc-budget-bailout/"},
-    {"slug": "mamdani-rent-freeze-agenda-nyc", "who": "Arpit Gupta", "what": "what comes after the rent freeze",
-     "u": "https://www.vitalcitynyc.org/mamdani-rent-freeze-agenda-nyc/",
-     "also": {"t": "a public conversation on it led by Errol Louis",
-              "u": "https://www.vitalcitynyc.org/mamdani-rent-freeze-conversation/"}},
-    {"slug": "what-has-mamdani-done-so-far", "who": "Aaron Short", "what": "what Mamdani has done so far",
-     "u": "https://www.vitalcitynyc.org/what-has-mamdani-done-so-far/"},
-    {"slug": "new-yorks-mamdani-ny-civil-service-system", "who": "Robert Gordon and Gabe Paley", "what": "the civil service and public-sector progress",
-     "u": "https://www.vitalcitynyc.org/new-yorks-mamdani-ny-civil-service-system/"},
-    {"slug": "a-housing-roadmap-for-new-yorks-next-mayor", "who": "Alex Armlovich", "what": "a housing roadmap for the next mayor",
-     "u": "https://www.vitalcitynyc.org/a-housing-roadmap-for-new-yorks-next-mayor/"},
-    {"slug": "zohran-mamdanis-real-world-constraints", "who": "Carl Weisbrod", "what": "the limits any mayor works within",
-     "u": "https://www.vitalcitynyc.org/zohran-mamdanis-real-world-constraints/"},
-    {"slug": "nyc-crime-midyear-2026-felony-assaults-rape-murder", "who": "Vital City", "what": "the midyear 2026 crime report",
-     "u": "https://www.vitalcitynyc.org/nyc-crime-midyear-2026-felony-assaults-rape-murder/", "report": True},
-]
+SHAPED_ENTRIES = {
+    "nyc-grocery-cost-explained": {"who": "Stephen Smith", "what": "why groceries cost so much"},
+    "mamdani-hochul-nyc-budget-bailout": {"who": "Paul Francis", "what": "the state bailout of the city budget"},
+    "mamdani-rent-freeze-agenda-nyc": {"who": "Arpit Gupta", "what": "what comes after the rent freeze",
+        "also": {"t": "a public conversation on it led by Errol Louis",
+                 "u": "https://www.vitalcitynyc.org/mamdani-rent-freeze-conversation/"}},
+    "what-has-mamdani-done-so-far": {"who": "Aaron Short", "what": "what Mamdani has done so far"},
+    "new-yorks-mamdani-ny-civil-service-system": {"who": "Robert Gordon and Gabe Paley", "what": "the civil service and public-sector progress"},
+    "a-housing-roadmap-for-new-yorks-next-mayor": {"who": "Alex Armlovich", "what": "a housing roadmap for the next mayor"},
+    "zohran-mamdanis-real-world-constraints": {"who": "Carl Weisbrod", "what": "the limits any mayor works within"},
+    "government-improvements-mamdani-can-tackle-in-the-first-100-days": {"who": "Vital City", "what": "11 governance fixes for a new mayor's first 100 days"},
+    "learning-from-jersey-city": {"who": "Benjamin Schneider", "what": "what New York can learn from Jersey City's building boom"},
+    "daniel-penny-jordan-neely-and-all-of-us-in-between": {"who": "Brandon del Pozo", "what": "Daniel Penny, Jordan Neely and the rest of us"},
+    "department-of-community-safety-and-universal-childcare-albequerque-new-york": {"who": "Ted Alcorn", "what": "New Mexico as a proving ground for a department of community safety and universal child care"},
+    "is-new-york-broken": {"who": "Greg Berman", "what": "why New York is not broken"},
+    "assessing-mamdani-six-months-in": {"who": "Bradley Tusk", "what": "the Mamdani administration at six months"},
+    "our-advice-to-the-new-york-times-about-a-vexing-editorial-decision": {"who": "An expert panel", "what": "The New York Times's mayoral endorsement process"},
+}
+# The general one-pager's list (Josh, Sept. 29, 2026), then each audience
+# version's own, drawn from pieces on its theme that reached the top 5% by
+# first-month readers. The midyear crime report follows every list.
+SHAPED = ["nyc-grocery-cost-explained", "mamdani-hochul-nyc-budget-bailout", "mamdani-rent-freeze-agenda-nyc",
+          "what-has-mamdani-done-so-far", "new-yorks-mamdani-ny-civil-service-system",
+          "a-housing-roadmap-for-new-yorks-next-mayor", "zohran-mamdanis-real-world-constraints"]
+SHAPED_BY_VARIANT = {
+    "abundance": ["nyc-grocery-cost-explained", "mamdani-rent-freeze-agenda-nyc", "a-housing-roadmap-for-new-yorks-next-mayor",
+                  "government-improvements-mamdani-can-tackle-in-the-first-100-days", "new-yorks-mamdani-ny-civil-service-system",
+                  "learning-from-jersey-city"],
+    "justice": ["daniel-penny-jordan-neely-and-all-of-us-in-between", "department-of-community-safety-and-universal-childcare-albequerque-new-york",
+                "is-new-york-broken"],
+    "civic": ["what-has-mamdani-done-so-far", "assessing-mamdani-six-months-in", "zohran-mamdanis-real-world-constraints",
+              "our-advice-to-the-new-york-times-about-a-vexing-editorial-decision", "is-new-york-broken"],
+}
+SHAPED_REPORT = {"slug": "nyc-crime-midyear-2026-felony-assaults-rape-murder", "who": "Vital City", "what": "the midyear 2026 crime report",
+                 "u": "https://www.vitalcitynyc.org/nyc-crime-midyear-2026-felony-assaults-rape-murder/"}
 
 
-def _shaped_pieces(growth):
-    """The curated SHAPED list with each piece's title, date and first-30-day
-    page views from the growth data, plus the top-5% line it is judged
-    against. A piece missing from the data keeps its entry without numbers."""
+def _shaped_pieces(growth, slugs=None):
+    """A 'work that shaped the debate' list: each piece's title, date and
+    first-30-day page views from the growth data, plus the top-5% line it is
+    judged against, then the midyear crime report. A piece missing from the
+    data is dropped rather than shown without numbers."""
     ga4 = (growth or {}).get("ga4") or {}
     pcs = {p.get("slug"): p for p in ((ga4.get("piece_index") or {}).get("pieces") or [])}
-    bands = ((ga4.get("piece_benchmarks") or {}).get("bands") or {})
-    p95 = bands.get("p95")
+    p95 = (((ga4.get("piece_benchmarks") or {}).get("bands") or {})).get("p95")
     out = []
-    for x in SHAPED:
-        p = pcs.get(x["slug"]) or {}
-        u = x.get("u") or p.get("url")
-        if not u:
+    for slug in (slugs or SHAPED) + [SHAPED_REPORT["slug"]]:
+        x = SHAPED_REPORT if slug == SHAPED_REPORT["slug"] else SHAPED_ENTRIES.get(slug)
+        p = pcs.get(slug) or {}
+        if not x or not p.get("url"):
+            print(f"  WARNING shaped: {slug} not in the piece index", file=__import__("sys").stderr)
             continue
         v = p.get("views30")
-        out.append({"who": x["who"], "what": x["what"], "u": u, "t": p.get("title") or "", "pub": p.get("pub") or "",
-                    "v30": v, "top5": bool(v and p95 and v >= p95), "also": x.get("also"), "report": bool(x.get("report"))})
+        out.append({"who": x["who"], "what": x["what"], "u": x.get("u") or p["url"], "t": p.get("title") or "",
+                    "pub": p.get("pub") or "", "v30": v, "top5": bool(v and p95 and v >= p95),
+                    "also": x.get("also"), "report": slug == SHAPED_REPORT["slug"]})
     return {"items": out, "p95": p95}
 
 
@@ -1350,8 +1367,8 @@ def main():
                    {"t":"the governor's program","u":"https://www.governor.ny.gov/news/safer-subways-one-year-after-deploying-additional-law-enforcement-and-safety-measures-governor"}]},
         {"head": "Permitting", "claim": "Days after publishing fixes for the permitting mess, City Hall released a report echoing them", "note": "",
          "links": [{"t":"the 8 fixes","u":"https://www.vitalcitynyc.org/nyc-housing-permits-fast-track-construction-mamdani/"}]},
-        {"head": "Crime data", "claim": "When reporters dig into the city's numbers, it is often Vital City's analyses they build on",
-         "note": f"{p_out.get('gothamist.com',0)} Gothamist and {p_out.get('politico.com',0)} Politico citations tracked",
+        {"head": "Crime data", "claim": f"When reporters dig into the city's numbers, they often build on Vital City's analyses, including {p_out.get('gothamist.com',0)} Gothamist and {p_out.get('politico.com',0)} Politico stories",
+         "note": "",
          "links": [{"t":"the annual analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"},
                    {"t":"why the numbers change","u":"https://www.vitalcitynyc.org/real-crime-numbers-nyc-nypd/"}]},
         {"head": "Housing", "claim": "The housing issue won the Citizens Housing and Planning Council's Insight Award",
@@ -1500,6 +1517,7 @@ def main():
         "variants": (lambda: {
             k: {"label": v["label"], "spot_title": v["spot_title"],
                 "receipts": v["receipts"], "authors": v["authors"], "products": v["products"],
+                "shaped": _shaped_pieces(growth, SHAPED_BY_VARIANT.get(k)),
                 "spots": [{"t": p["title"], "u": p["url"],
                            "a": p.get("primary_author") or ", ".join((p.get("authors") or [])[:2])}
                           for slug in v["spots"]
