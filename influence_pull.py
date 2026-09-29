@@ -447,6 +447,10 @@ def collect_courts():
                         if e.code != 429 or attempt == 5:
                             raise
                         time.sleep(30 * (attempt + 1))
+                    except (urllib.error.URLError, TimeoutError):  # it also just stalls
+                        if attempt == 5:
+                            raise
+                        time.sleep(30 * (attempt + 1))
                 for r in d.get("results", []):
                     key = r.get("id") or r.get("absolute_url")
                     docs[key] = {
