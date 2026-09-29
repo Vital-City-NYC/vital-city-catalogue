@@ -220,7 +220,7 @@ function build(d){
     <div class="tiles">${tiles}</div>
     <div class="cols">
       <div>
-        <div class="sec">The receipts — where the work moved policy</div>
+        <div class="sec">Where the work moved policy</div>
         ${receipts}
         ${shaped}
         ${senior}
@@ -264,7 +264,7 @@ async function exportDocx(){
   const tiles=m.tiles; const rows=[];
   for(let i=0;i<tiles.length;i+=3){ rows.push(new TableRow({children:tiles.slice(i,i+3).map(t=>cell([P([R(t.n,{bold:true,size:30})],{after:20}),P([R(t.l.toUpperCase(),{bold:true,size:14})],{after:20}),P([R(t.s,{size:15,color:"707175"})],{after:0})],{w:33,b:hair}))})); }
   kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows}));
-  kids.push(H("The receipts — where the work moved policy"));
+  kids.push(H("Where the work moved policy"));
   kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:m.receipts.map(r=>new TableRow({children:[cell([P([R(r.head,{bold:true,size:18})],{after:0})],{w:22,b:hair}),cell([P([R(r.claim,{size:18}),...(r.note?[R(" — "+r.note,{size:18,color:"707175"})]:[])],{after:0})],{w:78,b:hair})]}))}));
   if(m.shaped.length){ const all5=m.shaped.every(x=>x.top5);
     kids.push(H("Work that shaped the debate"));

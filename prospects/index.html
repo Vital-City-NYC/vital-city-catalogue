@@ -669,7 +669,7 @@ function boot(d){
     const L=["# Vital City — the case for funders","As of "+(FF.asof||"")+". Computed from live Mailchimp, Ghost analytics, the press tracker, the contact database and the catalogue.",""];
     L.push("## The numbers");
     (FF.tiles||[]).forEach(t=>L.push(`- **${t.n}** ${t.l} — ${t.s}`));
-    L.push("","## Policy impact — the receipts");
+    L.push("","## Where the work moved policy");
     (FF.receipts||[]).forEach(r=>L.push(`- **${r.head}:** ${r.claim}${r.note?` — ${r.note}`:""}${(r.links||[]).length?" ("+r.links.map(l=>`[${l.t}](${l.u})`).join(", ")+")":""}`));
     if(FF.press){L.push("","## In the press",`${FF.press.total} citations across ${FF.press.outlets} tracked outlets since ${FF.press.since}: `+(FF.press.top||[]).map(o=>`${o.outlet} (${o.n})`).join(", ")+".");
       (FF.press.samples||[]).forEach(x=>L.push(`- ${x.outlet}, ${x.date}: [${x.title}](${x.url})`));}
@@ -690,7 +690,7 @@ function boot(d){
   }
   $("#factsBody").innerHTML=`
     <div class="fitTiles">${(FF.tiles||[]).map(t=>`<div class="fitTile"><div class="n">${esc(t.n)}</div><div class="l">${esc(t.l)}</div><div class="s">${esc(t.s)}</div></div>`).join("")}</div>
-    <div class="fitSec">Policy impact — the receipts</div>
+    <div class="fitSec">Where the work moved policy</div>
     ${(FF.receipts||[]).map(r=>`<div class="rcp"><div class="rh">${esc(r.head)}</div><div class="rb">${esc(r.claim)}${r.note?` <span class="rn">— ${esc(r.note)}</span>`:""}<div class="rl">${(r.links||[]).map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join("")}</div></div></div>`).join("")}
     <div class="fitSec">In the press</div>
     <div style="font-size:12.5px">${esc(String((FF.press||{}).total||0))} citations across ${esc(String((FF.press||{}).outlets||0))} outlets since ${esc((FF.press||{}).since||"")} ; an undercount, since only about 25 named outlets are watched.</div>
