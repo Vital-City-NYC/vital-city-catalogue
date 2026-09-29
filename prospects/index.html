@@ -284,6 +284,40 @@ const LED_KINDS=[
   ["outcome","Outcomes","var(--vc-black)"]];
 const LED_ONE={press:"Press citation",government:"Government document",policy:"Policy citation",republished:"Republished",appearance:"Staff appearance",
   scholarly:"Scholarly citation",reader:"Subscribed",outcome:"Outcome"};
+// Donorbox gifts: every online gift on record, searchable, by gift or by
+// donor, with the giver's organization from the contact database.
+function renderGifts(G){
+  const box=$("#giftBox"); if(!box) return;
+  const all=(G&&G.rows)||[];
+  if(!all.length){ box.innerHTML=`<div class="why" style="padding:8px 0">No gift data in this build yet; it arrives with the next nightly refresh.</div>`; return; }
+  const money2=v=>"$"+Number(v||0).toLocaleString("en-US",{minimumFractionDigits:v%1?2:0,maximumFractionDigits:2});
+  const today=new Date().toISOString().slice(0,10);
+  const since=w=> w==="all" ? "" : new Date(Date.now()-(+w)*86400000).toISOString().slice(0,10);
+  const AP=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+  const day=iso=>{const p=String(iso||"").split("-"); return p.length<3?iso:`${AP[+p[1]-1]} ${+p[2]}, ${p[0]}`;};
+  const first=all.map(r=>r.d).filter(Boolean).sort()[0];
+  $("#giftHint").textContent=`Every gift made online through Donorbox${first?` since ${day(first)}`:""}${G.complete?"":" (this year's gifts until the full history arrives with the next nightly refresh)"}, newest first. Checks, wires, donor-advised funds and grants are not in Donorbox, so they are not here. Organizations come from the contact database where the giver's email matches.`;
+  const rows=()=>{ const a=since($("#giftWin").value), q=$("#giftQ").value.trim().toLowerCase();
+    return all.filter(r=>(!a||r.d>=a) && (!q || [r.n,r.e,r.inst,r.role,r.c].some(x=>String(x||"").toLowerCase().includes(q)))); };
+  const byDonor=rs=>{ const m={}; rs.forEach(r=>{ const k=r.e||("name:"+r.n.toLowerCase()); const o=m[k]=m[k]||{n:r.n,e:r.e,inst:r.inst,role:r.role,a:0,k:0,last:"",first:"9999",rec:false};
+      o.a+=r.a; o.k++; if(r.d>o.last) o.last=r.d; if(r.d<o.first) o.first=r.d; if(r.rec) o.rec=true; });
+    return Object.values(m).sort((x,y)=>y.a-x.a); };
+  const draw=()=>{ const rs=rows(), view=$("#giftView").value;
+    const tot=rs.reduce((t,r)=>t+r.a,0), donors=byDonor(rs), big=rs.filter(r=>r.a>=1000).length, rec=donors.filter(x=>x.rec).length;
+    $("#giftSum").innerHTML=[`<b>${money2(Math.round(tot))}</b> raised`,`<b>${fmtN(rs.length)}</b> gifts`,`<b>${fmtN(donors.length)}</b> donors`,`<b>${fmtN(rec)}</b> giving monthly`,`<b>${fmtN(big)}</b> gifts of $1,000 or more`].map(t=>`<button type="button" disabled>${t}</button>`).join("");
+    const who=r=>`${r.role?esc(r.role)+(r.inst?", ":""):""}${esc(r.inst||"")}`;
+    const nm=r=>r.e?`<a href="${profileURL(r.e)}" target="_blank" rel="noopener" style="color:inherit"><b>${esc(r.n)}</b></a>`:`<b>${esc(r.n)}</b>`;
+    box.innerHTML = !rs.length ? `<div class="why" style="padding:8px 0">No gifts match.</div>` : view==="donors"
+      ? `<table class="tbl"><thead><tr><th>Donor</th><th class="n">Total</th><th class="n">Gifts</th><th class="n">First</th><th class="n">Latest</th></tr></thead><tbody>${donors.map(x=>`<tr><td>${nm(x)}${x.rec?' <span class="fit">monthly</span>':""}<div class="why">${who(x)}${x.e?`${who(x)?" · ":""}<a href="mailto:${esc(x.e)}">${esc(x.e)}</a>`:""}</div></td><td class="n">${money2(x.a)}</td><td class="n">${x.k}</td><td class="n">${esc(day(x.first))}</td><td class="n">${esc(day(x.last))}</td></tr>`).join("")}</tbody></table>`
+      : `<table class="tbl"><thead><tr><th class="n">Date</th><th>Donor</th><th class="n">Amount</th><th>Campaign</th></tr></thead><tbody>${rs.map(r=>`<tr><td class="n" style="white-space:nowrap">${esc(day(r.d))}</td><td>${nm(r)}${r.rec?' <span class="fit">monthly</span>':""}<div class="why">${who(r)}</div></td><td class="n">${money2(r.a)}</td><td class="why">${esc(r.c)}</td></tr>`).join("")}</tbody></table>`;
+  };
+  ["giftWin","giftView"].forEach(id=>$("#"+id).addEventListener("change",draw));
+  $("#giftQ").addEventListener("input",draw);
+  $("#giftCsv").addEventListener("click",()=>{ const rs=rows();
+    if($("#giftView").value==="donors") csv(byDonor(rs).map(x=>({donor:x.n,email:x.e,organization:x.inst,role:x.role,total:x.a.toFixed(2),gifts:x.k,first_gift:x.first,latest_gift:x.last,monthly:x.rec?"yes":""})),["donor","email","organization","role","total","gifts","first_gift","latest_gift","monthly"],`vital-city-donorbox-donors-${today}.csv`);
+    else csv(rs.map(r=>({date:r.d,donor:r.n,email:r.e,organization:r.inst,role:r.role,amount:r.a.toFixed(2),monthly:r.rec?"yes":"",campaign:r.c})),["date","donor","email","organization","role","amount","monthly","campaign"],`vital-city-donorbox-gifts-${today}.csv`); });
+  draw();
+}
 function renderLedger(L){
   if(!L||!(L.rows||[]).length){ $("#impact").style.display="none"; return; }
   const on=new Set(LED_KINDS.map(k=>k[0]).filter(k=>k!=="reader"));
@@ -651,6 +685,20 @@ function boot(d){
     <div id="tierBody"></div>
   </div>
 
+  <div class="card" id="gifts">
+    <h2>Donorbox gifts
+      <button class="exp" id="giftCsv">&#8681; Download CSV</button>
+    </h2>
+    <div class="hint" id="giftHint"></div>
+    <div class="ledsum" id="giftSum"></div>
+    <div class="ledctl">
+      <select id="giftWin"><option value="30">Last 30 days</option><option value="90" selected>Last 90 days</option><option value="365">Last 12 months</option><option value="all">Everything on record</option></select>
+      <select id="giftView"><option value="gifts">Each gift</option><option value="donors">By donor</option></select>
+      <input id="giftQ" type="search" placeholder="Search names, emails, organizations, campaigns">
+    </div>
+    <div class="ledbox" id="giftBox"></div>
+  </div>
+
   <div class="card" id="base">
     <h2>The donor base, plainly</h2>
     <div class="ins">All ${fmtN(t.donors)} <b>online</b> donors arrived from one autumn campaign plus its echoes: ${t.top5_pct}% of the money came from five people, the median gift is ${money(t.median_gift)}, and only ${t.repeat_pct}% have given twice. That is a launch, not yet a base &mdash; and it is the online slice only; anything given by check, DAF or grant is invisible here. The two structural moves this page supports: convert one-time donors to a second gift (the ${(T.second||[]).length} names in that tab), re-ask the ${(T.lybunt||[]).length} whose last gift predates January${d.event?`, and call the ${d.event.unconverted} people who came to the November party and never gave`:``}.</div>
@@ -708,6 +756,7 @@ function boot(d){
     </div>`;
   $("#factsAll").addEventListener("click",e=>copyText(allMd(),e.target));
   renderLedger(d.impact_ledger);
+  renderGifts(d.gifts);
   $("#factsMd").addEventListener("click",()=>{
     const a=document.createElement("a");
     a.href=URL.createObjectURL(new Blob([allMd()],{type:"text/markdown"}));

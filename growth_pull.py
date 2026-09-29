@@ -4501,6 +4501,9 @@ def pull_donorbox():
         "active_recurring_donors": len(rec_donors),
         "mrr_estimate":   round(mrr, 2),
         "gifts_ytd":         gifts_ytd,          # every YTD gift (drill-in for Raised/Gifts YTD)
+        # Every paid gift on record, newest first, for the prospects page's
+        # searchable gift tracker (encrypted like the rest of this payload).
+        "gifts_all":         [{**_lean(d), "email": _email(d)} for d in sorted(paid, key=_day, reverse=True)],
         "gifts_30":          gifts_30,           # gifts in the last 30 days
         "donors_ytd":        donors_ytd,         # unique YTD donors, email-deduped
         "donors_all":        donors_all,         # unique all-time donors

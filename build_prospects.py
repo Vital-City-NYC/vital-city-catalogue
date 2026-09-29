@@ -430,6 +430,29 @@ def _shaped_pieces(growth, slugs=None):
     return {"items": out, "p95": p95}
 
 
+
+def _gift_tracker(growth, people):
+    """Every Donorbox gift (the growth pull's gifts_all; the year-to-date list
+    until that lands), newest first, with the giver's organization and role
+    from the contact database when their email matches. Online gifts only:
+    checks, wires, donor-advised funds and grants are not in Donorbox."""
+    db = (growth or {}).get("donorbox") or {}
+    rows = db.get("gifts_all") or db.get("gifts_ytd") or []
+    who = {}
+    for r in people or []:
+        for em in [r.get("e")] + list(r.get("emails") or []):
+            if em:
+                who[em.lower()] = r
+    out = []
+    for g in rows:
+        em = (g.get("email") or "").lower()
+        r = who.get(em) or {}
+        out.append({"d": g.get("date") or "", "n": g.get("donor") or "Anonymous", "a": round(float(g.get("amount") or 0), 2),
+                    "rec": bool(g.get("recurring")), "c": g.get("campaign") or "", "e": em,
+                    "inst": r.get("inst") or "", "role": r.get("role") or ""})
+    out.sort(key=lambda x: x["d"], reverse=True)
+    return {"rows": out, "complete": bool(db.get("gifts_all")), "since": db.get("history_starts") or ""}
+
 def _current_funders():
     """The underwriters named on vitalcitynyc.org/about. Fetched live; the last
     good list is cached so a fetch failure never blanks the section."""
@@ -1526,6 +1549,7 @@ def main():
                           if p or print(f"  WARNING variant {k}: slug not found: {slug}")]
                 + (v.get("extra_spots") or [])}
             for k, v in VARIANTS.items()})(),
+        "gifts": _gift_tracker(growth, people),
         "pipeline": PIPELINE,
         "readiness": {
             "sponsor": "Fund for the City of New York (FCNY)",
