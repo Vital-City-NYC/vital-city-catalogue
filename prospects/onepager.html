@@ -47,7 +47,7 @@
   .tile .n{font-weight:900;font-size:22px;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .tile .l{font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-top:4px;line-height:1.25}
   .tile .s{font-size:9.5px;color:var(--vc-charcoal);margin-top:2px;line-height:1.3}
-  .cols{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;flex:1}
+  .cols{display:grid;grid-template-columns:1.42fr 1fr;gap:18px;flex:1}
   .funds .fx{font-size:10px;line-height:1.4}
   .funds .fx b{font-weight:800}
   .roles{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}
@@ -79,6 +79,7 @@
   .wk:last-child{border-bottom:0}
   .wk b{font-weight:800}
   .wk a{color:var(--vc-black)}
+  .ssec{font-size:9px;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--vc-black);border-bottom:1px solid var(--vc-cloud);padding-bottom:2px;margin:9px 0 3px}
   .secn{font-weight:400;text-transform:none;letter-spacing:0;color:var(--vc-charcoal);font-size:9px;margin-left:4px}
   .foot{border-top:1.5px solid var(--vc-black);padding-top:8px;font-size:9.5px;color:var(--vc-charcoal);line-height:1.5;display:flex;justify-content:space-between;gap:16px}
   .foot b{color:var(--vc-black);font-weight:800}
@@ -183,22 +184,21 @@ function build(d){
     +(false&&PR&&PR.count?`<div><b>Power readers:</b> ${esc(PR.count.toLocaleString("en-US"))} <span style="color:var(--vc-charcoal)">— one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${esc(String(Math.round(PR.open||0)))}% of everything sent; disproportionately government, academic and press</span></div>`:"");
   const SH=((V&&V.shaped)?V.shaped:(FF.shaped||{})).items||[];
   const allTop5=SH.length&&SH.every(x=>x.top5);
-  const shLine=x=>x.report
-    ? `<div class="wk"><b>Our latest crime report</b>, <a href="${esc(x.u)}">"${esc(x.t||x.what)}"</a> (${esc(ym(x.pub))})</div>`
-    : `<div class="wk"><b>${esc(x.who)}</b> on <a href="${esc(x.u)}">${esc(x.what)}</a> (${esc(ym(x.pub))})${x.also?`, and <a href="${esc(x.also.u)}">${esc(x.also.t)}</a>`:""}</div>`;
-  // The essays run together as one paragraph (eight bordered rows cost the
-  // page its second half); the crime report keeps a line of its own.
+  // Influence in action: the four wins, then three sub-blocks (Josh, Sept.
+  // 29, 2026): commentary that shapes the debate, policy projects and
+  // illuminating data (the latest crime report and the three crime tools).
   const cap=t=>String(t||"").charAt(0).toUpperCase()+String(t||"").slice(1);
   const shIn=x=>(x.who==="Vital City" ? `<a href="${esc(x.u)}"><b>${esc(cap(x.what))}</b></a>` : `<b>${esc(x.who)}</b> on <a href="${esc(x.u)}">${esc(x.what)}</a>`)+` (${esc(ym(x.pub))})${x.also?`, and <a href="${esc(x.also.u)}">${esc(x.also.t)}</a>`:""}`;
   const shEss=SH.filter(x=>!x.report), shRep=SH.filter(x=>x.report);
-  const shaped=SH.length?`<div class="block"><div class="sec">Work that shaped the debate${allTop5?`<span class="secn">each in our top 5% by first-month readers</span>`:""}</div>`+
-    (shEss.length?`<div class="wk">${shEss.map(shIn).join("; ")}.</div>`:"")+shRep.map(shLine).join("")+`</div>`:"";
+  const ess5=shEss.length&&shEss.every(x=>x.top5);
   const semi=a=>a.length>1?a.slice(0,-1).join("; ")+"; and "+a[a.length-1]:(a[0]||"");
-  const TSHORT={"Historical Crime Explorer":"30-plus years of city crime data found nowhere else","Quarterly Crime Explorer":"the city's detailed quarterly figures","CompStat Decoder":"the Police Department's weekly precinct numbers, made readable"};
-  const tools=(FF.tools||[]).length?`<div class="block" id="toolsBlock"><div class="sec">Three crime data tools</div><div class="wk">${semi(FF.tools.map(t=>`<a href="${esc(t.u)}"><b>${esc(t.name)}</b></a>, ${esc(TSHORT[t.name]||t.desc)}`))}.</div></div>`:"";
+  const shaped=shEss.length?`<div class="ssec">Commentary that shapes the debate${ess5?`<span class="secn">each in our top 5% by first-month readers</span>`:""}</div><div class="wk">${shEss.map(shIn).join("; ")}.</div>`:"";
   const PSHORT={"Just Fix It":"doable fixes to the mechanics of city government","What To Do (and Not To Do)":"playbooks on what works, from subway safety to people in crisis","Rubber Meets Road":"how the city gets things done, starting with street lighting"};
   const PRODS=(FF.products||[]).slice().sort((a,b)=>{const o=(V&&V.products)||[];const i=o.indexOf(a.name),j=o.indexOf(b.name);return (i<0?9:i)-(j<0?9:j);});
-  const prods=PRODS.length?`<div class="block"><div class="sec">Policy products</div><div class="wk">${semi(PRODS.map(x=>`<b>${esc(x.name)}</b>, ${esc(PSHORT[x.name]||String(x.desc||"").replace(/\.$/,""))}`))}.</div></div>`:"";
+  const prods=PRODS.length?`<div class="ssec">Policy projects</div><div class="wk">${semi(PRODS.map(x=>`<b>${esc(x.name)}</b>, ${esc(PSHORT[x.name]||String(x.desc||"").replace(/\.$/,""))}`))}.</div>`:"";
+  const TSHORT={"Historical Crime Explorer":"30-plus years of city crime data found nowhere else","Quarterly Crime Explorer":"the city's detailed quarterly figures","CompStat Decoder":"the Police Department's weekly precinct numbers, made readable"};
+  const rep0=shRep[0];
+  const dataB=(rep0||(FF.tools||[]).length)?`<div class="ssec">Illuminating data</div><div class="wk">${rep0?`Our latest crime report, <a href="${esc(rep0.u)}"><b>"${esc(rep0.t||rep0.what)}"</b></a> (${esc(ym(rep0.pub))}). `:""}${(FF.tools||[]).length?`Three crime data tools: ${semi(FF.tools.map(t=>`<a href="${esc(t.u)}"><b>${esc(t.name)}</b></a>, ${esc(TSHORT[t.name]||t.desc)}`))}.`:""}</div>`:"";
   const S=FF.senior||{};
   const spot=(V&&V.authors&&S.tags)
     ? V.authors.filter(n=>S.tags[n]).slice(0,7).map(n=>({n,tag:S.tags[n]}))
@@ -227,8 +227,9 @@ function build(d){
       <div>
         <div class="sec">Influence in action</div>
         ${receipts}
-        ${prods}
         ${shaped}
+        ${prods}
+        ${dataB}
       </div>
       <div class="press">
         <div class="sec">Who reads it</div>
@@ -240,7 +241,6 @@ function build(d){
         <div class="chips">${chips}</div>
         ${alsoTxt}
         </div>
-        ${tools}
         ${senior}
         ${work}
       </div>
@@ -249,12 +249,6 @@ function build(d){
     <div class="foot">
       <div><b>Vital City</b> is a project of the Fund for the City of New York, a 501(c)(3), EIN 13-2612524. Editors Elizabeth Glazer and Greg Berman; managing editor Josh Greenman.</div>
     </div>`;
-  // Keep the two columns even: when the right one runs long (a version
-  // whose contributors carry long descriptions), the tools move left.
-  const cL=document.querySelector(".cols > div:first-child"), cR=document.querySelector(".cols > div.press"), tb=document.getElementById("toolsBlock");
-  const hOf=c=>{ const t=c.getBoundingClientRect().top; return Math.max(...[...c.children].map(k=>k.getBoundingClientRect().bottom))-t; };
-  if(cL&&cR&&tb){ const hL=hOf(cL), hR=hOf(cR), hT=tb.getBoundingClientRect().height+8;
-    if(Math.max(hL+hT, hR-hT) < Math.max(hL, hR)) cL.appendChild(tb); }
 }
 
 async function exportDocx(){
@@ -276,13 +270,15 @@ async function exportDocx(){
   kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows}));
   kids.push(H("Influence in action"));
   kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:m.receipts.map(r=>new TableRow({children:[cell([P([R(r.head,{bold:true,size:18})],{after:0})],{w:22,b:hair}),cell([P([R(r.claim+(/[.!?]$/.test(r.claim)?"":"."),{size:18}),...(r.note?[R(" — "+r.note,{size:18,color:"707175"})]:[])],{after:0})],{w:78,b:hair})]}))}));
-  if(m.products.length){ kids.push(H("Policy products")); kids.push(P(m.products.flatMap((x,i)=>[R(x.name,{bold:true}),R(": "+String(x.desc||"").replace(/\.$/,"")+(i<m.products.length-1?". ":"."))]))); }
-  if(m.shaped.length){ const all5=m.shaped.every(x=>x.top5);
-    kids.push(H("Work that shaped the debate"));
-    if(all5) kids.push(P([R("Each among the top 5% of everything Vital City published, by readers in its first month.",{color:"707175",size:16})],{after:40}));
-    m.shaped.forEach(x=>kids.push(P(x.report
-      ? [R("Our latest crime report",{bold:true}),R(`, "${x.t||x.what}" (${ym(x.pub)})`)]
-      : (x.who==="Vital City" ? [R(x.what.charAt(0).toUpperCase()+x.what.slice(1),{bold:true}),R(` (${ym(x.pub)})`)] : [R(x.who,{bold:true}),R(` on ${x.what} (${ym(x.pub)})`+(x.also?`, and ${x.also.t}`:""))]),{after:40}))); }
+  const SH2=(n,t)=>new Paragraph({spacing:{before:120,after:40},children:[new TextRun({text:t.toUpperCase(),font:F,size:15,bold:true,characterSpacing:16})]});
+  const ess=m.shaped.filter(x=>!x.report), rp=m.shaped.find(x=>x.report);
+  if(ess.length){ kids.push(SH2(0,"Commentary that shapes the debate"));
+    if(ess.every(x=>x.top5)) kids.push(P([R("Each among the top 5% of everything Vital City published, by readers in its first month.",{color:"707175",size:16})],{after:40}));
+    ess.forEach(x=>kids.push(P(x.who==="Vital City" ? [R(x.what.charAt(0).toUpperCase()+x.what.slice(1),{bold:true}),R(` (${ym(x.pub)})`)] : [R(x.who,{bold:true}),R(` on ${x.what} (${ym(x.pub)})`+(x.also?`, and ${x.also.t}`:""))],{after:40}))); }
+  if(m.products.length){ kids.push(SH2(0,"Policy projects")); kids.push(P(m.products.flatMap((x,i)=>[R(x.name,{bold:true}),R(": "+String(x.desc||"").replace(/\.$/,"")+(i<m.products.length-1?". ":"."))]))); }
+  if(rp||m.tools.length){ kids.push(SH2(0,"Illuminating data"));
+    if(rp) kids.push(P([R("Our latest crime report",{bold:true}),R(`, "${rp.t||rp.what}" (${ym(rp.pub)})`)],{after:40}));
+    m.tools.forEach(t=>kids.push(P([R(t.name,{bold:true}),R(": "+t.desc)],{after:40}))); }
   kids.push(H("Who writes it"));
   const w=m.writes; kids.push(P([R(`${w.pool} contributors since 2021, ${w.count} of them senior contributors on the masthead`+(w.spot.length?", including ":".")),...w.spot.flatMap((x,i)=>[R(x.n,{bold:true}),R(` (${x.tag})`+(i<w.spot.length-2?", ":i===w.spot.length-2?" and ":"."))])]));
   kids.push(H("Who reads it"));
@@ -294,7 +290,6 @@ async function exportDocx(){
   kids.push(P([R(`Cited ${nsN} times in the news and by government and policy groups since ${pr.since}, a conservative count. Most often: `),R(pr.top.map(o=>`${o.outlet} ${o.n}`).join(" · "),{bold:true})]));
   if(pr.also.length||pr.republished.length) kids.push(P([R((pr.also.length?`Also cited by ${pr.also.length>1?pr.also.slice(0,-1).join(", ")+" and "+pr.also.slice(-1)[0]:pr.also[0]}.`:"")+(pr.republished.length?` Essays have been republished by ${pr.republished.slice(0,-1).join(", ")} and ${pr.republished.slice(-1)[0]}.`:""))]));
   if(pr.most&&pr.most.visitors) kids.push(P([R(`Most read in ${pr.most.year}: `,{bold:true}),R(`“${pr.most.title}” — ${pr.most.visitors.toLocaleString("en-US")} readers.`)]));
-  if(m.tools.length){ kids.push(H("Three crime data tools")); m.tools.forEach(t=>kids.push(P([R(t.name,{bold:true}),R(": "+t.desc)],{after:40}))); }
   if(m.spots.length){ kids.push(H(m.V.spot_title||"Selected work")); m.spots.forEach(x=>kids.push(P([R(x.t),R(x.a?" — "+x.a:"",{color:"707175"})],{after:40}))); }
   if(m.funders.names.length){ kids.push(H("Who funds us")); const G=m.funders.giving||{}; const money=n=>"$"+Math.round(n||0).toLocaleString("en-US");
     const thN=n=>/^(The|the) /.test(n)||!/(Foundation|Fund|Trust)$/.test(n)?n:"the "+n; const fn=m.funders.names.map(thN);

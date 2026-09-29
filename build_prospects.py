@@ -1352,7 +1352,7 @@ def main():
          "links": [{"t":"the interview","u":"https://www.vitalcitynyc.org/zohran-mamdani-talks-public-safety/"},
                    {"t":"'quite taken' (NY Editorial Board)","u":"https://nyeditorialboard.substack.com/p/zohran-mamdani-interview-transcript"},
                    {"t":"the crime analysis","u":"https://www.vitalcitynyc.org/crime-in-new-york-city-trends-statistics/"}]},
-        {"head": "City Hall's safety chief", "claim": "Renita Francois, now the first deputy mayor for community safety, previewed her office's approach in Vital City in December 2025",
+        {"head": "City Hall's safety leader", "claim": "Renita Francois, now the city's first-ever deputy mayor for community safety, previewed her office's approach in Vital City in December 2025",
          "note": "",
          "links": [{"t":"the essay","u":"https://www.vitalcitynyc.org/nstat-should-be-key-to-mamdani-public-safety-plan/"},
                    {"t":"the interview","u":"https://www.vitalcitynyc.org/renita-francois-interview-neighborhood-safety/"}]},
