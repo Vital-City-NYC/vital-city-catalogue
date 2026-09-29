@@ -1,27 +1,40 @@
 {
   "meta": {
-    "generated_at": "2026-09-28T16:07:17.564036+00:00",
+    "generated_at": "2026-09-29T13:12:29.877429+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 948,
-    "total_authors": 512,
+    "total_posts": 950,
+    "total_authors": 513,
     "total_issues": 34,
-    "total_topics": 220,
+    "total_topics": 222,
     "date_range": [
       "2021-09-15",
-      "2026-09-24"
+      "2026-09-28"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 2,
+    "new_articles": [
+      {
+        "title": "In (Partial) Defense of Retiring N.Y.\u2019s Regents Exam Requirement",
+        "url": "https://www.vitalcitynyc.org/in-partial-defense-of-retiring-n-y-s-regents-exam-requirement/",
+        "published_date": "2026-09-28",
+        "primary_author": "Shael Polakow-Suransky"
+      },
+      {
+        "title": "Nikole Hannah-Jones\u2019 Biggest Blind Spot",
+        "url": "https://www.vitalcitynyc.org/nikole-hannah-jones-biggest-blind-spot/",
+        "published_date": "2026-09-28",
+        "primary_author": "Derrell Bradford"
+      }
+    ]
   },
-  "total_pieces": 948,
+  "total_pieces": 950,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 218
+    "2026": 220
   },
   "by_month": {
     "2021-09": 1,
@@ -78,12 +91,12 @@
     "2026-06": 46,
     "2026-07": 23,
     "2026-08": 16,
-    "2026-09": 21
+    "2026-09": 23
   },
   "by_type": [
     [
       "opinion/commentary",
-      743
+      745
     ],
     [
       "q&a",
@@ -176,15 +189,15 @@
       42
     ],
     [
+      "Education",
+      36
+    ],
+    [
       "Technology",
       35
     ],
     [
       "Transit",
-      34
-    ],
-    [
-      "Education",
       34
     ],
     [
@@ -216,7 +229,7 @@
       26
     ]
   ],
-  "n_topics_total": 220,
+  "n_topics_total": 222,
   "by_credential_pieces": [
     [
       "Academic",
@@ -231,12 +244,12 @@
       114
     ],
     [
-      "Vital City (institutional)",
-      98
+      "Other / unclassified",
+      99
     ],
     [
-      "Other / unclassified",
-      97
+      "Vital City (institutional)",
+      98
     ],
     [
       "Government / public official",
@@ -274,7 +287,7 @@
     ],
     [
       "Other / unclassified",
-      111
+      112
     ],
     [
       "Nonprofit / advocacy",
@@ -384,17 +397,17 @@
     }
   },
   "wc_stats": {
-    "n": 941,
-    "median": 1635,
-    "mean": 2170,
+    "n": 943,
+    "median": 1639,
+    "mean": 2169,
     "p90": 3259,
     "max": 30332,
-    "p10": 911,
-    "p25": 1282,
-    "p75": 2233,
-    "p95": 5728,
+    "p10": 912,
+    "p25": 1284,
+    "p75": 2232,
+    "p95": 5715,
     "no_count": 7,
-    "core_1000_2499": 668,
+    "core_1000_2499": 670,
     "under_500": 46,
     "over_5000": 53
   },
@@ -409,7 +422,7 @@
     ],
     [
       "1,000-1,999",
-      533
+      535
     ],
     [
       "2,000-2,999",
@@ -461,12 +474,12 @@
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 173
+        "n": 174
       },
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 108
+        "n": 109
       },
       {
         "floor": 2000,
@@ -540,15 +553,15 @@
     },
     {
       "year": "2026",
-      "n": 213,
-      "p25": 1286,
+      "n": 215,
+      "p25": 1288,
       "median": 1709,
-      "p75": 2490,
+      "p75": 2478,
       "max": 13669
     }
   ],
   "by_nauthors": {
-    "1": 807,
+    "1": 809,
     "2": 112,
     "3": 26,
     "4": 1,
@@ -707,39 +720,39 @@
       },
       {
         "year": "2026",
-        "weeks": 38.1,
-        "pieces": 218,
-        "outside_issues": 152,
-        "per_week_all": 5.72,
-        "per_week_outside_issues": 3.99,
+        "weeks": 38.7,
+        "pieces": 220,
+        "outside_issues": 154,
+        "per_week_all": 5.68,
+        "per_week_outside_issues": 3.98,
         "partial": true
       }
     ],
-    "total_weeks": 262.1,
+    "total_weeks": 262.7,
     "all_time_per_week": 3.62,
     "all_time_per_week_outside_issues": 1.72,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.99,
-    "current_per_week_all": 5.72,
+    "current_per_week_outside_issues": 3.98,
+    "current_per_week_all": 5.68,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 498,
       "published_away_from_drop": 64,
       "share_of_issue_pieces": 12.9,
-      "current_year_strict": 3.99,
-      "current_year_loose": 4.17,
+      "current_year_strict": 3.98,
+      "current_year_loose": 4.16,
       "all_time_strict": 1.72,
       "all_time_loose": 1.96,
       "all_time_all": 3.62
     }
   },
   "rhythm": {
-    "n_dated": 948,
+    "n_dated": 950,
     "by_weekday": [
       {
         "day": "Mon",
-        "pieces": 60,
-        "share": 6.3
+        "pieces": 62,
+        "share": 6.5
       },
       {
         "day": "Tue",
@@ -749,7 +762,7 @@
       {
         "day": "Wed",
         "pieces": 446,
-        "share": 47.0
+        "share": 46.9
       },
       {
         "day": "Thu",
@@ -773,8 +786,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.0,
-    "midweek_share": 84.2,
+    "top_day_share": 46.9,
+    "midweek_share": 84.0,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -836,9 +849,9 @@
       {
         "month": "September",
         "abbr": "Sep",
-        "pieces": 117,
+        "pieces": 119,
         "occurrences": 6,
-        "per_occurrence": 19.5
+        "per_occurrence": 19.8
       },
       {
         "month": "October",

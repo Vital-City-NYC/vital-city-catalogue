@@ -1,15 +1,28 @@
 {
-  "generated_at": "2026-09-28T16:07:17.564036+00:00",
+  "generated_at": "2026-09-29T13:12:29.877429+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 948,
-  "total_authors": 512,
+  "total_posts": 950,
+  "total_authors": 513,
   "total_issues": 34,
-  "total_topics": 220,
+  "total_topics": 222,
   "date_range": [
     "2021-09-15",
-    "2026-09-24"
+    "2026-09-28"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 2,
+  "new_articles": [
+    {
+      "title": "In (Partial) Defense of Retiring N.Y.’s Regents Exam Requirement",
+      "url": "https://www.vitalcitynyc.org/in-partial-defense-of-retiring-n-y-s-regents-exam-requirement/",
+      "published_date": "2026-09-28",
+      "primary_author": "Shael Polakow-Suransky"
+    },
+    {
+      "title": "Nikole Hannah-Jones’ Biggest Blind Spot",
+      "url": "https://www.vitalcitynyc.org/nikole-hannah-jones-biggest-blind-spot/",
+      "published_date": "2026-09-28",
+      "primary_author": "Derrell Bradford"
+    }
+  ]
 }
