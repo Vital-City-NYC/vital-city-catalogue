@@ -304,6 +304,7 @@ SPOTLIGHT = [
   ("Jelani Cobb", "dean of the Columbia Journalism School"),
   ("Errol Louis", "NY1 anchor"),
   ("Richard Buery Jr.", "CEO of Robin Hood"),
+  ("Tracey L. Meares", "Yale Law, Justice Collaboratory founder"),
 ]
 
 # Audience-targeted deck variants. Same skeleton, different emphasis: which
@@ -316,7 +317,7 @@ VARIANTS = {
    "spot_title": "Selected work: building, permitting, governing",
    "receipts": ["Permitting","Zohran Mamdani","Subway safety","Crime data","Rikers Island"],
    "authors": ["Edward Glaeser","David Schleicher","Arpit Gupta","Alex Armlovich","Henry Grabar",
-               "Ingrid Gould Ellen","Vishaan Chakrabarti","Martha Stark","Carl Weisbrod","Claire Weisz"],
+               "Ingrid Gould Ellen","Martha Stark","Vishaan Chakrabarti","Carl Weisbrod","Claire Weisz"],
    "products": ["Just Fix It","Rubber Meets Road","What To Do (and Not To Do)"],
    "spots": ["nyc-housing-permits-fast-track-construction-mamdani",
              "government-improvements-mamdani-can-tackle-in-the-first-100-days",

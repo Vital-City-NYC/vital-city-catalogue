@@ -39,6 +39,7 @@
   .mast h1{font-family:var(--vc-serif);font-weight:300;font-size:34px;line-height:1;margin:6px 0 0;letter-spacing:-.01em}
   .mast .tag{font-size:12px;color:var(--vc-charcoal);margin-top:6px}
   .mast .asof{font-size:10.5px;color:var(--vc-charcoal);text-align:right;line-height:1.5}
+  .mast .asof a,.funds a{color:var(--vc-black);font-weight:700}
   .mast h1{font-size:30px}
   .mast .dek{font-size:11.5px;line-height:1.45;color:var(--vc-black);margin-top:7px;max-width:62ch}
   .tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--vc-cloud);border:1px solid var(--vc-cloud)}
@@ -160,7 +161,7 @@ function build(d){
   const FU=FF.funders_current||{}, G=FF.giving||{};
   const money=n=>"$"+Math.round(n||0).toLocaleString("en-US");
   const funders=(FU.names||[]).length?`<div class="funds"><div class="sec">Who funds us</div>
-      <div class="fx">Vital City is underwritten by ${joinAnd((FU.names||[]).map(esc))}${G.donors?`, and by its readers: <b>${esc(G.donors.toLocaleString("en-US"))}</b> individual donors since online giving opened in ${esc(G.since||"")}${G.big_gifts?`, ${esc(String(G.big_gifts))} gifts of $1,000 or more`:""}`:""}.</div></div>`:"";
+      <div class="fx">Vital City is underwritten by ${joinAnd((FU.names||[]).map(esc))}${G.donors?`, and by its readers: <b>${esc(G.donors.toLocaleString("en-US"))}</b> individual donors since online giving opened in ${esc(G.since||"")}${G.big_gifts?`, ${esc(String(G.big_gifts))} gifts of $1,000 or more`:""}`:""}. Join them at <a href="https://www.vitalcitynyc.org/donate/">vitalcitynyc.org/donate</a>.</div></div>`:"";
   const P=FF.press||{};
   const chips=(P.top||[]).slice(0,3).map(o=>`<span class="chip">${esc(o.outlet)} <b>${esc(String(o.n))}</b></span>`).join("");
   const cites=(P.samples||[]).slice(0,1).map(x=>`<div class="cite"><span class="co">${esc(x.outlet)}</span>${esc(x.title)}</div>`).join("");
@@ -192,20 +193,20 @@ function build(d){
     (shEss.length?`<div class="wk">${shEss.map(shIn).join("; ")}.</div>`:"")+shRep.map(shLine).join("")+`</div>`:"";
   const semi=a=>a.length>1?a.slice(0,-1).join("; ")+"; and "+a[a.length-1]:(a[0]||"");
   const TSHORT={"Historical Crime Explorer":"30-plus years of city crime data found nowhere else","Quarterly Crime Explorer":"the city's detailed quarterly figures","CompStat Decoder":"the NYPD's weekly precinct numbers, made readable"};
-  const tools=(FF.tools||[]).length?`<div class="block"><div class="sec">Three crime data tools</div><div class="wk">${semi(FF.tools.map(t=>`<a href="${esc(t.u)}"><b>${esc(t.name)}</b></a>, ${esc(TSHORT[t.name]||t.desc)}`))}.</div></div>`:"";
+  const tools=(FF.tools||[]).length?`<div class="block" id="toolsBlock"><div class="sec">Three crime data tools</div><div class="wk">${semi(FF.tools.map(t=>`<a href="${esc(t.u)}"><b>${esc(t.name)}</b></a>, ${esc(TSHORT[t.name]||t.desc)}`))}.</div></div>`:"";
   const PSHORT={"Just Fix It":"doable fixes to the mechanics of city government","What To Do (and Not To Do)":"playbooks on what works, from subway safety to people in crisis","Rubber Meets Road":"how the city gets things done, starting with street lighting"};
   const PRODS=(FF.products||[]).slice().sort((a,b)=>{const o=(V&&V.products)||[];const i=o.indexOf(a.name),j=o.indexOf(b.name);return (i<0?9:i)-(j<0?9:j);});
   const prods=PRODS.length?`<div class="block"><div class="sec">Policy products</div><div class="wk">${semi(PRODS.map(x=>`<b>${esc(x.name)}</b>, ${esc(PSHORT[x.name]||String(x.desc||"").replace(/\.$/,""))}`))}.</div></div>`:"";
   const S=FF.senior||{};
   const spot=(V&&V.authors&&S.tags)
-    ? V.authors.filter(n=>S.tags[n]).slice(0,4).map(n=>({n,tag:S.tags[n]}))
-    : (S.spotlight||[]).slice(0,4);
+    ? V.authors.filter(n=>S.tags[n]).slice(0,7).map(n=>({n,tag:S.tags[n]}))
+    : (S.spotlight||[]).slice(0,7);
   const last=n=>n.replace(/\s+(Jr\.|Sr\.|II|III)$/,"").split(" ").slice(-1)[0];
   spot.sort((a,b)=>last(a.n).localeCompare(last(b.n)));
   const spotParts=spot.map(x=>`<b>${esc(x.n)}</b> (${esc(x.tag)})`);
   const spotTxt=joinAnd(spotParts);
   const senior=(S.count? `<div class="block"><div class="sec">Who writes it</div>
-      <div class="senior">${esc(String(S.pool||""))} contributors since 2021: criminologists, economists, planners, prosecutors, agency heads, mayors. ${esc(String(S.count))} are named senior contributors on the masthead${spotTxt?`, among them ${spotTxt}`:""}.</div></div>` : "");
+      <div class="senior">${esc(String(S.pool||""))} contributors since 2021, ${esc(String(S.count))} of them senior contributors on the masthead${spotTxt?`, among them ${spotTxt}`:""}.</div></div>` : "");
   window.__model={asof,V,FF,tiles:tileList,shaped:SH,tools:FF.tools||[],products:PRODS,receipts:rlist.slice(0,4),roles:(FF.roles||[]).filter(r=>r.label!=="Contributors"&&r.n).map(r=>({n:r.n,label:ROLE[r.label]||r.label.toLowerCase()})),
     aud:audRows.map(r=>{const m=AUD[r.label]||[r.label,null];return {label:m[0],value:r.value,note:m[1]||r.note}}).concat(false&&PR&&PR.count?[{label:"Power readers",value:PR.count.toLocaleString("en-US"),note:`one in ${Math.round(100/(PR.pct||10))} subscribers, opening ${Math.round(PR.open||0)}% of everything sent; disproportionately government, academic and press`}]:[]),
     press:{total:P.total,social:P.social,outlets:P.outlets,since:ym(P.since),top:(P.top||[]).slice(0,3),also,republished:FF.republished_by||[],sample:null,most:null},
@@ -217,7 +218,7 @@ function build(d){
         <h1>The evidence New York runs on.</h1>
         <div class="dek">${FF.oneliner?esc(FF.oneliner)+" ":""}An independent policy journal, a data and research shop and a convener, all in one.</div>
       </div>
-      <div class="asof">${V?`<b style="color:var(--vc-black)">${esc(V.label)}</b><br>`:""}vitalcitynyc.org<br>Figures as of ${esc(apDate(asof))}</div>
+      <div class="asof">${V?`<b style="color:var(--vc-black)">${esc(V.label)}</b><br>`:""}<a href="https://www.vitalcitynyc.org/">vitalcitynyc.org</a><br><a href="https://www.vitalcitynyc.org/donate/">vitalcitynyc.org/donate</a><br>Figures as of ${esc(apDate(asof))}</div>
     </div>
     <div class="tiles">${tiles}</div>
     <div class="cols">
@@ -246,6 +247,11 @@ function build(d){
     <div class="foot">
       <div><b>Vital City</b> is a project of the Fund for the City of New York, a 501(c)(3), EIN 13-2612524. Editors Elizabeth Glazer and Greg Berman; managing editor Josh Greenman.</div>
     </div>`;
+  // Keep the two columns even: when the right one runs long (a version
+  // whose contributors carry long descriptions), the tools move left.
+  const cL=document.querySelector(".cols > div:first-child"), cR=document.querySelector(".cols > div.press"), tb=document.getElementById("toolsBlock");
+  const hOf=c=>{ const t=c.getBoundingClientRect().top; return Math.max(...[...c.children].map(k=>k.getBoundingClientRect().bottom))-t; };
+  if(cL&&cR&&tb&&hOf(cR)-hOf(cL)>90) cL.appendChild(tb);
 }
 
 async function exportDocx(){
@@ -260,7 +266,7 @@ async function exportDocx(){
   kids.push(P([R("VITAL CITY",{bold:true,size:18})],{after:40}));
   kids.push(P([R("The evidence New York runs on.",{size:40})],{after:60}));
   kids.push(P([R((m.FF.oneliner?m.FF.oneliner+" ":"")+"An independent policy journal, a data and research shop and a convener, all in one.")],{after:60}));
-  kids.push(P([R((m.V?m.V.label+" · ":"")+"vitalcitynyc.org · Figures as of "+apDate(m.asof),{color:"707175",size:16})],{after:160}));
+  kids.push(P([R((m.V?m.V.label+" · ":"")+"vitalcitynyc.org · vitalcitynyc.org/donate · Figures as of "+apDate(m.asof),{color:"707175",size:16})],{after:160}));
   // tiles as a 2x4 table
   const tiles=m.tiles; const rows=[];
   for(let i=0;i<tiles.length;i+=5){ rows.push(new TableRow({children:tiles.slice(i,i+5).map(t=>cell([P([R(t.n,{bold:true,size:28})],{after:20}),P([R(t.l.toUpperCase(),{bold:true,size:13})],{after:20}),P([R(t.s,{size:14,color:"707175"})],{after:0})],{w:20,b:hair}))})); }
@@ -275,7 +281,7 @@ async function exportDocx(){
       ? [R("Our latest crime report: ",{bold:true}),R(`${x.t||x.what} (${ym(x.pub)})`)]
       : (x.who==="Vital City" ? [R(x.what.charAt(0).toUpperCase()+x.what.slice(1),{bold:true}),R(` (${ym(x.pub)})`)] : [R(x.who,{bold:true}),R(` on ${x.what} (${ym(x.pub)})`+(x.also?`, and ${x.also.t}`:""))]),{after:40}))); }
   kids.push(H("Who writes it"));
-  const w=m.writes; kids.push(P([R(`${w.pool} contributors since 2021: criminologists, economists, planners, prosecutors, agency heads, mayors. ${w.count} are named senior contributors on the masthead`+(w.spot.length?", among them ":".")),...w.spot.flatMap((x,i)=>[R(x.n,{bold:true}),R(` (${x.tag})`+(i<w.spot.length-2?", ":i===w.spot.length-2?" and ":"."))])]));
+  const w=m.writes; kids.push(P([R(`${w.pool} contributors since 2021, ${w.count} of them senior contributors on the masthead`+(w.spot.length?", among them ":".")),...w.spot.flatMap((x,i)=>[R(x.n,{bold:true}),R(` (${x.tag})`+(i<w.spot.length-2?", ":i===w.spot.length-2?" and ":"."))])]));
   kids.push(H("Who reads it"));
   kids.push(P([R("A conservative count: only readers we can identify by name and role are included, so the true numbers are higher.",{color:"707175",size:16})],{after:40}));
   if(m.roles.length) kids.push(P([R(m.roles.map(r=>`${r.n.toLocaleString("en-US")} ${r.label}`).join(" · "))]));
@@ -288,7 +294,7 @@ async function exportDocx(){
   if(m.tools.length){ kids.push(H("Three crime data tools")); m.tools.forEach(t=>kids.push(P([R(t.name,{bold:true}),R(": "+t.desc)],{after:40}))); }
   if(m.spots.length){ kids.push(H(m.V.spot_title||"Selected work")); m.spots.forEach(x=>kids.push(P([R(x.t),R(x.a?" — "+x.a:"",{color:"707175"})],{after:40}))); }
   if(m.funders.names.length){ kids.push(H("Who funds us")); const G=m.funders.giving||{}; const money=n=>"$"+Math.round(n||0).toLocaleString("en-US");
-    kids.push(P([R("Vital City is underwritten by "+m.funders.names.slice(0,-1).join(", ")+" and "+m.funders.names.slice(-1)[0]+(G.donors?`, and by its readers: ${G.donors.toLocaleString("en-US")} individual donors since online giving opened in ${G.since||""}${G.big_gifts?`, ${G.big_gifts} gifts of $1,000 or more`:""}`:"")+".")])); }
+    kids.push(P([R("Vital City is underwritten by "+m.funders.names.slice(0,-1).join(", ")+" and "+m.funders.names.slice(-1)[0]+(G.donors?`, and by its readers: ${G.donors.toLocaleString("en-US")} individual donors since online giving opened in ${G.since||""}${G.big_gifts?`, ${G.big_gifts} gifts of $1,000 or more`:""}`:"")+". Join them at vitalcitynyc.org/donate.")])); }
   kids.push(P([R("Vital City is a project of the Fund for the City of New York, a 501(c)(3), EIN 13-2612524. Editors Elizabeth Glazer and Greg Berman; managing editor Josh Greenman.",{size:15,color:"707175"})],{before:200}));
   const doc=new Document({styles:{default:{document:{run:{font:F,size:19}}}},sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:864,bottom:864,left:864,right:864}}},children:kids}]});
   const blob=await Packer.toBlob(doc); window.__lastDocxSize=blob.size;
