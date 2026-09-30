@@ -5,6 +5,8 @@
               ~/Desktop/Vital City website manual.pdf
   newsletter  private/manual/newsletter.html  -> newsletter-manual/data.enc
               ~/Desktop/Vital City newsletter manual.pdf
+  app         private/manual/app.html         -> app-manual/data.enc
+              ~/Desktop/Vital City app manual.pdf
 
 Sources are plaintext and gitignored -- edit THOSE files, never the output.
 Run after any edit:   python3 build_manual.py            (both)
@@ -40,6 +42,8 @@ DOCS = {
                    "pdf": "Vital City website manual.pdf", "nav": True},
     "newsletter": {"src": MAN / "newsletter.html", "out": ROOT / "newsletter-manual" / "data.enc",
                    "pdf": "Vital City newsletter manual.pdf", "nav": False},
+    "app":        {"src": MAN / "app.html", "out": ROOT / "app-manual" / "data.enc",
+                   "pdf": "Vital City app manual.pdf", "nav": False},
 }
 PASS_FILE = ROOT / "private" / ".netpass"
 ITERS = 600_000

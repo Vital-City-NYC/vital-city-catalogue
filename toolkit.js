@@ -34,12 +34,14 @@
     // Documents, not nightly datasets: "static" keeps the home page from
     // calling them stale. Both are rebuilt by build_manual.py when a source changes.
     { id: "manual",     label: "Manuals",    path: "manual/",            gated: true,
-      blurb: "Plain how-to guides for staff: running the website and making the newsletter.",
+      blurb: "Plain how-to guides for staff: running the website, making the newsletter and the iPhone app.",
       views: [
         { id: "manual",            label: "Website",    path: "manual/",            gated: true, data: "manual/data.enc", static: true,
           blurb: "How the website works: arranging vitalcitynyc.org in Ghost, and what only Obox can change." },
         { id: "newsletter-manual", label: "Newsletter", path: "newsletter-manual/", gated: true, data: "newsletter-manual/data.enc", static: true,
-          blurb: "How the Thursday newsletter is made: Google Docs, then Postcards, then Mailchimp." }
+          blurb: "How the Thursday newsletter is made: Google Docs, then Postcards, then Mailchimp." },
+        { id: "app-manual",        label: "App",        path: "app-manual/",        gated: true, data: "app-manual/data.enc", static: true,
+          blurb: "How the iPhone app works: where its content comes from, who can change what, how updates ship and its history." }
       ] },
     // One tab, two views: the city's calendar and the archive pieces worth
     // reposting against it. The bar shows "Calendar"; on either page the two
