@@ -355,6 +355,9 @@
      empty tracks stay card-colored instead of showing as a gray void. */
   .perfcell.hero{background:var(--vc-paper2);box-shadow:inset 0 3px 0 0 var(--vc-chartreuse)}
   .perfgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;background:var(--vc-white);border-top:1px solid var(--vc-cloud);border-left:1px solid var(--vc-cloud)}
+  /* The period tiles: eight of them, so two even rows of four (auto-fit left the last one stranded on a row of its own). */
+  #weekPulseGrid{grid-template-columns:repeat(4,1fr)}
+  @media (max-width:760px){#weekPulseGrid{grid-template-columns:repeat(2,1fr)}}
   .perfcell{background:var(--vc-white);padding:11px 14px;border-right:1px solid var(--vc-cloud);border-bottom:1px solid var(--vc-cloud)}
   .perfcell .pl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700}
   .perfcell .pn{font-family:var(--vc-serif);font-weight:900;font-size:22px;line-height:1.1;margin-top:3px}
@@ -6017,6 +6020,8 @@ function renderWeekPulse(data, span){
       const pct = (base && base>0) ? Math.round(Math.abs(d)/base*100) : null;
       dtxt = `${up?"▲":"▼"} ${dv} ${word} than ${typical}` +
         (thin ? "; too little history to give a percentage" : (pct!=null ? `, ${pct}% ${up?"above":"below"}` : ""));
+      // A falling count reads as bad everywhere else on the panel; say it.
+      if(t.goodDown) dtxt += up ? ": more people leaving" : ": fewer people leaving, which is good";
     }
     // Money on a small base: under 20 gifts in the window, a percentage is
     // noise (the monthly report's suppression rule). Show the figure and the
