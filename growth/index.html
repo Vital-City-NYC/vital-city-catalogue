@@ -183,6 +183,9 @@
   details.pc-more > summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--vc-cerulean)}
   aside.brandwatch > div[style]{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   aside.brandwatch ul.feed li.xtra{display:none}
+  .mbadge{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:9px;margin:0 4px 2px 0;vertical-align:1px;white-space:nowrap;color:#fff}
+  .mb-work{background:#3d7a35}.mb-people{background:#217ebe}.mb-repub{background:#7a5aa6}.mb-event{background:#c8612f}.mb-writer{background:#2f8a8a}
+  .mb-roundup{background:#9a9a9a}.mb-named{background:#c9c9c6;color:#050507}.mb-unchecked{background:transparent;color:#707175;border:1px solid #b9b9b6}
   aside.brandwatch ul.feed.showall li.xtra{display:list-item}
   .feedmore{font-size:11px;color:var(--vc-cerulean);cursor:pointer;margin:2px 0 6px;display:inline-block}
   /* phones (the installed app): headings wrap instead of pushing the page sideways */
@@ -1948,6 +1951,31 @@ function boot(data){
       </div>
     </div>`;
 
+// How a press mention uses Vital City, read from the passage that names it
+// (mention_context), the title and the page check. Order matters: a
+// republished piece or a roundup is that first, whatever else it says.
+const MENTION_KINDS=[
+  {k:"work",  l:"Cites our work",       t:"Draws on a Vital City analysis, report, map or article"},
+  {k:"people",l:"Our people cited",     t:"A Vital City editor or researcher quoted, cited or described as a source"},
+  {k:"repub", l:"Republished",          t:"A Vital City piece run by another outlet"},
+  {k:"event", l:"Our event or podcast", t:"News made at a Vital City event or on its podcast"},
+  {k:"writer",l:"By our writer",        t:"A Vital City contributor writing elsewhere and pointing to their Vital City piece"},
+  {k:"roundup",l:"Roundup link",        t:"A link in a daily headlines post or newsletter briefing: distribution, not coverage"},
+  {k:"named", l:"Names us",             t:"Names Vital City without drawing on a piece, quoting its people or linking in a roundup"},
+  {k:"unchecked",l:"Not yet checked",   t:"The page could not be read, so how it uses Vital City is unknown"},
+];
+const VC_PEOPLE=/\b(Elizabeth|Liz) Glazer|\bGlazer\b|Josh Greenman|\bGreenman\b|Greg Berman|Paul Reeping|Harry Siegel|Aaron Short/;
+function mentionKind(p){
+  const c=String(p.mention_context||""), t=String(p.title||"");
+  if(/originally (published|appeared) (by|in|on) Vital City|from our partners at Vital City|in partnership with Vital City|part of Vital City.s (ongoing )?series|republished (with permission )?from Vital City/i.test(c)) return "repub";
+  if(p.roundup || /\bheadlines\b|\bbriefing\b|round-?up|morning read|playbook|what we.re reading|links? of the day/i.test(t)) return "roundup";
+  if(/(hosted by|podcast|forum|panel|town hall|conversation)[^.]{0,70}Vital City|Vital City[^.]{0,40}(podcast|forum|panel|event|discussion|conversation)/i.test(c)) return "event";
+  if(/\b(as )?I (wrote|argued|noted|explained|showed)\b[^.]{0,60}Vital City|\b(my|our) (earlier |recent )?(piece|article|essay|column) (for|in) Vital City/i.test(c)) return "writer";
+  if(VC_PEOPLE.test(c)) return "people";
+  if(/\b(analysis|report|data|study|map|graphic|chart|article|story|piece|essay|series|survey|findings?|tracker|scorecard|graded|noted|found|shows?|showed|according to|wrote|writes|reported|deep dive|guide|interview|published|breakdown|put it|points? out|argued|argues)\b|\b(in|told) Vital City\b/i.test(c)) return "work";
+  if(!c && p.verified!==true) return "unchecked";
+  return c ? "named" : "unchecked";
+}
   // ----- Media mentions (third-party press only — kind='media')
   const news = data.news_mentions || [];
   // Hits the page check rejected are left out: named only in a related-story
@@ -1961,12 +1989,14 @@ function boot(data){
   // Link roundups are counted but tagged: they're real distribution, not a
   // story about us, and left unmarked they made one outlet's daily headlines
   // post look like our strongest coverage.
-  const roundups = realPress.filter(p => p.roundup).length;
+  realPress.forEach(p=>{ p._kind = mentionKind(p); });
+  const roundups = realPress.filter(p => p._kind==="roundup").length;
+  const KC={}; realPress.forEach(p=>{ KC[p._kind]=(KC[p._kind]||0)+1; });
   $("#newsFeed").innerHTML = realPress.length
     ? (pressStale?`<li class="empty" style="color:var(--vc-charcoal)">Google News didn't respond on the last refresh — showing the most recent press mentions we have; this list updates as soon as the feed recovers.</li>`:'')
-      + (roundups?`<li class="empty" style="color:var(--vc-charcoal)" title="Daily link roundups are real distribution but not substantive coverage. They're kept in the list and tagged so the headline count isn't mistaken for that many stories about Vital City.">${realPress.length - roundups} substantive &middot; ${roundups} link roundups</li>`:'')
+      + `<li class="empty" style="color:var(--vc-charcoal)" title="Each mention is sorted by how the page uses Vital City, read from the passage that names it. Roundup links are real distribution but not coverage.">${MENTION_KINDS.filter(k=>KC[k.k]).map(k=>`<span class="mbadge mb-${k.k}">${esc(k.l)}</span> ${KC[k.k]}`).join(" &nbsp;")}</li>`
       + realPress.slice(0,80).map(p=>`<li>
-        <span class="src">${esc(p.source||p.domain||'web')}${p.roundup?' &middot; <i title="Daily link roundup — real distribution, not a story about us">roundup</i>':''}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+        <span class="src">${esc(p.source||p.domain||'web')}</span> <span class="mbadge mb-${p._kind}" title="${esc((MENTION_KINDS.find(k=>k.k===p._kind)||{}).t||"")}">${esc((MENTION_KINDS.find(k=>k.k===p._kind)||{}).l||"")}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
         <span class="date">${esc((p.published_iso||p.published||'').slice(0,10))}</span>
         ${p.snippet?`<div class="snip">${esc(p.snippet)}</div>`:''}
       </li>`).join("")
