@@ -1,7 +1,300 @@
 {
- "generated": "2026-09-28T19:15:30+00:00",
+ "generated": "2026-09-30T16:23:28+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "women-and-guns-editors-note",
+   "title": "The Crisis We Fail to Name",
+   "url": "https://www.vitalcitynyc.org/women-and-guns-editors-note/",
+   "date": "2026-09-30",
+   "author": "Kerri M. Raissian, Jennifer Dineen",
+   "handle": null,
+   "dek": "What this issue is all about",
+   "tags": [
+    "Gun Violence",
+    "What We Know and Don't Know"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Kerri M. Raissian and Jennifer Dineen: What this issue is all about"
+    },
+    {
+     "kind": "writer",
+     "text": "Read Kerri M. Raissian and Jennifer Dineen: \"The Crisis We Fail to Name\""
+    },
+    {
+     "kind": "quote",
+     "text": "Kerri M. Raissian and Jennifer Dineen writes: \"Who needs the most resources both to prevent and respond to American gun violence?\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "police-firearm-use-gender-differences",
+   "title": "What Gender Reveals About Police Firearm Use",
+   "url": "https://www.vitalcitynyc.org/police-firearm-use-gender-differences/",
+   "date": "2026-09-30",
+   "author": "Lisa Barao, Katharina Neissl",
+   "handle": null,
+   "dek": "Men and women in law enforcement use guns differently.",
+   "tags": [
+    "Guns",
+    "Gun Violence",
+    "The Culture Around Us",
+    "Police Reform"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Lisa Barao and Katharina Neissl: Men and women in law enforcement use guns differently."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Lisa Barao and Katharina Neissl: \"What Gender Reveals About Police Firearm Use\""
+    },
+    {
+     "kind": "quote",
+     "text": "Lisa Barao and Katharina Neissl writes: \"Furthermore, publicized cases of police use of force can undermine trust in the police and perceptions of police legitimacy.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "the-rise-of-women-gunfighters-in-cinema",
+   "title": "Bullets Have No Sex: The Rise of Women Gunfighters in Cinema",
+   "url": "https://www.vitalcitynyc.org/the-rise-of-women-gunfighters-in-cinema/",
+   "date": "2026-09-30",
+   "author": "Monica Castillo",
+   "handle": null,
+   "dek": "These days, women are likelier to be armed on the big screen, not just in real life.",
+   "tags": [
+    "Gun Violence",
+    "The Culture Around Us",
+    "Film & TV"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Monica Castillo: These days, women are likelier to be armed on the big screen, not just in real life."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Monica Castillo: \"Bullets Have No Sex: The Rise of Women Gunfighters in Cinema\""
+    },
+    {
+     "kind": "quote",
+     "text": "Monica Castillo writes: \"Bullets meant action, terror, suspense, perhaps even tragedy or a happy ending, depending on whose body they riddled.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "domestic-violence-gun-deaths-incomplete-picture",
+   "title": "Shine a Light on Domestic Violence Gun Deaths",
+   "url": "https://www.vitalcitynyc.org/domestic-violence-gun-deaths-incomplete-picture/",
+   "date": "2026-09-30",
+   "author": "Lyra Monroe, Brian Malte",
+   "handle": null,
+   "dek": "America is likely getting an incomplete picture of intimate partner firearm violence, and that has dangerous consequences.",
+   "tags": [
+    "Gun Violence",
+    "When Guns Harm Women"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Lyra Monroe and Brian Malte: America is likely getting an incomplete picture of intimate partner firearm violence, and that has dangerous consequences."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Lyra Monroe and Brian Malte: \"Shine a Light on Domestic Violence Gun Deaths\""
+    },
+    {
+     "kind": "quote",
+     "text": "Lyra Monroe and Brian Malte writes: \"The Centers for Disease Control and Prevention National Violent Death Reporting System (NVDRS) is the premier tool for tracking intimate partner violence (IPV) fatalities in the United States.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "domestic-violence-victims-second-amendment-rights-blocked",
+   "title": "Queens Without Castles",
+   "url": "https://www.vitalcitynyc.org/domestic-violence-victims-second-amendment-rights-blocked/",
+   "date": "2026-09-30",
+   "author": "Michael R. Ulrich",
+   "handle": null,
+   "dek": "Why women victimized by domestic violence are unable to exercise Second Amendment rights",
+   "tags": [
+    "Gun Violence",
+    "When Women Wield Guns"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Michael R. Ulrich: Why women victimized by domestic violence are unable to exercise Second Amendment rights"
+    },
+    {
+     "kind": "writer",
+     "text": "Read Michael R. Ulrich: \"Queens Without Castles\""
+    },
+    {
+     "kind": "quote",
+     "text": "Michael R. Ulrich writes: \"The sexual assaults, which included using homemade sex toys and a handgun, were frequently recorded and even posted online.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "firearm-violence-victim-mothers-consequences",
+   "title": "The Ones Left Standing",
+   "url": "https://www.vitalcitynyc.org/firearm-violence-victim-mothers-consequences/",
+   "date": "2026-09-30",
+   "author": "Nelba Márquez-Greene, Zirui Song",
+   "handle": null,
+   "dek": "How firearm violence falls on mothers",
+   "tags": [
+    "Gun Violence",
+    "When Guns Harm Women"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Nelba Márquez-Greene and Zirui Song: How firearm violence falls on mothers"
+    },
+    {
+     "kind": "writer",
+     "text": "Read Nelba Márquez-Greene and Zirui Song: \"The Ones Left Standing\""
+    },
+    {
+     "kind": "quote",
+     "text": "Nelba Márquez-Greene and Zirui Song writes: \"In reality, when one family member sustains a firearm injury, the trauma is shared and experienced by others in the family.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "firearm-deaths-pregnancy-epidemic",
+   "title": "Pregnant and At Risk",
+   "url": "https://www.vitalcitynyc.org/firearm-deaths-pregnancy-epidemic/",
+   "date": "2026-09-30",
+   "author": "Ayesha Dholakia, Lois K. Lee",
+   "handle": null,
+   "dek": "America's hidden firearm epidemic",
+   "tags": [
+    "Gun Violence",
+    "When Guns Harm Women"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Ayesha Dholakia and Lois K. Lee: America's hidden firearm epidemic"
+    },
+    {
+     "kind": "writer",
+     "text": "Read Ayesha Dholakia and Lois K. Lee: \"Pregnant and At Risk\""
+    },
+    {
+     "kind": "quote",
+     "text": "Ayesha Dholakia and Lois K. Lee writes: \"At 26, she was nine months pregnant and due to give birth that very day.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "women-and-guns-data",
+   "title": "What the Data Tell Us About Women and Guns",
+   "url": "https://www.vitalcitynyc.org/women-and-guns-data/",
+   "date": "2026-09-30",
+   "author": "Vital City, Paul Reeping",
+   "handle": "@paulreeping",
+   "dek": "A portrait in numbers of what we know and where the gaps are",
+   "tags": [
+    "Gun Violence",
+    "What We Know and Don't Know"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Paul Reeping (@paulreeping): A portrait in numbers of what we know and where the gaps are"
+    },
+    {
+     "kind": "writer",
+     "text": "Read Paul Reeping (@paulreeping): \"What the Data Tell Us About Women and Guns\""
+    },
+    {
+     "kind": "quote",
+     "text": "Paul Reeping writes: \"About a third of American adults own a gun, and roughly 4 in 10 live in a household with one.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "disarming-domestic-violence-abusers",
+   "title": "Disrupting Known Danger: Disarming Domestic Violence Abusers",
+   "url": "https://www.vitalcitynyc.org/disarming-domestic-violence-abusers/",
+   "date": "2026-09-30",
+   "author": "Alice M. Ellyson, Sandra B. Shanahan",
+   "handle": null,
+   "dek": "Evidence suggests dedicated units are one way to improve firearm relinquishment by individuals restrained by a civil domestic violence protection order.",
+   "tags": [
+    "Gun Violence",
+    "When Guns Harm Women"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Alice M. Ellyson and Sandra B. Shanahan: Evidence suggests dedicated units are one way to improve firearm relinquishment by individuals restrained by a civil domestic violence protection order."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Alice M. Ellyson and Sandra B. Shanahan: \"Disrupting Known Danger: Disarming Domestic Violence Abusers\""
+    },
+    {
+     "kind": "quote",
+     "text": "Alice M. Ellyson and Sandra B. Shanahan writes: \"Jade is not a real person, but the elements of her story are both real and common among domestic violence survivors, who are disproportionately women.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "older-women-intimate-partner-violence-firearms",
+   "title": "Invisible Victims: Older Women, Intimate Partners and Firearms",
+   "url": "https://www.vitalcitynyc.org/older-women-intimate-partner-violence-firearms/",
+   "date": "2026-09-30",
+   "author": "Lynn A. Addington",
+   "handle": null,
+   "dek": "America needs a more honest conversation about an often overlooked group.",
+   "tags": [
+    "Gun Violence",
+    "When Guns Harm Women"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Lynn A. Addington: America needs a more honest conversation about an often overlooked group."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Lynn A. Addington: \"Invisible Victims: Older Women, Intimate Partners and Firearms\""
+    },
+    {
+     "kind": "quote",
+     "text": "Lynn A. Addington writes: \"Police in Arkansas arrive at a domestic disturbance call to find a 56-year-old woman shot and killed by her live-in boyfriend.\""
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "nikole-hannah-jones-biggest-blind-spot",
    "title": "Nikole Hannah-Jones’ Biggest Blind Spot",
