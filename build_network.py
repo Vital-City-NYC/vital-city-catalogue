@@ -779,6 +779,14 @@ def fold(q, p):
     if p["since"] and (not q["since"] or p["since"] < q["since"]): q["since"] = p["since"]
     if p["dlast"] > q["dlast"]: q["dlast"] = p["dlast"]
     if q["ns"] == "guess" and p["ns"] == "given": q["n"], q["ns"] = p["n"], "given"
+    # Flags set by hand in name_overrides.csv must survive a merge. Losing excl
+    # would put a sitting official back on the prospect lists; losing frreview
+    # drops a researched introduction lead.
+    for k in ("excl", "nyc", "oom"):
+        if p.get(k): q[k] = 1
+    if p.get("seg") and not q.get("seg"): q["seg"] = p["seg"]
+    if p.get("frreview") and not q.get("frreview"):
+        q["frreview"], q["frwhy"] = 1, p.get("frwhy", "")
 
 
 def merge_key(name, nick=False):
@@ -806,12 +814,24 @@ def merge_people(people):
       1. exact key (first|last, accent- and middle-name-insensitive) — always.
       2. nickname key (Dan->Daniel) — only when at least one side is 'known',
          to keep namesake risk low.
-    Within a pass, only merge when exactly one prior record shares the key."""
+    Within a pass, only merge when exactly one prior record shares the key.
+    Addresses marked solo in name_overrides.csv never merge by name: the
+    research confirmed who owns that address, not that a namesake is the same
+    person."""
+    folded_named = []
     def run(rows, keyfn, guard):
         seen, out = {}, []
         for p in rows:
             k = keyfn(p["n"])
-            if k and k in seen and (guard is None or guard(seen[k], p)):
+            if k and k in seen and not (is_solo(seen[k]) or is_solo(p)) \
+                    and (guard is None or guard(seen[k], p)):
+                # Two bare subscriptions that share only a name, one of them
+                # named by research: the likeliest namesake collision.
+                q = seen[k]
+                if q["emails"] and p["emails"] \
+                        and set(q["src"]) <= {"member"} and set(p["src"]) <= {"member"} \
+                        and any(e in OVERRIDE_NAMED for e in q["emails"] + p["emails"]):
+                    folded_named.append(p["n"])
                 fold(seen[k], p)
             else:
                 if k:
@@ -820,7 +840,36 @@ def merge_people(people):
         return out
     people = run(people, lambda n: merge_key(n, nick=False), None)
     people = run(people, lambda n: merge_key(n, nick=True), lambda a, b: known(a) or known(b))
+    # A name fixed in name_overrides.csv that then merged into a namesake is
+    # worth a look: set solo=1 on that row if they are different people.
+    if folded_named:
+        print(f"name-merged {len(folded_named)} subscriber pairs sharing only a researched name "
+              f"(check for namesakes; solo=1 in name_overrides.csv keeps an address apart): "
+              + ", ".join(sorted(set(folded_named))), file=__import__("sys").stderr)
     return people
+
+
+SOLO = set()            # emails that never merge by name (name_overrides.csv solo=1)
+OVERRIDE_NAMED = set()  # emails whose name comes from name_overrides.csv
+
+
+def is_solo(p):
+    return any(e in SOLO for e in p.get("emails") or [])
+
+
+def load_override_flags():
+    path = PRIV / "name_overrides.csv"
+    if not path.exists():
+        return
+    with open(path, newline="") as f:
+        for row in csv.DictReader(f):
+            em = email_norm(row.get("email"))
+            if not em:
+                continue
+            if (row.get("name") or "").strip():
+                OVERRIDE_NAMED.add(em)
+            if (row.get("solo") or "").strip() in ("1", "y", "yes", "true"):
+                SOLO.add(em)
 
 
 def load_author_file():
@@ -857,9 +906,13 @@ def main():
     def tight(s):
         return re.sub(r"[^a-z0-9]", "", norm(s))
 
+    load_override_flags()
+
     def get_or_make(emails=None, name="", fl=""):
         for e in (emails or []):
             if e and e in by_email: return by_email[e]
+        if any(e in SOLO for e in (emails or [])):
+            name = fl = ""                 # solo address: match by email only
         if name and name in by_name: return by_name[name]
         if fl and fl in by_fl: return by_fl[fl]
         if name and len(norm(name).split()) >= 2 and tight(name) in by_tight:
@@ -877,7 +930,7 @@ def main():
         for e in p["emails"]:
             by_email.setdefault(e, p)
         nn = norm(p.get("n"))
-        if nn and len(nn.split()) >= 2:        # only first+last names are merge keys; single tokens match by email only
+        if nn and len(nn.split()) >= 2 and not is_solo(p):   # only first+last names are merge keys; single tokens match by email only
             by_name.setdefault(nn, p)
             by_fl.setdefault(firstlast(p["n"]), p)
             by_tight.setdefault(tight(p["n"]), p)

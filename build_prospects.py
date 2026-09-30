@@ -1234,6 +1234,15 @@ def main():
         researched.append(pr)
     researched.sort(key=lambda x: (-(x["eclick"] or 0), -(x["eopen"] or 0)))
 
+    # Introduction leads: readers the reader-research rounds flagged by hand
+    # (frreview in name_overrides.csv), each with the documented reason. A flag
+    # records a public professional connection worth a look, never an estimate
+    # of wealth or willingness to give. Donors stay on the list; the columns
+    # show their giving.
+    leads = [person_row(r, r.get("frwhy") or "Flagged by reader research")
+             for r in people if r.get("frreview") and not r.get("excl") and r.get("e")]
+    leads.sort(key=lambda x: (x["n"] or "").split()[-1:] or [""])
+
     event = load_event(people)
 
     lybunt = [person_row(r, "Gave last year, nothing this year")
@@ -1560,7 +1569,7 @@ def main():
                                     for r in v if not (PERSON_EDITS.get((r.get("e") or "").lower()) or {}).get("hidden")]
                                 for k, v in tiers.items()})({
             "advisors": advisors, "upgrade": upgrade, "second": second,
-            "researched": researched,
+            "researched": researched, "leads": leads,
             "notables": notables, "principals": principals,
             "foundation_staff": fstaff, "lybunt": lybunt,
             "party": (event or {}).get("attended", [])}),
@@ -1593,7 +1602,7 @@ def main():
     print(f"prospects: {len(sub):,} subscribers, {len(donors)} donors -> "
           f"advisors {len(advisors)}, upgrade {len(upgrade)}, second-gift {len(second)}, "
           f"notables {len(notables)}, principals {len(principals)}, "
-          f"foundation staff {len(fstaff)}, lapsed {len(lybunt)}")
+          f"foundation staff {len(fstaff)}, lapsed {len(lybunt)}, introduction leads {len(leads)}")
     print(f"wrote {OUT.name} and {ENC}")
 
 
