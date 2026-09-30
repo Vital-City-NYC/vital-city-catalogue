@@ -157,6 +157,13 @@
     .cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .fig.hero,.chip.first{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
+  /* Measuring mode: the print slide box on screen, so a slide that would be
+     cut off on paper can be shrunk to fit before printing. */
+  body.pmeasure .stage{max-width:none;padding:0}
+  body.pmeasure .slide{width:10.3in;height:7.3in;min-height:0;max-height:7.3in;overflow:hidden;padding:30px 40px;box-sizing:border-box}
+  body.pmeasure .slide h2{font-size:34px}
+  body.pmeasure .cover h1{font-size:60px}
+  body.pmeasure .bf-view{height:330px}
   @media (max-width:700px){
     .slide{padding:28px 22px;min-height:0}
     .cover h1{font-size:44px}
@@ -232,6 +239,22 @@ $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
 (async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
 $("#lock").addEventListener("click",e=>{e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()});
 $("#print").addEventListener("click",()=>window.print());
+// Before printing, shrink the content of any slide that would run past its
+// landscape page (the mentions chart and the bylines grid were cut off), and
+// put everything back afterward.
+function fitSlidesForPrint(){
+  document.body.classList.add("pmeasure");
+  document.querySelectorAll(".slide").forEach(sl=>{
+    const kids=[...sl.children].filter(k=>!k.classList.contains("foot"));
+    kids.forEach(k=>k.style.zoom="");
+    const room=sl.clientHeight-60, need=kids.reduce((m,k)=>Math.max(m,k.offsetTop+k.offsetHeight),0);
+    if(need>room){ const z=Math.max(0.55,(room/need)*0.97); kids.forEach(k=>k.style.zoom=z.toFixed(3)); }
+  });
+  document.body.classList.remove("pmeasure");
+}
+function unfitSlides(){ document.querySelectorAll(".slide > *").forEach(k=>k.style.zoom=""); }
+window.addEventListener("beforeprint",fitSlidesForPrint);
+window.addEventListener("afterprint",unfitSlides);
 // "Email the deck": the gated URL is useless to a funder (and the passphrase
 // must never leave the team — it unlocks the contact database too). So this
 // exports a SELF-CONTAINED, ungated copy of the rendered deck: the DOM as it

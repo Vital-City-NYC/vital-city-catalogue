@@ -271,6 +271,14 @@
     /* paper layout */
     #app, main { max-width:none !important; width:auto !important; }
     main .card { break-inside: avoid; box-shadow:none !important; border:1px solid #d9d9d6 !important; margin:10px 0; }
+    /* A card taller than a page can't avoid breaking: asking it to pushed the
+       whole card to page two and left page one blank (the Where readers come
+       from card, Sept. 30, 2026). Tall cards and a card printed on its own may
+       break; their rows stay whole. */
+    main .card.ptall, body.print-one main .card.print-target { break-inside: auto; }
+    #sources .srow, #sources .stk, .pwl li, .pwp li, .lvt tr, .ki-row, .rcp { break-inside: avoid; }
+    /* Scrolling boxes print in full (the social feeds were cut off at their scroll height). */
+    main .card .soclist, main .card ul[style*="overflow-y:auto"] { max-height:none !important; overflow:visible !important; }
     .sechead { break-after: avoid; break-inside: avoid; }
     .kpi, .perfcell, table.tbl tr { break-inside: avoid; }
     /* Key indicators on paper: one row per measure instead of the tile grid,
@@ -8139,7 +8147,8 @@ function setupCardTools(){
     tools.appendChild(mk("⧉ copy","Copy this card's content (text + tables) to paste into an email", b=>copyCardContent(card.id,b)));
     // A card with its own report or download buttons keeps those; the small
     // "print this card" button would only duplicate them.
-    if(!card.querySelector(".btn-rpt, #pulseRpt")) tools.appendChild(mk("⤓ PDF","Export just this card as a PDF", ()=>exportCard(card.id)));
+    // The Tools card is interactive and hidden on paper; it makes its own exports.
+    if(!card.querySelector(".btn-rpt, #pulseRpt") && card.id!=="rangeReport") tools.appendChild(mk("⤓ PDF","Export just this card as a PDF", ()=>exportCard(card.id)));
     card.appendChild(tools);
   });
 }
@@ -8217,6 +8226,9 @@ function copyCardContent(id, btn){
     navigator.clipboard.writeText(text).then(ok,fail);
   } else { cleanup(); prompt("Copy this card's content:",text); }
 }
+// Mark cards taller than a printed page so the print rules let them break.
+function markTallCards(){ document.querySelectorAll("main .card").forEach(c=>c.classList.toggle("ptall", c.getBoundingClientRect().height>900)); }
+window.addEventListener("beforeprint", markTallCards);
 function exportCard(id){
   const card=document.getElementById(id); if(!card) return;
   const root=document.documentElement, body=document.body;
