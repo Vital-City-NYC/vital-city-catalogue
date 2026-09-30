@@ -1,7 +1,7 @@
 [
  {
   "name": "Vital City",
-  "post_count": 98,
+  "post_count": 99,
   "slugs": [
    "2025-a-look-back-most-read",
    "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -99,6 +99,7 @@
    "what-to-do-about-subway-safety-nyc-policy-recommendations",
    "who-gets-locked-up-and-why-a-data-story",
    "why-oversight-matters",
+   "women-and-guns-data",
    "youth-crime-in-new-york-after-raise-the-age",
    "zohran-mamdani-talks-public-safety"
   ],
@@ -525,6 +526,26 @@
   "senior": true
  },
  {
+  "name": "Paul Reeping",
+  "post_count": 9,
+  "slugs": [
+   "just-the-facts-on-new-york-city-subway-crime",
+   "navigating-apartment-hunting-rising-rent-in-nyc",
+   "nyc-crime-midyear-2026-felony-assaults-rape-murder",
+   "safer-cities-in-context",
+   "the-state-of-crime-in-new-york-city-at-midyear-2024",
+   "vital-signs-state-of-the-city-on-crime-2024",
+   "what-the-data-show-about-subway-safety",
+   "what-we-know-and-dont-know-about-guns",
+   "women-and-guns-data"
+  ],
+  "slug": "reeping-paul",
+  "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
+  "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "David Schleicher",
   "post_count": 9,
   "slugs": [
@@ -562,25 +583,6 @@
   "slug": "hall-john",
   "bio": "is a retired police professional and a National Institute of Justice Law Enforcement Advancing Data and Science (LEADS) Scholar.",
   "url": "https://www.vitalcitynyc.org/author/hall-john/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Paul Reeping",
-  "post_count": 8,
-  "slugs": [
-   "just-the-facts-on-new-york-city-subway-crime",
-   "navigating-apartment-hunting-rising-rent-in-nyc",
-   "nyc-crime-midyear-2026-felony-assaults-rape-murder",
-   "safer-cities-in-context",
-   "the-state-of-crime-in-new-york-city-at-midyear-2024",
-   "vital-signs-state-of-the-city-on-crime-2024",
-   "what-the-data-show-about-subway-safety",
-   "what-we-know-and-dont-know-about-guns"
-  ],
-  "slug": "reeping-paul",
-  "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
-  "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
   "twitter": null,
   "website": null
  },
@@ -1451,6 +1453,20 @@
   "url": "https://www.vitalcitynyc.org/author/vergara-camilo-jose/",
   "twitter": null,
   "website": null
+ },
+ {
+  "name": "Kerri M. Raissian",
+  "post_count": 2,
+  "slugs": [
+   "causal-research-more-not-less",
+   "women-and-guns-editors-note"
+  ],
+  "slug": "raissian-kerri-m",
+  "bio": "is an associate professor of public policy at the University of Connecticut and director of the ARMS Center for gun-injury prevention. She is a senior fellow at the Niskanen Center.",
+  "url": "https://www.vitalcitynyc.org/author/raissian-kerri-m/",
+  "twitter": null,
+  "website": null,
+  "senior": true
  },
  {
   "name": "Shael Polakow-Suransky",
@@ -2474,6 +2490,174 @@
   "twitter": null,
   "website": null,
   "senior": true
+ },
+ {
+  "name": "Jennifer Dineen",
+  "post_count": 1,
+  "slugs": [
+   "women-and-guns-editors-note"
+  ],
+  "slug": "dineen-jennifer",
+  "bio": "is an associate professor in residence at the University of Connecticut and the interim director of UConn\u2019s ARMS Center for Gun Injury Prevention.",
+  "url": "https://www.vitalcitynyc.org/author/dineen-jennifer/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Lisa Barao",
+  "post_count": 1,
+  "slugs": [
+   "police-firearm-use-gender-differences"
+  ],
+  "slug": "barao-lisa",
+  "bio": "is the associate director of research for the Crime and Justice Policy Lab at the University of Pennsylvania.",
+  "url": "https://www.vitalcitynyc.org/author/barao-lisa/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Katharina Neissl",
+  "post_count": 1,
+  "slugs": [
+   "police-firearm-use-gender-differences"
+  ],
+  "slug": "neissl-katharina",
+  "bio": "is an assistant professor of criminal justice at SUNY Brockport.",
+  "url": "https://www.vitalcitynyc.org/author/neissl-katharina/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Monica Castillo",
+  "post_count": 1,
+  "slugs": [
+   "the-rise-of-women-gunfighters-in-cinema"
+  ],
+  "slug": "castillo-monica",
+  "bio": "is a writer, critic, and programmer based in New York City.",
+  "url": "https://www.vitalcitynyc.org/author/castillo-monica/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Lyra Monroe",
+  "post_count": 1,
+  "slugs": [
+   "domestic-violence-gun-deaths-incomplete-picture"
+  ],
+  "slug": "monroe-lyra",
+  "bio": "is the IPV program director for the Hope and Heal Fund and holds more than 25 years of experience in survivor healing, trauma transformation and restorative justice.",
+  "url": "https://www.vitalcitynyc.org/author/monroe-lyra/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Brian Malte",
+  "post_count": 1,
+  "slugs": [
+   "domestic-violence-gun-deaths-incomplete-picture"
+  ],
+  "slug": "malte-brian",
+  "bio": "is the executive director for the Hope and Heal Fund, with 32 years of experience in reducing harms due to firearms.",
+  "url": "https://www.vitalcitynyc.org/author/malte-brian/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Michael R. Ulrich",
+  "post_count": 1,
+  "slugs": [
+   "domestic-violence-victims-second-amendment-rights-blocked"
+  ],
+  "slug": "ulrich-michael",
+  "bio": "is an associate professor of health law, ethics and human rights at Boston University's School of Public Health and School of Law.\n",
+  "url": "https://www.vitalcitynyc.org/author/ulrich-michael/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Nelba M\u00e1rquez-Greene",
+  "post_count": 1,
+  "slugs": [
+   "firearm-violence-victim-mothers-consequences"
+  ],
+  "slug": "marquez-greene-nelba",
+  "bio": "is a licensed marriage and family therapist, and the community scholar at Yale School of Public Health. ",
+  "url": "https://www.vitalcitynyc.org/author/marquez-greene-nelba/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Zirui Song",
+  "post_count": 1,
+  "slugs": [
+   "firearm-violence-victim-mothers-consequences"
+  ],
+  "slug": "song-zirui",
+  "bio": "is the Center for Primary Care faculty director of research and a Harvard Medical School associate professor of health care policy and medicine. He is also a general internist at Massachusetts General Hospital.",
+  "url": "https://www.vitalcitynyc.org/author/song-zirui/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Ayesha Dholakia",
+  "post_count": 1,
+  "slugs": [
+   "firearm-deaths-pregnancy-epidemic"
+  ],
+  "slug": "dholakia-ayesha",
+  "bio": "M.D., is a fellow in pediatric emergency medicine at Boston Children\u2019s Hospital.",
+  "url": "https://www.vitalcitynyc.org/author/dholakia-ayesha/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Lois K. Lee",
+  "post_count": 1,
+  "slugs": [
+   "firearm-deaths-pregnancy-epidemic"
+  ],
+  "slug": "lee-lois-k",
+  "bio": "M.D., MPH, is a pediatric emergency medicine physician at Boston Children\u2019s Hospital and a professor of clinical pediatrics at Harvard Medical School.",
+  "url": "https://www.vitalcitynyc.org/author/lee-lois-k/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Alice M. Ellyson",
+  "post_count": 1,
+  "slugs": [
+   "disarming-domestic-violence-abusers"
+  ],
+  "slug": "ellyson-alice-m",
+  "bio": "M.S., Ph.D., is an assistant professor at the University of Washington and the director of policy in the Center for Firearm Injury Prevention Research at the University of Washington.",
+  "url": "https://www.vitalcitynyc.org/author/ellyson-alice-m/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Sandra B. Shanahan",
+  "post_count": 1,
+  "slugs": [
+   "disarming-domestic-violence-abusers"
+  ],
+  "slug": "shanahan-sandra-b",
+  "bio": "MSW, is the program manager of the Regional Domestic Violence Firearms Enforcement Unit. Before that, she spent 15 years managing a system-based advocacy program supporting survivors as they sought civil domestic violence protection orders in court.",
+  "url": "https://www.vitalcitynyc.org/author/shanahan-sandra-b/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Lynn A. Addington",
+  "post_count": 1,
+  "slugs": [
+   "older-women-intimate-partner-violence-firearms"
+  ],
+  "slug": "addington-lynn-a",
+  "bio": "is a distinguished professor in the School of Public Affairs at American University in Washington, D.C.",
+  "url": "https://www.vitalcitynyc.org/author/addington-lynn-a/",
+  "twitter": null,
+  "website": null
  },
  {
   "name": "Derrell Bradford",
@@ -5884,19 +6068,6 @@
   "url": "https://www.vitalcitynyc.org/author/hahn-richard/",
   "twitter": null,
   "website": null
- },
- {
-  "name": "Kerri M. Raissian",
-  "post_count": 1,
-  "slugs": [
-   "causal-research-more-not-less"
-  ],
-  "slug": "raissian-kerri-m",
-  "bio": "is an associate professor of public policy at the University of Connecticut and director of the ARMS Center for gun-injury prevention. She is a senior fellow at the Niskanen Center.",
-  "url": "https://www.vitalcitynyc.org/author/raissian-kerri-m/",
-  "twitter": null,
-  "website": null,
-  "senior": true
  },
  {
   "name": "Tracy Palandjian",

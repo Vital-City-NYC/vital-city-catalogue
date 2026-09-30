@@ -1,27 +1,88 @@
 {
   "meta": {
-    "generated_at": "2026-09-30T11:13:12.027185+00:00",
+    "generated_at": "2026-09-30T21:16:27.935286+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 950,
-    "total_authors": 513,
+    "total_posts": 960,
+    "total_authors": 527,
     "total_issues": 34,
-    "total_topics": 222,
+    "total_topics": 223,
     "date_range": [
       "2021-09-15",
-      "2026-09-28"
+      "2026-09-30"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 10,
+    "new_articles": [
+      {
+        "title": "The Crisis We Fail to Name",
+        "url": "https://www.vitalcitynyc.org/women-and-guns-editors-note/",
+        "published_date": "2026-09-30",
+        "primary_author": "Kerri M. Raissian"
+      },
+      {
+        "title": "What Gender Reveals About Police Firearm Use",
+        "url": "https://www.vitalcitynyc.org/police-firearm-use-gender-differences/",
+        "published_date": "2026-09-30",
+        "primary_author": "Lisa Barao"
+      },
+      {
+        "title": "Bullets Have No Sex: The Rise of Women Gunfighters in Cinema",
+        "url": "https://www.vitalcitynyc.org/the-rise-of-women-gunfighters-in-cinema/",
+        "published_date": "2026-09-30",
+        "primary_author": "Monica Castillo"
+      },
+      {
+        "title": "Shine a Light on Domestic Violence Gun Deaths",
+        "url": "https://www.vitalcitynyc.org/domestic-violence-gun-deaths-incomplete-picture/",
+        "published_date": "2026-09-30",
+        "primary_author": "Lyra Monroe"
+      },
+      {
+        "title": "Queens Without Castles",
+        "url": "https://www.vitalcitynyc.org/domestic-violence-victims-second-amendment-rights-blocked/",
+        "published_date": "2026-09-30",
+        "primary_author": "Michael R. Ulrich"
+      },
+      {
+        "title": "The Ones Left Standing",
+        "url": "https://www.vitalcitynyc.org/firearm-violence-victim-mothers-consequences/",
+        "published_date": "2026-09-30",
+        "primary_author": "Nelba M\u00e1rquez-Greene"
+      },
+      {
+        "title": "Pregnant and At Risk",
+        "url": "https://www.vitalcitynyc.org/firearm-deaths-pregnancy-epidemic/",
+        "published_date": "2026-09-30",
+        "primary_author": "Ayesha Dholakia"
+      },
+      {
+        "title": "What the Data Tell Us About Women and Guns",
+        "url": "https://www.vitalcitynyc.org/women-and-guns-data/",
+        "published_date": "2026-09-30",
+        "primary_author": "Vital City"
+      },
+      {
+        "title": "Disrupting Known Danger: Disarming Domestic Violence Abusers",
+        "url": "https://www.vitalcitynyc.org/disarming-domestic-violence-abusers/",
+        "published_date": "2026-09-30",
+        "primary_author": "Alice M. Ellyson"
+      },
+      {
+        "title": "Invisible Victims: Older Women, Intimate Partners and Firearms",
+        "url": "https://www.vitalcitynyc.org/older-women-intimate-partner-violence-firearms/",
+        "published_date": "2026-09-30",
+        "primary_author": "Lynn A. Addington"
+      }
+    ]
   },
-  "total_pieces": 950,
+  "total_pieces": 960,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 220
+    "2026": 230
   },
   "by_month": {
     "2021-09": 1,
@@ -78,12 +139,12 @@
     "2026-06": 46,
     "2026-07": 23,
     "2026-08": 16,
-    "2026-09": 23
+    "2026-09": 33
   },
   "by_type": [
     [
       "opinion/commentary",
-      745
+      753
     ],
     [
       "q&a",
@@ -91,7 +152,7 @@
     ],
     [
       "data analysis",
-      49
+      51
     ],
     [
       "podcast",
@@ -136,6 +197,10 @@
       111
     ],
     [
+      "Gun Violence",
+      82
+    ],
+    [
       "Housing",
       81
     ],
@@ -148,15 +213,11 @@
       76
     ],
     [
-      "Gun Violence",
-      72
+      "Police Reform",
+      57
     ],
     [
       "Economics",
-      56
-    ],
-    [
-      "Police Reform",
       56
     ],
     [
@@ -208,19 +269,19 @@
       29
     ],
     [
-      "Quality of Life",
-      26
+      "Events",
+      27
     ],
     [
-      "Setting the Stage",
+      "Quality of Life",
       26
     ]
   ],
-  "n_topics_total": 222,
+  "n_topics_total": 223,
   "by_credential_pieces": [
     [
       "Academic",
-      225
+      229
     ],
     [
       "Journalist / media",
@@ -232,11 +293,11 @@
     ],
     [
       "Other / unclassified",
-      99
+      103
     ],
     [
       "Vital City (institutional)",
-      98
+      99
     ],
     [
       "Government / public official",
@@ -248,7 +309,7 @@
     ],
     [
       "Think tank / research institute",
-      54
+      55
     ],
     [
       "Architecture / design / planning",
@@ -270,15 +331,15 @@
   "by_credential_authors": [
     [
       "Academic",
-      160
+      167
     ],
     [
       "Other / unclassified",
-      112
+      116
     ],
     [
       "Nonprofit / advocacy",
-      77
+      79
     ],
     [
       "Journalist / media",
@@ -290,7 +351,7 @@
     ],
     [
       "Think tank / research institute",
-      30
+      31
     ],
     [
       "Business / private sector",
@@ -323,9 +384,9 @@
     "History",
     "Government Operations",
     "City Planning",
+    "Gun Violence",
     "Housing",
-    "Justice",
-    "culture"
+    "Justice"
   ],
   "topic_by_year": {
     "Crime": {
@@ -362,6 +423,13 @@
       "2025": 39,
       "2026": 17
     },
+    "Gun Violence": {
+      "2022": 14,
+      "2023": 14,
+      "2024": 5,
+      "2025": 31,
+      "2026": 18
+    },
     "Housing": {
       "2023": 5,
       "2024": 11,
@@ -374,27 +442,20 @@
       "2024": 27,
       "2025": 13,
       "2026": 10
-    },
-    "culture": {
-      "2022": 4,
-      "2023": 19,
-      "2024": 26,
-      "2025": 18,
-      "2026": 9
     }
   },
   "wc_stats": {
-    "n": 943,
+    "n": 953,
     "median": 1639,
-    "mean": 2152,
-    "p90": 3259,
+    "mean": 2147,
+    "p90": 3241,
     "max": 15166,
-    "p10": 912,
+    "p10": 916,
     "p25": 1284,
-    "p75": 2232,
-    "p95": 5715,
+    "p75": 2227,
+    "p95": 5648,
     "no_count": 7,
-    "core_1000_2499": 670,
+    "core_1000_2499": 680,
     "under_500": 46,
     "over_5000": 53
   },
@@ -409,11 +470,11 @@
     ],
     [
       "1,000-1,999",
-      535
+      543
     ],
     [
       "2,000-2,999",
-      190
+      192
     ],
     [
       "3,000-4,999",
@@ -456,22 +517,22 @@
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 143
+        "n": 147
       },
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 174
+        "n": 176
       },
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 109
+        "n": 111
       },
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 69
+        "n": 71
       },
       {
         "floor": 2250,
@@ -540,16 +601,16 @@
     },
     {
       "year": "2026",
-      "n": 215,
-      "p25": 1288,
-      "median": 1709,
-      "p75": 2478,
+      "n": 225,
+      "p25": 1297,
+      "median": 1699,
+      "p75": 2427,
       "max": 13669
     }
   ],
   "by_nauthors": {
-    "1": 809,
-    "2": 112,
+    "1": 812,
+    "2": 119,
     "3": 26,
     "4": 1,
     "8": 1,
@@ -558,7 +619,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 98,
+      "posts": 99,
       "credential": "Vital City (institutional)"
     },
     {
@@ -627,6 +688,11 @@
       "credential": "Academic"
     },
     {
+      "name": "Paul Reeping",
+      "posts": 9,
+      "credential": "Think tank / research institute"
+    },
+    {
       "name": "David Schleicher",
       "posts": 9,
       "credential": "Academic"
@@ -635,11 +701,6 @@
       "name": "John Hall",
       "posts": 9,
       "credential": "Government / public official"
-    },
-    {
-      "name": "Paul Reeping",
-      "posts": 8,
-      "credential": "Think tank / research institute"
     },
     {
       "name": "Bradley Tusk",
@@ -707,34 +768,34 @@
       },
       {
         "year": "2026",
-        "weeks": 38.7,
-        "pieces": 220,
+        "weeks": 39.0,
+        "pieces": 230,
         "outside_issues": 154,
-        "per_week_all": 5.68,
-        "per_week_outside_issues": 3.98,
+        "per_week_all": 5.9,
+        "per_week_outside_issues": 3.95,
         "partial": true
       }
     ],
-    "total_weeks": 262.7,
-    "all_time_per_week": 3.62,
+    "total_weeks": 263.0,
+    "all_time_per_week": 3.65,
     "all_time_per_week_outside_issues": 1.72,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.98,
-    "current_per_week_all": 5.68,
+    "current_per_week_outside_issues": 3.95,
+    "current_per_week_all": 5.9,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 498,
-      "published_away_from_drop": 64,
-      "share_of_issue_pieces": 12.9,
-      "current_year_strict": 3.98,
-      "current_year_loose": 4.16,
+      "issue_tagged_pieces": 508,
+      "published_away_from_drop": 71,
+      "share_of_issue_pieces": 14.0,
+      "current_year_strict": 3.95,
+      "current_year_loose": 4.31,
       "all_time_strict": 1.72,
-      "all_time_loose": 1.96,
-      "all_time_all": 3.62
+      "all_time_loose": 1.99,
+      "all_time_all": 3.65
     }
   },
   "rhythm": {
-    "n_dated": 950,
+    "n_dated": 960,
     "by_weekday": [
       {
         "day": "Mon",
@@ -744,17 +805,17 @@
       {
         "day": "Tue",
         "pieces": 167,
-        "share": 17.6
+        "share": 17.4
       },
       {
         "day": "Wed",
-        "pieces": 446,
-        "share": 46.9
+        "pieces": 456,
+        "share": 47.5
       },
       {
         "day": "Thu",
         "pieces": 185,
-        "share": 19.5
+        "share": 19.3
       },
       {
         "day": "Fri",
@@ -773,8 +834,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 46.9,
-    "midweek_share": 84.0,
+    "top_day_share": 47.5,
+    "midweek_share": 84.2,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -836,9 +897,9 @@
       {
         "month": "September",
         "abbr": "Sep",
-        "pieces": 119,
+        "pieces": 129,
         "occurrences": 6,
-        "per_occurrence": 19.8
+        "per_occurrence": 21.5
       },
       {
         "month": "October",
