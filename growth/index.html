@@ -950,6 +950,18 @@
         </div>
       </div>
 
+      <div class="card" id="appCard">
+        <h2>iPhone app <span class="hint" id="appHint">App Store numbers from Apple, a day or two behind &middot; newsletter signups made in the app, from Ghost</span></h2>
+        <div class="perfgrid" id="appKpis"></div>
+        <div style="margin-top:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:6px">Daily downloads and app signups</div>
+          <div class="chartwrap"><svg class="chart" id="appChart" viewBox="0 0 800 160" preserveAspectRatio="none"></svg></div>
+          <div class="legend">
+            <span><span class="sw" style="background:var(--vc-orange)"></span>First-time downloads</span>
+            <span><span class="sw" style="background:var(--vc-cerulean)"></span>Newsletter signups in the app</span>
+          </div>
+        </div>
+      </div>
+
           <div class="sechead" id="sec-content">
         <div class="sechead-title">The content engine</div>
         <div class="sechead-sub">What we publish and how each send lands — the machine driving the sections above. Click rate is the number to trust; open rates are inflated industry-wide and only comparable to themselves over time.</div>
@@ -1758,6 +1770,7 @@ function boot(data){
   setupJumpNav();
   renderUrlShares(data.news_mentions || []);
   renderDonors(data.donorbox || {});
+  renderApp(data.app_store || {});
   renderFundUnsub(mc);
   renderWhyLeave(mc);
   renderABTests(mc);
@@ -3910,6 +3923,10 @@ WHAT'S IN IT (top-level keys)
 - ghost_signup_attribution ... where signups came from (by_source, by_medium).
 - engagement_extras .. influence_weighted_reach = notable / government readers.
 - donorbox ........... giving. x_followers / linkedin / bluesky / instagram = social.
+- app_store .......... the iPhone app, from Apple's Analytics Reports (a day or two behind,
+                       small counts withheld): reports.downloads/store/web/sessions/installs/
+                       crashes, each days[date][kind][column] (kind = Download Type or Event);
+                       reviews; app_signups_by_day = Ghost signups with source "Vital City app".
 - news_mentions ...... third-party press, government and republication mentions. Count one
                        as a citation ONLY if verified is true, incidental is not true,
                        roundup is false and own_post is false; the rest are unconfirmed.
@@ -4291,6 +4308,71 @@ function renderABTests(mc){
   }).join("");
   host.innerHTML=`<table class="tbl"><thead><tr><th>Sent</th><th>Winner ✓ vs runner-up</th><th class="num">Open</th><th class="num">Click</th></tr></thead><tbody>${rows}</tbody></table>
     <div style="font-size:10.5px;line-height:1.6;margin-top:10px;color:var(--vc-charcoal)">Open and click rates here cover every send in each test (both test groups and the winner's send). Each variant's own rate isn't pulled yet, so the margin between subjects isn't shown and no pattern about which kind of subject wins can be read from this table (n=${tests.length}).</div>`;
+}
+
+// iPhone app: Apple's Analytics Reports (via growth_pull.pull_app_store) plus
+// Ghost's count of newsletter signups whose source is "Vital City app".
+// Apple names its own columns and kinds (Download Type, Event), so the
+// matching here is by pattern; a kind Apple doesn't send just sums to zero.
+function renderApp(a){
+  const card=$("#appCard"); if(!card) return;
+  const grid=card.querySelector("#appKpis"), svg=card.querySelector("#appChart");
+  if(!a || !a.available){
+    grid.innerHTML=`<div style="grid-column:1/-1;padding:12px;font-size:12.5px;color:var(--vc-charcoal)">App Store not connected: ${esc((a&&a.reason)||'no data')}.</div>`;
+    svg.innerHTML=''; return;
+  }
+  const R=a.reports||{};
+  const allDays=[...new Set(Object.values(R).flatMap(r=>Object.keys(r.days||{})))].sort();
+  const signups=Object.fromEntries((a.app_signups_by_day||[]).map(x=>[x.d,x.n]));
+  const last=allDays.length?allDays[allDays.length-1]:new Date().toISOString().slice(0,10);
+  const cut=new Date(new Date(last+"T12:00:00Z").getTime()-29*864e5).toISOString().slice(0,10);
+  function sum(key, kindRe, col, from){
+    const days=(R[key]||{}).days||{}; let t=0;
+    for(const [d,kinds] of Object.entries(days)){ if(from && d<from) continue;
+      for(const [k,cols] of Object.entries(kinds)){ if(kindRe && !kindRe.test(k)) continue; t+=(cols[col]||0); } }
+    return t;
+  }
+  const first=sum('downloads',/first/i,'Counts',cut), redl=sum('downloads',/redownload/i,'Counts',cut);
+  const views=sum('store',/page ?view/i,'Counts',cut), impr=sum('store',/impression/i,'Counts',cut);
+  const sess=sum('sessions',null,'Sessions',cut);
+  const sessDays=Object.keys((R.sessions||{}).days||{}).filter(d=>d>=cut).length;
+  const devAvg=sessDays? sum('sessions',null,'Unique Devices',cut)/sessDays : 0;
+  const dels=sum('installs',/delet/i,'Counts',cut), crashes=sum('crashes',null,'Crashes',cut);
+  const su30=Object.entries(signups).filter(([d])=>d>=cut).reduce((t,[,n])=>t+n,0);
+  const rv=a.reviews||{};
+  const waiting=!allDays.length;
+  const W="&mdash;";
+  const cells=[
+    {lbl:"Downloads · 30 days", n:waiting?W:fmtN(first), d:waiting?"waiting for Apple's first report":`${fmtN(redl)} re-downloads`,
+      tip:"First-time downloads of the app from the App Store in the last 30 days of Apple's data. Re-downloads are people installing it again on a device that had it before.\n\nSource: Apple's App Downloads report, a day or two behind. Apple leaves out very small counts for privacy."},
+    {lbl:"App Store page views · 30 days", n:waiting?W:fmtN(views), d:waiting?"":(views?`${(first/views*100).toFixed(0)}% downloaded · ${fmtN(impr)} times shown`:`${fmtN(impr)} times shown in the store`),
+      tip:"How many times people opened the app's App Store page, and how often it appeared in the store (search results, browsing). The percentage is first-time downloads divided by page views.\n\nSource: Apple's App Store Discovery and Engagement report."},
+    {lbl:"Sessions · 30 days", n:waiting?W:fmtN(sess), d:waiting?"":`about ${fmtN(Math.round(devAvg))} devices a day`,
+      tip:"How many times the app was opened and used, and the average number of devices using it each day.\n\nSource: Apple's App Sessions report. It counts only people who share analytics with developers in their iPhone settings, so it undercounts."},
+    {lbl:"Deletions · 30 days", n:waiting?W:fmtN(dels), d:"", tip:"Times the app was deleted from a device.\n\nSource: Apple's App Store Installation and Deletion report."},
+    {lbl:"Crashes · 30 days", n:waiting?W:fmtN(crashes), d:"", tip:"Crashes reported to Apple. Only from people who share analytics with developers.\n\nSource: Apple's App Crashes report."},
+    {lbl:"Ratings", n:rv.count?(rv.average||0).toFixed(1)+"★":W, d:`${fmtN(rv.count||0)} written reviews`,
+      tip:"Average star rating of written App Store reviews. Apple's API returns reviews with text, not every bare star rating, so this is a sample."},
+    {lbl:"Newsletter signups in the app · 30 days", n:fmtN(su30), d:"app 1.0.1 and later",
+      tip:"Newsletter signups whose source Ghost recorded as \"Vital City app\". The app tags its signups this way from version 1.0.1; earlier app signups show as coming from the /signup/ page."},
+  ];
+  grid.innerHTML=cells.map(c=>`<div class="perfcell" title="${esc(c.tip)}"><div class="pl">${esc(c.lbl)}</div><div class="pn">${c.n}</div><div class="pd flat">${esc(c.d)}</div></div>`).join("");
+  if(waiting) $("#appHint").textContent="Apple's first daily reports arrive a day or two after the reports were switched on (Oct. 1, 2026). This fills in on its own.";
+
+  const days=[...new Set([...allDays, ...Object.keys(signups)])].sort().slice(-60);
+  if(!days.length){ svg.innerHTML='<text x="400" y="80" text-anchor="middle" fill="#888">No daily data yet</text>'; return; }
+  const dl=days.map(d=>{const k=((R.downloads||{}).days||{})[d]||{}; return Object.entries(k).filter(([n])=>/first/i.test(n)).reduce((t,[,c])=>t+(c.Counts||0),0);});
+  const su=days.map(d=>signups[d]||0);
+  const Wd=800,H=160,pl=36,pr=12,pt=10,pb=22,iw=Wd-pl-pr,ih=H-pt-pb, mx=Math.max(1,...dl,...su);
+  const bw=Math.max(2,iw/days.length*0.38), x=i=>pl+(i+0.5)*(iw/days.length), y=v=>pt+ih-(v/mx)*ih;
+  let g=`<line x1="${pl}" x2="${Wd-pr}" y1="${pt+ih}" y2="${pt+ih}" stroke="var(--vc-cloud)"/>`+
+        `<text x="${pl-6}" y="${pt+8}" text-anchor="end" font-size="10" fill="#888">${fmtN(mx)}</text>`;
+  days.forEach((d,i)=>{
+    g+=`<rect x="${x(i)-bw}" y="${y(dl[i])}" width="${bw}" height="${pt+ih-y(dl[i])}" fill="var(--vc-orange)"><title>${d}: ${dl[i]} downloads</title></rect>`;
+    g+=`<rect x="${x(i)}" y="${y(su[i])}" width="${bw}" height="${pt+ih-y(su[i])}" fill="var(--vc-cerulean)"><title>${d}: ${su[i]} app signups</title></rect>`;
+  });
+  [0,days.length-1].forEach(i=>{ g+=`<text x="${x(i)}" y="${H-6}" text-anchor="${i?'end':'start'}" font-size="10" fill="#888">${days[i]}</text>`; });
+  svg.innerHTML=g;
 }
 
 function renderDonors(db){

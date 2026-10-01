@@ -2985,6 +2985,7 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
     by_url = {}
     by_day = {}            # day -> count of signup events (canonical signup source-of-truth)
     by_source = {}         # referrer_source -> count (Direct, Google, newsletter, LinkedIn, etc.)
+    app_by_day = {}        # day -> signups made in the iPhone app
     by_medium = {}         # referrer_medium -> count (search, email, social, etc.)
     by_landing = {}        # attribution.type (post|page|url) -> count (where they signed up)
     signup_slugs = {}      # article slug -> signups it landed, for the topic rollup
@@ -3052,6 +3053,10 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
             # per-URL counts.
             src = (att.get("referrer_source") or "(unknown)").strip() or "(unknown)"
             by_source[src] = by_source.get(src, 0) + 1
+            # The iPhone app opens the signup page with ?ref=Vital City app
+            # (app 1.0.1 and later), so its signups carry that source.
+            if src == APP_SIGNUP_SOURCE and ts:
+                app_by_day[ts[:10]] = app_by_day.get(ts[:10], 0) + 1
             med = (att.get("referrer_medium") or "(none)").strip() or "(none)"
             by_medium[med] = by_medium.get(med, 0) + 1
             ltype = (att.get("type") or "unknown")
@@ -3118,6 +3123,7 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
         "by_url":         by_url,
         "by_day":         [{"d": d, "subs": n} for d, n in sorted(by_day.items())],
         "by_source":      [{"src": s, "n": n} for s, n in sorted(by_source.items(), key=lambda kv: -kv[1])],
+        "app_by_day":     [{"d": d, "n": n} for d, n in sorted(app_by_day.items())],
         "by_medium":      [{"med": m, "n": n} for m, n in sorted(by_medium.items(), key=lambda kv: -kv[1])],
         "by_landing":     [{"type": t, "n": n} for t, n in sorted(by_landing.items(), key=lambda kv: -kv[1])],
         "by_topic":       by_topic(signup_slugs, catalogue_topic_map(), "signups"),
@@ -5059,6 +5065,143 @@ def attribute_donations_to_posts(db, gh, window_days=14):
     gh["donation_window_days"] = window_days
 
 
+APP_SIGNUP_SOURCE = "Vital City app"
+ASC_APP_ID = "6793655458"
+ASC_REPORT_REQUEST = "b84d7735-798e-4226-a8b7-83faa1b63573"   # ONGOING, created 2026-10-01
+# The Analytics Reports worth a dashboard. Apple names the columns; the
+# parser below reads them from each file's header rather than assuming.
+ASC_REPORTS = {
+    "downloads":  "App Downloads Standard",
+    "store":      "App Store Discovery and Engagement Standard",
+    "web":        "App Store Web Preview Engagement Standard",
+    "sessions":   "App Sessions Standard",
+    "installs":   "App Store Installation and Deletion Standard",
+    "crashes":    "App Crashes",
+}
+
+
+def _asc_token():
+    """ES256 JWT for the App Store Connect API, from the read-only
+    "Growth dashboard" key (Sales role). CI passes it as ASC_SALES_KEY_*;
+    on Josh's Mac it is ~/.appstoreconnect/private_keys/AuthKey_<id>.p8."""
+    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives.asymmetric import ec, utils
+    kid = os.environ.get("ASC_SALES_KEY_ID") or "93GWWW632P"
+    iss = os.environ.get("ASC_ISSUER_ID") or "cd73ce4b-4549-4afb-ab2f-ec1d8c5fab7a"
+    pem = os.environ.get("ASC_SALES_KEY_P8")
+    if not pem:
+        f = Path.home() / f".appstoreconnect/private_keys/AuthKey_{kid}.p8"
+        if not f.exists():
+            return None
+        pem = f.read_text()
+    key = serialization.load_pem_private_key(pem.encode(), password=None)
+    now = int(time.time())
+    seg = (_b64url(json.dumps({"alg": "ES256", "kid": kid, "typ": "JWT"}).encode()) + b"." +
+           _b64url(json.dumps({"iss": iss, "iat": now, "exp": now + 1200,
+                               "aud": "appstoreconnect-v1"}).encode()))
+    r, s_ = utils.decode_dss_signature(key.sign(seg, ec.ECDSA(hashes.SHA256())))
+    return (seg + b"." + _b64url(r.to_bytes(32, "big") + s_.to_bytes(32, "big"))).decode()
+
+
+def _asc_get(path, tok):
+    url = path if path.startswith("http") else "https://api.appstoreconnect.apple.com/v1" + path
+    return json.loads(http_get(url, headers={"Authorization": f"Bearer {tok}"}, timeout=60))
+
+
+def _asc_rows(seg_url):
+    """One report segment: a gzipped, tab-separated file behind a pre-signed
+    link (no Authorization header, or the storage host refuses it)."""
+    import gzip, csv, io
+    with urllib.request.urlopen(seg_url, timeout=120) as r:
+        raw = r.read()
+    try:
+        raw = gzip.decompress(raw)
+    except OSError:
+        pass
+    return list(csv.DictReader(io.StringIO(raw.decode("utf-8-sig")), delimiter="\t"))
+
+
+def _num(v):
+    try:
+        return float(str(v).replace(",", "")) if v not in (None, "") else 0.0
+    except ValueError:
+        return 0.0
+
+
+def pull_app_store(signup_attr=None, days=120):
+    """The iPhone app's numbers from Apple: downloads, App Store page views,
+    sessions, installs and deletions, crashes, ratings. Apple's Analytics
+    Reports arrive daily, a day or two behind, and leave out very small counts
+    for privacy, so a quiet day can be missing rather than zero.
+
+    Each report is summed by day and by its kind column (Download Type, Event
+    and so on): {report: {"days": {date: {kind: {column: total}}}, "columns": [...]}}.
+    Column names come from Apple's file headers. Also carries the app's
+    newsletter signups from Ghost's attribution.
+    """
+    out = {"available": False, "app_id": ASC_APP_ID,
+           "app_signups_by_day": (signup_attr or {}).get("app_by_day") or []}
+    try:
+        tok = _asc_token()
+    except Exception as e:
+        out["reason"] = f"App Store key unreadable: {e}"
+        return out
+    if not tok:
+        out["reason"] = "no App Store Connect key"
+        return out
+    since = (datetime.now(timezone.utc) - timedelta(days=days)).date().isoformat()
+    reports, errors = {}, []
+    try:
+        listing = _asc_get(f"/analyticsReportRequests/{ASC_REPORT_REQUEST}/reports?limit=200", tok)
+        by_name = {x["attributes"]["name"]: x["id"] for x in listing.get("data", [])}
+    except Exception as e:
+        out["reason"] = f"report list failed: {e}"
+        return out
+    for key, name in ASC_REPORTS.items():
+        rid = by_name.get(name)
+        if not rid:
+            errors.append(f"{name}: not offered")
+            continue
+        days_agg, cols = {}, set()
+        try:
+            inst = _asc_get(f"/analyticsReports/{rid}/instances?filter[granularity]=DAILY&limit=200", tok)
+            for it in inst.get("data", []):
+                if (it["attributes"].get("processingDate") or "") < since:
+                    continue
+                segs = _asc_get(f"/analyticsReportInstances/{it['id']}/segments", tok)
+                for sg in segs.get("data", []):
+                    for row in _asc_rows(sg["attributes"]["url"]):
+                        cols.update(row.keys())
+                        d = (row.get("Date") or it["attributes"].get("processingDate") or "")[:10]
+                        kind = (row.get("Download Type") or row.get("Event") or "all").strip() or "all"
+                        slot = days_agg.setdefault(d, {}).setdefault(kind, {})
+                        for c in ("Counts", "Unique Counts", "Sessions", "Total Session Duration",
+                                  "Unique Devices", "Crashes"):
+                            if c in row:
+                                slot[c] = slot.get(c, 0) + _num(row[c])
+        except Exception as e:
+            errors.append(f"{name}: {e}")
+            continue
+        reports[key] = {"name": name, "columns": sorted(cols),
+                        "days": dict(sorted(days_agg.items()))}
+    try:
+        rv = _asc_get(f"/apps/{ASC_APP_ID}/customerReviews?limit=200&sort=-createdDate", tok)
+        stars = [x["attributes"].get("rating") for x in rv.get("data", []) if x["attributes"].get("rating")]
+        out["reviews"] = {"count": len(stars),
+                          "average": round(sum(stars) / len(stars), 2) if stars else None,
+                          "latest": [{"rating": x["attributes"].get("rating"),
+                                      "title": x["attributes"].get("title") or "",
+                                      "date": (x["attributes"].get("createdDate") or "")[:10]}
+                                     for x in rv.get("data", [])[:5]]}
+    except Exception as e:
+        errors.append(f"reviews: {e}")
+    out.update({"available": True, "reports": reports, "errors": errors,
+                "days_with_data": len({d for r in reports.values() for d in r["days"]})})
+    log(f"  app store: {out['days_with_data']} days of report data, "
+        f"{len(errors)} problems" + (f" ({'; '.join(errors[:3])})" if errors else ""))
+    return out
+
+
 def main():
     PRIV.mkdir(parents=True, exist_ok=True)
     mc = pull_mailchimp()
@@ -5235,6 +5378,7 @@ def main():
         # Needs a STAFF access token; the integration key gets 403 on every
         # /stats/* endpoint (verified live). Free once the token is added.
         "ghost_traffic": pull_ghost_traffic(),
+        "app_store": pull_app_store(signup_attr),
         # LinkedIn company-page follower count (public-page meta scrape with
         # repo-cached fallback for when LinkedIn authwalls the runner).
         "linkedin": pull_linkedin_followers(),

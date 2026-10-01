@@ -129,6 +129,11 @@ jobs:
           # history). Both must be set for the visitor tiles to populate from GA4.
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
           GA4_CREDS_JSON:  ${{ secrets.GA4_CREDS_JSON }}
+          # Optional: the iPhone app's App Store numbers, read with the
+          # read-only "Growth dashboard" App Store Connect key (Sales role).
+          ASC_SALES_KEY_ID:  ${{ secrets.ASC_SALES_KEY_ID }}
+          ASC_ISSUER_ID:     ${{ secrets.ASC_ISSUER_ID }}
+          ASC_SALES_KEY_P8:  ${{ secrets.ASC_SALES_KEY_P8 }}
         run: |
           python3 growth_pull.py || echo "WARNING: growth_pull failed; growth dashboard will be stale"
 
