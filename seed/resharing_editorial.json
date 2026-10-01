@@ -292,8 +292,13 @@
     }
    ],
    "why": "Why now: an argument about present-day preparedness rather than commemoration, which is both more useful and less likely to read as opportunism. Post it on the 12th, not the 11th  -  the anniversary itself belongs to remembrance, and a policy argument lands badly in that feed.",
-   "also": [],
-   "also_note": "",
+   "also": [
+    {
+     "slug": "nyc-terrorist-threat-before-and-after-9-11",
+     "title": "The Terrorist Threat, Then and Now"
+    }
+   ],
+   "also_note": "Also: The Terrorist Threat, Then and Now, from the 25th-anniversary package, on how the risk to New York City has changed shape without going away.",
    "match": {
     "window": [
      "09-09",
@@ -303,9 +308,8 @@
      "anniversary"
     ],
     "keywords": [
-     "9/11",
-     "September 11",
-     "World Trade Center"
+     "9/11 attacks",
+     "anniversary of 9/11"
     ],
     "post_offset_days": 1,
     "offset_reason": "The anniversary itself belongs to remembrance; a policy argument lands badly in that feed."
@@ -450,6 +454,59 @@
     "keywords": []
    },
    "id": "moment-14"
+  },
+  {
+   "kind": "moment",
+   "label": "Mid-January · the preliminary budget",
+   "picks": [
+    {
+     "slug": "tough-budget-choices-ahead-for-zohran-mamdani",
+     "title": "Tough Budget Choices Ahead"
+    }
+   ],
+   "why": "Why now: the preliminary budget is the first full statement of what the mayor means to spend, and this piece says where a mayor serious about management should look for savings. Read it next to the document and it works as a checklist.",
+   "also": [],
+   "also_note": "",
+   "match": {
+    "window": [
+     "01-10",
+     "01-31"
+    ],
+    "strands": [],
+    "keywords": [
+     "preliminary budget for fiscal"
+    ]
+   },
+   "id": "moment-15"
+  },
+  {
+   "kind": "moment",
+   "label": "Early November · the charter questions on the ballot",
+   "picks": [
+    {
+     "slug": "nyc-mamdani-coge-government-efficiency-ballot-reform-recommendations",
+     "title": "What Mamdani's Efficiency Commission Got Right, and Where It Fell Short"
+    }
+   ],
+   "why": "Why now: five charter amendments sit below the governor's race on the ballot, and most voters will meet them for the first time in the booth. This is Vital City's own assessment of the commission's proposals, which is the question a voter has in that moment.",
+   "also": [
+    {
+     "slug": "charter-revision-politics-nyc-primer",
+     "title": "Charter Revision Politics: A Primer"
+    }
+   ],
+   "also_note": "Also: Charter Revision Politics: A Primer, Richard Briffault on why changing the charter has become so common and so complicated.",
+   "match": {
+    "window": [
+     "11-01",
+     "11-10"
+    ],
+    "strands": [],
+    "keywords": [
+     "charter amendments"
+    ]
+   },
+   "id": "moment-16"
   },
   {
    "kind": "hook",
