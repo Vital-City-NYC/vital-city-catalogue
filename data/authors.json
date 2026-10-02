@@ -1,7 +1,7 @@
 [
  {
   "name": "Vital City",
-  "post_count": 99,
+  "post_count": 100,
   "slugs": [
    "2025-a-look-back-most-read",
    "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -84,6 +84,7 @@
    "the-state-of-new-york-citys-jails-mid-2024",
    "the-state-of-new-york-citys-jails-year-end-2024",
    "the-urban-optimist-holiday-gift-guide",
+   "this-shapeshifting-city",
    "tracie-keesee-interview",
    "understanding-new-yorks-congestion-pricing-mess",
    "vital-city-issues-call-for-submissions",
@@ -103,9 +104,9 @@
    "youth-crime-in-new-york-after-raise-the-age",
    "zohran-mamdani-talks-public-safety"
   ],
-  "slug": "vital-city",
-  "bio": "is a journal about urban policy, politics, data and culture.",
-  "url": "https://www.vitalcitynyc.org/author/vital-city/",
+  "slug": "vital",
+  "bio": null,
+  "url": "https://www.vitalcitynyc.org/author/vital/",
   "twitter": null,
   "website": null
  },
@@ -1072,6 +1073,20 @@
   "website": null
  },
  {
+  "name": "Joseph P. Viteritti",
+  "post_count": 3,
+  "slugs": [
+   "hochul-trump-school-choice-ny",
+   "mamdanis-charter-school-dilemma",
+   "new-york-for-better-and-worse"
+  ],
+  "slug": "viteritti-joseph-p",
+  "bio": "is the Thomas Hunter Professor of Public Policy at Hunter College and author of \u201cRadical Dreamers: Race, Choice, and the Failure of American Education.\u201d ",
+  "url": "https://www.vitalcitynyc.org/author/viteritti-joseph-p/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "Jeff Asher",
   "post_count": 3,
   "slugs": [
@@ -1634,19 +1649,6 @@
   "slug": "briffault-richard",
   "bio": "is a professor of law at Columbia Law School, where he researches, writes and teaches state and local government law.",
   "url": "https://www.vitalcitynyc.org/author/briffault-richard/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Joseph P. Viteritti",
-  "post_count": 2,
-  "slugs": [
-   "hochul-trump-school-choice-ny",
-   "mamdanis-charter-school-dilemma"
-  ],
-  "slug": "viteritti-joseph-p",
-  "bio": "is the Thomas Hunter Professor of Public Policy at Hunter College and author of \u201cRadical Dreamers: Race, Choice, and the Failure of American Education.\u201d ",
-  "url": "https://www.vitalcitynyc.org/author/viteritti-joseph-p/",
   "twitter": null,
   "website": null
  },

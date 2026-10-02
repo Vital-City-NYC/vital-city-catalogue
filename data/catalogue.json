@@ -1,5 +1,83 @@
 [
   {
+    "title": "This Shapeshifting City",
+    "slug": "this-shapeshifting-city",
+    "url": "https://www.vitalcitynyc.org/this-shapeshifting-city/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-10-02",
+    "published_at": "2026-10-02T16:00:47.000+00:00",
+    "updated_at": "2026-10-02T16:00:46.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "The ebb and flow of New York City's population from 1970 to present, seen many different ways.",
+    "excerpt": "The ebb and flow of New York City's population from 1970 to present, seen many different ways.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/10/VITALCITYPOPBrad_Jones_18--1-.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Brad Jones",
+    "embeds": {
+      "flourish": [],
+      "iframes": [
+        {
+          "url": "https://vital-city-nyc.github.io/nyc-population-turnover/?embed=1",
+          "host": "vital-city-nyc.github.io",
+          "kind": "vital city project"
+        }
+      ],
+      "counts": {
+        "vital city project": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 482,
+    "reading_minutes": 2,
+    "id": "6aa9796a165ce00001549c11"
+  },
+  {
+    "title": "New York, for Better and Worse",
+    "slug": "new-york-for-better-and-worse",
+    "url": "https://www.vitalcitynyc.org/new-york-for-better-and-worse/",
+    "type": "book review",
+    "type_basis": "tag:book-review",
+    "published_date": "2026-10-02",
+    "published_at": "2026-10-02T16:00:01.000+00:00",
+    "updated_at": "2026-10-02T16:00:01.000+00:00",
+    "primary_author": "Joseph P. Viteritti",
+    "authors": [
+      "Joseph P. Viteritti"
+    ],
+    "topics": [
+      "Book Review",
+      "History",
+      "Inequality"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "On Mason B. Williams’ new history of modern New York, “City of Fortune”",
+    "excerpt": "On Mason B. Williams’ new history of modern New York, “City of Fortune”",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/10/VITERITTIGettyImages-545844329.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Susan Wood/Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2385,
+    "reading_minutes": 10,
+    "id": "6abe62cde2ccd70001573604"
+  },
+  {
     "title": "The Crisis We Fail to Name",
     "slug": "women-and-guns-editors-note",
     "url": "https://www.vitalcitynyc.org/women-and-guns-editors-note/",

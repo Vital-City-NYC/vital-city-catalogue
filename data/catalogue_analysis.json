@@ -1,27 +1,40 @@
 {
   "meta": {
-    "generated_at": "2026-10-02T12:30:55.737003+00:00",
+    "generated_at": "2026-10-02T16:32:25.495737+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 960,
+    "total_posts": 962,
     "total_authors": 527,
     "total_issues": 34,
     "total_topics": 223,
     "date_range": [
       "2021-09-15",
-      "2026-09-30"
+      "2026-10-02"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 2,
+    "new_articles": [
+      {
+        "title": "This Shapeshifting City",
+        "url": "https://www.vitalcitynyc.org/this-shapeshifting-city/",
+        "published_date": "2026-10-02",
+        "primary_author": "Vital City"
+      },
+      {
+        "title": "New York, for Better and Worse",
+        "url": "https://www.vitalcitynyc.org/new-york-for-better-and-worse/",
+        "published_date": "2026-10-02",
+        "primary_author": "Joseph P. Viteritti"
+      }
+    ]
   },
-  "total_pieces": 960,
+  "total_pieces": 962,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 230
+    "2026": 232
   },
   "by_month": {
     "2021-09": 1,
@@ -78,12 +91,13 @@
     "2026-06": 46,
     "2026-07": 23,
     "2026-08": 16,
-    "2026-09": 33
+    "2026-09": 33,
+    "2026-10": 2
   },
   "by_type": [
     [
       "opinion/commentary",
-      753
+      754
     ],
     [
       "q&a",
@@ -107,7 +121,7 @@
     ],
     [
       "book review",
-      7
+      8
     ],
     [
       "map/tool",
@@ -120,11 +134,11 @@
       147
     ],
     [
-      "City Government",
-      144
+      "History",
+      145
     ],
     [
-      "History",
+      "City Government",
       144
     ],
     [
@@ -220,7 +234,7 @@
   "by_credential_pieces": [
     [
       "Academic",
-      229
+      230
     ],
     [
       "Journalist / media",
@@ -236,7 +250,7 @@
     ],
     [
       "Vital City (institutional)",
-      99
+      100
     ],
     [
       "Government / public official",
@@ -319,8 +333,8 @@
   ],
   "top_topics_for_stack": [
     "Crime",
-    "City Government",
     "History",
+    "City Government",
     "Government Operations",
     "City Planning",
     "Gun Violence",
@@ -335,18 +349,18 @@
       "2025": 31,
       "2026": 23
     },
-    "City Government": {
-      "2023": 4,
-      "2024": 20,
-      "2025": 54,
-      "2026": 66
-    },
     "History": {
       "2022": 12,
       "2023": 28,
       "2024": 38,
       "2025": 52,
-      "2026": 14
+      "2026": 15
+    },
+    "City Government": {
+      "2023": 4,
+      "2024": 20,
+      "2025": 54,
+      "2026": 66
     },
     "Government Operations": {
       "2022": 1,
@@ -384,24 +398,24 @@
     }
   },
   "wc_stats": {
-    "n": 953,
+    "n": 955,
     "median": 1639,
-    "mean": 2147,
+    "mean": 2146,
     "p90": 3241,
     "max": 15166,
-    "p10": 916,
+    "p10": 913,
     "p25": 1284,
-    "p75": 2227,
-    "p95": 5648,
+    "p75": 2229,
+    "p95": 5635,
     "no_count": 7,
-    "core_1000_2499": 680,
-    "under_500": 46,
+    "core_1000_2499": 681,
+    "under_500": 47,
     "over_5000": 53
   },
   "wc_buckets": [
     [
       "<500",
-      46
+      47
     ],
     [
       "500-999",
@@ -413,7 +427,7 @@
     ],
     [
       "2,000-2,999",
-      192
+      193
     ],
     [
       "3,000-4,999",
@@ -436,7 +450,7 @@
       {
         "floor": 250,
         "label": "250",
-        "n": 12
+        "n": 13
       },
       {
         "floor": 500,
@@ -476,7 +490,7 @@
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 66
+        "n": 67
       },
       {
         "floor": 2500,
@@ -540,15 +554,15 @@
     },
     {
       "year": "2026",
-      "n": 225,
+      "n": 227,
       "p25": 1297,
       "median": 1699,
-      "p75": 2427,
+      "p75": 2411,
       "max": 13669
     }
   ],
   "by_nauthors": {
-    "1": 812,
+    "1": 814,
     "2": 119,
     "3": 26,
     "4": 1,
@@ -558,7 +572,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 99,
+      "posts": 100,
       "credential": "Vital City (institutional)"
     },
     {
@@ -707,39 +721,39 @@
       },
       {
         "year": "2026",
-        "weeks": 39.0,
-        "pieces": 230,
-        "outside_issues": 154,
-        "per_week_all": 5.9,
-        "per_week_outside_issues": 3.95,
+        "weeks": 39.3,
+        "pieces": 232,
+        "outside_issues": 156,
+        "per_week_all": 5.91,
+        "per_week_outside_issues": 3.97,
         "partial": true
       }
     ],
-    "total_weeks": 263.0,
+    "total_weeks": 263.3,
     "all_time_per_week": 3.65,
     "all_time_per_week_outside_issues": 1.72,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.95,
-    "current_per_week_all": 5.9,
+    "current_per_week_outside_issues": 3.97,
+    "current_per_week_all": 5.91,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 508,
       "published_away_from_drop": 71,
       "share_of_issue_pieces": 14.0,
-      "current_year_strict": 3.95,
-      "current_year_loose": 4.31,
+      "current_year_strict": 3.97,
+      "current_year_loose": 4.33,
       "all_time_strict": 1.72,
       "all_time_loose": 1.99,
       "all_time_all": 3.65
     }
   },
   "rhythm": {
-    "n_dated": 960,
+    "n_dated": 962,
     "by_weekday": [
       {
         "day": "Mon",
         "pieces": 62,
-        "share": 6.5
+        "share": 6.4
       },
       {
         "day": "Tue",
@@ -749,17 +763,17 @@
       {
         "day": "Wed",
         "pieces": 456,
-        "share": 47.5
+        "share": 47.4
       },
       {
         "day": "Thu",
         "pieces": 185,
-        "share": 19.3
+        "share": 19.2
       },
       {
         "day": "Fri",
-        "pieces": 62,
-        "share": 6.5
+        "pieces": 64,
+        "share": 6.7
       },
       {
         "day": "Sat",
@@ -773,8 +787,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.5,
-    "midweek_share": 84.2,
+    "top_day_share": 47.4,
+    "midweek_share": 84.0,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -843,9 +857,9 @@
       {
         "month": "October",
         "abbr": "Oct",
-        "pieces": 99,
-        "occurrences": 5,
-        "per_occurrence": 19.8
+        "pieces": 101,
+        "occurrences": 6,
+        "per_occurrence": 16.8
       },
       {
         "month": "November",
