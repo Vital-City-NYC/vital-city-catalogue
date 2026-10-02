@@ -1,7 +1,59 @@
 {
- "generated": "2026-09-30T16:23:28+00:00",
+ "generated": "2026-10-02T18:19:32+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "this-shapeshifting-city",
+   "title": "This Shapeshifting City",
+   "url": "https://www.vitalcitynyc.org/this-shapeshifting-city/",
+   "date": "2026-10-02",
+   "author": "Vital City",
+   "handle": null,
+   "dek": "The ebb and flow of New York City's population from 1970 to present, seen many different ways.",
+   "tags": [],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "The ebb and flow of New York City's population from 1970 to present, seen many different ways."
+    },
+    {
+     "kind": "quote",
+     "text": "\"Siegel's piece and the short video version that circulated on social media struck a chord.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "new-york-for-better-and-worse",
+   "title": "New York, for Better and Worse",
+   "url": "https://www.vitalcitynyc.org/new-york-for-better-and-worse/",
+   "date": "2026-10-02",
+   "author": "Joseph P. Viteritti",
+   "handle": null,
+   "dek": "On Mason B. Williams' new history of modern New York, \"City of Fortune\"",
+   "tags": [
+    "Book Review",
+    "History",
+    "Inequality"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Joseph P. Viteritti: On Mason B. Williams' new history of modern New York, \"City of Fortune\""
+    },
+    {
+     "kind": "writer",
+     "text": "Read Joseph P. Viteritti: \"New York, for Better and Worse\""
+    },
+    {
+     "kind": "quote",
+     "text": "Joseph P. Viteritti writes: \"Many mayors have tried to square the circle; Mamdani's agenda, while called ahistorical by some, is just a more aggressive variation on the theme.\""
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "women-and-guns-editors-note",
    "title": "The Crisis We Fail to Name",
@@ -929,35 +981,6 @@
     {
      "kind": "quote",
      "text": "Nicole Gelinas writes: \"A few weeks after the attacks, I had gone to a Brooklyn Duane Reade to buy sympathy cards to mail to the addresses Thomson provided, but the sympathy cards were sold out.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "john-mangin-bsa-chair-nyc-city-council",
-   "title": "Why the City Council Must Confirm John Mangin",
-   "url": "https://www.vitalcitynyc.org/john-mangin-bsa-chair-nyc-city-council/",
-   "date": "2026-09-01",
-   "author": "Daniel Garodnick",
-   "handle": null,
-   "dek": "The nominee to lead the Board of Standards and Appeals is the right fit for the challenge ahead.",
-   "tags": [
-    "City Government",
-    "Housing"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Daniel Garodnick: The nominee to lead the Board of Standards and Appeals is the right fit for the challenge ahead."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Daniel Garodnick: \"Why the City Council Must Confirm John Mangin\""
-    },
-    {
-     "kind": "quote",
-     "text": "Daniel Garodnick writes: \"In the two decades since I first joined the New York City Council, I have seen a significant transformation — for the better — in our city's conversation around housing.\""
     }
    ],
    "attempts": 1
