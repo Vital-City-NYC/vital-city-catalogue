@@ -53,7 +53,7 @@
   },
   {
     "name": "Jails",
-    "post_count": 49
+    "post_count": 50
   },
   {
     "name": "Social Science",
@@ -76,12 +76,12 @@
     "post_count": 32
   },
   {
-    "name": "data",
+    "name": "Budget",
     "post_count": 30
   },
   {
-    "name": "Budget",
-    "post_count": 29
+    "name": "data",
+    "post_count": 30
   },
   {
     "name": "Podcast",
@@ -104,11 +104,11 @@
     "post_count": 26
   },
   {
-    "name": "Infrastructure",
-    "post_count": 23
+    "name": "Incarceration",
+    "post_count": 24
   },
   {
-    "name": "Incarceration",
+    "name": "Infrastructure",
     "post_count": 23
   },
   {
@@ -156,12 +156,12 @@
     "post_count": 16
   },
   {
-    "name": "Transportation",
+    "name": "Mamdani",
     "post_count": 15
   },
   {
-    "name": "Mamdani",
-    "post_count": 14
+    "name": "Transportation",
+    "post_count": 15
   },
   {
     "name": "The Way Forward",
@@ -310,6 +310,10 @@
   {
     "name": "Etc.",
     "post_count": 7
+  },
+  {
+    "name": "Criminal Justice",
+    "post_count": 6
   },
   {
     "name": "Sports",
@@ -468,10 +472,6 @@
     "post_count": 4
   },
   {
-    "name": "Criminal Justice",
-    "post_count": 4
-  },
-  {
     "name": "Place",
     "post_count": 4
   },
@@ -600,6 +600,10 @@
     "post_count": 3
   },
   {
+    "name": "Rikers",
+    "post_count": 2
+  },
+  {
     "name": "Guns",
     "post_count": 2
   },
@@ -702,6 +706,18 @@
   {
     "name": "Gun Violence.",
     "post_count": 2
+  },
+  {
+    "name": "Taxes",
+    "post_count": 1
+  },
+  {
+    "name": "Privacy",
+    "post_count": 1
+  },
+  {
+    "name": "Courts",
+    "post_count": 1
   },
   {
     "name": "Integration",
@@ -885,10 +901,6 @@
   },
   {
     "name": "Report",
-    "post_count": 1
-  },
-  {
-    "name": "Rikers",
     "post_count": 1
   }
 ]

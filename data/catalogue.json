@@ -1,5 +1,126 @@
 [
   {
+    "title": "The Hidden Privacy Cost of New York’s Pied-à-Terre Tax",
+    "slug": "the-hidden-privacy-cost-of-new-yorks-pied-a-terre-tax",
+    "url": "https://www.vitalcitynyc.org/the-hidden-privacy-cost-of-new-yorks-pied-a-terre-tax/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-10-05",
+    "published_at": "2026-10-05T19:00:11.000+00:00",
+    "updated_at": "2026-10-05T19:00:10.000+00:00",
+    "primary_author": "Suma Mandel",
+    "authors": [
+      "Suma Mandel",
+      "Steven M. Cohen"
+    ],
+    "topics": [
+      "Taxes",
+      "Mamdani",
+      "Budget",
+      "Privacy"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "New York is fighting federal demands for sensitive personal information. Its own pied-à-terre tax rollout exposes a privacy gap closer to home.",
+    "excerpt": "New York is fighting federal demands for sensitive personal information. Its own pied-à-terre tax rollout exposes a privacy gap closer to home.\n",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/10/COHENMANDEL-NYC37049.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Thomas Hoepker / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2438,
+    "reading_minutes": 11,
+    "id": "6ac3bed8287b090001a5341b"
+  },
+  {
+    "title": "Criminal Court Judges Should Be Experts in Criminal Law",
+    "slug": "criminal-court-judges-should-be-experts-in-criminal-law",
+    "url": "https://www.vitalcitynyc.org/criminal-court-judges-should-be-experts-in-criminal-law/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-10-05",
+    "published_at": "2026-10-05T18:00:24.000+00:00",
+    "updated_at": "2026-10-05T18:00:24.000+00:00",
+    "primary_author": "Jeffrey M. Zimmerman",
+    "authors": [
+      "Jeffrey M. Zimmerman"
+    ],
+    "topics": [
+      "Courts",
+      "Criminal Justice"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "In New York, a shortage of judges leads to judges being shuffled from court to court.",
+    "excerpt": "In New York, a shortage of judges leads to judges being shuffled from court to court.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/10/ZIMMERMANGettyImages-1250763256.jpg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Bloomberg / Contributor",
+    "embeds": {
+      "flourish": [],
+      "iframes": [
+        {
+          "url": "https://vital-city-nyc.github.io/judge-shuffle/?embed=1",
+          "host": "vital-city-nyc.github.io",
+          "kind": "vital city project"
+        }
+      ],
+      "counts": {
+        "vital city project": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1170,
+    "reading_minutes": 5,
+    "id": "6ac3bb3f287b090001a533f7"
+  },
+  {
+    "title": "Closing Rikers Is the (Relatively) Easy Part",
+    "slug": "closing-rikers-is-the-relatively-easy-part",
+    "url": "https://www.vitalcitynyc.org/closing-rikers-is-the-relatively-easy-part/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-10-05",
+    "published_at": "2026-10-05T17:00:22.000+00:00",
+    "updated_at": "2026-10-05T17:00:21.000+00:00",
+    "primary_author": "Lisel Petis",
+    "authors": [
+      "Lisel Petis"
+    ],
+    "topics": [
+      "Jails",
+      "Rikers",
+      "Incarceration",
+      "Criminal Justice"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "Making the city’s jails better managed and more humane is a much deeper challenge.",
+    "excerpt": "Making the city’s jails better managed and more humane is a much deeper challenge.\n",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/10/PETISNYC28066.jpeg",
+    "feature_image_alt": null,
+    "feature_image_credit": "Leonard Freed / Magnum",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1937,
+    "reading_minutes": 8,
+    "id": "6ac3b822287b090001a533cf"
+  },
+  {
     "title": "This Shapeshifting City",
     "slug": "this-shapeshifting-city",
     "url": "https://www.vitalcitynyc.org/this-shapeshifting-city/",
@@ -1677,7 +1798,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2026-08-25",
     "published_at": "2026-08-25T13:00:16.000+00:00",
-    "updated_at": "2026-09-29T21:09:11.000+00:00",
+    "updated_at": "2026-10-05T15:02:20.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City",
@@ -1845,7 +1966,7 @@
       },
       "total": 28
     },
-    "featured": true,
+    "featured": false,
     "visibility": "public",
     "word_count": 3241,
     "reading_minutes": 14,
