@@ -1,7 +1,98 @@
 {
- "generated": "2026-10-02T18:19:32+00:00",
+ "generated": "2026-10-05T21:08:45+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "the-hidden-privacy-cost-of-new-yorks-pied-a-terre-tax",
+   "title": "The Hidden Privacy Cost of New York’s Pied-à-Terre Tax",
+   "url": "https://www.vitalcitynyc.org/the-hidden-privacy-cost-of-new-yorks-pied-a-terre-tax/",
+   "date": "2026-10-05",
+   "author": "Suma Mandel, Steven M. Cohen",
+   "handle": null,
+   "dek": "New York is fighting federal demands for sensitive personal information. Its own pied-à-terre tax rollout exposes a privacy gap closer to home.",
+   "tags": [
+    "Taxes",
+    "Mamdani",
+    "Budget",
+    "Privacy"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Suma Mandel and Steven M. Cohen: New York is fighting federal demands for sensitive personal information. Its own pied-à-terre tax rollout exposes a privacy gap closer to home."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Suma Mandel and Steven M. Cohen: \"The Hidden Privacy Cost of New York's Pied-à-Terre Tax\""
+    },
+    {
+     "kind": "quote",
+     "text": "Suma Mandel and Steven M. Cohen writes: \"The Department of Finance (DOF) has confirmed that surcharge submissions will not receive tax secrecy protections.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "criminal-court-judges-should-be-experts-in-criminal-law",
+   "title": "Criminal Court Judges Should Be Experts in Criminal Law",
+   "url": "https://www.vitalcitynyc.org/criminal-court-judges-should-be-experts-in-criminal-law/",
+   "date": "2026-10-05",
+   "author": "Jeffrey M. Zimmerman",
+   "handle": null,
+   "dek": "In New York, a shortage of judges leads to judges being shuffled from court to court.",
+   "tags": [
+    "Courts",
+    "Criminal Justice"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Jeffrey M. Zimmerman: In New York, a shortage of judges leads to judges being shuffled from court to court."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Jeffrey M. Zimmerman: \"Criminal Court Judges Should Be Experts in Criminal Law\""
+    },
+    {
+     "kind": "quote",
+     "text": "Jeffrey M. Zimmerman writes: \"Imagine being admitted to the hospital for heart surgery and meeting your surgeon for the first time.\""
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "closing-rikers-is-the-relatively-easy-part",
+   "title": "Closing Rikers Is the (Relatively) Easy Part",
+   "url": "https://www.vitalcitynyc.org/closing-rikers-is-the-relatively-easy-part/",
+   "date": "2026-10-05",
+   "author": "Lisel Petis",
+   "handle": null,
+   "dek": "Making the city's jails better managed and more humane is a much deeper challenge.",
+   "tags": [
+    "Jails",
+    "Rikers",
+    "Incarceration",
+    "Criminal Justice"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Lisel Petis: Making the city's jails better managed and more humane is a much deeper challenge."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Lisel Petis: \"Closing Rikers Is the (Relatively) Easy Part\""
+    },
+    {
+     "kind": "quote",
+     "text": "Lisel Petis writes: \"Closing the Rikers jail complex by the deadline required by law less than a year from now is, at this point, essentially impossible.\""
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "this-shapeshifting-city",
    "title": "This Shapeshifting City",
