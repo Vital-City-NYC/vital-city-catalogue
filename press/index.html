@@ -323,7 +323,7 @@
   <span id="selcount"></span>
   <button id="selCopy" title="Copy the addresses, comma-separated, to paste into any To or BCC field">Copy emails</button>
   <button id="selCsv" title="Download a spreadsheet of the people selected, with where each address came from">Export CSV</button>
-  <button id="selMail" title="Open a new message with everyone selected in BCC. If the last names you ticked were under a piece in 'Who should hear about this', the draft carries the note, the title and the link.">Draft email</button>
+  <button id="selMail" title="Open a new Gmail message with everyone selected in BCC. If the last names you ticked were under a piece in 'Who should hear about this', the draft carries the note, the title and the link.">Draft email</button>
   <button id="selClear" class="ghost">Clear</button>
   <span id="selnote"></span>
 </div>
@@ -1122,11 +1122,13 @@ function topicPhrase(label){
 // What the piece is about, from the site's own topic tags: series names ("Just
 // Fix It", "When Women Wield Guns") and "policy" are skipped, "City Government"
 // gives way to anything more specific, and at most two are joined.
+// Tags that are names keep their capitals in the drafted note ("taxes and Mamdani").
+const PROPER_TAG=/^(Mamdani|Hochul|Adams|Cuomo|Trump|Rikers|Albany|Chicago|Brooklyn|Queens|Bronx|Manhattan|Staten Island|Harlem|New York.*|.*New York)$/;
 function tagTopic(tags){
   const t=(tags||[]).filter(x=>x&&!/^#/.test(x)&&x.trim().split(/\s+/).length<=2&&!/^policy$/i.test(x))
     .map(x=>x.replace(/Artifical/i,"Artificial"));
   const specific=t.filter(x=>!/^city government$/i.test(x));
-  const pick=(specific.length?specific:t).slice(0,2).map(x=>/^(AI|NYCHA|NYPD|MTA)$/.test(x)?x:x.toLowerCase());
+  const pick=(specific.length?specific:t).slice(0,2).map(x=>/^(AI|NYCHA|NYPD|MTA|FDNY|CUNY|COGE|SYEP)$/.test(x)||PROPER_TAG.test(x)?x:x.toLowerCase());
   return pick.join(" and ");
 }
 // Phone and sign-off live in this browser only: the page's code is public, so a
@@ -1156,10 +1158,20 @@ function pitchFor(i){
   return {subject: `A new piece${on} that might interest you`,
     body:`Hi. I thought you might be interested in this new piece${on}${by}, just published by Vital City. Please call me${me.phone?` at ${me.phone}`:""} with any questions or if you want to connect with the author.\n\n${title}\n${pc.url}${me.sign?`\n\n${me.sign}`:""}`};
 }
+// Drafts open in Gmail itself rather than through a mailto: link. A mailto:
+// link depends on the browser having an email handler set up, and a Chrome
+// profile without one (Josh's vitalcitynyc.org profile, Oct. 5, 2026) does
+// nothing at all when it is clicked. Gmail opens in whichever Google account
+// that browser profile is signed in to.
+function gmailDraft(o){
+  const q=["view=cm","fs=1"];
+  for(const [k,v] of [["to",o.to],["bcc",o.bcc],["su",o.subject],["body",o.body]]) if(v) q.push(k+"="+encodeURIComponent(v));
+  window.open("https://mail.google.com/mail/?"+q.join("&"),"_blank","noopener");
+}
 function mailDraft(i){
   const em=selEmails(); if(!em.length) return false;
   const pt=pitchFor(i==null?LAST_PIECE:i);
-  location.href=`mailto:?bcc=${em.map(encodeURIComponent).join(",")}`+(pt?`&subject=${encodeURIComponent(pt.subject)}&body=${encodeURIComponent(pt.body)}`:"");
+  gmailDraft({bcc:em.join(","), subject:pt&&pt.subject, body:pt&&pt.body});
   return true;
 }
 async function copyEmails(){ const em=selEmails(); if(!em.length) return 0;
@@ -1210,6 +1222,10 @@ function initSelection(){
   window.addEventListener("pageshow",()=>updateSelbar());
   // "Email the ticked reporters" opens its own panel of actions in place, so
   // it works whether or not the bar at the bottom of the window is in view.
+  document.addEventListener("click",e=>{
+    const m=e.target.closest('a[href^="mailto:"]'); if(!m||e.metaKey||e.ctrlKey||e.shiftKey) return;
+    e.preventDefault(); gmailDraft({to:decodeURIComponent(m.getAttribute("href").slice(7).split("?")[0])});
+  });
   document.addEventListener("click",async e=>{
     const b=e.target.closest(".ampmail"); if(b){ ampPanel(b); return; }
     const a=e.target.closest(".ampact [data-act]"); if(!a) return;
