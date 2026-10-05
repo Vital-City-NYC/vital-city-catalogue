@@ -175,7 +175,9 @@ def pairs_with_email(name, email):
     if not parts:
         return False
     first, last = parts[0], parts[-1]
-    for L in {last, last.replace("-", "")}:
+    # A hyphenated surname often appears by one half (luis.ferre for
+    # Ferré-Sadurní), so each half counts as the surname too.
+    for L in {last, last.replace("-", ""), *[h for h in last.split("-") if len(h) > 3]}:
         if len(L) > 2 and L in local:
             return True
         if local in (first[0] + L, first + L, (first + L), L + first[0]):
@@ -185,6 +187,15 @@ def pairs_with_email(name, email):
             if len(mid) > 2 and mid in local:
                 return True
     return len(first) > 3 and local == re.sub(r"[^a-z]", "", first)
+
+def own_page_pair(name, email):
+    """Looser pairing for an address read off the person's OWN author page,
+    where the page itself names them: newsrooms clip handles (adamnag for Adam
+    Nagourney, jemcki for Jesse McKinley), so three letters of any part of the
+    name in the handle will do. Never used for addresses on shared pages."""
+    local = re.sub(r"[^a-z]", "", norm(email.split("@")[0]))
+    parts = [re.sub(r"[^a-z]", "", norm(p)) for p in re.split(r"[\s\-]+", name)]
+    return any(len(p) >= 3 and p[:3] in local for p in parts)
 
 GENERIC_LOCAL = re.compile(
     r"^(tips?|info|news|editor|editors|desk|contact|press|media|support|help|careers|jobs|hello|"
@@ -1291,6 +1302,41 @@ def main():
             print(f"  {added} addresses added from the Mac's locked file of {bc['as_of'][:10]}")
         except Exception as e:
             msg = f"blocked_contacts.enc not used ({type(e).__name__}: {e}); addresses at outlets that refuse CI will be missing"
+            print("  WARNING: " + msg)
+            report["notes"].append(msg)
+
+    # Addresses read by hand, in a browser, off author pages that refuse every
+    # automated client (the Times' /by/ pages, whose "Contact" tab gives each
+    # reporter's address). Same rules as everywhere else: read verbatim, paired
+    # with the person's name, never replacing an address and never creating a
+    # person. Locked with the toolkit passphrase; each row keeps its page and
+    # the date it was read. No expiry, since newsroom addresses rarely change,
+    # but rows older than 180 days are counted in the report as due a recheck.
+    rce = PRESS / "reviewed_contacts.enc"
+    if rce.exists():
+        passphrase = (os.environ.get("VC_NETWORK_PASS") or "").strip()
+        try:
+            rc = json.loads(decrypt_blob(json.load(open(rce)), passphrase))
+            added, stale = 0, 0
+            for p in people.values():
+                c = rc["contacts"].get(loose_name(p["name"]))
+                if c and not p.get("email") and (pairs_with_email(p["name"], c["email"])
+                                                 or (c.get("own_page") and own_page_pair(p["name"], c["email"]))):
+                    p["email"] = c["email"]
+                    p["email_source_url"] = c.get("email_source_url")
+                    p["email_evidence"] = c.get("email_evidence")
+                    added += 1
+                    try:
+                        if (datetime.now(timezone.utc).date()
+                                - datetime.fromisoformat(c["verified_on"]).date()).days > 180:
+                            stale += 1
+                    except Exception:
+                        pass
+            print(f"  {added} addresses added from hand-reviewed author pages ({rc['as_of'][:10]})")
+            if stale:
+                report["notes"].append(f"{stale} hand-reviewed addresses are over 180 days old; recheck their pages")
+        except Exception as e:
+            msg = f"reviewed_contacts.enc not used ({type(e).__name__}: {e}); hand-reviewed addresses (the Times) will be missing"
             print("  WARNING: " + msg)
             report["notes"].append(msg)
 
