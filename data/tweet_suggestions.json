@@ -1,7 +1,37 @@
 {
- "generated": "2026-10-05T21:08:45+00:00",
+ "generated": "2026-10-07T19:17:18+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "why-cities-need-to-stay-in-their-lane",
+   "title": "Why Cities Need to Stay in Their Lane",
+   "url": "https://www.vitalcitynyc.org/why-cities-need-to-stay-in-their-lane/",
+   "date": "2026-10-07",
+   "author": "Clayton P. Gillette, Andrew Haughwout",
+   "handle": null,
+   "dek": "New York and other localities should be cautious about stepping into the many breaches created by the Trump administration.",
+   "tags": [
+    "Federal Government",
+    "Local power",
+    "Mamdani"
+   ],
+   "mode": "rules",
+   "posts": [
+    {
+     "kind": "claim",
+     "text": "From Clayton P. Gillette and Andrew Haughwout: New York and other localities should be cautious about stepping into the many breaches created by the Trump administration."
+    },
+    {
+     "kind": "writer",
+     "text": "Read Clayton P. Gillette and Andrew Haughwout: \"Why Cities Need to Stay in Their Lane\""
+    },
+    {
+     "kind": "quote",
+     "text": "Clayton P. Gillette and Andrew Haughwout writes: \"The instinct of some cities is to fill the gap with increased local spending even in areas that fall outside the traditional local domain.\""
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "the-hidden-privacy-cost-of-new-yorks-pied-a-terre-tax",
    "title": "The Hidden Privacy Cost of New York’s Pied-à-Terre Tax",
@@ -866,212 +896,6 @@
     {
      "kind": "quote",
      "text": "Jeff Asher writes: \"Writing about trends in women's gun deaths and, specifically, domestic violence, seems like it should be straightforward from a data perspective.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "colum-mccann-9-11-25-years-later",
-   "title": "That Very Blue Day",
-   "url": "https://www.vitalcitynyc.org/colum-mccann-9-11-25-years-later/",
-   "date": "2026-09-05",
-   "author": "Colum McCann",
-   "handle": null,
-   "dek": "What it meant to me, and to the broader 'us'",
-   "tags": [
-    "9/11",
-    "History",
-    "Looking Back, Looking Forward"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Colum McCann: What it meant to me, and to the broader 'us'"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Colum McCann: \"That Very Blue Day\""
-    },
-    {
-     "kind": "quote",
-     "text": "Colum McCann writes: \"The miracle of it is not that we survived it — it is more that we are still living it, 25 years after the fact.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "how-nyc-changed-since-9-11",
-   "title": "A City Forgets. Maybe It’s Supposed To.",
-   "url": "https://www.vitalcitynyc.org/how-nyc-changed-since-9-11/",
-   "date": "2026-09-05",
-   "author": "Harry Siegel",
-   "handle": null,
-   "dek": "The New York of today is a different city than the New York of 9/11.",
-   "tags": [
-    "9/11",
-    "Looking Back, Looking Forward"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Harry Siegel: The New York of today is a different city than the New York of 9/11."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Harry Siegel: \"A City Forgets. Maybe It's Supposed To.\""
-    },
-    {
-     "kind": "quote",
-     "text": "Harry Siegel writes: \"At that point, fully half of the city had turned over in just over a decade.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "9-11-a-muslim-american-reflection",
-   "title": "The City We Remember, the City We Become",
-   "url": "https://www.vitalcitynyc.org/9-11-a-muslim-american-reflection/",
-   "date": "2026-09-05",
-   "author": "Asad Dandia",
-   "handle": null,
-   "dek": "A Muslim American reflection on 9/11 and its aftermath",
-   "tags": [
-    "9/11",
-    "Looking Back, Looking Forward"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Asad Dandia: A Muslim American reflection on 9/11 and its aftermath"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Asad Dandia: \"The City We Remember, the City We Become\""
-    },
-    {
-     "kind": "quote",
-     "text": "Asad Dandia writes: \"Life moved at a slower pace, and everything you needed was within a 10-block radius.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "how-it-felt-as-it-happened-september-11",
-   "title": "How It Felt As It Happened",
-   "url": "https://www.vitalcitynyc.org/how-it-felt-as-it-happened-september-11/",
-   "date": "2026-09-05",
-   "author": "Wendell Jamieson",
-   "handle": null,
-   "dek": "What we experienced that day and how the media processed it",
-   "tags": [
-    "9/11",
-    "History",
-    "Looking Back, Looking Forward"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Wendell Jamieson: What we experienced that day and how the media processed it"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Wendell Jamieson: \"How It Felt As It Happened\""
-    },
-    {
-     "kind": "quote",
-     "text": "Wendell Jamieson writes: \"For those of us who were here, a certain kind of morning brings it all back.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "evolution-nyc-architecture-world-trade-center",
-   "title": "Much More Than Two Towers",
-   "url": "https://www.vitalcitynyc.org/evolution-nyc-architecture-world-trade-center/",
-   "date": "2026-09-05",
-   "author": "Vishaan Chakrabarti",
-   "handle": null,
-   "dek": "How the feel of New York has changed",
-   "tags": [
-    "9/11",
-    "Architecture",
-    "Looking Back, Looking Forward"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Vishaan Chakrabarti: How the feel of New York has changed"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Vishaan Chakrabarti: \"Much More Than Two Towers\""
-    },
-    {
-     "kind": "quote",
-     "text": "Vishaan Chakrabarti writes: \"The towers, glowing, hopeful, almost innocent, stood in stark contrast to the raw streets and sidewalks of late 1980s New York.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "nyc-terrorist-threat-before-and-after-9-11",
-   "title": "The Terrorist Threat, Then and Now",
-   "url": "https://www.vitalcitynyc.org/nyc-terrorist-threat-before-and-after-9-11/",
-   "date": "2026-09-05",
-   "author": "Michael Chertoff, Ron Rowe",
-   "handle": null,
-   "dek": "New York City is under a different type of risk, but danger still looms large.",
-   "tags": [
-    "9/11",
-    "Looking Back, Looking Forward"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Michael Chertoff and Ron Rowe: New York City is under a different type of risk, but danger still looms large."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Michael Chertoff and Ron Rowe: \"The Terrorist Threat, Then and Now\""
-    },
-    {
-     "kind": "quote",
-     "text": "Michael Chertoff and Ron Rowe writes: \"On the morning of September 11, 2001, the threat to this country materialized as hijacked commercial airliners used as kinetic weapons.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "downtown-manhattan-after-september-11",
-   "title": "Downtown Manhattan, Split in Two",
-   "url": "https://www.vitalcitynyc.org/downtown-manhattan-after-september-11/",
-   "date": "2026-09-05",
-   "author": "Nicole Gelinas",
-   "handle": "@nicolegelinas",
-   "dek": "After the attacks, the unthinkable quickly became normal.",
-   "tags": [
-    "9/11",
-    "Looking Back, Looking Forward"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Nicole Gelinas (@nicolegelinas): After the attacks, the unthinkable quickly became normal."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Nicole Gelinas (@nicolegelinas): \"Downtown Manhattan, Split in Two\""
-    },
-    {
-     "kind": "quote",
-     "text": "Nicole Gelinas writes: \"A few weeks after the attacks, I had gone to a Brooklyn Duane Reade to buy sympathy cards to mail to the addresses Thomson provided, but the sympathy cards were sold out.\""
     }
    ],
    "attempts": 1
