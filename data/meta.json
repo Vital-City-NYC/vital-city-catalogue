@@ -1,15 +1,22 @@
 {
-  "generated_at": "2026-10-07T01:57:26.640812+00:00",
+  "generated_at": "2026-10-07T17:43:32.994669+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 965,
-  "total_authors": 529,
+  "total_posts": 966,
+  "total_authors": 531,
   "total_issues": 34,
-  "total_topics": 226,
+  "total_topics": 227,
   "date_range": [
     "2021-09-15",
-    "2026-10-05"
+    "2026-10-07"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "Why Cities Need to Stay in Their Lane",
+      "url": "https://www.vitalcitynyc.org/why-cities-need-to-stay-in-their-lane/",
+      "published_date": "2026-10-07",
+      "primary_author": "Clayton P. Gillette"
+    }
+  ]
 }

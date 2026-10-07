@@ -1,27 +1,34 @@
 {
   "meta": {
-    "generated_at": "2026-10-07T01:57:26.640812+00:00",
+    "generated_at": "2026-10-07T17:43:32.994669+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 965,
-    "total_authors": 529,
+    "total_posts": 966,
+    "total_authors": 531,
     "total_issues": 34,
-    "total_topics": 226,
+    "total_topics": 227,
     "date_range": [
       "2021-09-15",
-      "2026-10-05"
+      "2026-10-07"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 1,
+    "new_articles": [
+      {
+        "title": "Why Cities Need to Stay in Their Lane",
+        "url": "https://www.vitalcitynyc.org/why-cities-need-to-stay-in-their-lane/",
+        "published_date": "2026-10-07",
+        "primary_author": "Clayton P. Gillette"
+      }
+    ]
   },
-  "total_pieces": 965,
+  "total_pieces": 966,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 235
+    "2026": 236
   },
   "by_month": {
     "2021-09": 1,
@@ -79,12 +86,12 @@
     "2026-07": 23,
     "2026-08": 16,
     "2026-09": 33,
-    "2026-10": 5
+    "2026-10": 6
   },
   "by_type": [
     [
       "opinion/commentary",
-      757
+      758
     ],
     [
       "q&a",
@@ -217,11 +224,11 @@
       26
     ]
   ],
-  "n_topics_total": 226,
+  "n_topics_total": 227,
   "by_credential_pieces": [
     [
       "Academic",
-      230
+      229
     ],
     [
       "Journalist / media",
@@ -249,7 +256,7 @@
     ],
     [
       "Think tank / research institute",
-      55
+      57
     ],
     [
       "Legal practitioner",
@@ -275,7 +282,7 @@
     ],
     [
       "Other / unclassified",
-      116
+      117
     ],
     [
       "Nonprofit / advocacy",
@@ -286,11 +293,11 @@
       37
     ],
     [
-      "Government / public official",
-      31
+      "Think tank / research institute",
+      32
     ],
     [
-      "Think tank / research institute",
+      "Government / public official",
       31
     ],
     [
@@ -385,17 +392,17 @@
     }
   },
   "wc_stats": {
-    "n": 958,
+    "n": 959,
     "median": 1639,
-    "mean": 2145,
+    "mean": 2144,
     "p90": 3241,
     "max": 15166,
-    "p10": 915,
+    "p10": 916,
     "p25": 1284,
     "p75": 2229,
-    "p95": 5615,
+    "p95": 5609,
     "no_count": 7,
-    "core_1000_2499": 684,
+    "core_1000_2499": 685,
     "under_500": 47,
     "over_5000": 53
   },
@@ -410,7 +417,7 @@
     ],
     [
       "1,000-1,999",
-      545
+      546
     ],
     [
       "2,000-2,999",
@@ -457,7 +464,7 @@
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 147
+        "n": 148
       },
       {
         "floor": 1500,
@@ -541,16 +548,16 @@
     },
     {
       "year": "2026",
-      "n": 230,
-      "p25": 1295,
-      "median": 1704,
-      "p75": 2417,
+      "n": 231,
+      "p25": 1292,
+      "median": 1699,
+      "p75": 2411,
       "max": 13669
     }
   ],
   "by_nauthors": {
     "1": 816,
-    "2": 120,
+    "2": 121,
     "3": 26,
     "4": 1,
     "8": 1,
@@ -708,34 +715,34 @@
       },
       {
         "year": "2026",
-        "weeks": 39.7,
-        "pieces": 235,
-        "outside_issues": 159,
-        "per_week_all": 5.92,
+        "weeks": 40.0,
+        "pieces": 236,
+        "outside_issues": 160,
+        "per_week_all": 5.9,
         "per_week_outside_issues": 4.0,
         "partial": true
       }
     ],
-    "total_weeks": 263.7,
+    "total_weeks": 264.0,
     "all_time_per_week": 3.66,
     "all_time_per_week_outside_issues": 1.73,
     "current_year": "2026",
     "current_per_week_outside_issues": 4.0,
-    "current_per_week_all": 5.92,
+    "current_per_week_all": 5.9,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 508,
       "published_away_from_drop": 71,
       "share_of_issue_pieces": 14.0,
       "current_year_strict": 4.0,
-      "current_year_loose": 4.36,
+      "current_year_loose": 4.35,
       "all_time_strict": 1.73,
       "all_time_loose": 2.0,
       "all_time_all": 3.66
     }
   },
   "rhythm": {
-    "n_dated": 965,
+    "n_dated": 966,
     "by_weekday": [
       {
         "day": "Mon",
@@ -749,7 +756,7 @@
       },
       {
         "day": "Wed",
-        "pieces": 456,
+        "pieces": 457,
         "share": 47.3
       },
       {
@@ -844,9 +851,9 @@
       {
         "month": "October",
         "abbr": "Oct",
-        "pieces": 104,
+        "pieces": 105,
         "occurrences": 6,
-        "per_occurrence": 17.3
+        "per_occurrence": 17.5
       },
       {
         "month": "November",
