@@ -606,7 +606,8 @@
       <div id="dtBody"></div>
       <div class="modalbtns">
         <button class="btn primary" id="dtClose">Close</button>
-        <button class="btn" id="dtEmailCard" title="Copy this contact's full details to the clipboard so you can email it to someone.">&#9993; Email this card</button>
+        <button class="btn" id="dtCopyCard" title="Copy everything on this card as plain text: tags, contact details, newsletter numbers, giving and provenance.">&#10697; Copy card</button>
+        <button class="btn" id="dtEmailCard" title="Open a Gmail draft with everything on this card (also copies it).">&#9993; Email this card</button>
         <button class="btn" id="dtCopyLink" title="Copy a link that reopens this contact.">Copy link</button>
       </div>
     </div>
@@ -646,7 +647,8 @@
       <div class="modalbtns">
         <button class="btn primary" id="edSave" title="Save your changes (shortcut: ⌘-Enter / Ctrl-Enter). They're stored for everyone automatically — you see them now, others on the next daily refresh.">Save <span style="font-weight:400;opacity:.7;font-size:11px">⌘↵</span></button>
         <button class="btn" id="edCancel" title="Close without saving any changes.">Cancel</button>
-        <button class="btn" id="edEmailCard" title="Copy this contact's full details to the clipboard (and open a mail draft if you have a desktop mail app) so you can email it to someone.">✉ Email this card</button>
+        <button class="btn" id="edCopyCard" title="Copy everything on this card as plain text.">⧉ Copy card</button>
+        <button class="btn" id="edEmailCard" title="Open a Gmail draft with everything on this card (also copies it).">✉ Email this card</button>
         <button class="btn" id="edCopyLink" title="Copy a link that opens this person's card (needs the passphrase to view)">🔗 Copy link</button>
         <button class="btn" id="edRevertGuess" style="display:none" title="Turn this name back into a gray, unconfirmed guess (undoes a confirmation). The name text stays; it just goes back to looking like an educated guess.">↩ Revert to guess</button>
         <button class="btn" id="edDelete" style="margin-left:auto;border-color:var(--vc-magenta);color:var(--vc-magenta)" title="Remove this person from the tool for everyone. (If they still come from a live source like Ghost or Donorbox, they'll return on the next refresh.)">Delete entry</button>
@@ -1153,12 +1155,14 @@ function init(){
   $("#edDelete").addEventListener("click",()=>{ if(editKey) deleteEntry(editKey); });
   $("#dtClose").addEventListener("click",closeDetail);
   $("#dtEmailCard").addEventListener("click",emailCard);
+  $("#dtCopyCard").addEventListener("click",copyCard);
   $("#dtCopyLink").addEventListener("click",copyCardLink);
   // Pen in the detail view: hand off to the form for the same person.
   $("#dtEdit").addEventListener("click",()=>{ const k=detailKey; closeDetail(); if(k) openEdit(k); });
   // Click the backdrop to dismiss, matching the other windows.
   $("#detailModal").addEventListener("click",e=>{ if(e.target.id==="detailModal") closeDetail(); });
   $("#edEmailCard").addEventListener("click",emailCard);
+  $("#edCopyCard").addEventListener("click",copyCard);
   $("#edCopyLink").addEventListener("click",copyCardLink);
   $("#edRevertGuess").addEventListener("click",revertGuess);
   $("#editModal").addEventListener("click",e=>{if(e.target.id==="editModal")closeEdit();});
@@ -1626,29 +1630,69 @@ function copyCardLink(){
     .then(()=>toast("Link to this contact card copied — opens for anyone with the passphrase"))
     .catch(()=>toast("Copy failed"));
 }
-function emailCard(){
-  // serves both the detail view and the edit form
+// The whole card as plain text, section by section in the order the card
+// shows it, so a copy carries everything (Oct. 7, 2026: copying the card by
+// hand grabbed only the name and a few fields).
+function cardText(p){
+  const plain=h=>{ const d=document.createElement("div"); d.innerHTML=h||""; return d.textContent.replace(/\s+/g," ").trim(); };
+  const nm=[firstName(p),lastName(p)].filter(Boolean).join(" ")||p.n||p.e||"(no name)";
+  const L=[nm];
+  const sub=[p.inst,p.role].filter(Boolean).join(" · "); if(sub) L.push(sub);
+  const tags=[];
+  if(p.hp&&p.hp.length){ const h=plain(hpBadge(p)).toLowerCase(); tags.push(h.charAt(0).toUpperCase()+h.slice(1)); }
+  if(p.frreview) tags.push("Introduction lead"+(p.frwhy?": "+p.frwhy:""));
+  if(p.ns==="guess") tags.push("Guessed name");
+  if((p.pros||0)>=4) tags.push("$ Prospect"+(p.prosw?" ("+p.prosw+")":""));
+  if(p.wiki) tags.push("Notable (Wikipedia match)");
+  if(p.press) tags.push("Press");
+  if(p.unsub) tags.push("Unsubscribed"); else if(p.mem) tags.push("Subscriber");
+  if(p.don) tags.push("Donor");
+  if(p.auth) tags.push("Contributor");
+  if(p.star) tags.push("Starred");
+  if(p.added) tags.push("Added by hand");
+  if(tags.length) L.push("Tags: "+tags.join(" | "));
+  const S=(h,rows)=>{ rows=rows.filter(r=>r&&r[1]!==""&&r[1]!=null); if(rows.length){ L.push("",h.toUpperCase()); rows.forEach(([k,v])=>L.push(k+": "+v)); } };
+  S("Contact",[["Emails",(p.emails||[]).map(e=>e+(e===p.e?" (primary)":"")).join(", ")||"none on file"],
+    ["Types",(p.types||[]).join(", ")],["Specialties",(p.topics||[]).join(", ")],
+    ["Press outlet",p.poutlet||""],["Press handle",p.ptw||""]]);
+  if(p.mem||p.unsub) S("Newsletter",[["Mailchimp rating",(p.erate||0)+"/5"],["Open rate",(p.eopen||0)+"%"],
+    ["Click rate",(p.eclick||0)+"%"],["Engagement score",engScore(p)+" of 200"],
+    ["Recent opens",[p.d7c?p.d7c+" in the last 7 days":"",p.d30c?p.d30c+" in the last 30 days":""].filter(Boolean).join(", ")],
+    ["Subscribed",p.since||""],["Unsubscribed",p.udate||""],
+    ["House parties",(p.hp||[]).map(h=>h.label+" — "+h.status+(h.raw&&h.raw!==h.status?" ("+h.raw+")":"")).join("; ")]]);
+  if(p.don) S("Giving",[["Lifetime","$"+Math.round(p.damt||0).toLocaleString()],["Gifts",String(p.dcnt||0)],
+    ["Last gift",p.dlast?p.dlast.slice(0,10):"—"],["Status",p.dcnt>1?"Repeat":"First-time"]]);
+  if(p.auth) S("Contributions",[["Pieces written",String(p.arts||0)],["Byline",p.aname||""]]);
+  if(p.note) S("Notes",[["Note",p.note]]);
+  S("Provenance",[["Sources",(p.src||[]).join(", ")],["Name",p.ns==="given"?"Confirmed by a person":"Inferred from the email address"]]);
+  return {name:nm, text:L.join("\n")};
+}
+document.addEventListener("copy",e=>{
+  const open=$("#detailModal")&&$("#detailModal").style.display==="flex";
+  const sel=String(window.getSelection()||"");
+  if(!open||!detailKey) return;
+  const box=$("#detailModal").querySelector(".modalbox")||$("#detailModal");
+  // nothing selected, or a selection that runs across the card: give the full text
+  if(sel.trim().length<3 || sel.length>box.innerText.length*0.5){
+    const p=PEOPLE.find(x=>personKey(x)===detailKey); if(!p) return;
+    e.clipboardData.setData("text/plain",cardText(p).text); e.preventDefault(); toast("Whole card copied");
+  }
+});
+function copyCard(){
   const p=PEOPLE.find(x=>personKey(x)===(editKey||detailKey)); if(!p) return;
-  const L=["Name: "+(p.n||"")];
-  if(p.inst) L.push("Institution: "+p.inst);
-  if(p.emails&&p.emails.length) L.push("Email: "+p.emails.join(", "));
-  if(p.types&&p.types.length) L.push("Type: "+p.types.join(", "));
-  if(p.topics&&p.topics.length) L.push("Areas: "+p.topics.join(", "));
-  const st=[]; if(p.mem)st.push("newsletter subscriber"+(p.since?" since "+p.since.slice(0,4):""));
-  if(p.auth)st.push((p.arts?p.arts+" ":"")+"VC contributor"); if(p.don)st.push("donor ($"+Math.round(p.damt).toLocaleString()+(p.dlast?", last "+p.dlast:"")+")");
-  if(p.press)st.push("press contact"+(p.poutlet?" ("+p.poutlet+")":""));
-  if(st.length) L.push("Status: "+st.join(" · "));
-  if(p.note) L.push("Notes: "+p.note);
-  const subject="Vital City contact: "+(p.n||p.e||""), body=L.join("\n");
-  // Copy the card text first so it always works, even with no desktop mail app
-  // (e.g. if you use Gmail in the browser). Then try to open a mail app too.
-  navigator.clipboard.writeText(subject+"\n\n"+body).catch(()=>{});
-  // Use a transient link rather than location.href so the page doesn't blank out
-  // when there's no mailto handler registered.
-  const a=document.createElement("a");
-  a.href="mailto:?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
-  a.style.display="none"; document.body.appendChild(a); a.click(); a.remove();
-  toast("Card copied to clipboard — paste it into any email. (If you have a mail app, a draft should also open.)");
+  const t=cardText(p).text;
+  navigator.clipboard.writeText(t).then(()=>toast("Whole card copied — paste it anywhere"))
+    .catch(()=>{ prompt("Copy the card:", t); });
+}
+function emailCard(){
+  // serves both the detail view and the edit form. Opens a Gmail draft rather
+  // than a mailto: link, which does nothing in a browser with no email app set
+  // up; the text is copied too, so it can go anywhere else.
+  const p=PEOPLE.find(x=>personKey(x)===(editKey||detailKey)); if(!p) return;
+  const c=cardText(p), subject="Vital City contact: "+c.name;
+  navigator.clipboard.writeText(c.text).catch(()=>{});
+  window.open("https://mail.google.com/mail/?view=cm&fs=1&su="+encodeURIComponent(subject)+"&body="+encodeURIComponent(c.text),"_blank","noopener");
+  toast("Gmail draft opened, and the whole card is on your clipboard");
 }
 function toggleStar(key){
   const p=PEOPLE.find(x=>personKey(x)===key); if(!p) return;
