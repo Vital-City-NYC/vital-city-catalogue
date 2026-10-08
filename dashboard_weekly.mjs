@@ -50,17 +50,26 @@ async function main() {
     "--headless=new", `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`,
     "--no-first-run", "--no-default-browser-check", "--disable-gpu",
     // Ubuntu runners block the sandbox's user namespaces; the page is our own.
-    ...(process.env.GITHUB_ACTIONS ? ["--no-sandbox"] : []),
+    ...(process.env.GITHUB_ACTIONS ? ["--no-sandbox", "--disable-dev-shm-usage"] : []),
     "about:blank",
-  ], { stdio: "ignore" });
+  ], { stdio: ["ignore", "ignore", "pipe"] });
+  // Keep Chrome's own error output so a failed start says why.
+  let chromeErr = "";
+  chrome.stderr.on("data", d => { chromeErr = (chromeErr + d).slice(-2000); });
+  let chromeExit = null;
+  chrome.on("exit", code => { chromeExit = code; });
+  chrome.on("error", e => { chromeErr += `\nspawn ${CHROME}: ${e.message}`; chromeExit = -1; });
   try {
     let tabs = [];
-    for (let i = 0; i < 75 && !tabs.length; i++) {
+    // Cold starts on a CI runner can take well over 15 seconds.
+    for (let i = 0; i < 300 && !tabs.length && chromeExit === null; i++) {
       try { tabs = (await (await fetch(`http://127.0.0.1:${port}/json/list`)).json()).filter(t => t.type === "page"); }
       catch { /* not up yet */ }
       if (!tabs.length) await sleep(200);
     }
-    if (!tabs.length) throw new Error("headless Chrome did not start");
+    if (!tabs.length) {
+      throw new Error(`headless Chrome did not start (${CHROME}, exit ${chromeExit})\n` + chromeErr.trim().split("\n").slice(-8).join("\n"));
+    }
 
     const ws = new WebSocket(tabs[0].webSocketDebuggerUrl);
     await new Promise((res, rej) => { ws.onopen = res; ws.onerror = () => rej(new Error("could not connect to Chrome")); });

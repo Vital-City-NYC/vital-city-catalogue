@@ -96,7 +96,7 @@ jobs:
 
       # Failure only, and only ever a direct message to Josh: never a channel.
       - name: Tell Josh if it failed
-        if: failure()
+        if: failure() && github.event.inputs.test != 'true'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_DM_TO: ${{ secrets.SLACK_DM_TO }}
