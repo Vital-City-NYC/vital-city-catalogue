@@ -31,6 +31,10 @@ on:
         description: "Rewrite even if this week's summaries are already published"
         type: boolean
         default: false
+      test:
+        description: "Test run: export, write and check, but publish nothing"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -68,7 +72,8 @@ jobs:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
         run: |
           python3 weekly_summaries.py --serve --max-cost 2 \
-            ${{ github.event.inputs.force != 'true' && '--skip-if-current' || '' }}
+            ${{ github.event.inputs.test == 'true' && '--no-publish' || '' }} \
+            ${{ (github.event.inputs.force != 'true' && github.event.inputs.test != 'true') && '--skip-if-current' || '' }}
 
       - name: Commit and push
         if: steps.write.outputs.published == 'true'
