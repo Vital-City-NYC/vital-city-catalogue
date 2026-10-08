@@ -1,27 +1,58 @@
 {
   "meta": {
-    "generated_at": "2026-10-08T16:08:45.408893+00:00",
+    "generated_at": "2026-10-08T17:45:03.119665+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 966,
-    "total_authors": 531,
+    "total_posts": 971,
+    "total_authors": 535,
     "total_issues": 34,
-    "total_topics": 227,
+    "total_topics": 228,
     "date_range": [
       "2021-09-15",
-      "2026-10-07"
+      "2026-10-08"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 5,
+    "new_articles": [
+      {
+        "title": "A Terrible Human Problem \u2014 With Some Technological Responses",
+        "url": "https://www.vitalcitynyc.org/technological-strategies-to-reduce-campus-sexual-assault/",
+        "published_date": "2026-10-08",
+        "primary_author": "Jennifer Doleac"
+      },
+      {
+        "title": "How Big a Problem Is Sexual Assault on Campus?",
+        "url": "https://www.vitalcitynyc.org/campus-sexual-assault-numbers-analysis/",
+        "published_date": "2026-10-08",
+        "primary_author": "Jens Ludwig"
+      },
+      {
+        "title": "We Move What We Measure: Campus Safety Requires Reliable Data",
+        "url": "https://www.vitalcitynyc.org/campus-sexual-assault-prevention-requires-reliable-data/",
+        "published_date": "2026-10-08",
+        "primary_author": "Judd Kessler"
+      },
+      {
+        "title": "The Lifelong Scars of Campus Rape",
+        "url": "https://www.vitalcitynyc.org/campus-rape-survivors-lifelong-scars/",
+        "published_date": "2026-10-08",
+        "primary_author": "Abi Adams"
+      },
+      {
+        "title": "Finding New Ideas for Campus Sexual Assault Prevention",
+        "url": "https://www.vitalcitynyc.org/new-campus-sexual-assault-prevention-ideas/",
+        "published_date": "2026-10-08",
+        "primary_author": "Biz Rasich"
+      }
+    ]
   },
-  "total_pieces": 966,
+  "total_pieces": 971,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 236
+    "2026": 241
   },
   "by_month": {
     "2021-09": 1,
@@ -79,12 +110,12 @@
     "2026-07": 23,
     "2026-08": 16,
     "2026-09": 33,
-    "2026-10": 6
+    "2026-10": 11
   },
   "by_type": [
     [
       "opinion/commentary",
-      758
+      763
     ],
     [
       "q&a",
@@ -118,7 +149,7 @@
   "by_topic_top25": [
     [
       "Crime",
-      147
+      152
     ],
     [
       "History",
@@ -178,11 +209,11 @@
     ],
     [
       "Education",
-      36
+      41
     ],
     [
       "Technology",
-      35
+      36
     ],
     [
       "Transit",
@@ -217,11 +248,11 @@
       26
     ]
   ],
-  "n_topics_total": 227,
+  "n_topics_total": 228,
   "by_credential_pieces": [
     [
       "Academic",
-      229
+      232
     ],
     [
       "Journalist / media",
@@ -233,7 +264,7 @@
     ],
     [
       "Other / unclassified",
-      103
+      104
     ],
     [
       "Vital City (institutional)",
@@ -244,12 +275,12 @@
       86
     ],
     [
-      "Business / private sector",
+      "Think tank / research institute",
       58
     ],
     [
-      "Think tank / research institute",
-      57
+      "Business / private sector",
+      58
     ],
     [
       "Legal practitioner",
@@ -271,7 +302,7 @@
   "by_credential_authors": [
     [
       "Academic",
-      167
+      169
     ],
     [
       "Other / unclassified",
@@ -279,7 +310,7 @@
     ],
     [
       "Nonprofit / advocacy",
-      80
+      81
     ],
     [
       "Journalist / media",
@@ -287,7 +318,7 @@
     ],
     [
       "Think tank / research institute",
-      32
+      33
     ],
     [
       "Government / public official",
@@ -334,7 +365,7 @@
       "2023": 37,
       "2024": 38,
       "2025": 31,
-      "2026": 23
+      "2026": 28
     },
     "History": {
       "2022": 12,
@@ -385,17 +416,17 @@
     }
   },
   "wc_stats": {
-    "n": 959,
+    "n": 964,
     "median": 1639,
-    "mean": 2144,
+    "mean": 2143,
     "p90": 3241,
     "max": 15166,
     "p10": 916,
     "p25": 1284,
-    "p75": 2229,
-    "p95": 5609,
+    "p75": 2228,
+    "p95": 5587,
     "no_count": 7,
-    "core_1000_2499": 685,
+    "core_1000_2499": 689,
     "under_500": 47,
     "over_5000": 53
   },
@@ -410,7 +441,7 @@
     ],
     [
       "1,000-1,999",
-      546
+      550
     ],
     [
       "2,000-2,999",
@@ -418,7 +449,7 @@
     ],
     [
       "3,000-4,999",
-      57
+      58
     ],
     [
       "5,000+",
@@ -457,17 +488,17 @@
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 148
+        "n": 149
       },
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 176
+        "n": 177
       },
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 112
+        "n": 114
       },
       {
         "floor": 2000,
@@ -502,7 +533,7 @@
       {
         "floor": 3500,
         "label": "3,500+",
-        "n": 85
+        "n": 86
       }
     ]
   },
@@ -541,16 +572,16 @@
     },
     {
       "year": "2026",
-      "n": 231,
-      "p25": 1292,
-      "median": 1699,
-      "p75": 2411,
+      "n": 236,
+      "p25": 1297,
+      "median": 1704,
+      "p75": 2410,
       "max": 13669
     }
   ],
   "by_nauthors": {
-    "1": 816,
-    "2": 121,
+    "1": 820,
+    "2": 122,
     "3": 26,
     "4": 1,
     "8": 1,
@@ -648,14 +679,14 @@
       "credential": "Business / private sector"
     },
     {
+      "name": "Jens Ludwig",
+      "posts": 7,
+      "credential": "Academic"
+    },
+    {
       "name": "John K. Roman",
       "posts": 7,
       "credential": "Think tank / research institute"
-    },
-    {
-      "name": "Howard Yaruss",
-      "posts": 6,
-      "credential": "Legal practitioner"
     }
   ],
   "n_issues": 34,
@@ -708,34 +739,34 @@
       },
       {
         "year": "2026",
-        "weeks": 40.0,
-        "pieces": 236,
-        "outside_issues": 160,
-        "per_week_all": 5.9,
-        "per_week_outside_issues": 4.0,
+        "weeks": 40.1,
+        "pieces": 241,
+        "outside_issues": 165,
+        "per_week_all": 6.0,
+        "per_week_outside_issues": 4.11,
         "partial": true
       }
     ],
-    "total_weeks": 264.0,
-    "all_time_per_week": 3.66,
-    "all_time_per_week_outside_issues": 1.73,
+    "total_weeks": 264.1,
+    "all_time_per_week": 3.68,
+    "all_time_per_week_outside_issues": 1.75,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.0,
-    "current_per_week_all": 5.9,
+    "current_per_week_outside_issues": 4.11,
+    "current_per_week_all": 6.0,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 508,
       "published_away_from_drop": 71,
       "share_of_issue_pieces": 14.0,
-      "current_year_strict": 4.0,
-      "current_year_loose": 4.35,
-      "all_time_strict": 1.73,
-      "all_time_loose": 2.0,
-      "all_time_all": 3.66
+      "current_year_strict": 4.11,
+      "current_year_loose": 4.46,
+      "all_time_strict": 1.75,
+      "all_time_loose": 2.02,
+      "all_time_all": 3.68
     }
   },
   "rhythm": {
-    "n_dated": 966,
+    "n_dated": 971,
     "by_weekday": [
       {
         "day": "Mon",
@@ -745,17 +776,17 @@
       {
         "day": "Tue",
         "pieces": 167,
-        "share": 17.3
+        "share": 17.2
       },
       {
         "day": "Wed",
         "pieces": 457,
-        "share": 47.3
+        "share": 47.1
       },
       {
         "day": "Thu",
-        "pieces": 185,
-        "share": 19.2
+        "pieces": 190,
+        "share": 19.6
       },
       {
         "day": "Fri",
@@ -774,8 +805,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.3,
-    "midweek_share": 83.7,
+    "top_day_share": 47.1,
+    "midweek_share": 83.8,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -844,9 +875,9 @@
       {
         "month": "October",
         "abbr": "Oct",
-        "pieces": 105,
+        "pieces": 110,
         "occurrences": 6,
-        "per_occurrence": 17.5
+        "per_occurrence": 18.3
       },
       {
         "month": "November",
