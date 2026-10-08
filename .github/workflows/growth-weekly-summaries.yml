@@ -1,0 +1,116 @@
+name: growth-weekly-summaries
+# Writes the plain-language "In brief" paragraph at the top of each growth
+# dashboard report view (growth/analysis.enc). Moved here from the local Claude
+# scheduled task vc-growth-weekly-summaries (Tuesdays, 8:30am) on 2026-10-08 so
+# it runs whether or not Josh's laptop is on. weekly_summaries.py exports the
+# report views from this checkout in headless Chrome, has Claude Opus 5.5
+# (effort high) write one paragraph per view under the task's rules, checks
+# that every figure in each paragraph appears in that view's report, and
+# encrypts the result. The dashboard itself never calls a model.
+#
+# Reads only data already committed here: growth/data.enc, rebuilt twice a day
+# by network-refresh (Mailchimp, Ghost, GA4 and the rest are pulled there).
+# Secrets: ANTHROPIC_API_KEY and VC_NETWORK_PASS; SLACK_BOT_TOKEN (+ optional
+# SLACK_DM_TO) only for the failure DM. About $0.72 a run.
+#
+# The repo and its Actions logs are public: the script prints no report text,
+# paragraph or figure here, only view keys, word counts, check results and cost.
+#
+# SCHEDULE IS OFF until ANTHROPIC_API_KEY is set and the local task is
+# disabled (both writing the same file on the same morning would double the
+# spend). To switch on, uncomment the two cron lines. The second is a
+# backstop for a dropped or delayed first run; a run that finds this week's
+# summaries already published exits without calling Claude.
+on:
+  # schedule:
+  #   - cron: "30 12 * * 2"   # Tuesday 12:30 UTC = 8:30am EDT / 7:30am EST
+  #   - cron: "30 17 * * 2"   # backstop, same day
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Rewrite even if this week's summaries are already published"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: growth-weekly-summaries
+  cancel-in-progress: false
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # The dashboard works out "last Sunday" and "yesterday" from the
+      # browser's clock; run it on New York time, as on Josh's Mac.
+      TZ: America/New_York
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"   # built-in WebSocket for the Chrome DevTools connection
+
+      - name: Install dependencies
+        run: pip install --quiet anthropic==1.9.0 cryptography
+
+      - name: Write, check and encrypt the summaries
+        id: write
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: |
+          python3 weekly_summaries.py --serve --max-cost 2 \
+            ${{ github.event.inputs.force != 'true' && '--skip-if-current' || '' }}
+
+      - name: Commit and push
+        if: steps.write.outputs.published == 'true'
+        run: |
+          if git diff --quiet -- growth/analysis.enc; then
+            echo "analysis.enc unchanged"
+            exit 0
+          fi
+          git config user.name  "vital-city-bot"
+          git config user.email "actions@github.com"
+          git add growth/analysis.enc
+          git commit -m "Growth reports: written summaries for the week ending ${{ steps.write.outputs.week_ending }}"
+          # network-refresh pushes to main twice a day; rebase and retry.
+          for i in 1 2 3; do
+            git pull --rebase --quiet && git push --quiet && exit 0
+            echo "push attempt $i failed, retrying"
+            sleep 5
+          done
+          exit 1
+
+      # Failure only, and only ever a direct message to Josh: never a channel.
+      - name: Tell Josh if it failed
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_DM_TO: ${{ secrets.SLACK_DM_TO }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          tok = os.environ.get("SLACK_BOT_TOKEN", "")
+          to = os.environ.get("SLACK_DM_TO") or "U0730459X4L"
+          if not tok:
+              raise SystemExit("no SLACK_BOT_TOKEN; GitHub's failure email is the only notice")
+          if not to.startswith(("U", "D", "W")):
+              raise SystemExit("SLACK_DM_TO is not a person or a DM; not posting anywhere")
+          text = ("Vital City growth summaries: this week's run failed, nothing was "
+                  "published. Details: " + os.environ["RUN_URL"])
+          req = urllib.request.Request("https://slack.com/api/chat.postMessage",
+              data=json.dumps({"channel": to, "text": text, "unfurl_links": False}).encode(),
+              headers={"Authorization": f"Bearer {tok}",
+                       "Content-Type": "application/json; charset=utf-8"})
+          r = json.loads(urllib.request.urlopen(req, timeout=30).read())
+          print("DM sent" if r.get("ok") else f"Slack refused: {r.get('error')}")
+          PY

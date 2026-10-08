@@ -28,7 +28,9 @@ import { join } from "node:path";
 // $VC_WEEKLY_URL points the script at another copy of the dashboard (a local
 // preview, for testing layout before a push).
 const DASH = process.env.VC_WEEKLY_URL || "https://vitalcity-nyc.github.io/vital-city-catalogue/growth/index.html";
-const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+// $CHROME_PATH overrides; on Linux (GitHub Actions) Chrome is on the PATH.
+const CHROME = process.env.CHROME_PATH || (process.platform === "darwin"
+  ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" : "google-chrome");
 const OUT = process.env.VC_WEEKLY_OUT || join(homedir(), "Desktop");
 const today = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD, local time
 const base = join(OUT, `Vital-City-Weekly-${today}`);
@@ -46,7 +48,10 @@ async function main() {
   const port = 9300 + Math.floor(Math.random() * 500);
   const chrome = spawn(CHROME, [
     "--headless=new", `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`,
-    "--no-first-run", "--no-default-browser-check", "--disable-gpu", "about:blank",
+    "--no-first-run", "--no-default-browser-check", "--disable-gpu",
+    // Ubuntu runners block the sandbox's user namespaces; the page is our own.
+    ...(process.env.GITHUB_ACTIONS ? ["--no-sandbox"] : []),
+    "about:blank",
   ], { stdio: "ignore" });
   try {
     let tabs = [];
