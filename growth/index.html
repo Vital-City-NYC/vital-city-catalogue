@@ -6526,7 +6526,7 @@ function scorecardModel(data){
       const rel = my ? sl/Math.abs(my) : 0; x.trend = rel>0.04 ? "rising" : rel<-0.04 ? "falling" : "steady"; }
     const skipped=[...skip].filter(m=>m>=months[9]&&m<=months[20]).length;
     x.baseLbl = bIdx.length ? rng(bIdx) : "";
-    x.baseText = bIdx.length ? `Compared with ${rng(bIdx)}${skipped?(x.k==="giving"?", leaving out the launch month and the December matching campaign":", leaving out months the data can't support"):""}.` : "";
+    x.baseText = bIdx.length ? `Compared with ${rng(bIdx)}${skipped?(x.k==="giving"?", leaving out the launch month and the December matching campaign":", leaving out months thrown off by one-time events"):""}.` : "";
     const fmtS = q => x.kind==="stock" ? ((q>=0?"+":"−")+fmtN(Math.round(Math.abs(q)))) : x.fmt(q);
     const per = (x.kind==="rate"||x.kind==="level") ? "" : " a month";
     x.unitLine = x.waiting ? "" : `${x.unit} ${scName(full)}`+(x.extra?` · ${x.extra}`:"");
@@ -6591,7 +6591,7 @@ function scorecardModel(data){
   const better=M.filter(x=>x.tone==="good").map(x=>lc(x.name));
   const worse=M.filter(x=>x.tone==="watch").map(x=>lc(x.name));
   const summary=[];
-  if(better.length) summary.push(`Better in ${curLbl} than in the months before (${rng(BASE)}, less any months a measure's data can't support; each names its months): ${scList(better)}.`);
+  if(better.length) summary.push(`Better in ${curLbl} than in the months before: ${scList(better)}.`);
   if(worse.length) summary.push(`Worse in ${curLbl} than in the months before: ${scList(worse)}.`);
   const order=["list","signups","active","conv","click","unsub","visits"];
   const first=order.map(k=>B[k]).find(x=>x&&x.tone==="watch");
