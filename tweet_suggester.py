@@ -9,8 +9,8 @@ and drafts three posts per piece in one of two ways:
           account's own posts show works. The editor's dek as the claim, "Read
           [writer] on ..." with their known handle, and a sentence quoted
           verbatim from the piece. Every draft still goes through the style screen.
-  claude  (when the key is set): sends the full text to Claude with the style
-          guide below, as before. About $0.02 a piece.
+  claude  (when the key is set): sends the full text to Claude Sonnet 5.5
+          with the style guide below. About $0.02 a piece.
 
 Writes a rolling 30-day file, data/tweet_suggestions.json, that the Press
 page's "Who should hear about this" module reads. Posts to Slack when a
@@ -26,11 +26,18 @@ destination is configured; without one it skips delivery instead of failing.
   python3 tweet_suggester.py --refill 30        # redraft every piece of the last N days
                                                 # (rules mode; rebuilds the Press module)
 
-Costs money: one Claude call per new piece (~$0.02 each at current Sonnet
-prices). --dry-run first if a wide window might pick up dozens.
+Costs money: one Claude call per new piece (~$0.02 each at Sonnet 5.5's
+$2/$10 per million tokens), more when a draft breaks the style screen and is
+redrafted. --dry-run first if a wide window might pick up dozens.
 
-Secrets: ANTHROPIC_API_KEY from env or macOS keychain. Slack needs
+Secrets: ANTHROPIC_API_KEY from env or the macOS keychain. With no key at all
+the run says so and writes the free rule-based drafts instead; with a key, any
+API error (bad key, no credit, an outage that outlasts the SDK's retries)
+stops the run with exit code 2 so the workflow fails visibly. Slack needs
 SLACK_BOT_TOKEN and SLACK_DM_TO in the environment.
+
+Claude mode needs the Anthropic SDK (pip install anthropic); rules mode is
+stdlib-only.
 """
 
 import argparse, json, os, re, subprocess, sys, time, urllib.parse, urllib.request
@@ -43,8 +50,8 @@ OUT   = HERE / "data" / "tweet_suggestions.json"
 
 GHOST_KEY = "dd8e178e9ddfc883537e71dd07"          # public content key
 GHOST_API = "https://vital-city.ghost.io/ghost/api/content"
-API_URL   = "https://api.anthropic.com/v1/messages"
-MODEL     = "claude-sonnet-5"
+MODEL     = "claude-sonnet-5-5"
+EFFORT    = "medium"   # short copy under many rules; low skimps, high buys little
 MAX_CHARS = 260        # X allows 280; leave room for the link X appends
 
 
@@ -203,14 +210,20 @@ PUBLISHED: {date}
 FULL TEXT:
 {body}
 
-Write three posts following the rules above. Return only JSON, no other
-text, in this exact shape:
+Write three posts following the rules above, one of each kind: "finding"
+(the claim), "argument" (the writer) and "hook" (the quote or the
+question)."""
 
-{{"posts": [
-  {{"kind": "finding", "text": "..."}},
-  {{"kind": "argument", "text": "..."}},
-  {{"kind": "hook", "text": "..."}}
-]}}"""
+# Structured outputs hold the reply to this shape, so no parsing guesswork.
+POSTS_SCHEMA = {
+    "type": "object",
+    "properties": {"posts": {"type": "array", "items": {
+        "type": "object",
+        "properties": {"kind": {"type": "string", "enum": ["finding", "argument", "hook"]},
+                       "text": {"type": "string"}},
+        "required": ["kind", "text"], "additionalProperties": False}}},
+    "required": ["posts"], "additionalProperties": False,
+}
 
 
 # ----------------------------------------------------------------- plumbing
@@ -221,14 +234,18 @@ def http_json(url, headers=None, data=None, timeout=60):
 
 
 def anthropic_key():
-    if os.environ.get("ANTHROPIC_API_KEY"):
-        return os.environ["ANTHROPIC_API_KEY"]
+    """The API key, or None when there is none. An empty repo secret arrives
+    as an empty string, which counts as none."""
+    if os.environ.get("ANTHROPIC_API_KEY", "").strip():
+        return os.environ["ANTHROPIC_API_KEY"].strip()
+    if sys.platform != "darwin":
+        return None
     try:
         return subprocess.check_output(
             ["security", "find-generic-password", "-s", "ANTHROPIC_API_KEY", "-w"],
-            stderr=subprocess.DEVNULL).decode().strip()
+            stderr=subprocess.DEVNULL).decode().strip() or None
     except Exception:
-        raise Abort("No ANTHROPIC_API_KEY in the environment or the keychain.")
+        return None
 
 
 def fetch_posts(days, limit=100):
@@ -311,47 +328,107 @@ def author_handle(post):
     return None
 
 
-def draft(key, post, retries=2):
+def claude_client(key):
+    try:
+        import anthropic
+    except ImportError:
+        raise Abort("ANTHROPIC_API_KEY is set but the anthropic package is not "
+                    "installed (pip install anthropic).")
+    # The SDK retries connection errors, 429s and 5xx itself; whatever is left
+    # after that is a real failure and should stop the run.
+    return anthropic.Anthropic(api_key=key, max_retries=4, timeout=180)
+
+
+def ask_claude(client, system, user):
+    """One request. Returns (reply text, usage). Raises Abort on anything that
+    is not a normal finished reply."""
+    import anthropic
+    try:
+        r = client.beta.messages.create(
+            model=MODEL, max_tokens=16000,
+            system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+            messages=[{"role": "user", "content": user}],
+            output_config={"effort": EFFORT,
+                           "format": {"type": "json_schema", "schema": POSTS_SCHEMA}},
+            # If a safety classifier declines, retry on the model Anthropic
+            # recommends for that category instead of failing the piece.
+            betas=["server-side-fallback-2026-07-01"], fallbacks="default")
+    except anthropic.APIStatusError as e:
+        rid = f" [request {e.request_id}]" if e.request_id else ""
+        raise Abort(f"Claude API error {e.status_code} ({type(e).__name__}): {e.message}{rid}")
+    except anthropic.APIConnectionError as e:
+        raise Abort(f"Could not reach the Claude API: {e}")
+    if r.stop_reason == "refusal":
+        cat = getattr(r.stop_details, "category", None) if r.stop_details else None
+        return None, r.usage, f"declined (category: {cat})"
+    if r.stop_reason != "end_turn":
+        raise Abort(f"Claude stopped early (stop_reason: {r.stop_reason}) [request {r.id}]")
+    text = "".join(b.text for b in r.content if b.type == "text").strip()
+    if not text:
+        raise Abort(f"No text in the model reply (blocks: {[b.type for b in r.content]})")
+    return text, r.usage, None
+
+
+SPEND = {"in": 0, "cache_w": 0, "cache_r": 0, "out": 0}
+
+
+def tally(u):
+    SPEND["in"] += u.input_tokens or 0
+    SPEND["cache_w"] += u.cache_creation_input_tokens or 0
+    SPEND["cache_r"] += u.cache_read_input_tokens or 0
+    SPEND["out"] += u.output_tokens or 0
+
+
+def spend_dollars():
+    # Sonnet 5.5: $2 in, $10 out, $2.50 cache write, $0.20 cache read (per million)
+    return (SPEND["in"] * 2 + SPEND["cache_w"] * 2.5 + SPEND["cache_r"] * 0.2
+            + SPEND["out"] * 10) / 1e6
+
+
+def draft(client, post, retries=2):
     body = (post.get("plaintext") or "").strip()
     if len(body) < 200:
         raise Abort(f"'{post['title']}' came back with {len(body)} characters of text.")
-    prompt = "\n\n".join([STYLE, EXAMPLES, TASK.format(
+    system = STYLE + "\n\n" + EXAMPLES
+    task = TASK.format(
         title=post["title"],
         dek=post.get("custom_excerpt") or post.get("excerpt") or "(none)",
         author=", ".join(a["name"] for a in post.get("authors") or []) or "(unattributed)",
         handle=author_handle(post) or "(none known - use the name in words, do not invent one)",
         tags=", ".join(t["name"] for t in post.get("tags") or [] if not t["name"].startswith("#")) or "(none)",
         date=post["published_at"][:10],
-        body=body[:24000])])
+        body=body[:24000])
 
-    last = None
+    last, posts = None, None
     for attempt in range(retries + 1):
-        msg = prompt if attempt == 0 else (
-            prompt + "\n\nYour previous attempt broke these rules: " + last +
-            "\nRewrite all three. Same JSON shape.")
-        r = http_json(API_URL, timeout=120,
-            headers={"x-api-key": key, "anthropic-version": "2023-06-01",
-                     "content-type": "application/json"},
-            data=json.dumps({"model": MODEL, "max_tokens": 4000,
-                             "messages": [{"role": "user", "content": msg}]}).encode())
-        text = "".join(b.get("text", "") for b in r.get("content", [])
-                       if b.get("type") == "text").strip()
-        if not text:
-            kinds = [b.get("type") for b in r.get("content", [])]
-            raise Abort(f"No text in the model reply (blocks: {kinds}, "
-                        f"stop_reason: {r.get('stop_reason')})")
-        text = re.sub(r"^```(?:json)?|```$", "", text, flags=re.M).strip()
+        msg = task if attempt == 0 else (
+            task + "\n\nYour previous attempt broke these rules: " + last +
+            "\nRewrite all three.")
+        text, usage, declined = ask_claude(client, system, msg)
+        tally(usage)
+        if declined:
+            # A content decision, not an outage: fall back to the free drafts
+            # for this piece and say so on each of them.
+            log(f"  Claude {declined}; using the rule-based drafts for this piece")
+            d = rules_draft(post)
+            for p in d:
+                p.setdefault("flags", []).append(f"Claude {declined}")
+            return d, attempt
         try:
-            posts = json.loads(text[text.find("{"):text.rfind("}") + 1])["posts"]
+            posts = json.loads(text)["posts"]
         except Exception as e:
             last = f"the response was not valid JSON ({e})"
             continue
         problems = {p["text"]: screen(p["text"]) for p in posts}
         flagged = {t: v for t, v in problems.items() if v}
+        if len(posts) != 3:
+            flagged["(count)"] = [f"{len(posts)} posts instead of 3"]
         if not flagged:
             return posts, attempt
         last = "; ".join(f"{t[:40]}... -> {', '.join(v)}" for t, v in flagged.items())
         log(f"  retry {attempt+1}: {last[:160]}")
+    if posts is None:
+        raise Abort(f"No usable reply for '{post['title']}' after {retries + 1} tries: {last}")
     # Hand back the last attempt with its problems attached rather than
     # dropping the piece; a flagged draft a human can fix beats silence.
     for p in posts:
@@ -571,18 +648,22 @@ def main():
         print(f"\n{len(new)} pieces would cost roughly ${0.02*len(new):.2f}.")
         return 0
 
-    key = None
-    if not a.rules:
-        try:
-            key = anthropic_key()
-        except Abort:
-            log("no ANTHROPIC_API_KEY: using the free rule-based drafts")
+    key = None if a.rules else anthropic_key()
+    if not a.rules and not key:
+        # Not an error: the free drafts still feed the Press page. Said loudly
+        # so nobody mistakes them for Claude drafts.
+        msg = ("ANTHROPIC_API_KEY is not set, so Claude drafting is skipped; "
+               "writing the free rule-based drafts instead")
+        log(msg)
+        if os.environ.get("GITHUB_ACTIONS"):
+            print(f"::notice title=tweet-suggester::{msg}", flush=True)
+    client = claude_client(key) if key else None
     mode = "claude" if key else "rules"
     results = []
     for i, p in enumerate(new, 1):
         log(f"[{i}/{len(new)}] {p['title'][:64]}")
         if key:
-            drafts, tries = draft(key, p)
+            drafts, tries = draft(client, p)
         else:
             drafts, tries = rules_draft(p), 0
         results.append({
@@ -612,6 +693,11 @@ def main():
     OUT.write_text(json.dumps(
         {"generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
          "window_days": 30, "pieces": window}, indent=1, ensure_ascii=False))
+
+    if key:
+        log(f"Claude spend this run: ${spend_dollars():.3f} "
+            f"({SPEND['in'] + SPEND['cache_w'] + SPEND['cache_r']:,} tokens in, "
+            f"{SPEND['out']:,} out)")
 
     digest = format_slack(results)
     if a.slack:
