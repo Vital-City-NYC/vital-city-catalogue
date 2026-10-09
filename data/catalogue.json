@@ -45,7 +45,7 @@
     "type_basis": "default",
     "published_date": "2026-10-08",
     "published_at": "2026-10-08T17:39:00.000+00:00",
-    "updated_at": "2026-10-08T18:16:25.000+00:00",
+    "updated_at": "2026-10-09T16:28:56.000+00:00",
     "primary_author": "Jens Ludwig",
     "authors": [
       "Jens Ludwig"
@@ -65,28 +65,15 @@
     "feature_image_alt": "Chalkboard with perspective-grid lines and a faint outlined figure at center",
     "feature_image_credit": "Alec Soth / Magnum Photos",
     "embeds": {
-      "flourish": [
-        {
-          "id": "30473275",
-          "src": "visualisation/30473275?1257272",
-          "url": "https://public.flourish.studio/visualisation/30473275/"
-        },
-        {
-          "id": "30473877",
-          "src": "visualisation/30473877?1257272",
-          "url": "https://public.flourish.studio/visualisation/30473877/"
-        }
-      ],
+      "flourish": [],
       "iframes": [],
-      "counts": {
-        "flourish": 2
-      },
-      "total": 2
+      "counts": {},
+      "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 5824,
-    "reading_minutes": 25,
+    "visibility": "members",
+    "word_count": 228,
+    "reading_minutes": 1,
     "id": "6ac7d2152b87e50001b443e5"
   },
   {
