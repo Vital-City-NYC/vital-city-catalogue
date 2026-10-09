@@ -1,49 +1,18 @@
 {
   "meta": {
-    "generated_at": "2026-10-08T17:45:03.119665+00:00",
+    "generated_at": "2026-10-09T02:43:30.304012+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 971,
     "total_authors": 535,
-    "total_issues": 34,
+    "total_issues": 35,
     "total_topics": 228,
     "date_range": [
       "2021-09-15",
       "2026-10-08"
     ],
     "first_run": false,
-    "new_article_count": 5,
-    "new_articles": [
-      {
-        "title": "A Terrible Human Problem \u2014 With Some Technological Responses",
-        "url": "https://www.vitalcitynyc.org/technological-strategies-to-reduce-campus-sexual-assault/",
-        "published_date": "2026-10-08",
-        "primary_author": "Jennifer Doleac"
-      },
-      {
-        "title": "How Big a Problem Is Sexual Assault on Campus?",
-        "url": "https://www.vitalcitynyc.org/campus-sexual-assault-numbers-analysis/",
-        "published_date": "2026-10-08",
-        "primary_author": "Jens Ludwig"
-      },
-      {
-        "title": "We Move What We Measure: Campus Safety Requires Reliable Data",
-        "url": "https://www.vitalcitynyc.org/campus-sexual-assault-prevention-requires-reliable-data/",
-        "published_date": "2026-10-08",
-        "primary_author": "Judd Kessler"
-      },
-      {
-        "title": "The Lifelong Scars of Campus Rape",
-        "url": "https://www.vitalcitynyc.org/campus-rape-survivors-lifelong-scars/",
-        "published_date": "2026-10-08",
-        "primary_author": "Abi Adams"
-      },
-      {
-        "title": "Finding New Ideas for Campus Sexual Assault Prevention",
-        "url": "https://www.vitalcitynyc.org/new-campus-sexual-assault-prevention-ideas/",
-        "published_date": "2026-10-08",
-        "primary_author": "Biz Rasich"
-      }
-    ]
+    "new_article_count": 0,
+    "new_articles": []
   },
   "total_pieces": 971,
   "by_year": {
@@ -418,17 +387,17 @@
   "wc_stats": {
     "n": 964,
     "median": 1639,
-    "mean": 2143,
+    "mean": 2146,
     "p90": 3241,
     "max": 15166,
     "p10": 916,
     "p25": 1284,
     "p75": 2228,
-    "p95": 5587,
+    "p95": 5708,
     "no_count": 7,
     "core_1000_2499": 689,
     "under_500": 47,
-    "over_5000": 53
+    "over_5000": 54
   },
   "wc_buckets": [
     [
@@ -449,11 +418,11 @@
     ],
     [
       "3,000-4,999",
-      58
+      57
     ],
     [
       "5,000+",
-      53
+      54
     ]
   ],
   "wc_hist": {
@@ -689,7 +658,7 @@
       "credential": "Think tank / research institute"
     }
   ],
-  "n_issues": 34,
+  "n_issues": 35,
   "cadence": {
     "by_year": [
       {
@@ -756,12 +725,12 @@
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 508,
-      "published_away_from_drop": 71,
-      "share_of_issue_pieces": 14.0,
+      "published_away_from_drop": 69,
+      "share_of_issue_pieces": 13.6,
       "current_year_strict": 4.11,
-      "current_year_loose": 4.46,
+      "current_year_loose": 4.43,
       "all_time_strict": 1.75,
-      "all_time_loose": 2.02,
+      "all_time_loose": 2.01,
       "all_time_all": 3.68
     }
   },
