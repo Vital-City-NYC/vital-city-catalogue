@@ -8,7 +8,7 @@
 #     - real subjects ("Housing", "Gun Violence")
 #     - issue section rubrics ("Setting the Stage", "What Can Be Done?"), which
 #       exist to structure one issue's table of contents and name no subject
-#     - format/meta labels ("Podcast", "Data Stories", "interview"), which
+#     - format/meta labels ("Podcast", "Data Stories", "Interview"), which
 #       duplicate what the `type` field already records
 #   This script sorts all 206 normalized topics into those three buckets by hand
 #   (below), maps the subjects onto 18 beats, and writes the aggregates to
@@ -75,7 +75,7 @@ BEATS = {
   # other cultural tag. Its overlap with every other beat is reported separately.
   "History & the long view": ["History", "Historical Lessons", "9/11"],
   "Culture & city life": [
-    "culture", "Sports", "Museums", "Film & TV", "Music & Entertainment",
+    "Culture", "Sports", "Museums", "Film & TV", "Music & Entertainment",
     "Arts", "Theater", "Photography", "Food and Drink", "Religion", "Libraries",
     "Civic Life", "Sights and Sounds", "The Spirit of the City", "Hello To All That",
     "The Best Connection I Ever Made", "Modern Evolution: Marketing and Profits"],
@@ -95,7 +95,7 @@ for beat, subs in BEATS.items():
 # These describe how a piece was made, not what it is about. The `type` field
 # already carries this, so they are excluded from subject counts.
 META = {
-  "Podcast", "interview", "Conversations", "In Conversation With...", "Book Review",
+  "Podcast", "Interview", "Conversations", "In Conversation With...", "Book Review",
   "Data Stories", "data", "Reality Check", "Statistics", "Social Science", "Sociology",
   "Press Releases", "Events", "About This Project", "In Memoriam", "Report",
   "Overview", "terminology", "policy", "Context: Politics and Data",
@@ -686,7 +686,7 @@ GENERIC_TAGS = {
     "City Planning", "Urban Planning", "Urbanism", "Place",
     "Crime", "Justice", "Criminal Justice", "Law", "Safety", "Community Safety",
     "Crime Stories", "Police Reform", "Housing", "History", "Historical Lessons",
-    "culture", "Politics", "Economics", "Technology", "Transit", "Transportation",
+    "Culture", "Politics", "Economics", "Technology", "Transit", "Transportation",
     "Infrastructure", "Public Health", "Health", "Education", "Jails",
     "Incarceration", "Corrections", "Journalism", "Media",
 }
