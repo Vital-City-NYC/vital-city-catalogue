@@ -34,9 +34,10 @@ BEATS = {
   "Crime & violence": [
     "Crime", "Gun Violence", "Guns", "Subway Crime", "Subway Safety", "Safety",
     "Community Safety", "Broken Windows", "Disorder", "Quality of Life",
-    "Crime Stories", "Subway Safety Stories", "Two Sides of the Gun: Stories of Possession and Victimization"],
+    "Crime Stories", "Subway Safety Stories", "Two Sides of the Gun: Stories of Possession and Victimization",
+    "Campus Sexual Misconduct"],
   "Policing": ["Police Reform", "Police-Community Relations", "Street Lighting"],
-  "Courts & prosecution": ["Justice", "Criminal Justice", "Prosecution", "Law", "Corruption"],
+  "Courts & prosecution": ["Justice", "Criminal Justice", "Prosecution", "Law", "Corruption", "Courts"],
   "Jails & incarceration": [
     "Jails", "Rikers", "Incarceration", "Incarceration Stories", "Corrections",
     "Projecting the Size of the Jail Population — More than Math"],
@@ -50,11 +51,12 @@ BEATS = {
   "City government & governance": [
     "City Government", "Government Operations", "Governance", "Mayoralty",
     "Charter Revision", "COGE", "Policymakers", "Comings and Goings",
-    "Leadership in Crisis", "Just Fix It", "The State of the City", "The State of Gotham"],
+    "Leadership in Crisis", "Just Fix It", "The State of the City", "The State of Gotham",
+    "Local power"],
   "Money, budgets & the economy": [
     "Economics", "Budget", "Jobs", "Labor", "What We Can and Can't Afford",
     "The $2 Trillion Question", "The Shape of the Economic Engine",
-    "More Money in More Pockets"],
+    "More Money in More Pockets", "Taxes"],
   "Politics & elections": ["Politics", "Elections", "Mamdani"],
   "State, federal & beyond NYC": [
     "State Government", "Federal Government", "Immigration", "Foreign Policy",
@@ -64,9 +66,9 @@ BEATS = {
     "Alcohol", "Legalization", "My Substance Story", "People in Crisis on Streets and Subways"],
   "Homelessness & social services": [
     "Homelessness", "Social Services", "Community Services", "Child Welfare", "Poverty"],
-  "Education & youth": ["Education", "Youth"],
+  "Education & youth": ["Education", "Youth", "Charter Schools", "Integration"],
   "Climate, environment & sanitation": ["Climate Change", "Environment", "Sanitation", "Cleanup on Aisle 10"],
-  "Technology": ["Technology", "Artifical Intelligence"],
+  "Technology": ["Technology", "Artifical Intelligence", "Privacy"],
   "Race, gender & inequality": ["Race", "Gender", "Inequality"],
   # "History" is kept out of Culture deliberately. It is applied as a *lens*
   # across the whole corpus — to housing, charter-reform and infrastructure
@@ -123,7 +125,7 @@ RUBRICS = {
   "What the Future Holds", "Where We’ve Been", "Dreams of the Future",
   "Sweating the Small Stuff", "What Else Can Be Done",
   "Looking Back, Looking Forward", "The Culture Around Us",
-  "What We Know and Don't Know", "When Women Wield Guns",
+  "What We Know and Don't Know", "When Women Wield Guns", "When Guns Harm Women",
 }
 
 # --- Rubrics, sorted again by the JOB they name -----------------------------
@@ -140,7 +142,8 @@ STANCES = {
     "Currents", "Connecting Dots", "What Do We Know?",
     "Public Perception and Statistical Realities", "Beyond False Simplicity",
     "What It Looks Like Up Close", "What Does It All Mean?",
-    "The Culture Around Us", "What We Know and Don't Know", "When Women Wield Guns"],
+    "The Culture Around Us", "What We Know and Don't Know", "When Women Wield Guns",
+    "When Guns Harm Women"],
   "Diagnosing what's broken": [
     "How Did It Get This Bad?", "Mugged by Reality", "Persistent Problems Inside",
     "The Causes", "What Doesn’t Work", "Wrenches in the Gears", "Repercussions",
