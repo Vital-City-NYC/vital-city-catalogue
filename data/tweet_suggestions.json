@@ -1,7 +1,97 @@
 {
- "generated": "2026-10-08T19:13:36+00:00",
+ "generated": "2026-10-14T17:55:25+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "from-san-juan-hill-to-lincoln-center-and-back",
+   "title": "From San Juan Hill to Lincoln Center and Back",
+   "url": "https://www.vitalcitynyc.org/from-san-juan-hill-to-lincoln-center-and-back/",
+   "date": "2026-10-14",
+   "author": "Julia Foulkes",
+   "handle": null,
+   "dek": "How cultural institutions should respect what they displace",
+   "tags": [
+    "Culture",
+    "History",
+    "Gentrification"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Julia Foulkes argues that Lincoln Center's San Juan Hill festival is a long-overdue attempt to make a cultural treasure welcome to a wider range of New Yorkers, and that its new design should open outward too."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Julia Foulkes on what Lincoln Center replaced. San Juan Hill gave New York City stride piano, \"Shuffle Along\" and the Charleston before it was cleared for the performing arts complex."
+    },
+    {
+     "kind": "hook",
+     "text": "\"It can be an elite cultural treasure — but it need not and should not be only for elites.\" Julia Foulkes on Lincoln Center, San Juan Hill and what an institution owes the neighborhood it displaced."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "how-ice-puts-the-nypd-in-an-impossible-position",
+   "title": "How ICE Puts the NYPD in an Impossible Position",
+   "url": "https://www.vitalcitynyc.org/how-ice-puts-the-nypd-in-an-impossible-position/",
+   "date": "2026-10-14",
+   "author": "John Hall",
+   "handle": null,
+   "dek": "Those pointing fingers at the police department in the wake of the Marble Hill shooting fail to understand its legal constraints and responsibilities.",
+   "tags": [
+    "Immigration",
+    "Federal Government",
+    "Justice"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "John Hall argues the New York City Police Department has little choice in how it responds to ICE: city law bars it from assisting civil immigration enforcement, and federal law bars it from obstructing federal agents."
+    },
+    {
+     "kind": "argument",
+     "text": "Read John Hall on the Marble Hill shooting and the police department's legal position. Hall says City Hall should issue clear public guidelines on what officers may and may not do when ICE is on the street."
+    },
+    {
+     "kind": "hook",
+     "text": "\"The feds cause a mess, and local police take much of the blame.\" John Hall on what Newark's Delaney Hall protests show about where New York City is heading."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "make-the-governor-responsible-for-new-yorks-schools-2",
+   "title": "Make the Governor Responsible for New York’s Schools",
+   "url": "https://www.vitalcitynyc.org/make-the-governor-responsible-for-new-yorks-schools-2/",
+   "date": "2026-10-14",
+   "author": "Daniel Weisberg",
+   "handle": null,
+   "dek": "Learn from mayoral control, and from other states",
+   "tags": [
+    "Education",
+    "Governor",
+    "Accountability"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Daniel Weisberg argues New York's governor should pick the Board of Regents, which would then pick the education commissioner. A change in state law would do it, he says. No constitutional amendment needed."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Daniel Weisberg on what New York could learn from mayoral control and from Mississippi, Tennessee and Louisiana about who should be answerable for the state's schools."
+    },
+    {
+     "kind": "hook",
+     "text": "Who is in charge of New York's schools? Daniel Weisberg says the governor has no say over the Regents or the commissioner, and that the \"maybes\" mean no one is in charge."
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "technological-strategies-to-reduce-campus-sexual-assault",
    "title": "A Terrible Human Problem — With Some Technological Responses",
@@ -815,238 +905,6 @@
     {
      "kind": "quote",
      "text": "Brittany N. Montgomery writes: \"You don't have to look very far in New York to find failed government technology projects.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "nyc-public-school-classroom-ai-policy",
-   "title": "What a Better Public School AI Policy Would Look Like",
-   "url": "https://www.vitalcitynyc.org/nyc-public-school-classroom-ai-policy/",
-   "date": "2026-09-10",
-   "author": "Justin Reich",
-   "handle": null,
-   "dek": "New York City's new rules provide too little room for rigorous experimentation by teachers and students.",
-   "tags": [
-    "Education",
-    "Technology",
-    "Artifical Intelligence"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Justin Reich: New York City's new rules provide too little room for rigorous experimentation by teachers and students."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Justin Reich: \"What a Better Public School AI Policy Would Look Like\""
-    },
-    {
-     "kind": "quote",
-     "text": "Justin Reich writes: \"New York City's new policy on AI in schools is based on politics, not science.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "early-school-start-times-harm-nyc",
-   "title": "A Simple Change That Could Improve the Lives of Millions of New Yorkers",
-   "url": "https://www.vitalcitynyc.org/early-school-start-times-harm-nyc/",
-   "date": "2026-09-10",
-   "author": "Terra Ziporyn",
-   "handle": null,
-   "dek": "By starting school too early, New York City is depriving students of desperately needed sleep. The ripple effects are enormous.",
-   "tags": [
-    "Education",
-    "Youth"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Terra Ziporyn: By starting school too early, New York City is depriving students of desperately needed sleep. The ripple effects are enormous."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Terra Ziporyn: \"A Simple Change That Could Improve the Lives of Millions of New Yorkers\""
-    },
-    {
-     "kind": "quote",
-     "text": "Terra Ziporyn writes: \"Unlike class size, nutrition or environmental hazards, the timing of the school day has no citywide guardrails designed for students.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "women-and-illegal-firearm-diversion",
-   "title": "She Buys It, He Fires It",
-   "url": "https://www.vitalcitynyc.org/women-and-illegal-firearm-diversion/",
-   "date": "2026-09-09",
-   "author": "Anthony A. Braga, Marianna Mitchem",
-   "handle": null,
-   "dek": "Women, straw purchasing and the illegal diversion of guns to criminals",
-   "tags": [
-    "Gun Violence",
-    "Crime",
-    "The Culture Around Us"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Anthony A. Braga and Marianna Mitchem: Women, straw purchasing and the illegal diversion of guns to criminals"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Anthony A. Braga and Marianna Mitchem: \"She Buys It, He Fires It\""
-    },
-    {
-     "kind": "quote",
-     "text": "Anthony A. Braga and Marianna Mitchem writes: \"Just three months later, one of the firearms purchased by Lake was recovered in a shooting in Nassau County, New York.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "urban-gun-violence-black-women",
-   "title": "Unpacking the Triggers",
-   "url": "https://www.vitalcitynyc.org/urban-gun-violence-black-women/",
-   "date": "2026-09-09",
-   "author": "Brooklynn Hitchens, Necole Muhammad",
-   "handle": null,
-   "dek": "Arriving at a better understanding of women and girls' involvement in urban gun violence",
-   "tags": [
-    "Gun Violence",
-    "Race",
-    "When Women Wield Guns"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Brooklynn Hitchens and Necole Muhammad: Arriving at a better understanding of women and girls' involvement in urban gun violence"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Brooklynn Hitchens and Necole Muhammad: \"Unpacking the Triggers\""
-    },
-    {
-     "kind": "quote",
-     "text": "Brooklynn Hitchens and Necole Muhammad writes: \"What we see on the ground — and what research increasingly confirms — is that urban gun violence is not randomly distributed.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "stand-your-ground-laws-womens-safety",
-   "title": "Stand Your Ground Laws and Women’s Safety",
-   "url": "https://www.vitalcitynyc.org/stand-your-ground-laws-womens-safety/",
-   "date": "2026-09-09",
-   "author": "Erdal Tekin",
-   "handle": null,
-   "dek": "When statutes theoretically designed to protect do anything but",
-   "tags": [
-    "Gun Violence",
-    "When Women Wield Guns"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Erdal Tekin: When statutes theoretically designed to protect do anything but"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Erdal Tekin: \"Stand Your Ground Laws and Women's Safety\""
-    },
-    {
-     "kind": "quote",
-     "text": "Erdal Tekin writes: \"In June 2015, Carol Bowne, a 39-year-old New Jersey woman, was stabbed to death in her driveway by her ex-boyfriend.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "how-women-think-about-guns-lethal-force",
-   "title": "Carrying Care",
-   "url": "https://www.vitalcitynyc.org/how-women-think-about-guns-lethal-force/",
-   "date": "2026-09-09",
-   "author": "Margaret Kelley",
-   "handle": null,
-   "dek": "How women think differently about guns, responsibility and lethal force",
-   "tags": [
-    "Gun Violence",
-    "When Women Wield Guns"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Margaret Kelley: How women think differently about guns, responsibility and lethal force"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Margaret Kelley: \"Carrying Care\""
-    },
-    {
-     "kind": "quote",
-     "text": "Margaret Kelley writes: \"In policy debates, media coverage and public imagination, firearms are most often framed through harm: who is injured, who is killed and how to prevent the next tragedy.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "women-gun-owners-recent-rise",
-   "title": "The Recent Rise of Women Gun Owners",
-   "url": "https://www.vitalcitynyc.org/women-gun-owners-recent-rise/",
-   "date": "2026-09-09",
-   "author": "Rosanna Smart, Andrew R. Morral",
-   "handle": null,
-   "dek": "",
-   "tags": [
-    "Gun Violence",
-    "When Women Wield Guns"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "writer",
-     "text": "Read Rosanna Smart and Andrew R. Morral: \"The Recent Rise of Women Gun Owners\""
-    },
-    {
-     "kind": "quote",
-     "text": "Rosanna Smart and Andrew R. Morral writes: \"Between 2020 and 2022, more than 7.5 million people bought their first gun, and an estimated 60 million new firearms entered the U.S. civilian market.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "crime-data-gaps-women-firearms",
-   "title": "What Data Can’t Tell Us",
-   "url": "https://www.vitalcitynyc.org/crime-data-gaps-women-firearms/",
-   "date": "2026-09-09",
-   "author": "Jeff Asher",
-   "handle": null,
-   "dek": "Gaps in the knowledge base on women and firearms",
-   "tags": [
-    "Gun Violence",
-    "What We Know and Don't Know",
-    "Crime"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Jeff Asher: Gaps in the knowledge base on women and firearms"
-    },
-    {
-     "kind": "writer",
-     "text": "Read Jeff Asher: \"What Data Can't Tell Us\""
-    },
-    {
-     "kind": "quote",
-     "text": "Jeff Asher writes: \"Writing about trends in women's gun deaths and, specifically, domestic violence, seems like it should be straightforward from a data perspective.\""
     }
    ],
    "attempts": 1
