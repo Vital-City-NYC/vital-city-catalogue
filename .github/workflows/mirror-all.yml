@@ -37,9 +37,18 @@ jobs:
             # Safety: only ever mirror a verifiably PUBLIC source.
             vis=$(gh api repos/vitalcity-nyc/$r --jq '.private' 2>/dev/null)
             if [ "$vis" != "false" ]; then echo "skip $r (not public)"; skipped=$((skipped+1)); continue; fi
-            gh api repos/Vital-City-NYC/$r >/dev/null 2>&1 \
-              || gh repo create Vital-City-NYC/$r --public --description "Institutional mirror of vitalcity-nyc/$r" >/dev/null 2>&1 \
-              || { echo "create failed $r"; failed=$((failed+1)); continue; }
+            if ! gh api repos/Vital-City-NYC/$r >/dev/null 2>&1; then
+              if ! gh repo create Vital-City-NYC/$r --public --description "Institutional mirror of vitalcity-nyc/$r" >/dev/null 2>/tmp/create_err; then
+                # A passing API error can make an existing org copy look
+                # missing; the create then fails on the taken name. That
+                # failed the Oct. 14 run over city-evidence-radar, which was
+                # already current. Look again before counting a failure.
+                sleep 10
+                if ! gh api repos/Vital-City-NYC/$r >/dev/null 2>&1; then
+                  echo "create failed $r: $(head -1 /tmp/create_err)"; failed=$((failed+1)); continue
+                fi
+              fi
+            fi
             db=$(gh api repos/vitalcity-nyc/$r --jq .default_branch 2>/dev/null)
             rm -rf /tmp/m
             # Full clone (NOT shallow): a depth-1 clone produces an incomplete
