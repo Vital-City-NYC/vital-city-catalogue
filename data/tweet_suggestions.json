@@ -1,7 +1,37 @@
 {
- "generated": "2026-10-14T17:55:25+00:00",
+ "generated": "2026-10-15T17:42:19+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "new-yorks-devilish-assault-problem",
+   "title": "New York’s Devilish Assault Problem",
+   "url": "https://www.vitalcitynyc.org/new-yorks-devilish-assault-problem/",
+   "date": "2026-10-15",
+   "author": "Vital City, Paul Reeping",
+   "handle": "@paulreeping",
+   "dek": "What's driving it and what's next?",
+   "tags": [
+    "Crime",
+    "Justice",
+    "Data Stories"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Paul Reeping tested the usual explanations for New York City's rise in assaults, from hotspots to repeat offenders to subway crime. Most contribute. None drives it. The rise is citywide and mostly among people who know each other."
+    },
+    {
+     "kind": "argument",
+     "text": "Read @paulreeping on why assaults keep rising in New York City while murders and shootings fall. His answer starts with the city doing deeper analysis of the detailed data it already holds."
+    },
+    {
+     "kind": "hook",
+     "text": "Why are assaults up 20% since 2019 in New York City when they are falling nationally? Paul Reeping checks six common explanations against the data. Stranger attacks, hotspots and the subway are part of it, none the main cause."
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "from-san-juan-hill-to-lincoln-center-and-back",
    "title": "From San Juan Hill to Lincoln Center and Back",
