@@ -1,8 +1,8 @@
 {
   "meta": {
-    "generated_at": "2026-10-15T01:11:09.942912+00:00",
+    "generated_at": "2026-10-15T15:32:53.787989+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 974,
+    "total_posts": 975,
     "total_authors": 537,
     "total_issues": 35,
     "total_topics": 231,
@@ -11,36 +11,24 @@
       "2026-10-14"
     ],
     "first_run": false,
-    "new_article_count": 3,
+    "new_article_count": 1,
     "new_articles": [
       {
-        "title": "From San Juan Hill to Lincoln Center and Back",
-        "url": "https://www.vitalcitynyc.org/from-san-juan-hill-to-lincoln-center-and-back/",
-        "published_date": "2026-10-14",
-        "primary_author": "Julia Foulkes"
-      },
-      {
-        "title": "How ICE Puts the NYPD in an Impossible Position",
-        "url": "https://www.vitalcitynyc.org/how-ice-puts-the-nypd-in-an-impossible-position/",
-        "published_date": "2026-10-14",
-        "primary_author": "John Hall"
-      },
-      {
-        "title": "Make the Governor Responsible for New York\u2019s Schools",
-        "url": "https://www.vitalcitynyc.org/make-the-governor-responsible-for-new-yorks-schools-2/",
-        "published_date": "2026-10-14",
-        "primary_author": "Daniel Weisberg"
+        "title": "How to Analyze Lighting and Crime in Any City",
+        "url": "https://www.vitalcitynyc.org/rubber-meets-road-lighting-crime-analysis/",
+        "published_date": "2026-05-20",
+        "primary_author": "Vital City"
       }
     ]
   },
-  "total_pieces": 974,
+  "total_pieces": 975,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 244
+    "2026": 245
   },
   "by_month": {
     "2021-09": 1,
@@ -93,7 +81,7 @@
     "2026-02": 24,
     "2026-03": 18,
     "2026-04": 25,
-    "2026-05": 26,
+    "2026-05": 27,
     "2026-06": 46,
     "2026-07": 23,
     "2026-08": 16,
@@ -119,7 +107,7 @@
     ],
     [
       "policy",
-      14
+      15
     ],
     [
       "something else",
@@ -256,7 +244,7 @@
     ],
     [
       "Vital City (institutional)",
-      100
+      101
     ],
     [
       "Government / public official",
@@ -404,17 +392,17 @@
     }
   },
   "wc_stats": {
-    "n": 967,
+    "n": 968,
     "median": 1635,
     "mean": 2136,
     "p90": 3240,
     "max": 15166,
     "p10": 909,
     "p25": 1284,
-    "p75": 2222,
-    "p95": 5574,
+    "p75": 2224,
+    "p95": 5569,
     "no_count": 7,
-    "core_1000_2499": 691,
+    "core_1000_2499": 692,
     "under_500": 49,
     "over_5000": 53
   },
@@ -433,7 +421,7 @@
     ],
     [
       "2,000-2,999",
-      194
+      195
     ],
     [
       "3,000-4,999",
@@ -496,7 +484,7 @@
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 68
+        "n": 69
       },
       {
         "floor": 2500,
@@ -560,15 +548,15 @@
     },
     {
       "year": "2026",
-      "n": 239,
-      "p25": 1288,
+      "n": 240,
+      "p25": 1289,
       "median": 1690,
-      "p75": 2401,
+      "p75": 2400,
       "max": 13669
     }
   ],
   "by_nauthors": {
-    "1": 822,
+    "1": 823,
     "2": 123,
     "3": 26,
     "4": 1,
@@ -578,7 +566,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 100,
+      "posts": 101,
       "credential": "Vital City (institutional)"
     },
     {
@@ -728,9 +716,9 @@
       {
         "year": "2026",
         "weeks": 41.0,
-        "pieces": 244,
+        "pieces": 245,
         "outside_issues": 168,
-        "per_week_all": 5.95,
+        "per_week_all": 5.98,
         "per_week_outside_issues": 4.1,
         "partial": true
       }
@@ -740,10 +728,10 @@
     "all_time_per_week_outside_issues": 1.76,
     "current_year": "2026",
     "current_per_week_outside_issues": 4.1,
-    "current_per_week_all": 5.95,
+    "current_per_week_all": 5.98,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 508,
+      "issue_tagged_pieces": 509,
       "published_away_from_drop": 69,
       "share_of_issue_pieces": 13.6,
       "current_year_strict": 4.1,
@@ -754,7 +742,7 @@
     }
   },
   "rhythm": {
-    "n_dated": 974,
+    "n_dated": 975,
     "by_weekday": [
       {
         "day": "Mon",
@@ -768,8 +756,8 @@
       },
       {
         "day": "Wed",
-        "pieces": 460,
-        "share": 47.2
+        "pieces": 461,
+        "share": 47.3
       },
       {
         "day": "Thu",
@@ -793,7 +781,7 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.2,
+    "top_day_share": 47.3,
     "midweek_share": 83.9,
     "weekend_pieces": 28,
     "by_month": [
@@ -828,9 +816,9 @@
       {
         "month": "May",
         "abbr": "May",
-        "pieces": 73,
+        "pieces": 74,
         "occurrences": 5,
-        "per_occurrence": 14.6
+        "per_occurrence": 14.8
       },
       {
         "month": "June",

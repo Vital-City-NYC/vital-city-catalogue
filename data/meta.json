@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-15T01:11:09.942912+00:00",
+  "generated_at": "2026-10-15T15:32:53.787989+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 974,
+  "total_posts": 975,
   "total_authors": 537,
   "total_issues": 35,
   "total_topics": 231,
@@ -10,25 +10,13 @@
     "2026-10-14"
   ],
   "first_run": false,
-  "new_article_count": 3,
+  "new_article_count": 1,
   "new_articles": [
     {
-      "title": "From San Juan Hill to Lincoln Center and Back",
-      "url": "https://www.vitalcitynyc.org/from-san-juan-hill-to-lincoln-center-and-back/",
-      "published_date": "2026-10-14",
-      "primary_author": "Julia Foulkes"
-    },
-    {
-      "title": "How ICE Puts the NYPD in an Impossible Position",
-      "url": "https://www.vitalcitynyc.org/how-ice-puts-the-nypd-in-an-impossible-position/",
-      "published_date": "2026-10-14",
-      "primary_author": "John Hall"
-    },
-    {
-      "title": "Make the Governor Responsible for New York’s Schools",
-      "url": "https://www.vitalcitynyc.org/make-the-governor-responsible-for-new-yorks-schools-2/",
-      "published_date": "2026-10-14",
-      "primary_author": "Daniel Weisberg"
+      "title": "How to Analyze Lighting and Crime in Any City",
+      "url": "https://www.vitalcitynyc.org/rubber-meets-road-lighting-crime-analysis/",
+      "published_date": "2026-05-20",
+      "primary_author": "Vital City"
     }
   ]
 }

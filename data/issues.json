@@ -451,8 +451,8 @@
   },
   {
     "name": "hidehome",
-    "post_count": 1,
-    "first_published": "2026-10-08",
+    "post_count": 2,
+    "first_published": "2026-05-20",
     "last_published": "2026-10-08",
     "number": null,
     "display_name": "Hidehome",
@@ -467,6 +467,10 @@
       ],
       [
         "Crime",
+        1
+      ],
+      [
+        "Street Lighting",
         1
       ]
     ]
@@ -563,8 +567,8 @@
   },
   {
     "name": "hidecommentary",
-    "post_count": 13,
-    "first_published": "2026-09-05",
+    "post_count": 14,
+    "first_published": "2026-05-20",
     "last_published": "2026-09-09",
     "number": null,
     "display_name": "Hidecommentary",
@@ -645,19 +649,19 @@
   },
   {
     "name": "rubber-meets-road",
-    "post_count": 9,
+    "post_count": 10,
     "first_published": "2026-05-20",
     "last_published": "2026-05-20",
     "number": null,
     "display_name": "Rubber Meets Road",
     "top_topics": [
       [
-        "policy",
+        "Street Lighting",
         9
       ],
       [
-        "Street Lighting",
-        8
+        "policy",
+        9
       ],
       [
         "Crime",
