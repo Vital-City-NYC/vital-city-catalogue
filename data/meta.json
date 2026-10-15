@@ -1,15 +1,34 @@
 {
-  "generated_at": "2026-10-14T15:45:33.321665+00:00",
+  "generated_at": "2026-10-15T01:11:09.942912+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 971,
-  "total_authors": 535,
+  "total_posts": 974,
+  "total_authors": 537,
   "total_issues": 35,
-  "total_topics": 228,
+  "total_topics": 231,
   "date_range": [
     "2021-09-15",
-    "2026-10-08"
+    "2026-10-14"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 3,
+  "new_articles": [
+    {
+      "title": "From San Juan Hill to Lincoln Center and Back",
+      "url": "https://www.vitalcitynyc.org/from-san-juan-hill-to-lincoln-center-and-back/",
+      "published_date": "2026-10-14",
+      "primary_author": "Julia Foulkes"
+    },
+    {
+      "title": "How ICE Puts the NYPD in an Impossible Position",
+      "url": "https://www.vitalcitynyc.org/how-ice-puts-the-nypd-in-an-impossible-position/",
+      "published_date": "2026-10-14",
+      "primary_author": "John Hall"
+    },
+    {
+      "title": "Make the Governor Responsible for New York’s Schools",
+      "url": "https://www.vitalcitynyc.org/make-the-governor-responsible-for-new-yorks-schools-2/",
+      "published_date": "2026-10-14",
+      "primary_author": "Daniel Weisberg"
+    }
+  ]
 }

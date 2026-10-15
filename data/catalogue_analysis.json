@@ -1,27 +1,46 @@
 {
   "meta": {
-    "generated_at": "2026-10-14T15:45:33.321665+00:00",
+    "generated_at": "2026-10-15T01:11:09.942912+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 971,
-    "total_authors": 535,
+    "total_posts": 974,
+    "total_authors": 537,
     "total_issues": 35,
-    "total_topics": 228,
+    "total_topics": 231,
     "date_range": [
       "2021-09-15",
-      "2026-10-08"
+      "2026-10-14"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 3,
+    "new_articles": [
+      {
+        "title": "From San Juan Hill to Lincoln Center and Back",
+        "url": "https://www.vitalcitynyc.org/from-san-juan-hill-to-lincoln-center-and-back/",
+        "published_date": "2026-10-14",
+        "primary_author": "Julia Foulkes"
+      },
+      {
+        "title": "How ICE Puts the NYPD in an Impossible Position",
+        "url": "https://www.vitalcitynyc.org/how-ice-puts-the-nypd-in-an-impossible-position/",
+        "published_date": "2026-10-14",
+        "primary_author": "John Hall"
+      },
+      {
+        "title": "Make the Governor Responsible for New York\u2019s Schools",
+        "url": "https://www.vitalcitynyc.org/make-the-governor-responsible-for-new-yorks-schools-2/",
+        "published_date": "2026-10-14",
+        "primary_author": "Daniel Weisberg"
+      }
+    ]
   },
-  "total_pieces": 971,
+  "total_pieces": 974,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 241
+    "2026": 244
   },
   "by_month": {
     "2021-09": 1,
@@ -79,12 +98,12 @@
     "2026-07": 23,
     "2026-08": 16,
     "2026-09": 33,
-    "2026-10": 11
+    "2026-10": 14
   },
   "by_type": [
     [
       "opinion/commentary",
-      763
+      766
     ],
     [
       "q&a",
@@ -122,7 +141,7 @@
     ],
     [
       "History",
-      145
+      146
     ],
     [
       "City Government",
@@ -141,16 +160,16 @@
       82
     ],
     [
+      "Justice",
+      81
+    ],
+    [
       "Housing",
       81
     ],
     [
-      "Justice",
-      80
-    ],
-    [
       "Culture",
-      76
+      77
     ],
     [
       "Police Reform",
@@ -173,12 +192,12 @@
       50
     ],
     [
-      "Social Science",
+      "Education",
       42
     ],
     [
-      "Education",
-      41
+      "Social Science",
+      42
     ],
     [
       "Technology",
@@ -217,11 +236,11 @@
       26
     ]
   ],
-  "n_topics_total": 228,
+  "n_topics_total": 231,
   "by_credential_pieces": [
     [
       "Academic",
-      232
+      233
     ],
     [
       "Journalist / media",
@@ -233,7 +252,7 @@
     ],
     [
       "Other / unclassified",
-      104
+      105
     ],
     [
       "Vital City (institutional)",
@@ -241,7 +260,7 @@
     ],
     [
       "Government / public official",
-      86
+      87
     ],
     [
       "Think tank / research institute",
@@ -271,11 +290,11 @@
   "by_credential_authors": [
     [
       "Academic",
-      169
+      170
     ],
     [
       "Other / unclassified",
-      117
+      119
     ],
     [
       "Nonprofit / advocacy",
@@ -291,7 +310,7 @@
     ],
     [
       "Government / public official",
-      31
+      30
     ],
     [
       "Business / private sector",
@@ -325,8 +344,8 @@
     "Government Operations",
     "City Planning",
     "Gun Violence",
-    "Housing",
-    "Justice"
+    "Justice",
+    "Housing"
   ],
   "topic_by_year": {
     "Crime": {
@@ -341,7 +360,7 @@
       "2023": 28,
       "2024": 38,
       "2025": 52,
-      "2026": 15
+      "2026": 16
     },
     "City Government": {
       "2023": 4,
@@ -370,39 +389,39 @@
       "2025": 31,
       "2026": 18
     },
-    "Housing": {
-      "2023": 5,
-      "2024": 11,
-      "2025": 37,
-      "2026": 28
-    },
     "Justice": {
       "2022": 4,
       "2023": 26,
       "2024": 27,
       "2025": 13,
-      "2026": 10
+      "2026": 11
+    },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 37,
+      "2026": 28
     }
   },
   "wc_stats": {
-    "n": 964,
-    "median": 1637,
-    "mean": 2140,
+    "n": 967,
+    "median": 1635,
+    "mean": 2136,
     "p90": 3240,
     "max": 15166,
-    "p10": 913,
+    "p10": 909,
     "p25": 1284,
-    "p75": 2224,
-    "p95": 5587,
+    "p75": 2222,
+    "p95": 5574,
     "no_count": 7,
-    "core_1000_2499": 689,
-    "under_500": 48,
+    "core_1000_2499": 691,
+    "under_500": 49,
     "over_5000": 53
   },
   "wc_buckets": [
     [
       "<500",
-      48
+      49
     ],
     [
       "500-999",
@@ -410,7 +429,7 @@
     ],
     [
       "1,000-1,999",
-      550
+      552
     ],
     [
       "2,000-2,999",
@@ -432,7 +451,7 @@
       {
         "floor": 0,
         "label": "0",
-        "n": 35
+        "n": 36
       },
       {
         "floor": 250,
@@ -452,12 +471,12 @@
       {
         "floor": 1000,
         "label": "1,000",
-        "n": 110
+        "n": 111
       },
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 149
+        "n": 150
       },
       {
         "floor": 1500,
@@ -541,15 +560,15 @@
     },
     {
       "year": "2026",
-      "n": 236,
-      "p25": 1293,
-      "median": 1695,
-      "p75": 2407,
+      "n": 239,
+      "p25": 1288,
+      "median": 1690,
+      "p75": 2401,
       "max": 13669
     }
   ],
   "by_nauthors": {
-    "1": 819,
+    "1": 822,
     "2": 123,
     "3": 26,
     "4": 1,
@@ -628,6 +647,11 @@
       "credential": "Academic"
     },
     {
+      "name": "John Hall",
+      "posts": 10,
+      "credential": "Government / public official"
+    },
+    {
       "name": "Paul Reeping",
       "posts": 9,
       "credential": "Think tank / research institute"
@@ -636,11 +660,6 @@
       "name": "David Schleicher",
       "posts": 9,
       "credential": "Academic"
-    },
-    {
-      "name": "John Hall",
-      "posts": 9,
-      "credential": "Government / public official"
     },
     {
       "name": "Bradley Tusk",
@@ -708,34 +727,34 @@
       },
       {
         "year": "2026",
-        "weeks": 40.1,
-        "pieces": 241,
-        "outside_issues": 165,
-        "per_week_all": 6.0,
-        "per_week_outside_issues": 4.11,
+        "weeks": 41.0,
+        "pieces": 244,
+        "outside_issues": 168,
+        "per_week_all": 5.95,
+        "per_week_outside_issues": 4.1,
         "partial": true
       }
     ],
-    "total_weeks": 264.1,
+    "total_weeks": 265.0,
     "all_time_per_week": 3.68,
-    "all_time_per_week_outside_issues": 1.75,
+    "all_time_per_week_outside_issues": 1.76,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.11,
-    "current_per_week_all": 6.0,
+    "current_per_week_outside_issues": 4.1,
+    "current_per_week_all": 5.95,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 508,
       "published_away_from_drop": 69,
       "share_of_issue_pieces": 13.6,
-      "current_year_strict": 4.11,
-      "current_year_loose": 4.43,
-      "all_time_strict": 1.75,
-      "all_time_loose": 2.01,
+      "current_year_strict": 4.1,
+      "current_year_loose": 4.41,
+      "all_time_strict": 1.76,
+      "all_time_loose": 2.02,
       "all_time_all": 3.68
     }
   },
   "rhythm": {
-    "n_dated": 971,
+    "n_dated": 974,
     "by_weekday": [
       {
         "day": "Mon",
@@ -745,17 +764,17 @@
       {
         "day": "Tue",
         "pieces": 167,
-        "share": 17.2
+        "share": 17.1
       },
       {
         "day": "Wed",
-        "pieces": 457,
-        "share": 47.1
+        "pieces": 460,
+        "share": 47.2
       },
       {
         "day": "Thu",
         "pieces": 190,
-        "share": 19.6
+        "share": 19.5
       },
       {
         "day": "Fri",
@@ -774,8 +793,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.1,
-    "midweek_share": 83.8,
+    "top_day_share": 47.2,
+    "midweek_share": 83.9,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -844,9 +863,9 @@
       {
         "month": "October",
         "abbr": "Oct",
-        "pieces": 110,
+        "pieces": 113,
         "occurrences": 6,
-        "per_occurrence": 18.3
+        "per_occurrence": 18.8
       },
       {
         "month": "November",
