@@ -1,34 +1,34 @@
 {
   "meta": {
-    "generated_at": "2026-10-15T15:32:53.787989+00:00",
+    "generated_at": "2026-10-16T00:57:42.928678+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 975,
+    "total_posts": 976,
     "total_authors": 537,
     "total_issues": 35,
     "total_topics": 231,
     "date_range": [
       "2021-09-15",
-      "2026-10-14"
+      "2026-10-15"
     ],
     "first_run": false,
     "new_article_count": 1,
     "new_articles": [
       {
-        "title": "How to Analyze Lighting and Crime in Any City",
-        "url": "https://www.vitalcitynyc.org/rubber-meets-road-lighting-crime-analysis/",
-        "published_date": "2026-05-20",
+        "title": "New York\u2019s Devilish Assault Problem",
+        "url": "https://www.vitalcitynyc.org/new-yorks-devilish-assault-problem/",
+        "published_date": "2026-10-15",
         "primary_author": "Vital City"
       }
     ]
   },
-  "total_pieces": 975,
+  "total_pieces": 976,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 245
+    "2026": 246
   },
   "by_month": {
     "2021-09": 1,
@@ -86,7 +86,7 @@
     "2026-07": 23,
     "2026-08": 16,
     "2026-09": 33,
-    "2026-10": 14
+    "2026-10": 15
   },
   "by_type": [
     [
@@ -99,7 +99,7 @@
     ],
     [
       "data analysis",
-      51
+      52
     ],
     [
       "podcast",
@@ -125,7 +125,7 @@
   "by_topic_top25": [
     [
       "Crime",
-      152
+      153
     ],
     [
       "History",
@@ -144,12 +144,12 @@
       111
     ],
     [
-      "Gun Violence",
+      "Justice",
       82
     ],
     [
-      "Justice",
-      81
+      "Gun Violence",
+      82
     ],
     [
       "Housing",
@@ -244,7 +244,7 @@
     ],
     [
       "Vital City (institutional)",
-      101
+      102
     ],
     [
       "Government / public official",
@@ -331,8 +331,8 @@
     "City Government",
     "Government Operations",
     "City Planning",
-    "Gun Violence",
     "Justice",
+    "Gun Violence",
     "Housing"
   ],
   "topic_by_year": {
@@ -341,7 +341,7 @@
       "2023": 37,
       "2024": 38,
       "2025": 31,
-      "2026": 28
+      "2026": 29
     },
     "History": {
       "2022": 12,
@@ -370,19 +370,19 @@
       "2025": 39,
       "2026": 17
     },
+    "Justice": {
+      "2022": 4,
+      "2023": 26,
+      "2024": 27,
+      "2025": 13,
+      "2026": 12
+    },
     "Gun Violence": {
       "2022": 14,
       "2023": 14,
       "2024": 5,
       "2025": 31,
       "2026": 18
-    },
-    "Justice": {
-      "2022": 4,
-      "2023": 26,
-      "2024": 27,
-      "2025": 13,
-      "2026": 11
     },
     "Housing": {
       "2023": 5,
@@ -392,19 +392,19 @@
     }
   },
   "wc_stats": {
-    "n": 968,
+    "n": 969,
     "median": 1635,
-    "mean": 2136,
-    "p90": 3240,
+    "mean": 2139,
+    "p90": 3241,
     "max": 15166,
-    "p10": 909,
+    "p10": 910,
     "p25": 1284,
-    "p75": 2224,
-    "p95": 5569,
+    "p75": 2227,
+    "p95": 5565,
     "no_count": 7,
     "core_1000_2499": 692,
     "under_500": 49,
-    "over_5000": 53
+    "over_5000": 54
   },
   "wc_buckets": [
     [
@@ -429,7 +429,7 @@
     ],
     [
       "5,000+",
-      53
+      54
     ]
   ],
   "wc_hist": {
@@ -509,7 +509,7 @@
       {
         "floor": 3500,
         "label": "3,500+",
-        "n": 85
+        "n": 86
       }
     ]
   },
@@ -548,16 +548,16 @@
     },
     {
       "year": "2026",
-      "n": 240,
-      "p25": 1289,
-      "median": 1690,
-      "p75": 2400,
+      "n": 241,
+      "p25": 1290,
+      "median": 1691,
+      "p75": 2405,
       "max": 13669
     }
   ],
   "by_nauthors": {
     "1": 823,
-    "2": 123,
+    "2": 124,
     "3": 26,
     "4": 1,
     "8": 1,
@@ -566,7 +566,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 101,
+      "posts": 102,
       "credential": "Vital City (institutional)"
     },
     {
@@ -635,14 +635,14 @@
       "credential": "Academic"
     },
     {
+      "name": "Paul Reeping",
+      "posts": 10,
+      "credential": "Think tank / research institute"
+    },
+    {
       "name": "John Hall",
       "posts": 10,
       "credential": "Government / public official"
-    },
-    {
-      "name": "Paul Reeping",
-      "posts": 9,
-      "credential": "Think tank / research institute"
     },
     {
       "name": "David Schleicher",
@@ -715,34 +715,34 @@
       },
       {
         "year": "2026",
-        "weeks": 41.0,
-        "pieces": 245,
-        "outside_issues": 168,
+        "weeks": 41.1,
+        "pieces": 246,
+        "outside_issues": 170,
         "per_week_all": 5.98,
-        "per_week_outside_issues": 4.1,
+        "per_week_outside_issues": 4.13,
         "partial": true
       }
     ],
-    "total_weeks": 265.0,
+    "total_weeks": 265.1,
     "all_time_per_week": 3.68,
-    "all_time_per_week_outside_issues": 1.76,
+    "all_time_per_week_outside_issues": 1.77,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.1,
+    "current_per_week_outside_issues": 4.13,
     "current_per_week_all": 5.98,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 509,
+      "issue_tagged_pieces": 508,
       "published_away_from_drop": 69,
       "share_of_issue_pieces": 13.6,
-      "current_year_strict": 4.1,
-      "current_year_loose": 4.41,
-      "all_time_strict": 1.76,
+      "current_year_strict": 4.13,
+      "current_year_loose": 4.45,
+      "all_time_strict": 1.77,
       "all_time_loose": 2.02,
       "all_time_all": 3.68
     }
   },
   "rhythm": {
-    "n_dated": 975,
+    "n_dated": 976,
     "by_weekday": [
       {
         "day": "Mon",
@@ -757,12 +757,12 @@
       {
         "day": "Wed",
         "pieces": 461,
-        "share": 47.3
+        "share": 47.2
       },
       {
         "day": "Thu",
-        "pieces": 190,
-        "share": 19.5
+        "pieces": 191,
+        "share": 19.6
       },
       {
         "day": "Fri",
@@ -781,7 +781,7 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.3,
+    "top_day_share": 47.2,
     "midweek_share": 83.9,
     "weekend_pieces": 28,
     "by_month": [
@@ -851,9 +851,9 @@
       {
         "month": "October",
         "abbr": "Oct",
-        "pieces": 113,
+        "pieces": 114,
         "occurrences": 6,
-        "per_occurrence": 18.8
+        "per_occurrence": 19.0
       },
       {
         "month": "November",

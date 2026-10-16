@@ -1,7 +1,7 @@
 [
  {
   "name": "Vital City",
-  "post_count": 101,
+  "post_count": 102,
   "slugs": [
    "2025-a-look-back-most-read",
    "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -48,6 +48,7 @@
    "michael-lipetri-interview",
    "new-york-city-deputy-mayors-on-how-things-really-get-done",
    "new-york-citys-subways-moving-millions",
+   "new-yorks-devilish-assault-problem",
    "nyc-coge-charter-reform-government-operations-fixes",
    "nyc-crime-midyear-2026-felony-assaults-rape-murder",
    "nyc-economy-data-story",
@@ -105,9 +106,9 @@
    "youth-crime-in-new-york-after-raise-the-age",
    "zohran-mamdani-talks-public-safety"
   ],
-  "slug": "vital",
-  "bio": null,
-  "url": "https://www.vitalcitynyc.org/author/vital/",
+  "slug": "vital-city",
+  "bio": "is a journal about urban policy, politics, data and culture.",
+  "url": "https://www.vitalcitynyc.org/author/vital-city/",
   "twitter": null,
   "website": null
  },
@@ -528,6 +529,27 @@
   "senior": true
  },
  {
+  "name": "Paul Reeping",
+  "post_count": 10,
+  "slugs": [
+   "just-the-facts-on-new-york-city-subway-crime",
+   "navigating-apartment-hunting-rising-rent-in-nyc",
+   "new-yorks-devilish-assault-problem",
+   "nyc-crime-midyear-2026-felony-assaults-rape-murder",
+   "safer-cities-in-context",
+   "the-state-of-crime-in-new-york-city-at-midyear-2024",
+   "vital-signs-state-of-the-city-on-crime-2024",
+   "what-the-data-show-about-subway-safety",
+   "what-we-know-and-dont-know-about-guns",
+   "women-and-guns-data"
+  ],
+  "slug": "reeping-paul",
+  "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
+  "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
+  "twitter": null,
+  "website": null
+ },
+ {
   "name": "John Hall",
   "post_count": 10,
   "slugs": [
@@ -545,26 +567,6 @@
   "slug": "hall-john",
   "bio": "is a retired NYPD official, a Ph.D. student in criminology at the University of Cambridge and a National Institute of Justice LEADS Scholar.",
   "url": "https://www.vitalcitynyc.org/author/hall-john/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Paul Reeping",
-  "post_count": 9,
-  "slugs": [
-   "just-the-facts-on-new-york-city-subway-crime",
-   "navigating-apartment-hunting-rising-rent-in-nyc",
-   "nyc-crime-midyear-2026-felony-assaults-rape-murder",
-   "safer-cities-in-context",
-   "the-state-of-crime-in-new-york-city-at-midyear-2024",
-   "vital-signs-state-of-the-city-on-crime-2024",
-   "what-the-data-show-about-subway-safety",
-   "what-we-know-and-dont-know-about-guns",
-   "women-and-guns-data"
-  ],
-  "slug": "reeping-paul",
-  "bio": "is the director of research at Vital City and a dedicated gun violence prevention researcher. Before joining Vital City, Paul served as a postdoctoral fellow at the Violence Prevention Research Program at UC Davis.",
-  "url": "https://www.vitalcitynyc.org/author/reeping-paul/",
   "twitter": null,
   "website": null
  },
