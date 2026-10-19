@@ -353,7 +353,7 @@ ol>li{{margin-bottom:12px}} .todo{{background:#fafae8;padding:12px 18px 4px 36px
 <p class=dek>{E(window)}. Signups from Ghost, unsubscribes from Mailchimp. Read-only: nothing was changed in either system.</p>
 <div class=nums>
 <div><b>{len(a['new'])}</b>new subscribers</div>
-<div><b>{len(a['left_mc']) + len(a['left_ghost'])}</b>unsubscribed or bounced</div>
+<div><b>{len({r['email'] for r in a['left_mc'] + a['left_ghost']})}</b>unsubscribed or bounced</div>
 <div><b>{a['ghost_active']:,}</b>active in Ghost</div>
 <div><b>{a['mc_active']:,}</b>active in Mailchimp</div>
 </div>
@@ -380,7 +380,7 @@ ol>li{{margin-bottom:12px}} .todo{{background:#fafae8;padding:12px 18px 4px 36px
 
     # ---- Slack-ready summary (names included: it goes to a self-DM only)
     S = [f"*Vital City subscriber sync, week ending {et(now).strftime('%b %-d')}*",
-         f"{len(a['new'])} new subscribers, {len(a['left_mc']) + len(a['left_ghost'])} unsubscribed or bounced.",
+         f"{len(a['new'])} new subscribers, {len({r['email'] for r in a['left_mc'] + a['left_ghost']})} unsubscribed or bounced.",
          ""]
     if a["new"]:
         S.append("*New (Ghost):*")
