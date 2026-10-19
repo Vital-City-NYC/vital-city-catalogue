@@ -234,7 +234,12 @@ def write_csv(path, header, rows):
 
 
 def fmt_day(ts):
-    return et(ts).strftime("%a %b %-d, %-I:%M %p") if ts else ""
+    if not ts:
+        return ""
+    t = et(ts)
+    if t.year != et(dt.datetime.now(UTC)).year:
+        return t.strftime("%b %-d, %Y")
+    return t.strftime("%a %b %-d, %-I:%M %p")
 
 
 def build(out_dir, a, since, now):
