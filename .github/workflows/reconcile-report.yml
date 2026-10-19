@@ -13,12 +13,10 @@
 name: Subscriber sync check (preview only)
 
 on:
-  schedule:
-    # 18:00 UTC Wednesday = 2pm ET in summer, 1pm ET in winter. Cron is fixed
-    # UTC and does not follow daylight saving, so the ET hour shifts by one in
-    # November. Both are Wednesday afternoon, which is what was asked for.
-    - cron: "0 18 * * 3"
-  workflow_dispatch:        # also runnable on demand from the Actions tab
+  # No schedule since Oct. 19, 2026. The weekly report is now
+  # weekly_subscriber_report.py, run Wednesdays at 4 PM by a local scheduled
+  # task. This stays available on demand from the Actions tab.
+  workflow_dispatch:
 
 permissions:
   contents: read            # never needs to write to the repo
