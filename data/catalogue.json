@@ -7,7 +7,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2026-10-15",
     "published_at": "2026-10-15T16:14:57.000+00:00",
-    "updated_at": "2026-10-15T16:14:57.000+00:00",
+    "updated_at": "2026-10-19T18:25:34.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City",
@@ -26,158 +26,15 @@
     "feature_image_alt": null,
     "feature_image_credit": "Ernst Haas / Getty Images",
     "embeds": {
-      "flourish": [
-        {
-          "id": "30418235",
-          "src": "visualisation/30418235?1257272",
-          "url": "https://public.flourish.studio/visualisation/30418235/"
-        },
-        {
-          "id": "3836353",
-          "src": "story/3836353?1257272",
-          "url": "https://public.flourish.studio/story/3836353/"
-        },
-        {
-          "id": "30460484",
-          "src": "visualisation/30460484?1257272",
-          "url": "https://public.flourish.studio/visualisation/30460484/"
-        },
-        {
-          "id": "29485879",
-          "src": "visualisation/29485879?1257272",
-          "url": "https://public.flourish.studio/visualisation/29485879/"
-        },
-        {
-          "id": "30203820",
-          "src": "visualisation/30203820?1257272",
-          "url": "https://public.flourish.studio/visualisation/30203820/"
-        },
-        {
-          "id": "30203762",
-          "src": "visualisation/30203762?1257272",
-          "url": "https://public.flourish.studio/visualisation/30203762/"
-        },
-        {
-          "id": "30437408",
-          "src": "visualisation/30437408?1257272",
-          "url": "https://public.flourish.studio/visualisation/30437408/"
-        },
-        {
-          "id": "28156401",
-          "src": "visualisation/28156401?1257272",
-          "url": "https://public.flourish.studio/visualisation/28156401/"
-        },
-        {
-          "id": "28334639",
-          "src": "visualisation/28334639?1257272",
-          "url": "https://public.flourish.studio/visualisation/28334639/"
-        },
-        {
-          "id": "29487622",
-          "src": "visualisation/29487622?1257272",
-          "url": "https://public.flourish.studio/visualisation/29487622/"
-        },
-        {
-          "id": "30427576",
-          "src": "visualisation/30427576?1257272",
-          "url": "https://public.flourish.studio/visualisation/30427576/"
-        },
-        {
-          "id": "30426607",
-          "src": "visualisation/30426607?1257272",
-          "url": "https://public.flourish.studio/visualisation/30426607/"
-        },
-        {
-          "id": "30403417",
-          "src": "visualisation/30403417?1257272",
-          "url": "https://public.flourish.studio/visualisation/30403417/"
-        },
-        {
-          "id": "30216990",
-          "src": "visualisation/30216990?1257272",
-          "url": "https://public.flourish.studio/visualisation/30216990/"
-        },
-        {
-          "id": "30216676",
-          "src": "visualisation/30216676?1257272",
-          "url": "https://public.flourish.studio/visualisation/30216676/"
-        },
-        {
-          "id": "29487359",
-          "src": "visualisation/29487359?1257272",
-          "url": "https://public.flourish.studio/visualisation/29487359/"
-        },
-        {
-          "id": "30203208",
-          "src": "visualisation/30203208?1257272",
-          "url": "https://public.flourish.studio/visualisation/30203208/"
-        },
-        {
-          "id": "29487027",
-          "src": "visualisation/29487027?1257272",
-          "url": "https://public.flourish.studio/visualisation/29487027/"
-        },
-        {
-          "id": "30405826",
-          "src": "visualisation/30405826?1257272",
-          "url": "https://public.flourish.studio/visualisation/30405826/"
-        },
-        {
-          "id": "29487787",
-          "src": "visualisation/29487787?1257272",
-          "url": "https://public.flourish.studio/visualisation/29487787/"
-        },
-        {
-          "id": "29135408",
-          "src": "visualisation/29135408?1257272",
-          "url": "https://public.flourish.studio/visualisation/29135408/"
-        },
-        {
-          "id": "29135264",
-          "src": "visualisation/29135264?1257272",
-          "url": "https://public.flourish.studio/visualisation/29135264/"
-        },
-        {
-          "id": "28228242",
-          "src": "visualisation/28228242?1257272",
-          "url": "https://public.flourish.studio/visualisation/28228242/"
-        },
-        {
-          "id": "30438462",
-          "src": "visualisation/30438462?1257272",
-          "url": "https://public.flourish.studio/visualisation/30438462/"
-        },
-        {
-          "id": "30438586",
-          "src": "visualisation/30438586?1257272",
-          "url": "https://public.flourish.studio/visualisation/30438586/"
-        },
-        {
-          "id": "27895634",
-          "src": "visualisation/27895634?1257272",
-          "url": "https://public.flourish.studio/visualisation/27895634/"
-        },
-        {
-          "id": "27895527",
-          "src": "visualisation/27895527?1257272",
-          "url": "https://public.flourish.studio/visualisation/27895527/"
-        },
-        {
-          "id": "30217551",
-          "src": "visualisation/30217551?1257272",
-          "url": "https://public.flourish.studio/visualisation/30217551/"
-        }
-      ],
+      "flourish": [],
       "iframes": [],
-      "counts": {
-        "flourish": 28
-      },
-      "total": 28
+      "counts": {},
+      "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 5042,
-    "reading_minutes": 22,
+    "visibility": "members",
+    "word_count": 187,
+    "reading_minutes": 1,
     "id": "6ace9de45c45510001e3babe"
   },
   {
