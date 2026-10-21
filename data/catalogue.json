@@ -45,7 +45,7 @@
     "type_basis": "default",
     "published_date": "2026-10-14",
     "published_at": "2026-10-14T16:37:29.000+00:00",
-    "updated_at": "2026-10-14T16:37:29.000+00:00",
+    "updated_at": "2026-10-20T19:47:34.000+00:00",
     "primary_author": "Julia Foulkes",
     "authors": [
       "Julia Foulkes"
@@ -69,9 +69,9 @@
       "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 1144,
-    "reading_minutes": 5,
+    "visibility": "members",
+    "word_count": 228,
+    "reading_minutes": 1,
     "id": "6ace5c865c45510001e3ba95"
   },
   {
