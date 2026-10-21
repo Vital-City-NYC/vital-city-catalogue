@@ -5,7 +5,7 @@
   },
   {
     "name": "History",
-    "post_count": 146
+    "post_count": 148
   },
   {
     "name": "City Government",
@@ -17,11 +17,11 @@
   },
   {
     "name": "City Planning",
-    "post_count": 111
+    "post_count": 112
   },
   {
     "name": "Justice",
-    "post_count": 82
+    "post_count": 83
   },
   {
     "name": "Gun Violence",
@@ -65,7 +65,7 @@
   },
   {
     "name": "Technology",
-    "post_count": 36
+    "post_count": 37
   },
   {
     "name": "Transit",
@@ -104,12 +104,16 @@
     "post_count": 26
   },
   {
+    "name": "Infrastructure",
+    "post_count": 24
+  },
+  {
     "name": "Incarceration",
     "post_count": 24
   },
   {
-    "name": "Infrastructure",
-    "post_count": 23
+    "name": "Corruption",
+    "post_count": 22
   },
   {
     "name": "Data Stories",
@@ -117,10 +121,6 @@
   },
   {
     "name": "policy",
-    "post_count": 21
-  },
-  {
-    "name": "Corruption",
     "post_count": 21
   },
   {
@@ -136,15 +136,15 @@
     "post_count": 18
   },
   {
+    "name": "Mental Health",
+    "post_count": 17
+  },
+  {
     "name": "Mamdani",
     "post_count": 16
   },
   {
     "name": "Race",
-    "post_count": 16
-  },
-  {
-    "name": "Mental Health",
     "post_count": 16
   },
   {
@@ -220,6 +220,10 @@
     "post_count": 10
   },
   {
+    "name": "Book Review",
+    "post_count": 9
+  },
+  {
     "name": "Artifical Intelligence",
     "post_count": 9
   },
@@ -244,10 +248,6 @@
     "post_count": 9
   },
   {
-    "name": "Book Review",
-    "post_count": 8
-  },
-  {
     "name": "More Money in More Pockets",
     "post_count": 8
   },
@@ -270,6 +270,10 @@
   {
     "name": "Toward Solutions",
     "post_count": 8
+  },
+  {
+    "name": "Sports",
+    "post_count": 7
   },
   {
     "name": "Film & TV",
@@ -312,11 +316,11 @@
     "post_count": 7
   },
   {
-    "name": "Criminal Justice",
+    "name": "Elections",
     "post_count": 6
   },
   {
-    "name": "Sports",
+    "name": "Criminal Justice",
     "post_count": 6
   },
   {
@@ -385,10 +389,6 @@
   },
   {
     "name": "When Women Wield Guns",
-    "post_count": 5
-  },
-  {
-    "name": "Elections",
     "post_count": 5
   },
   {
@@ -712,6 +712,10 @@
     "post_count": 2
   },
   {
+    "name": "Money in politics",
+    "post_count": 1
+  },
+  {
     "name": "Gentrification",
     "post_count": 1
   },
@@ -737,6 +741,10 @@
   },
   {
     "name": "Courts",
+    "post_count": 1
+  },
+  {
+    "name": "Population",
     "post_count": 1
   },
   {

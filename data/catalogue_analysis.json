@@ -1,27 +1,52 @@
 {
   "meta": {
-    "generated_at": "2026-10-21T01:13:58.133189+00:00",
+    "generated_at": "2026-10-21T15:53:49.168529+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 976,
-    "total_authors": 537,
+    "total_posts": 980,
+    "total_authors": 538,
     "total_issues": 35,
-    "total_topics": 231,
+    "total_topics": 233,
     "date_range": [
       "2021-09-15",
-      "2026-10-15"
+      "2026-10-21"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 4,
+    "new_articles": [
+      {
+        "title": "Daniel Penny and Jordan Neely, Through Cracked Looking Glass",
+        "url": "https://www.vitalcitynyc.org/anand-giridharadas-book-review-daniel-penny-jordan-neely/",
+        "published_date": "2026-10-21",
+        "primary_author": "Brandon del Pozo"
+      },
+      {
+        "title": "The Other Time New York Bled Orange and Blue",
+        "url": "https://www.vitalcitynyc.org/mets-1986-world-series-victory-knicks-2026/",
+        "published_date": "2026-10-21",
+        "primary_author": "Jere Hester"
+      },
+      {
+        "title": "Let\u2019s Be Honest. LinkNYC Has Been a Failure.",
+        "url": "https://www.vitalcitynyc.org/link-nyc-kiosks-failure/",
+        "published_date": "2026-10-21",
+        "primary_author": "Michael Samuelian"
+      },
+      {
+        "title": "Money and Politics in New York City: A Frontline Perspective",
+        "url": "https://www.vitalcitynyc.org/election-campaign-financing-complications-nyc/",
+        "published_date": "2026-10-21",
+        "primary_author": "Maya Kornberg"
+      }
+    ]
   },
-  "total_pieces": 976,
+  "total_pieces": 980,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 246
+    "2026": 250
   },
   "by_month": {
     "2021-09": 1,
@@ -79,12 +104,12 @@
     "2026-07": 23,
     "2026-08": 16,
     "2026-09": 33,
-    "2026-10": 15
+    "2026-10": 19
   },
   "by_type": [
     [
       "opinion/commentary",
-      766
+      769
     ],
     [
       "q&a",
@@ -108,7 +133,7 @@
     ],
     [
       "book review",
-      8
+      9
     ],
     [
       "map/tool",
@@ -122,7 +147,7 @@
     ],
     [
       "History",
-      146
+      148
     ],
     [
       "City Government",
@@ -134,11 +159,11 @@
     ],
     [
       "City Planning",
-      111
+      112
     ],
     [
       "Justice",
-      82
+      83
     ],
     [
       "Gun Violence",
@@ -182,7 +207,7 @@
     ],
     [
       "Technology",
-      36
+      37
     ],
     [
       "Transit",
@@ -217,11 +242,11 @@
       26
     ]
   ],
-  "n_topics_total": 231,
+  "n_topics_total": 233,
   "by_credential_pieces": [
     [
       "Academic",
-      233
+      234
     ],
     [
       "Journalist / media",
@@ -229,11 +254,11 @@
     ],
     [
       "Nonprofit / advocacy",
-      115
+      116
     ],
     [
       "Other / unclassified",
-      105
+      106
     ],
     [
       "Vital City (institutional)",
@@ -241,7 +266,7 @@
     ],
     [
       "Government / public official",
-      87
+      88
     ],
     [
       "Think tank / research institute",
@@ -291,7 +316,7 @@
     ],
     [
       "Government / public official",
-      30
+      31
     ],
     [
       "Business / private sector",
@@ -341,7 +366,7 @@
       "2023": 28,
       "2024": 38,
       "2025": 52,
-      "2026": 16
+      "2026": 18
     },
     "City Government": {
       "2023": 4,
@@ -361,14 +386,14 @@
       "2023": 17,
       "2024": 32,
       "2025": 39,
-      "2026": 17
+      "2026": 18
     },
     "Justice": {
       "2022": 4,
       "2023": 26,
       "2024": 27,
       "2025": 13,
-      "2026": 12
+      "2026": 13
     },
     "Gun Violence": {
       "2022": 14,
@@ -385,17 +410,17 @@
     }
   },
   "wc_stats": {
-    "n": 969,
-    "median": 1635,
-    "mean": 2133,
-    "p90": 3240,
+    "n": 973,
+    "median": 1634,
+    "mean": 2131,
+    "p90": 3239,
     "max": 15166,
-    "p10": 906,
-    "p25": 1282,
-    "p75": 2223,
-    "p95": 5565,
+    "p10": 907,
+    "p25": 1279,
+    "p75": 2217,
+    "p95": 5548,
     "no_count": 7,
-    "core_1000_2499": 691,
+    "core_1000_2499": 694,
     "under_500": 51,
     "over_5000": 53
   },
@@ -406,15 +431,15 @@
     ],
     [
       "500-999",
-      62
+      63
     ],
     [
       "1,000-1,999",
-      551
+      553
     ],
     [
       "2,000-2,999",
-      195
+      196
     ],
     [
       "3,000-4,999",
@@ -447,12 +472,12 @@
       {
         "floor": 750,
         "label": "750",
-        "n": 48
+        "n": 49
       },
       {
         "floor": 1000,
         "label": "1,000",
-        "n": 110
+        "n": 111
       },
       {
         "floor": 1250,
@@ -462,7 +487,7 @@
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 177
+        "n": 178
       },
       {
         "floor": 1750,
@@ -472,7 +497,7 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 71
+        "n": 72
       },
       {
         "floor": 2250,
@@ -541,15 +566,15 @@
     },
     {
       "year": "2026",
-      "n": 241,
-      "p25": 1286,
-      "median": 1690,
-      "p75": 2399,
+      "n": 245,
+      "p25": 1281,
+      "median": 1687,
+      "p75": 2393,
       "max": 13669
     }
   ],
   "by_nauthors": {
-    "1": 823,
+    "1": 827,
     "2": 124,
     "3": 26,
     "4": 1,
@@ -608,6 +633,11 @@
       "credential": "Journalist / media"
     },
     {
+      "name": "Brandon del Pozo",
+      "posts": 12,
+      "credential": "Academic"
+    },
+    {
       "name": "Aaron Chalfin",
       "posts": 12,
       "credential": "Academic"
@@ -621,11 +651,6 @@
       "name": "Nicole Gelinas",
       "posts": 11,
       "credential": "Think tank / research institute"
-    },
-    {
-      "name": "Brandon del Pozo",
-      "posts": 11,
-      "credential": "Academic"
     },
     {
       "name": "Paul Reeping",
@@ -708,64 +733,64 @@
       },
       {
         "year": "2026",
-        "weeks": 41.1,
-        "pieces": 246,
-        "outside_issues": 170,
-        "per_week_all": 5.98,
-        "per_week_outside_issues": 4.13,
+        "weeks": 42.0,
+        "pieces": 250,
+        "outside_issues": 173,
+        "per_week_all": 5.95,
+        "per_week_outside_issues": 4.12,
         "partial": true
       }
     ],
-    "total_weeks": 265.1,
+    "total_weeks": 266.0,
     "all_time_per_week": 3.68,
     "all_time_per_week_outside_issues": 1.77,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.13,
-    "current_per_week_all": 5.98,
+    "current_per_week_outside_issues": 4.12,
+    "current_per_week_all": 5.95,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 508,
+      "issue_tagged_pieces": 509,
       "published_away_from_drop": 69,
       "share_of_issue_pieces": 13.6,
-      "current_year_strict": 4.13,
-      "current_year_loose": 4.45,
+      "current_year_strict": 4.12,
+      "current_year_loose": 4.43,
       "all_time_strict": 1.77,
-      "all_time_loose": 2.02,
+      "all_time_loose": 2.03,
       "all_time_all": 3.68
     }
   },
   "rhythm": {
-    "n_dated": 976,
+    "n_dated": 980,
     "by_weekday": [
       {
         "day": "Mon",
         "pieces": 65,
-        "share": 6.7
+        "share": 6.6
       },
       {
         "day": "Tue",
         "pieces": 167,
-        "share": 17.1
+        "share": 17.0
       },
       {
         "day": "Wed",
-        "pieces": 461,
-        "share": 47.2
+        "pieces": 465,
+        "share": 47.4
       },
       {
         "day": "Thu",
         "pieces": 191,
-        "share": 19.6
+        "share": 19.5
       },
       {
         "day": "Fri",
         "pieces": 64,
-        "share": 6.6
+        "share": 6.5
       },
       {
         "day": "Sat",
         "pieces": 24,
-        "share": 2.5
+        "share": 2.4
       },
       {
         "day": "Sun",
@@ -774,8 +799,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.2,
-    "midweek_share": 83.9,
+    "top_day_share": 47.4,
+    "midweek_share": 84.0,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -844,9 +869,9 @@
       {
         "month": "October",
         "abbr": "Oct",
-        "pieces": 114,
+        "pieces": 118,
         "occurrences": 6,
-        "per_occurrence": 19.0
+        "per_occurrence": 19.7
       },
       {
         "month": "November",

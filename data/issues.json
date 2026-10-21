@@ -450,6 +450,32 @@
     ]
   },
   {
+    "name": "hidehome",
+    "post_count": 2,
+    "first_published": "2026-05-20",
+    "last_published": "2026-10-15",
+    "number": null,
+    "display_name": "Hidehome",
+    "top_topics": [
+      [
+        "Crime",
+        1
+      ],
+      [
+        "Justice",
+        1
+      ],
+      [
+        "Data Stories",
+        1
+      ],
+      [
+        "Street Lighting",
+        1
+      ]
+    ]
+  },
+  {
     "name": "women-and-guns",
     "post_count": 16,
     "first_published": "2026-09-09",
@@ -647,20 +673,6 @@
       ],
       [
         "Quality of Life",
-        1
-      ]
-    ]
-  },
-  {
-    "name": "hidehome",
-    "post_count": 1,
-    "first_published": "2026-05-20",
-    "last_published": "2026-05-20",
-    "number": null,
-    "display_name": "Hidehome",
-    "top_topics": [
-      [
-        "Street Lighting",
         1
       ]
     ]
