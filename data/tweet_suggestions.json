@@ -1,7 +1,126 @@
 {
- "generated": "2026-10-15T17:42:19+00:00",
+ "generated": "2026-10-21T17:56:34+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "anand-giridharadas-book-review-daniel-penny-jordan-neely",
+   "title": "Daniel Penny and Jordan Neely, Through Cracked Looking Glass",
+   "url": "https://www.vitalcitynyc.org/anand-giridharadas-book-review-daniel-penny-jordan-neely/",
+   "date": "2026-10-21",
+   "author": "Brandon del Pozo",
+   "handle": "@brandondelpozo",
+   "dek": "What to make of \"Man in the Mirror,\" Anand Giridharadas' impressive but incomplete new book",
+   "tags": [
+    "Book Review",
+    "Mental Health",
+    "Justice"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Brandon del Pozo says Anand Giridharadas' book on Jordan Neely and Daniel Penny gets the failed mental health system right and the Penny trial wrong, treating an acquittal as justice denied."
+    },
+    {
+     "kind": "argument",
+     "text": "Read @brandondelpozo, a former New York City Police Department precinct commander, on \"Man in the Mirror.\" He finds it important but incomplete, and says it never considers what the killing did to Penny as a person."
+    },
+    {
+     "kind": "hook",
+     "text": "\"To bristle at the proceedings of a criminal trial because it isn't a fulsome portrait of anyone involved is to fundamentally misunderstand its purpose,\" writes Brandon del Pozo on the Penny trial."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "mets-1986-world-series-victory-knicks-2026",
+   "title": "The Other Time New York Bled Orange and Blue",
+   "url": "https://www.vitalcitynyc.org/mets-1986-world-series-victory-knicks-2026/",
+   "date": "2026-10-21",
+   "author": "Jere Hester",
+   "handle": null,
+   "dek": "40 years ago, the Mets did the impossible — and brought the city together.",
+   "tags": [
+    "Sports",
+    "History"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Jere Hester was in the Shea Stadium stands for Game 6 in 1986 and on the streets for the Knicks title this June. He writes that both wins briefly united a fractured city."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Jere Hester on the Mets in 1986, the Knicks this year, and what two championships 40 years apart did for New York City. He was at Shea Stadium for the first and in the streets for the second."
+    },
+    {
+     "kind": "hook",
+     "text": "\"The Mets made us a family.\" Mayor Ed Koch said it in 1986. Jere Hester writes that Mayor Zohran Mamdani echoed him at the Knicks parade, and that New York City got the magic twice in one lifetime."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "link-nyc-kiosks-failure",
+   "title": "Let’s Be Honest. LinkNYC Has Been a Failure.",
+   "url": "https://www.vitalcitynyc.org/link-nyc-kiosks-failure/",
+   "date": "2026-10-21",
+   "author": "Michael Samuelian",
+   "handle": null,
+   "dek": "Why the de Blasio-era experiment was the wrong model and what we should do about it",
+   "tags": [
+    "Technology",
+    "Infrastructure",
+    "City Planning"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Michael Samuelian argues LinkNYC failed because the City built a public utility on a private advertiser's balance sheet, then looked away. The 32-foot Link5G towers, he says, repeat the mistake."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Michael Samuelian on LinkNYC at ten. He lays out four structural failures, from backward geography to absent oversight, and proposes a public Broadband Development Corporation instead."
+    },
+    {
+     "kind": "hook",
+     "text": "\"New York doesn't need taller 5G towers. It needs a landlord who owns the pipes.\" Michael Samuelian on what the City should do after ten years of LinkNYC."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "election-campaign-financing-complications-nyc",
+   "title": "Money and Politics in New York City: A Frontline Perspective",
+   "url": "https://www.vitalcitynyc.org/election-campaign-financing-complications-nyc/",
+   "date": "2026-10-21",
+   "author": "Maya Kornberg",
+   "handle": null,
+   "dek": "A former candidate for the New York City Council explains the complications of campaign financing.",
+   "tags": [
+    "Elections",
+    "Money in politics",
+    "Corruption"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Maya Kornberg ran for the New York City Council with public matching funds. She says outside groups spent over $400,000 backing her, and many voters blamed her campaign for the ads anyway."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Maya Kornberg, a political scientist and former City Council candidate, on what outside spending did to her race and why she wants Citizens United overturned."
+    },
+    {
+     "kind": "hook",
+     "text": "\"I was no longer in control of how voters experienced messaging about my goals or values.\" Maya Kornberg on running for City Council amid outside spending."
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "new-yorks-devilish-assault-problem",
    "title": "New York’s Devilish Assault Problem",
@@ -850,91 +969,6 @@
     {
      "kind": "quote",
      "text": "Jordan McGillis writes: \"Zohran Mamdani tapped into that sentiment on his way to winning the mayoralty in 2025, with affordability at the heart of his campaign.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "cost-effective-childcare-policy-reforms-nyc",
-   "title": "6 Policy Reforms to Make Childcare Dollars Go Further for Families",
-   "url": "https://www.vitalcitynyc.org/cost-effective-childcare-policy-reforms-nyc/",
-   "date": "2026-09-17",
-   "author": "Vital City",
-   "handle": null,
-   "dek": "How to cost-effectively reach more children with high-quality care",
-   "tags": [
-    "Just Fix It",
-    "Education",
-    "City Government",
-    "policy"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Just Fix It: How to cost-effectively reach more children with high-quality care"
-    },
-    {
-     "kind": "quote",
-     "text": "From Just Fix It: \"Since 2014, every 4-year-old in the city has been eligible for pre-K, and in 2017, many 3-year-olds became eligible for 3-K.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "unlocking-vacant-rent-stabilized-housing-units-nyc",
-   "title": "The City Needs 700,000 New Homes — Here’s 57,000",
-   "url": "https://www.vitalcitynyc.org/unlocking-vacant-rent-stabilized-housing-units-nyc/",
-   "date": "2026-09-17",
-   "author": "Howard Yaruss",
-   "handle": null,
-   "dek": "A city in desperate need of housing must unlock its unoccupied, uneconomic rent-stabilized apartments.",
-   "tags": [
-    "Housing",
-    "City Government"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Howard Yaruss: A city in desperate need of housing must unlock its unoccupied, uneconomic rent-stabilized apartments."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Howard Yaruss: \"The City Needs 700,000 New Homes — Here's 57,000\""
-    },
-    {
-     "kind": "quote",
-     "text": "Howard Yaruss writes: \"At an average household size of 2.48 people for the city, these vacant units could house approximately 140,000 people — the entire population of Syracuse, New Haven or Stamford, Connecticut.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "better-government-technologies-strategies-nyc",
-   "title": "The Real Path to Better Government Technology",
-   "url": "https://www.vitalcitynyc.org/better-government-technologies-strategies-nyc/",
-   "date": "2026-09-17",
-   "author": "Brittany N. Montgomery",
-   "handle": null,
-   "dek": "We need to change the way the City buys software.",
-   "tags": [
-    "Technology",
-    "City Government"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Brittany N. Montgomery: We need to change the way the City buys software."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Brittany N. Montgomery: \"The Real Path to Better Government Technology\""
-    },
-    {
-     "kind": "quote",
-     "text": "Brittany N. Montgomery writes: \"You don't have to look very far in New York to find failed government technology projects.\""
     }
    ],
    "attempts": 1
