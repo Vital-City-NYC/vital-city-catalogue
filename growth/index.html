@@ -736,6 +736,7 @@
       </details>
       <div class="sechead-title" id="sec-glance" style="margin:24px 0 4px">At a glance</div>
       <div style="font-size:12.5px;color:var(--vc-charcoal);margin:0 0 12px;max-width:760px">The monthly measures to steer by, who is reading, and the last seven days. Everything below starts folded; click a heading to open it.</div>
+      <p id="leadLine" style="font-size:17px;line-height:1.45;margin:0 0 14px;max-width:760px;display:none"></p>
       <div class="card" id="scorecard"><h2>Key indicators</h2><div class="hint">Loading…</div></div>
       <div class="card" id="policyCircle">
         <h2>Who's reading <span class="hint">notable and government readers active in the last 30 days &middot; the measure the mission turns on</span></h2>
@@ -1776,7 +1777,8 @@ function boot(data){
   renderABTests(mc);
   renderAcquisition(data.ghost_signup_attribution || {});
   renderEngagementExtras(data.engagement_extras || {});
-  renderLifecycle(data.lifecycle || {}, kiStayHTML(data));
+  renderLifecycle(data.lifecycle || {}, kiStayHTML(data) + roleMonthlyHTML(data), mc);
+  renderLeadLine(data);
   renderTraffic(data);
   renderSearchConsole(data);
   renderTopSearches(data);
@@ -1805,9 +1807,22 @@ function boot(data){
   // one on the live dashboard.
   const camp=(mc.campaigns||[]).slice().sort((a,b)=>String(b.sent||"").localeCompare(String(a.sent||"")));
   if(camp.length){
-    const SHOW=5;
+    const SHOW=8;
+    // "Vs. usual": each send against the median of the eight sends of the
+    // same kind before it (newsletter against newsletters, appeal against
+    // appeals), in percentage points. Borrowed from the Cowork dashboard,
+    // Oct. 2026.
+    const KIND_LBL={newsletter:"Newsletter",appeal:"Appeal",other:"Other"};
+    const med=a=>{ const v=a.slice().sort((x,y)=>x-y), n=v.length; return n? (n%2?v[(n-1)/2]:(v[n/2-1]+v[n/2])/2) : null; };
+    const usual={};
+    ["newsletter","appeal","other"].forEach(k=>{
+      const same=camp.filter(c=>(c.kind||"other")===k).slice().reverse();   // oldest first
+      same.forEach((c,i)=>{ const prev=same.slice(Math.max(0,i-8),i); if(prev.length>=4) usual[c.id]={op:med(prev.map(x=>+x.open_pct||0)),cl:med(prev.map(x=>+x.click_pct||0)),n:prev.length}; });
+    });
+    const vs=(v,u,dp)=>{ if(u==null) return '<span style="color:var(--vc-charcoal)">&ndash;</span>'; const d=v-u, t=Math.abs(d)<(dp?0.15:1.5);
+      return `<span style="color:${t?'var(--vc-charcoal)':(d>0?'var(--vc-green)':'var(--vc-orange)')}" title="Usual: ${u.toFixed(dp?2:1)}%">${t?'about usual':(d>0?'+':'&minus;')+Math.abs(d).toFixed(1)+' pts'}</span>`; };
     const mkRow = (c) => {
-      const op=c.open_pct||0, cl=c.click_pct||0;
+      const op=c.open_pct||0, cl=c.click_pct||0, u=usual[c.id]||{};
       const opPill=op>=35?'pillok':(op>=22?'pillinfo':'pillwarn');
       // Variate (A/B-test) campaigns have no subject_line on the parent —
       // the children carry the variants. Fall back to the variate subject
@@ -1830,37 +1845,32 @@ function boot(data){
       const link=`https://us15.admin.mailchimp.com/reports/summary?id=${esc(c.id)}`;
       return `<tr>
         <td>${esc(c.sent)}</td>
+        <td>${esc(KIND_LBL[c.kind]||"Other")}</td>
         <td${abNote?` title="${esc(abNote)}"`:""}><a href="${link}" target="_blank">${esc(subj)}</a></td>
         <td class="num">${fmtN(c.sent_to)}</td>
         <td class="num"><span class="${opPill}">${op}%</span></td>
+        <td class="num">${vs(op,u.op,0)}</td>
         <td class="num">${cl}%</td>
+        <td class="num">${vs(cl,u.cl,1)}</td>
       </tr>`;
     };
     const head = `<thead><tr>
-      <th>Sent</th><th>Subject</th><th class="num">Recipients</th><th class="num">Open rate</th><th class="num">Click rate</th>
+      <th>Sent</th><th>Kind</th><th>Subject</th><th class="num">Recipients</th><th class="num">Open rate</th><th class="num">vs. usual</th><th class="num">Click rate</th><th class="num">vs. usual</th>
     </tr></thead>`;
-    const firstRows = camp.slice(0,SHOW).map(mkRow).join("");
-    const moreRows  = camp.slice(SHOW).map(mkRow).join("");
-    const extra = camp.length - SHOW;
-    $("#campTbl").innerHTML =
-      `<table class="tbl">${head}<tbody id="campTbody">${firstRows}</tbody></table>` +
-      (extra > 0 ? `<button class="btn-link" id="campToggle" style="margin-top:10px;background:none;border:0;color:var(--vc-cerulean);font:inherit;font-weight:700;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;padding:4px 0">Show ${extra} more ▾</button>` : '');
-    if(extra > 0){
-      $("#campToggle").addEventListener("click", () => {
-        const btn = $("#campToggle");
-        const tbody = $("#campTbody");
-        if(btn.dataset.open === "1"){
-          tbody.innerHTML = firstRows;
-          btn.textContent = `Show ${extra} more ▾`;
-          btn.dataset.open = "0";
-        } else {
-          tbody.innerHTML = firstRows + moreRows;
-          btn.textContent = `Hide ▴`;
-          btn.dataset.open = "1";
-        }
-      });
-    }
-    wrapTables();
+    let kindF="all", open=false;
+    const draw=()=>{
+      const rows=camp.filter(c=>kindF==="all"||(c.kind||"other")===kindF);
+      const extra=rows.length-SHOW;
+      $("#campTbl").innerHTML =
+        `<div class="campf" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">${[["all","All sends"],["newsletter","Newsletters"],["appeal","Appeals"],["other","Other"]].map(([k,l])=>`<button data-k="${k}" style="font:inherit;font-size:11px;font-weight:700;padding:3px 9px;border:1px solid var(--vc-black);cursor:pointer;background:${k===kindF?'var(--vc-black)':'transparent'};color:${k===kindF?'var(--vc-paper)':'var(--vc-black)'}">${l} (${fmtN(k==="all"?camp.length:camp.filter(c=>(c.kind||"other")===k).length)})</button>`).join("")}</div>`+
+        `<table class="tbl">${head}<tbody>${rows.slice(0,open?rows.length:SHOW).map(mkRow).join("")}</tbody></table>` +
+        (extra > 0 ? `<button class="btn-link" id="campToggle" style="margin-top:10px;background:none;border:0;color:var(--vc-cerulean);font:inherit;font-weight:700;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;padding:4px 0">${open?'Hide ▴':`Show ${extra} more ▾`}</button>` : '')+
+        `<div style="font-size:11px;color:var(--vc-charcoal);margin-top:6px">"Vs. usual" compares each send with the median of the eight sends of the same kind before it, in percentage points (blank until there are four). Newsletters are the regular Thursday sends; appeals are fundraising emails. In an A/B test, both subjects are shown and the winner has a check mark.</div>`;
+      $("#campTbl").querySelectorAll(".campf button").forEach(b=>b.addEventListener("click",()=>{ kindF=b.dataset.k; open=false; draw(); }));
+      const t=$("#campToggle"); if(t) t.addEventListener("click",()=>{ open=!open; draw(); });
+      wrapTables();
+    };
+    draw();
   } else {
     $("#campTbl").innerHTML='<div style="font-size:12px;color:var(--vc-charcoal)">No campaign data available.</div>';
   }
@@ -5561,7 +5571,7 @@ function renderBigPicture(data){
     </div>` + listBlock;
 }
 
-function renderLifecycle(lc, stayHTML){
+function renderLifecycle(lc, stayHTML, mc){
   const host = $("#lifecycleBody");
   if(!host) return;
   const card=document.getElementById("lifecycle");
@@ -5587,6 +5597,7 @@ function renderLifecycle(lc, stayHTML){
         <div class="pl">Activation · new 30d</div>
         <div class="pn">${act.pct||0}%</div>
         <div class="pd ${actCls}">${fmtN(act.engaged||0)} of ${fmtN(act.cohort_size||0)} opened ≥1 email</div>
+        ${(()=>{ const m=mc||{}, a=+((m.mau||{}).active_users)||0, t=+m.total_subscribers||0; return a&&t?`<div class="pd flat" title="Everyone on the list who opened at least one email sent in the last 30 days, out of everyone subscribed.">Whole list: ${Math.round(100*a/t)}% (${fmtN(a)} of ${fmtN(t)})</div>`:""; })()}
       </div>
       <div class="perfcell" title="Subscribers who opened at least one email in the past year but nothing in the last 30 days. They've drifted but you've earned their attention before — the highest-ROI re-engagement target. Click the number to see who they are.">
         <div class="pl">At-risk · lapsed but reachable</div>
@@ -6673,7 +6684,8 @@ function kiRowsHTML(sc, w, marks, h){
 // Do new subscribers stay? Ghost-era signups by how they arrived, matched to
 // the contacts database (engagement_extras.channel_ltv, built nightly).
 const KI_SRC={"AcademicOutreach":"University outreach emails","ReengagementCampaign":"Emails inviting lapsed readers back","(unknown)":"Not recorded","Direct":"Came straight to the site (typed the address, a bookmark or an app)","Newsletter":"A link in the newsletter","Twitter":"X (Twitter)",
-  "Vital City Newsletter Contacts":"Newsletter contacts","newsletter":"A link in the newsletter","Other (small channels)":"Other small sources"};
+  "Vital City Newsletter Contacts":"Newsletter contacts","newsletter":"A link in the newsletter","Other (small channels)":"Other small sources",
+  "Old site form (Mailchimp)":"The old website's signup form, before March 2026"};
 function kiSrc(s){ return KI_SRC[s]||s; }
 function kiStayRows(data){
   const cl=((data.engagement_extras||{}).channel_ltv)||{};
@@ -6684,9 +6696,11 @@ function kiStayHTML(data){
   const rows=(cl.channels||[]).filter(r=>r.stayed_pct!=null&&r.matched>=10);
   if(!rows.length) return "";
   const start=((data.ghost_signup_attribution||{}).coverage_start)||"";
+  const live=cl.status_source==="mailchimp_live";
+  const hasSt=rows.some(r=>r.subscribed!=null);
   return `<div class="ki-stay" style="margin-top:16px"><b>Do new subscribers stay?</b> Signups since ${esc(start?pwDate(start):"")} by how they arrived, and the share still subscribed today.
-    <table><tr><th>Arrived from</th><th>Signups</th><th>Still subscribed</th></tr>${rows.map(r=>`<tr><td>${esc(kiSrc(r.source))}</td><td>${fmtN(r.signups)}</td><td>${Math.round(r.stayed_pct)}%</td></tr>`).join("")}</table>
-    <div class="ki-fine">Event registrations are added to the list outside Ghost, so they aren't in this table yet.</div></div>`;
+    <table><tr><th>Arrived from</th><th>Signups</th>${hasSt?`<th>Unsubscribed</th><th>Bounced</th>`:""}<th>Still subscribed</th></tr>${rows.map(r=>`<tr><td>${esc(kiSrc(r.source))}</td><td>${fmtN(r.signups)}</td>${hasSt?`<td>${fmtN(r.unsubscribed||0)}</td><td>${fmtN(r.cleaned||0)}</td>`:""}<td>${Math.round(r.stayed_pct)}% <span style="color:var(--vc-charcoal);font-size:10.5px">(${fmtN(r.matched-r.left)} of ${fmtN(r.matched)})</span></td></tr>`).join("")}</table>
+    <div class="ki-fine">${live?"Status is each person's current Mailchimp status, where people unsubscribe. ":""}The share is out of the people who have reached Mailchimp. Signups from the past eight days that are still waiting for the Thursday transfer from Ghost are left out${live&&rows.some(r=>r.not_in_mc)?`, and ${fmtN(rows.reduce((t,r)=>t+(r.not_in_mc||0),0))} older signups that never reached Mailchimp are left out too`:""}. Event lists are registrations for a Vital City event, added to the list in bulk.</div></div>`;
 }
 function kiBodyHTML(sc, w, opts){
   opts=opts||{}; opts.layout=opts.layout||"both";   // "grid" (screen tiles), "rows" (paper) or both, with CSS picking one
@@ -6814,6 +6828,37 @@ function scReportMD(sc, data){
   if(rows.length) o+=`\n**Do new subscribers stay?** ${rows.map(r=>`${kiSrc(r.source)}: ${fmtN(r.signups)} signups, ${Math.round(r.stayed_pct)}% still subscribed`).join("; ")}.\n`;
   o+=`\n_Notes: ${sc.measures.map(x=>`${x.name}: ${x.baseText||""} ${x.note||""}`.trim()).join(" ")} ${SC_LEGEND}_\n`;
   return o;
+}
+// Joined and left by group, month by month (contacts database, nightly).
+// Borrowed from the Cowork dashboard, Oct. 2026; the 7- and 30-day lines are
+// whoHTML below.
+function roleMonthlyHTML(data){
+  const rf=data.role_flows||{}; if(!rf.available||!(rf.monthly||[]).length) return "";
+  const keys=(rf.keys||[]).filter(k=>k!=="other"), lab=rf.labels||{};
+  const ms=rf.monthly.filter(m=>m.m>="2025-01").slice(-12).reverse();
+  if(!ms.length) return "";
+  const cell=(m,k)=>{ const j=(m.join||{})[k]||0, l=(m.leave||{})[k]||0; return `<td>${fmtN(j)} / ${fmtN(l)}</td>`; };
+  return `<div class="ki-stay" style="margin-top:16px"><b>Joined and left, by group</b> Each month, people who joined the list / people who unsubscribed.
+    <div class="tscroll"><table><tr><th>Month</th>${keys.map(k=>`<th>${esc(lab[k]||k)}</th>`).join("")}<th>Everyone</th></tr>${ms.map(m=>{
+      const tj=Object.values(m.join||{}).reduce((a,b)=>a+b,0), tl=Object.values(m.leave||{}).reduce((a,b)=>a+b,0);
+      const [y,mo]=m.m.split("-"); return `<tr><td>${PX_MON[+mo-1]} ${y}</td>${keys.map(k=>cell(m,k)).join("")}<td>${fmtN(tj)} / ${fmtN(tl)}</td></tr>`; }).join("")}</table></div>
+    <div class="ki-fine">Groups come from the contacts database's tags, then .gov and .edu addresses. Joined is dated by signup; left by the Mailchimp unsubscribe date the contacts database holds, which can miss some unsubscribes. The current month is partial.</div></div>`;
+}
+// One plain sentence at the top of the page: the list now and this month so
+// far. Borrowed from the Cowork dashboard, Oct. 2026. Facts only.
+function renderLeadLine(data){
+  const el=document.getElementById("leadLine"); if(!el) return;
+  try{
+    const mc=data.mailchimp||{}, tot=+mc.total_subscribers||0; if(!tot) return;
+    const rows=mc.daily_activity||[], last=rows.length?rows[rows.length-1].d:"";
+    const mo=String(last).slice(0,7); if(!mo) return;
+    const inMo=rows.filter(r=>String(r.d).startsWith(mo));
+    const subs=inMo.reduce((t,r)=>t+(+r.subs||0),0), ev=inMo.reduce((t,r)=>t+(+r.event_subs||0),0), uns=inMo.reduce((t,r)=>t+(+r.unsubs||0),0);
+    const act=+((mc.mau||{}).active_users)||0;
+    const [y,m]=mo.split("-");
+    el.innerHTML=`Vital City's newsletter has ${fmtN(tot)} subscribers. From ${PX_MON[+m-1]} 1 through ${esc(pxDay(last))}, ${fmtN(subs)} people signed up${ev?` (${fmtN(ev)} of them from an event list)`:""} and ${fmtN(uns)} unsubscribed.${act?` ${fmtN(act)} people opened at least one email in the last 30 days.`:""}`;
+    el.style.display="";
+  }catch(e){}
 }
 // Who joined and who left, by role (contacts database via the nightly pull).
 function whoHTML(data, which){

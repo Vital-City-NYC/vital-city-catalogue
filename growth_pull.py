@@ -888,12 +888,32 @@ def build_engagement_extras(mc, signup_attr, donorbox):
             for em in (p.get("emails") or []):
                 em_to_person[em.lower().strip()] = p
         chan = {}     # source label → {signups, donors, total_amt, gifts}
+        # Still subscribed or not comes from Mailchimp's live status, where
+        # people unsubscribe; the contacts database's `unsub` flag missed
+        # many (see pull_mailchimp_member_status). `matched` = reached
+        # Mailchimp; `left` = unsubscribed or cleaned (bounced). Anyone not in
+        # Mailchimp who signed up in the last eight days is still waiting for
+        # the Thursday Ghost-to-Mailchimp batch and is left out; older ones
+        # never reached the list and are counted in `not_in_mc`.
+        mc_status = pull_mailchimp_member_status()
+        _wait_cut = (datetime.now(timezone.utc) - timedelta(days=8)).isoformat()
+        _z = lambda: {"signups": 0, "donors": 0, "total_amt": 0.0, "gifts": 0, "matched": 0, "left": 0,
+                      "subscribed": 0, "unsubscribed": 0, "cleaned": 0, "not_in_mc": 0, "waiting": 0}
         for em, info in src_email.items():
             src = info.get("source") or "(unknown)"
-            chan.setdefault(src, {"signups": 0, "donors": 0, "total_amt": 0.0, "gifts": 0, "matched": 0, "left": 0})
+            chan.setdefault(src, _z())
             chan[src]["signups"] += 1
             p = em_to_person.get(em)
-            if p:
+            if mc_status:
+                st = mc_status.get(em)
+                if st in ("subscribed", "unsubscribed", "cleaned"):
+                    chan[src]["matched"] += 1; chan[src][st] += 1
+                    if st != "subscribed": chan[src]["left"] += 1
+                elif (info.get("ts") or "") >= _wait_cut:
+                    chan[src]["waiting"] += 1
+                else:
+                    chan[src]["not_in_mc"] += 1
+            elif p:
                 chan[src]["matched"] += 1
                 if p.get("unsub"): chan[src]["left"] += 1
             if p and p.get("don"):
@@ -902,10 +922,11 @@ def build_engagement_extras(mc, signup_attr, donorbox):
                 chan[src]["gifts"]     += int(p.get("dcnt") or 0)
         # Roll up tiny channels (<5 signups) into "Other" to keep the chart readable
         chan_rows = []   # renamed from `rows` to avoid shadowing the engagement tuples list above
-        other = {"signups": 0, "donors": 0, "total_amt": 0.0, "gifts": 0, "matched": 0, "left": 0}
+        other = _z()
         for src, d in chan.items():
             if d["signups"] < 5:
-                other["matched"] += d["matched"]; other["left"] += d["left"]
+                for _k in ("matched", "left", "subscribed", "unsubscribed", "cleaned", "not_in_mc", "waiting"):
+                    other[_k] += d[_k]
                 other["signups"] += d["signups"]
                 other["donors"]  += d["donors"]
                 other["total_amt"] += d["total_amt"]
@@ -920,6 +941,8 @@ def build_engagement_extras(mc, signup_attr, donorbox):
                 "ltv_per_signup": round(d["total_amt"] / d["signups"], 2) if d["signups"] else 0,
                 "ltv_per_donor":  round(d["total_amt"] / d["donors"], 2)  if d["donors"]  else 0,
                 "matched": d["matched"], "left": d["left"],
+                "subscribed": d["subscribed"], "unsubscribed": d["unsubscribed"], "cleaned": d["cleaned"],
+                "not_in_mc": d["not_in_mc"], "waiting": d["waiting"],
                 "stayed_pct": round(100 * (1 - d["left"] / d["matched"]), 1) if d["matched"] else None,
             })
         if other["signups"] > 0:
@@ -932,6 +955,8 @@ def build_engagement_extras(mc, signup_attr, donorbox):
                 "ltv_per_signup": round(other["total_amt"] / other["signups"], 2) if other["signups"] else 0,
                 "ltv_per_donor":  round(other["total_amt"] / other["donors"], 2)  if other["donors"]  else 0,
                 "matched": other["matched"], "left": other["left"],
+                "subscribed": other["subscribed"], "unsubscribed": other["unsubscribed"], "cleaned": other["cleaned"],
+                "not_in_mc": other["not_in_mc"], "waiting": other["waiting"],
                 "stayed_pct": round(100 * (1 - other["left"] / other["matched"]), 1) if other["matched"] else None,
             })
         chan_rows.sort(key=lambda r: -r["signups"])
@@ -948,6 +973,7 @@ def build_engagement_extras(mc, signup_attr, donorbox):
             "window_days": (signup_attr or {}).get("window_days", 180),
             "channels": chan_rows,
             "total": tot,
+            "status_source": "mailchimp_live" if mc_status else "contacts_db",
         }
     else:
         out["channel_ltv"] = {"available": False,
@@ -2981,6 +3007,13 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
     # piece by signups in its first 30 days). Everything else keeps the
     # days_back window.
     url_since_iso = min(since_iso, url_since + "T00:00:00+00:00")
+    # Bulk-added members (Ghost marks their signup event source "import").
+    # After the March 3, 2026 migration these are event registration lists,
+    # real people who signed up for something; they count as signups with the
+    # event as their source. Before it, they are the old site's Mailchimp form
+    # signups copied over, so they count too, as "Old site form".
+    event_lists = _ghost_event_lists(tok)
+    event_by_day = {}      # day -> signups that arrived on an event list
     url_days = {}          # post url -> [signup day, ...] since url_since
     by_url = {}
     by_day = {}            # day -> count of signup events (canonical signup source-of-truth)
@@ -3047,6 +3080,14 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
                                    "landing_title": _att.get("title") or "",
                                    "landing_type": _att.get("type") or ""})
             att = d.get("attribution") or {}
+            _imp = d.get("source") == "import"
+            if _imp and ts and ts[:10] > "2026-03-03":
+                _em0 = ((d.get("member") or {}).get("email") or "").lower().strip()
+                event_by_day[ts[:10]] = event_by_day.get(ts[:10], 0) + 1
+                att = {"referrer_source": "Event: " + event_lists.get(_em0, "a registration list"),
+                       "referrer_medium": "event", "type": "event"}
+            elif _imp:
+                att = {"referrer_source": "Old site form (Mailchimp)", "referrer_medium": "form", "type": "import"}
             # Flat aggregates — capture every signup's source, not just the
             # ones that attributed to a specific post. Homepage signups are
             # the bulk of volume; they'd be invisible if we only looked at
@@ -3124,6 +3165,7 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
         "by_day":         [{"d": d, "subs": n} for d, n in sorted(by_day.items())],
         "by_source":      [{"src": s, "n": n} for s, n in sorted(by_source.items(), key=lambda kv: -kv[1])],
         "app_by_day":     [{"d": d, "n": n} for d, n in sorted(app_by_day.items())],
+        "event_by_day":   [{"d": d, "n": n} for d, n in sorted(event_by_day.items())],
         "by_medium":      [{"med": m, "n": n} for m, n in sorted(by_medium.items(), key=lambda kv: -kv[1])],
         "by_landing":     [{"type": t, "n": n} for t, n in sorted(by_landing.items(), key=lambda kv: -kv[1])],
         "by_topic":       by_topic(signup_slugs, catalogue_topic_map(), "signups"),
@@ -3133,6 +3175,83 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
         "_url_days":      url_days,   # internal — per-piece signup days since url_since, for the piece index
         "url_since":      url_since,
     }
+
+
+def pull_mailchimp_member_status():
+    """Every Mailchimp member's current status (subscribed, unsubscribed,
+    cleaned ...), by lowercased email. The "do new subscribers stay?" table
+    reads this: people unsubscribe in Mailchimp, through the footer of each
+    email, and the contacts database's `unsub` flag missed many of them
+    (Oct. 21, 2026: re-engagement signups showed 16 of 16 still subscribed
+    when Mailchimp had 11 of the 16 unsubscribed)."""
+    key = mailchimp_key()
+    if not key: return {}
+    dc = key.split("-")[-1]
+    list_id = os.environ.get("MAILCHIMP_LIST", "ec30bf0c4b")
+    out, offset = {}, 0
+    try:
+        while offset < 60000:
+            mems = mc_get(f"/lists/{list_id}/members?count=1000&offset={offset}"
+                          "&fields=members.email_address,members.status,total_items",
+                          key, dc).get("members", [])
+            for m in mems:
+                em = (m.get("email_address") or "").lower().strip()
+                if em: out[em] = m.get("status") or ""
+            if len(mems) < 1000: break
+            offset += 1000
+    except Exception as e:
+        log(f"  mailchimp member status failed: {e}")
+        return {}
+    log(f"  mailchimp member status: {len(out)} members")
+    return out
+
+
+def _ghost_event_lists(tok):
+    """Lists added to Ghost in bulk after the March 2026 move, by member email:
+    {email: "After the Freeze webinar, June 26"}. Ghost tags each import with
+    "Import <date time>" plus whatever label the uploader chose; the chosen
+    label names the event (for example "0626 - After the Freeze Webinar"). The
+    March 3 migration of the whole Mailchimp list is left out: those are the
+    old site's form signups, not an event."""
+    H = {"Authorization": f"Ghost {tok}", "Accept-Version": "v5.0"}
+    out = {}
+    try:
+        labs = json.loads(http_get(f"{GHOST_ADMIN_API}/labels/?limit=all", headers=H, timeout=60)).get("labels", [])
+    except Exception as e:
+        log(f"  ghost labels failed: {e}"); return out
+    for lab in labs:
+        nm = lab.get("name") or ""
+        m = re.match(r"Import (\d{4}-\d{2}-\d{2})", nm)
+        if not m or m.group(1) <= "2026-03-03": continue
+        page, members = 1, []
+        while page < 50:
+            f = urllib.parse.quote(f"label:{lab['slug']}")
+            try:
+                d = json.loads(http_get(f"{GHOST_ADMIN_API}/members/?filter={f}&limit=100&page={page}&include=labels",
+                                        headers=H, timeout=60))
+            except Exception as e:
+                log(f"  ghost import-label members failed: {e}"); break
+            members += d.get("members", [])
+            if not ((d.get("meta") or {}).get("pagination") or {}).get("next"): break
+            page += 1
+        # The event's name: the other label shared by most of the batch,
+        # preferring the one written out with spaces over its slug twin.
+        from collections import Counter as _C
+        other = _C(l.get("name") or "" for mm in members for l in (mm.get("labels") or [])
+                   if not (l.get("name") or "").startswith("Import ") and (l.get("name") or "") != "Mailchimp import")
+        names = sorted(other.items(), key=lambda kv: (-kv[1], -(" " in kv[0]), -len(kv[0])))
+        ev = names[0][0] if names else ""
+        mm_ = re.match(r"(\d{2})(\d{2})\s*-\s*(.+)", ev)
+        if mm_:
+            mon = ["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."][int(mm_.group(1))-1]
+            ev = f"{mm_.group(3).strip()}, {mon} {int(mm_.group(2))}"
+        ev = ev or f"List added {m.group(1)}"
+        ev = re.sub(r"\bWebinar\b", "webinar", ev)
+        for mm in members:
+            em = (mm.get("email") or "").lower().strip()
+            if em: out.setdefault(em, ev)
+    log(f"  ghost event lists: {len(out)} members across {len(set(out.values()))} lists")
+    return out
 
 
 def pull_recent_unsubs(days=21):
@@ -5301,6 +5420,17 @@ def main():
         mc["daily_activity"] = sorted(mc.get("daily_activity") or [], key=lambda r: r["d"])
         # Note this in the data so the dashboard can label it
         mc["signup_source"] = "ghost_events"
+        # Signups that arrived on an event registration list (the June 26,
+        # 2026 webinar list, added July 2). They stay in every total; these
+        # fields let the dashboard say how many of a month's came that way.
+        ev_day = {r["d"]: r["n"] for r in (signup_attr.get("event_by_day") or [])}
+        for row in (mc.get("daily_activity") or []):
+            if row.get("d") in ev_day: row["event_subs"] = ev_day[row["d"]]
+        from collections import Counter as _Cev
+        ev_mon = _Cev()
+        for d_, n_ in ev_day.items(): ev_mon[d_[:7]] += n_
+        for m in (mc.get("monthly_signups") or []):
+            if ev_mon.get(m.get("month")): m["event_signups"] = ev_mon[m["month"]]
         # Also recompute the signup_windows ytd/prior_ytd totals based on the
         # corrected activity series.
         from datetime import date as _date
