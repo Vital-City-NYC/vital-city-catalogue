@@ -44,7 +44,7 @@
     "type_basis": "default",
     "published_date": "2026-10-21",
     "published_at": "2026-10-21T14:37:28.000+00:00",
-    "updated_at": "2026-10-21T14:37:28.000+00:00",
+    "updated_at": "2026-10-21T21:39:47.000+00:00",
     "primary_author": "Jere Hester",
     "authors": [
       "Jere Hester"
@@ -67,9 +67,9 @@
       "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 937,
-    "reading_minutes": 4,
+    "visibility": "members",
+    "word_count": 181,
+    "reading_minutes": 1,
     "id": "6ad8c58a807b1e000181a5cf"
   },
   {
@@ -80,7 +80,7 @@
     "type_basis": "default",
     "published_date": "2026-10-21",
     "published_at": "2026-10-21T14:23:56.000+00:00",
-    "updated_at": "2026-10-21T14:23:56.000+00:00",
+    "updated_at": "2026-10-21T21:06:11.000+00:00",
     "primary_author": "Michael Samuelian",
     "authors": [
       "Michael Samuelian"
@@ -104,9 +104,9 @@
       "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 1607,
-    "reading_minutes": 7,
+    "visibility": "members",
+    "word_count": 184,
+    "reading_minutes": 1,
     "id": "6ad778e0390b980001173f29"
   },
   {
@@ -3158,7 +3158,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-07-28",
     "published_at": "2026-07-28T18:59:13.000+00:00",
-    "updated_at": "2026-09-29T21:20:42.000+00:00",
+    "updated_at": "2026-10-21T20:45:56.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -3182,7 +3182,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 13669,
+    "word_count": 13675,
     "reading_minutes": 59,
     "id": "6aa95983165ce00001549b95"
   },
@@ -4288,14 +4288,14 @@
     "id": "6a355d51c936bc0001afadd8"
   },
   {
-    "title": "Darializa Avila Chevalier on Housing, Immigration, & Her Run for Congress in New York's 13th District",
+    "title": "Darializa Avila Chevalier on Housing, Immigration & Her Run for Congress in New York's 13th District",
     "slug": "darializa-avila-chevalier-on-housing",
     "url": "https://www.vitalcitynyc.org/darializa-avila-chevalier-on-housing/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2026-06-18",
     "published_at": "2026-06-18T18:19:39.000+00:00",
-    "updated_at": "2026-09-29T20:53:53.000+00:00",
+    "updated_at": "2026-10-21T20:45:47.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -4319,7 +4319,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 11892,
+    "word_count": 11933,
     "reading_minutes": 52,
     "id": "6aa95980165ce00001549b90"
   },
@@ -5692,14 +5692,14 @@
     "id": "6a286c49db63ad0001922567"
   },
   {
-    "title": "Micah Lasher on Housing, Immigration, and His Campaign for Congress in New York's 12th District",
+    "title": "Micah Lasher on Housing, Immigration and His Campaign for Congress in New York's 12th District",
     "slug": "micah-lasher-on-housing-immigration",
     "url": "https://www.vitalcitynyc.org/micah-lasher-on-housing-immigration/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2026-06-09",
     "published_at": "2026-06-09T17:17:24.000+00:00",
-    "updated_at": "2026-09-29T21:09:06.000+00:00",
+    "updated_at": "2026-10-21T21:28:36.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -5723,7 +5723,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 8767,
+    "word_count": 8807,
     "reading_minutes": 38,
     "id": "6aa9597d165ce00001549b8b"
   },
@@ -6040,14 +6040,14 @@
     "id": "6a1601a25179a30001d0cd3e"
   },
   {
-    "title": "Julie Won on Immigration, AI Regulation, and Her Campaign for Congress in New York's 7th District",
+    "title": "Julie Won on Immigration, AI Regulation and Her Campaign for Congress in New York's 7th District",
     "slug": "julie-won-on-immigration-ai-regulation",
     "url": "https://www.vitalcitynyc.org/julie-won-on-immigration-ai-regulation/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2026-05-26",
     "published_at": "2026-05-26T18:28:01.000+00:00",
-    "updated_at": "2026-09-29T21:08:58.000+00:00",
+    "updated_at": "2026-10-21T20:45:53.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -6071,7 +6071,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12379,
+    "word_count": 12404,
     "reading_minutes": 54,
     "id": "6aa9597a165ce00001549b86"
   },
@@ -6771,14 +6771,14 @@
     "id": "6a034b1bcfd6eb00011c7518"
   },
   {
-    "title": "Alex Bores on Housing, AI Regulation, and His Campaign for Congress in New York's 12th District",
+    "title": "Alex Bores on Housing, AI Regulation and His Campaign for Congress in New York's 12th District",
     "slug": "alex-bores-on-housing-ai-regulation",
     "url": "https://www.vitalcitynyc.org/alex-bores-on-housing-ai-regulation/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2026-05-13",
     "published_at": "2026-05-13T13:30:39.000+00:00",
-    "updated_at": "2026-09-29T21:20:28.000+00:00",
+    "updated_at": "2026-10-21T20:45:42.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -6802,7 +6802,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 10257,
+    "word_count": 10280,
     "reading_minutes": 45,
     "id": "6aa95977165ce00001549b81"
   },
@@ -6851,14 +6851,14 @@
     "id": "6a033e00cfd6eb00011c74bf"
   },
   {
-    "title": "Antonio Reynoso on Mamdani, Immigration, and His Campaign for Congress in New York's 7th District",
+    "title": "Antonio Reynoso on Mamdani, Immigration and His Campaign for Congress in New York's 7th District",
     "slug": "antonio-reynoso-on-mamdani-immigration",
     "url": "https://www.vitalcitynyc.org/antonio-reynoso-on-mamdani-immigration/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2026-05-08",
     "published_at": "2026-05-08T13:32:07.000+00:00",
-    "updated_at": "2026-09-29T20:53:30.000+00:00",
+    "updated_at": "2026-10-21T20:45:42.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -6882,7 +6882,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12856,
+    "word_count": 12899,
     "reading_minutes": 56,
     "id": "6aa95972165ce00001549b7c"
   },
@@ -7113,14 +7113,14 @@
     "id": "69f38594ca687f000116276a"
   },
   {
-    "title": "Claire Valdez on Mamdani, AOC, and Her Campaign for Congress in New York's 7th District",
+    "title": "Claire Valdez on Mamdani, AOC and Her Campaign for Congress in New York's 7th District",
     "slug": "claire-valdez-on-mamdani-aoc-and",
     "url": "https://www.vitalcitynyc.org/claire-valdez-on-mamdani-aoc-and/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2026-04-30",
     "published_at": "2026-04-30T13:31:08.000+00:00",
-    "updated_at": "2026-09-29T21:20:32.000+00:00",
+    "updated_at": "2026-10-21T20:45:46.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -7144,7 +7144,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 8955,
+    "word_count": 8984,
     "reading_minutes": 39,
     "id": "6aa9596f165ce00001549b77"
   },
@@ -7813,14 +7813,14 @@
     "id": "69cad17d1523a60001e0fc0f"
   },
   {
-    "title": "Brad Lander on Immigration Reform, Foreign Policy, and His Bid for Congress",
+    "title": "Brad Lander on Immigration Reform, Foreign Policy and His Bid for Congress",
     "slug": "brad-lander-on-immigration-reform",
     "url": "https://www.vitalcitynyc.org/brad-lander-on-immigration-reform/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2026-04-10",
     "published_at": "2026-04-10T18:05:33.000+00:00",
-    "updated_at": "2026-09-29T21:20:31.000+00:00",
+    "updated_at": "2026-10-21T20:45:45.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -7831,8 +7831,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "The New York Editorial Board's interview with former NYC Comptroller Brad Lander.",
-    "excerpt": "The New York Editorial Board's interview with former NYC Comptroller Brad Lander.",
+    "summary": "The New York Editorial Board’s interview with former New York City Comptroller Brad Lander.",
+    "excerpt": "The New York Editorial Board’s interview with former New York City Comptroller Brad Lander.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/36a34e9b-6206-4b6b-8164-e39823a0007a_1406x1054.jpeg",
     "feature_image_alt": "Brad Lander seated in a restaurant",
     "feature_image_credit": null,
@@ -7844,7 +7844,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 11421,
+    "word_count": 11436,
     "reading_minutes": 50,
     "id": "6aa9596b165ce00001549b72"
   },
@@ -8069,14 +8069,14 @@
     "id": "69cc164515749b00019ebb03"
   },
   {
-    "title": "Steven Fulop on Fighting for Business Interests in Zohran Mamdani's New York",
+    "title": "Steven Fulop on Fighting for Business Interests in Zohran Mamdani’s New York",
     "slug": "steven-fulop-on-fighting-for-business",
     "url": "https://www.vitalcitynyc.org/steven-fulop-on-fighting-for-business/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2026-03-29",
     "published_at": "2026-03-29T21:48:11.000+00:00",
-    "updated_at": "2026-09-29T20:55:56.000+00:00",
+    "updated_at": "2026-10-21T21:28:35.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -8100,7 +8100,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12232,
+    "word_count": 12291,
     "reading_minutes": 53,
     "id": "6aa95968165ce00001549b6d"
   },
@@ -8863,14 +8863,14 @@
     "id": "69a6fa1d8d694b00011ce3de"
   },
   {
-    "title": "Dan Goldman on Zohran Mamdani, Donald Trump, and His Case for Reelection",
+    "title": "Dan Goldman on Zohran Mamdani, Donald Trump and His Case for Reelection",
     "slug": "dan-goldman-on-zohran-mamdani-donald",
     "url": "https://www.vitalcitynyc.org/dan-goldman-on-zohran-mamdani-donald/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2026-02-24",
     "published_at": "2026-02-24T18:53:07.000+00:00",
-    "updated_at": "2026-09-29T20:53:52.000+00:00",
+    "updated_at": "2026-10-21T20:45:46.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -8894,7 +8894,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 10449,
+    "word_count": 10462,
     "reading_minutes": 45,
     "id": "6aa95963165ce00001549b68"
   },
@@ -10160,14 +10160,14 @@
     "id": "69a04c0ad4006a00010a42ea"
   },
   {
-    "title": "Julie Menin on Leading the City Council, Working with Mayor Mamdani, and Tackling Challenges Facing the City",
+    "title": "Julie Menin on Leading the City Council, Working with Mayor Mamdani and Tackling Challenges Facing the City",
     "slug": "julie-menin-on-leading-the-city-council",
     "url": "https://www.vitalcitynyc.org/julie-menin-on-leading-the-city-council/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2026-01-26",
     "published_at": "2026-01-26T17:40:29.000+00:00",
-    "updated_at": "2026-09-29T21:20:40.000+00:00",
+    "updated_at": "2026-10-21T20:45:52.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -10191,7 +10191,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 11266,
+    "word_count": 11272,
     "reading_minutes": 49,
     "id": "6aa95960165ce00001549b63"
   },
@@ -10892,14 +10892,14 @@
     "id": "69a04c0ad4006a00010a3fdf"
   },
   {
-    "title": "John Catsimatidis on Donald Trump, Immigration, and New York Republicans",
+    "title": "John Catsimatidis on Donald Trump, Immigration and New York Republicans",
     "slug": "john-catsimatidis-on-donald-trump",
     "url": "https://www.vitalcitynyc.org/john-catsimatidis-on-donald-trump/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2025-12-17",
     "published_at": "2025-12-17T15:18:15.000+00:00",
-    "updated_at": "2026-09-29T21:08:56.000+00:00",
+    "updated_at": "2026-10-21T20:45:51.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -10923,7 +10923,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 8981,
+    "word_count": 8995,
     "reading_minutes": 39,
     "id": "6aa9595d165ce00001549b5e"
   },
@@ -11568,14 +11568,14 @@
     "id": "69a04c0ad4006a00010a3fe7"
   },
   {
-    "title": "Patrick Gaspard on Barack Obama, Zohran Mamdani, and Political Capital",
+    "title": "Patrick Gaspard on Barack Obama, Zohran Mamdani and Political Capital",
     "slug": "patrick-gaspard-on-barack-obama-zohran",
     "url": "https://www.vitalcitynyc.org/patrick-gaspard-on-barack-obama-zohran/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2025-12-08",
     "published_at": "2025-12-08T15:31:20.000+00:00",
-    "updated_at": "2026-09-29T20:55:37.000+00:00",
+    "updated_at": "2026-10-21T20:45:58.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -11586,8 +11586,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "The New York Editorial Board's interview with political strategist Patrick Gaspard, an advisor to Barack Obama, Bill de Blasio, and Zohran Mamdani.",
-    "excerpt": "The New York Editorial Board's interview with political strategist Patrick Gaspard, an advisor to Barack Obama, Bill de Blasio, and Zohran Mamdani.",
+    "summary": "The New York Editorial Board’s interview with political strategist Patrick Gaspard, an advisor to Barack Obama, Bill de Blasio and Zohran Mamdani.",
+    "excerpt": "The New York Editorial Board’s interview with political strategist Patrick Gaspard, an advisor to Barack Obama, Bill de Blasio and Zohran Mamdani.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/0113e450-7848-44c3-ace5-8a935b362328_3149x2362.jpeg",
     "feature_image_alt": "Patrick Gaspard standing inside a busy restaurant",
     "feature_image_credit": null,
@@ -11599,7 +11599,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 13834,
+    "word_count": 13915,
     "reading_minutes": 60,
     "id": "6aa9595b165ce00001549b59"
   },
@@ -12832,14 +12832,14 @@
     "id": "69a04c0ad4006a00010a4005"
   },
   {
-    "title": "Janno Lieber on Free Buses, the State of the MTA, and The Promise of the Interborough Express",
+    "title": "Janno Lieber on Free Buses, the State of the MTA and the Promise of the Interborough Express",
     "slug": "janno-lieber-on-free-buses-the-state",
     "url": "https://www.vitalcitynyc.org/janno-lieber-on-free-buses-the-state/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2025-10-29",
     "published_at": "2025-10-29T13:24:32.000+00:00",
-    "updated_at": "2026-09-29T21:20:37.000+00:00",
+    "updated_at": "2026-10-21T20:45:48.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -12863,8 +12863,8 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 13423,
-    "reading_minutes": 58,
+    "word_count": 13457,
+    "reading_minutes": 59,
     "id": "6aa95958165ce00001549b54"
   },
   {
@@ -13737,14 +13737,14 @@
     "id": "69a04c0ad4006a00010a42b5"
   },
   {
-    "title": "Bill de Blasio on Zohran Mamdani, New York's Future, and Why He Had a Chip on His Shoulder",
+    "title": "Bill de Blasio on Zohran Mamdani, New York's Future and Why He Had a Chip on His Shoulder",
     "slug": "bill-de-blasio-interview-transcript",
     "url": "https://www.vitalcitynyc.org/bill-de-blasio-interview-transcript/",
     "type": "q&a",
     "type_basis": "tag:interview",
     "published_date": "2025-09-22",
     "published_at": "2025-09-22T18:33:34.000+00:00",
-    "updated_at": "2026-09-29T20:53:35.000+00:00",
+    "updated_at": "2026-10-21T20:45:43.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -13768,7 +13768,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12312,
+    "word_count": 12341,
     "reading_minutes": 54,
     "id": "6aa95954165ce00001549b4f"
   },
@@ -17790,7 +17790,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-06-18",
     "published_at": "2025-06-18T23:30:00.000+00:00",
-    "updated_at": "2026-09-29T21:20:47.000+00:00",
+    "updated_at": "2026-10-21T20:46:01.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -17801,8 +17801,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "A transcript of The New York Editorial Board's debrief on our interviews with the Democratic candidates for Mayor.",
-    "excerpt": "A transcript of The New York Editorial Board's debrief on our interviews with the Democratic candidates for Mayor.",
+    "summary": "A transcript of The New York Editorial Board’s debrief on our interviews with the Democratic candidates for mayor.",
+    "excerpt": "A transcript of The New York Editorial Board’s debrief on our interviews with the Democratic candidates for mayor.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/057b1ccb-9306-467c-b257-e5c4f13f490d_2727x1623.jpeg",
     "feature_image_alt": "Nine people sit around a wooden table in a restaurant",
     "feature_image_credit": null,
@@ -17814,7 +17814,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12570,
+    "word_count": 12573,
     "reading_minutes": 55,
     "id": "6aa95951165ce00001549b4a"
   },
@@ -17910,7 +17910,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-06-16",
     "published_at": "2025-06-16T20:49:01.000+00:00",
-    "updated_at": "2026-09-29T21:20:38.000+00:00",
+    "updated_at": "2026-10-21T20:45:49.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -17921,8 +17921,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "A transcript of The New York Editorial Board's interview with Public Advocate candidate Jenifer Rajkumar.",
-    "excerpt": "A transcript of The New York Editorial Board's interview with Public Advocate candidate Jenifer Rajkumar.",
+    "summary": "A transcript of The New York Editorial Board's interview with public advocate candidate Jenifer Rajkumar.",
+    "excerpt": "A transcript of The New York Editorial Board's interview with public advocate candidate Jenifer Rajkumar.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/be3211fc-0e39-41e9-86e9-ea6bafa0182a_4032x3024.jpeg",
     "feature_image_alt": "Jenifer Rajkumar standing inside a bakery cafe",
     "feature_image_credit": null,
@@ -17934,7 +17934,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 9352,
+    "word_count": 9369,
     "reading_minutes": 41,
     "id": "6aa9594d165ce00001549b45"
   },
@@ -18172,7 +18172,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-06-12",
     "published_at": "2025-06-12T14:15:15.000+00:00",
-    "updated_at": "2026-09-29T20:53:21.000+00:00",
+    "updated_at": "2026-10-21T20:45:41.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -18196,7 +18196,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 7632,
+    "word_count": 7633,
     "reading_minutes": 33,
     "id": "6aa95949165ce00001549b40"
   },
@@ -18244,7 +18244,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-06-09",
     "published_at": "2025-06-09T18:26:49.000+00:00",
-    "updated_at": "2026-09-29T21:09:00.000+00:00",
+    "updated_at": "2026-10-21T20:45:54.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -18268,7 +18268,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 10082,
+    "word_count": 10122,
     "reading_minutes": 44,
     "id": "6aa95944165ce00001549b3b"
   },
@@ -18433,7 +18433,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-06-02",
     "published_at": "2025-06-02T15:23:37.000+00:00",
-    "updated_at": "2026-09-29T21:08:59.000+00:00",
+    "updated_at": "2026-10-21T20:45:54.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -18457,7 +18457,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 6028,
+    "word_count": 6038,
     "reading_minutes": 26,
     "id": "6aa95940165ce00001549b36"
   },
@@ -18735,7 +18735,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-05-21",
     "published_at": "2025-05-21T15:01:07.000+00:00",
-    "updated_at": "2026-09-29T20:55:01.000+00:00",
+    "updated_at": "2026-10-21T20:45:55.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -18759,7 +18759,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 11408,
+    "word_count": 11406,
     "reading_minutes": 50,
     "id": "6aa9593b165ce00001549b31"
   },
@@ -19748,7 +19748,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-04-08",
     "published_at": "2025-04-08T16:05:33.000+00:00",
-    "updated_at": "2026-09-29T20:55:05.000+00:00",
+    "updated_at": "2026-10-21T21:28:37.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -19759,8 +19759,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "A transcript of The New York Editorial Board's interview with mayoral candidate Michael Blake.",
-    "excerpt": "A transcript of The New York Editorial Board's interview with mayoral candidate Michael Blake.",
+    "summary": "A transcript of The New York Editorial Board’s interview with mayoral candidate Michael Blake.",
+    "excerpt": "A transcript of The New York Editorial Board’s interview with mayoral candidate Michael Blake.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/08d6aff9-77bc-4092-a4fd-697499b7b177_4032x3024.jpeg",
     "feature_image_alt": "Michael Blake in a dark suit",
     "feature_image_credit": null,
@@ -19772,7 +19772,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 7146,
+    "word_count": 7149,
     "reading_minutes": 31,
     "id": "6aa95937165ce00001549b2c"
   },
@@ -19940,7 +19940,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-04-02",
     "published_at": "2025-04-02T14:36:36.000+00:00",
-    "updated_at": "2026-09-29T21:20:44.000+00:00",
+    "updated_at": "2026-10-21T21:28:37.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -19964,7 +19964,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12448,
+    "word_count": 12457,
     "reading_minutes": 54,
     "id": "6aa95933165ce00001549b27"
   },
@@ -20166,7 +20166,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-03-11",
     "published_at": "2025-03-11T15:27:18.000+00:00",
-    "updated_at": "2026-09-29T21:09:53.000+00:00",
+    "updated_at": "2026-10-21T20:46:01.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -20177,8 +20177,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "A transcript of The New York Editorial Board's interview with mayoral candidate Whitney Tilson.",
-    "excerpt": "A transcript of The New York Editorial Board's interview with mayoral candidate Whitney Tilson.",
+    "summary": "A transcript of The New York Editorial Board’s interview with mayoral candidate Whitney Tilson.",
+    "excerpt": "A transcript of The New York Editorial Board’s interview with mayoral candidate Whitney Tilson.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/a94add7c-b0b4-4287-9169-ba401abbe754_2016x1512.jpeg",
     "feature_image_alt": "Whitney Tilson in a blue blazer in a restaurant",
     "feature_image_credit": null,
@@ -20190,7 +20190,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12345,
+    "word_count": 12401,
     "reading_minutes": 54,
     "id": "6aa9592f165ce00001549b22"
   },
@@ -21384,7 +21384,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-02-24",
     "published_at": "2025-02-24T17:35:43.000+00:00",
-    "updated_at": "2026-09-29T20:56:50.000+00:00",
+    "updated_at": "2026-10-21T20:46:02.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -21395,8 +21395,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "A transcript of The New York Editorial Board's interview with mayoral candidate Zellnor Myrie.",
-    "excerpt": "A transcript of The New York Editorial Board's interview with mayoral candidate Zellnor Myrie.",
+    "summary": "A transcript of The New York Editorial Board’s interview with mayoral candidate Zellnor Myrie.",
+    "excerpt": "A transcript of The New York Editorial Board’s interview with mayoral candidate Zellnor Myrie.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/434bb3a4-3bcd-4a42-9051-d1034d0cf8ad_4032x3024.jpeg",
     "feature_image_alt": "Zellnor Myrie standing in a restaurant",
     "feature_image_credit": null,
@@ -21408,7 +21408,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 13572,
+    "word_count": 13570,
     "reading_minutes": 59,
     "id": "6aa9592c165ce00001549b1d"
   },
@@ -21456,7 +21456,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-02-18",
     "published_at": "2025-02-18T23:30:00.000+00:00",
-    "updated_at": "2026-09-29T21:08:54.000+00:00",
+    "updated_at": "2026-10-21T20:45:51.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -21467,8 +21467,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "A transcript of The New York Editorial Board's interview with mayoral candidate Jim Walden.",
-    "excerpt": "A transcript of The New York Editorial Board's interview with mayoral candidate Jim Walden.",
+    "summary": "A transcript of The New York Editorial Board’s interview with mayoral candidate Jim Walden.",
+    "excerpt": "A transcript of The New York Editorial Board’s interview with mayoral candidate Jim Walden.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/0911244e-11c7-479c-b736-92b32885ed24.jpg",
     "feature_image_alt": "Jim Walden in round glasses at a warmly lit restaurant",
     "feature_image_credit": null,
@@ -21480,7 +21480,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12722,
+    "word_count": 12750,
     "reading_minutes": 55,
     "id": "6aa95929165ce00001549b18"
   },
@@ -22235,7 +22235,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-02-02",
     "published_at": "2025-02-02T23:30:00.000+00:00",
-    "updated_at": "2026-09-29T21:20:49.000+00:00",
+    "updated_at": "2026-10-21T20:46:03.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -22259,7 +22259,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 12195,
+    "word_count": 12201,
     "reading_minutes": 53,
     "id": "6aa95926165ce00001549b13"
   },
@@ -23421,7 +23421,7 @@
     "type_basis": "tag:interview",
     "published_date": "2025-01-12",
     "published_at": "2025-01-12T23:30:00.000+00:00",
-    "updated_at": "2026-09-29T21:20:39.000+00:00",
+    "updated_at": "2026-10-21T20:45:50.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -23445,7 +23445,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 10422,
+    "word_count": 10402,
     "reading_minutes": 45,
     "id": "6aa95922165ce00001549b0e"
   },
@@ -23810,7 +23810,7 @@
     "type_basis": "tag:interview",
     "published_date": "2024-12-15",
     "published_at": "2024-12-15T17:27:36.000+00:00",
-    "updated_at": "2026-09-29T21:20:30.000+00:00",
+    "updated_at": "2026-10-21T20:45:44.000+00:00",
     "primary_author": "New York Editorial Board",
     "authors": [
       "New York Editorial Board"
@@ -23821,8 +23821,8 @@
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "A transcript of The New York Editorial Board's Dec. 12 2024 interview with mayoral candidate Brad Lander.",
-    "excerpt": "A transcript of The New York Editorial Board's Dec. 12 2024 interview with mayoral candidate Brad Lander.",
+    "summary": "A transcript of The New York Editorial Board's Dec. 12, 2024, interview with mayoral candidate Brad Lander.",
+    "excerpt": "A transcript of The New York Editorial Board's Dec. 12, 2024, interview with mayoral candidate Brad Lander.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/78e0fbec-16fa-40d1-b84d-12af519b3223.jpg",
     "feature_image_alt": "Brad Lander standing in front of a blurred bar with wine glasses",
     "feature_image_credit": null,
@@ -23834,7 +23834,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 10413,
+    "word_count": 10407,
     "reading_minutes": 45,
     "id": "6aa958f5165ce00001549b07"
   },
