@@ -705,9 +705,14 @@ def build_impact_ledger(growth, people, receipts, cat_titles=None):
     def add(date_, kind, source, title, url, detail="", who="", area_text=None, links=None, checked=None, context=""):
         title = re.sub(r"\s+", " ", (title or "")).strip()
         k = (kind, re.sub(r"\W+", "", title.lower())[:80], source.lower())
-        if not title or k in seen:
+        # The same page reached through two channels (the search and a hand
+        # log) is one mention, whatever each channel calls it.
+        cu = _canon(url) if url and "youtube.com/watch" not in url else ""
+        if not title or k in seen or (cu and cu in seen):
             return
         seen.add(k)
+        if cu:
+            seen.add(cu)
         rows.append({"date": (date_ or "")[:10], "kind": kind, "source": source, "title": title,
                      "url": url or "", "detail": detail, "who": who,
                      "area": _area(title + " " + detail if area_text is None else area_text, matchers)

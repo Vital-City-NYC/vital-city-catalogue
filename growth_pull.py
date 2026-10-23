@@ -3673,6 +3673,173 @@ def load_mentions_ledger():
                      "automatically -- edit mentions_ledger.json to add more.")}
 
 
+# Cowork's running record of media mentions and praise, a Google Doc shared
+# "anyone with the link can view" (Josh, Oct. 23, 2026: "make sure all mentions
+# in it are reflected in the appropriate place in the toolkit"). It catches
+# what no search here can: podcasts, Substacks, op-eds, links in newsletters,
+# posts seen only as screenshots, and anything older than the rolling feed.
+# Read fresh every night; if the read fails, the last good copy in
+# private/mentions_record.json is used and the dashboard says so.
+MENTIONS_DOC_ID = "1zEWLMdLgHtM5-mrhS1PCRPMkFy7VRH-vORqcDMErZ2s"
+_MR_SOCIAL = re.compile(r"(^|\.)(x\.com|twitter\.com|linkedin\.com|bsky\.app|facebook\.com|threads\.net|instagram\.com)$")
+_MR_AUDIO = re.compile(r"podcasts\.apple\.com|open\.spotify\.com|simplecast|wnyc\.org|wnycstudios|youtube\.com|youtu\.be|ny1\.com|pod\.link|podbean|/podcast", re.I)
+_MR_GOV = re.compile(r"(^|\.)(nyc\.gov|ny\.gov|nysenate\.gov|nyassembly\.gov|council\.nyc\.gov|congress\.gov|[a-z-]+\.gov)$")
+_MR_POLICY = re.compile(r"Manhattan Institute|Citizens Union|Citizens Budget Commission|Brennan|Vera Institute|Niskanen|Center for an Urban Future|Regional Plan|Urban Institute|Brookings|Council on Criminal Justice|Partnership for New York", re.I)
+_MR_STAFF = re.compile(r"Elizabeth Glazer|Liz Glazer|Josh Greenman|Glazer|Greenman")
+
+
+def _mr_parse(md):
+    """Rows of the doc's tables: | links + note | outlet | date |."""
+    from urllib.parse import urlsplit
+    out = []
+    for ln in md.splitlines():
+        ln = ln.strip()
+        if not ln.startswith("|") or re.match(r"^\|\s*:?-{3}", ln):
+            continue
+        cells = [c.strip() for c in re.split(r"(?<!\\)\|", ln)[1:-1]]
+        if len(cells) < 3 or not any(cells):
+            continue
+        body, outlet, date_txt = cells[0], cells[-2], cells[-1]
+        # Bare-URL links ([https\://...](https://...)) are the cited pages;
+        # other links inside the note are just links.
+        urls = [u for t, u in re.findall(r"\[([^\]]*)\]\((https?://[^)\s]+)\)", body)
+                if t.replace("\\", "").lstrip("*_ ").startswith("http")]
+        if not urls:      # a bare address typed into the note or the outlet cell
+            urls = [u.rstrip(".,;") for u in re.findall(r"https?://[^\s)\]>|*]+", (body + " " + outlet).replace("\\", ""))][:1]
+        note = re.sub(r"\[[*_ ]*https?[^\]]*\]\([^)]*\)", "", body)
+        note = re.sub(r"\[?https?://[^\s\]]+\]?", "", note)
+        note = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", note)
+        note = re.sub(r"!\[[^\]]*\]\[[^\]]*\]", "", note)
+        note = re.sub(r"\\(.)", r"\1", note).replace("**", "")
+        note = re.sub(r"\[?https?://[^\s\]]+\]?(\([^)]*\)?)?", "", note)
+        note = re.sub(r"^\[?\S*[=&]\S*\)?\s*", "", note)        # the tail of a long tracking link
+        note = re.sub(r"\s+", " ", note.replace("*", "")).strip()
+        outlet = re.sub(r"!\[[^\]]*\]\[[^\]]*\]|\[?https?://\S*", "", outlet)
+        outlet = re.sub(r"\\(.)", r"\1", outlet).replace("**", "").replace("*", "")
+        outlet = re.sub(r"\[?https?://\S*", "", outlet).strip() or "(screenshot in the doc)"
+        date_txt = re.sub(r"\\(.)", r"\1", date_txt).replace("**", "").strip()
+        d = ""
+        for f in ("%b %d, %Y", "%B %d, %Y", "%b. %d, %Y", "%Y-%m-%d"):
+            try:
+                d = datetime.strptime(date_txt.replace("Sept", "Sep"), f).date().isoformat(); break
+            except ValueError:
+                pass
+        if not d or not (note or urls):
+            continue      # a header row or an empty line
+        unverified = bool(re.search(r"\[?Unverified\]?", note, re.I))
+        note = re.sub(r"^\[?Unverified\]?\s*", "", note, flags=re.I).strip()
+        dom = urlsplit(urls[0]).netloc.lower().removeprefix("www.") if urls else ""
+        # Reporter names, from "Outlet (Name)" or "Outlet (Name and Name)".
+        who = []
+        m = re.match(r"^(.*?)\s*\(([^)]*)\)\s*$", outlet)
+        if m:
+            for part in re.split(r",| and ", m.group(2)):
+                part = part.strip()
+                if re.fullmatch(r"[A-Z][\w.'’-]+(?: [A-Z][\w.'’-]+){1,3}", part) and not re.search(
+                        r"Substack|podcast|Institute|LinkedIn|News|Times|Post", part):
+                    who.append(part)
+        if _MR_SOCIAL.search(dom) or re.search(r"LinkedIn|, X$|\bX\b post|Bluesky", outlet):
+            kind = "social"
+        elif _MR_GOV.search(dom) or re.search(r"Mayor.s Office|City Council|Comptroller|Public Advocate|Governor", outlet):
+            kind = "government"
+        elif _MR_AUDIO.search(" ".join(urls)) or re.search(r"podcast|radio|\bTV\b|NY1|WNYC", outlet, re.I):
+            kind = "appearance" if _MR_STAFF.search(note) and re.search(
+                r"episode|interview|guest|discuss|segment|joins|appear", note, re.I) else "audio"
+        elif _MR_POLICY.search(outlet):
+            kind = "policy"
+        else:
+            kind = "press"
+        out.append({"date": d, "outlet": outlet, "who": who, "note": note, "url": urls[0] if urls else "",
+                    "urls": urls, "domain": dom, "kind": kind, "unverified": unverified})
+    out.sort(key=lambda r: r["date"], reverse=True)
+    return out
+
+
+def load_mentions_record():
+    cache = PRIV / "mentions_record.json"      # private: some rows quote feedback sent to Liz
+    url = f"https://docs.google.com/document/d/{MENTIONS_DOC_ID}/export?format=md"
+    src = {"doc": f"https://docs.google.com/document/d/{MENTIONS_DOC_ID}/edit"}
+    try:
+        raw = http_get(url, timeout=60)
+        items = _mr_parse(raw.decode("utf-8", "replace") if isinstance(raw, bytes) else raw)
+        if len(items) < 50:
+            raise ValueError(f"only {len(items)} rows parsed; the doc's layout may have changed")
+        rec = {"available": True, "as_of": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+               "stale": False, "items": items, **src}
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_text(json.dumps(rec, ensure_ascii=False, indent=1))
+    except Exception as e:
+        log(f"  WARNING: mentions record: could not read the Cowork doc ({str(e)[:120]})")
+        if not cache.exists():
+            return {"available": False, "reason": str(e)[:160], "items": [], "counts": {}, **src}
+        rec = json.loads(cache.read_text())
+        rec["stale"] = True
+        rec["stale_reason"] = str(e)[:160]
+    from collections import Counter as _Cmr
+    rec["counts"] = dict(_Cmr(i["kind"] for i in rec["items"]))
+    log(f"  mentions record: {len(rec['items'])} rows from the Cowork doc"
+        f"{' (STALE copy)' if rec.get('stale') else ''}: {rec['counts']}")
+    return rec
+
+
+def merge_mentions_record(news, ledger, record):
+    """Fold Cowork's record into the lists that already exist, so each mention
+    shows up once, where its kind belongs: press in the media feed, government
+    and policy groups in the citations feed, podcasts and radio in the
+    hand-logged ledger, posts in the social list. Rows the searches already
+    found are skipped by their address. Rows Cowork marked unverified, or that
+    have no link, stay in the doc only. Returns how many were added, by kind."""
+    def canon(u):
+        u = re.sub(r"^https?://(www\.|m\.)?", "", (u or "").strip().lower())
+        return u.split("#")[0].split("?")[0].rstrip("/")
+    have = {canon(m.get(k)) for m in news for k in ("url", "resolved_url") if m.get(k)}
+    have |= {canon(x.get("url")) for x in (ledger.get("items") or []) if x.get("url")}
+    to_kind = {"press": "media", "government": "gov", "policy": "republication", "social": "social"}
+    added = {}
+    for r in record.get("items") or []:
+        if r.get("unverified") or not r.get("url"):
+            continue
+        if any(canon(u) in have for u in (r.get("urls") or [r["url"]])):
+            continue
+        have.add(canon(r["url"]))
+        note = r.get("note") or ""
+        base = re.sub(r"\s*\([^)]*\)\s*$", "", r.get("outlet") or "").strip() or r.get("outlet") or ""
+        if r.get("kind") in ("audio", "appearance"):
+            ledger.setdefault("items", []).append({
+                "date": r["date"], "outlet": base, "program": note if len(note) <= 140 else note[:137].rsplit(" ", 1)[0] + "...",
+                "url": r["url"], "who": ", ".join(r.get("who") or []),
+                "kind": "video" if re.search(r"youtube|youtu\.be|ny1\.com|\bTV\b|NBC|CBS|ABC", r["url"] + " " + base, re.I) else "audio",
+                "role": "appearance" if r.get("kind") == "appearance" else "citation",
+                "note": note, "from_record": True})
+            added["ledger"] = added.get("ledger", 0) + 1
+            continue
+        kind = to_kind.get(r.get("kind"), "media")
+        news.append({
+            "title": note if len(note) <= 160 else note[:157].rsplit(" ", 1)[0] + "...",
+            "url": r["url"], "source": base, "domain": r.get("domain") or "",
+            "published": r["date"], "published_iso": r["date"] + "T12:00:00+00:00",
+            "snippet": ("By " + ", ".join(r["who"])) if r.get("who") else "",
+            "mention_context": note, "kind": kind, "match_shape": "mentions record",
+            "is_url_share": False, "own_post": False, "roundup": False, "incidental": False,
+            "verified": True, "verify_note": "checked by Cowork (mentions record)", "from_record": True})
+        added[kind] = added.get(kind, 0) + 1
+    # newest first within each kind, as the searched lists already run
+    order = {"media": 0, "social": 1, "gov": 2, "republication": 3}
+    by_kind = {}
+    for m in news:
+        by_kind.setdefault(m.get("kind"), []).append(m)
+    news[:] = [m for k in sorted(by_kind, key=lambda k: order.get(k, 9))
+               for m in sorted(by_kind[k], key=lambda m: m.get("published_iso") or "", reverse=True)]
+    if ledger.get("items"):
+        ledger["items"].sort(key=lambda x: x.get("date", ""), reverse=True)
+        ledger["total"] = len(ledger["items"])
+        ledger["appearances"] = sum(1 for i in ledger["items"] if i.get("role") == "appearance")
+        ledger["citations"] = sum(1 for i in ledger["items"] if i.get("role") == "citation")
+        ledger["available"] = True
+    log(f"  mentions record: added {added or 'nothing'} that the searches had not found")
+    return added
+
+
 def pull_scholar_citations():
     """Academic and law-review citations of Vital City.
 
@@ -5332,6 +5499,8 @@ def main():
     # News mentions need to be pulled here (was at the bottom of out) so we
     # can post-process URL-share items for own-post flagging.
     news_mentions = pull_news_mentions()
+    mentions_ledger = load_mentions_ledger()
+    mentions_record = load_mentions_record()
     all_titles = pull_all_ghost_titles()
     # Pull VC's own X tweets to recognize URL shares that are reposts from
     # @VitalCityNYC's own account (where VC's tweet copy doesn't match an
@@ -5340,6 +5509,7 @@ def main():
     vc_tweets = [t.get("text","") for t in (xprof.get("recent_tweets") or [])] if xprof.get("available") else []
     own_social = pull_own_social_posts()
     flag_own_url_shares(news_mentions, all_titles, vc_tweets=vc_tweets, own_social=own_social)
+    mentions_record["added"] = merge_mentions_record(news_mentions, mentions_ledger, mentions_record)
     # Capture MAU/AAU sets BEFORE they're popped, for the people.json enrich pass
     mau_set_for_enrich = mc.get("_mau_set") or set()
     aau_set_for_enrich = mc.get("_aau_set") or set()
@@ -5501,7 +5671,9 @@ def main():
         # (audio leaves no indexable trace).
         "scholar_citations": pull_scholar_citations(),
         "voice_appearances": pull_voice_appearances(),
-        "mentions_ledger": load_mentions_ledger(),
+        "mentions_ledger": mentions_ledger,
+        # The doc itself, slimmed: the rows are already folded in above.
+        "mentions_record": {k: v for k, v in mentions_record.items() if k != "items"},
         "lifecycle":     lifecycle,
         "engagement_extras": engagement_extras,
         # Ghost's own Tinybird-backed site analytics (visitors, page views).

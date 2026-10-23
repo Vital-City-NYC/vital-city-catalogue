@@ -771,7 +771,7 @@ def apply_contact_sources(people, contacts):
 # ---------------------------------------------------------------- Vital City layer
 def load_vc_layer():
     """Who already engages with Vital City, read from the catalogue's own files."""
-    vc = {"press_list": {}, "authors": set(), "mentions": [], "ledger": {}, "errors": []}
+    vc = {"press_list": {}, "authors": set(), "mentions": [], "ledger": {}, "record": [], "errors": []}
 
     p = PRIV / "press_source.csv"
     if p.exists():
@@ -800,6 +800,8 @@ def load_vc_layer():
         d = json.load(open(g))
         vc["mentions"] = d.get("news_mentions") or []
         vc["ledger"] = d.get("mentions_ledger") or {}
+        rp = PRIV / "mentions_record.json"      # growth_pull's copy of Cowork's doc
+        vc["record"] = (json.load(open(rp)).get("items") or []) if rp.exists() else []
     else:
         vc["errors"].append("private/growth.json missing — Vital City mentions could not be read")
     return vc
@@ -1360,6 +1362,16 @@ def main():
             mention_titles[nt] = m
             mention_titles.setdefault(nt[:45], m)
 
+    # Cowork's mentions record (growth_pull.load_mentions_record) is already
+    # folded into the mentions above; its rows carry no story titles, but many
+    # name the reporter, "Gothamist (Karen Yi)", which earns the person flag.
+    record_by_name = {}
+    for r in vc["record"]:
+        if r.get("kind") == "social" or r.get("unverified"):
+            continue
+        for w in r.get("who") or []:
+            record_by_name.setdefault(loose_name(w), r)
+
     dom_of = {}
     for o in outlets:
         d = re.sub(r"^www\.", "", re.sub(r"^https?://", "", o["site"]).split("/")[0])
@@ -1376,6 +1388,10 @@ def main():
                 cited_people[p["id"]] = {"title": s.get("title"), "url": s.get("url"),
                                          "date": s.get("date") or hit.get("published_iso")}
                 break
+        if p["id"] not in cited_people and loose_name(p["name"]) in record_by_name:
+            r = record_by_name[loose_name(p["name"])]
+            cited_people[p["id"]] = {"title": r.get("note", "")[:140], "url": r.get("url"),
+                                     "date": r.get("date"), "source": "mentions record"}
 
     # The New York Times is the most important target and always leads every list.
     # ...and the core outlets' beat reporters always sit above the line, so both keep
