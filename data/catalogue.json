@@ -316,7 +316,9 @@
       "Technology",
       "Crime"
     ],
-    "issues": [],
+    "issues": [
+      "campus-sexual-misconduct"
+    ],
     "issue_numbers": [],
     "summary": "Novel ways to reduce campus sexual assault",
     "excerpt": "Novel ways to reduce campus sexual assault",
@@ -353,7 +355,9 @@
       "Education",
       "Crime"
     ],
-    "issues": [],
+    "issues": [
+      "campus-sexual-misconduct"
+    ],
     "issue_numbers": [],
     "summary": "A closer look at the numbers we have",
     "excerpt": "A closer look at the numbers we have",
@@ -391,7 +395,9 @@
       "Education",
       "Crime"
     ],
-    "issues": [],
+    "issues": [
+      "campus-sexual-misconduct"
+    ],
     "issue_numbers": [],
     "summary": "And right now, we have anything but.",
     "excerpt": "And right now, we have anything but.",
@@ -428,7 +434,9 @@
       "Education",
       "Crime"
     ],
-    "issues": [],
+    "issues": [
+      "campus-sexual-misconduct"
+    ],
     "issue_numbers": [],
     "summary": "The consequences haunt survivors for decades.",
     "excerpt": "The consequences haunt survivors for decades.",
@@ -465,7 +473,9 @@
       "Education",
       "Crime"
     ],
-    "issues": [],
+    "issues": [
+      "campus-sexual-misconduct"
+    ],
     "issue_numbers": [],
     "summary": "Learn from schools with better climates.",
     "excerpt": "Learn from schools with better climates.",
@@ -7075,7 +7085,7 @@
     "type_basis": "tag:interview",
     "published_date": "2026-04-30",
     "published_at": "2026-04-30T18:10:05.000+00:00",
-    "updated_at": "2026-09-29T21:09:24.000+00:00",
+    "updated_at": "2026-10-23T18:16:27.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
