@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-10-26T00:58:17.286660+00:00",
+    "generated_at": "2026-10-26T17:12:35.250982+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 983,
     "total_authors": 538,
@@ -710,9 +710,9 @@
         "year": "2026",
         "weeks": 42.0,
         "pieces": 253,
-        "outside_issues": 171,
+        "outside_issues": 169,
         "per_week_all": 6.02,
-        "per_week_outside_issues": 4.07,
+        "per_week_outside_issues": 4.02,
         "partial": true
       }
     ],
@@ -720,15 +720,15 @@
     "all_time_per_week": 3.7,
     "all_time_per_week_outside_issues": 1.76,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.07,
+    "current_per_week_outside_issues": 4.02,
     "current_per_week_all": 6.02,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 514,
-      "published_away_from_drop": 69,
-      "share_of_issue_pieces": 13.4,
-      "current_year_strict": 4.07,
-      "current_year_loose": 4.38,
+      "issue_tagged_pieces": 516,
+      "published_away_from_drop": 70,
+      "share_of_issue_pieces": 13.6,
+      "current_year_strict": 4.02,
+      "current_year_loose": 4.36,
       "all_time_strict": 1.76,
       "all_time_loose": 2.02,
       "all_time_all": 3.7

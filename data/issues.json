@@ -451,12 +451,20 @@
   },
   {
     "name": "hidehome",
-    "post_count": 2,
+    "post_count": 4,
     "first_published": "2026-05-20",
-    "last_published": "2026-10-15",
+    "last_published": "2026-10-21",
     "number": null,
     "display_name": "Hidehome",
     "top_topics": [
+      [
+        "Interview",
+        2
+      ],
+      [
+        "New York Editorial Board",
+        2
+      ],
       [
         "Crime",
         1
@@ -467,10 +475,6 @@
       ],
       [
         "Data Stories",
-        1
-      ],
-      [
-        "Street Lighting",
         1
       ]
     ]
