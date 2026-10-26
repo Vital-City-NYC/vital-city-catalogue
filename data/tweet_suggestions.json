@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-21T17:56:34+00:00",
+ "generated": "2026-10-26T19:08:02+00:00",
  "window_days": 30,
  "pieces": [
   {
@@ -117,6 +117,64 @@
     {
      "kind": "hook",
      "text": "\"I was no longer in control of how voters experienced messaging about my goals or values.\" Maya Kornberg on running for City Council amid outside spending."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "letitia-james-on-donald-trump-defending",
+   "title": "Letitia James on Donald Trump, Defending State Law and Her Case for Reelection as New York Attorney General",
+   "url": "https://www.vitalcitynyc.org/letitia-james-on-donald-trump-defending/",
+   "date": "2026-10-21",
+   "author": "New York Editorial Board",
+   "handle": null,
+   "dek": "The New York Editorial Board's interview with New York Attorney General Letitia James, a Democrat seeking reelection in 2026.",
+   "tags": [
+    "Interview",
+    "New York Editorial Board"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Letitia James tells the New York Editorial Board that criminal enforcement is maybe a quarter of her office's work, and that public safety is mainly a matter for district attorneys and the police commissioner."
+    },
+    {
+     "kind": "argument",
+     "text": "Read the New York Editorial Board's interview with Attorney General Letitia James on Donald Trump, subway crime, Atlantic Yards and police killings. Nicole Gelinas, Alyssa Katz and Ben Smith are among the questioners."
+    },
+    {
+     "kind": "hook",
+     "text": "\"I'm not fighting Donald Trump. What I'm doing is protecting the rights of New Yorkers.\" Letitia James, in an interview with the New York Editorial Board, on her case for a third term as attorney general."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "saritha-komatireddy-on-public-safety",
+   "title": "Saritha Komatireddy on Public Safety, Law Enforcement and Her Campaign for New York Attorney General",
+   "url": "https://www.vitalcitynyc.org/saritha-komatireddy-on-public-safety/",
+   "date": "2026-10-19",
+   "author": "New York Editorial Board",
+   "handle": null,
+   "dek": "The New York Editorial Board's interview with Saritha Komatireddy, the Republican nominee for New York attorney general in the 2026 election.",
+   "tags": [
+    "Interview",
+    "New York Editorial Board"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Saritha Komatireddy, the Republican nominee for attorney general, says she would move 350 of the office's 700 assistant attorneys general onto criminal prosecution. She told the New York Editorial Board how."
+    },
+    {
+     "kind": "argument",
+     "text": "The New York Editorial Board sat down with Saritha Komatireddy, a former federal prosecutor running for attorney general, and pressed her on crime data, Alvin Bragg and the Justice Department under Trump."
+    },
+    {
+     "kind": "hook",
+     "text": "What can an attorney general do when a district attorney charges too low? Saritha Komatireddy tells the New York Editorial Board she would use Executive Law 63 to take the case over and prosecute it herself."
     }
    ],
    "attempts": 1
@@ -912,63 +970,6 @@
     {
      "kind": "quote",
      "text": "Shael Polakow-Suransky writes: \"The rules take effect next school year, which means the first students affected are already in high school.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "making-micromobility-work-nyc",
-   "title": "Making Micromobility Work",
-   "url": "https://www.vitalcitynyc.org/making-micromobility-work-nyc/",
-   "date": "2026-09-24",
-   "author": "Charles Komanoff",
-   "handle": null,
-   "dek": "A new vision should make clear distinctions between different ways of getting about the city.",
-   "tags": [
-    "Streets",
-    "Transit"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Charles Komanoff: A new vision should make clear distinctions between different ways of getting about the city."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Charles Komanoff: \"Making Micromobility Work\""
-    },
-    {
-     "kind": "quote",
-     "text": "Charles Komanoff writes: \"Back when I burned with fervor for New York City bicycling, I typically took to heart my occasional run-ins with fellow New Yorkers.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "nyc-middle-class-family-affordability-challenge",
-   "title": "New York City’s Prime Economic Challenge: Middle-Class Family Affordability",
-   "url": "https://www.vitalcitynyc.org/nyc-middle-class-family-affordability-challenge/",
-   "date": "2026-09-24",
-   "author": "Jordan McGillis",
-   "handle": null,
-   "dek": "Affordability isn't one thing, it's many — and the city's biggest problem is the flight of families.",
-   "tags": [
-    "Economics"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Jordan McGillis: Affordability isn't one thing, it's many — and the city's biggest problem is the flight of families."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Jordan McGillis: \"New York City's Prime Economic Challenge: Middle-Class Family Affordability\""
-    },
-    {
-     "kind": "quote",
-     "text": "Jordan McGillis writes: \"Zohran Mamdani tapped into that sentiment on his way to winning the mayoralty in 2025, with affordability at the heart of his campaign.\""
     }
    ],
    "attempts": 1
