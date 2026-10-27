@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-27T18:38:10+00:00",
+ "generated": "2026-10-27T22:54:14+00:00",
  "window_days": 30,
  "pieces": [
   {
@@ -27,6 +27,34 @@
     {
      "kind": "hook",
      "text": "Does involving local police in immigration enforcement make cities safer? Nayna Gupta points to a new American Economic Review study: Hispanic victims reported fewer crimes and were more likely to become victims."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ice-enforcement-local-police-immigration",
+   "title": "When ICE Comes to Town: The Role of Law, Local Police and Neighbors",
+   "url": "https://www.vitalcitynyc.org/ice-enforcement-local-police-immigration/",
+   "date": "2026-10-27",
+   "author": "Vital City",
+   "handle": null,
+   "dek": "Former Homeland Security Secretary Jeh Johnson, immigration researcher Austin Kocher and Documented reporter Eileen Grench on what police should do when an immigration operation comes to a city.",
+   "tags": [
+    "Immigration"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Former Homeland Security Secretary Jeh Johnson says local police should keep a role when federal agents work their neighborhoods. Refusing to cooperate with ICE, he argues, is counterproductive for public safety."
+    },
+    {
+     "kind": "argument",
+     "text": "Read researcher Austin Kocher on who ICE is arresting. He says all the growth in arrests since last summer came from people with no criminal charges or convictions, a gap he says the data shows against the rhetoric."
+    },
+    {
+     "kind": "hook",
+     "text": "\"When you're out on the streets, use your common sense.\" Jeh Johnson says he told ICE that as Homeland Security Secretary. Hear him, Austin Kocher and Eileen Grench on what police should do when ICE comes to a city."
     }
    ],
    "attempts": 1
