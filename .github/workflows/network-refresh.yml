@@ -30,7 +30,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install --quiet cryptography openpyxl feedparser beautifulsoup4   # feedparser + bs4: the press-map harvest
+        run: pip install --quiet cryptography openpyxl feedparser beautifulsoup4 pillow   # feedparser + bs4: the press-map harvest
 
       - name: Restore secrets + decrypt source bundle
         env:
@@ -194,6 +194,12 @@ jobs:
             echo "source data missing — skipping prospects build"
           fi
 
+      # The deck's "The publication" slide shows a picture of the homepage,
+      # taken here each night (a live frame printed blank). Non-fatal: on a
+      # failure the last picture stays, and its caption says when it was taken.
+      - name: Screenshot the homepage for the funder deck
+        run: python3 capture_homepage.py || echo "WARNING - homepage screenshot failed; the deck keeps the last one"
+
       # The resharing calendar joins the fresh catalogue to the New York City
       # calendar's dated events and ranks by lifetime views, so it runs after
       # the catalogue refresh and the growth pull. Non-fatal: a failure leaves
@@ -263,7 +269,7 @@ jobs:
           # skipped), staging NOTHING — which is how the rotation rebuild on
           # 2026-09-16 re-encrypted every payload and then published none of them.
           git add data 2>/dev/null || true
-          for f in network/data.enc network/authors.enc growth/data.enc prospects/data.enc catalogue-analysis/data.enc resharing/data.enc press/data.enc; do
+          for f in network/data.enc network/authors.enc growth/data.enc prospects/data.enc prospects/homepage.jpg prospects/homepage.json catalogue-analysis/data.enc resharing/data.enc press/data.enc; do
             [ -e "$f" ] && git add "$f"
           done
           # encrypt_people.py runs every time and rewrites network/data.enc with a

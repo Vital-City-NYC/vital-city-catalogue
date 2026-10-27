@@ -102,8 +102,8 @@
   .bf-bar i:nth-child(2){background:var(--vc-gold)}
   .bf-bar i:nth-child(3){background:var(--vc-green)}
   .bf-url{font-size:11px;color:var(--vc-charcoal);font-weight:700;margin-left:8px;letter-spacing:.03em}
-  .bf-view{position:relative;height:430px;overflow:hidden;background:var(--vc-paper)}
-  .bf-view iframe{width:200%;height:860px;border:0;transform:scale(.5);transform-origin:0 0;pointer-events:none}
+  .bf-view{position:relative;aspect-ratio:1440/1000;overflow:hidden;background:var(--vc-paper)}
+  .bf-view img{display:block;width:100%;height:100%;object-fit:cover;object-position:top left}
   .bf-cap{font-size:11px;color:var(--vc-charcoal);margin-top:8px}
   .tq{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;background:var(--vc-cloud);border:1px solid var(--vc-cloud);margin-top:12px}
   .tqi{background:var(--vc-white);padding:14px 16px}
@@ -153,7 +153,7 @@
            overflow:hidden;padding:30px 40px;page-break-inside:avoid;break-inside:avoid}
     .slide h2{font-size:34px}
     .cover h1{font-size:60px}
-    .bf-view{height:330px}
+    .browserframe{max-width:600px}   /* the whole picture, lead headline included, on one sheet */
     .cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .fig.hero,.chip.first{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
@@ -163,7 +163,7 @@
   body.pmeasure .slide{width:10.3in;height:7.3in;min-height:0;max-height:7.3in;overflow:hidden;padding:30px 40px;box-sizing:border-box}
   body.pmeasure .slide h2{font-size:34px}
   body.pmeasure .cover h1{font-size:60px}
-  body.pmeasure .bf-view{height:330px}
+  body.pmeasure .browserframe{max-width:600px}
   @media (max-width:700px){
     .slide{padding:28px 22px;min-height:0}
     .cover h1{font-size:44px}
@@ -231,6 +231,7 @@ async function unlock(fromStore){
     const blob=await fetch("data.enc",{cache:"no-cache"}).then(r=>r.json());
     const data=await decryptBlob(pass,blob);
     savePass(pass); $("#gate").style.display="none"; $("#app").style.display="";
+    await homeshotReady;      // the homepage slide's caption carries the picture's date
     build(data);
   }catch(e){console.error(e);$("#err").textContent="Wrong passphrase, or data unavailable.";if(fromStore)try{localStorage.removeItem(PASSKEY)}catch{}}
 }
@@ -238,7 +239,16 @@ $("#unlock").addEventListener("click",()=>unlock(false));
 $("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false)});
 (async()=>{const p=loadPass();if(p){$("#pw").value=p;await unlock(true)}})();
 $("#lock").addEventListener("click",e=>{e.preventDefault();try{localStorage.removeItem(PASSKEY)}catch{};location.reload()});
-$("#print").addEventListener("click",()=>window.print());
+// Print only once every picture has arrived: a print taken while the homepage
+// picture is still loading leaves its slide blank (the Oct. 27, 2026 PDF).
+function imagesReady(){
+  return Promise.all([...document.images].map(i=>i.complete&&i.naturalWidth ? null :
+    new Promise(r=>{ i.addEventListener("load",r,{once:true}); i.addEventListener("error",r,{once:true}); setTimeout(r,8000); })));
+}
+// Taken nightly by capture_homepage.py; the caption dates it.
+let HOMESHOT={};
+const homeshotReady=fetch("homepage.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{}).then(j=>{HOMESHOT=j||{};}).catch(()=>{});
+$("#print").addEventListener("click",()=>imagesReady().then(()=>window.print()));
 // Before printing, shrink the content of any slide that would run past its
 // landscape page (the mentions chart and the bylines grid were cut off), and
 // put everything back afterward.
@@ -287,6 +297,11 @@ async function emailDeck(fromClick){
   const doc=document.documentElement.cloneNode(true);
   doc.querySelectorAll("#gate,.bar,script").forEach(n=>n.remove());
   if(logoData) doc.querySelectorAll("img[src='vc-logo-black.png']").forEach(i=>i.setAttribute("src",logoData));
+  // the homepage picture travels inside the file too, or the copy shows a broken image
+  for(const im of doc.querySelectorAll("img.homeshot")){
+    try{ const b=await fetch(im.getAttribute("src")).then(r=>r.blob());
+      im.setAttribute("src", await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.readAsDataURL(b);})); }catch(e){}
+  }
   const app=doc.querySelector("#app"); if(app) app.style.display="";
   const stamp=(FF.asof||"").slice(0,10);
   const note=document.createElement("div");   // doc is the cloned <html> element, which has no createElement
@@ -424,6 +439,14 @@ async function exportPptx(){
       {text:"A nonprofit journal, research shop and convener, built as one thing: timely commentary from the people shaping urban policy, data rendered intelligible, and evidence-based recommendations pressed into practice.",options:{color:"C9CCD2"}}],
       {x:L,y:4.35,w:8.6,h:1.5,fontSize:14,fontFace:SANS,valign:"top",lineSpacingMultiple:1.25});
     TX(s,"Prepared "+fmtDate(asof),{x:6.9,y:7.02,w:4.0,h:0.25,fontSize:7.5,color:"6F727A",fontFace:SANS,align:"right",charSpacing:2}); }
+  // 1b the publication: the nightly homepage picture, when there is one
+  { const shot=await asData("homepage.jpg?v="+encodeURIComponent(HOMESHOT.captured_at||asof));
+    if(shot){ const s=slide("The publication","Pragmatism, published daily.");
+      const y=s._bodyY||1.6, h=4.6, w=h*1440/1000, x=L;   // the picture's own shape, uncropped
+      s.addShape(pptx.ShapeType.rect,{x:x+0.12,y:y+0.12,w,h,fill:{color:ORG},line:{color:ORG,width:0}});
+      s.addImage({data:shot,x,y,w,h});
+      s.addShape(pptx.ShapeType.rect,{x,y,w,h,fill:{type:"none"},line:{color:BLK,width:1.5}});
+      TX(s,"The Vital City homepage, vitalcitynyc.org"+(HOMESHOT.captured_at?", as it looked on "+fmtDate(HOMESHOT.captured_at):"")+".",{x,y:y+h+0.25,w:CW,h:0.3,fontSize:9,color:CHAR,fontFace:SANS}); } }
   // 2 the moment
   { const s=slide("The moment","A new administration is rewriting how New York City works. Someone has to guide it toward what the evidence supports.");
     let y=2.25;
@@ -548,7 +571,7 @@ if(/[?&]email=1/.test(location.search)){
 // dialog as soon as the deck has rendered — the PDF saved is generated from
 // the current nightly data.
 if(/[?&]print=1/.test(location.search)){
-  const _t=setInterval(()=>{ if(document.body.textContent.length>4000){clearInterval(_t);setTimeout(()=>window.print(),400);} },150);
+  const _t=setInterval(()=>{ if(document.body.textContent.length>4000){clearInterval(_t);imagesReady().then(()=>setTimeout(()=>window.print(),300));} },150);
 }
 
 const fmtDate=d=>{const x=new Date(String(d).slice(0,10)+"T12:00:00");return isNaN(x)?String(d).slice(0,10):x.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});};
@@ -605,9 +628,9 @@ function slides(){
     <h2>Pragmatism, published daily.</h2>
     <div class="browserframe">
       <div class="bf-bar"><i></i><i></i><i></i><span class="bf-url">vitalcitynyc.org</span></div>
-      <div class="bf-view"><iframe src="https://www.vitalcitynyc.org/" loading="eager" title="vitalcitynyc.org, live" scrolling="no"></iframe></div>
+      <div class="bf-view"><img class="homeshot" src="homepage.jpg?v=${esc(HOMESHOT.captured_at||asof)}" alt="The Vital City homepage, vitalcitynyc.org"></div>
     </div>
-    <div class="bf-cap">The Vital City homepage, vitalcitynyc.org — as of ${esc(asof)}, the date this copy of the deck was generated. If this panel prints blank, the printed copy simply omits the preview; every figure elsewhere is unaffected.</div>`});
+    <div class="bf-cap">The Vital City homepage, vitalcitynyc.org${HOMESHOT.captured_at?`, as it looked on ${esc(fmtDate(HOMESHOT.captured_at))}`:""}. A fresh picture is taken every night.</div>`});
 
   S.push({eyebrow:"The moment",html:`
     <h2>A new administration is rewriting how New York City works. Someone has to guide it toward what the evidence supports.</h2>
