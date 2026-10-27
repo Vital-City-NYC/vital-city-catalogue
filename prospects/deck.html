@@ -450,7 +450,7 @@ async function exportPptx(){
   // 2 the moment
   { const s=slide("The moment","The Mamdani administration is rewriting how New York City works. Someone has to guide it toward what the evidence supports.");
     let y=2.25;
-    y=lede(s,y,"A first-term mayor, a federal receiver at Rikers Island, a charter revision fight and an affordability crisis that will define the decade. Every one of those debates is about to be settled — well or badly — by whoever brings the best facts into the room.",{h:0.95});
+    y=lede(s,y,"A first-term mayor, a federal receiver at Rikers Island, charter changes put to voters in November 2026 and an affordability crisis that will define the decade. Every one of those debates is being settled — well or badly — by whoever brings the best facts into the room.",{h:0.95});
     TX(s,"WHAT IS MISSING",{x:L,y,w:6,h:0.3,fontSize:9,bold:true,color:BLK,charSpacing:2,fontFace:SANS}); y+=0.35;
     y=bullets(s,y,["Newsroom capacity for urban policy has collapsed.","Academic research reaches City Hall years late, if ever.","Advocacy shops arrive with a conclusion already written."]);
     pull(s,y+0.1,"Vital City occupies the empty middle: rigorous enough for the researchers, readable enough for the deputy mayor, independent enough that both sides cite it."); }
@@ -634,7 +634,7 @@ function slides(){
 
   S.push({eyebrow:"The moment",html:`
     <h2>The Mamdani administration is rewriting how New York City works. Someone has to guide it toward what the evidence supports.</h2>
-    <p class="lede">A first-term mayor, a federal receiver at Rikers Island, a charter revision fight and an affordability crisis that will define the decade. Every one of those debates is about to be settled — well or badly — by whoever brings the best facts into the room.</p>
+    <p class="lede">A first-term mayor, a federal receiver at Rikers Island, charter changes put to voters in November 2026 and an affordability crisis that will define the decade. Every one of those debates is being settled — well or badly — by whoever brings the best facts into the room.</p>
     <h3>What is missing</h3>
     <ul class="bullets">
       <li>Newsroom capacity for urban policy has collapsed.</li>
