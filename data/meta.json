@@ -1,15 +1,22 @@
 {
-  "generated_at": "2026-10-27T12:32:36.014258+00:00",
+  "generated_at": "2026-10-27T16:16:27.497611+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 983,
-  "total_authors": 538,
+  "total_posts": 984,
+  "total_authors": 539,
   "total_issues": 36,
   "total_topics": 233,
   "date_range": [
     "2021-09-15",
-    "2026-10-21"
+    "2026-10-27"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "How Unchecked Immigration Enforcement Risks Making U.S. Cities Less Safe",
+      "url": "https://www.vitalcitynyc.org/ice-enforcement-risks-public-safety/",
+      "published_date": "2026-10-27",
+      "primary_author": "Nayna Gupta"
+    }
+  ]
 }
