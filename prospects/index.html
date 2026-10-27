@@ -308,7 +308,7 @@ function renderGifts(G){
     const who=r=>`${r.role?esc(r.role)+(r.inst?", ":""):""}${esc(r.inst||"")}`;
     const nm=r=>r.e?`<a href="${profileURL(r.e)}" target="_blank" rel="noopener" style="color:inherit"><b>${esc(r.n)}</b></a>`:`<b>${esc(r.n)}</b>`;
     box.innerHTML = !rs.length ? `<div class="why" style="padding:8px 0">No gifts match.</div>` : view==="donors"
-      ? `<table class="tbl"><thead><tr><th>Donor</th><th class="n">Total</th><th class="n">Gifts</th><th class="n">First</th><th class="n">Latest</th></tr></thead><tbody>${donors.map(x=>`<tr><td>${nm(x)}${x.rec?' <span class="fit">monthly</span>':""}<div class="why">${who(x)}${x.e?`${who(x)?" · ":""}<a href="mailto:${esc(x.e)}">${esc(x.e)}</a>`:""}</div></td><td class="n">${money2(x.a)}</td><td class="n">${x.k}</td><td class="n">${esc(day(x.first))}</td><td class="n">${esc(day(x.last))}</td></tr>`).join("")}</tbody></table>`
+      ? `<table class="tbl"><thead><tr><th>Donor</th><th class="n">Total</th><th class="n">Gifts</th><th class="n">First</th><th class="n">Latest</th></tr></thead><tbody>${donors.map(x=>`<tr><td>${nm(x)}${x.rec?' <span class="fit">monthly</span>':""}<div class="why">${who(x)}${x.e?`${who(x)?" · ":""}<a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=${encodeURIComponent(x.e||"")}" target="_blank" rel="noopener">${esc(x.e)}</a>`:""}</div></td><td class="n">${money2(x.a)}</td><td class="n">${x.k}</td><td class="n">${esc(day(x.first))}</td><td class="n">${esc(day(x.last))}</td></tr>`).join("")}</tbody></table>`
       : `<table class="tbl"><thead><tr><th class="n">Date</th><th>Donor</th><th class="n">Amount</th><th>Campaign</th></tr></thead><tbody>${rs.map(r=>`<tr><td class="n" style="white-space:nowrap">${esc(day(r.d))}</td><td>${nm(r)}${r.rec?' <span class="fit">monthly</span>':""}<div class="why">${who(r)}</div></td><td class="n">${money2(r.a)}</td><td class="why">${esc(r.c)}</td></tr>`).join("")}</tbody></table>`;
   };
   ["giftWin","giftView"].forEach(id=>$("#"+id).addEventListener("change",draw));
@@ -584,7 +584,7 @@ function boot(d){
     <td>${p.wiki?'<span class="badge b-star">★</span>':""}<a href="${profileURL(p.e)}" target="_blank" rel="noopener" title="Open this person's full profile in the contact tool" style="color:inherit"><b>${esc(p.n)||'<span class="why">(no name)</span>'}</b></a>
         ${(p.types||[]).map(x=>`<span class="fit">${esc(x)}</span>`).join("")}
         <div class="why">${p.role?esc(p.role)+(p.inst?", ":""):""}${esc(p.inst)}${p.nyc?' <span class="fit" title="Has a demonstrable New York link — the research pass recorded one">NYC</span>':""}</div>
-        <div class="why"><a href="mailto:${esc(p.e)}">${esc(p.e)}</a> <span class="editlink" data-pkey="${esc((p.e||"").toLowerCase())}" data-pname="${esc(p.n||"")}" title="Add a note, or take this person off the prospect lists">Note or remove</span></div>
+        <div class="why"><a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=${encodeURIComponent(p.e||"")}" target="_blank" rel="noopener">${esc(p.e)}</a> <span class="editlink" data-pkey="${esc((p.e||"").toLowerCase())}" data-pname="${esc(p.n||"")}" title="Add a note, or take this person off the prospect lists">Note or remove</span></div>
         ${p.pnote?`<div class="pnote">${esc(p.pnote)}</div>`:""}</td>
     <td class="n">${p.damt?money(p.damt):"—"}</td>
     <td class="n">${p.dcnt||"—"}</td>

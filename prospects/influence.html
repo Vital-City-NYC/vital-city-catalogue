@@ -236,9 +236,23 @@ function plainText(){
     L.push(""); });
   return L.join("\n");
 }
+// Drafts open in Gmail, not the mail app: Josh's Vital City Chrome profile has
+// no handler for mailto: links, so they did nothing (same fix as the press
+// map, Oct. 5, 2026).
+function gmailUrl(o){
+  const q=["view=cm","fs=1"];
+  for(const [k,v] of [["to",o.to],["su",o.subject],["body",o.body]]) if(v) q.push(k+"="+encodeURIComponent(v));
+  return "https://mail.google.com/mail/?"+q.join("&");
+}
 $("#email").addEventListener("click",()=>{
-  let body=plainText(); if(body.length>12000) body=body.slice(0,12000)+"\n…";
-  location.href="mailto:?subject="+encodeURIComponent("Vital City's influence")+"&body="+encodeURIComponent(body);
+  const full=plainText();
+  // Gmail refuses a draft address much past 8,000 characters. A longer
+  // summary goes on the clipboard, and the draft says to paste it.
+  const fits=encodeURIComponent(full).length<7500;
+  const tab=window.open(gmailUrl({subject:"Vital City's influence", body: fits ? full :
+    "[The full summary is on your clipboard. Paste it here.]"}),"_blank");
+  if(!fits && navigator.clipboard) navigator.clipboard.writeText(full).catch(()=>{});
+  if(!tab) alert("Your browser blocked the Gmail tab. Allow pop-ups for this page and try again.");
 });
 $("#print").addEventListener("click",()=>window.print());
 
