@@ -1,7 +1,36 @@
 {
- "generated": "2026-10-26T19:08:02+00:00",
+ "generated": "2026-10-27T18:38:10+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "ice-enforcement-risks-public-safety",
+   "title": "How Unchecked Immigration Enforcement Risks Making U.S. Cities Less Safe",
+   "url": "https://www.vitalcitynyc.org/ice-enforcement-risks-public-safety/",
+   "date": "2026-10-27",
+   "author": "Nayna Gupta",
+   "handle": null,
+   "dek": "ICE actions are harming trust between locals and police.",
+   "tags": [
+    "Immigration",
+    "Federal Government"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Nayna Gupta argues that no amount of effective local policing can make up for what aggressive federal immigration enforcement does to public trust in police, and so to public safety."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Nayna Gupta on what happens when local police become a force multiplier for Immigration and Customs Enforcement, and what New York City and other cities can do about it."
+    },
+    {
+     "kind": "hook",
+     "text": "Does involving local police in immigration enforcement make cities safer? Nayna Gupta points to a new American Economic Review study: Hispanic victims reported fewer crimes and were more likely to become victims."
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "anand-giridharadas-book-review-daniel-penny-jordan-neely",
    "title": "Daniel Penny and Jordan Neely, Through Cracked Looking Glass",
