@@ -1,8 +1,8 @@
 {
   "meta": {
-    "generated_at": "2026-10-27T16:16:27.497611+00:00",
+    "generated_at": "2026-10-28T02:00:57.624836+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 984,
+    "total_posts": 985,
     "total_authors": 539,
     "total_issues": 36,
     "total_topics": 233,
@@ -14,21 +14,21 @@
     "new_article_count": 1,
     "new_articles": [
       {
-        "title": "How Unchecked Immigration Enforcement Risks Making U.S. Cities Less Safe",
-        "url": "https://www.vitalcitynyc.org/ice-enforcement-risks-public-safety/",
+        "title": "When ICE Comes to Town: The Role of Law, Local Police and Neighbors",
+        "url": "https://www.vitalcitynyc.org/ice-enforcement-local-police-immigration/",
         "published_date": "2026-10-27",
-        "primary_author": "Nayna Gupta"
+        "primary_author": "Vital City"
       }
     ]
   },
-  "total_pieces": 984,
+  "total_pieces": 985,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 254
+    "2026": 255
   },
   "by_month": {
     "2021-09": 1,
@@ -86,7 +86,7 @@
     "2026-07": 23,
     "2026-08": 16,
     "2026-09": 33,
-    "2026-10": 23
+    "2026-10": 24
   },
   "by_type": [
     [
@@ -95,7 +95,7 @@
     ],
     [
       "q&a",
-      90
+      91
     ],
     [
       "data analysis",
@@ -244,7 +244,7 @@
     ],
     [
       "Vital City (institutional)",
-      102
+      103
     ],
     [
       "Government / public official",
@@ -392,19 +392,19 @@
     }
   },
   "wc_stats": {
-    "n": 977,
+    "n": 978,
     "median": 1635,
-    "mean": 2158,
-    "p90": 3259,
+    "mean": 2166,
+    "p90": 3276,
     "max": 15166,
     "p10": 899,
     "p25": 1278,
-    "p75": 2227,
-    "p95": 5839,
+    "p75": 2229,
+    "p95": 5881,
     "no_count": 7,
     "core_1000_2499": 694,
     "under_500": 53,
-    "over_5000": 56
+    "over_5000": 57
   },
   "wc_buckets": [
     [
@@ -429,7 +429,7 @@
     ],
     [
       "5,000+",
-      56
+      57
     ]
   ],
   "wc_hist": {
@@ -509,7 +509,7 @@
       {
         "floor": 3500,
         "label": "3,500+",
-        "n": 88
+        "n": 89
       }
     ]
   },
@@ -548,15 +548,15 @@
     },
     {
       "year": "2026",
-      "n": 249,
-      "p25": 1275,
+      "n": 250,
+      "p25": 1276,
       "median": 1690,
-      "p75": 2405,
+      "p75": 2410,
       "max": 13675
     }
   ],
   "by_nauthors": {
-    "1": 831,
+    "1": 832,
     "2": 124,
     "3": 26,
     "4": 1,
@@ -566,7 +566,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 102,
+      "posts": 103,
       "credential": "Vital City (institutional)"
     },
     {
@@ -716,33 +716,33 @@
       {
         "year": "2026",
         "weeks": 42.9,
-        "pieces": 254,
-        "outside_issues": 170,
-        "per_week_all": 5.93,
-        "per_week_outside_issues": 3.97,
+        "pieces": 255,
+        "outside_issues": 171,
+        "per_week_all": 5.95,
+        "per_week_outside_issues": 3.99,
         "partial": true
       }
     ],
     "total_weeks": 266.9,
     "all_time_per_week": 3.69,
-    "all_time_per_week_outside_issues": 1.75,
+    "all_time_per_week_outside_issues": 1.76,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.97,
-    "current_per_week_all": 5.93,
+    "current_per_week_outside_issues": 3.99,
+    "current_per_week_all": 5.95,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 516,
       "published_away_from_drop": 70,
       "share_of_issue_pieces": 13.6,
-      "current_year_strict": 3.97,
-      "current_year_loose": 4.29,
-      "all_time_strict": 1.75,
-      "all_time_loose": 2.01,
+      "current_year_strict": 3.99,
+      "current_year_loose": 4.32,
+      "all_time_strict": 1.76,
+      "all_time_loose": 2.02,
       "all_time_all": 3.69
     }
   },
   "rhythm": {
-    "n_dated": 984,
+    "n_dated": 985,
     "by_weekday": [
       {
         "day": "Mon",
@@ -751,13 +751,13 @@
       },
       {
         "day": "Tue",
-        "pieces": 168,
-        "share": 17.1
+        "pieces": 169,
+        "share": 17.2
       },
       {
         "day": "Wed",
         "pieces": 466,
-        "share": 47.4
+        "share": 47.3
       },
       {
         "day": "Thu",
@@ -781,8 +781,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.4,
-    "midweek_share": 83.8,
+    "top_day_share": 47.3,
+    "midweek_share": 83.9,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -851,9 +851,9 @@
       {
         "month": "October",
         "abbr": "Oct",
-        "pieces": 122,
+        "pieces": 123,
         "occurrences": 6,
-        "per_occurrence": 20.3
+        "per_occurrence": 20.5
       },
       {
         "month": "November",

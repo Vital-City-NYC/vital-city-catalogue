@@ -1,5 +1,48 @@
 [
   {
+    "title": "When ICE Comes to Town: The Role of Law, Local Police and Neighbors",
+    "slug": "ice-enforcement-local-police-immigration",
+    "url": "https://www.vitalcitynyc.org/ice-enforcement-local-police-immigration/",
+    "type": "q&a",
+    "type_basis": "html:multi-speaker-transcript",
+    "published_date": "2026-10-27",
+    "published_at": "2026-10-27T19:57:27.000+00:00",
+    "updated_at": "2026-10-27T20:03:01.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Immigration"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "Former Homeland Security Secretary Jeh Johnson, immigration researcher Austin Kocher and Documented reporter Eileen Grench on what police should do when an immigration operation comes to a city.",
+    "excerpt": "Former Homeland Security Secretary Jeh Johnson, immigration researcher Austin Kocher and Documented reporter Eileen Grench on what police should do when an immigration operation comes to a city.\n",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/10/ice-comes-to-town-enforcement.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Deccio Serrano / NurPhoto / AP Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [
+        {
+          "url": "https://www.youtube.com/embed/uzHvZ2Os4ic?si=6zwfaD4_BtY0P96w",
+          "host": "www.youtube.com",
+          "kind": "video"
+        }
+      ],
+      "counts": {
+        "video": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 9879,
+    "reading_minutes": 43,
+    "id": "6ae100e4537a0b000185afc3"
+  },
+  {
     "title": "How Unchecked Immigration Enforcement Risks Making U.S. Cities Less Safe",
     "slug": "ice-enforcement-risks-public-safety",
     "url": "https://www.vitalcitynyc.org/ice-enforcement-risks-public-safety/",
