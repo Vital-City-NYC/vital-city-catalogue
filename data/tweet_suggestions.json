@@ -1,7 +1,67 @@
 {
- "generated": "2026-10-27T22:54:14+00:00",
+ "generated": "2026-10-28T18:44:58+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "postpandemic-homicide-decline-federal-funding",
+   "title": "Did Federal Local Fiscal Recovery Funding Drive America’s Postpandemic Homicide Decline?",
+   "url": "https://www.vitalcitynyc.org/postpandemic-homicide-decline-federal-funding/",
+   "date": "2026-10-28",
+   "author": "Ethan Doshi",
+   "handle": null,
+   "dek": "A close look at the evidence says it doesn't look likely.",
+   "tags": [
+    "Crime",
+    "Federal Government",
+    "Economics"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Cities that got more federal recovery money than similar cities in their state saw no bigger drop in homicide, finds Ethan Doshi. The biggest surges, he writes, produced the biggest declines."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Ethan Doshi on whether American Rescue Plan money drove the postpandemic homicide decline. He tested the theory across hundreds of cities and says the signal isn't there."
+    },
+    {
+     "kind": "hook",
+     "text": "Why did homicide fall fastest in the cities that got the most federal money? Ethan Doshi says the formula sent money to the hardest-hit places, and those places were already due to fall back."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "malcolm-gladwell-gun-violence-review",
+   "title": "Taking Gun Violence Seriously",
+   "url": "https://www.vitalcitynyc.org/malcolm-gladwell-gun-violence-review/",
+   "date": "2026-10-28",
+   "author": "Philip J. Cook",
+   "handle": null,
+   "dek": "On Malcolm Gladwell's latest book, \"The American Way of Killing\"",
+   "tags": [
+    "Book Review",
+    "Guns",
+    "Culture"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Philip J. Cook says Malcolm Gladwell is right that American police forces are too small, but wrong that trauma care explains the homicide numbers. Chicago shooting data shows why."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Philip J. Cook, who has researched American gun violence for 50 years, on Malcolm Gladwell's \"The American Way of Killing\": what the book gets right, and where he says it misses."
+    },
+    {
+     "kind": "hook",
+     "text": "Did better trauma care keep the homicide rate from tripling? Philip J. Cook checked Gladwell's claim against Chicago shooting data and the National Crime Victimization Survey."
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "ice-enforcement-risks-public-safety",
    "title": "How Unchecked Immigration Enforcement Risks Making U.S. Cities Less Safe",
