@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-10-29T02:06:37.824333+00:00",
+    "generated_at": "2026-10-29T17:23:03.493556+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 987,
     "total_authors": 540,
@@ -11,21 +11,8 @@
       "2026-10-28"
     ],
     "first_run": false,
-    "new_article_count": 2,
-    "new_articles": [
-      {
-        "title": "Did Federal Local Fiscal Recovery Funding Drive America\u2019s Postpandemic Homicide Decline?",
-        "url": "https://www.vitalcitynyc.org/postpandemic-homicide-decline-federal-funding/",
-        "published_date": "2026-10-28",
-        "primary_author": "Ethan Doshi"
-      },
-      {
-        "title": "Taking Gun Violence Seriously",
-        "url": "https://www.vitalcitynyc.org/malcolm-gladwell-gun-violence-review/",
-        "published_date": "2026-10-28",
-        "primary_author": "Philip J. Cook"
-      }
-    ]
+    "new_article_count": 0,
+    "new_articles": []
   },
   "total_pieces": 987,
   "by_year": {
@@ -399,23 +386,23 @@
   },
   "wc_stats": {
     "n": 980,
-    "median": 1635,
-    "mean": 2164,
+    "median": 1634,
+    "mean": 2162,
     "p90": 3276,
     "max": 15166,
-    "p10": 899,
+    "p10": 898,
     "p25": 1278,
     "p75": 2228,
     "p95": 5878,
     "no_count": 7,
-    "core_1000_2499": 695,
-    "under_500": 54,
+    "core_1000_2499": 694,
+    "under_500": 55,
     "over_5000": 57
   },
   "wc_buckets": [
     [
       "<500",
-      54
+      55
     ],
     [
       "500-999",
@@ -427,7 +414,7 @@
     ],
     [
       "2,000-2,999",
-      197
+      196
     ],
     [
       "3,000-4,999",
@@ -450,7 +437,7 @@
       {
         "floor": 250,
         "label": "250",
-        "n": 13
+        "n": 14
       },
       {
         "floor": 500,
@@ -485,7 +472,7 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 73
+        "n": 72
       },
       {
         "floor": 2250,
@@ -555,8 +542,8 @@
     {
       "year": "2026",
       "n": 252,
-      "p25": 1274,
-      "median": 1690,
+      "p25": 1271,
+      "median": 1688,
       "p75": 2407,
       "max": 13675
     }

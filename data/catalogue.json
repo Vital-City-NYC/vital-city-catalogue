@@ -44,7 +44,7 @@
     "type_basis": "tag:book-review",
     "published_date": "2026-10-28",
     "published_at": "2026-10-28T16:38:00.000+00:00",
-    "updated_at": "2026-10-28T18:52:59.000+00:00",
+    "updated_at": "2026-10-29T15:48:03.000+00:00",
     "primary_author": "Philip J. Cook",
     "authors": [
       "Philip J. Cook"
@@ -68,9 +68,9 @@
       "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 2195,
-    "reading_minutes": 10,
+    "visibility": "members",
+    "word_count": 298,
+    "reading_minutes": 1,
     "id": "6adf7223bda6b6000153dab4"
   },
   {
