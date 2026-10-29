@@ -1,0 +1,34 @@
+name: kpi-weekly
+
+# Weekly key indicators for the Claude dashboard (claude.ai/artifact/JmbSAJs5jv27ttVhyNczWW).
+# Pulls Mailchimp, Donorbox and GA4 directly and overwrites the
+# "Vital City key indicators" Google Sheet, which the dashboard reads live.
+# Writes nothing to the repo. GitHub emails on failure.
+
+on:
+  schedule:
+    - cron: "0 12 * * 1"   # Mondays 12:00 UTC = 8am ET (EDT) / 7am ET (EST), after the week closes
+  workflow_dispatch:
+
+concurrency:
+  group: kpi-weekly
+  cancel-in-progress: false
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet cryptography
+      - name: Pull the week's numbers and write the sheet
+        env:
+          MAILCHIMP_KEY:   ${{ secrets.MAILCHIMP_KEY }}
+          DONORBOX_KEY:    ${{ secrets.DONORBOX_KEY }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GA4_CREDS_JSON:  ${{ secrets.GA4_CREDS_JSON }}
+          KPI_SHEET_ID:    1OlElkNQYaZEl4kYU2EexoU52MBgqTjkmdfGEkHwLWzc
+        run: python3 kpi_weekly.py
