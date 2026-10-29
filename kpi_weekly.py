@@ -4,19 +4,21 @@ Weekly key indicators since the move to Ghost, with the longer monthly record
 and industry norms beside them, written to a Google Sheet.
 
 Tabs:
-  weekly      one row per Monday-to-Sunday week from the week of March 2, 2026
-              (the site moved from Prismic to Ghost on March 1) through the
-              last full week
+  weekly      one row per Monday-to-Sunday week from Jan. 6, 2025, through the
+              last full week; the site moved from Prismic to Ghost on March 1,
+              2026, and engaged time is comparable only from then
   monthly     the same measures by calendar month from January 2024, so the
               weekly numbers can be read against Vital City's own history
   benchmarks  published industry norms, with their sources
   events      dated initiatives and data breaks, marked on the charts
+  signup_pages  the pages people signed up on most, last 4 weeks and since the move
   about       when the sheet was last refreshed
 
 Every number comes straight from the source APIs on each run:
   Mailchimp   list size and net growth (rebuilt from each member's join and
               leave dates), active newsletter readers, open and click rates
   Donorbox    donors
+  Ghost       the page each newsletter signup happened on
   GA4         website active users, average engaged time
 
 The Claude dashboard reads the sheet through the Google Sheets connector,
@@ -27,6 +29,7 @@ Runs from GitHub Actions every Monday (.github/workflows/kpi-weekly.yml).
 
 Environment:
   MAILCHIMP_KEY, DONORBOX_KEY       (or private/.mailchimp_key, .donorbox_key)
+  GHOST_ADMIN_KEY                   (or private/.ghost_admin_key)
   GA4_PROPERTY_ID, GA4_CREDS_JSON   the service account that also writes the sheet
   KPI_SHEET_ID                      the spreadsheet id
 
@@ -40,6 +43,7 @@ import growth_pull as gp
 
 NY = ZoneInfo("America/New_York")
 WEEK0 = date(2026, 3, 2)          # first Monday after the March 1, 2026 move to Ghost
+WEEKS_FROM = date(2025, 1, 6)     # first full week of 2025; the weekly record starts here
 HISTORY0 = date(2024, 1, 1)       # start of the monthly record
 ACTIVE0 = date(2025, 1, 1)        # active readers need every send's openers; from 2025
 LIST_ID = os.environ.get("MAILCHIMP_LIST", "ec30bf0c4b")
@@ -51,7 +55,7 @@ MEASURES = [
     "donors", "new_donors", "gifts",
     "web_active_users", "avg_engaged_seconds",
 ]
-WEEK_COLS = ["week_start", "week_end"] + MEASURES + ["donors_since_move"]
+WEEK_COLS = ["week_start", "week_end"] + MEASURES + ["donors_since_move", "engaged_time_comparable"]
 MONTH_COLS = ["month", "month_start", "month_end"] + MEASURES + ["engaged_time_comparable"]
 
 # Published norms, as the growth dashboard's industry-context table gives them
@@ -95,11 +99,11 @@ def log(m): print(m, file=sys.stderr, flush=True)
 
 
 def periods():
-    """Full weeks since the move and full calendar months since HISTORY0,
+    """Full weeks since WEEKS_FROM and full calendar months since HISTORY0,
     each ending no later than last Sunday or the end of last month."""
     today = datetime.now(NY).date()
     last_sun = today - timedelta(days=today.weekday() + 1)
-    weeks, m = [], WEEK0
+    weeks, m = [], WEEKS_FROM
     while m + timedelta(days=6) <= last_sun:
         weeks.append((m, m + timedelta(days=6)))
         m += timedelta(days=7)
@@ -277,9 +281,60 @@ def pull_donorbox(weeks, months):
             out[s] = {"donors": len(donors),
                       "new_donors": sum(1 for w in donors if s <= first[w] <= e),
                       "gifts": len(g),
-                      "donors_since_move": len({w for d, w in gifts if WEEK0 <= d <= e})}
+                      "donors_since_move": len({w for d, w in gifts if WEEK0 <= d <= e}) if e >= WEEK0 else None}
         return out
     return measures(weeks), measures(months)
+
+
+# ---------------------------------------------------------------- Ghost
+SIGNUP_COLS = ["period", "start", "end", "rank", "title", "url", "kind", "signups", "period_signups"]
+
+
+def pull_signup_pages(weeks, top=12):
+    """Where people signed up, from Ghost's signup events: each carries the
+    page the person was on. Bulk imports (event registration lists) are left
+    out, since they have no page. Ghost became the signup record on
+    March 3, 2026, so this starts at the move."""
+    tok = gp._ghost_admin_token()
+    if not tok: raise SystemExit("GHOST_ADMIN_KEY not set")
+    end = weeks[-1][1]
+    since = WEEK0
+    events, cursor = [], None
+    while True:
+        flt = "type:signup_event" + (f"+id:<{cursor}" if cursor else "")
+        data = json.loads(gp.http_get(f"{gp.GHOST_ADMIN_API}/members/events/?filter={urllib.parse.quote(flt)}&limit=100",
+                                      headers={"Authorization": f"Ghost {tok}", "Accept-Version": "v5.0"}, timeout=60))
+        batch = data.get("events") or []
+        if not batch: break
+        done = False
+        for e in batch:
+            d = e.get("data") or {}
+            day = ny_date(d.get("created_at"))
+            if not day: continue
+            if day < since: done = True; break
+            if day > end or d.get("source") == "import": continue
+            a = d.get("attribution") or {}
+            # Ghost records the homepage both as "/" and as the full address
+            path = urllib.parse.urlparse(a.get("url") or "").path.rstrip("/")
+            kind = a.get("type") or "unknown"
+            if not path: title, kind = "Homepage", "homepage"
+            else: title = a.get("title") or path
+            events.append((day, path or "/", title, kind))
+        cursor = batch[-1].get("data", {}).get("id") or batch[-1].get("id")
+        if done or not cursor: break
+    log(f"  ghost: {len(events):,} signups with a page since {since}")
+    rows = [SIGNUP_COLS]
+    four = weeks[-4][0]
+    for name, s0 in (("last_4_weeks", four), ("since_move", since)):
+        ev = [e for e in events if s0 <= e[0] <= end]
+        counts = {}
+        for _, url, title, kind in ev:
+            c = counts.setdefault(url, {"title": title, "kind": kind, "n": 0})
+            c["n"] += 1
+        ranked = sorted(counts.items(), key=lambda kv: -kv[1]["n"])[:top]
+        for i, (url, c) in enumerate(ranked, 1):
+            rows.append([name, s0.isoformat(), end.isoformat(), i, c["title"], url, c["kind"], c["n"], len(ev)])
+    return rows
 
 
 # ---------------------------------------------------------------- GA4
@@ -363,8 +418,11 @@ def main():
     weeks, months = periods()
     log(f"{len(weeks)} weeks from {weeks[0][0]}; {len(months)} months from {months[0][0]}")
     (mw, mm), (dw, dm), (gw, gm) = pull_mailchimp(weeks, months), pull_donorbox(weeks, months), pull_ga4(weeks, months)
+    signup_pages = pull_signup_pages(weeks)
 
-    weekly = table(WEEK_COLS, weeks, lambda s, e: {"week_start": s.isoformat(), "week_end": e.isoformat()},
+    weekly = table(WEEK_COLS, weeks, lambda s, e: {"week_start": s.isoformat(), "week_end": e.isoformat(),
+                                                   # Prismic and Ghost recorded engaged time differently
+                                                   "engaged_time_comparable": "yes" if s >= WEEK0 else "no"},
                    mw, dw, gw)
     monthly = table(MONTH_COLS, months,
                     lambda s, e: {"month": s.strftime("%Y-%m"), "month_start": s.isoformat(),
@@ -384,7 +442,7 @@ def main():
              ["website_source", "GA4" if gw else "missing on this run"]]
     events = [["from", "to", "label", "kind"]] + [[e["from"], e.get("to", ""), e["label"], e.get("kind", "")]
                                                   for e in EVENTS]
-    tabs = {"weekly": weekly, "monthly": monthly, "benchmarks": BENCHMARKS, "events": events, "about": about}
+    tabs = {"weekly": weekly, "monthly": monthly, "benchmarks": BENCHMARKS, "events": events, "signup_pages": signup_pages, "about": about}
 
     if a.out:
         with open(a.out, "w") as f: json.dump(tabs, f)

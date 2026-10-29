@@ -1,7 +1,7 @@
 name: kpi-weekly
 
 # Weekly key indicators for the Claude dashboard (claude.ai/artifact/JmbSAJs5jv27ttVhyNczWW).
-# Pulls Mailchimp, Donorbox and GA4 directly and overwrites the
+# Pulls Mailchimp, Donorbox, Ghost and GA4 directly and overwrites the
 # "Vital City key indicators" Google Sheet, which the dashboard reads live.
 # Writes nothing to the repo. GitHub emails on failure.
 
@@ -28,6 +28,7 @@ jobs:
         env:
           MAILCHIMP_KEY:   ${{ secrets.MAILCHIMP_KEY }}
           DONORBOX_KEY:    ${{ secrets.DONORBOX_KEY }}
+          GHOST_ADMIN_KEY: ${{ secrets.GHOST_ADMIN_KEY }}
           GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
           GA4_CREDS_JSON:  ${{ secrets.GA4_CREDS_JSON }}
           KPI_SHEET_ID:    1OlElkNQYaZEl4kYU2EexoU52MBgqTjkmdfGEkHwLWzc
