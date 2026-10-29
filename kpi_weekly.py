@@ -89,10 +89,11 @@ BENCHMARKS = [
 
 # Dated events for the charts: the growth dashboard's own list, plus two
 # since its last update.
-EVENTS = gp.INITIATIVES + [
+EVENTS = sorted(gp.INITIATIVES + [
+    {"from": "2026-06-04", "label": "Newsletter starts going to about 8,300 people instead of about 10,700; open rates jump from about 30% to 41% that week", "kind": "newsletter"},
     {"from": "2026-10-08", "label": "Some new pieces go members-only", "kind": "site"},
     {"from": "2026-10-28", "label": "Signup boxes added inside and at the end of articles", "kind": "site"},
-]
+], key=lambda e: e["from"])
 
 
 def log(m): print(m, file=sys.stderr, flush=True)
