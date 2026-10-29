@@ -1,46 +1,77 @@
 [
   {
-    "title": "When ICE Comes to Town: The Role of Law, Local Police and Neighbors",
-    "slug": "ice-enforcement-local-police-immigration",
-    "url": "https://www.vitalcitynyc.org/ice-enforcement-local-police-immigration/",
-    "type": "q&a",
-    "type_basis": "html:multi-speaker-transcript",
-    "published_date": "2026-10-27",
-    "published_at": "2026-10-27T19:57:27.000+00:00",
-    "updated_at": "2026-10-27T20:03:01.000+00:00",
-    "primary_author": "Vital City",
+    "title": "Did Federal Local Fiscal Recovery Funding Drive America’s Postpandemic Homicide Decline?",
+    "slug": "postpandemic-homicide-decline-federal-funding",
+    "url": "https://www.vitalcitynyc.org/postpandemic-homicide-decline-federal-funding/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-10-28",
+    "published_at": "2026-10-28T17:28:50.000+00:00",
+    "updated_at": "2026-10-28T20:19:10.000+00:00",
+    "primary_author": "Ethan Doshi",
     "authors": [
-      "Vital City"
+      "Ethan Doshi"
     ],
     "topics": [
-      "Immigration"
+      "Crime",
+      "Federal Government",
+      "Economics"
     ],
     "issues": [],
     "issue_numbers": [],
-    "summary": "Former Homeland Security Secretary Jeh Johnson, immigration researcher Austin Kocher and Documented reporter Eileen Grench on what police should do when an immigration operation comes to a city.",
-    "excerpt": "Former Homeland Security Secretary Jeh Johnson, immigration researcher Austin Kocher and Documented reporter Eileen Grench on what police should do when an immigration operation comes to a city.\n",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/10/ice-comes-to-town-enforcement.png",
-    "feature_image_alt": null,
-    "feature_image_credit": "Deccio Serrano / NurPhoto / AP Photo",
+    "summary": "A close look at the evidence says it doesn’t look likely.",
+    "excerpt": "A close look at the evidence says it doesn’t look likely.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/10/Cropping-Tool---2026-10-28T131920.998.png",
+    "feature_image_alt": "A skeleton is displayed in a window that is partially obscured by two leafy plants",
+    "feature_image_credit": "Mathias Wasik",
     "embeds": {
       "flourish": [],
-      "iframes": [
-        {
-          "url": "https://www.youtube.com/embed/uzHvZ2Os4ic?si=6zwfaD4_BtY0P96w",
-          "host": "www.youtube.com",
-          "kind": "video"
-        }
-      ],
-      "counts": {
-        "video": 1
-      },
-      "total": 1
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "members",
+    "word_count": 212,
+    "reading_minutes": 1,
+    "id": "6adf9d40bda6b6000153db35"
+  },
+  {
+    "title": "Taking Gun Violence Seriously",
+    "slug": "malcolm-gladwell-gun-violence-review",
+    "url": "https://www.vitalcitynyc.org/malcolm-gladwell-gun-violence-review/",
+    "type": "book review",
+    "type_basis": "tag:book-review",
+    "published_date": "2026-10-28",
+    "published_at": "2026-10-28T16:38:00.000+00:00",
+    "updated_at": "2026-10-28T18:52:59.000+00:00",
+    "primary_author": "Philip J. Cook",
+    "authors": [
+      "Philip J. Cook"
+    ],
+    "topics": [
+      "Book Review",
+      "Guns",
+      "Culture"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "On Malcolm Gladwell’s latest book, “The American Way of Killing”",
+    "excerpt": "On Malcolm Gladwell’s latest book, “The American Way of Killing”",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/10/Cropping-Tool---2026-10-28T133305.111.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Olivier Douliery / Abaca / Sipa USA / AP Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 9879,
-    "reading_minutes": 43,
-    "id": "6ae100e4537a0b000185afc3"
+    "word_count": 2195,
+    "reading_minutes": 10,
+    "id": "6adf7223bda6b6000153dab4"
   },
   {
     "title": "How Unchecked Immigration Enforcement Risks Making U.S. Cities Less Safe",
@@ -77,6 +108,49 @@
     "word_count": 1237,
     "reading_minutes": 5,
     "id": "6ae0b0ba537a0b000185aef3"
+  },
+  {
+    "title": "When ICE Comes to Town: The Role of Law, Local Police and Neighbors",
+    "slug": "ice-enforcement-local-police-immigration",
+    "url": "https://www.vitalcitynyc.org/ice-enforcement-local-police-immigration/",
+    "type": "q&a",
+    "type_basis": "html:multi-speaker-transcript",
+    "published_date": "2026-10-27",
+    "published_at": "2026-10-27T13:17:00.000+00:00",
+    "updated_at": "2026-10-28T17:40:26.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Immigration"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "Former Homeland Security Secretary Jeh Johnson, immigration researcher Austin Kocher and Documented reporter Eileen Grench on what police should do when an immigration operation comes to a city.",
+    "excerpt": "Former Homeland Security Secretary Jeh Johnson, immigration researcher Austin Kocher and Documented reporter Eileen Grench on what police should do when an immigration operation comes to a city.\n",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/10/ice-comes-to-town-enforcement.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Deccio Serrano / NurPhoto / AP Photo",
+    "embeds": {
+      "flourish": [],
+      "iframes": [
+        {
+          "url": "https://www.youtube.com/embed/uzHvZ2Os4ic?si=6zwfaD4_BtY0P96w",
+          "host": "www.youtube.com",
+          "kind": "video"
+        }
+      ],
+      "counts": {
+        "video": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 9879,
+    "reading_minutes": 43,
+    "id": "6ae100e4537a0b000185afc3"
   },
   {
     "title": "Daniel Penny and Jordan Neely, Through Cracked Looking Glass",

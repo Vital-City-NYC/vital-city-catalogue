@@ -1,7 +1,7 @@
 [
   {
     "name": "Crime",
-    "post_count": 153
+    "post_count": 154
   },
   {
     "name": "History",
@@ -33,7 +33,11 @@
   },
   {
     "name": "Culture",
-    "post_count": 77
+    "post_count": 78
+  },
+  {
+    "name": "Economics",
+    "post_count": 57
   },
   {
     "name": "Police Reform",
@@ -41,10 +45,6 @@
   },
   {
     "name": "Interview",
-    "post_count": 56
-  },
-  {
-    "name": "Economics",
     "post_count": 56
   },
   {
@@ -168,6 +168,10 @@
     "post_count": 14
   },
   {
+    "name": "Federal Government",
+    "post_count": 13
+  },
+  {
     "name": "Inequality",
     "post_count": 13
   },
@@ -181,10 +185,6 @@
   },
   {
     "name": "Immigration",
-    "post_count": 12
-  },
-  {
-    "name": "Federal Government",
     "post_count": 12
   },
   {
@@ -212,16 +212,16 @@
     "post_count": 11
   },
   {
+    "name": "Book Review",
+    "post_count": 10
+  },
+  {
     "name": "Streets",
     "post_count": 10
   },
   {
     "name": "Why the Trains Matter",
     "post_count": 10
-  },
-  {
-    "name": "Book Review",
-    "post_count": 9
   },
   {
     "name": "Artifical Intelligence",
@@ -504,6 +504,10 @@
     "post_count": 4
   },
   {
+    "name": "Guns",
+    "post_count": 3
+  },
+  {
     "name": "What We Know and Don't Know",
     "post_count": 3
   },
@@ -605,10 +609,6 @@
   },
   {
     "name": "Rikers",
-    "post_count": 2
-  },
-  {
-    "name": "Guns",
     "post_count": 2
   },
   {

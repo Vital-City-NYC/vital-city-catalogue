@@ -1,27 +1,40 @@
 {
   "meta": {
-    "generated_at": "2026-10-28T17:05:01.231473+00:00",
+    "generated_at": "2026-10-29T02:06:37.824333+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 985,
-    "total_authors": 539,
+    "total_posts": 987,
+    "total_authors": 540,
     "total_issues": 36,
     "total_topics": 233,
     "date_range": [
       "2021-09-15",
-      "2026-10-27"
+      "2026-10-28"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 2,
+    "new_articles": [
+      {
+        "title": "Did Federal Local Fiscal Recovery Funding Drive America\u2019s Postpandemic Homicide Decline?",
+        "url": "https://www.vitalcitynyc.org/postpandemic-homicide-decline-federal-funding/",
+        "published_date": "2026-10-28",
+        "primary_author": "Ethan Doshi"
+      },
+      {
+        "title": "Taking Gun Violence Seriously",
+        "url": "https://www.vitalcitynyc.org/malcolm-gladwell-gun-violence-review/",
+        "published_date": "2026-10-28",
+        "primary_author": "Philip J. Cook"
+      }
+    ]
   },
-  "total_pieces": 985,
+  "total_pieces": 987,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 255
+    "2026": 257
   },
   "by_month": {
     "2021-09": 1,
@@ -79,12 +92,12 @@
     "2026-07": 23,
     "2026-08": 16,
     "2026-09": 33,
-    "2026-10": 24
+    "2026-10": 26
   },
   "by_type": [
     [
       "opinion/commentary",
-      770
+      771
     ],
     [
       "q&a",
@@ -108,7 +121,7 @@
     ],
     [
       "book review",
-      9
+      10
     ],
     [
       "map/tool",
@@ -118,7 +131,7 @@
   "by_topic_top25": [
     [
       "Crime",
-      153
+      154
     ],
     [
       "History",
@@ -150,7 +163,11 @@
     ],
     [
       "Culture",
-      77
+      78
+    ],
+    [
+      "Economics",
+      57
     ],
     [
       "Police Reform",
@@ -158,10 +175,6 @@
     ],
     [
       "Interview",
-      56
-    ],
-    [
-      "Economics",
       56
     ],
     [
@@ -221,7 +234,7 @@
   "by_credential_pieces": [
     [
       "Academic",
-      234
+      235
     ],
     [
       "Journalist / media",
@@ -233,7 +246,7 @@
     ],
     [
       "Other / unclassified",
-      107
+      108
     ],
     [
       "Vital City (institutional)",
@@ -275,7 +288,7 @@
     ],
     [
       "Other / unclassified",
-      120
+      121
     ],
     [
       "Nonprofit / advocacy",
@@ -334,7 +347,7 @@
       "2023": 37,
       "2024": 38,
       "2025": 31,
-      "2026": 29
+      "2026": 30
     },
     "History": {
       "2022": 12,
@@ -385,24 +398,24 @@
     }
   },
   "wc_stats": {
-    "n": 978,
+    "n": 980,
     "median": 1635,
-    "mean": 2166,
+    "mean": 2164,
     "p90": 3276,
     "max": 15166,
     "p10": 899,
     "p25": 1278,
-    "p75": 2229,
-    "p95": 5881,
+    "p75": 2228,
+    "p95": 5878,
     "no_count": 7,
-    "core_1000_2499": 694,
-    "under_500": 53,
+    "core_1000_2499": 695,
+    "under_500": 54,
     "over_5000": 57
   },
   "wc_buckets": [
     [
       "<500",
-      53
+      54
     ],
     [
       "500-999",
@@ -414,7 +427,7 @@
     ],
     [
       "2,000-2,999",
-      196
+      197
     ],
     [
       "3,000-4,999",
@@ -432,7 +445,7 @@
       {
         "floor": 0,
         "label": "0",
-        "n": 40
+        "n": 41
       },
       {
         "floor": 250,
@@ -472,7 +485,7 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 72
+        "n": 73
       },
       {
         "floor": 2250,
@@ -541,15 +554,15 @@
     },
     {
       "year": "2026",
-      "n": 250,
-      "p25": 1276,
+      "n": 252,
+      "p25": 1274,
       "median": 1690,
-      "p75": 2410,
+      "p75": 2407,
       "max": 13675
     }
   ],
   "by_nauthors": {
-    "1": 832,
+    "1": 834,
     "2": 124,
     "3": 26,
     "4": 1,
@@ -708,34 +721,34 @@
       },
       {
         "year": "2026",
-        "weeks": 42.9,
-        "pieces": 255,
-        "outside_issues": 171,
-        "per_week_all": 5.95,
-        "per_week_outside_issues": 3.99,
+        "weeks": 43.0,
+        "pieces": 257,
+        "outside_issues": 173,
+        "per_week_all": 5.98,
+        "per_week_outside_issues": 4.02,
         "partial": true
       }
     ],
-    "total_weeks": 266.9,
-    "all_time_per_week": 3.69,
+    "total_weeks": 267.0,
+    "all_time_per_week": 3.7,
     "all_time_per_week_outside_issues": 1.76,
     "current_year": "2026",
-    "current_per_week_outside_issues": 3.99,
-    "current_per_week_all": 5.95,
+    "current_per_week_outside_issues": 4.02,
+    "current_per_week_all": 5.98,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 516,
       "published_away_from_drop": 70,
       "share_of_issue_pieces": 13.6,
-      "current_year_strict": 3.99,
-      "current_year_loose": 4.32,
+      "current_year_strict": 4.02,
+      "current_year_loose": 4.35,
       "all_time_strict": 1.76,
-      "all_time_loose": 2.02,
-      "all_time_all": 3.69
+      "all_time_loose": 2.03,
+      "all_time_all": 3.7
     }
   },
   "rhythm": {
-    "n_dated": 985,
+    "n_dated": 987,
     "by_weekday": [
       {
         "day": "Mon",
@@ -745,12 +758,12 @@
       {
         "day": "Tue",
         "pieces": 169,
-        "share": 17.2
+        "share": 17.1
       },
       {
         "day": "Wed",
-        "pieces": 466,
-        "share": 47.3
+        "pieces": 468,
+        "share": 47.4
       },
       {
         "day": "Thu",
@@ -774,7 +787,7 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.3,
+    "top_day_share": 47.4,
     "midweek_share": 83.9,
     "weekend_pieces": 28,
     "by_month": [
@@ -844,9 +857,9 @@
       {
         "month": "October",
         "abbr": "Oct",
-        "pieces": 123,
+        "pieces": 125,
         "occurrences": 6,
-        "per_occurrence": 20.5
+        "per_occurrence": 20.8
       },
       {
         "month": "November",
