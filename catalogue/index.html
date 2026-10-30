@@ -391,7 +391,7 @@ function articleCats(r) {
 function fmtDate(d) {
   if (!d) return "";
   const [y, m, day] = d.split("-");
-  const mo = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m - 1];
+  const mo = ["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."][+m - 1];   // AP style, like every other tool
   return `${mo} ${+day}, ${y}`;
 }
 function issueLabel(name) {

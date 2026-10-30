@@ -32,7 +32,9 @@ DATA_DIR = Path(__file__).resolve().parent / "data"
 
 # Internal Ghost tags that are migration artifacts, not real classifications.
 JUNK_TAG_SLUGS = {"hash-imagesuploaded", "hash-none"}
-JUNK_TAG_PREFIXES = ("hash-import-",)
+# hash-hide*/hash-skip* are homepage layout switches (#hidehome, #skiphome,
+# #hidecommentary), not issues or series; they had been listed as issues.
+JUNK_TAG_PREFIXES = ("hash-import-", "hash-hide", "hash-skip")
 
 
 def fetch_json(url):
