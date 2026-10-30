@@ -206,9 +206,10 @@ def build_people(people, growth, prospects, press, signup_by_email, cites):
     # 2. The press map: by published address, else by name for people the
     #    contact tool already marks as press or journalists.
     press_by_email, press_by_name = {}, defaultdict(list)
+    outlet_name = {o.get("id"): o.get("name") or o.get("id") for o in press.get("outlets") or []}
     for p in press.get("people") or []:
         beats = sorted(p.get("beats") or [], key=lambda b: -(b.get("count") or 0))[:3]
-        rec = {"id": p.get("id"), "n": p.get("name"), "o": p.get("outlet"), "sc": p.get("story_count"),
+        rec = {"id": p.get("id"), "n": p.get("name"), "o": outlet_name.get(p.get("outlet"), p.get("outlet")), "sc": p.get("story_count"),
                "l": day(p.get("latest")), "b": [[b.get("label"), b.get("count")] for b in beats],
                "act": bool(p.get("active"))}
         if p.get("email"):
