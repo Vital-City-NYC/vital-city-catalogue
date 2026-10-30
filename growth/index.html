@@ -4628,11 +4628,14 @@ function renderSendItems(data){
 function renderGating(data){
   const host=$("#gatingBody"); if(!host) return;
   const pi=(((data.ga4||{}).piece_index||{}).pieces)||[];
-  const mem=pi.filter(p=>p.members).sort((a,b)=>String(b.pub).localeCompare(String(a.pub)));
   const inits=((data.initiatives||{}).items)||[];
   const start=String((inits.find(i=>/members-only/i.test(i.label||""))||{}).from||"2026-10-08").slice(0,10);
+  // Only pieces that were members-only from publication are compared. Older
+  // pieces switched later drew most of their views and signups while open.
+  const memAll=pi.filter(p=>p.members).sort((a,b)=>String(b.pub).localeCompare(String(a.pub)));
+  const mem=memAll.filter(p=>String(p.pub)>=start), memOld=memAll.filter(p=>String(p.pub)<start);
   const lg=((data.ghost_logins||{}).weeks)||[];
-  if(!mem.length&&!lg.length){ host.innerHTML=`<div class="hint">No members-only pieces yet.</div>`; return; }
+  if(!memAll.length&&!lg.length){ host.innerHTML=`<div class="hint">No members-only pieces yet.</div>`; return; }
   const rate=(su,v)=>v?1000*su/v:null, f1=v=>v==null?"—":(v>=10?Math.round(v):v.toFixed(1));
   const since="2026-08-01";
   const open=pi.filter(p=>!p.members&&String(p.pub)>=since&&p.signups!=null&&p.views>=200);
@@ -4641,10 +4644,11 @@ function renderGating(data){
   const oMed=(()=>{ const r=open.map(p=>rate(p.signups,p.views)).sort((a,b)=>a-b); return r.length?r[r.length>>1]:null; })();
   let h="";
   if(mem.length){
-    h+=`<p class="si-read">${mem.length} members-only piece${mem.length===1?"":"s"} since ${esc(pwDate(start))}: <b>${fmtN(M.su)}</b> newsletter signups on ${fmtN(M.v)} views, or <b>${f1(M.r)}</b> per 1,000 views. Open pieces published since ${esc(pwDate(since))} drew ${f1(O.r)} per 1,000 views (${fmtN(O.su)} signups on ${fmtN(O.v)} views across ${open.length} pieces; the typical one, ${f1(oMed)}).</p>
+    h+=`<p class="si-read">${mem.length} piece${mem.length===1?"":"s"} published members-only since ${esc(pwDate(start))}: <b>${fmtN(M.su)}</b> newsletter signups on ${fmtN(M.v)} views, or <b>${f1(M.r)}</b> per 1,000 views. Open pieces published since ${esc(pwDate(since))} drew ${f1(O.r)} per 1,000 views (${fmtN(O.su)} signups on ${fmtN(O.v)} views across ${open.length} pieces; the typical one, ${f1(oMed)}).</p>
       <div class="tscroll"><table class="tbl"><thead><tr><th>Piece</th><th>Published</th><th class="num">Views</th><th class="num">Signups</th><th class="num">Per 1,000 views</th></tr></thead><tbody>
       ${mem.map(p=>`<tr><td><a href="../catalogue/#piece=${encodeURIComponent(p.slug)}" title="This piece's page in the catalogue">${esc(p.title)}</a></td><td style="white-space:nowrap">${esc(pxDay(p.pub))}</td><td class="num">${fmtN(p.views)}</td><td class="num">${p.signups==null?"—":fmtN(p.signups)}</td><td class="num">${f1(rate(p.signups||0,p.views))}</td></tr>`).join("")}
-      </tbody></table></div>`;
+      </tbody></table></div>`
+      +(memOld.length?`<div class="flagnote" style="margin-top:8px">Also members-only now, but published before ${esc(pwDate(start))} and open for most of their life, so left out of the comparison: ${memOld.map(p=>`<a href="../catalogue/#piece=${encodeURIComponent(p.slug)}">${esc(p.title)}</a> (${esc(pwDate(p.pub))})`).join("; ")}.</div>`:"");
   }
   if(lg.length){
     const wks=lg.slice(-16), max=Math.max(1,...wks.map(w=>w.logins));
