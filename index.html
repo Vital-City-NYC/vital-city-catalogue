@@ -144,7 +144,7 @@ async function renderWeek(){
   const stat=(k,label,href)=>{ const [now,base]=W.n[k]||[]; let d="";
     if(base!=null&&now!=null){ const diff=now-base, pct=base?Math.round(100*diff/base):null;
       d = Math.abs(diff)<0.5 ? "Level with the four weeks before" :
-        `<b>${diff>0?"+":"−"}${fmt(Math.abs(diff))}</b>`+(pct!=null&&Math.abs(pct)>=1?` (${diff>0?"+":"−"}${Math.abs(pct)}%)`:"")+` vs. the ${fmt(base)} weekly average of the four weeks before`; }
+        `<b>${diff>0?"+":"−"}${fmt(Math.abs(diff))}</b>`+(pct!=null&&Math.abs(pct)>=1?` (${diff>0?"+":"−"}${Math.abs(pct)}%)`:"")+` against ${fmt(base)}, the average of the four weeks before`; }
     return `<div class="vcx-stat"><a href="${href}"><div class="k">${label}</div><div class="v">${fmt(now)}</div></a><div class="d">${d}</div></div>`; };
   const card=(title,href,linkText,body)=>`<div class="vcx-card"><h3><span>${title}</span>${href?`<a href="${esc(href)}">${linkText} →</a>`:""}</h3>${body}</div>`;
   const list=items=>items.length?`<ul class="vcx-list">${items.join("")}</ul>`:"";
