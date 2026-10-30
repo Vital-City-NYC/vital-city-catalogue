@@ -123,6 +123,45 @@ def _campaign_kind(entry):
     return "other"
 
 
+_HREF = re.compile(r'href=["\']([^"\']+)["\']', re.I)
+
+
+def _send_items(e, det, key, dc):
+    """One send's pieces in the order they appear in the email, with the
+    clicks each drew. Position 1 is the first piece linked (the lead). Links
+    to anything that isn't a piece (donate, social, other sites) are summed
+    as 'other'."""
+    def slug(u):
+        u = (u or "").split("?")[0].split("#")[0]
+        if "vitalcitynyc.org" not in u:
+            return ""
+        sl = u.rstrip("/").rsplit("/", 1)[-1].lower()
+        return "" if sl in ("", "vitalcitynyc.org", "www.vitalcitynyc.org", "portal", "signup", "signin") else sl
+    c = mc_get(f"/campaigns/{e['id']}/content?fields=html,variate_contents.html", key, dc)
+    html = c.get("html") or ((c.get("variate_contents") or [{}])[0].get("html")) or ""
+    order = []
+    for h in _HREF.findall(html):
+        sl = slug(h)
+        if sl and sl not in order:
+            order.append(sl)
+    clicks, other = {}, 0
+    for u in det:
+        sl = slug(u.get("url"))
+        if not sl:
+            other += int(u.get("total_clicks") or 0)
+            continue
+        r = clicks.setdefault(sl, [0, 0])
+        r[0] += int(u.get("total_clicks") or 0)
+        r[1] += int(u.get("unique_clicks") or 0)
+    items = [{"pos": i + 1, "slug": sl, "clicks": clicks.get(sl, [0, 0])[0], "unique": clicks.get(sl, [0, 0])[1]}
+             for i, sl in enumerate(order)]
+    # Clicked pieces the HTML scan missed (a tracked redirect): kept, unplaced.
+    items += [{"pos": None, "slug": sl, "clicks": v[0], "unique": v[1]} for sl, v in clicks.items() if sl not in order]
+    return {"id": e["id"], "subject": e.get("winner_subject") or e.get("subject"), "sent": e.get("sent"),
+            "kind": e.get("kind"), "delivered": e.get("delivered"), "open_pct": e.get("open_pct"),
+            "click_pct": e.get("click_pct"), "unsubs": e.get("unsubs"), "items": items, "other_clicks": other}
+
+
 def pull_mailchimp():
     key = mailchimp_key()
     if not key:
@@ -397,7 +436,13 @@ def pull_mailchimp():
             recent = [e for e in sorted(camp_out, key=lambda e: e.get("sent") or "", reverse=True)
                       if e.get("sent")][:CLICK_SENDS]
             by_slug, n_ok = {}, 0
-            for e in recent:
+            # The newest ITEM_SENDS sends also keep their own clicks per piece
+            # and each piece's place in the email, for the dashboard's
+            # send-by-send report ("which items got clicked, and does the lead
+            # take everything?").
+            ITEM_SENDS = 12
+            send_items = []
+            for i_send, e in enumerate(recent):
                 # A/B parents report zero clicked links; the children hold them
                 # (see variate_children). Merge across the child sends.
                 det = []
@@ -411,6 +456,11 @@ def pull_mailchimp():
                 if not det:
                     continue
                 n_ok += 1
+                if i_send < ITEM_SENDS:
+                    try:
+                        send_items.append(_send_items(e, det, key, dc))
+                    except Exception as ex:
+                        log(f"  send items for {e.get('id')}: {ex}")
                 for u in det:
                     url = (u.get("url") or "").split("?")[0]
                     if "vitalcitynyc.org" not in url:
@@ -426,6 +476,7 @@ def pull_mailchimp():
                                   "cap": CLICK_SENDS, "n_slugs": len(by_slug),
                                   "by_slug": by_slug,
                                   "window_start": min((e.get("sent") or "") for e in recent) if recent else ""}
+            out["send_items"] = {"available": bool(send_items), "sends": send_items}
             log(f"  mailchimp link clicks: {len(by_slug)} article URLs across {n_ok} sends")
         except Exception as e:
             log(f"  mailchimp link-clicks pull failed: {e}")
@@ -1974,6 +2025,8 @@ def _ga4_piece_index(prop, token, bench=None):
                "views": (lv or [0, 0, 0])[0],
                "secs": round((lv or [0, 0, 0])[1]),
                "users": (lv or [0, 0, 0])[2]}
+        if (c.get("visibility") or "public") != "public":
+            rec["members"] = 1          # members-only: readers sign in or subscribe to finish it
         if f3:
             # A suspect date means we can't trust the opening window at all, so
             # leave views30 absent rather than publishing a misleading zero the
@@ -3164,6 +3217,51 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
         "_url_days":      url_days,   # internal — per-piece signup days since url_since, for the piece index
         "url_since":      url_since,
     }
+
+
+def pull_ghost_logins(weeks=20):
+    """Member sign-ins by Monday-to-Sunday week (New York time), from Ghost's
+    login events. A member signs in when a members-only piece stops them, so
+    this is the friction gauge for gating: subscribers reach pieces from the
+    newsletter, which goes out through Mailchimp and doesn't sign anyone in."""
+    from zoneinfo import ZoneInfo
+    tok = _ghost_admin_token()
+    if not tok:
+        return {"available": False, "reason": "no Ghost admin key"}
+    ny = ZoneInfo("America/New_York")
+    today = datetime.now(ny).date()
+    start = today - timedelta(days=today.weekday() + 7 * weeks)
+    since_iso = datetime.combine(start, datetime.min.time(), ny).astimezone(timezone.utc).isoformat()
+    by_wk, members, cursor, pages = Counter(), defaultdict(set), None, 0
+    while pages < 200:
+        flt = "type:login_event" + (f"+id:<{cursor}" if cursor else "")
+        try:
+            data = json.loads(http_get(f"{GHOST_ADMIN_API}/members/events/?filter={urllib.parse.quote(flt)}&limit=100",
+                                       headers={"Authorization": f"Ghost {tok}", "Accept-Version": "v5.0"}, timeout=60))
+        except Exception as e:
+            return {"available": False, "reason": f"login events: {e}"}
+        ev = data.get("events") or []
+        if not ev:
+            break
+        stop = False
+        for e in ev:
+            d = e.get("data") or {}
+            ts = d.get("created_at") or ""
+            if not ts or ts < since_iso:
+                stop = True
+                continue
+            loc = datetime.fromisoformat(ts.replace("Z", "+00:00")).astimezone(ny).date()
+            wk = (loc - timedelta(days=loc.weekday())).isoformat()
+            by_wk[wk] += 1
+            members[wk].add(d.get("member_id") or (d.get("member") or {}).get("id"))
+        cursor = (ev[-1].get("data") or {}).get("id")
+        pages += 1
+        if stop or not cursor:
+            break
+    this_wk = (today - timedelta(days=today.weekday())).isoformat()
+    rows = [{"wk": w, "logins": by_wk[w], "members": len(members[w] - {None})} for w in sorted(by_wk) if w < this_wk]
+    log(f"  ghost sign-ins: {sum(r['logins'] for r in rows)} over {len(rows)} full weeks")
+    return {"available": True, "weeks": rows}
 
 
 def pull_mailchimp_member_status():
@@ -5813,6 +5911,11 @@ def main():
     except Exception as e:
         log(f"  role flows failed: {e}")
         out["role_flows"] = {"available": False, "reason": str(e)}
+    try:
+        out["ghost_logins"] = pull_ghost_logins()
+    except Exception as e:
+        log(f"  ghost sign-ins: {e}")
+        out["ghost_logins"] = {"available": False, "reason": str(e)}
     try:
         import initiatives as _init
         out["initiatives"] = _init.load()
