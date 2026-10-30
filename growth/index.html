@@ -1096,6 +1096,7 @@
 </main>
 
     <aside class="brandwatch" id="brand">
+      <div class="flagnote" style="margin:0 0 12px">These lists show everything the press tracker found. The count of citations used across the toolkit (the key indicators, the home page, the catalogue) is the stricter one kept in <a href="../prospects/#impact">Prospects › Impact ledger</a>: roundups, passing mentions and duplicates are left out there.</div>
       <h2>Media mentions <a href="about.html#whitelist" target="_blank" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-cerulean);text-decoration:none;margin-left:8px" title="See about.html → 'Editing the media whitelist'">edit whitelist ↗</a></h2>
       <div style="font-size:11.5px;color:var(--vc-charcoal);margin-bottom:10px" title="The dashboard runs a Google News query per whitelisted outlet for the exact phrase 'Vital City', for @vitalcitynyc, and for any vitalcitynyc.org URL share. To add or remove outlets, edit MENTION_OUTLETS in growth_pull.py — full instructions on the How it works page.">Third-party publications citing Vital City. Searches Google News for the exact phrase, the @ handle, and any vitalcitynyc.org URL share — inside a whitelist of 32 outlets (Gothamist, NYT, NY1, WNYC, Streetsblog, THE CITY, Politico, NY Daily News, NY Mag, City Journal, City &amp; State, City Limits, Gotham Gazette, amNewYork, ABC7, SILive, W42ST, Real Deal, plus key Substacks, plus national: New Yorker, WaPo, Bloomberg, Guardian, Newsweek, Semafor, Fast Company, Law.com, Nieman Lab, LinkedIn, X). <b>Limits to know:</b> WNYC audio segments aren't indexed by Google News (Gothamist co-publishes some WNYC content and catches those); paywalled stories that don't expose the phrase to crawlers will miss; podcast mentions miss entirely (a podcast audit found appearances Google News never indexes). Government, academic and staff-appearance mentions are tracked separately below, because an outlet whitelist can&rsquo;t see them. To add an outlet, see the <a href="about.html#whitelist" target="_blank">whitelist editing guide</a>.</div>
       <ul class="feed" id="newsFeed"></ul>
@@ -6497,6 +6498,7 @@ function scAdd(ym,k){const [y,m]=ym.split("-").map(Number); return new Date(Date
 function scName(ym,noYear){const [y,m]=ym.split("-").map(Number); return noYear? SC_MON[m-1] : `${SC_MON[m-1]} ${y}`;}
 function scList(a){return a.length>1? a.slice(0,-1).join(", ")+" and "+a[a.length-1] : (a[0]||"");}
 function scSecs(v){ v=Math.round(v||0); const m=Math.floor(v/60), s=v%60; return m?`${m}m ${String(s).padStart(2,"0")}s`:`${s}s`; }
+const SC_WEEKLY="The same subject week by week: seven measures (list size and net growth, active readers, open and click rates, donors, website users and engaged time) since January 2025, in the Weekly indicators dashboard under the Growth tab. Where the two overlap they read the same sources. The weekly view also shows open rate and active readers, which this page leaves out of its indicators because Apple Mail's automatic opens inflate both; read them there as trends.";
 const SC_LEGEND="In each line, the blue band marks the latest three months and the grey band the months they are compared with. Lines start at zero; gaps are months left out, with the reason in the notes. Dotted lines mark the months of the dated events listed below them.";
 
 function scorecardModel(data){
@@ -6843,7 +6845,7 @@ function kiStayHTML(data){
 function kiBodyHTML(sc, w, opts){
   opts=opts||{}; opts.layout=opts.layout||"both";   // "grid" (screen tiles), "rows" (paper) or both, with CSS picking one
   const marks=sc.marks||[];
-  const notes=sc.measures.map(x=>`<p><b>${esc(x.name)}.</b> ${esc(x.def)} ${esc(x.baseText||"")} ${esc(x.note||"")}</p>`).join("")+`<p>${esc(SC_LEGEND)}</p>`;
+  const notes=sc.measures.map(x=>`<p><b>${esc(x.name)}.</b> ${esc(x.def)} ${esc(x.baseText||"")} ${esc(x.note||"")}</p>`).join("")+`<p>${esc(SC_LEGEND)}</p><p>${esc(SC_WEEKLY)}</p>`;
   return (opts.noLede?"":`<p class="ki-lede">${esc(sc.lede)}</p>`)+
     (sc.summary.length?`<div class="ki-sum">${sc.summary.map(esc).join("<br>")}</div>`:"")+
     (opts.layout==="rows"?"":`<div class="ki-grid">${sc.measures.map(x=>kiTileHTML(x,w,marks,opts.sparkH,opts.noRead)).join("")}</div>`)+
