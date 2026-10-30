@@ -10,7 +10,8 @@ Tabs:
   monthly     the same measures by calendar month from January 2024, so the
               weekly numbers can be read against Vital City's own history
   benchmarks  published industry norms, with their sources
-  events      dated initiatives and data breaks, marked on the charts
+  events      dated initiatives and data breaks, marked on the charts. Kept by
+              hand in the sheet and never written here (see initiatives.py)
   signup_pages  the pages people signed up on most, last 4 weeks and since the move
   about       when the sheet was last refreshed
 
@@ -85,15 +86,6 @@ BENCHMARKS = [
      "Only about 20% of Americans pay for any online news; Vital City is free, so donations play that role.",
      "Reuters Institute Digital News Report 2025"],
 ]
-
-
-# Dated events for the charts: the growth dashboard's own list, plus two
-# since its last update.
-EVENTS = sorted(gp.INITIATIVES + [
-    {"from": "2026-06-04", "label": "Newsletter starts going to about 8,300 people instead of about 10,700; open rates jump from about 30% to 41% that week", "kind": "newsletter"},
-    {"from": "2026-10-08", "label": "Some new pieces go members-only", "kind": "site"},
-    {"from": "2026-10-28", "label": "Signup boxes added inside and at the end of articles", "kind": "site"},
-], key=lambda e: e["from"])
 
 
 def log(m): print(m, file=sys.stderr, flush=True)
@@ -440,10 +432,14 @@ def main():
     stamp = datetime.now(NY).strftime("%Y-%m-%d %H:%M %Z")
     about = [["field", "value"], ["refreshed_at", stamp],
              ["periods", "Monday to Sunday weeks and calendar months, New York time, full periods only"],
-             ["website_source", "GA4" if gw else "missing on this run"]]
-    events = [["from", "to", "label", "kind"]] + [[e["from"], e.get("to", ""), e["label"], e.get("kind", "")]
-                                                  for e in EVENTS]
-    tabs = {"weekly": weekly, "monthly": monthly, "benchmarks": BENCHMARKS, "events": events, "signup_pages": signup_pages, "about": about}
+             ["website_source", "GA4" if gw else "missing on this run"],
+             ["events_tab", "The events tab is the one log of what Vital City tried and when. Add a row there "
+                            "(from, to, label, kind, notes; dates as 2026-05 or 2026-05-07) and every chart marks it "
+                            "on its next refresh: the growth dashboard, this dashboard and the toolkit home page. "
+                            "Kinds: data, fundraising, site, outreach, event, newsletter, social, other."]]
+    # The events tab is not written here: staff keep it by hand, and it is the
+    # one log every chart reads (see initiatives.py).
+    tabs = {"weekly": weekly, "monthly": monthly, "benchmarks": BENCHMARKS, "signup_pages": signup_pages, "about": about}
 
     if a.out:
         with open(a.out, "w") as f: json.dump(tabs, f)

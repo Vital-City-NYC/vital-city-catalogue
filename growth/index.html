@@ -166,6 +166,8 @@
   .ki-spark{color:var(--vc-black)}.ki-spark svg{display:block;width:100%;height:auto}
   .ki-read{font-size:11.5px;line-height:1.4;color:var(--vc-charcoal)}
   .ki-also,.ki-marks{font-size:11.5px;line-height:1.5;margin-top:10px;color:var(--vc-charcoal)}
+  .ki-addlog{white-space:nowrap;font-weight:700;margin-left:6px;color:var(--vc-cerulean,#217ebe)}
+  @media print{.ki-addlog{display:none}}
   /* Sept. 23, 2026 declutter: on screen the tiles show number, comparison and
      trend; benchmarks, context and the chart legend sit behind a switch. Print
      and the generated reports are untouched. */
@@ -6608,14 +6610,18 @@ function scorecardModel(data){
   const first=order.map(k=>B[k]).find(x=>x&&x.tone==="watch");
   if(first) summary.push(`Where to look first: ${lc(first.name)}. ${first.reading}`);
   // Dated events to mark on the lines.
-  const items=((data.initiatives||{}).items)||[];
-  const marks=items.filter(it=>it.from>=months[0]&&it.from<=full).map((it,i)=>({n:i+1, idx:months.indexOf(it.from), label:it.label,
-    when: it.to&&it.to!==it.from ? `${scName(it.from,it.from.slice(0,4)===it.to.slice(0,4))}–${scName(it.to)}` : scName(it.from)}));
+  // Items may be dated to the day (2026-06-04) or the month; the monthly lines
+  // place each one by its month.
+  const items=(((data.initiatives||{}).items)||[]).map(it=>Object.assign({}, it,
+    {m0:(it.month||String(it.from||"").slice(0,7)), m1:(it.to_month||String(it.to||"").slice(0,7))}));
+  const marks=items.filter(it=>it.m0>=months[0]&&it.m0<=full).map((it,i)=>({n:i+1, idx:months.indexOf(it.m0), label:it.label,
+    when: it.m1&&it.m1!==it.m0 ? `${scName(it.m0,it.m0.slice(0,4)===it.m1.slice(0,4))}–${scName(it.m1)}` : scName(it.m0)}));
   // "Also today": the two stock tiles the indicators don't already carry.
   const st=window._stocksModel||[]; const pick=re=>st.find(k=>re.test(k.lbl));
   const act30=pick(/Active subscribers/i), soc=pick(/Social followers/i);
   const also=[soc?`${soc.num} social-media followers (${String(soc.delta).replace(/ LI\b/," LinkedIn").replace(/ Bsky\b/," Bluesky").replace(/ IG\b/," Instagram")})`:""].filter(Boolean).join(" · ");
-  return {full, fullLbl:scName(full), curLbl, baseLbl:rng(BASE), months, measures:M, summary, marks, also: also?`Also, as of today: ${also}.`:"",
+  const logUrl=(data.initiatives||{}).sheet_url||"";
+  return {full, fullLbl:scName(full), curLbl, baseLbl:rng(BASE), months, measures:M, summary, marks, logUrl, also: also?`Also, as of today: ${also}.`:"",
     lede:`${["No","One","Two","Three","Four","Five","Six","Seven","Eight","Nine"][M.length]||M.length} measures of readership and growth, on full calendar months. Each shows the latest month and a line of the last 24 months, compares the latest three months (${curLbl}) with the months before them, gives the direction over the last six months, and sets the figure against a published industry standard where a reliable one exists.`};
 }
 function scNowText(x){
@@ -6711,7 +6717,7 @@ function kiBodyHTML(sc, w, opts){
     (opts.layout==="rows"?"":`<div class="ki-grid">${sc.measures.map(x=>kiTileHTML(x,w,marks,opts.sparkH,opts.noRead)).join("")}</div>`)+
     (opts.layout==="grid"?"":`<div class="ki-paper">${kiRowsHTML(sc,210,marks,26)}</div>`)+
     (sc.also&&!opts.noAlso?`<div class="ki-also">${esc(sc.also)}</div>`:"")+
-    (marks.length?`<div class="ki-marks"><b>Dotted lines mark:</b> ${marks.map(k=>`${esc(k.when)}: ${esc(k.label)}`).join(" · ")}</div>`:"")+
+    (marks.length?`<div class="ki-marks"><b>Dotted lines mark:</b> ${marks.map(k=>`${esc(k.when)}: ${esc(k.label)}`).join(" · ")}${(!opts.printNotes&&sc.logUrl)?` <a class="ki-addlog" href="${esc(sc.logUrl)}" target="_blank" rel="noopener" title="The one log of what Vital City tried, kept in the key-indicators Google Sheet. A row added there is marked on every chart at the next refresh.">Add to the log</a>`:""}</div>`:"")+
     (opts.stay||"")+
     (opts.noNotes ? "" : (opts.printNotes ? `<div class="ki-notes"><b>Notes and sources</b>${notes}</div>` : `<details class="ki-notes"><summary>Notes and sources</summary>${notes}</details>`));
 }
@@ -7035,7 +7041,7 @@ function pulseTrend(data){
   const sg=full.map(x=>x.signups).filter(v=>v!=null).sort((a,b)=>a-b), med=sg.length?sg[sg.length>>1]:0;
   const inits=((data.initiatives||{}).items)||[];
   const spikes=full.filter(x=>x.signups!=null && med>0 && x.signups>=med*2.5).map(x=>{
-    const mo=x.wk.slice(0,7), ev=inits.find(it=>it.from<=mo && (it.to||it.from)>=mo && /regist|import|added to the list|outreach/i.test(it.label||""));
+    const mo=x.wk.slice(0,7), ev=inits.find(it=>String(it.from).slice(0,7)<=mo && String(it.to||it.from).slice(0,7)>=mo && /regist|import|added to the list|outreach/i.test(it.label||""));
     return {lbl:x.lbl, n:x.signups, note: ev ? ev.label : null}; });
   return {weeks, nFull:full.length, pubLink, list, spikes, medSig:med,
     visits:tot(full,"visits"), lyVisits: lyOk ? tot(full,"lyVisits") : null,

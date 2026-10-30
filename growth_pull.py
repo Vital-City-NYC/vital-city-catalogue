@@ -1105,21 +1105,10 @@ def build_engagement_extras(mc, signup_attr, donorbox):
 
 
 # Dated initiatives and data events, marked on the scorecard's lines so a change
-# in a trend can be read against what was happening. Only dates with a record
-# behind them (Josh's email with Liz Glazer and Anthony Esguerra, and the
-# project notes); no internal counts here, since this file is public. Content
-# gating is missing on purpose: nothing on record dates its start.
-INITIATIVES = [
-    {"from": "2025-05", "to": "2025-09", "label": "Bot signup surge (about half of new signups)", "kind": "data"},
-    {"from": "2025-11", "to": "2025-12", "label": "End-of-year fundraising drive; online giving opens Nov. 12", "kind": "fundraising"},
-    {"from": "2026-03", "label": "Site moves from Prismic to Ghost; one-time catch-up import of signups into Mailchimp", "kind": "site"},
-    {"from": "2026-04", "label": "Pages found missing from Google's index after the move; re-indexing requested", "kind": "site"},
-    {"from": "2026-04", "to": "2026-05", "label": "University and law-school faculty outreach emails", "kind": "outreach"},
-    {"from": "2026-04", "label": "Gopnik and Sampson event (Apr. 27)", "kind": "event"},
-    {"from": "2026-05", "label": "Subject-line A/B tests begin (May 7); inactive addresses removed from the list", "kind": "newsletter"},
-    {"from": "2026-05", "to": "2026-06", "label": "Spring fundraising drive (May 12 to June 13)", "kind": "fundraising"},
-    {"from": "2026-06", "label": "Rent-freeze webinar; registrants added to the list", "kind": "event"},
-]
+# in a trend can be read against what was happening. The list itself lives in
+# the "events" tab of the key-indicators Google Sheet, where staff add to it;
+# initiatives.py reads it (and holds the fallback used when it can't).
+from initiatives import FALLBACK as INITIATIVES  # noqa: E402  (kept for older imports)
 
 ROLE_BUCKETS = [
     ("gov", "Government", {"current nyc.gov", "city gov", "state gov", "fed gov", "judge"}),
@@ -5818,7 +5807,12 @@ def main():
     except Exception as e:
         log(f"  role flows failed: {e}")
         out["role_flows"] = {"available": False, "reason": str(e)}
-    out["initiatives"] = {"available": True, "items": INITIATIVES}
+    try:
+        import initiatives as _init
+        out["initiatives"] = _init.load()
+    except Exception as e:
+        log(f"  initiatives: {e}; using the built-in list")
+        out["initiatives"] = {"available": True, "source": "built-in list", "items": INITIATIVES}
 
     # ---- Never let a missing credential erase good data -------------------
     # Every credential-gated section emits {"available": false, "reason": ...}
