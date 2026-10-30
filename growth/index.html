@@ -4579,7 +4579,9 @@ function renderSendItems(data){
   const sends=(si.sends||[]).filter(x=>x&&x.items);
   if(!si.available||!sends.length){ host.innerHTML=`<div class="hint">Send-by-send clicks arrive with the next refresh.</div>`; return; }
   const titles={}; (((data.ga4||{}).piece_index||{}).pieces||[]).forEach(p=>{ titles[p.slug]=p.title; });
-  const nice=sl=>titles[sl]||sl.replace(/-/g," ").replace(/^./,c=>c.toUpperCase());
+  // Pages that aren't pieces (an issue's landing page) have no title on file:
+  // "issue-12-what-makes-cities-tick" reads as "Issue 12: What Makes Cities Tick".
+  const nice=sl=>titles[sl]||sl.replace(/^issue-(\d+)-/,"issue $1: ").replace(/-/g," ").replace(/\b([a-z])/g,c=>c.toUpperCase());
   const camps=(mc.campaigns||[]).filter(c=>c.sent).slice().sort((x,y)=>String(y.sent).localeCompare(String(x.sent)));
   const med=a=>{ a=a.filter(v=>v!=null&&!isNaN(v)).sort((x,y)=>x-y); return a.length?a[a.length>>1]:null; };
   const usual=(e,k)=>med(camps.filter(c=>c.kind===e.kind&&String(c.sent)<String(e.sent)).slice(0,8).map(c=>+c[k]));
