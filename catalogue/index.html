@@ -834,7 +834,10 @@ function pieceHTML(r){
        : `<div class="vcx-fine">${loading?"Loading readers, signups and citations…":"No readership or signup figures for this piece yet."}</div>`;
   if(members){
     const pr=publicRate();
-    body+=`<div class="vcx-sec"><h4>Members-only</h4><div style="font-size:13px;line-height:1.5">Readers sign in or subscribe to finish it.${(rate!=null&&pr&&views>=100)?` It drew <b>${rate>=10?Math.round(rate):rate.toFixed(1)}</b> signups per 1,000 views; the typical open piece published since Aug. 1, 2026, drew <b>${pr.med.toFixed(1)}</b> (the median of ${pr.n}).`:""} Subscribers who aren't signed in on their browser have to sign in again to read it.</div></div>`;
+    // Members-only pieces began Oct. 8, 2026. A piece published before then
+    // was open for most of its life, so its rate isn't a members-only rate.
+    const late=(r.published_date||"")<"2026-10-08";
+    body+=`<div class="vcx-sec"><h4>Members-only</h4><div style="font-size:13px;line-height:1.5">Readers sign in or subscribe to finish it.${late?` It was published open and switched later, so most of its views and signups came while anyone could read it.`:(rate!=null&&pr&&views>=100)?` It drew <b>${rate>=10?Math.round(rate):rate.toFixed(1)}</b> signups per 1,000 views; the typical open piece published since Aug. 1, 2026, drew <b>${pr.med.toFixed(1)}</b> (the median of ${pr.n}).`:""} Subscribers who aren't signed in on their browser have to sign in again to read it.</div></div>`;
   }
   const C=(LINKS&&LINKS.citations&&LINKS.citations.rows)||[];
   const cites=(x.c||[]).map(i=>C[i]).filter(Boolean);
