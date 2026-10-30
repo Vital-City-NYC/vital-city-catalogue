@@ -20,8 +20,17 @@
   var TOOLS = [
     { id: "catalogue",  label: "Catalogue",  path: "catalogue/",         gated: true,  data: "data/meta.json",
       blurb: "Every piece Vital City has published, searchable by author, topic, issue and date, with readership and contributor contacts." },
+    // Two views of one subject: the monthly dashboard here, and the seven
+    // weekly measures in a Claude dashboard (it reads the key-indicators
+    // Google Sheet, which kpi_weekly.py writes every Monday).
     { id: "growth",     label: "Growth",     path: "growth/",            gated: true,  data: "growth/data.enc",
-      blurb: "The newsletter list, signups, sends, site traffic and giving, with the ten key indicators and the weekly report." },
+      blurb: "The newsletter list, signups, sends, site traffic and giving, with the ten key indicators and the weekly report.",
+      views: [
+        { id: "growth", label: "Dashboard", path: "growth/", gated: true, data: "growth/data.enc",
+          blurb: "The newsletter list, signups, sends, site traffic and giving, by month, with the ten key indicators and the weekly report." },
+        { id: "weekly", label: "Weekly indicators", href: "https://claude.ai/artifact/JmbSAJs5jv27ttVhyNczWW", gated: false, static: true,
+          blurb: "Seven measures week by week since January 2025, with industry norms and Vital City's own averages. A Claude dashboard: open it signed in to claude.ai with the Google Sheets connector on." }
+      ] },
     { id: "contacts",   label: "Contacts",   path: "network/",           gated: true,  data: "network/data.enc",
       blurb: "Everyone in Vital City's orbit: subscribers, contributors, press, funders and donors, searchable and exportable." },
     { id: "prospects",  label: "Prospects",  path: "prospects/",         gated: true,  data: "prospects/data.enc",
@@ -82,6 +91,43 @@
     if (!el || !when) { return; }
     el.textContent = "Updated " + apDate(when) + (extra ? " \u00b7 " + extra : "");
   };
+
+  // Any tool can open another tool's encrypted file with the passphrase this
+  // device already saved (the same {pass, exp} every gate writes). Used for
+  // data/links.enc, the nightly file that joins the tools to one another:
+  // the catalogue's piece page, the contact card's links, the home page's
+  // Monday summary. Resolves to null, never throws, when there is no saved
+  // passphrase or the file isn't published yet, so a page can simply leave
+  // the joined section out.
+  var kitRoot = null, opened = {};
+  function savedPass() {
+    try {
+      var r = localStorage.getItem("vc_net_pass"); if (!r) { return null; }
+      if (r.charAt(0) !== "{") { return r; }
+      var o = JSON.parse(r); return (o && o.pass && o.exp > Date.now()) ? o.pass : null;
+    } catch (e) { return null; }
+  }
+  function b64(s) { var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) { u[i] = b.charCodeAt(i); } return u; }
+  window.vcOpen = function (path) {
+    if (opened[path]) { return opened[path]; }
+    var pass = savedPass();
+    if (!pass || !window.crypto || !crypto.subtle) { return Promise.resolve(null); }
+    var p = fetch((kitRoot || base()) + path, { cache: "no-cache" })
+      .then(function (r) { if (!r.ok) { throw new Error(r.status); } return r.json(); })
+      .then(function (blob) {
+        return crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"])
+          .then(function (km) {
+            return crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(blob.salt), iterations: blob.iters, hash: "SHA-256" },
+              km, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+          })
+          .then(function (key) { return crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(blob.iv) }, key, b64(blob.ct)); })
+          .then(function (buf) { return JSON.parse(new TextDecoder().decode(buf)); });
+      })
+      .catch(function () { delete opened[path]; return null; });
+    opened[path] = p;
+    return p;
+  };
+  window.vcLinks = function () { return window.vcOpen("data/links.enc"); };
 
   function base() {
     var s = document.currentScript;
@@ -156,6 +202,8 @@
     if (slot) { slot.appendChild(nav); }
     else { document.body.insertBefore(nav, document.body.firstChild); }
   }
+
+  kitRoot = base();   // while this script is still the current one
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", mount);

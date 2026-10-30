@@ -205,3 +205,103 @@ html.dark body .gatebox { box-shadow: 7px 7px 0 rgba(0, 0, 0, .45); }
 @page { @top-left{content:""} @top-center{content:""} @top-right{content:""} @bottom-left{content:""} @bottom-center{content:""} @bottom-right{content:""} }
 
 @media print { .vckit { display: none !important; } }
+
+/* ===== Cross-tool panels (Oct. 30, 2026) =====================================
+ * The pieces that join one tool to another share one look on every page: the
+ * home page's week summary, the catalogue's piece page, the contact card's
+ * "Across the toolkit" section. Data comes from data/links.enc (vcLinks() in
+ * toolkit.js). Prefixed vcx- so no page rule collides with them.
+ */
+.vcx-eyebrow {
+  font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--vc-charcoal, #707175); margin: 0 0 8px;
+}
+.vcx-week { margin: 0 0 34px; }
+.vcx-week-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 12px; }
+.vcx-week-head h2 { font-size: 20px; font-weight: 800; letter-spacing: -.01em; margin: 0; color: var(--vc-black, #050507); }
+.vcx-week-head .vcx-asof { font-size: 12px; color: var(--vc-charcoal, #707175); }
+.vcx-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 2px solid var(--vc-black, #050507); border-bottom: 1px solid var(--vc-cloud, #dddddd); margin-bottom: 20px; }
+.vcx-stat { padding: 12px 14px 12px 0; min-width: 0; }
+.vcx-stat + .vcx-stat { padding-left: 14px; border-left: 1px solid var(--vc-cloud, #dddddd); }
+.vcx-stat .k { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--vc-charcoal, #707175); }
+.vcx-stat .v { font-size: 28px; font-weight: 800; line-height: 1.1; margin-top: 4px; font-variant-numeric: tabular-nums; color: var(--vc-black, #050507); }
+.vcx-stat .d { font-size: 12px; line-height: 1.35; color: var(--vc-charcoal, #707175); margin-top: 3px; }
+.vcx-stat .d b { font-weight: 700; color: var(--vc-black, #050507); }
+.vcx-stat a { color: inherit; text-decoration: none; display: block; }
+.vcx-stat a:hover .v, .vcx-stat a:focus-visible .v { color: var(--vc-cerulean, #217ebe); }
+.vcx-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 22px 28px; }
+.vcx-card { min-width: 0; }
+.vcx-card h3 {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+  font-size: 13px; font-weight: 800; margin: 0 0 4px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--vc-black, #050507); color: var(--vc-black, #050507);
+}
+.vcx-card h3 a, .vcx-go { font-size: 11px; font-weight: 700; color: var(--vc-cerulean, #217ebe); text-decoration: none; white-space: nowrap; }
+.vcx-card h3 a:hover, .vcx-go:hover { text-decoration: underline; }
+.vcx-list { list-style: none; margin: 0; padding: 0; }
+.vcx-list li { padding: 7px 0; border-bottom: 1px solid var(--vc-cloud, #dddddd); font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
+.vcx-list li:last-child { border-bottom: 0; }
+.vcx-list a { color: var(--vc-black, #050507); text-decoration: none; }
+.vcx-list a:hover { color: var(--vc-cerulean, #217ebe); text-decoration: underline; }
+.vcx-meta { display: block; font-size: 11.5px; color: var(--vc-charcoal, #707175); margin-top: 2px; }
+.vcx-num { float: right; margin-left: 10px; font-variant-numeric: tabular-nums; font-weight: 700; }
+.vcx-empty { font-size: 12.5px; color: var(--vc-charcoal, #707175); padding: 7px 0; }
+.vcx-tag {
+  display: inline-block; font-size: 9.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  padding: 1px 6px; margin-right: 5px; vertical-align: 1px; border-radius: 2px;
+  background: var(--vc-cloud, #dddddd); color: var(--vc-black, #050507);
+}
+.vcx-tag.mo { background: var(--vc-black, #050507); color: var(--vc-paper, #f7f7f4); }
+.vcx-tag.good { background: var(--vc-green, #57aa4a); color: #fff; }
+.vcx-tag.blue { background: var(--vc-cerulean, #217ebe); color: #fff; }
+
+/* Facts in a row of small figures (piece page). */
+.vcx-figs { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); border-top: 2px solid var(--vc-black, #050507); border-bottom: 1px solid var(--vc-cloud, #dddddd); margin: 6px 0 16px; }
+.vcx-fig { padding: 10px 10px 10px 0; min-width: 0; }
+.vcx-fig .v { font-size: 20px; font-weight: 800; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.vcx-fig .k { font-size: 11px; color: var(--vc-charcoal, #707175); line-height: 1.3; margin-top: 2px; }
+.vcx-sec { margin: 18px 0 0; }
+.vcx-sec > h4 { font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--vc-charcoal, #707175); margin: 0 0 4px; }
+.vcx-fine { font-size: 11.5px; line-height: 1.45; color: var(--vc-charcoal, #707175); margin-top: 12px; }
+
+/* Side drawer (the catalogue's piece page). Full width on a phone. */
+.vcx-scrim { position: fixed; inset: 0; background: rgba(5, 5, 7, .38); z-index: 900; opacity: 0; transition: opacity .18s ease; }
+.vcx-scrim.on { opacity: 1; }
+.vcx-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(580px, 100vw); z-index: 901;
+  background: var(--vc-paper, #f7f7f4); color: var(--vc-black, #050507);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, .16); overflow-y: auto; overscroll-behavior: contain;
+  transform: translateX(100%); transition: transform .22s ease;
+  font-family: "halyard-text", "Inter", "Helvetica Neue", Arial, sans-serif; text-align: left;
+}
+.vcx-drawer.on { transform: none; }
+.vcx-drawer .vcx-dhead { position: relative; padding: 18px 56px 12px 24px; border-bottom: 1px solid var(--vc-cloud, #dddddd); }
+.vcx-drawer .vcx-dbody { padding: 4px 24px 44px; }
+.vcx-drawer h2 { font-size: 22px; line-height: 1.15; font-weight: 800; margin: 4px 0 6px; letter-spacing: -.01em; }
+.vcx-drawer .vcx-dsub { font-size: 12.5px; color: var(--vc-charcoal, #707175); }
+.vcx-drawer .vcx-dsub a { color: inherit; }
+.vcx-x {
+  position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border: 0; border-radius: 50%;
+  background: transparent; color: var(--vc-black, #050507); font-size: 24px; line-height: 1; cursor: pointer;
+}
+.vcx-x:hover, .vcx-x:focus-visible { background: var(--vc-cloud, #dddddd); outline: none; }
+.vcx-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 2px; }
+.vcx-btn {
+  display: inline-block; font: inherit; font-size: 12px; font-weight: 700; padding: 6px 11px; border: 1px solid var(--vc-black, #050507);
+  color: var(--vc-black, #050507); background: transparent; text-decoration: none; border-radius: 2px; cursor: pointer; line-height: 1.3;
+}
+.vcx-btn:hover, .vcx-btn:focus-visible { background: var(--vc-black, #050507); color: var(--vc-paper, #f7f7f4); }
+@media (prefers-reduced-motion: reduce) { .vcx-drawer, .vcx-scrim { transition: none; } }
+html.dark .vcx-drawer { box-shadow: -10px 0 30px rgba(0, 0, 0, .5); }
+html.dark .vcx-scrim { background: rgba(0, 0, 0, .55); }
+
+@media (max-width: 760px) {
+  .vcx-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vcx-stat:nth-child(3) { padding-left: 0; border-left: 0; }
+  .vcx-stat:nth-child(n+3) { border-top: 1px solid var(--vc-cloud, #dddddd); }
+  .vcx-stat .v { font-size: 24px; }
+  .vcx-drawer .vcx-dhead { padding: 14px 52px 10px 16px; }
+  .vcx-drawer .vcx-dbody { padding: 4px 16px 40px; }
+  .vcx-drawer h2 { font-size: 19px; }
+}
+@media print { .vcx-drawer, .vcx-scrim { display: none !important; } }

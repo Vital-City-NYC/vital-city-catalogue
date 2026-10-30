@@ -147,15 +147,8 @@ jobs:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
         run: python3 encrypt_people.py
 
-      - name: Encrypt growth-dashboard data for publishing
-        env:
-          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
-        run: |
-          if [ -s private/growth.json ]; then
-            python3 encrypt_growth.py
-          else
-            echo "no private/growth.json to encrypt — skipping"
-          fi
+      # (The growth dashboard is encrypted near the end, after build_links.py
+      # has written the shared citation record into it.)
 
       # The catalogue-analysis page is gated like the other dashboards: it reads
       # an encrypted bundle, not the plaintext data/*.json. Both steps must run
@@ -246,6 +239,31 @@ jobs:
             timeout 20m python3 -u build_press.py && python3 encrypt_press.py || echo "WARNING: press build failed or ran past 20 minutes; the press page will be stale"
           else
             echo "no build_press.py yet — skipping"
+          fi
+
+      # Runs last, once every tool is built: joins them to one another (the
+      # catalogue's piece page, the contact card's links to the press map,
+      # funders and Prospects, one record of citations, the home page's
+      # Monday summary). Non-fatal: a failure leaves data/links.enc as it was
+      # and the pages show what they have.
+      - name: Join the tools to one another
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: |
+          if [ -s private/growth.json ]; then
+            python3 build_links.py && python3 encrypt_links.py || echo "WARNING: links build failed; cross-tool links will be stale"
+          else
+            echo "no growth.json — skipping links"
+          fi
+
+      - name: Encrypt growth-dashboard data for publishing
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+        run: |
+          if [ -s private/growth.json ]; then
+            python3 encrypt_growth.py
+          else
+            echo "no private/growth.json to encrypt — skipping"
           fi
 
       - name: Save the press map's story history

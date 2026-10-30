@@ -1274,6 +1274,10 @@ function init(){
   $("#clear").addEventListener("click",()=>{$("#q").value="";runQuery();});
   $("#q").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey))runQuery();});
   ["fEmail","fVC","fDiv","fMajor"].forEach(id=>$("#"+id).addEventListener("change",runQuery));
+  // Other tools link here with ?q=<a story, headline or link> (the catalogue's
+  // piece page asks "who should hear about this piece").
+  try{ const q0=new URLSearchParams(location.search).get("q");
+    if(q0){ $("#q").value=q0; runQuery(); setTimeout(()=>document.getElementById("ask")?.scrollIntoView({behavior:"smooth"}),60); } }catch(e){}
   $$(".jump a").forEach(a=>a.addEventListener("click",()=>document.getElementById(a.dataset.go)?.scrollIntoView({behavior:"smooth"})));
   document.addEventListener("click",e=>{
     const id=e.target?.dataset?.all; if(!id) return;

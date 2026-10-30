@@ -5506,6 +5506,12 @@ def main():
     engagement_extras = build_engagement_extras(mc, signup_attr, db)
     # Strip internal-only fields from in-memory objects before JSON write
     mc.pop("_mau_set", None); mc.pop("_aau_set", None)
+    # The page each person signed up on, for the contact card (build_links.py).
+    # Private and gitignored; the public growth JSON never carries addresses.
+    try:
+        (PRIV / "signup_by_email.json").write_text(json.dumps(signup_attr.get("_by_email") or {}))
+    except Exception as e:
+        log(f"  signup_by_email not written: {e}")
     signup_attr.pop("_by_email", None)
 
     # ---- Enrich people.json with engagement flags --------------------
