@@ -305,3 +305,12 @@ html.dark .vcx-scrim { background: rgba(0, 0, 0, .55); }
   .vcx-drawer h2 { font-size: 19px; }
 }
 @media print { .vcx-drawer, .vcx-scrim { display: none !important; } }
+
+/* Phones zoom in on any text box set smaller than 16px when it takes focus,
+   and every tool's sign-in box takes focus on load, so the whole tool opened
+   zoomed in and stayed that way after unlocking. 16px on phones stops it. */
+@media (max-width: 760px) {
+  html body .gatebox input,
+  html body input[type="text"], html body input[type="search"], html body input[type="password"],
+  html body input[type="email"], html body input:not([type]), html body select, html body textarea { font-size: 16px; }
+}
