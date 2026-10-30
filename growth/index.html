@@ -327,6 +327,8 @@
   .si-head .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15}
   .si-head .k{font-size:11px;color:var(--vc-charcoal);line-height:1.3}
   .si-bar{height:8px;background:var(--vc-cerulean);border-radius:1px;min-width:1px}
+  th.si-sh{width:28%}
+  @media (max-width:640px){ #sendItems .si-rd{display:none} #sendItems .si-bar{display:none} th.si-sh{width:auto} #gating td:nth-child(2),#gating th:nth-child(2){display:none} }
   .si-lead td{font-weight:700}
   .si-read{font-size:13px;line-height:1.5;margin:0 0 10px}
   .gt-bars{display:flex;align-items:flex-end;gap:4px;height:120px;margin:8px 0 4px;padding-top:14px;border-bottom:1px solid var(--vc-black)}
@@ -4609,9 +4611,9 @@ function renderSendItems(data){
         ${fig(fmtN(e.unsubs),`unsubscribed · usual ${uu==null?"—":fmtN(Math.round(uu))}`)}
       </div>
       ${read?`<p class="si-read">${read}</p>`:""}
-      <div class="tscroll"><table class="tbl"><thead><tr><th>#</th><th>Piece</th><th class="num">Clicks</th><th class="num">Readers</th><th style="width:28%">Share of piece clicks</th></tr></thead><tbody>
-      ${items.map(i=>`<tr class="${i.pos===1?"si-lead":""}"><td>${i.pos==null?"—":i.pos}</td><td><a href="../catalogue/#piece=${encodeURIComponent(i.slug)}" title="This piece's page in the catalogue">${esc(nice(i.slug))}</a></td><td class="num">${fmtN(i.clicks)}</td><td class="num">${fmtN(i.unique)}</td>
-        <td><div style="display:flex;align-items:center;gap:8px"><div class="si-bar" style="width:${(70*(i.clicks||0)/top).toFixed(1)}%"></div><span style="font-size:11.5px;color:var(--vc-charcoal);font-variant-numeric:tabular-nums">${T?Math.round(100*(i.clicks||0)/T)+"%":""}</span></div></td></tr>`).join("")}
+      <div class="tscroll"><table class="tbl"><thead><tr><th>#</th><th>Piece</th><th class="num">Clicks</th><th class="num si-rd">Readers</th><th class="si-sh">Share of piece clicks</th></tr></thead><tbody>
+      ${items.map(i=>`<tr class="${i.pos===1?"si-lead":""}"><td>${i.pos==null?"—":i.pos}</td><td><a href="../catalogue/#piece=${encodeURIComponent(i.slug)}" title="This piece's page in the catalogue">${esc(nice(i.slug))}</a></td><td class="num">${fmtN(i.clicks)}</td><td class="num si-rd">${fmtN(i.unique)}</td>
+        <td class="si-sh"><div style="display:flex;align-items:center;gap:8px"><div class="si-bar" style="width:${(70*(i.clicks||0)/top).toFixed(1)}%"></div><span style="font-size:11.5px;color:var(--vc-charcoal);font-variant-numeric:tabular-nums">${T?Math.round(100*(i.clicks||0)/T)+"%":""}</span></div></td></tr>`).join("")}
       </tbody></table></div>
       ${posShare.length?`<p class="si-read" style="margin-top:12px">Across the last ${nls.length} Thursday newsletters, the share of clicks on pieces by position: ${posShare.map(x=>`<b>${x.pos===1?"lead":"no. "+x.pos}</b> ${Math.round(x.share)}%`).join(" · ")}.</p>`:""}
       <div class="flagnote" style="margin-top:8px">“Readers” are different people who clicked. Order is where the piece's first link appears in the email; a dash means the piece's link was found in the clicks but not in the email's text. Clicks on links that aren't Vital City pieces (donate, social, other sites): ${fmtN(e.other_clicks||0)}. Open rates run high industry-wide because Apple Mail loads images automatically, so read opens as a trend, clicks as the firmer number.</div>`;
