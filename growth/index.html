@@ -332,6 +332,7 @@
   .gt-bars{display:flex;align-items:flex-end;gap:4px;height:120px;margin:8px 0 4px;padding-top:14px;border-bottom:1px solid var(--vc-black)}
   .gt-bars div{flex:1;background:var(--vc-cloud);position:relative;min-width:6px}
   .gt-bars div.on{background:var(--vc-cerulean)}
+  .gt-bars div.mid{background:var(--vc-cerulean);opacity:.4}
   .gt-bars div span{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-size:10px;font-variant-numeric:tabular-nums;color:var(--vc-charcoal);white-space:nowrap}
   .gt-axis{display:flex;gap:4px;font-size:10px;color:var(--vc-charcoal)}
   .gt-axis div{flex:1;text-align:center;min-width:6px;overflow:hidden;white-space:nowrap}
@@ -4653,12 +4654,13 @@ function renderGating(data){
   if(lg.length){
     const wks=lg.slice(-16), max=Math.max(1,...wks.map(w=>w.logins));
     const sWk=(()=>{ const d=new Date(start+"T12:00:00"); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d.toISOString().slice(0,10); })();
-    const before=lg.filter(w=>w.wk<sWk).slice(-8), after=lg.filter(w=>w.wk>=sWk);
+    // A week the start falls inside counts as neither before nor after.
+    const before=lg.filter(w=>w.wk<sWk).slice(-8), after=lg.filter(w=>w.wk>=start), mid=sWk<start?sWk:null;
     const avg=a=>a.length?Math.round(a.reduce((t,w)=>t+w.logins,0)/a.length):null;
     h+=`<h3 class="subh" style="margin-top:18px">Member sign-ins by week <span class="hint">Ghost login events, Monday to Sunday</span></h3>
-      <div class="gt-bars" role="img" aria-label="Member sign-ins by week">${wks.map(w=>`<div class="${w.wk>=sWk?"on":""}" style="height:${(100*w.logins/max).toFixed(1)}%" title="Week of ${esc(pxDay(w.wk))}: ${fmtN(w.logins)} sign-ins by ${fmtN(w.members)} members"><span>${fmtN(w.logins)}</span></div>`).join("")}</div>
+      <div class="gt-bars" role="img" aria-label="Member sign-ins by week">${wks.map(w=>`<div class="${w.wk===mid?"mid":w.wk>=sWk?"on":""}" style="height:${(100*w.logins/max).toFixed(1)}%" title="Week of ${esc(pxDay(w.wk))}: ${fmtN(w.logins)} sign-ins by ${fmtN(w.members)} members"><span>${fmtN(w.logins)}</span></div>`).join("")}</div>
       <div class="gt-axis">${wks.map(w=>`<div>${esc(pxDay(w.wk))}</div>`).join("")}</div>
-      <p class="si-read" style="margin-top:10px">${before.length&&after.length?`Sign-ins averaged <b>${fmtN(avg(before))}</b> a week in the ${before.length} weeks before members-only pieces began and <b>${fmtN(avg(after))}</b> a week since (blue). `:""}Some of the rise is new members confirming their address; much of it is existing subscribers asked to sign in again, because the newsletter goes out through Mailchimp and its links don't sign anyone in, and a sign-in lasts only on the browser where it happened.</p>`;
+      <p class="si-read" style="margin-top:10px">${before.length&&after.length?`Sign-ins averaged <b>${fmtN(avg(before))}</b> a week in the ${before.length} weeks before members-only pieces began and <b>${fmtN(avg(after))}</b> a week in the ${after.length} full week${after.length===1?"":"s"} since (blue)${mid?`; the week of ${esc(pxDay(mid))}, when they began, is shaded lighter and counted in neither`:""}. `:""}Some of the rise is new members confirming their address; much of it is existing subscribers asked to sign in again, because the newsletter goes out through Mailchimp and its links don't sign anyone in, and a sign-in lasts only on the browser where it happened.</p>`;
   }
   h+=`<div class="flagnote" style="margin-top:8px">Signups are people who joined while on the piece (Ghost records the page); views are Google Analytics page views since publication. Open pieces with fewer than 200 views are left out of the comparison.</div>`;
   host.innerHTML=h;
