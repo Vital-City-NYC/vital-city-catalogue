@@ -87,6 +87,8 @@
     <div class="sub">Every tool Vital City uses to track its work, readers, supporters and coverage. You are signed in on this device, so each one opens without asking again.</div>
   </header>
   <main class="tools">
+    <section id="week" class="vcx-week" hidden aria-live="polite"></section>
+    <div class="vcx-eyebrow" id="toolsHead" hidden>Every tool</div>
     <div id="list"></div>
     <div class="signed">Signed in on this device for 90 days. <a href="#" id="lockAll2">Lock every tool</a> on a shared computer.</div>
   </main>
@@ -119,6 +121,74 @@ async function unlock(pass, fromStore){
   savePass(pass);
   $("#gate").style.display="none"; $("#app").style.display="block";
   renderTools();
+  renderWeek();
+}
+
+// ----- This week ---------------------------------------------------------
+// One screen of what moved and what needs doing, from data/links.enc (built
+// last in the nightly refresh by build_links.py). Every line links to the
+// tool it comes from. If the file isn't there, the section stays hidden and
+// the page is the plain list of tools it always was.
+const AP_M=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+function apd(s,noYear){ const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||""); if(!m) return esc(s||""); return `${AP_M[+m[2]-1]} ${+m[3]}`+(noYear?"":`, ${m[1]}`); }
+function apm(s){ const m=/^(\d{4})-(\d{2})$/.exec(s||""); return m?`${AP_M[+m[2]-1].replace(/\.$/,"")} ${m[1]}`:apd(s); }
+function span(a,b){ const A=/^(\d{4})-(\d{2})-(\d{2})/.exec(a||""), B=/^(\d{4})-(\d{2})-(\d{2})/.exec(b||""); if(!A||!B) return "";
+  return A[2]===B[2] ? `${AP_M[+A[2]-1]} ${+A[3]}–${+B[3]}` : `${apd(a,true)}–${apd(b,true)}`; }
+const fmt=n=>n==null?"—":Math.round(n).toLocaleString();
+const KIND={press:"Press",government:"Government",policy:"Policy",republished:"Republished",appearance:"Appearance",scholarly:"Scholarly"};
+async function renderWeek(){
+  if(!window.vcLinks){ setTimeout(renderWeek,60); return; }
+  const L=await window.vcLinks(); const W=L&&L.week; if(!W||!W.n) return;
+  const C=(L.citations||{}).rows||[];
+  // A stat: this week against the average of the four weeks before it.
+  const stat=(k,label,href)=>{ const [now,base]=W.n[k]||[]; let d="";
+    if(base!=null&&now!=null){ const diff=now-base, pct=base?Math.round(100*diff/base):null;
+      d = Math.abs(diff)<0.5 ? "Level with the four weeks before" :
+        `<b>${diff>0?"+":"−"}${fmt(Math.abs(diff))}</b>`+(pct!=null&&Math.abs(pct)>=1?` (${diff>0?"+":"−"}${Math.abs(pct)}%)`:"")+` vs. the ${fmt(base)} weekly average of the four weeks before`; }
+    return `<div class="vcx-stat"><a href="${href}"><div class="k">${label}</div><div class="v">${fmt(now)}</div></a><div class="d">${d}</div></div>`; };
+  const card=(title,href,linkText,body)=>`<div class="vcx-card"><h3><span>${title}</span>${href?`<a href="${esc(href)}">${linkText} →</a>`:""}</h3>${body}</div>`;
+  const list=items=>items.length?`<ul class="vcx-list">${items.join("")}</ul>`:"";
+  const empty=t=>`<div class="vcx-empty">${t}</div>`;
+
+  const joined=(W.join&&W.join.notable)||[];
+  const joinBody=(list(joined.map(p=>`<li>${p.wiki?'<span class="vcx-tag blue" title="Has a Wikipedia page">Notable</span>':""}${esc(p.n)}<span class="vcx-meta">${esc([p.role,p.org].filter(Boolean).join(" · "))} · ${apd(p.date,true)}</span></li>`))
+    || empty("No one from government, academia, the press or policy groups joined in these seven days."))
+    +(W.join&&W.join.total!=null?`<div class="vcx-fine">${fmt(W.join.total)} people joined the list from ${apd(W.join.from,true)} to ${apd(W.join.to,true)}; ${fmt((W.leave||{}).total)} left.</div>`:"");
+
+  const cites=(W.cites||[]).map(i=>C[i]).filter(Boolean);
+  const citeBody=list(cites.slice(0,6).map(c=>`<li><span class="vcx-tag">${esc(KIND[c.kind]||c.kind)}</span><a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title)}</a><span class="vcx-meta">${esc(c.source||"")} · ${apd(c.date,true)}</span></li>`))
+    || empty("No new citations were logged for this week.");
+
+  const topBody=list((W.top||[]).slice(0,5).map(p=>`<li><span class="vcx-num">${fmt(p.v)}</span><a href="https://www.vitalcitynyc.org${esc(p.p||"")}" target="_blank" rel="noopener">${esc(p.t||p.p)}</a></li>`))
+    || empty("Traffic by page isn't available on this refresh.");
+
+  const rsBody=list((W.reshare||[]).map(r=>`<li><b>${apd(r.date,true)}</b> · ${esc(r.label||"")}${(r.picks||[]).map(p=>`<span class="vcx-meta"><a href="${esc(p.u)}" target="_blank" rel="noopener">${esc(p.t)}</a></span>`).join("")}</li>`))
+    || empty("Nothing on the calendar in the next eight days.");
+
+  const giftBody=list((W.gifts||[]).map(g=>`<li><span class="vcx-num">$${fmt(g.a)}</span>${esc(g.n||"Anonymous")}${g.rec?' <span class="vcx-tag good">Monthly</span>':""}<span class="vcx-meta">${[g.inst&&esc(g.inst), apd(g.d,true)].filter(Boolean).join(" · ")}</span></li>`))
+    || empty("No online gifts in the last seven days.");
+
+  const logBody=(list((W.log||[]).map(i=>`<li>${esc(i.label)}<span class="vcx-meta">${apm(i.from)}${i.kind?` · ${esc(i.kind)}`:""}</span></li>`))
+    || empty("Nothing logged in the last six weeks."))+`<div class="vcx-fine">Launched something, held an event or changed the newsletter? Add a row to the log and every chart marks it at the next refresh.</div>`;
+
+  const el=$("#week");
+  el.innerHTML=`<div class="vcx-week-head"><h2>The week of ${span(W.from,W.to)}</h2><span class="vcx-asof">Monday to Sunday · built ${apd(String(L.generated_at||"").slice(0,10))}</span></div>
+    <div class="vcx-stats">
+      ${stat("visits","Website visits","growth/#trafficCard")}
+      ${stat("signups","Newsletter signups","growth/#acquisition")}
+      ${stat("unsubs","Unsubscribes","growth/#whyLeave")}
+      ${stat("gifts","Online gifts","prospects/#gifts")}
+    </div>
+    <div class="vcx-cards">
+      ${card("Who joined","network/","Contacts",joinBody)}
+      ${card("Cited","prospects/#impact","Impact ledger",citeBody)}
+      ${card("Most read, last seven days","growth/#trafficCard","Growth",topBody)}
+      ${card("Coming up to reshare","resharing/","What to reshare",rsBody)}
+      ${card("Gifts, last seven days","prospects/#gifts","Prospects",giftBody)}
+      ${card("The log of what we tried",W.log_url,"Add to the log",logBody)}
+    </div>`;
+  el.querySelectorAll('a[href^="https://docs.google"]').forEach(a=>{ a.target="_blank"; a.rel="noopener"; });
+  el.hidden=false; $("#toolsHead").hidden=false;
 }
 
 // One row per tool, from the same registry the bar uses (toolkit.js). The date
@@ -145,7 +215,9 @@ function renderTools(){
       <div class="views">${t.views.map(v=>`<div class="view"><a class="vname" href="${esc(url(v))}">${esc(v.label)}</a><span class="blurb">${esc(v.blurb)}</span>${freshCell(v.id)}</div>`).join("")}</div></div>`;
     return `<div class="tool"><a class="name" href="${esc(url(t))}">${esc(t.label)}</a><span class="blurb">${esc(t.blurb)}</span>${freshCell(t.id)}</div>`;
   }).join("");
-  tools.forEach(t=>{ (t.views||[t]).forEach(v=>fillFresh(v.id, v.dataHref||v.data, v.static, v.staleHours)); });
+  tools.forEach(t=>{ (t.views||[t]).forEach(v=>{
+    if(/^https:\/\/claude\.ai\//.test(v.href||"")){ const el=document.getElementById("fresh-"+v.id); if(el) el.textContent="In Claude · Mondays"; return; }
+    fillFresh(v.id, v.dataHref||v.data, v.static, v.staleHours); }); });
 }
 
 function applyTheme(t){ document.documentElement.classList.toggle("dark", t==="dark");
