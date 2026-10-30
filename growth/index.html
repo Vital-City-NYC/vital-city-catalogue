@@ -318,6 +318,24 @@
 
   /* Table */
   table.tbl{width:100%;border-collapse:collapse;font-size:13px}
+  /* Send by send and members-only cards (Oct. 30, 2026) */
+  .si-pick{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 12px}
+  .si-pick button{font:inherit;font-size:11.5px;font-weight:700;padding:4px 9px;border:1px solid var(--vc-cloud);background:var(--vc-white);color:var(--vc-black);cursor:pointer;border-radius:2px}
+  .si-pick button[aria-pressed="true"]{background:var(--vc-black);color:var(--vc-paper);border-color:var(--vc-black)}
+  .si-head{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));border-top:2px solid var(--vc-black);border-bottom:1px solid var(--vc-cloud);margin-bottom:12px}
+  .si-head > div{padding:9px 10px 9px 0}
+  .si-head .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15}
+  .si-head .k{font-size:11px;color:var(--vc-charcoal);line-height:1.3}
+  .si-bar{height:8px;background:var(--vc-cerulean);border-radius:1px;min-width:1px}
+  .si-lead td{font-weight:700}
+  .si-read{font-size:13px;line-height:1.5;margin:0 0 10px}
+  .gt-bars{display:flex;align-items:flex-end;gap:4px;height:120px;margin:8px 0 4px;padding-top:14px;border-bottom:1px solid var(--vc-black)}
+  .gt-bars div{flex:1;background:var(--vc-cloud);position:relative;min-width:6px}
+  .gt-bars div.on{background:var(--vc-cerulean)}
+  .gt-bars div span{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-size:10px;font-variant-numeric:tabular-nums;color:var(--vc-charcoal);white-space:nowrap}
+  .gt-axis{display:flex;gap:4px;font-size:10px;color:var(--vc-charcoal)}
+  .gt-axis div{flex:1;text-align:center;min-width:6px;overflow:hidden;white-space:nowrap}
+  @media (max-width:640px){ .gt-bars div span{display:none} .gt-axis div:nth-child(odd){visibility:hidden} }
   #sources .ssum{font-size:15px;line-height:1.45;margin:0 0 8px;max-width:820px;font-weight:600}
   #sources .slede{font-size:12.5px;line-height:1.5;margin:0 0 10px;max-width:760px}
   #sources .shd,#sources .srow{display:grid;grid-template-columns:minmax(200px,1.6fr) 2fr 96px 84px;gap:12px;align-items:center}
@@ -896,6 +914,11 @@
       
       </div>
 
+            <div class="card" id="gating">
+        <h2>Members-only pieces <span class="hint">signups they bring in, and the sign-ins they ask of subscribers</span></h2>
+        <div id="gatingBody"><div class="hint">Loading…</div></div>
+      </div>
+
             <div class="card" id="trend">
         <h2>Signups vs unsubscribes <span class="hint" id="trendHint"></span></h2>
         <div class="winrow" id="trendWin"></div>
@@ -1006,6 +1029,11 @@
         <h3 class="subh">The sends themselves <span class="hint">same data as the chart · click a subject to open it in Mailchimp</span></h3>
         <div id="campTbl"></div>
       
+      </div>
+
+            <div class="card" id="sendItems">
+        <h2>Newsletter, send by send <span class="hint">which pieces got clicked, in the order they ran</span></h2>
+        <div id="sendItemsBody"><div class="hint">Loading…</div></div>
       </div>
 
             <div class="card" id="abTests">
@@ -1778,6 +1806,8 @@ function boot(data){
   renderWhyLeave(mc);
   renderABTests(mc);
   renderAcquisition(data.ghost_signup_attribution || {});
+  renderGating(data);
+  renderSendItems(data);
   renderEngagementExtras(data.engagement_extras || {});
   renderLifecycle(data.lifecycle || {}, kiStayHTML(data) + roleMonthlyHTML(data), mc);
   renderLeadLine(data);
@@ -4533,6 +4563,102 @@ function renderDonors(db){
     `pulled live from Donorbox · history since ${(db.history_starts||'').slice(0,10) || '—'} · ${fmtN(db.donations_paid||0)} paid gifts`;
 }
 
+// ===== Newsletter, send by send ===========================================
+// Each recent send's pieces in the order they ran, with the clicks each drew
+// (Mailchimp click details, placed by reading the email's own HTML). Answers
+// "did the lead take everything?" for one send, and on average across the
+// recent Thursday newsletters. Opens, clicks and unsubscribes are set against
+// the median of the eight sends of the same kind before it.
+function renderSendItems(data){
+  const host=$("#sendItemsBody"); if(!host) return;
+  const mc=data.mailchimp||{}, si=mc.send_items||{};
+  const sends=(si.sends||[]).filter(x=>x&&x.items);
+  if(!si.available||!sends.length){ host.innerHTML=`<div class="hint">Send-by-send clicks arrive with the next refresh.</div>`; return; }
+  const titles={}; (((data.ga4||{}).piece_index||{}).pieces||[]).forEach(p=>{ titles[p.slug]=p.title; });
+  const nice=sl=>titles[sl]||sl.replace(/-/g," ").replace(/^./,c=>c.toUpperCase());
+  const camps=(mc.campaigns||[]).filter(c=>c.sent).slice().sort((x,y)=>String(y.sent).localeCompare(String(x.sent)));
+  const med=a=>{ a=a.filter(v=>v!=null&&!isNaN(v)).sort((x,y)=>x-y); return a.length?a[a.length>>1]:null; };
+  const usual=(e,k)=>med(camps.filter(c=>c.kind===e.kind&&String(c.sent)<String(e.sent)).slice(0,8).map(c=>+c[k]));
+  const pct=v=>v==null?"—":(+v).toFixed(1)+"%";
+  // Average share of piece clicks by position, across the recent Thursday newsletters.
+  const nls=sends.filter(x=>x.kind==="newsletter");
+  const posShare=[1,2,3,4,5].map(pos=>{ const v=nls.map(x=>{ const T=x.items.reduce((t,i)=>t+(i.clicks||0),0); const it=x.items.find(i=>i.pos===pos); return T&&it?100*it.clicks/T:null; }).filter(v=>v!=null);
+    return v.length?{pos,share:v.reduce((a,b)=>a+b,0)/v.length,n:v.length}:null; }).filter(Boolean);
+  let cur=(sends.find(x=>x.kind==="newsletter")||sends[0]).id;
+  const draw=()=>{
+    const e=sends.find(x=>x.id===cur)||sends[0];
+    const items=e.items.slice().sort((a,b)=>(a.pos==null)-(b.pos==null)||(a.pos||0)-(b.pos||0));
+    const T=items.reduce((t,i)=>t+(i.clicks||0),0), top=Math.max(1,...items.map(i=>i.clicks||0));
+    const lead=items.find(i=>i.pos===1);
+    const fig=(v,k)=>`<div><div class="v">${v}</div><div class="k">${k}</div></div>`;
+    const uo=usual(e,"open_pct"), uc=usual(e,"click_pct"), uu=usual(e,"unsubs");
+    const kindLbl={newsletter:"Thursday newsletter",appeal:"appeal",other:"other send"}[e.kind]||e.kind||"";
+    let read="";
+    if(T&&lead){ const rest=T-lead.clicks;
+      read=`The lead drew <b>${Math.round(100*lead.clicks/T)}%</b> of the clicks on pieces; the ${items.length-1} piece${items.length===2?"":"s"} after it drew ${Math.round(100*rest/T)}%.`;
+      const best=items.slice().sort((a,b)=>b.clicks-a.clicks)[0];
+      if(best&&best.pos&&best.pos!==1) read+=` The most-clicked piece ran at number ${best.pos}.`; }
+    host.innerHTML=`<div class="si-pick" role="group" aria-label="Choose a send">${sends.map(x=>`<button type="button" data-send="${esc(x.id)}" aria-pressed="${x.id===e.id}" title="${esc(x.subject||"")}">${esc(pxDay(x.sent))}${x.kind!=="newsletter"?` · ${esc(x.kind==="appeal"?"appeal":"other")}`:""}</button>`).join("")}</div>
+      <div style="font-size:15px;font-weight:800;margin:0 0 6px">${esc(e.subject||"(no subject)")} <span class="hint">${esc(kindLbl)} · ${esc(pwDate(e.sent))}</span></div>
+      <div class="si-head">
+        ${fig(fmtN(e.delivered),"delivered")}
+        ${fig(pct(e.open_pct),`opened · usual ${pct(uo)}`)}
+        ${fig(pct(e.click_pct),`clicked · usual ${pct(uc)}`)}
+        ${fig(fmtN(e.unsubs),`unsubscribed · usual ${uu==null?"—":fmtN(Math.round(uu))}`)}
+      </div>
+      ${read?`<p class="si-read">${read}</p>`:""}
+      <div class="tscroll"><table class="tbl"><thead><tr><th>#</th><th>Piece</th><th class="num">Clicks</th><th class="num">Readers</th><th style="width:28%">Share of piece clicks</th></tr></thead><tbody>
+      ${items.map(i=>`<tr class="${i.pos===1?"si-lead":""}"><td>${i.pos==null?"—":i.pos}</td><td><a href="../catalogue/#piece=${encodeURIComponent(i.slug)}" title="This piece's page in the catalogue">${esc(nice(i.slug))}</a></td><td class="num">${fmtN(i.clicks)}</td><td class="num">${fmtN(i.unique)}</td>
+        <td><div style="display:flex;align-items:center;gap:8px"><div class="si-bar" style="width:${(70*(i.clicks||0)/top).toFixed(1)}%"></div><span style="font-size:11.5px;color:var(--vc-charcoal);font-variant-numeric:tabular-nums">${T?Math.round(100*(i.clicks||0)/T)+"%":""}</span></div></td></tr>`).join("")}
+      </tbody></table></div>
+      ${posShare.length?`<p class="si-read" style="margin-top:12px">Across the last ${nls.length} Thursday newsletters, the share of clicks on pieces by position: ${posShare.map(x=>`<b>${x.pos===1?"lead":"no. "+x.pos}</b> ${Math.round(x.share)}%`).join(" · ")}.</p>`:""}
+      <div class="flagnote" style="margin-top:8px">“Readers” are different people who clicked. Order is where the piece's first link appears in the email; a dash means the piece's link was found in the clicks but not in the email's text. Clicks on links that aren't Vital City pieces (donate, social, other sites): ${fmtN(e.other_clicks||0)}. Open rates run high industry-wide because Apple Mail loads images automatically, so read opens as a trend, clicks as the firmer number.</div>`;
+    host.querySelectorAll("[data-send]").forEach(b=>b.addEventListener("click",()=>{ cur=b.dataset.send; draw(); }));
+  };
+  draw();
+}
+
+// ===== Members-only pieces =================================================
+// What gating does on both sides: signups per 1,000 views on members-only
+// pieces against open pieces published in the same stretch, and member
+// sign-ins by week, which rise when subscribers who aren't signed in on their
+// browser are stopped by a gated piece (the newsletter goes out through
+// Mailchimp, so its links don't sign anyone in).
+function renderGating(data){
+  const host=$("#gatingBody"); if(!host) return;
+  const pi=(((data.ga4||{}).piece_index||{}).pieces)||[];
+  const mem=pi.filter(p=>p.members).sort((a,b)=>String(b.pub).localeCompare(String(a.pub)));
+  const inits=((data.initiatives||{}).items)||[];
+  const start=String((inits.find(i=>/members-only/i.test(i.label||""))||{}).from||"2026-10-08").slice(0,10);
+  const lg=((data.ghost_logins||{}).weeks)||[];
+  if(!mem.length&&!lg.length){ host.innerHTML=`<div class="hint">No members-only pieces yet.</div>`; return; }
+  const rate=(su,v)=>v?1000*su/v:null, f1=v=>v==null?"—":(v>=10?Math.round(v):v.toFixed(1));
+  const since="2026-08-01";
+  const open=pi.filter(p=>!p.members&&String(p.pub)>=since&&p.signups!=null&&p.views>=200);
+  const pool=g=>{ const su=g.reduce((t,p)=>t+(p.signups||0),0), v=g.reduce((t,p)=>t+(p.views||0),0); return {su,v,r:rate(su,v)}; };
+  const M=pool(mem.filter(p=>p.signups!=null)), O=pool(open);
+  const oMed=(()=>{ const r=open.map(p=>rate(p.signups,p.views)).sort((a,b)=>a-b); return r.length?r[r.length>>1]:null; })();
+  let h="";
+  if(mem.length){
+    h+=`<p class="si-read">${mem.length} members-only piece${mem.length===1?"":"s"} since ${esc(pwDate(start))}: <b>${fmtN(M.su)}</b> newsletter signups on ${fmtN(M.v)} views, or <b>${f1(M.r)}</b> per 1,000 views. Open pieces published since ${esc(pwDate(since))} drew ${f1(O.r)} per 1,000 views (${fmtN(O.su)} signups on ${fmtN(O.v)} views across ${open.length} pieces; the typical one, ${f1(oMed)}).</p>
+      <div class="tscroll"><table class="tbl"><thead><tr><th>Piece</th><th>Published</th><th class="num">Views</th><th class="num">Signups</th><th class="num">Per 1,000 views</th></tr></thead><tbody>
+      ${mem.map(p=>`<tr><td><a href="../catalogue/#piece=${encodeURIComponent(p.slug)}" title="This piece's page in the catalogue">${esc(p.title)}</a></td><td style="white-space:nowrap">${esc(pxDay(p.pub))}</td><td class="num">${fmtN(p.views)}</td><td class="num">${p.signups==null?"—":fmtN(p.signups)}</td><td class="num">${f1(rate(p.signups||0,p.views))}</td></tr>`).join("")}
+      </tbody></table></div>`;
+  }
+  if(lg.length){
+    const wks=lg.slice(-16), max=Math.max(1,...wks.map(w=>w.logins));
+    const sWk=(()=>{ const d=new Date(start+"T12:00:00"); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d.toISOString().slice(0,10); })();
+    const before=lg.filter(w=>w.wk<sWk).slice(-8), after=lg.filter(w=>w.wk>=sWk);
+    const avg=a=>a.length?Math.round(a.reduce((t,w)=>t+w.logins,0)/a.length):null;
+    h+=`<h3 class="subh" style="margin-top:18px">Member sign-ins by week <span class="hint">Ghost login events, Monday to Sunday</span></h3>
+      <div class="gt-bars" role="img" aria-label="Member sign-ins by week">${wks.map(w=>`<div class="${w.wk>=sWk?"on":""}" style="height:${(100*w.logins/max).toFixed(1)}%" title="Week of ${esc(pxDay(w.wk))}: ${fmtN(w.logins)} sign-ins by ${fmtN(w.members)} members"><span>${fmtN(w.logins)}</span></div>`).join("")}</div>
+      <div class="gt-axis">${wks.map(w=>`<div>${esc(pxDay(w.wk))}</div>`).join("")}</div>
+      <p class="si-read" style="margin-top:10px">${before.length&&after.length?`Sign-ins averaged <b>${fmtN(avg(before))}</b> a week in the ${before.length} weeks before members-only pieces began and <b>${fmtN(avg(after))}</b> a week since (blue). `:""}Some of the rise is new members confirming their address; much of it is existing subscribers asked to sign in again, because the newsletter goes out through Mailchimp and its links don't sign anyone in, and a sign-in lasts only on the browser where it happened.</p>`;
+  }
+  h+=`<div class="flagnote" style="margin-top:8px">Signups are people who joined while on the piece (Ghost records the page); views are Google Analytics page views since publication. Open pieces with fewer than 200 views are left out of the comparison.</div>`;
+  host.innerHTML=h;
+}
+
 function renderAcquisition(attr){
   const host = $("#acqBody");
   const hint = $("#acqHint");
@@ -6404,6 +6530,12 @@ function scorecardModel(data){
     // A page that was read and did not carry a real mention is not a citation.
     // Media older than the checker's reach (verified unset) still count.
     if(x.verified===false||x.incidental===true) return; const m=String(x.published_iso||"").slice(0,7); if(m) cites[m]=(cites[m]||0)+1; });
+  // Since Oct. 30, 2026 the toolkit keeps one record of citations (the
+  // Prospects impact ledger, written into this file by build_links.py), so
+  // this tile, the home page and the ledger give the same count. The tracker
+  // rule above stays as the fallback for a file built before that.
+  const citeRec=(data.citations&&data.citations.monthly)||null;
+  if(citeRec){ Object.keys(cites).forEach(k=>delete cites[k]); Object.assign(cites, citeRec); }
   const giving={}; (db.monthly_series||[]).forEach(r=>{giving[r.m]=r.amt;});
   const pieces={}; (gh.pub_dates||[]).forEach(d=>{const m=String(d).slice(0,7); pieces[m]=(pieces[m]||0)+1;});
   // Signups and unsubscribes by calendar month from the same daily record the
@@ -6499,7 +6631,7 @@ function scorecardModel(data){
       const top=Object.entries(tot).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([c,n])=>`${nm[c]||c.toLowerCase()} ${Math.round(n/all*100)}%`);
       return all?`${curLbl}, where visits came from: ${top.join(", ")}. Industry: 69% of Google searches ended without a click by May 2025, up from 56% a year earlier, and the share of searches that led to a website fell about a fifth again by May 2026 (Similarweb). ${aiLine()}`.trim():""; }},
    {k:"cites", name:"Times Vital City was cited", unit:"in", kind:"flow", good:1,
-    def:"News stories, government documents and other publishers citing or republishing Vital City's work, found by the press tracker and checked by reading the page.",
+    def:"News stories, government documents and other publishers citing or republishing Vital City's work, found by the press tracker and checked by reading the page. The count is the Prospects impact ledger's, the one record of citations every toolkit page uses: roundups, passing mentions and duplicates are left out.",
     vals:S(m=>cites[m]||0,"2025-03"), fmt:n0, note:"The tracker's record starts in March 2025.",
     std:()=>"No industry standard. This is a minimum: the tracker watches a set list of sources, so some citations are missed."},
    {k:"giving", name:"Reader giving", unit:"given online in", kind:"flow", good:1,
@@ -6955,9 +7087,15 @@ function pulseExtras(w, data){
   // not to cite us, never a passing mention or roundup; government and
   // republication items must be confirmed.
   const cite=x=>!x.own_post && !x.roundup && ["media","republication","gov"].includes(x.kind) && x.verified!==false && x.incidental!==true && (x.kind==="media" || x.verified===true);
-  const seen={}; const cs=[];
+  const seen={}; let cs=[];
   (data.news_mentions||[]).filter(cite).forEach(x=>{ const d=day(x.published_iso); const k=(x.title||"").toLowerCase().slice(0,60)+"|"+(x.source||"");
     if(seen[k]) return; seen[k]=1; cs.push({...x, _d:d}); });
+  // The one record of citations, when this file carries it (see the key
+  // indicators): the same rows the impact ledger and the home page count.
+  const crec=data.citations&&data.citations.rows;
+  if(crec&&crec.length){ const ik=data.citations.indicator_kinds||["press","government","policy","republished"];
+    const toKind={press:"media",government:"gov",policy:"media",republished:"republication"};
+    cs=crec.filter(x=>ik.includes(x.kind)&&x.date).map(x=>({...x, kind:toKind[x.kind]||x.kind, _d:x.date})); }
   const cw=cs.filter(x=>x._d>=a && x._d<=b).sort((x,y)=>y._d.localeCompare(x._d));
   const firstChecked=cs.map(x=>x._d).filter(Boolean).sort()[0]||"9999";
   const histFrom = yearBack>firstChecked ? yearBack : firstChecked;
