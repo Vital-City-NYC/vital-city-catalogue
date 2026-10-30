@@ -4644,7 +4644,7 @@ function renderGating(data){
   const oMed=(()=>{ const r=open.map(p=>rate(p.signups,p.views)).sort((a,b)=>a-b); return r.length?r[r.length>>1]:null; })();
   let h="";
   if(mem.length){
-    h+=`<p class="si-read">${mem.length} piece${mem.length===1?"":"s"} published members-only since ${esc(pwDate(start))}: <b>${fmtN(M.su)}</b> newsletter signups on ${fmtN(M.v)} views, or <b>${f1(M.r)}</b> per 1,000 views. Open pieces published since ${esc(pwDate(since))} drew ${f1(O.r)} per 1,000 views (${fmtN(O.su)} signups on ${fmtN(O.v)} views across ${open.length} pieces; the typical one, ${f1(oMed)}).</p>
+    h+=`<p class="si-read">${mem.length} piece${mem.length===1?"":"s"} published members-only since ${esc(pwDate(start))}: <b>${fmtN(M.su)}</b> newsletter signups on ${fmtN(M.v)} views, or <b>${f1(M.r)}</b> per 1,000 views. Open pieces published since ${esc(pwDate(since))}, drew ${f1(O.r)} per 1,000 views (${fmtN(O.su)} signups on ${fmtN(O.v)} views across ${open.length} pieces; the typical one, ${f1(oMed)}).</p>
       <div class="tscroll"><table class="tbl"><thead><tr><th>Piece</th><th>Published</th><th class="num">Views</th><th class="num">Signups</th><th class="num">Per 1,000 views</th></tr></thead><tbody>
       ${mem.map(p=>`<tr><td><a href="../catalogue/#piece=${encodeURIComponent(p.slug)}" title="This piece's page in the catalogue">${esc(p.title)}</a></td><td style="white-space:nowrap">${esc(pxDay(p.pub))}</td><td class="num">${fmtN(p.views)}</td><td class="num">${p.signups==null?"—":fmtN(p.signups)}</td><td class="num">${f1(rate(p.signups||0,p.views))}</td></tr>`).join("")}
       </tbody></table></div>`
