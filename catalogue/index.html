@@ -164,6 +164,12 @@
   td.title { max-width: 460px; }
   td.title a.headline { font-weight: 700; }
   td.title a.headline:hover { color: var(--vc-orange); }
+  td.title .vcx-tag.mo { margin-right: 6px; }
+  /* The way into a piece's page: quiet until the row is hovered or focused. */
+  .pdet { display: block; margin-top: 5px; padding: 0; border: 0; background: none; font: inherit; font-size: 11.5px; font-weight: 700;
+    color: var(--vc-cerulean); cursor: pointer; opacity: .78; }
+  tr:hover .pdet, .pdet:focus-visible { opacity: 1; text-decoration: underline; }
+  @media (hover: none) { .pdet { opacity: 1; } }
   td.title .summary {
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     font-weight: 300; font-size: 13px; color: var(--vc-charcoal); margin-top: 4px; line-height: 1.4;
@@ -331,6 +337,7 @@
     <option value="document">Document</option>
   </select>
   <label class="chk"><input type="checkbox" id="fFeatured"> Featured</label>
+  <label class="chk" title="Pieces only signed-in members can read in full."><input type="checkbox" id="fMembers"> Members-only</label>
   <button class="clear" id="clear">Clear</button>
 </div>
 
@@ -412,6 +419,8 @@ async function load() {
     if (resp.ok) { AUTHOR_CATS = await resp.json(); HAS_CRM = Object.keys(AUTHOR_CATS).length > 0; }
   } catch (e) { /* no CRM available — public mode */ }
   buildStats(); buildFilters(); bind(); applyURLParams(); render();
+  pieceFromHash();
+  window.addEventListener("hashchange", pieceFromHash);
   // Already signed in to the toolkit on this device: show the column without asking.
   showReaders(false);
   $("#readersToggle").addEventListener("click", e=>{ e.preventDefault(); if(!READERS) showReaders(true); });
@@ -477,9 +486,10 @@ function buildFilters() {
 function bind() {
   ["#q","#fType","#fAuthorType","#fAuthor","#fTopic","#fIssue","#fYear","#fCredit","#fEmbed"].forEach(s => $(s).addEventListener("input", render));
   $("#fFeatured").addEventListener("change", render);
+  $("#fMembers").addEventListener("change", render);
   $("#clear").addEventListener("click", () => {
     $("#q").value=""; ["#fType","#fAuthorType","#fAuthor","#fTopic","#fIssue","#fYear","#fCredit","#fEmbed"].forEach(s=>$(s).value="");
-    $("#fFeatured").checked=false; render();
+    $("#fFeatured").checked=false; $("#fMembers").checked=false; render();
   });
   document.querySelectorAll("thead th").forEach(th => th.addEventListener("click", () => {
     const k = th.dataset.k;
@@ -503,6 +513,8 @@ function bind() {
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeEmbedPop(); });
   // delegate clicks on author / topic / issue to set the matching filter
   $("#rows").addEventListener("click", e => {
+    const pd = e.target.closest("[data-piece]");
+    if (pd) { openPiece(pd.dataset.piece); return; }
     const el = e.target.closest("[data-author],[data-topic],[data-issue],[data-type],[data-cat]"); if (!el) return;
     if (el.dataset.author !== undefined) $("#fAuthor").value = el.dataset.author;
     if (el.dataset.topic !== undefined) $("#fTopic").value = el.dataset.topic;
@@ -517,7 +529,7 @@ function bind() {
 function filtered() {
   const q = $("#q").value.trim().toLowerCase();
   const ftype = $("#fType").value, fatype = $("#fAuthorType").value, fa = $("#fAuthor").value, ft = $("#fTopic").value, fi = $("#fIssue").value, fy = $("#fYear").value;
-  const feat = $("#fFeatured").checked, fe = $("#fEmbed").value, fc = $("#fCredit").value;
+  const feat = $("#fFeatured").checked, fe = $("#fEmbed").value, fc = $("#fCredit").value, mo = $("#fMembers").checked;
   return DATA.filter(r => {
     if (ftype && r.type !== ftype) return false;
     if (fatype && !articleCats(r).includes(fatype)) return false;
@@ -526,6 +538,7 @@ function filtered() {
     if (fi && !(r.issues||[]).includes(fi)) return false;
     if (fy && !(r.published_date||"").startsWith(fy)) return false;
     if (feat && !r.featured) return false;
+    if (mo && (r.visibility || "public") === "public") return false;
     if (fc && (r.feature_image_credit || "") !== fc) return false;
     if (fe) {
       const cnts = (r.embeds && r.embeds.counts) || {};
@@ -727,6 +740,112 @@ async function showAuthorCard(name){
     <div class="ac-meta">${facts.join(" &middot; ")}</div>${topics}`;
 }
 
+// ---- Piece page ---------------------------------------------------------
+// One panel with everything the toolkit knows about a piece. Public facts come
+// from the catalogue; readers from data/readership.enc; signups, newsletter
+// clicks, citations and reshare dates from data/links.enc, which the nightly
+// refresh builds after every tool (build_links.py). Opened from "Piece details"
+// on any row, or by link: catalogue/#piece=<slug>.
+let LINKS=null, PREADERS=null;
+const pEsc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const pN=n=>n==null?"—":Math.round(n).toLocaleString();
+const CITE_KIND={press:"Press",government:"Government",policy:"Policy",republished:"Republished",appearance:"Appearance",scholarly:"Scholarly"};
+function pieceFromHash(){
+  const m=/^#piece=([^&]+)/.exec(location.hash||""); if(m) openPiece(decodeURIComponent(m[1]),true);
+}
+function closePiece(){
+  const d=document.getElementById("pieceDrawer"), sc=document.getElementById("pieceScrim");
+  if(!d) return;
+  d.classList.remove("on"); sc&&sc.classList.remove("on");
+  setTimeout(()=>{ d.remove(); sc&&sc.remove(); },230);
+  document.body.style.overflow="";
+  if(/^#piece=/.test(location.hash)) history.replaceState(null,"",location.pathname+location.search);
+  if(closePiece._from&&document.body.contains(closePiece._from)) { try{ closePiece._from.focus(); }catch(e){} }
+}
+// Signups per 1,000 views for open pieces published from Aug. 1, 2026, the
+// stretch the members-only pieces are judged against. Pieces with under 200
+// views are left out: a handful of signups on a few views says nothing.
+function publicRate(){
+  if(publicRate._v!==undefined) return publicRate._v;
+  if(!LINKS) return null;
+  const rates=DATA.filter(r=>(r.visibility||"public")==="public" && (r.published_date||"")>="2026-08-01").map(r=>{
+    const x=(LINKS.pieces||{})[r.slug||slugOf(r.url)]||{}; return (x.v>=200&&x.su!=null)?1000*x.su/x.v:null; }).filter(v=>v!=null).sort((a,b)=>a-b);
+  return publicRate._v = rates.length>=5 ? {med:rates[rates.length>>1], n:rates.length} : null;
+}
+async function openPiece(slug, fromHash){
+  const r=DATA.find(x=>(x.slug||slugOf(x.url))===slug); if(!r) return;
+  closePiece._from=document.activeElement;
+  if(!fromHash) history.replaceState(null,"",location.pathname+location.search+"#piece="+encodeURIComponent(slug));
+  document.getElementById("pieceDrawer")?.remove(); document.getElementById("pieceScrim")?.remove();
+  const sc=document.createElement("div"); sc.id="pieceScrim"; sc.className="vcx-scrim"; sc.addEventListener("click",closePiece);
+  const d=document.createElement("aside"); d.id="pieceDrawer"; d.className="vcx-drawer"; d.tabIndex=-1;
+  d.setAttribute("role","dialog"); d.setAttribute("aria-modal","true"); d.setAttribute("aria-labelledby","pdTitle");
+  document.body.append(sc,d); document.body.style.overflow="hidden";
+  const draw=()=>{ d.innerHTML=pieceHTML(r); d.querySelector(".vcx-x").addEventListener("click",closePiece);
+    d.querySelectorAll("[data-pfilter]").forEach(a=>a.addEventListener("click",e=>{ e.preventDefault(); const i=a.dataset.pfilter.indexOf("|"), k=a.dataset.pfilter.slice(0,i), v=a.dataset.pfilter.slice(i+1);
+      if(k==="author") $("#fAuthor").value=v; if(k==="topic") $("#fTopic").value=v; closePiece(); render(); window.scrollTo({top:0,behavior:"smooth"}); }));
+    d.querySelector("#pdCopy")?.addEventListener("click",e=>{ const b=e.currentTarget; const u=location.href.split("#")[0]+"#piece="+encodeURIComponent(slug);
+      (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>{ b.textContent="Link copied"; setTimeout(()=>b.textContent="Copy link",1600); }).catch(()=>prompt("Copy this link:",u)); }); };
+  draw();
+  requestAnimationFrame(()=>{ sc.classList.add("on"); d.classList.add("on"); d.querySelector(".vcx-x").focus(); });
+  if(!LINKS||!PREADERS){
+    const [L,R]=await Promise.all([LINKS||(window.vcLinks?window.vcLinks():null), PREADERS||(window.vcOpen?window.vcOpen("data/readership.enc"):null)]);
+    LINKS=L||LINKS; PREADERS=(R&&R.pieces)||PREADERS; publicRate._v=undefined;
+    if(document.getElementById("pieceDrawer")===d){ const st=d.scrollTop; draw(); d.scrollTop=st; }
+  }
+}
+document.addEventListener("keydown",e=>{
+  const d=document.getElementById("pieceDrawer"); if(!d) return;
+  if(e.key==="Escape"){ closePiece(); return; }
+  if(e.key==="Tab"){   // keep focus inside the panel while it is open
+    const f=[...d.querySelectorAll("a[href],button")]; if(!f.length) return;
+    if(e.shiftKey&&document.activeElement===f[0]){ e.preventDefault(); f[f.length-1].focus(); }
+    else if(!e.shiftKey&&document.activeElement===f[f.length-1]){ e.preventDefault(); f[0].focus(); }
+  }
+});
+function pieceHTML(r){
+  const slug=r.slug||slugOf(r.url), x=(LINKS&&LINKS.pieces||{})[slug]||{}, rd=(PREADERS||READERS||{})[slug]||null;
+  const members=(r.visibility||"public")!=="public";
+  const loading=!LINKS&&!PREADERS;
+  const fig=(v,k,t)=>`<div class="vcx-fig"${t?` title="${pEsc(t)}"`:""}><div class="v">${v}</div><div class="k">${k}</div></div>`;
+  const views=rd?rd.v:x.v, rate=(x.su!=null&&views)?1000*x.su/views:null;
+  const sinceLbl=LINKS&&LINKS.signups_since?apDate(LINKS.signups_since):"March 2026";
+  const figs=[];
+  if(views!=null) figs.push(fig(pN(views),"page views, lifetime","Google Analytics page views since the piece was published."));
+  if(rd&&rd.t) figs.push(fig(TIER_LABEL[rd.t],rd.b==="year"?"for its year":"first 30 days, against every piece",rd.b==="debut"?"Its first 30 days of views, compared with every piece's first 30 days.":"Lifetime views compared with pieces published the same year."));
+  if(x.sec) figs.push(fig(Math.floor(x.sec/60)+":"+String(x.sec%60).padStart(2,"0"),"minutes per view","Average time on the page, Google Analytics."));
+  if(x.su!=null) figs.push(fig(pN(x.su),"newsletter signups on the page",`People who signed up for the newsletter while on this piece, since ${sinceLbl} (Ghost records the page).`));
+  if(rate!=null&&views>=100) figs.push(fig(rate>=10?Math.round(rate):rate.toFixed(1),"signups per 1,000 views"));
+  if(x.nlc!=null) figs.push(fig(pN(x.nlc),`newsletter clicks, ${pN(x.nls)} send${x.nls===1?"":"s"}`,`Clicks on links to this piece in Vital City's emails, ${pN(x.nlu)} of them by different readers.`));
+  const author0=(r.authors||[])[0];
+  const head=`<div class="vcx-dhead"><button type="button" class="vcx-x" aria-label="Close">×</button>
+      <div class="vcx-eyebrow">${[pEsc(r.type),fmtDate(r.published_date),(r.issues||[]).map(n=>pEsc(issueLabel(n))).join(", ")].filter(Boolean).join(" · ")}</div>
+      <h2 id="pdTitle">${members?'<span class="vcx-tag mo">Members-only</span> ':""}${pEsc(r.title)}</h2>
+      <div class="vcx-dsub">By ${(r.authors||[]).map(a=>`<a href="#" data-pfilter="author|${pEsc(a)}" title="Show every piece by ${pEsc(a)}">${pEsc(a)}</a>`).join(", ")||"—"}${r.word_count?` · ${r.word_count.toLocaleString()} words`:""}</div>
+      <div class="vcx-actions">
+        <a class="vcx-btn" href="${pEsc(r.url)}" target="_blank" rel="noopener">Read it ↗</a>
+        <a class="vcx-btn" href="../press/?q=${encodeURIComponent([r.title,r.summary].filter(Boolean).join(". "))}" title="The press map, asked which reporters cover what this piece is about">Who should hear about it</a>
+        ${author0?`<a class="vcx-btn" href="../network/#${encodeURIComponent(JSON.stringify({author:author0}))}" title="The author's record in Contacts">Author in Contacts</a>`:""}
+        <button type="button" class="vcx-btn" id="pdCopy">Copy link</button>
+      </div></div>`;
+  let body="";
+  if(r.summary) body+=`<p style="font-size:14px;line-height:1.5;margin:14px 0 6px">${pEsc(r.summary)}</p>`;
+  body+= figs.length?`<div class="vcx-figs">${figs.join("")}</div>`
+       : `<div class="vcx-fine">${loading?"Loading readers, signups and citations…":"No readership or signup figures for this piece yet."}</div>`;
+  if(members){
+    const pr=publicRate();
+    body+=`<div class="vcx-sec"><h4>Members-only</h4><div style="font-size:13px;line-height:1.5">Readers sign in or subscribe to finish it.${(rate!=null&&pr&&views>=100)?` It drew <b>${rate>=10?Math.round(rate):rate.toFixed(1)}</b> signups per 1,000 views; the typical open piece published since Aug. 1, 2026, drew <b>${pr.med.toFixed(1)}</b> (the median of ${pr.n}).`:""} Subscribers who aren't signed in on their browser have to sign in again to read it.</div></div>`;
+  }
+  const C=(LINKS&&LINKS.citations&&LINKS.citations.rows)||[];
+  const cites=(x.c||[]).map(i=>C[i]).filter(Boolean);
+  if(cites.length) body+=`<div class="vcx-sec"><h4>Cited or featured elsewhere (${cites.length})</h4><ul class="vcx-list">${cites.slice(0,12).map(c=>`<li><span class="vcx-tag">${pEsc(CITE_KIND[c.kind]||c.kind)}</span><a href="${pEsc(c.url)}" target="_blank" rel="noopener">${pEsc(c.title)}</a><span class="vcx-meta">${pEsc(c.source||"")} · ${apDate(c.date)}</span></li>`).join("")}</ul></div>`;
+  if(x.rs||x.ao) body+=`<div class="vcx-sec"><h4>Reshare</h4><ul class="vcx-list">${(x.rs||[]).map(s=>`<li><b>${apDate(s.date)}</b> · ${pEsc(s.label||"")}</li>`).join("")}${x.ao?`<li>On the always-on list: worth posting in any quiet week.</li>`:""}</ul><a class="vcx-go" href="../resharing/">What to reshare →</a></div>`;
+  if(x.q&&x.q.length) body+=`<div class="vcx-sec"><h4>What people searched to find it</h4><div style="font-size:13px">${x.q.map(q=>`“${pEsc(q)}”`).join(" · ")}</div></div>`;
+  if((r.topics||[]).length) body+=`<div class="vcx-sec"><h4>Topics</h4>${r.topics.map(t=>`<a href="#" class="pill" data-pfilter="topic|${pEsc(t)}" style="text-decoration:none">${pEsc(t)}</a>`).join(" ")}</div>`;
+  if(LINKS) body+=`<div class="vcx-fine">Views and time on page are from Google Analytics; signups are from Ghost, since ${sinceLbl}; newsletter clicks are from Mailchimp. Citations are the Prospects impact ledger's, matched to this piece by its title or address. Built ${apDate(String(LINKS.generated_at||"").slice(0,10))}.</div>`;
+  return head+`<div class="vcx-dbody">${body}</div>`;
+}
+
 function render() {
   const rows = sortRows(filtered());
   document.querySelectorAll("thead th .arrow").forEach(a => a.textContent = "");
@@ -743,7 +862,7 @@ function render() {
       <td class="date">${fmtDate(r.published_date)}</td>
       <td class="typecell">${r.type?`<span class="tt ${typeClass(r.type)}" data-type="${esc(r.type)}">${esc(r.type)}</span>`:''}</td>
       <td class="embcell">${embedCell(r, esc)}</td>
-      <td class="title">${r.featured?'<span class="star">★ </span>':''}<a class="headline" href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a>${r.summary?`<span class="summary">${esc(r.summary)}</span>`:''}</td>
+      <td class="title">${r.featured?'<span class="star">★ </span>':''}${(r.visibility||"public")!=="public"?'<span class="vcx-tag mo" title="Members-only: readers sign in or subscribe to read it in full.">Members</span>':''}<a class="headline" href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a>${r.summary?`<span class="summary">${esc(r.summary)}</span>`:''}<button type="button" class="pdet" data-piece="${esc(r.slug||slugOf(r.url))}" title="Everything the toolkit knows about this piece: readers, signups, newsletter clicks, citations and reshare dates">Piece details&nbsp;›</button></td>
       <td>${(r.authors||[]).map(a=>`<a class="author" data-author="${esc(a)}">${esc(a)}</a>`).join(", ")}${HAS_CRM?articleCats(r).map(c=>`<span class="catpill" data-cat="${esc(c)}">${esc(c)}</span>`).join(""):""}</td>
       <td>${(r.topics||[]).map(t=>`<span class="pill" data-topic="${esc(t)}">${esc(t)}</span>`).join("")}</td>
       <td>${(r.issues||[]).map(n=>`<span class="pill issue" data-issue="${esc(n)}">${esc(issueLabel(n))}</span>`).join("")}</td>

@@ -91,6 +91,8 @@
   .dtRow dt{flex:0 0 118px;color:var(--vc-charcoal);font-size:11.5px}
   .dtRow dd{margin:0;flex:1;min-width:0;word-break:break-word}
   .dtRow dd .muted{color:var(--vc-charcoal)}
+  .dtRow dd .dtGo{font-size:11.5px;font-weight:700;color:var(--vc-cerulean);text-decoration:none;white-space:nowrap}
+  .dtRow dd .dtGo:hover{text-decoration:underline}
   /* Metric tiles: the numbers people actually came to read */
   .dtMetrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--vc-cloud);
              border:1px solid var(--vc-cloud);margin-top:4px}
@@ -1538,12 +1540,46 @@ function openDetail(key){
     + sec("Giving",don)
     + sec("Contributions", p.auth?
         row("Pieces written",(p.arts||0)+"")+row("Byline",esc(p.aname||"")):"")
+    + `<div id="dtLinks"></div>`
     + sec("Notes", p.note?`<div class="dtNote">${esc(p.note)}</div>`:"")
     + sec("Provenance", row("Sources",(p.src||[]).map(esc).join(", "))
       + row("Name",p.ns==="given"?"Confirmed by a person":"Inferred from the email address"));
 
   $("#detailModal").style.display="flex";
   $("#dtEdit").focus();
+  fillToolkitLinks(p, key, row, sec);
+}
+
+// "Across the toolkit": what the other tools know about this person, from
+// data/links.enc (built nightly by build_links.py, after every tool). Each
+// line links to the tool it comes from. Nothing shows when there's nothing.
+function apShort(d){ const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d||""); if(!m) return esc(d||"");
+  const M=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."]; return `${M[+m[2]-1]} ${+m[3]}, ${m[1]}`; }
+async function fillToolkitLinks(p, key, row, sec){
+  const host=$("#dtLinks"); if(!host||!window.vcLinks) return;
+  const L=await window.vcLinks(); if(!L||detailKey!==key) return;
+  const ems=[...new Set([p.e,...(p.emails||[])].filter(Boolean).map(e=>e.toLowerCase()))];
+  const pick=k=>{ for(const e of ems){ const x=(L.people||{})[e]; if(x&&x[k]) return x[k]; } return null; };
+  const sp=pick("sp"), pm=pick("pm"), fu=pick("fu"), pt=pick("pt"), cids=pick("c");
+  const C=(L.citations||{}).rows||[];
+  const go=(href,label)=>` <a class="dtGo" href="${href}">${label}&nbsp;→</a>`;
+  let h="";
+  if(sp){
+    const title=sp.t||sp.u||"the site";
+    h+=row("Signed up on", (sp.slug?`<a href="../catalogue/#piece=${encodeURIComponent(sp.slug)}" title="This piece's page in the catalogue">${esc(title)}</a>`:esc(title))
+      +` <span class="muted">· ${apShort(sp.d)}${sp.src?` · arrived from ${esc(sp.src)}`:""}</span>`);
+  }
+  if(pm){
+    const beats=(pm.b||[]).map(b=>`${esc(b[0])} (${b[1]})`).join(", ");
+    h+=row("Press map", `${esc(pm.o||"")}${pm.sc?` · ${pm.sc.toLocaleString()} stories on file`:""}${pm.l?`, latest ${apShort(pm.l)}`:""}`
+      +(beats?`<br><span class="muted">Covers ${beats}</span>`:"")+go("../press/#directory","Press map"));
+  }
+  if(fu) h+=row("Funder", `Has an address at <b>${esc(fu.n)}</b>${fu.cur?", a current funder":""}.`+go("../prospects/#cards","Prospects"));
+  if(pt&&pt.length) h+=row("Prospects lists", pt.map(t=>`<b>${esc(t.l)}</b>${t.w?` <span class="muted">— ${esc(t.w)}</span>`:""}`).join("<br>")+go("../prospects/#people","Prospects"));
+  const cites=(cids||[]).map(i=>C[i]).filter(Boolean);
+  if(cites.length) h+=row("Appearances", cites.slice(0,6).map(c=>`<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title)}</a> <span class="muted">· ${esc(c.source||"")}, ${apShort(c.date)}</span>`).join("<br>")
+    +(cites.length>6?`<br><span class="muted">and ${cites.length-6} more</span>`:"")+go("../prospects/#impact","Impact ledger"));
+  host.innerHTML=h?sec("Across the toolkit",h):"";
 }
 function closeDetail(){ $("#detailModal").style.display="none"; detailKey=null; }
 
