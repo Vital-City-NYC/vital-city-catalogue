@@ -313,9 +313,7 @@ def build_week(growth, prospects, resharing, cites, initiatives, today):
     since7 = (today - timedelta(days=7)).isoformat()
     res["gifts"] = [{"d": g.get("d"), "n": g.get("n"), "a": g.get("a"), "rec": g.get("rec"), "inst": g.get("inst")}
                     for g in ((prospects.get("gifts") or {}).get("rows") or []) if (g.get("d") or "") >= since7][:8]
-    cut = (today - timedelta(days=45)).isoformat()
-    res["log"] = [i for i in (initiatives.get("items") or [])
-                  if (i.get("from") or "") >= cut[:len(i.get("from") or "")]][-4:]
+    res["log"] = (initiatives.get("items") or [])[-4:]          # the latest entries, newest last
     res["log_url"] = initiatives.get("sheet_url") or LOG_SHEET
     return res
 

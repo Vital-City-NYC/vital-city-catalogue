@@ -168,8 +168,8 @@ async function renderWeek(){
   const giftBody=list((W.gifts||[]).map(g=>`<li><span class="vcx-num">$${fmt(g.a)}</span>${esc(g.n||"Anonymous")}${g.rec?' <span class="vcx-tag good">Monthly</span>':""}<span class="vcx-meta">${[g.inst&&esc(g.inst), apd(g.d,true)].filter(Boolean).join(" · ")}</span></li>`))
     || empty("No online gifts in the last seven days.");
 
-  const logBody=(list((W.log||[]).map(i=>`<li>${esc(i.label)}<span class="vcx-meta">${apm(i.from)}${i.kind?` · ${esc(i.kind)}`:""}</span></li>`))
-    || empty("Nothing logged in the last six weeks."))+`<div class="vcx-fine">Launched something, held an event or changed the newsletter? Add a row to the log and every chart marks it at the next refresh.</div>`;
+  const logBody=(list((W.log||[]).slice().reverse().map(i=>`<li>${esc(i.label)}<span class="vcx-meta">${apm(i.from)}${i.kind?` · ${esc(i.kind)}`:""}</span></li>`))
+    || empty("Nothing logged yet."))+`<div class="vcx-fine">Launched something, held an event or changed the newsletter? Add a row to the log and every chart marks it at the next refresh.</div>`;
 
   const el=$("#week");
   el.innerHTML=`<div class="vcx-week-head"><h2>The week of ${span(W.from,W.to)}</h2><span class="vcx-asof">Monday to Sunday · built ${apd(String(L.generated_at||"").slice(0,10))}</span></div>
@@ -180,7 +180,7 @@ async function renderWeek(){
       ${stat("gifts","Online gifts","prospects/#gifts")}
     </div>
     <div class="vcx-cards">
-      ${card("Who joined","network/","Contacts",joinBody)}
+      ${card("Who joined, last seven days","network/","Contacts",joinBody)}
       ${card("Cited","prospects/#impact","Impact ledger",citeBody)}
       ${card("Most read, last seven days","growth/#trafficCard","Growth",topBody)}
       ${card("Coming up to reshare","resharing/","What to reshare",rsBody)}
