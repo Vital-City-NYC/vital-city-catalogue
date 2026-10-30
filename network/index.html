@@ -1516,8 +1516,8 @@ function openDetail(key){
        ${M(engScore(p),"Engagement score",engScore(p))}
      </div>
      ${(p.d30c||p.d7c)?`<div class="dtRow" style="margin-top:8px"><dt>Recent opens</dt><dd>${p.d7c?`${p.d7c} in the last 7 days`:""}${(p.d7c&&p.d30c)?" &middot; ":""}${p.d30c?`${p.d30c} in the last 30 days`:""}</dd></div>`:""}
-     ${row("Subscribed",p.since?esc(p.since):"")}
-     ${row("Unsubscribed",p.udate?esc(p.udate):"")}
+     ${row("Subscribed",p.since?apShort(p.since):"")}
+     ${row("Unsubscribed",p.udate?apShort(p.udate):"")}
      ${row("House parties",(p.hp||[]).map(h=>esc(h.label)+" — "+esc(h.status)+(h.raw&&h.raw!==h.status?" ("+esc(h.raw)+")":"")).join("<br>"))}
      <div class="dtCav">Engagement score = Mailchimp rating &times; 20 + open rate, out of 200.
        Open rate is inflated by Apple Mail's automatic opens, and a brand-new subscriber can show
