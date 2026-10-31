@@ -271,7 +271,7 @@ def build_people(people, growth, prospects, press, signup_by_email, cites):
 
 # ----- the Monday summary ---------------------------------------------------
 
-def build_week(growth, prospects, resharing, cites, initiatives, today):
+def build_week(growth, prospects, resharing, cites, initiatives, today, slugs):
     ga4 = growth.get("ga4") or {}
     as_of = day(ga4.get("as_of")) or today.isoformat()
     # The last full Monday-to-Sunday week before the data's as-of date.
@@ -304,7 +304,9 @@ def build_week(growth, prospects, resharing, cites, initiatives, today):
     j, lv = rf.get("join") or {}, rf.get("leave") or {}
     res["join"] = {"from": j.get("from"), "to": j.get("to"), "total": j.get("total"), "notable": (j.get("notable") or [])[:8]}
     res["leave"] = {"total": lv.get("total"), "notable": (lv.get("notable") or [])[:5]}
-    top = ((growth.get("ghost_traffic") or {}).get("top_pages_7d") or [])[:5]
+    # Pieces only: Ghost's list also holds section pages such as /data/.
+    top = [p for p in ((growth.get("ghost_traffic") or {}).get("top_pages_7d") or [])
+           if (p.get("path") or p.get("pathname") or "").strip("/").split("/")[-1] in slugs][:5]
     res["top"] = [{"t": p.get("title"), "p": p.get("path") or p.get("pathname"),
                    "v": p.get("visits") or p.get("visitors") or p.get("views")} for p in top]
     horizon = (today + timedelta(days=8)).isoformat()
@@ -341,7 +343,8 @@ def main():
     cites = build_citations(prospects, today)
     pieces, signup_since = build_pieces(catalogue, growth, resharing, cites)
     persons = build_people(people, growth, prospects, press, signup_by_email, cites)
-    week = build_week(growth, prospects, resharing, cites, growth.get("initiatives") or {}, today)
+    week = build_week(growth, prospects, resharing, cites, growth.get("initiatives") or {}, today,
+                      {c.get("slug") for c in catalogue})
     out = {"generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
            "citations": cites, "pieces": pieces, "signups_since": signup_since,
            "people": persons, "week": week, "tiers": TIER_LABELS}

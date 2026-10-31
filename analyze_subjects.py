@@ -218,7 +218,9 @@ for r in CAT:
         continue
     for b in bs:
         beat_n[b] += 1
-        beat_words.setdefault(b, []).append(r.get("word_count") or 0)
+        beat_words.setdefault(b, [])
+        if r.get("word_count"):          # blank for members-only pieces (preview only)
+            beat_words[b].append(r["word_count"])
         beat_types.setdefault(b, collections.Counter())[r.get("type")] += 1
         beat_years.setdefault(b, collections.Counter())[year(r)] += 1
         beat_bylines.setdefault(b, collections.Counter())[byline(r)] += 1
@@ -400,7 +402,7 @@ out = {
   "rubrics_listed": sorted(RUBRICS),
   "meta_listed": sorted(META),
   "beats": [{"beat": b, "pieces": n, "share": round(n / len(CAT) * 100, 1),
-             "median_words": int(statistics.median(beat_words[b])),
+             "median_words": int(statistics.median(beat_words[b])) if beat_words[b] else 0,
              "types": beat_types[b].most_common(),
              "by_year": dict(sorted(beat_years[b].items()))}
             for b, n in beat_n.most_common()],

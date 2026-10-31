@@ -401,6 +401,7 @@ def normalize_post(p):
     numbered = [n for n in numbered if n is not None]
     ptype, type_basis = classify_type(p, [t["name"] for t in topics], issue_names)
 
+    gated = (p.get("visibility") or "public") != "public"
     return {
         "title": p.get("title"),
         "slug": p.get("slug"),
@@ -429,8 +430,13 @@ def normalize_post(p):
         "embeds": extract_embeds(p.get("html")),
         "featured": p.get("featured", False),
         "visibility": p.get("visibility"),
-        "word_count": word_count(p.get("html")),
-        "reading_minutes": max(1, round(word_count(p.get("html")) / 230)) if p.get("html") else None,
+        # A members-only post comes back from the Content API with only its
+        # free preview, so counting its words gave 64 to 298 for full pieces.
+        # Leave the count blank there and keep Ghost's own reading time, which
+        # Ghost works out from the whole text.
+        "word_count": word_count(p.get("html")) if not gated else None,
+        "reading_minutes": (max(1, round(word_count(p.get("html")) / 230)) if p.get("html") else None)
+                           if not gated else p.get("reading_time"),
         "id": p.get("id"),
     }
 
