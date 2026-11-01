@@ -52,9 +52,7 @@
      "01-10",
      "02-05"
     ],
-    "strands": [
-     "cityhall"
-    ],
+    "strands": [],
     "keywords": [
      "State of the City"
     ]
@@ -126,7 +124,7 @@
      "budget"
     ],
     "keywords": [
-     "executive budget"
+     "executive budget for fiscal"
     ]
    },
    "id": "moment-03"
@@ -802,9 +800,13 @@
     {
      "slug": "a-nation-and-city-less-secure",
      "title": "A Nation and City Less Secure"
+    },
+    {
+     "slug": "how-ice-puts-the-nypd-in-an-impossible-position",
+     "title": "How ICE Puts the NYPD in an Impossible Position"
     }
    ],
-   "also_note": "Also: A Nation and City Less Secure (3,548 views) on the dismantling of federal agencies.",
+   "also_note": "Also: A Nation and City Less Secure on the dismantling of federal agencies, and, when the federal action is immigration enforcement, John Hall's How ICE Puts the NYPD in an Impossible Position on what the department can and cannot legally do.",
    "signals": [
     "federal",
     "Washington",
@@ -833,6 +835,64 @@
     "quality of life"
    ],
    "id": "hook-11"
+  },
+  {
+   "kind": "moment",
+   "label": "Early November · DC 37's contract runs out",
+   "picks": [
+    {
+     "slug": "mamdani-nyc-unions-efficiency-reform",
+     "title": "Public Sector Unions vs. Mamdani's Ambitions"
+    }
+   ],
+   "why": "Why now: District Council 37 is the city's largest municipal union, and its contract is the first big labor deal of Mamdani's term. Daniel DiSalvo's piece argues that a mayor elected with labor's support and promising a more efficient government will have to choose between the two, and the bargaining table is where that choice gets made.",
+   "also": [
+    {
+     "slug": "public-sector-unions-city-politics",
+     "title": "The Unions and the Cities"
+    }
+   ],
+   "also_note": "Also: Nicholas Bagley on what to do when public sector labor's interests and the public's diverge.",
+   "match": {
+    "window": [
+     "11-01",
+     "11-15"
+    ],
+    "strands": [],
+    "keywords": [
+     "District Council 37"
+    ]
+   },
+   "id": "moment-17"
+  },
+  {
+   "kind": "moment",
+   "label": "Early February · the governor's budget",
+   "picks": [
+    {
+     "slug": "mamdani-hochul-nyc-budget-bailout",
+     "title": "Call It What It Is: A State Bailout of New York City"
+    }
+   ],
+   "why": "Why now: the governor's executive budget decides how much of the city's budget Albany ends up paying for. Paul Francis read this year's deal as a bailout of New York City, and that is the frame to hold the next proposal against.",
+   "also": [
+    {
+     "slug": "why-are-new-york-transit-expenses-so-high-history-of-politics",
+     "title": "The Cost Containment Conundrum"
+    }
+   ],
+   "also_note": "Also: The Cost Containment Conundrum, on transit costs, since the Metropolitan Transportation Authority's money runs through the state budget.",
+   "match": {
+    "window": [
+     "01-20",
+     "02-10"
+    ],
+    "strands": [],
+    "keywords": [
+     "state executive budget"
+    ]
+   },
+   "id": "moment-18"
   }
  ]
 }
