@@ -152,7 +152,7 @@ async function renderWeek(){
 
   const joined=(W.join&&W.join.notable)||[];
   const joinBody=(list(joined.map(p=>`<li>${p.wiki?'<span class="vcx-tag blue" title="Has a Wikipedia page">Notable</span>':""}${esc(p.n)}<span class="vcx-meta">${esc([p.role,p.org].filter(Boolean).join(" · "))} · ${apd(p.date,true)}</span></li>`))
-    || empty("No one from government, academia, the press or policy groups joined in these seven days."))
+    || empty(`No one from government, academia, the press or policy groups joined ${W.join&&W.join.span==="week"?"that week":"in these seven days"}.`))
     +(W.join&&W.join.total!=null?`<div class="vcx-fine">${fmt(W.join.total)} people joined the list from ${apd(W.join.from,true)} to ${apd(W.join.to,true)}; ${fmt((W.leave||{}).total)} left.</div>`:"");
 
   const cites=(W.cites||[]).map(i=>C[i]).filter(Boolean);
@@ -166,7 +166,7 @@ async function renderWeek(){
     || empty("Nothing on the calendar in the next eight days.");
 
   const giftBody=list((W.gifts||[]).map(g=>`<li><span class="vcx-num">$${fmt(g.a)}</span>${esc(g.n||"Anonymous")}${g.rec?' <span class="vcx-tag good">Monthly</span>':""}<span class="vcx-meta">${[g.inst&&esc(g.inst), apd(g.d,true)].filter(Boolean).join(" · ")}</span></li>`))
-    || empty("No online gifts in the last seven days.");
+    || empty("No online gifts that week.");
 
   const logBody=(list((W.log||[]).slice().reverse().map(i=>`<li>${esc(i.label)}<span class="vcx-meta">${apm(i.from)}${i.kind?` · ${esc(i.kind)}`:""}</span></li>`))
     || empty("Nothing logged yet."))+`<div class="vcx-fine">Launched something, held an event or changed the newsletter? Add a row to the log and every chart marks it at the next refresh.</div>`;
@@ -180,11 +180,11 @@ async function renderWeek(){
       ${stat("gifts","Online gifts","prospects/#gifts")}
     </div>
     <div class="vcx-cards">
-      ${card("Who joined, last seven days","network/","Contacts",joinBody)}
+      ${card(W.join&&W.join.span==="week"?"Who joined":"Who joined, last seven days","network/","Contacts",joinBody)}
       ${card("Cited","prospects/#impact","Impact ledger",citeBody)}
-      ${card("Most read, last seven days","growth/#trafficCard","Growth",topBody)}
+      ${card(W.top_span==="week"?"Most read":"Most read, last seven days","growth/#trafficCard","Growth",topBody)}
       ${card("Coming up to reshare","resharing/","What to reshare",rsBody)}
-      ${card("Gifts, last seven days","prospects/#gifts","Prospects",giftBody)}
+      ${card("Gifts","prospects/#gifts","Prospects",giftBody)}
       ${card("The log of what we tried",W.log_url,"Add to the log",logBody)}
     </div>`;
   el.querySelectorAll('a[href^="https://docs.google"]').forEach(a=>{ a.target="_blank"; a.rel="noopener"; });

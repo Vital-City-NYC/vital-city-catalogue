@@ -300,22 +300,35 @@ def build_week(growth, prospects, resharing, cites, initiatives, today, slugs):
             "gifts": [span(gifts, s, e, "gifts"), avg([span(gifts, a, b, "gifts") for a, b in pw])],
         }
         res["cites"] = [c["id"] for c in cites["rows"] if s.isoformat() <= day(c.get("date")) <= e.isoformat()]
-    rf = (growth.get("role_flows") or {}).get("week") or {}
-    j, lv = rf.get("join") or {}, rf.get("leave") or {}
-    res["join"] = {"from": j.get("from"), "to": j.get("to"), "total": j.get("total"), "notable": (j.get("notable") or [])[:8]}
+    # Who joined, most read and gifts cover the same Monday-to-Sunday week as
+    # the numbers above. Where a source has no data for that week (an older
+    # growth.json), they fall back to the last seven days, and say so ("span").
+    flows = growth.get("role_flows") or {}
+    rf = next((w for w in (flows.get("weeks") or []) if (w.get("join") or {}).get("from") == res.get("from")), None)
+    j, lv = ((rf or flows.get("week") or {}).get(k) or {} for k in ("join", "leave"))
+    res["join"] = {"from": j.get("from"), "to": j.get("to"), "total": j.get("total"), "notable": (j.get("notable") or [])[:8],
+                   "span": "week" if rf else "7d"}
     res["leave"] = {"total": lv.get("total"), "notable": (lv.get("notable") or [])[:5]}
-    # Pieces only: Ghost's list also holds section pages such as /data/.
-    top = [p for p in ((growth.get("ghost_traffic") or {}).get("top_pages_7d") or [])
-           if (p.get("path") or p.get("pathname") or "").strip("/").split("/")[-1] in slugs][:5]
-    res["top"] = [{"t": p.get("title"), "p": p.get("path") or p.get("pathname"),
-                   "v": p.get("visits") or p.get("visitors") or p.get("views")} for p in top]
+
+    def piece(path):
+        return (path or "").strip("/").split("/")[-1] in slugs   # pieces only, not section pages like /data/
+    wt = next((w for w in ((ga4.get("story_weekly") or {}).get("week_top") or []) if w.get("wk") == res.get("from")), None)
+    if wt:
+        res["top"] = [{"t": t, "p": p, "v": v} for p, t, v in wt["rows"] if piece(p)][:5]
+        res["top_span"] = "week"
+    else:
+        top = [p for p in ((growth.get("ghost_traffic") or {}).get("top_pages_7d") or [])
+               if piece(p.get("path") or p.get("pathname"))][:5]
+        res["top"] = [{"t": p.get("title"), "p": p.get("path") or p.get("pathname"),
+                       "v": p.get("visits") or p.get("visitors") or p.get("views")} for p in top]
+        res["top_span"] = "7d"
     horizon = (today + timedelta(days=8)).isoformat()
     res["reshare"] = [{"date": u.get("post_on"), "label": u.get("label"),
                        "picks": [{"t": p.get("title"), "u": p.get("url"), "slug": p.get("slug")} for p in (u.get("picks") or [])[:2]]}
                       for u in (resharing.get("upcoming") or []) if today.isoformat() <= (u.get("post_on") or "") <= horizon][:5]
-    since7 = (today - timedelta(days=7)).isoformat()
+    ga, gb = res.get("from") or (today - timedelta(days=7)).isoformat(), res.get("to") or today.isoformat()
     res["gifts"] = [{"d": g.get("d"), "n": g.get("n"), "a": g.get("a"), "rec": g.get("rec"), "inst": g.get("inst")}
-                    for g in ((prospects.get("gifts") or {}).get("rows") or []) if (g.get("d") or "") >= since7][:8]
+                    for g in ((prospects.get("gifts") or {}).get("rows") or []) if ga <= (g.get("d") or "")[:10] <= gb][:8]
     res["log"] = (initiatives.get("items") or [])[-4:]          # the latest entries, newest last
     res["log_url"] = initiatives.get("sheet_url") or LOG_SHEET
     return res

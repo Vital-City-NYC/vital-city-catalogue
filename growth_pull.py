@@ -1217,6 +1217,9 @@ def build_role_flows():
         if not last:
             return {"counts": {k: 0 for k in keys}, "total": 0, "notable": []}
         a = (datetime.strptime(last, "%Y-%m-%d") - timedelta(days=days - 1)).strftime("%Y-%m-%d")
+        return between(rows, a, last)
+
+    def between(rows, a, last):
         sel = [(d, b, p) for d, b, p in rows if a <= d <= last]
         counts = {k: 0 for k in keys}
         for _d, b, _p in sel:
@@ -1230,7 +1233,21 @@ def build_role_flows():
     return {"available": True, "as_of": last, "labels": labels, "keys": keys,
             "monthly": [{"m": m, **monthly[m]} for m in sorted(monthly)],
             "week": {"join": win(joins, 7), "leave": win(leaves, 7)},
-            "month": {"join": win(joins, 30), "leave": win(leaves, 30)}}
+            "month": {"join": win(joins, 30), "leave": win(leaves, 30)},
+            # The last six full Monday-to-Sunday weeks, so the home page's
+            # "Who joined" can cover the same week as its headline numbers.
+            "weeks": [{"join": between(joins, a, b), "leave": between(leaves, a, b)}
+                      for a, b in _full_weeks(last, 6)]}
+
+
+def _full_weeks(last, n):
+    """The last n Monday-to-Sunday weeks that end on or before `last`."""
+    if not last:
+        return []
+    d = datetime.strptime(last, "%Y-%m-%d")
+    end = d - timedelta(days=(d.weekday() + 1) % 7)   # the Sunday on or before
+    return [((end - timedelta(days=6 + 7 * i)).strftime("%Y-%m-%d"), (end - timedelta(days=7 * i)).strftime("%Y-%m-%d"))
+            for i in range(n)][::-1]
 
 
 def build_lifecycle(mc):
@@ -1661,8 +1678,16 @@ def _ga4_story_weekly(prop, token, days=300, top=120):
     for i, (path, info) in enumerate(kept):
         for wk, (v, s) in sorted(info["weeks"].items()):
             rows.append([i, wk, v, round(s)])
+    # The home page's "Most read" for one Monday-to-Sunday week. Ranked across
+    # every article, not just the `top` kept above, so a new piece having its
+    # first big week still shows up.
+    recent = sorted({wk for info in pages.values() for wk in info["weeks"]})[-6:]
+    week_top = [{"wk": wk, "rows": [[path, info["title"], info["weeks"][wk][0]] for path, info in
+                                    sorted(((p, i) for p, i in pages.items() if wk in i["weeks"]),
+                                           key=lambda kv: -kv[1]["weeks"][wk][0])[:10]]}
+                for wk in recent]
     log(f"  ga4 story-weekly: {len(plist)} articles, {len(rows)} page-weeks")
-    return {"pages": plist, "rows": rows}
+    return {"pages": plist, "rows": rows, "week_top": week_top}
 
 
 def _ga4_daily_by_slug(prop, token, start_date, end_date="today"):

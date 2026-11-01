@@ -45,22 +45,22 @@ BEATS = {
   "Land use & the built city": [
     "City Planning", "Urban Planning", "Urbanism", "Architecture", "Design",
     "Community Development", "Place", "Neighborhood Life", "Parks", "Streets",
-    "Supermarkets", "Building Blocks", "Pouring the Foundation"],
+    "Supermarkets", "Building Blocks", "Pouring the Foundation", "Gentrification", "Population"],
   "Transportation": ["Transit", "Transportation", "Subways", "Traffic", "Infrastructure",
     "Why the Trains Matter"],
   "City government & governance": [
     "City Government", "Government Operations", "Governance", "Mayoralty",
     "Charter Revision", "COGE", "Policymakers", "Comings and Goings",
     "Leadership in Crisis", "Just Fix It", "The State of the City", "The State of Gotham",
-    "Local power"],
+    "Local power", "Accountability"],
   "Money, budgets & the economy": [
     "Economics", "Budget", "Jobs", "Labor", "What We Can and Can't Afford",
     "The $2 Trillion Question", "The Shape of the Economic Engine",
     "More Money in More Pockets", "Taxes"],
-  "Politics & elections": ["Politics", "Elections", "Mamdani"],
+  "Politics & elections": ["Politics", "Elections", "Mamdani", "Money in politics"],
   "State, federal & beyond NYC": [
     "State Government", "Federal Government", "Immigration", "Foreign Policy",
-    "Military", "Chicago", "The Role of the Feds", "Borrow and Steal"],
+    "Military", "Chicago", "The Role of the Feds", "Borrow and Steal", "Governor"],
   "Health, mental health & drugs": [
     "Public Health", "Mental Health", "Health", "Drugs", "Substance Abuse",
     "Alcohol", "Legalization", "My Substance Story", "People in Crisis on Streets and Subways"],
