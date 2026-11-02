@@ -7,7 +7,7 @@ name: kpi-weekly
 
 on:
   schedule:
-    - cron: "0 12 * * 1"   # Mondays 12:00 UTC = 8am ET (EDT) / 7am ET (EST), after the week closes
+    - cron: "0 6 * * 1"    # Mondays 06:00 UTC = 2am ET (EDT) / 1am ET (EST); GitHub starts scheduled runs hours late, so this lands before the workday
   workflow_dispatch:
 
 concurrency:
