@@ -72,6 +72,6 @@ Checked and needing no action:
   pieces, so most author pages are thin. Not harmful, but they are a large
   share of what Google crawls.
 - **A/B test the biggest evergreen page.** "20 Strategies for Reducing Crime in
-  Cities" is the single most-read piece in the entire record — 74,928 views on
+  Cities" is the most-read piece in the record — 74,928 views on
   its old URL alone. It is worth making sure the new URL is the one being
   linked and shared.

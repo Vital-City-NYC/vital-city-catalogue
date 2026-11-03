@@ -111,7 +111,7 @@
 <header class="mast">
   <div>
     <h1>Resharing calendar</h1>
-    <div class="sub">Pieces from the archive worth posting again, matched to what the city is actually doing. Dates come from <a href="https://vitalcity-nyc.github.io/nyc-policy-calendar/">the New York City calendar</a>; the picks and the argument for each are hand-written.</div>
+    <div class="sub">Pieces from the archive worth posting again, matched to what the city is doing. Dates come from <a href="https://vitalcity-nyc.github.io/nyc-policy-calendar/">the New York City calendar</a>; the picks and the argument for each are hand-written.</div>
   </div>
   <nav class="mastlinks"><a href="#" id="todayBtn" title="Jump to the next thing worth posting — today's, or the next one after it">Today</a><a href="#" id="themeToggle">🌙 Dark mode</a><a href="#" id="lock">Lock</a></nav>
 </header>
@@ -238,7 +238,7 @@ function boot(d){
   out.push(`<h2 id="next">What's coming</h2>`);
   out.push(`<p class="lede">The next ${d.horizon_days} days. Every line is a dated event from the New York City calendar that one of these pieces answers. Say why you're posting it — an old link with no framing reads as filler.</p>`);
   out.push(d.upcoming.length ? d.upcoming.map(entry).join("") :
-    `<div class="entry"><div class="angle">Nothing in the window clears the bar. That is a real answer, not a failure — routine committee business is filtered out on purpose.</div></div>`);
+    `<div class="entry"><div class="angle">Nothing in the window clears the bar. Routine committee business is filtered out on purpose.</div></div>`);
 
   if(d.seasonal && d.seasonal.length){
     out.push(`<h2 id="seasons">Seasons</h2>`);
@@ -279,7 +279,7 @@ function boot(d){
     <br><br>
     <b>What the machine did and did not choose.</b> The pairings and the argument under each are hand-written and carried from the seed file; the build only joins them to dates and ranks them. Entries marked <span class="tag warn">unreviewed match</span> are the exception — those are keyword matches nobody has checked, and they are labelled rather than hidden. Matching is word-boundary on event titles only: an earlier version searched venue lines and scoring notes, and put the rodent-control piece against the Mayor's Management Report.
     <br><br>
-    <b>A gap is reported, not filled.</b> A major moment with no piece behind it is listed as a gap rather than given the least-bad match.
+    <b>Gaps are listed as gaps.</b> A major moment with no piece behind it is listed as a gap instead of being given the least-bad match.
   </div>`);
 
   $("#body").innerHTML = out.join("");

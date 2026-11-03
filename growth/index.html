@@ -889,7 +889,7 @@
             <span style="font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700">Right axis</span>
             <span id="rsTog" style="display:inline-flex;gap:4px">
               <button class="winbtn on" data-s="opens" title="People who opened, each send's count added up for the week (resends and welcome emails since Feb. 2026 included). Inflated by Apple Mail's privacy auto-opens — directional only.">Opens</button>
-              <button class="winbtn" data-s="clicks" title="Weekly total clicks. Apple Mail's auto-opens can't generate clicks, so this is the honest engagement trend. Shown on its own full-height scale — clicks run roughly a fifth of opens, so sharing one axis would flatten the line.">Clicks</button>
+              <button class="winbtn" data-s="clicks" title="Weekly total clicks. Apple Mail's auto-opens can't generate clicks, so this is the more reliable engagement trend. Shown on its own full-height scale — clicks run roughly a fifth of opens, so sharing one axis would flatten the line.">Clicks</button>
             </span>
           </span>
         </div>
@@ -1046,7 +1046,7 @@
 
       <div class="sechead" id="sec-reach">
         <div class="sechead-title">Reach &amp; traffic</div>
-        <div class="sechead-sub">Distribution signals — directional only. A follower or a visit counts when it converts into a subscriber or donor upstream, so read this section as weather, not scoreboard.</div>
+        <div class="sechead-sub">Distribution signals — directional only. A follower or a visit counts when it converts into a subscriber or donor upstream, so read this section as background.</div>
       </div>
 
       <div class="card" id="trafficCard">
@@ -1084,7 +1084,7 @@
              analytics.x.com and rerun the numbers -- the method is in the
              commit that added this block. -->
         <div style="margin-top:16px;border-top:1px solid var(--vc-cloud);padding-top:12px">
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:8px">A year of our own X posts — what actually worked <span style="font-weight:400;text-transform:none;letter-spacing:0">· X analytics exports (content + daily), Aug. 2025-Aug. 2026 · 418 posts, 365 tracked days · not live, refreshed by hand</span></div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:8px">A year of our own X posts — what worked <span style="font-weight:400;text-transform:none;letter-spacing:0">· X analytics exports (content + daily), Aug. 2025-Aug. 2026 · 418 posts, 365 tracked days · not live, refreshed by hand</span></div>
           <div style="font-size:12.5px;line-height:1.6;color:var(--vc-black)">
             <p style="margin:0 0 8px"><b>Maps convert; virality doesn't.</b> Four posts sharing interactive maps produced 14,711 link clicks and 220 new followers — 65% of the year's clicks and 60% of its new followers, at 45 clicks per 1,000 impressions. The year's viral hit — a Mamdani rent-freeze video clip that reached 10.1 million impressions, 82% of the year's total — delivered 809 clicks and 17 followers: reach without conversion, at 0.08 clicks per 1,000.</p>
             <p style="margin:0 0 8px"><b>The feed is a lottery.</b> The median post reached 420 people; the top 20 of 418 posts accounted for 95% of all impressions. What breaks out: data that corrects a common belief (the asking-rent-vs-actual-rent thread, 278,000 impressions), officials in their own words (the Lieber and Mamdani quote posts) and anything interactive.</p>
@@ -1575,7 +1575,7 @@ function boot(data){
         delta:"Donorbox not connected", cls:"na", tip:"Monthly recurring donation revenue. Needs Donorbox."};
       return {lbl:"Recurring revenue \u00b7 monthly", num:fmtUSD(mrr),
         delta:`${fmtN(n||0)} recurring donors \u00b7 ${fmtUSD(mrr*12)}/yr`, cls:"flat",
-        tip:`Dependable income: ${fmtN(n||0)} people giving on a schedule, worth ${fmtUSD(mrr)} a month or ${fmtUSD(mrr*12)} a year.\n\nWhy it is here and total raised is not: sustainability is the stated purpose of the fundraising objective, and recurring gifts are the only part of the income that can be counted on before it arrives. Everything else depends on December -- December 2025 alone carried 56% of every gift on record.\n\nThis is the clearest growth opportunity on the page. Against a list of ${fmtN(total)} with a 66% activation rate among new subscribers, the recurring base is a rounding error.`};
+        tip:`Dependable income: ${fmtN(n||0)} people giving on a schedule, worth ${fmtUSD(mrr)} a month or ${fmtUSD(mrr*12)} a year.\n\nWhy it is here and total raised is not: sustainability is the stated purpose of the fundraising objective, and recurring gifts are the only part of the income that can be counted on before it arrives. Everything else depends on December -- December 2025 alone carried 56% of every gift on record.\n\nThis has the most room to grow of anything on the page. Against a list of ${fmtN(total)} with a 66% activation rate among new subscribers, the recurring base is a rounding error.`};
     })(),
     (function(){
       const y=dWin.ytd||{};
@@ -1617,7 +1617,7 @@ function boot(data){
       return {lbl:"Active subscribers · 30d", num: n!=null ? fmtN(n) : "—",
               delta: n!=null ? `${pct} of the list; ${fmtN((mc.aau||{}).active_users||0)} people opened at least one in the past year` : "data pending",
               cls:"flat",
-              tip:`Unique people who opened at least one Vital City newsletter in the last 30 days — a real union across every send in the window, deduped by email. Sometimes called MAU (monthly active users).\n\nWhy it matters: This is your genuinely reachable audience — the people actually reading, not just subscribed. List size flatters; this is the number that predicts how many will see your next send.\n\nNote: Apple Mail privacy auto-opens inflate this somewhat — click rate is the cleaner cut.`};
+              tip:`Unique people who opened at least one Vital City newsletter in the last 30 days — a real union across every send in the window, deduped by email. Sometimes called MAU (monthly active users).\n\nWhy it matters: This is your reachable audience: the subscribers who are reading. List size flatters; this is the number that predicts how many will see your next send.\n\nNote: Apple Mail privacy auto-opens inflate this somewhat — click rate is the cleaner cut.`};
     })(),
     (function(){
       const a=mc.aau||{}, n=a.active_users;
@@ -1994,7 +1994,7 @@ function boot(data){
         <li><b>2★</b> — rarely opens (or too new to score), but hasn't unsubscribed. This bucket is usually the largest by far.</li>
         <li><b>1★</b> — almost never opens. Candidate for a re-engagement campaign before pruning.</li>
       </ul>
-      <div style="margin-top:6px">Apple Mail's privacy-protection feature auto-opens emails on the user's behalf to fetch tracking pixels. That can inflate ratings for Apple Mail users without real engagement. Ratings across the list were also pulled down by the bot accounts that joined from May to September 2025, about 2,400 of which are still on the list. Click rate (separate from open rate) is the honest signal — Apple Mail's auto-opens don't generate clicks.</div>
+      <div style="margin-top:6px">Apple Mail's privacy-protection feature auto-opens emails on the user's behalf to fetch tracking pixels. That can inflate ratings for Apple Mail users without real engagement. Ratings across the list were also pulled down by the bot accounts that joined from May to September 2025, about 2,400 of which are still on the list. Click rate (separate from open rate) is the more reliable signal — Apple Mail's auto-opens don't generate clicks.</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
       <div>
@@ -2446,7 +2446,7 @@ function renderGrowthChart(mc){
   if(rsLeg){
     rsLeg.innerHTML = `<span class="sw" style="background:${rsColor};opacity:.6"></span>`+
       (RS === "clicks"
-        ? `Total clicks per week (right axis) — the honest signal`
+        ? `Total clicks per week (right axis) — the more reliable signal`
         : `Openers per week, all sends added up (right axis)`);
   }
   const rsTog = document.getElementById("rsTog");
@@ -2495,7 +2495,7 @@ function renderGrowthChart(mc){
       if(lift >= 0){
         openLine = ` Avg total opens per <i>week</i> is up ${lift.toFixed(0)}% comparing the first 8 weeks of the window to the last 8 complete weeks — even though the per-email open rate fell (bot accounts from the 2025 surge, which never open, diluted it), the list grew enough that more people open each week.`;
       } else {
-        openLine = ` Avg total opens per week is ${Math.abs(lift).toFixed(0)}% lower comparing the first 8 weeks to the last 8 complete weeks — list growth wasn't enough to offset the per-email engagement drop. The Newsletter performance card below has click rate, the honest engagement signal (clicks aren't inflated by Apple Mail auto-opens).`;
+        openLine = ` Avg total opens per week is ${Math.abs(lift).toFixed(0)}% lower comparing the first 8 weeks to the last 8 complete weeks — list growth wasn't enough to offset the per-email engagement drop. The Newsletter performance card below has click rate, the more reliable engagement signal (clicks aren't inflated by Apple Mail auto-opens).`;
       }
     }
     const grossLine = gYtd > 0
@@ -2575,14 +2575,14 @@ function renderPerf(mc){
     (cc ? {lbl:`Click rate · ${q0Lbl}`, n:cc.now.toFixed(1)+"%",
       d:`${fmtPctDelta(cc.d)} against the average from ${normLbl} (about ${cc.base.toFixed(1)}%)${trendTxt(cc)}`,
       cls:deltaPctClass(cc.d,true),
-      tip:`Newsletter click rate over the last three full months (${q0Lbl}), weighted by emails delivered, against the ${cc.months} months before them, leaving out the May–September 2025 bot surge. Year to date is ${ytd.click_pct||0}%; the same window last year was ${prior.click_pct||0}%.\n\nWhy it matters: the honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens. Same caveat as the open rate on the composition side: the never-opening accounts don't click either, so the raw level runs low. Benchmark: nonprofit email averages ~3.3% (M+R Benchmarks 2025).`}
+      tip:`Newsletter click rate over the last three full months (${q0Lbl}), weighted by emails delivered, against the ${cc.months} months before them, leaving out the May–September 2025 bot surge. Year to date is ${ytd.click_pct||0}%; the same window last year was ${prior.click_pct||0}%.\n\nWhy it matters: the more reliable engagement signal — clicks aren't inflated by Apple Mail's auto-opens. Same caveat as the open rate on the composition side: the never-opening accounts don't click either, so the raw level runs low. Benchmark: nonprofit email averages ~3.3% (M+R Benchmarks 2025).`}
         : {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
       d:fmtPctDelta(dClickYtd)+" against the same dates in 2025", cls:deltaPctClass(dClickYtd,true),
-      tip:"Year-to-date click rate, recipient-weighted across every send.\n\nWhy it matters: The honest engagement signal — clicks aren't inflated by Apple Mail's auto-opens, so this is the truest read on whether content is landing. If one performance number deserves your attention, it's this one."+interpretInsight("click_rate", dClickYtd)}),
+      tip:"Year-to-date click rate, recipient-weighted across every send.\n\nWhy it matters: The more reliable engagement signal — clicks aren't inflated by Apple Mail's auto-opens, so this is the truest read on whether content is landing. If one performance number deserves your attention, it's this one."+interpretInsight("click_rate", dClickYtd)}),
     {lbl:"Click-to-open · YTD", n:(ytd.ctor_pct||0)+"%",
       d:`${fmtPctDelta(pctDelta(ytd.ctor_pct, prior.ctor_pct))} against the same dates in 2025`,
       cls:deltaPctClass(pctDelta(ytd.ctor_pct, prior.ctor_pct), true),
-      tip:"Click-to-Open Ratio (CTOR) = clicks ÷ opens. THE quality signal in the post-Apple-Mail-privacy era: 'of the people who actually opened the email, what % engaged with it enough to click something?' Healthy editorial newsletters typically run 8-18% CTOR. Above 18% means subjects + content are well-aligned with audience interest. This number doesn't get inflated by Apple's privacy auto-opens the way the raw open rate does, so it's the honest read on content quality.\n\nIt is also the one rate whose year-over-year comparison is trustworthy: both its numerator and its denominator are drawn from people who opened, so a list stuffed with accounts that never open cannot move it. Open rate and click rate both fell year over year partly because the list changed; CTOR falling from 16.0% to 11.6% is a real decline in how many readers act on what they read."},
+      tip:"Click-to-Open Ratio (CTOR) = clicks ÷ opens. THE quality signal in the post-Apple-Mail-privacy era: 'of the people who actually opened the email, what % engaged with it enough to click something?' Healthy editorial newsletters typically run 8-18% CTOR. Above 18% means subjects + content are well-aligned with audience interest. This number doesn't get inflated by Apple's privacy auto-opens the way the raw open rate does, so it's the more reliable read on content quality.\n\nIt is also the one rate whose year-over-year comparison is trustworthy: both its numerator and its denominator are drawn from people who opened, so a list stuffed with accounts that never open cannot move it. Open rate and click rate both fell year over year partly because the list changed; CTOR falling from 16.0% to 11.6% is a real decline in how many readers act on what they read."},
     {lbl:"Sends · YTD", n:fmtN(ytd.sends||0),
       d:fmtPctDelta(dSendsYtd)+" against the same dates in 2025", cls:deltaPctClass(dSendsYtd,true),
       tip:"Total newsletter sends so far this year vs the same period last year. Includes automations and manual sends.\n\nWhy it matters: Publishing cadence. More sends mean more reach and more signup touchpoints — but read it alongside unsubscribes and click rate to be sure volume isn't fatiguing the list rather than serving it."+interpretInsight("sends", dSendsYtd)},
@@ -2753,7 +2753,7 @@ function interpretInsight(metric, deltaPct, ctx){
   if(ad < 15) return "";   // ignore noise
   const sign = deltaPct>=0 ? "+" : "";
   if(metric==="open_rate" && deltaPct<-20){
-    return ` Open rates move for reasons besides reading: Apple Mail's automatic opens, never-opening bot accounts on the list (the May–Sept. 2025 surge), and whether the email lands in the inbox. Click rate is the more honest signal — check whether it moved the same way.`;
+    return ` Open rates move for reasons besides reading: Apple Mail's automatic opens, never-opening bot accounts on the list (the May–Sept. 2025 surge), and whether the email lands in the inbox. Click rate is the more reliable signal — check whether it moved the same way.`;
   }
   if(metric==="open_rate" && deltaPct>20){
     return ` Likely driver: list cleanup (removing unengaged subscribers) or a stretch of unusually compelling subject lines. Cross-check with subscribers count — if it went down at the same time, you trimmed disengaged readers.`;
@@ -3488,7 +3488,7 @@ function renderPieceBenchmarks(data){
     <table class="tbl" style="width:100%"><thead><tr><th>Band</th><th class="num">First-${bm.first_days}-day views</th><th class="num">Pieces</th><th>What it means</th></tr></thead><tbody>${tierRows}</tbody></table>
 
     ${hoursRows?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:20px 0 6px">Attention &mdash; total reader-hours in the first ${bm.first_days} days</div>
-    <div style="font-size:12px;color:var(--vc-charcoal);line-height:1.5;margin-bottom:6px">Views &times; time actually spent. The honest counterweight to reach: a piece can win on traffic and lose here, and a dense explainer that holds people can clear this bar on modest views.</div>
+    <div style="font-size:12px;color:var(--vc-charcoal);line-height:1.5;margin-bottom:6px">Views &times; time spent. A counterweight to reach: a piece can win on traffic and lose here, and a dense explainer that holds people can clear this bar on modest views.</div>
     <table class="tbl" style="width:100%"><thead><tr><th>Band</th><th class="num">Reader-hours</th><th class="num">Pieces</th></tr></thead><tbody>${hoursRows}</tbody></table>`:""}
 
     ${depthRow?`<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal);font-weight:700;margin:20px 0 6px">Depth &mdash; engaged seconds per view</div>
@@ -4332,7 +4332,7 @@ function renderWhyLeave(mc){
       <div><div style="font-family:var(--vc-serif);font-size:26px;line-height:1;color:var(--vc-cerulean)">${rm.toFixed(2)}<span style="font-size:12px;font-family:var(--vc-sans);color:var(--vc-charcoal)"> /1k</span></div><div style="font-size:11px;color:var(--vc-charcoal);margin-top:3px">multi-send weeks</div></div>
       <div style="font-weight:800;color:${vcol};font-size:13px;padding-bottom:2px">${verdict}</div>
     </div>
-    <div style="font-size:10.5px;line-height:1.6;margin-top:8px;color:var(--vc-charcoal)">Correlational: busy weeks skew toward fundraising appeals and special sends, so read this as "frequency isn't hurting the list" — not "send more." The regular weekly newsletter is the single biggest unsubscribe trigger simply because it's the consistent full-list touch.</div>`;
+    <div style="font-size:10.5px;line-height:1.6;margin-top:8px;color:var(--vc-charcoal)">Correlational: busy weeks skew toward fundraising appeals and special sends, so read this as "frequency isn't hurting the list" — not "send more." The regular weekly newsletter triggers the most unsubscribes because it's the consistent full-list touch.</div>`;
   }
   host.innerHTML=html;
 }
@@ -4458,13 +4458,13 @@ function renderDonors(db){
           (yoyOk?"":` Donorbox history in this account starts ${esc((db.history_starts||'').slice(0,10))}, so a like-for-like YoY isn't possible yet.`)},
     {lbl:"Unique donors · YTD", n:fmtN(ytd.donors||0),
       d:drD.label, cls:drD.cls,
-      tip:"Distinct donors who gave at least once this year, deduped by email.\n\nWhy it matters: Breadth of support, not just dollars. A rising donor count means the base is widening — which boards and funders read as institutional health and lower dependence on any single large gift."},
+      tip:"Distinct donors who gave at least once this year, deduped by email.\n\nWhy it matters: It measures breadth of support. A rising donor count means the base is widening — which boards and funders read as institutional health and lower dependence on any single large gift."},
     {lbl:"Gifts · YTD", n:fmtN(ytd.count||0),
       d:`avg ${fmtUSD(ytd.avg_gift||0)}`, cls:"flat",
       tip:"Total individual gifts processed this year; one donor can give multiple times.\n\nWhy it matters: Gift frequency. When gifts run well ahead of donors, people are giving repeatedly — a signal of loyalty and a cue that recurring asks would land."},
     {lbl:"Recurring · MRR", n:fmtUSD(db.mrr_estimate||0),
       d:`${fmtN(db.active_recurring_donors||0)} active donors`, cls:"flat",
-      tip:"Estimated monthly recurring revenue, summed from recurring gifts processed in the last 30 days. Active recurring donors = unique recurring donors who gave at least once in the last 90 days.\n\nWhy it matters: Recurring revenue is the predictable base you can budget against — worth far more per dollar than one-time gifts because it renews without re-asking. Growing the MRR base is the single most leveraged fundraising move."},
+      tip:"Estimated monthly recurring revenue, summed from recurring gifts processed in the last 30 days. Active recurring donors = unique recurring donors who gave at least once in the last 90 days.\n\nWhy it matters: Recurring revenue is the predictable base you can budget against — worth far more per dollar than one-time gifts because it renews without re-asking. Growing the MRR base is the fundraising move with the most return."},
     {lbl:"Last 30 days", n:fmtUSD(l30.amount||0),
       d:yoyOk && yoy30.amount ? fmtPctDelta(((l30.amount-yoy30.amount)/yoy30.amount)*100)+" vs same window '25" : `${fmtN(l30.count||0)} gifts`,
       cls:yoyOk && yoy30.amount ? deltaPctClass(((l30.amount-yoy30.amount)/yoy30.amount)*100, true) : "flat",
@@ -4824,7 +4824,7 @@ function renderEngagementExtras(ex){
     <div style="margin-bottom:22px">
       <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin-bottom:4px">Engagement by mailbox provider</div>
       <div style="font-size:12px;color:var(--vc-charcoal);margin-bottom:8px;line-height:1.5">
-        <b style="color:var(--vc-black)">What it is:</b> Average open rate of subscribers, grouped by who hosts their email (Gmail, Outlook, .gov, etc.). <b>Why look:</b> a strikingly low rate for one provider (e.g. Microsoft / Outlook at 16%) is usually a <b>deliverability problem</b> — VC's mail landing in Junk for that provider's users. Worth checking Microsoft Postmaster Tools / Google Postmaster. The .gov and .edu rows tend to be the most honest engagement signal because those mail setups don't run Apple Mail privacy proxies.
+        <b style="color:var(--vc-black)">What it is:</b> Average open rate of subscribers, grouped by who hosts their email (Gmail, Outlook, .gov, etc.). <b>Why look:</b> an unusually low rate for one provider (e.g. Microsoft / Outlook at 16%) is usually a <b>deliverability problem</b> — VC's mail landing in Junk for that provider's users. Worth checking Microsoft Postmaster Tools / Google Postmaster. The .gov and .edu rows tend to be the most reliable engagement signal because those mail setups don't run Apple Mail privacy proxies.
       </div>
       ${mbox.map(m=>`<div class="dombar" title="${esc(m.label==='Government'?'Subscribers with a .gov email — usually NYC city government, state, federal':m.label==='Academic'?'Subscribers at a .edu institution — NYU, Columbia, Wagner, etc.':`Subscribers using ${m.label}-hosted email`)}.">
         <div style="font-size:12px">${esc(m.label)}</div>
@@ -5630,7 +5630,7 @@ function renderBigPicture(data){
     }).join("");
     const emTable = emRows ? `
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:24px 0 8px">Newsletter performance by year</div>
-      <table class="tbl" style="width:100%"><thead><tr><th>Year</th><th class="num">Subscribers (EOY)</th><th class="num">Sends</th><th class="num">Open rate <span class="flag">Apple Mail–inflated</span></th><th class="num">Total opens</th><th class="num" title="Total opens ÷ the weeks of that year that have elapsed. This is the number to compare across years — the in-progress year's raw total is low only because the year isn't over.">Opens / week</th><th class="num">Total clicks <span class="flag">honest signal</span></th><th class="num" title="Total clicks ÷ the weeks of that year that have elapsed. Clicks aren't inflated by Apple Mail auto-opens, so this is the cleanest year-over-year engagement trend on the page.">Clicks / week <span class="flag">best trend line</span></th></tr></thead><tbody>${emRows}</tbody></table>
+      <table class="tbl" style="width:100%"><thead><tr><th>Year</th><th class="num">Subscribers (EOY)</th><th class="num">Sends</th><th class="num">Open rate <span class="flag">Apple Mail–inflated</span></th><th class="num">Total opens</th><th class="num" title="Total opens ÷ the weeks of that year that have elapsed. This is the number to compare across years — the in-progress year's raw total is low only because the year isn't over.">Opens / week</th><th class="num">Total clicks <span class="flag">reliable signal</span></th><th class="num" title="Total clicks ÷ the weeks of that year that have elapsed. Clicks aren't inflated by Apple Mail auto-opens, so this is the cleanest year-over-year engagement trend on the page.">Clicks / week <span class="flag">best trend line</span></th></tr></thead><tbody>${emRows}</tbody></table>
       <div style="font-size:11px;color:var(--vc-charcoal);margin-top:8px;line-height:1.55">Total opens/clicks are estimated from each send's open/click rate × recipients (Mailchimp reports rates, not raw totals). <b>Open rate isn't comparable across the whole span</b> — Apple Mail Privacy Protection (Sept 2021+) auto-opens email, inflating opens from ~2022 on; treat open rate as directional and clicks as the cleaner engagement signal. <b>Per-week columns divide by the weeks of that year that have actually elapsed</b>, so ${curYear} can be read against complete years — its raw totals are lower only because the year is still running. ${curYear} is in progress.</div>` : "";
     // ---- Active readers per send, by year. The list size above is who is
     // subscribed; this is who actually opens (and, the honest line, clicks).
@@ -5652,7 +5652,7 @@ function renderBigPicture(data){
     const arBlock = arYears.length>=2 ? `
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--vc-charcoal);font-weight:700;margin:24px 0 10px">Active readers per send, by year</div>
       <div style="display:flex;gap:14px;align-items:flex-end;height:180px">${arBars}</div>
-      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the average number of people who opened a send that year (emails delivered × the share who opened); the percentage inside a bar is the change from the year before; the figure under it is the average who clicked, the honest signal. Per-send averages are comparable across a year in progress, unlike totals. Opens are Apple Mail–inflated from 2022 on, so read the openers bar as directional and the clickers figure as the truth.</div>` : "";
+      <div style="font-size:11px;color:var(--vc-charcoal);margin-top:12px;line-height:1.55">Each bar is the average number of people who opened a send that year (emails delivered × the share who opened); the percentage inside a bar is the change from the year before; the figure under it is the average who clicked, the more reliable signal. Per-send averages are comparable across a year in progress, unlike totals. Opens are Apple Mail–inflated from 2022 on, so read the openers bar as directional and the clickers figure as the truth.</div>` : "";
 
     listBlock = `
       <div style="border-top:1px solid var(--vc-cloud);margin-top:26px;padding-top:20px"></div>
@@ -5732,7 +5732,7 @@ function renderLifecycle(lc, stayHTML, mc){
   const actCls = act.pct >= 50 ? "up" : act.pct >= 30 ? "flat" : "down";
   const kpis = `
     <div class="perfgrid" style="margin-bottom:18px">
-      <div class="perfcell" title="Of the ${fmtN(act.cohort_size||0)} people who joined the newsletter in the last 30 days, this is the % who have opened at least one Vital City email. Below 30% suggests a broken welcome experience or signups that weren't intentional. Above 50% means people who join are actually reading.">
+      <div class="perfcell" title="Of the ${fmtN(act.cohort_size||0)} people who joined the newsletter in the last 30 days, this is the % who have opened at least one Vital City email. Below 30% suggests a broken welcome experience or signups that weren't intentional. Above 50% means people who join are reading.">
         <div class="pl">Activation · new 30d</div>
         <div class="pn">${act.pct||0}%</div>
         <div class="pd ${actCls}">${fmtN(act.engaged||0)} of ${fmtN(act.cohort_size||0)} opened ≥1 email</div>

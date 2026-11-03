@@ -650,7 +650,7 @@ function boot(d){
     <div data-tid="renewals" class="ins">Renewals are the cheapest money in fundraising. Arnold (12 readers, a byline) and Guggenheim (staff who donate personally) are deep relationships with obvious expansion cases; Achelis &amp; Bodman, Public Welfare and Teagle fund without a single staff reader on file &mdash; worth asking who the program officer is and getting them on the list.</div>
 
     <h2 style="margin-top:26px">Funder conversations on record</h2>
-    <div class="hint">Subject matter of funder conversations found in an Aug 2026 review, each dated to the most recent record. This is not a status board &mdash; where any of these stands today is not something this page can know.</div>
+    <div class="hint">Subject matter of funder conversations found in an Aug 2026 review, each dated to the most recent record. This page cannot show where any of these stands today.</div>
     <table class="tbl"><thead><tr><th>Who</th><th>Last record</th><th>Subject</th></tr></thead>
     <tbody>${(d.pipeline||[]).map(p=>`<tr>
       <td><b>${esc(p.name)}</b> <span class="editlink" data-pipekey="${esc(p.key||"")}" title="Update the date or the note, or remove this row">Edit</span>${p.edited?`<span class="edstamp">edited ${esc(p.edited)}</span>`:""}</td>
@@ -675,7 +675,7 @@ function boot(d){
     <div class="hint">Big pools, but built for news gathering. A commentary-and-analysis journal is off-profile for most of them; the wedge, where one exists, is the data-journalism output or the civic-information frame.</div>
     <table class="tbl"><thead><tr><th>Funder &middot; focus &middot; beat fit</th><th>Readers</th><th>Engaged</th><th>Donors</th><th>Who</th><th>Note</th></tr></thead>
     <tbody>${journo.concat(other).map(frow).join("")}</tbody></table><div class="addrow"><span class="editlink" data-add="funder" data-section="journalism">+ Add a journalism funder</span></div>
-    <div data-tid="verify" class="ins warn"><b>These are leads to verify, not research.</b> Programs, deadlines and eligibility change; several of these funders work by invitation. Check the funder's own site and current filings before anyone spends time on an approach, and nothing on this page should be pasted into an application.</div>
+    <div data-tid="verify" class="ins warn"><b>These are leads to verify.</b> Programs, deadlines and eligibility change; several of these funders work by invitation. Check the funder's own site and current filings before anyone spends time on an approach, and nothing on this page should be pasted into an application.</div>
     <div data-tid="readiness" class="ins"><b>Grant readiness:</b> Vital City is a 501(c)(3) project via fiscal sponsorship by the <b>Fund for the City of New York</b> (EIN 13-2612524). Applications and checks route through the sponsor &mdash; confirm current terms with FCNY before quoting them to a funder.</div>
   </div>
 

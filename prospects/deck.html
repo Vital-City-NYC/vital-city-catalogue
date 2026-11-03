@@ -510,21 +510,21 @@ async function exportPptx(){
     y=rows(s,y,[
       {k:"Inside government",v:(tile("Government + university").s||"")+" — the people these analyses are written to reach receive them directly."},
       {k:"Inside the funders",v:arow(FF.audience,"Staff at grantmaking foundations").value||""}],{kw:2.2,rh:0.62});
-    caveat(s,y,"On engagement:",`click-to-open is the honest metric (${arow(FF.engagement,"Click-to-open").value||"—"} against a 5.3–8.6% cross-industry band) — Apple Mail inflates raw open rates for everyone, so clicks are the like-for-like comparison.`); }
+    caveat(s,y,"On engagement:",`click-to-open is the more reliable metric (${arow(FF.engagement,"Click-to-open").value||"—"} against a 5.3–8.6% cross-industry band) — Apple Mail inflates raw open rates for everyone, so clicks are the like-for-like comparison.`); }
   // 8 reach
   { const s=slide("Reach","Growing, in a year when publisher traffic is collapsing.");
     let y=figs(s,s._bodyY||2.2,[
       {v:tile("Site visitors").n||"—",k:"Site visitors, last 30 days",n:tile("Site visitors").s||"",hero:true},
       {v:tile("Pieces published").n||"—",k:"Pieces published",n:tile("Pieces published").s||""}]);
     y=lede(s,y,"Publisher search traffic fell by a third globally last year; small publishers lost more. Vital City's weekly visitors rose instead — the archive keeps ranking because the analyses keep being the source.",{h:0.9});
-    caveat(s,y,"On subscriber growth.","The 2025 signup surge is inflated by bot registrations; 2024 is the honest volume baseline for growth claims."); }
+    caveat(s,y,"On subscriber growth.","The 2025 signup surge is inflated by bot registrations; 2024 is the cleaner volume baseline for growth claims."); }
   // 9 long view — three native charts
   { const s=slide("The long view","Year over year over year.");
     const lv=FF.longview||{}; const cw=(CW-0.5)/3;
     if((lv.visitors||[]).length) barchart(s,L,s._bodyY||2.2,cw,3.9,"Unique website visitors",lv.visitors.map(r=>r.y),lv.visitors.map(r=>r.n),CER);
     if((lv.list||[]).length) barchart(s,L+cw+0.25,s._bodyY||2.2,cw,3.9,"Email list at year end",lv.list.map(r=>r.y),lv.list.map(r=>r.n),ORG);
     if((lv.pieces||[]).length) barchart(s,L+2*(cw+0.25),s._bodyY||2.2,cw,3.9,"Pieces published per year",lv.pieces.map(r=>r.y),lv.pieces.map(r=>r.n),CER);
-    caveat(s,6.25,"Reading these honestly:","visitor counts start in 2023 because that is when analytics begin — earlier years are unmeasured, not zero. The 2025 list-size jump includes a wave of bot registrations, since cleaned; 2024 is the honest baseline. Output and visitor numbers carry no such caveat."); }
+    caveat(s,6.25,"How to read these:","visitor counts start in 2023 because that is when analytics begin — earlier years are unmeasured, not zero. The 2025 list-size jump includes a wave of bot registrations, since cleaned; 2024 is the cleaner baseline. Output and visitor numbers carry no such caveat."); }
   // 10 products
   { const s=slide("The products","Formats built to get things fixed.");
     const prods=V?V.products.map(nm=>(FF.products||[]).find(p=>p.name===nm)).filter(Boolean):(FF.products||[]);
@@ -700,7 +700,7 @@ function slides(){
       <div class="row"><div class="rk">Inside government</div><div class="rv">${esc(tile("Government + university").s||"")} — the people these analyses are written to reach receive them directly.</div></div>
       <div class="row"><div class="rk">Inside the funders</div><div class="rv">${esc(arow(FF.audience,"Staff at grantmaking foundations").value||"")}</div></div>
     </div>
-    <div class="caveat"><b>On engagement:</b> click-to-open is the honest metric (${esc(arow(FF.engagement,"Click-to-open").value||"—")} against a 5.3–8.6% cross-industry band) — Apple Mail inflates raw open rates for everyone, so clicks are the like-for-like comparison.</div>`});
+    <div class="caveat"><b>On engagement:</b> click-to-open is the more reliable metric (${esc(arow(FF.engagement,"Click-to-open").value||"—")} against a 5.3–8.6% cross-industry band) — Apple Mail inflates raw open rates for everyone, so clicks are the like-for-like comparison.</div>`});
 
   S.push({eyebrow:"Reach",html:`
     <h2>Growing, in a year when publisher traffic is collapsing.</h2>
@@ -709,7 +709,7 @@ function slides(){
       {v:esc(tile("Pieces published").n||"—"),k:"Pieces published",n:esc(tile("Pieces published").s||"")}
     ])}
     <p class="lede">Publisher search traffic fell by a third globally last year; small publishers lost more. Vital City's weekly visitors rose instead — the archive keeps ranking because the analyses keep being the source.</p>
-    <div class="caveat"><b>On subscriber growth.</b> The 2025 signup surge is inflated by bot registrations; 2024 is the honest volume baseline for growth claims.</div>`});
+    <div class="caveat"><b>On subscriber growth.</b> The 2025 signup surge is inflated by bot registrations; 2024 is the cleaner volume baseline for growth claims.</div>`});
 
   S.push({eyebrow:"The long view",html:`
     <h2>Year over year over year.</h2>
@@ -738,7 +738,7 @@ function slides(){
           ${chart(lv.pieces||[],false,r=>String(yr)===r.y?"to date":"")}</div>
       </div>`;
     })()}
-    <div class="caveat"><b>Reading these honestly:</b> visitor counts start in 2023 because that is when analytics begin — earlier years are unmeasured, not zero, and 2026 is on pace to pass 2025 with a third of the year left. The 2025 list-size jump includes a wave of bot registrations, since cleaned; 2024 is the honest baseline for organic list-growth claims. The visitor and output numbers carry no such caveat.</div>`});
+    <div class="caveat"><b>How to read these:</b> visitor counts start in 2023 because that is when analytics begin — earlier years are unmeasured, not zero, and 2026 is on pace to pass 2025 with a third of the year left. The 2025 list-size jump includes a wave of bot registrations, since cleaned; 2024 is the cleaner baseline for organic list-growth claims. The visitor and output numbers carry no such caveat.</div>`});
 
   S.push({eyebrow:"The products",html:`
     <h2>Formats built to get things fixed.</h2>

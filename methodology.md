@@ -73,7 +73,7 @@ A single article can belong to more than one issue/series and to many topics.
 
 Not every issue got a number. Vital City has run **special online issues that
 were never numbered**, and in Ghost these carry a named internal tag rather than
-`#issue-N`. Two consequences worth knowing:
+`#issue-N`. Two consequences:
 
 - **The numbered sequence skips 12.** That is not a missing issue: **"What Makes
   Cities Tick" is issue 12**, published unnumbered. Its 20 pieces ran from March
@@ -85,7 +85,7 @@ were never numbered**, and in Ghost these carry a named internal tag rather than
 - **A named internal tag is usually an issue, not a standing series.** Most of
   them publish every piece on a single day (`congestion-pricing`,
   `crime-in-2023-and-2024`), or roll out over a few weeks. Only a handful —
-  `data-stories`, `what-makes-cities-tick`, `just-fix-it` — genuinely recur
+  `data-stories`, `what-makes-cities-tick`, `just-fix-it` — recur
   across years. So anything that counts "issues" must count numbered and named
   tags together; counting only `#issue-N` undercounts issues by roughly a third
   and overstates how much is published outside an issue.
@@ -167,7 +167,7 @@ interview passes.
   `leaflet.js`, `api.mapbox.com`, `/d3@`, `vega-lite`), **not** loose words, so
   prose like "Las **Vega**s" or "road**map**" does not trigger a false positive.
 - The 3-chart threshold for "data analysis" keeps opinion essays that merely
-  include a chart or two in "opinion/commentary"; only genuinely chart-driven
+  include a chart or two in "opinion/commentary"; only chart-driven
   pieces flip to "data analysis".
 - **Data beats policy, and data beats tool.** A chart-driven component of a
   policy series (e.g. "Subway Safety: What the Data Show", inside *What To Do
@@ -248,7 +248,7 @@ spreadsheet and is **never published** — the source `.xlsx` and the entire
 
 In the catalogue UI, when this local layer is present the page shows an "author
 type" filter and contact-category tags beside each author. On the public
-GitHub Pages site the file is absent, so those features simply do not appear —
+GitHub Pages site the file is absent, so those features do not appear —
 the public catalogue contains only published-content data, never the CRM.
 
 ## Known limitations

@@ -1,6 +1,6 @@
 # Press map
 
-Who covers New York City government, what they have actually been writing about,
+Who covers New York City government, what they have been writing about,
 and how to reach them. A tool tab in the Vital City toolkit: `press/index.html`,
 gated with the shared passphrase, reading `press/data.enc`.
 
@@ -66,7 +66,7 @@ parser walked into the wrong person's block — which is the one failure mode th
 would put a real reporter's address on somebody else's card. Those are dropped
 into `unpaired_addresses` with the surrounding text, for a human to look at.
 
-This is not theoretical. An early run paired Chalkbeat's data reporter with the
+An early run paired Chalkbeat's data reporter with the
 address of the person listed above her. The pairing rule caught it.
 
 Nothing is ever inferred from a pattern. Same rule as the officials database.
