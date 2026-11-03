@@ -430,6 +430,12 @@ def collect_courts():
     contain the organization's web address. Addresses, not names: a filing that
     cites a report almost always carries its URL, and a URL cannot be ordinary
     English. Dated by filing date."""
+    # CourtListener's v4 search answers 401 without an API token (free account,
+    # Profile > Developer Tools). Stop with a plain message rather than a traceback.
+    token = os.environ.get("COURTLISTENER_TOKEN")
+    if not token:
+        sys.exit("COURTLISTENER_TOKEN is not set; CourtListener's search API now requires one.")
+    cl_headers = {"Accept": "application/json", "Authorization": f"Token {token}"}
     raw = load_raw()
     out = {}
     for o in ORGS:
@@ -441,7 +447,7 @@ def collect_courts():
             while url and pages < 20:
                 for attempt in range(6):      # CourtListener answers bursts with 429
                     try:
-                        d = json.loads(http_get(url, ua=UA_BOT, headers={"Accept": "application/json"}))
+                        d = json.loads(http_get(url, ua=UA_BOT, headers=cl_headers))
                         break
                     except urllib.error.HTTPError as e:
                         if e.code != 429 or attempt == 5:
