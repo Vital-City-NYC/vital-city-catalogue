@@ -3874,7 +3874,7 @@
     "type_basis": "html:multi-speaker-transcript",
     "published_date": "2026-07-06",
     "published_at": "2026-07-06T14:00:59.000+00:00",
-    "updated_at": "2026-08-26T18:04:54.000+00:00",
+    "updated_at": "2026-11-04T14:49:18.000+00:00",
     "primary_author": "Sarah Feinberg",
     "authors": [
       "Sarah Feinberg",
@@ -3904,8 +3904,8 @@
       "flourish": [],
       "iframes": [
         {
-          "url": "https://joshgreenman1973.github.io/nyc-charter-explorer/",
-          "host": "joshgreenman1973.github.io",
+          "url": "https://vitalcity-nyc.github.io/nyc-charter-explorer/?embed=1",
+          "host": "vitalcity-nyc.github.io",
           "kind": "vital city project"
         }
       ],
@@ -6114,7 +6114,7 @@
     "type_basis": "default",
     "published_date": "2026-06-03",
     "published_at": "2026-06-03T13:33:06.000+00:00",
-    "updated_at": "2026-09-29T21:08:21.000+00:00",
+    "updated_at": "2026-11-04T14:58:09.000+00:00",
     "primary_author": "Richard Briffault",
     "authors": [
       "Richard Briffault"
@@ -6151,7 +6151,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1817,
+    "word_count": 1828,
     "reading_minutes": 8,
     "id": "6a1d9d31d224c200019e91f7"
   },
