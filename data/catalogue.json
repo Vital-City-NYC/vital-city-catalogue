@@ -1,5 +1,65 @@
 [
   {
+    "title": "The Fiscal Significance of Mamdani’s Union Contracts",
+    "slug": "union-contracts-mamdani-budget",
+    "url": "https://www.vitalcitynyc.org/union-contracts-mamdani-budget/",
+    "type": "data analysis",
+    "type_basis": "html:4-chart-embeds",
+    "published_date": "2026-11-05",
+    "published_at": "2026-11-05T14:42:54.000+00:00",
+    "updated_at": "2026-11-05T14:42:54.000+00:00",
+    "primary_author": "Tal Roded",
+    "authors": [
+      "Tal Roded"
+    ],
+    "topics": [
+      "Budget",
+      "City Government",
+      "Labor"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "The agreements City Hall inks with organized labor will largely determine the magnitude of future budget gaps.",
+    "excerpt": "The agreements City Hall inks with organized labor will largely determine the magnitude of future budget gaps.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool--56-.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Spencer Platt / Getty Images",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "30672112",
+          "src": "visualisation/30672112?1257272",
+          "url": "https://public.flourish.studio/visualisation/30672112/"
+        },
+        {
+          "id": "30672352",
+          "src": "visualisation/30672352?1257272",
+          "url": "https://public.flourish.studio/visualisation/30672352/"
+        },
+        {
+          "id": "30672499",
+          "src": "visualisation/30672499?1257272",
+          "url": "https://public.flourish.studio/visualisation/30672499/"
+        },
+        {
+          "id": "30672569",
+          "src": "visualisation/30672569?1257272",
+          "url": "https://public.flourish.studio/visualisation/30672569/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 4
+      },
+      "total": 4
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1949,
+    "reading_minutes": 8,
+    "id": "6aec90f0625c770001008d5e"
+  },
+  {
     "title": "There’s No Tenable Way To Integrate New York’s Schools from the Top Down",
     "slug": "school-integration-nikole-hannah-jones-nyc",
     "url": "https://www.vitalcitynyc.org/school-integration-nikole-hannah-jones-nyc/",

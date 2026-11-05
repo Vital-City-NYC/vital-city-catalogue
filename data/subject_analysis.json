@@ -1,6 +1,6 @@
 {
- "generated_from": "2026-11-05T03:04:11.756095+00:00",
- "total_pieces": 990,
+ "generated_from": "2026-11-05T18:35:32.467726+00:00",
+ "total_pieces": 991,
  "n_topics_normalized": 226,
  "topic_bucket_sizes": {
   "subjects": 149,
@@ -8,7 +8,7 @@
   "rubrics": 53
  },
  "topic_bucket_piece_volume": {
-  "subject_tag_applications": 2115,
+  "subject_tag_applications": 2118,
   "meta_tag_applications": 301,
   "rubric_tag_applications": 314
  },
@@ -96,9 +96,9 @@
  "beats": [
   {
    "beat": "City government & governance",
-   "pieces": 265,
+   "pieces": 266,
    "share": 26.8,
-   "median_words": 1588,
+   "median_words": 1591,
    "types": [
     [
      "opinion/commentary",
@@ -114,7 +114,7 @@
     ],
     [
      "data analysis",
-     9
+     10
     ],
     [
      "policy",
@@ -134,13 +134,13 @@
     "2023": 18,
     "2024": 58,
     "2025": 109,
-    "2026": 79
+    "2026": 80
    }
   },
   {
    "beat": "Crime & violence",
    "pieces": 261,
-   "share": 26.4,
+   "share": 26.3,
    "median_words": 1635,
    "types": [
     [
@@ -187,7 +187,7 @@
   {
    "beat": "Land use & the built city",
    "pieces": 161,
-   "share": 16.3,
+   "share": 16.2,
    "median_words": 1603,
    "types": [
     [
@@ -226,7 +226,7 @@
   {
    "beat": "History & the long view",
    "pieces": 157,
-   "share": 15.9,
+   "share": 15.8,
    "median_words": 1646,
    "types": [
     [
@@ -334,9 +334,9 @@
   },
   {
    "beat": "Money, budgets & the economy",
-   "pieces": 90,
-   "share": 9.1,
-   "median_words": 1605,
+   "pieces": 91,
+   "share": 9.2,
+   "median_words": 1608,
    "types": [
     [
      "opinion/commentary",
@@ -348,7 +348,7 @@
     ],
     [
      "data analysis",
-     2
+     3
     ],
     [
      "something else",
@@ -363,7 +363,7 @@
     "2023": 7,
     "2024": 15,
     "2025": 22,
-    "2026": 46
+    "2026": 47
    }
   },
   {
@@ -833,7 +833,7 @@
   {
    "a": "City government & governance",
    "b": "Money, budgets & the economy",
-   "pieces": 31
+   "pieces": 32
   },
   {
    "a": "Land use & the built city",
@@ -1198,9 +1198,9 @@
   },
   {
    "beat": "Money, budgets & the economy",
-   "pieces": 90,
+   "pieces": 91,
    "distinct_bylines": 68,
-   "top5_share": 25.6,
+   "top5_share": 25.3,
    "vital_city_share": 4.4,
    "top3": [
     {
@@ -1219,9 +1219,9 @@
   },
   {
    "beat": "City government & governance",
-   "pieces": 265,
-   "distinct_bylines": 164,
-   "top5_share": 24.9,
+   "pieces": 266,
+   "distinct_bylines": 165,
+   "top5_share": 24.8,
    "vital_city_share": 9.4,
    "top3": [
     {
@@ -1413,7 +1413,7 @@
   },
   {
    "beat": "City government & governance",
-   "pieces": 265,
+   "pieces": 266,
    "with_history": 20,
    "share": 7.5
   },
@@ -1461,7 +1461,7 @@
   },
   {
    "beat": "Money, budgets & the economy",
-   "pieces": 90,
+   "pieces": 91,
    "with_history": 2,
    "share": 2.2
   }
@@ -1503,15 +1503,15 @@
    },
    "2026": {
     "cj": 79,
-    "total": 260,
-    "share": 30.4
+    "total": 261,
+    "share": 30.3
    }
   }
  },
  "beats_per_piece": {
   "0": 48,
   "1": 227,
-  "2": 576,
+  "2": 577,
   "3": 121,
   "4": 15,
   "5": 3
@@ -1629,7 +1629,7 @@
  "curation": {
   "in_curated_issue": 512,
   "share": 51.7,
-  "standalone": 478,
+  "standalone": 479,
   "n_issues_and_series": 33,
   "named_series_top": [
    {
@@ -1693,14 +1693,14 @@
    "2026"
   ],
   "early_pieces": 200,
-  "late_pieces": 564,
+  "late_pieces": 565,
   "beats": [
    {
     "beat": "City government & governance",
-    "pieces": 265,
+    "pieces": 266,
     "early": 9.5,
-    "late": 33.3,
-    "change": 23.8
+    "late": 33.5,
+    "change": 24.0
    },
    {
     "beat": "Politics & elections",
@@ -1710,18 +1710,18 @@
     "change": 9.4
    },
    {
+    "beat": "Money, budgets & the economy",
+    "pieces": 91,
+    "early": 3.5,
+    "late": 12.2,
+    "change": 8.7
+   },
+   {
     "beat": "Housing",
     "pieces": 83,
     "early": 3.0,
     "late": 11.7,
     "change": 8.7
-   },
-   {
-    "beat": "Money, budgets & the economy",
-    "pieces": 90,
-    "early": 3.5,
-    "late": 12.1,
-    "change": 8.6
    },
    {
     "beat": "Transportation",
@@ -1790,8 +1790,8 @@
     "beat": "Courts & prosecution",
     "pieces": 119,
     "early": 17.0,
-    "late": 8.2,
-    "change": -8.8
+    "late": 8.1,
+    "change": -8.9
    },
    {
     "beat": "Jails & incarceration",
@@ -1811,22 +1811,26 @@
     "beat": "Crime & violence",
     "pieces": 261,
     "early": 40.0,
-    "late": 20.6,
-    "change": -19.4
+    "late": 20.5,
+    "change": -19.5
    }
   ]
  },
  "named_in_headline": [
   {
    "name": "Mamdani",
-   "headlines": 68,
-   "share": 6.9,
+   "headlines": 69,
+   "share": 7.0,
    "by_year": {
     "2025": 32,
-    "2026": 36
+    "2026": 37
    },
    "first": "2025-02-02",
    "titles": [
+    {
+     "date": "2026-11-05",
+     "title": "The Fiscal Significance of Mamdani’s Union Contracts"
+    },
     {
      "date": "2026-11-04",
      "title": "What Does Zohran Mamdani’s Office of Mass Engagement Really Do?"
@@ -2342,8 +2346,8 @@
  "headline_words": [
   {
    "word": "mamdani",
-   "headlines": 68,
-   "share": 6.9
+   "headlines": 69,
+   "share": 7.0
   },
   {
    "word": "crime",
@@ -2396,12 +2400,12 @@
    "share": 2.1
   },
   {
-   "word": "state",
+   "word": "trump",
    "headlines": 19,
    "share": 1.9
   },
   {
-   "word": "trump",
+   "word": "state",
    "headlines": 19,
    "share": 1.9
   },
@@ -2451,12 +2455,12 @@
    "share": 1.3
   },
   {
-   "word": "transcript",
+   "word": "interview",
    "headlines": 13,
    "share": 1.3
   },
   {
-   "word": "interview",
+   "word": "transcript",
    "headlines": 13,
    "share": 1.3
   },
@@ -2542,17 +2546,17 @@
   }
  ],
  "headline_signal_test": {
-  "argument_pieces": 841,
+  "argument_pieces": 842,
   "excluded_non_argument": 149,
-  "base_rate_data_analysis": 6.2,
-  "base_rate_opinion": 93.8,
+  "base_rate_data_analysis": 6.3,
+  "base_rate_opinion": 93.7,
   "rows": [
    {
     "signal": "analysis signal",
     "headlines": 50,
     "share_of_argument": 5.9,
     "pct_data_analysis": 48.0,
-    "lift_vs_base": 7.8
+    "lift_vs_base": 7.6
    },
    {
     "signal": "opinion signal",
@@ -2566,13 +2570,13 @@
     "headlines": 3,
     "share_of_argument": 0.4,
     "pct_data_analysis": 33.3,
-    "lift_vs_base": 5.4
+    "lift_vs_base": 5.3
    },
    {
     "signal": "no signal",
-    "headlines": 712,
+    "headlines": 713,
     "share_of_argument": 84.7,
-    "pct_data_analysis": 3.7,
+    "pct_data_analysis": 3.8,
     "lift_vs_base": 0.6
    }
   ],
@@ -2594,8 +2598,8 @@
  },
  "bench": {
   "primary_bylines": 450,
-  "wrote_once": 317,
-  "wrote_once_share": 70.4
+  "wrote_once": 316,
+  "wrote_once_share": 70.2
  },
  "history_only_pieces": 114,
  "pieces_with_no_subject_tag": {
@@ -2828,13 +2832,13 @@
  "subtopics": [
   {
    "beat": "City government & governance",
-   "pieces": 265,
+   "pieces": 266,
    "classified_pct": 59,
    "subtopics": [
     {
      "name": "General / mixed",
      "n": 108,
-     "share": 40.8,
+     "share": 40.6,
      "examples": [
       "The City Needs 700,000 New Homes — Here’s 57,000",
       "The Real Path to Better Government Technology",
@@ -2844,7 +2848,7 @@
     {
      "name": "Mayoral power & leadership",
      "n": 100,
-     "share": 37.7,
+     "share": 37.6,
      "examples": [
       "What Does Zohran Mamdani’s Office of Mass Engagement Really Do?",
       "Make the Governor Responsible for New York’s Schools",
@@ -2853,18 +2857,18 @@
     },
     {
      "name": "Agency operations & delivery",
-     "n": 28,
-     "share": 10.6,
+     "n": 29,
+     "share": 10.9,
      "examples": [
+      "The Fiscal Significance of Mamdani’s Union Contracts",
       "6 Policy Reforms to Make Childcare Dollars Go Further for Families",
-      "Mamdani’s Childcare Strategy Should Focus on Equity",
-      "Mamdani’s PIT Crews: Government Innovation, or Innovation Theater?"
+      "Mamdani’s Childcare Strategy Should Focus on Equity"
      ]
     },
     {
      "name": "Charter revision & structure",
      "n": 11,
-     "share": 4.2,
+     "share": 4.1,
      "examples": [
       "13 Fixes for New York City Government That Go Beyond the Charter",
       "What Mamdani's Efficiency Commission Got Right — and Where it Fell Short",
@@ -3312,23 +3316,23 @@
   },
   {
    "beat": "Money, budgets & the economy",
-   "pieces": 90,
+   "pieces": 91,
    "classified_pct": 71,
    "subtopics": [
     {
      "name": "The city budget & fiscal health",
-     "n": 31,
-     "share": 34.4,
+     "n": 32,
+     "share": 35.2,
      "examples": [
+      "The Fiscal Significance of Mamdani’s Union Contracts",
       "Did Federal Local Fiscal Recovery Funding Drive America’s Postpandemic Homicide Decline?",
-      "The Hidden Privacy Cost of New York’s Pied-à-Terre Tax",
-      "Come Again Another Day?"
+      "The Hidden Privacy Cost of New York’s Pied-à-Terre Tax"
      ]
     },
     {
      "name": "General / mixed",
      "n": 26,
-     "share": 28.9,
+     "share": 28.6,
      "examples": [
       "After the Mamdani Rent Freeze",
       "The Myth of Millionaire Flight",
@@ -3338,7 +3342,7 @@
     {
      "name": "Jobs, wages & labor",
      "n": 14,
-     "share": 15.6,
+     "share": 15.4,
      "examples": [
       "Time to Take on Small Business Insurance Premiums",
       "Complexity on the Menu: The State of New York City's Restaurant Industry",
@@ -3348,7 +3352,7 @@
     {
      "name": "The economic engine",
      "n": 13,
-     "share": 14.4,
+     "share": 14.3,
      "examples": [
       "New York City’s Prime Economic Challenge: Middle-Class Family Affordability",
       "Economic Growth vs. Economic Justice: A False Choice",
@@ -3358,7 +3362,7 @@
     {
      "name": "Cost of living & prices",
      "n": 5,
-     "share": 5.6,
+     "share": 5.5,
      "examples": [
       "Zohran Mamdani's Promise and the Reality of Supermarket Prices",
       "Put a Price on Street Parking, Generate Billions",

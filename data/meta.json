@@ -1,34 +1,22 @@
 {
-  "generated_at": "2026-11-05T03:04:11.756095+00:00",
+  "generated_at": "2026-11-05T18:35:32.467726+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 990,
+  "total_posts": 991,
   "total_authors": 541,
   "total_issues": 33,
   "total_topics": 233,
   "date_range": [
     "2021-09-15",
-    "2026-11-04"
+    "2026-11-05"
   ],
   "first_run": false,
-  "new_article_count": 3,
+  "new_article_count": 1,
   "new_articles": [
     {
-      "title": "There’s No Tenable Way To Integrate New York’s Schools from the Top Down",
-      "url": "https://www.vitalcitynyc.org/school-integration-nikole-hannah-jones-nyc/",
-      "published_date": "2026-11-04",
-      "primary_author": "Tim DeRoche"
-    },
-    {
-      "title": "It Wasn’t the Dutch Who Shaped New Amsterdam",
-      "url": "https://www.vitalcitynyc.org/schagen-letter-nyc-history-lenape-dutch/",
-      "published_date": "2026-11-04",
-      "primary_author": "Alan Mikhail"
-    },
-    {
-      "title": "What Does Zohran Mamdani’s Office of Mass Engagement Really Do?",
-      "url": "https://www.vitalcitynyc.org/mamdani-tenant-canvassing-organize-nyc/",
-      "published_date": "2026-11-04",
-      "primary_author": "Sage Lattman"
+      "title": "The Fiscal Significance of Mamdani’s Union Contracts",
+      "url": "https://www.vitalcitynyc.org/union-contracts-mamdani-budget/",
+      "published_date": "2026-11-05",
+      "primary_author": "Tal Roded"
     }
   ]
 }

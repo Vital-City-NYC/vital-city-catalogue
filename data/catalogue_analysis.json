@@ -1,46 +1,34 @@
 {
   "meta": {
-    "generated_at": "2026-11-05T03:04:11.756095+00:00",
+    "generated_at": "2026-11-05T18:35:32.467726+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 990,
+    "total_posts": 991,
     "total_authors": 541,
     "total_issues": 33,
     "total_topics": 233,
     "date_range": [
       "2021-09-15",
-      "2026-11-04"
+      "2026-11-05"
     ],
     "first_run": false,
-    "new_article_count": 3,
+    "new_article_count": 1,
     "new_articles": [
       {
-        "title": "There\u2019s No Tenable Way To Integrate New York\u2019s Schools from the Top Down",
-        "url": "https://www.vitalcitynyc.org/school-integration-nikole-hannah-jones-nyc/",
-        "published_date": "2026-11-04",
-        "primary_author": "Tim DeRoche"
-      },
-      {
-        "title": "It Wasn\u2019t the Dutch Who Shaped New Amsterdam",
-        "url": "https://www.vitalcitynyc.org/schagen-letter-nyc-history-lenape-dutch/",
-        "published_date": "2026-11-04",
-        "primary_author": "Alan Mikhail"
-      },
-      {
-        "title": "What Does Zohran Mamdani\u2019s Office of Mass Engagement Really Do?",
-        "url": "https://www.vitalcitynyc.org/mamdani-tenant-canvassing-organize-nyc/",
-        "published_date": "2026-11-04",
-        "primary_author": "Sage Lattman"
+        "title": "The Fiscal Significance of Mamdani\u2019s Union Contracts",
+        "url": "https://www.vitalcitynyc.org/union-contracts-mamdani-budget/",
+        "published_date": "2026-11-05",
+        "primary_author": "Tal Roded"
       }
     ]
   },
-  "total_pieces": 990,
+  "total_pieces": 991,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 260
+    "2026": 261
   },
   "by_month": {
     "2021-09": 1,
@@ -99,7 +87,7 @@
     "2026-08": 16,
     "2026-09": 33,
     "2026-10": 26,
-    "2026-11": 3
+    "2026-11": 4
   },
   "by_type": [
     [
@@ -112,7 +100,7 @@
     ],
     [
       "data analysis",
-      52
+      53
     ],
     [
       "podcast",
@@ -146,7 +134,7 @@
     ],
     [
       "City Government",
-      145
+      146
     ],
     [
       "Government Operations",
@@ -218,7 +206,7 @@
     ],
     [
       "Budget",
-      30
+      31
     ],
     [
       "data",
@@ -253,7 +241,7 @@
     ],
     [
       "Other / unclassified",
-      108
+      109
     ],
     [
       "Vital City (institutional)",
@@ -367,7 +355,7 @@
       "2023": 4,
       "2024": 20,
       "2025": 54,
-      "2026": 67
+      "2026": 68
     },
     "Government Operations": {
       "2022": 1,
@@ -405,17 +393,17 @@
     }
   },
   "wc_stats": {
-    "n": 971,
+    "n": 972,
     "median": 1642,
     "mean": 2185,
     "p90": 3276,
     "max": 15166,
-    "p10": 937,
+    "p10": 939,
     "p25": 1292,
-    "p75": 2232,
+    "p75": 2231,
     "p95": 5883,
     "no_count": 19,
-    "core_1000_2499": 697,
+    "core_1000_2499": 698,
     "under_500": 43,
     "over_5000": 57
   },
@@ -430,7 +418,7 @@
     ],
     [
       "1,000-1,999",
-      556
+      557
     ],
     [
       "2,000-2,999",
@@ -487,7 +475,7 @@
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 116
+        "n": 117
       },
       {
         "floor": 2000,
@@ -561,15 +549,15 @@
     },
     {
       "year": "2026",
-      "n": 243,
-      "p25": 1320,
-      "median": 1756,
-      "p75": 2438,
+      "n": 244,
+      "p25": 1330,
+      "median": 1767,
+      "p75": 2431,
       "max": 13675
     }
   ],
   "by_nauthors": {
-    "1": 837,
+    "1": 838,
     "2": 124,
     "3": 26,
     "4": 1,
@@ -728,34 +716,34 @@
       },
       {
         "year": "2026",
-        "weeks": 44.0,
-        "pieces": 260,
-        "outside_issues": 180,
+        "weeks": 44.1,
+        "pieces": 261,
+        "outside_issues": 181,
         "per_week_all": 5.91,
-        "per_week_outside_issues": 4.09,
+        "per_week_outside_issues": 4.1,
         "partial": true
       }
     ],
-    "total_weeks": 268.0,
-    "all_time_per_week": 3.69,
-    "all_time_per_week_outside_issues": 1.78,
+    "total_weeks": 268.1,
+    "all_time_per_week": 3.7,
+    "all_time_per_week_outside_issues": 1.79,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.09,
+    "current_per_week_outside_issues": 4.1,
     "current_per_week_all": 5.91,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 512,
       "published_away_from_drop": 69,
       "share_of_issue_pieces": 13.5,
-      "current_year_strict": 4.09,
+      "current_year_strict": 4.1,
       "current_year_loose": 4.39,
-      "all_time_strict": 1.78,
+      "all_time_strict": 1.79,
       "all_time_loose": 2.04,
-      "all_time_all": 3.69
+      "all_time_all": 3.7
     }
   },
   "rhythm": {
-    "n_dated": 990,
+    "n_dated": 991,
     "by_weekday": [
       {
         "day": "Mon",
@@ -770,12 +758,12 @@
       {
         "day": "Wed",
         "pieces": 471,
-        "share": 47.6
+        "share": 47.5
       },
       {
         "day": "Thu",
-        "pieces": 191,
-        "share": 19.3
+        "pieces": 192,
+        "share": 19.4
       },
       {
         "day": "Fri",
@@ -794,8 +782,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.6,
-    "midweek_share": 83.9,
+    "top_day_share": 47.5,
+    "midweek_share": 84.0,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -871,9 +859,9 @@
       {
         "month": "November",
         "abbr": "Nov",
-        "pieces": 52,
+        "pieces": 53,
         "occurrences": 6,
-        "per_occurrence": 8.7
+        "per_occurrence": 8.8
       },
       {
         "month": "December",
