@@ -1,6 +1,6 @@
 {
- "generated_from": "2026-11-04T18:32:25.731374+00:00",
- "total_pieces": 987,
+ "generated_from": "2026-11-05T03:04:11.756095+00:00",
+ "total_pieces": 990,
  "n_topics_normalized": 226,
  "topic_bucket_sizes": {
   "subjects": 149,
@@ -8,7 +8,7 @@
   "rubrics": 53
  },
  "topic_bucket_piece_volume": {
-  "subject_tag_applications": 2110,
+  "subject_tag_applications": 2115,
   "meta_tag_applications": 301,
   "rubric_tag_applications": 314
  },
@@ -96,13 +96,13 @@
  "beats": [
   {
    "beat": "City government & governance",
-   "pieces": 264,
-   "share": 26.7,
-   "median_words": 1585,
+   "pieces": 265,
+   "share": 26.8,
+   "median_words": 1588,
    "types": [
     [
      "opinion/commentary",
-     214
+     215
     ],
     [
      "q&a",
@@ -134,7 +134,7 @@
     "2023": 18,
     "2024": 58,
     "2025": 109,
-    "2026": 78
+    "2026": 79
    }
   },
   {
@@ -225,13 +225,13 @@
   },
   {
    "beat": "History & the long view",
-   "pieces": 156,
-   "share": 15.8,
-   "median_words": 1647,
+   "pieces": 157,
+   "share": 15.9,
+   "median_words": 1646,
    "types": [
     [
      "opinion/commentary",
-     141
+     142
     ],
     [
      "book review",
@@ -255,13 +255,13 @@
     "2023": 28,
     "2024": 39,
     "2025": 54,
-    "2026": 23
+    "2026": 24
    }
   },
   {
    "beat": "Courts & prosecution",
    "pieces": 119,
-   "share": 12.1,
+   "share": 12.0,
    "median_words": 1595,
    "types": [
     [
@@ -368,13 +368,13 @@
   },
   {
    "beat": "Housing",
-   "pieces": 82,
-   "share": 8.3,
-   "median_words": 1817,
+   "pieces": 83,
+   "share": 8.4,
+   "median_words": 1820,
    "types": [
     [
      "opinion/commentary",
-     70
+     71
     ],
     [
      "podcast",
@@ -398,7 +398,7 @@
     "2023": 5,
     "2024": 11,
     "2025": 37,
-    "2026": 28
+    "2026": 29
    }
   },
   {
@@ -581,13 +581,13 @@
   },
   {
    "beat": "Education & youth",
-   "pieces": 48,
+   "pieces": 49,
    "share": 4.9,
-   "median_words": 1648,
+   "median_words": 1662,
    "types": [
     [
      "opinion/commentary",
-     45
+     46
     ],
     [
      "policy",
@@ -606,13 +606,13 @@
     "2023": 5,
     "2024": 8,
     "2025": 14,
-    "2026": 21
+    "2026": 22
    }
   },
   {
    "beat": "State, federal & beyond NYC",
    "pieces": 40,
-   "share": 4.1,
+   "share": 4.0,
    "median_words": 1784,
    "types": [
     [
@@ -647,7 +647,7 @@
   {
    "beat": "Technology",
    "pieces": 39,
-   "share": 4.0,
+   "share": 3.9,
    "median_words": 1759,
    "types": [
     [
@@ -668,13 +668,13 @@
   },
   {
    "beat": "Race, gender & inequality",
-   "pieces": 30,
-   "share": 3.0,
-   "median_words": 1818,
+   "pieces": 31,
+   "share": 3.1,
+   "median_words": 1820,
    "types": [
     [
      "opinion/commentary",
-     24
+     25
     ],
     [
      "q&a",
@@ -693,7 +693,7 @@
     "2023": 8,
     "2024": 4,
     "2025": 16,
-    "2026": 2
+    "2026": 3
    }
   },
   {
@@ -848,7 +848,7 @@
   {
    "a": "City government & governance",
    "b": "Housing",
-   "pieces": 27
+   "pieces": 28
   },
   {
    "a": "City government & governance",
@@ -1177,10 +1177,10 @@
   },
   {
    "beat": "Race, gender & inequality",
-   "pieces": 30,
-   "distinct_bylines": 27,
-   "top5_share": 26.7,
-   "vital_city_share": 10.0,
+   "pieces": 31,
+   "distinct_bylines": 28,
+   "top5_share": 25.8,
+   "vital_city_share": 9.7,
    "top3": [
     {
      "name": "Vital City",
@@ -1191,7 +1191,7 @@
      "pieces": 2
     },
     {
-     "name": "Joseph P. Viteritti",
+     "name": "Tim DeRoche",
      "pieces": 1
     }
    ]
@@ -1219,10 +1219,10 @@
   },
   {
    "beat": "City government & governance",
-   "pieces": 264,
-   "distinct_bylines": 163,
-   "top5_share": 25.0,
-   "vital_city_share": 9.5,
+   "pieces": 265,
+   "distinct_bylines": 164,
+   "top5_share": 24.9,
+   "vital_city_share": 9.4,
    "top3": [
     {
      "name": "Vital City",
@@ -1235,27 +1235,6 @@
     {
      "name": "Elizabeth Glazer",
      "pieces": 12
-    }
-   ]
-  },
-  {
-   "beat": "Housing",
-   "pieces": 82,
-   "distinct_bylines": 61,
-   "top5_share": 23.2,
-   "vital_city_share": 4.9,
-   "top3": [
-    {
-     "name": "Jamie Rubin",
-     "pieces": 6
-    },
-    {
-     "name": "Vital City",
-     "pieces": 4
-    },
-    {
-     "name": "Martha Stark",
-     "pieces": 3
     }
    ]
   },
@@ -1281,11 +1260,32 @@
    ]
   },
   {
-   "beat": "Education & youth",
-   "pieces": 48,
-   "distinct_bylines": 40,
+   "beat": "Housing",
+   "pieces": 83,
+   "distinct_bylines": 62,
    "top5_share": 22.9,
-   "vital_city_share": 6.2,
+   "vital_city_share": 4.8,
+   "top3": [
+    {
+     "name": "Jamie Rubin",
+     "pieces": 6
+    },
+    {
+     "name": "Vital City",
+     "pieces": 4
+    },
+    {
+     "name": "Martha Stark",
+     "pieces": 3
+    }
+   ]
+  },
+  {
+   "beat": "Education & youth",
+   "pieces": 49,
+   "distinct_bylines": 41,
+   "top5_share": 22.4,
+   "vital_city_share": 6.1,
    "top3": [
     {
      "name": "Vital City",
@@ -1303,9 +1303,9 @@
   },
   {
    "beat": "History & the long view",
-   "pieces": 156,
-   "distinct_bylines": 114,
-   "top5_share": 17.9,
+   "pieces": 157,
+   "distinct_bylines": 115,
+   "top5_share": 17.8,
    "vital_city_share": 5.1,
    "top3": [
     {
@@ -1359,9 +1359,9 @@
   },
   {
    "beat": "Race, gender & inequality",
-   "pieces": 30,
+   "pieces": 31,
    "with_history": 7,
-   "share": 23.3
+   "share": 22.6
   },
   {
    "beat": "Land use & the built city",
@@ -1395,9 +1395,9 @@
   },
   {
    "beat": "Housing",
-   "pieces": 82,
+   "pieces": 83,
    "with_history": 8,
-   "share": 9.8
+   "share": 9.6
   },
   {
    "beat": "Climate, environment & sanitation",
@@ -1413,9 +1413,9 @@
   },
   {
    "beat": "City government & governance",
-   "pieces": 264,
+   "pieces": 265,
    "with_history": 20,
-   "share": 7.6
+   "share": 7.5
   },
   {
    "beat": "Jails & incarceration",
@@ -1430,16 +1430,16 @@
    "share": 5.6
   },
   {
-   "beat": "Education & youth",
-   "pieces": 48,
-   "with_history": 2,
-   "share": 4.2
-  },
-  {
    "beat": "Policing",
    "pieces": 72,
    "with_history": 3,
    "share": 4.2
+  },
+  {
+   "beat": "Education & youth",
+   "pieces": 49,
+   "with_history": 2,
+   "share": 4.1
   },
   {
    "beat": "Politics & elections",
@@ -1474,7 +1474,7 @@
    "Jails & incarceration"
   ],
   "pieces": 411,
-  "share": 41.6,
+  "share": 41.5,
   "by_year": {
    "2021": {
     "cj": 1,
@@ -1503,22 +1503,22 @@
    },
    "2026": {
     "cj": 79,
-    "total": 257,
-    "share": 30.7
+    "total": 260,
+    "share": 30.4
    }
   }
  },
  "beats_per_piece": {
   "0": 48,
-  "1": 226,
-  "2": 574,
+  "1": 227,
+  "2": 576,
   "3": 121,
   "4": 15,
   "5": 3
  },
  "stance": {
   "pieces_with_rubric": 313,
-  "coverage_share": 31.7,
+  "coverage_share": 31.6,
   "buckets": [
    {
     "stance": "Prescribing a fix",
@@ -1628,8 +1628,8 @@
  },
  "curation": {
   "in_curated_issue": 512,
-  "share": 51.9,
-  "standalone": 475,
+  "share": 51.7,
+  "standalone": 478,
   "n_issues_and_series": 33,
   "named_series_top": [
    {
@@ -1693,11 +1693,11 @@
    "2026"
   ],
   "early_pieces": 200,
-  "late_pieces": 561,
+  "late_pieces": 564,
   "beats": [
    {
     "beat": "City government & governance",
-    "pieces": 264,
+    "pieces": 265,
     "early": 9.5,
     "late": 33.3,
     "change": 23.8
@@ -1706,21 +1706,21 @@
     "beat": "Politics & elections",
     "pieces": 68,
     "early": 0.5,
-    "late": 10.0,
-    "change": 9.5
+    "late": 9.9,
+    "change": 9.4
+   },
+   {
+    "beat": "Housing",
+    "pieces": 83,
+    "early": 3.0,
+    "late": 11.7,
+    "change": 8.7
    },
    {
     "beat": "Money, budgets & the economy",
     "pieces": 90,
     "early": 3.5,
     "late": 12.1,
-    "change": 8.6
-   },
-   {
-    "beat": "Housing",
-    "pieces": 82,
-    "early": 3.0,
-    "late": 11.6,
     "change": 8.6
    },
    {
@@ -1731,17 +1731,17 @@
     "change": 5.8
    },
    {
+    "beat": "Education & youth",
+    "pieces": 49,
+    "early": 2.5,
+    "late": 6.4,
+    "change": 3.9
+   },
+   {
     "beat": "State, federal & beyond NYC",
     "pieces": 40,
     "early": 2.0,
     "late": 5.7,
-    "change": 3.7
-   },
-   {
-    "beat": "Education & youth",
-    "pieces": 48,
-    "early": 2.5,
-    "late": 6.2,
     "change": 3.7
    },
    {
@@ -1753,24 +1753,24 @@
    },
    {
     "beat": "Race, gender & inequality",
-    "pieces": 30,
+    "pieces": 31,
     "early": 4.0,
-    "late": 3.2,
-    "change": -0.8
+    "late": 3.4,
+    "change": -0.6
    },
    {
     "beat": "Land use & the built city",
     "pieces": 161,
     "early": 18.5,
-    "late": 15.9,
-    "change": -2.6
+    "late": 15.8,
+    "change": -2.7
    },
    {
     "beat": "History & the long view",
-    "pieces": 156,
+    "pieces": 157,
     "early": 20.0,
-    "late": 13.7,
-    "change": -6.3
+    "late": 13.8,
+    "change": -6.2
    },
    {
     "beat": "Policing",
@@ -1811,22 +1811,26 @@
     "beat": "Crime & violence",
     "pieces": 261,
     "early": 40.0,
-    "late": 20.7,
-    "change": -19.3
+    "late": 20.6,
+    "change": -19.4
    }
   ]
  },
  "named_in_headline": [
   {
    "name": "Mamdani",
-   "headlines": 67,
-   "share": 6.8,
+   "headlines": 68,
+   "share": 6.9,
    "by_year": {
     "2025": 32,
-    "2026": 35
+    "2026": 36
    },
    "first": "2025-02-02",
    "titles": [
+    {
+     "date": "2026-11-04",
+     "title": "What Does Zohran Mamdani’s Office of Mass Engagement Really Do?"
+    },
     {
      "date": "2026-08-27",
      "title": "Mamdani’s Childcare Strategy Should Focus on Equity"
@@ -2338,13 +2342,13 @@
  "headline_words": [
   {
    "word": "mamdani",
-   "headlines": 67,
-   "share": 6.8
+   "headlines": 68,
+   "share": 6.9
   },
   {
    "word": "crime",
    "headlines": 47,
-   "share": 4.8
+   "share": 4.7
   },
   {
    "word": "mayor",
@@ -2372,6 +2376,11 @@
    "share": 2.6
   },
   {
+   "word": "zohran",
+   "headlines": 22,
+   "share": 2.2
+  },
+  {
    "word": "violence",
    "headlines": 21,
    "share": 2.1
@@ -2383,11 +2392,6 @@
   },
   {
    "word": "government",
-   "headlines": 21,
-   "share": 2.1
-  },
-  {
-   "word": "zohran",
    "headlines": 21,
    "share": 2.1
   },
@@ -2507,6 +2511,11 @@
    "share": 1.1
   },
   {
+   "word": "way",
+   "headlines": 10,
+   "share": 1.0
+  },
+  {
    "word": "problem",
    "headlines": 10,
    "share": 1.0
@@ -2530,30 +2539,25 @@
    "word": "reality",
    "headlines": 10,
    "share": 1.0
-  },
-  {
-   "word": "justice",
-   "headlines": 10,
-   "share": 1.0
   }
  ],
  "headline_signal_test": {
-  "argument_pieces": 838,
+  "argument_pieces": 841,
   "excluded_non_argument": 149,
   "base_rate_data_analysis": 6.2,
   "base_rate_opinion": 93.8,
   "rows": [
    {
     "signal": "analysis signal",
-    "headlines": 49,
-    "share_of_argument": 5.8,
-    "pct_data_analysis": 49.0,
-    "lift_vs_base": 7.9
+    "headlines": 50,
+    "share_of_argument": 5.9,
+    "pct_data_analysis": 48.0,
+    "lift_vs_base": 7.8
    },
    {
     "signal": "opinion signal",
     "headlines": 76,
-    "share_of_argument": 9.1,
+    "share_of_argument": 9.0,
     "pct_data_analysis": 1.3,
     "lift_vs_base": 0.2
    },
@@ -2566,7 +2570,7 @@
    },
    {
     "signal": "no signal",
-    "headlines": 710,
+    "headlines": 712,
     "share_of_argument": 84.7,
     "pct_data_analysis": 3.7,
     "lift_vs_base": 0.6
@@ -2589,11 +2593,11 @@
   }
  },
  "bench": {
-  "primary_bylines": 448,
-  "wrote_once": 316,
-  "wrote_once_share": 70.5
+  "primary_bylines": 450,
+  "wrote_once": 317,
+  "wrote_once_share": 70.4
  },
- "history_only_pieces": 113,
+ "history_only_pieces": 114,
  "pieces_with_no_subject_tag": {
   "count": 48,
   "examples": [
@@ -2824,13 +2828,13 @@
  "subtopics": [
   {
    "beat": "City government & governance",
-   "pieces": 264,
+   "pieces": 265,
    "classified_pct": 59,
    "subtopics": [
     {
      "name": "General / mixed",
      "n": 108,
-     "share": 40.9,
+     "share": 40.8,
      "examples": [
       "The City Needs 700,000 New Homes — Here’s 57,000",
       "The Real Path to Better Government Technology",
@@ -2839,12 +2843,12 @@
     },
     {
      "name": "Mayoral power & leadership",
-     "n": 99,
-     "share": 37.5,
+     "n": 100,
+     "share": 37.7,
      "examples": [
+      "What Does Zohran Mamdani’s Office of Mass Engagement Really Do?",
       "Make the Governor Responsible for New York’s Schools",
-      "Why Cities Need to Stay in Their Lane",
-      "Zohran Mamdani's Promise and the Reality of Supermarket Prices"
+      "Why Cities Need to Stay in Their Lane"
      ]
     },
     {
@@ -3066,23 +3070,23 @@
   },
   {
    "beat": "History & the long view",
-   "pieces": 156,
+   "pieces": 157,
    "classified_pct": 41,
    "subtopics": [
     {
      "name": "General / mixed",
-     "n": 92,
-     "share": 59.0,
+     "n": 93,
+     "share": 59.2,
      "examples": [
+      "It Wasn’t the Dutch Who Shaped New Amsterdam",
       "The Other Time New York Bled Orange and Blue",
-      "From San Juan Hill to Lincoln Center and Back",
-      "This Shapeshifting City"
+      "From San Juan Hill to Lincoln Center and Back"
      ]
     },
     {
      "name": "Crime & justice history",
      "n": 24,
-     "share": 15.4,
+     "share": 15.3,
      "examples": [
       "What is the Future of ‘Renewable Rikers’ Island?",
       "The Case Against Futility",
@@ -3092,7 +3096,7 @@
     {
      "name": "Built-city history",
      "n": 17,
-     "share": 10.9,
+     "share": 10.8,
      "examples": [
       "Much More Than Two Towers",
       "Time to Build Big Again",
@@ -3102,7 +3106,7 @@
     {
      "name": "Political history",
      "n": 14,
-     "share": 9.0,
+     "share": 8.9,
      "examples": [
       "Charter Revision Politics: A Primer",
       "Mamdani’s Victory, and Memories of Dinkins’",
@@ -3371,13 +3375,13 @@
   },
   {
    "beat": "Housing",
-   "pieces": 82,
-   "classified_pct": 70,
+   "pieces": 83,
+   "classified_pct": 69,
    "subtopics": [
     {
      "name": "Supply, zoning & building more",
      "n": 32,
-     "share": 39.0,
+     "share": 38.6,
      "examples": [
       "Appreciate Mamdani’s Housing Achievement",
       "The Road to Producing More Housing Passes Through Meaningful Local Zoning Reforms",
@@ -3386,18 +3390,18 @@
     },
     {
      "name": "General / mixed",
-     "n": 25,
-     "share": 30.5,
+     "n": 26,
+     "share": 31.3,
      "examples": [
+      "What Does Zohran Mamdani’s Office of Mass Engagement Really Do?",
       "Why the City Council Must Confirm John Mangin",
-      "The Prosperity Equation",
-      "Why It Takes Four New Housing Units to Get One Person Off the Street"
+      "The Prosperity Equation"
      ]
     },
     {
      "name": "Affordability & subsidy",
      "n": 7,
-     "share": 8.5,
+     "share": 8.4,
      "examples": [
       "The Big Hole in Mamdani’s Housing Plan",
       "Mamdani’s Affordability Dilemma: The Challenge of Making New York City Housing Less Expensive",
@@ -3407,7 +3411,7 @@
     {
      "name": "Rent regulation & the freeze",
      "n": 7,
-     "share": 8.5,
+     "share": 8.4,
      "examples": [
       "When Rent Regulation Makes Sense",
       "After the Rent Freeze: What Happens to New York City’s Regulated Housing Stock Now and in the Future",
@@ -3417,7 +3421,7 @@
     {
      "name": "Living here: renters & buildings",
      "n": 4,
-     "share": 4.9,
+     "share": 4.8,
      "examples": [
       "Why Your Pre-War Radiator Runs Hot, Clangs at 3 a.m. and is Painted Silver",
       "It's a Jungle Out There",
@@ -3427,7 +3431,7 @@
     {
      "name": "The pied-à-terre surcharge",
      "n": 3,
-     "share": 3.7,
+     "share": 3.6,
      "examples": [
       "The City Needs 700,000 New Homes — Here’s 57,000",
       "A Smarter Way To Roll Out the Pied-à-Terre Surcharge",
@@ -3747,13 +3751,23 @@
   },
   {
    "beat": "Education & youth",
-   "pieces": 48,
+   "pieces": 49,
    "classified_pct": 65,
    "subtopics": [
     {
+     "name": "K-12 schools",
+     "n": 17,
+     "share": 34.7,
+     "examples": [
+      "There’s No Tenable Way To Integrate New York’s Schools from the Top Down",
+      "Make the Governor Responsible for New York’s Schools",
+      "Finding New Ideas for Campus Sexual Assault Prevention"
+     ]
+    },
+    {
      "name": "General / mixed",
      "n": 17,
-     "share": 35.4,
+     "share": 34.7,
      "examples": [
       "A Terrible Human Problem — With Some Technological Responses",
       "How Big a Problem Is Sexual Assault on Campus?",
@@ -3761,19 +3775,9 @@
      ]
     },
     {
-     "name": "K-12 schools",
-     "n": 16,
-     "share": 33.3,
-     "examples": [
-      "Make the Governor Responsible for New York’s Schools",
-      "Finding New Ideas for Campus Sexual Assault Prevention",
-      "In (Partial) Defense of Retiring N.Y.’s Regents Exam Requirement"
-     ]
-    },
-    {
      "name": "Youth programs & summer jobs",
      "n": 10,
-     "share": 20.8,
+     "share": 20.4,
      "examples": [
       "Mamdani Is Hitting Many Milestones on Childcare. Except One.",
       "Economic Justice Starts With Young People",
@@ -3783,7 +3787,7 @@
     {
      "name": "Childcare & early childhood",
      "n": 4,
-     "share": 8.3,
+     "share": 8.2,
      "examples": [
       "6 Policy Reforms to Make Childcare Dollars Go Further for Families",
       "Mamdani’s Childcare Strategy Should Focus on Equity",
@@ -3793,7 +3797,7 @@
     {
      "name": "Higher education",
      "n": 1,
-     "share": 2.1,
+     "share": 2.0,
      "examples": []
     }
    ]
@@ -3902,23 +3906,23 @@
   },
   {
    "beat": "Race, gender & inequality",
-   "pieces": 30,
+   "pieces": 31,
    "classified_pct": 100,
    "subtopics": [
     {
      "name": "Race & the city",
-     "n": 16,
-     "share": 53.3,
+     "n": 17,
+     "share": 54.8,
      "examples": [
+      "There’s No Tenable Way To Integrate New York’s Schools from the Top Down",
       "Unpacking the Triggers",
-      "Percy Sutton, Eric Adams and the State of Black Political Power in New York",
-      "A City of Winners and Losers: New York in the 1980s"
+      "Percy Sutton, Eric Adams and the State of Black Political Power in New York"
      ]
     },
     {
      "name": "Inequality & class",
      "n": 13,
-     "share": 43.3,
+     "share": 41.9,
      "examples": [
       "New York, for Better and Worse",
       "The Other Side of Affordability",
@@ -3928,7 +3932,7 @@
     {
      "name": "Gender & women",
      "n": 1,
-     "share": 3.3,
+     "share": 3.2,
      "examples": []
     }
    ]
