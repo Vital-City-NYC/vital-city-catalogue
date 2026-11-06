@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the press page (Mining media mentions): who covers New York City government, and what they cover.
+"""Build the press page (Maximizing media mentions): who covers New York City government, and what they cover.
 
 Writes private/press.json (gitignored) for press/index.html to read after
 encrypt_press.py turns it into press/data.enc.
