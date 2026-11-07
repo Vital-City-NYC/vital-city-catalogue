@@ -1,7 +1,36 @@
 {
- "generated": "2026-11-05T20:33:59+00:00",
+ "generated": "2026-11-07T00:02:10+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "the-midterms-taught-new-york-a-lesson-about-character",
+   "title": "The Midterms Taught New York a Lesson About Character",
+   "url": "https://www.vitalcitynyc.org/the-midterms-taught-new-york-a-lesson-about-character/",
+   "date": "2026-11-06",
+   "author": "Nicole Gelinas",
+   "handle": "@nicolegelinas",
+   "dek": "Like or loathe their policies, Hochul and Mamdani tend to behave like decent human beings. Blakeman, not so much.",
+   "tags": [
+    "Elections",
+    "Mamdani"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Nicole Gelinas argues Bruce Blakeman lost in part on character: he twice tried to use 9/11 for political points, and voters who paid attention noticed. Policy ideas were only part of it."
+    },
+    {
+     "kind": "argument",
+     "text": "Read @nicolegelinas on why New York Republicans cannot beat Zohran Mamdani by attacking him as a person, and what Kathy Hochul and Mamdani did at the 9/11 ceremonies that Bruce Blakeman did not."
+    },
+    {
+     "kind": "hook",
+     "text": "\"Politicians are not just collections of platform planks; they are people.\" Nicole Gelinas on what the midterms showed about Bruce Blakeman, Hochul and Mamdani."
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "union-contracts-mamdani-budget",
    "title": "The Fiscal Significance of Mamdani’s Union Contracts",
@@ -679,36 +708,6 @@
     {
      "kind": "quote",
      "text": "Biz Rasich writes: \"Imagine moving to a town where one in four drivers will, at some point, be involved in a car crash that alters their lives forever.\""
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "why-cities-need-to-stay-in-their-lane",
-   "title": "Why Cities Need to Stay in Their Lane",
-   "url": "https://www.vitalcitynyc.org/why-cities-need-to-stay-in-their-lane/",
-   "date": "2026-10-07",
-   "author": "Clayton P. Gillette, Andrew Haughwout",
-   "handle": null,
-   "dek": "New York and other localities should be cautious about stepping into the many breaches created by the Trump administration.",
-   "tags": [
-    "Federal Government",
-    "Local power",
-    "Mamdani"
-   ],
-   "mode": "rules",
-   "posts": [
-    {
-     "kind": "claim",
-     "text": "From Clayton P. Gillette and Andrew Haughwout: New York and other localities should be cautious about stepping into the many breaches created by the Trump administration."
-    },
-    {
-     "kind": "writer",
-     "text": "Read Clayton P. Gillette and Andrew Haughwout: \"Why Cities Need to Stay in Their Lane\""
-    },
-    {
-     "kind": "quote",
-     "text": "Clayton P. Gillette and Andrew Haughwout writes: \"The instinct of some cities is to fill the gap with increased local spending even in areas that fall outside the traditional local domain.\""
     }
    ],
    "attempts": 1
