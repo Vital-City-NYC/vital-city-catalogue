@@ -1,27 +1,40 @@
 {
   "meta": {
-    "generated_at": "2026-11-09T02:20:25.377278+00:00",
+    "generated_at": "2026-11-09T21:23:24.267786+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 992,
+    "total_posts": 994,
     "total_authors": 541,
     "total_issues": 33,
-    "total_topics": 233,
+    "total_topics": 234,
     "date_range": [
       "2021-09-15",
-      "2026-11-06"
+      "2026-11-09"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 2,
+    "new_articles": [
+      {
+        "title": "Let\u2019s Be Demanding of Government, but Not Cheaply Cynical About It",
+        "url": "https://www.vitalcitynyc.org/lets-be-demanding-of-government-but-not-cheaply-cynical-about-it/",
+        "published_date": "2026-11-09",
+        "primary_author": "Vishaan Chakrabarti"
+      },
+      {
+        "title": "Is Zohran Mamdani\u2019s Coalition Reshaping American Politics?",
+        "url": "https://www.vitalcitynyc.org/is-zohran-mamdanis-coalition-reshaping-american-politics/",
+        "published_date": "2026-11-09",
+        "primary_author": "Richard Florida"
+      }
+    ]
   },
-  "total_pieces": 992,
+  "total_pieces": 994,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 262
+    "2026": 264
   },
   "by_month": {
     "2021-09": 1,
@@ -80,12 +93,12 @@
     "2026-08": 16,
     "2026-09": 33,
     "2026-10": 26,
-    "2026-11": 5
+    "2026-11": 7
   },
   "by_type": [
     [
       "opinion/commentary",
-      775
+      778
     ],
     [
       "q&a",
@@ -93,7 +106,7 @@
     ],
     [
       "data analysis",
-      53
+      52
     ],
     [
       "podcast",
@@ -138,12 +151,12 @@
       112
     ],
     [
-      "Justice",
+      "Housing",
       83
     ],
     [
-      "Housing",
-      82
+      "Justice",
+      83
     ],
     [
       "Gun Violence",
@@ -152,6 +165,10 @@
     [
       "Culture",
       78
+    ],
+    [
+      "Politics",
+      57
     ],
     [
       "Economics",
@@ -164,10 +181,6 @@
     [
       "Interview",
       56
-    ],
-    [
-      "Politics",
-      55
     ],
     [
       "Jails",
@@ -218,11 +231,11 @@
       26
     ]
   ],
-  "n_topics_total": 233,
+  "n_topics_total": 234,
   "by_credential_pieces": [
     [
       "Academic",
-      236
+      237
     ],
     [
       "Journalist / media",
@@ -253,12 +266,12 @@
       58
     ],
     [
-      "Legal practitioner",
+      "Architecture / design / planning",
       33
     ],
     [
-      "Architecture / design / planning",
-      32
+      "Legal practitioner",
+      33
     ],
     [
       "Survey / reader poll",
@@ -325,8 +338,8 @@
     "City Government",
     "Government Operations",
     "City Planning",
-    "Justice",
     "Housing",
+    "Justice",
     "Gun Violence"
   ],
   "topic_by_year": {
@@ -364,18 +377,18 @@
       "2025": 39,
       "2026": 18
     },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 37,
+      "2026": 30
+    },
     "Justice": {
       "2022": 4,
       "2023": 26,
       "2024": 27,
       "2025": 13,
       "2026": 13
-    },
-    "Housing": {
-      "2023": 5,
-      "2024": 11,
-      "2025": 37,
-      "2026": 29
     },
     "Gun Violence": {
       "2022": 14,
@@ -386,17 +399,17 @@
     }
   },
   "wc_stats": {
-    "n": 973,
+    "n": 971,
     "median": 1642,
-    "mean": 2184,
+    "mean": 2185,
     "p90": 3276,
     "max": 15166,
-    "p10": 933,
+    "p10": 937,
     "p25": 1292,
-    "p75": 2231,
+    "p75": 2232,
     "p95": 5883,
-    "no_count": 19,
-    "core_1000_2499": 698,
+    "no_count": 23,
+    "core_1000_2499": 697,
     "under_500": 43,
     "over_5000": 57
   },
@@ -407,11 +420,11 @@
     ],
     [
       "500-999",
-      63
+      62
     ],
     [
       "1,000-1,999",
-      557
+      556
     ],
     [
       "2,000-2,999",
@@ -448,7 +461,7 @@
       {
         "floor": 750,
         "label": "750",
-        "n": 49
+        "n": 48
       },
       {
         "floor": 1000,
@@ -458,7 +471,7 @@
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 151
+        "n": 152
       },
       {
         "floor": 1500,
@@ -468,7 +481,7 @@
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 117
+        "n": 115
       },
       {
         "floor": 2000,
@@ -542,15 +555,15 @@
     },
     {
       "year": "2026",
-      "n": 245,
-      "p25": 1311,
-      "median": 1756,
-      "p75": 2424,
+      "n": 243,
+      "p25": 1320,
+      "median": 1728,
+      "p75": 2438,
       "max": 13675
     }
   ],
   "by_nauthors": {
-    "1": 839,
+    "1": 841,
     "2": 124,
     "3": 26,
     "4": 1,
@@ -589,14 +602,14 @@
       "credential": "Journalist / media"
     },
     {
+      "name": "Vishaan Chakrabarti",
+      "posts": 16,
+      "credential": "Architecture / design / planning"
+    },
+    {
       "name": "Harry Siegel",
       "posts": 15,
       "credential": "Journalist / media"
-    },
-    {
-      "name": "Vishaan Chakrabarti",
-      "posts": 15,
-      "credential": "Architecture / design / planning"
     },
     {
       "name": "A Survey",
@@ -709,39 +722,39 @@
       },
       {
         "year": "2026",
-        "weeks": 44.3,
-        "pieces": 262,
-        "outside_issues": 182,
-        "per_week_all": 5.92,
-        "per_week_outside_issues": 4.11,
+        "weeks": 44.7,
+        "pieces": 264,
+        "outside_issues": 184,
+        "per_week_all": 5.9,
+        "per_week_outside_issues": 4.12,
         "partial": true
       }
     ],
-    "total_weeks": 268.3,
+    "total_weeks": 268.7,
     "all_time_per_week": 3.7,
     "all_time_per_week_outside_issues": 1.79,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.11,
-    "current_per_week_all": 5.92,
+    "current_per_week_outside_issues": 4.12,
+    "current_per_week_all": 5.9,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 512,
       "published_away_from_drop": 69,
       "share_of_issue_pieces": 13.5,
-      "current_year_strict": 4.11,
-      "current_year_loose": 4.4,
+      "current_year_strict": 4.12,
+      "current_year_loose": 4.41,
       "all_time_strict": 1.79,
       "all_time_loose": 2.05,
       "all_time_all": 3.7
     }
   },
   "rhythm": {
-    "n_dated": 992,
+    "n_dated": 994,
     "by_weekday": [
       {
         "day": "Mon",
-        "pieces": 67,
-        "share": 6.8
+        "pieces": 69,
+        "share": 6.9
       },
       {
         "day": "Tue",
@@ -751,17 +764,17 @@
       {
         "day": "Wed",
         "pieces": 471,
-        "share": 47.5
+        "share": 47.4
       },
       {
         "day": "Thu",
         "pieces": 192,
-        "share": 19.4
+        "share": 19.3
       },
       {
         "day": "Fri",
         "pieces": 65,
-        "share": 6.6
+        "share": 6.5
       },
       {
         "day": "Sat",
@@ -775,8 +788,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.5,
-    "midweek_share": 83.9,
+    "top_day_share": 47.4,
+    "midweek_share": 83.7,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -852,9 +865,9 @@
       {
         "month": "November",
         "abbr": "Nov",
-        "pieces": 54,
+        "pieces": 56,
         "occurrences": 6,
-        "per_occurrence": 9.0
+        "per_occurrence": 9.3
       },
       {
         "month": "December",

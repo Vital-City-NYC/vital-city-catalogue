@@ -1,15 +1,28 @@
 {
-  "generated_at": "2026-11-09T02:20:25.377278+00:00",
+  "generated_at": "2026-11-09T21:23:24.267786+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 992,
+  "total_posts": 994,
   "total_authors": 541,
   "total_issues": 33,
-  "total_topics": 233,
+  "total_topics": 234,
   "date_range": [
     "2021-09-15",
-    "2026-11-06"
+    "2026-11-09"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 2,
+  "new_articles": [
+    {
+      "title": "Let’s Be Demanding of Government, but Not Cheaply Cynical About It",
+      "url": "https://www.vitalcitynyc.org/lets-be-demanding-of-government-but-not-cheaply-cynical-about-it/",
+      "published_date": "2026-11-09",
+      "primary_author": "Vishaan Chakrabarti"
+    },
+    {
+      "title": "Is Zohran Mamdani’s Coalition Reshaping American Politics?",
+      "url": "https://www.vitalcitynyc.org/is-zohran-mamdanis-coalition-reshaping-american-politics/",
+      "published_date": "2026-11-09",
+      "primary_author": "Richard Florida"
+    }
+  ]
 }
