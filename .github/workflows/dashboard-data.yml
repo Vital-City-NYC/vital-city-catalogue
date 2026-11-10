@@ -1,0 +1,160 @@
+name: dashboard-data
+
+# Builds the files behind the "Vital City analytics" Claude Dashboard.
+#
+# Runs after each growth refresh (network-refresh.yml, about twice a day), and
+# by hand from the Actions tab. vc_dashboard_build.py reads the growth payload
+# and writes about 35 CSVs of totals plus a history folder of daily snapshots.
+#
+# THOSE FILES ARE PRIVATE. They hold donation totals and subscriber counts and
+# this repository is public, so they are never written into this checkout.
+# They go to the private repository vitalcity-nyc/vc-dashboard-data, which this
+# job checks out and pushes to with a deploy key (secret DASHBOARD_DATA_KEY, a
+# key that works on that one repository only). This job's log is public too:
+# it prints file names and the data's as-of time, never a figure.
+#
+# A Claude scheduled task ("Vital City analytics dashboard refresh") then copies
+# new files from the private repository into the dashboard, six times a day.
+# Before this (Oct. 21 to Nov. 10, 2026) the script ran on Josh's Mac, and a
+# sleeping Mac meant a missed refresh.
+
+on:
+  workflow_run:
+    workflows: ["network-refresh"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dashboard-data
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # After a growth refresh that failed there is nothing new to read.
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check the deploy key is set
+        env:
+          KEY: ${{ secrets.DASHBOARD_DATA_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error title=No deploy key::The DASHBOARD_DATA_KEY secret is not set, so the private data repository can't be reached."
+            exit 1
+          fi
+
+      - name: Check out this repository
+        uses: actions/checkout@v4
+        with:
+          path: catalogue
+
+      - name: Check out the private data repository
+        uses: actions/checkout@v4
+        with:
+          repository: vitalcity-nyc/vc-dashboard-data
+          ssh-key: ${{ secrets.DASHBOARD_DATA_KEY }}
+          path: dashdata
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet cryptography
+
+      - name: Build the dashboard files
+        working-directory: catalogue
+        env:
+          VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
+          VC_DASH_DIR: ${{ github.workspace }}/dashdata
+        run: python3 vc_dashboard_build.py --alerts
+
+      # No fallback: a failure here must stop the job before anything is saved.
+      # Compares the new files with the last saved ones. Prints file names only.
+      - name: Safety check - refuse to save a gutted build
+        working-directory: dashdata
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, sys
+          from pathlib import Path
+
+          def old(path):
+              r = subprocess.run(["git", "show", f"HEAD:{path}"], capture_output=True, text=True)
+              return r.stdout if r.returncode == 0 else None
+
+          bad = []
+          new_asof = json.loads(Path("out/as_of.json").read_text()).get("as_of", "")
+          prev = old("out/as_of.json")
+          old_asof = json.loads(prev).get("as_of", "") if prev else ""
+          if not new_asof: bad.append("out/as_of.json has no as-of time")
+          if old_asof and new_asof < old_asof: bad.append("the new data is older than what is already saved")
+
+          tracked = subprocess.run(["git", "ls-files", "out", "history"], capture_output=True, text=True).stdout.split()
+          for path in tracked:
+              if not path.endswith(".csv"): continue
+              p = Path(path)
+              if not p.exists():
+                  bad.append(f"{path} was not written"); continue
+              was, now = len(old(path).splitlines()), len(p.read_text().splitlines())
+              if was > 1 and now <= 1: bad.append(f"{path} came back empty")
+              # The history files are records and should keep growing. (A day's detail rows
+              # can be replaced by a slightly shorter set, so allow a little give.)
+              if path.startswith("history/") and now < was * 0.8: bad.append(f"{path} lost a fifth or more of its rows")
+
+          if bad:
+              for b in bad: print(f"::error title=Dashboard data not saved::{b}")
+              sys.exit(1)
+          print(f"ok: {len(tracked)} files checked, data as of {new_asof}")
+          PY
+
+      - name: Save to the private repository
+        working-directory: dashdata
+        run: |
+          git config user.name "Vital City Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "nothing new to save"
+            exit 0
+          fi
+          git commit -q -m "Dashboard data $(date -u '+%Y-%m-%d %H:%M') UTC"
+          # The weekly follower-counts task also writes here (one other file),
+          # so step past its commit if it landed first.
+          ok=
+          for i in 1 2 3 4; do
+            if git push -q; then ok=1; echo "saved on attempt $i"; break; fi
+            echo "push attempt $i failed; syncing and retrying"
+            git pull -q --rebase origin main || git rebase --abort || true
+            sleep 6
+          done
+          [ -n "$ok" ] || { echo "::error title=Dashboard data not saved::could not push to the private repository after 4 attempts"; exit 1; }
+
+      # Failure only, and only ever a direct message to Josh: never a channel.
+      - name: Tell Josh if it failed
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_DM_TO: ${{ secrets.SLACK_DM_TO }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          tok = os.environ.get("SLACK_BOT_TOKEN", "")
+          to = os.environ.get("SLACK_DM_TO") or "U0730459X4L"
+          if not tok:
+              raise SystemExit("no SLACK_BOT_TOKEN; GitHub's failure email is the only notice")
+          if not to.startswith(("U", "D", "W")):
+              raise SystemExit("SLACK_DM_TO is not a person or a DM; not posting anywhere")
+          text = ("Vital City analytics dashboard: the build of its data files failed, so the "
+                  "dashboard keeps its last numbers. Details: " + os.environ["RUN_URL"])
+          req = urllib.request.Request("https://slack.com/api/chat.postMessage",
+              data=json.dumps({"channel": to, "text": text, "unfurl_links": False}).encode(),
+              headers={"Authorization": f"Bearer {tok}",
+                       "Content-Type": "application/json; charset=utf-8"})
+          r = json.loads(urllib.request.urlopen(req, timeout=30).read())
+          print("DM sent" if r.get("ok") else f"Slack refused: {r.get('error')}")
+          PY
