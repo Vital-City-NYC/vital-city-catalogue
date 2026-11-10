@@ -472,10 +472,17 @@ _dhr = [_dh[k2] for k2 in sorted(_dh)]
 _save(HIST / "daily.csv", ["date","ghost_visits","ghost_pageviews","signups","note"], _dhr)
 now_daily = _dhr[-120:]
 write("now_daily.csv", ["date","ghost_visits","ghost_pageviews","signups","note"], now_daily)
-# per-day details: newest version of each day wins, older days are kept
+# per-day details: newest version of each day wins, older days are kept.
+# One exception. The payload lists only the most recent signups, so once a day is older than
+# that list a new build has no signup breakdown for it. The breakdown saved while the day was
+# still in the list is the only copy, so it is kept rather than replaced with nothing.
 _new_days = set(r["date"] for r in dd)
-_ddh = [r for r in _read(HIST / "day_detail.csv") if r["date"] not in _new_days] + [{k2: str(v) for k2, v in r.items()} for r in dd]
-_ddh.sort(key=lambda r: r["date"])
+_SIGNUP_KINDS = ("signup_source", "signup_page")
+_ddh = [r for r in _read(HIST / "day_detail.csv")
+        if r["date"] not in _new_days or (r["kind"] in _SIGNUP_KINDS and r["date"] not in _full)]
+_ddh += [{k2: str(v) for k2, v in r.items()} for r in dd]
+_KIND_ORDER = {k2: i for i, k2 in enumerate(("site", "signup_source", "signup_page", "published", "unsubs", "gifts", "send"))}
+_ddh.sort(key=lambda r: (r["date"], _KIND_ORDER.get(r["kind"], 99)))
 _save(HIST / "day_detail.csv", ["date","kind","label","n","extra"], _ddh)
 _cut120 = (_date.fromisoformat(_gen) - _td(days=120)).isoformat()
 write("day_detail.csv", ["date","kind","label","n","extra"], [r for r in _ddh if r["date"] >= _cut120])
