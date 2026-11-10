@@ -7,7 +7,7 @@
     "type_basis": "default",
     "published_date": "2026-11-09",
     "published_at": "2026-11-09T20:15:43.000+00:00",
-    "updated_at": "2026-11-10T14:16:31.000+00:00",
+    "updated_at": "2026-11-10T16:58:25.000+00:00",
     "primary_author": "Vishaan Chakrabarti",
     "authors": [
       "Vishaan Chakrabarti"
@@ -32,9 +32,9 @@
       "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 1437,
-    "reading_minutes": 6,
+    "visibility": "members",
+    "word_count": null,
+    "reading_minutes": 5,
     "id": "6af2294a5a4a6700013a0638"
   },
   {
@@ -2044,7 +2044,7 @@
     "type_basis": "default",
     "published_date": "2026-09-10",
     "published_at": "2026-09-10T14:55:09.000+00:00",
-    "updated_at": "2026-09-10T14:55:09.000+00:00",
+    "updated_at": "2026-11-10T17:46:45.000+00:00",
     "primary_author": "Justin Reich",
     "authors": [
       "Justin Reich"
@@ -2069,7 +2069,7 @@
     },
     "featured": false,
     "visibility": "public",
-    "word_count": 1858,
+    "word_count": 1856,
     "reading_minutes": 8,
     "id": "6a7cb9f4c673b70001958f45"
   },
