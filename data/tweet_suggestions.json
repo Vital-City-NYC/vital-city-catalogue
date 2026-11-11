@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-09T22:56:54+00:00",
+ "generated": "2026-11-11T20:06:31+00:00",
  "window_days": 30,
  "pieces": [
   {
@@ -29,6 +29,35 @@
     {
      "kind": "hook",
      "text": "\"People see the widespread failures brought on by our collective shortsightedness, and then become jaded when we try to fix any of it.\" Vishaan Chakrabarti on cynicism and the midterms."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "is-zohran-mamdanis-coalition-reshaping-american-politics",
+   "title": "Is Zohran Mamdani’s Coalition Reshaping American Politics?",
+   "url": "https://www.vitalcitynyc.org/is-zohran-mamdanis-coalition-reshaping-american-politics/",
+   "date": "2026-11-09",
+   "author": "Richard Florida",
+   "handle": "@richard_florida",
+   "dek": "The midterm election results may signal that a deeper shift is underway.",
+   "tags": [
+    "Elections",
+    "Politics"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Richard Florida argues that the coalition behind the Democratic midterm landslide resembles the one Zohran Mamdani built to win the mayoralty: creative and service workers united by the cost of a decent life."
+    },
+    {
+     "kind": "argument",
+     "text": "Read @richard_florida on whether Zohran Mamdani's coalition of creative and service workers is already reshaping American politics, and what the midterm results suggest about it."
+    },
+    {
+     "kind": "hook",
+     "text": "\"The midterm results suggest that coalition has legs and is already reshaping American politics.\" Richard Florida on what Zohran Mamdani's win in New York City may have previewed."
     }
    ],
    "attempts": 1
