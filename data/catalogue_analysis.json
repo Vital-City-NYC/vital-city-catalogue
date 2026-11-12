@@ -1,27 +1,52 @@
 {
   "meta": {
-    "generated_at": "2026-11-12T03:35:37.302448+00:00",
+    "generated_at": "2026-11-12T18:46:17.931846+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 994,
-    "total_authors": 541,
+    "total_posts": 998,
+    "total_authors": 542,
     "total_issues": 33,
-    "total_topics": 234,
+    "total_topics": 236,
     "date_range": [
       "2021-09-15",
-      "2026-11-09"
+      "2026-11-12"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 4,
+    "new_articles": [
+      {
+        "title": "The Best Street Safety Fix New York Isn\u2019t Using",
+        "url": "https://www.vitalcitynyc.org/the-best-street-safety-fix-new-york-isnt-using/",
+        "published_date": "2026-11-12",
+        "primary_author": "Sara Lind"
+      },
+      {
+        "title": "Tough Truths About Integration and Education",
+        "url": "https://www.vitalcitynyc.org/tough-truths-integration-education/",
+        "published_date": "2026-11-12",
+        "primary_author": "Daniel Weisberg"
+      },
+      {
+        "title": "A New Rec Center Comes to Play",
+        "url": "https://www.vitalcitynyc.org/a-new-rec-center-shirley-chisolm/",
+        "published_date": "2026-11-12",
+        "primary_author": "Alyssa Katz"
+      },
+      {
+        "title": "How Strong Are the Winds at Mamdani\u2019s Back?",
+        "url": "https://www.vitalcitynyc.org/zohran-mamdanis-good-fortune/",
+        "published_date": "2026-11-12",
+        "primary_author": "Ross Barkan"
+      }
+    ]
   },
-  "total_pieces": 994,
+  "total_pieces": 998,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 264
+    "2026": 268
   },
   "by_month": {
     "2021-09": 1,
@@ -80,12 +105,12 @@
     "2026-08": 16,
     "2026-09": 33,
     "2026-10": 26,
-    "2026-11": 7
+    "2026-11": 11
   },
   "by_type": [
     [
       "opinion/commentary",
-      778
+      782
     ],
     [
       "q&a",
@@ -155,7 +180,7 @@
     ],
     [
       "Politics",
-      57
+      58
     ],
     [
       "Economics",
@@ -175,7 +200,7 @@
     ],
     [
       "Education",
-      43
+      44
     ],
     [
       "Social Science",
@@ -218,7 +243,7 @@
       26
     ]
   ],
-  "n_topics_total": 234,
+  "n_topics_total": 236,
   "by_credential_pieces": [
     [
       "Academic",
@@ -226,15 +251,15 @@
     ],
     [
       "Journalist / media",
-      134
+      135
     ],
     [
       "Nonprofit / advocacy",
-      117
+      118
     ],
     [
       "Other / unclassified",
-      109
+      111
     ],
     [
       "Vital City (institutional)",
@@ -280,7 +305,7 @@
     ],
     [
       "Nonprofit / advocacy",
-      82
+      83
     ],
     [
       "Journalist / media",
@@ -386,17 +411,17 @@
     }
   },
   "wc_stats": {
-    "n": 970,
+    "n": 974,
     "median": 1642,
-    "mean": 2186,
-    "p90": 3331,
+    "mean": 2185,
+    "p90": 3276,
     "max": 15166,
-    "p10": 935,
-    "p25": 1292,
-    "p75": 2232,
-    "p95": 5884,
+    "p10": 942,
+    "p25": 1294,
+    "p75": 2234,
+    "p95": 5882,
     "no_count": 24,
-    "core_1000_2499": 696,
+    "core_1000_2499": 699,
     "under_500": 43,
     "over_5000": 57
   },
@@ -411,11 +436,11 @@
     ],
     [
       "1,000-1,999",
-      555
+      557
     ],
     [
       "2,000-2,999",
-      196
+      198
     ],
     [
       "3,000-4,999",
@@ -463,12 +488,12 @@
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 177
+        "n": 178
       },
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 115
+        "n": 116
       },
       {
         "floor": 2000,
@@ -478,12 +503,12 @@
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 69
+        "n": 70
       },
       {
         "floor": 2500,
         "label": "2,500",
-        "n": 35
+        "n": 36
       },
       {
         "floor": 2750,
@@ -542,15 +567,15 @@
     },
     {
       "year": "2026",
-      "n": 242,
-      "p25": 1315,
-      "median": 1742,
+      "n": 246,
+      "p25": 1351,
+      "median": 1766,
       "p75": 2439,
       "max": 13675
     }
   ],
   "by_nauthors": {
-    "1": 841,
+    "1": 845,
     "2": 124,
     "3": 26,
     "4": 1,
@@ -709,34 +734,34 @@
       },
       {
         "year": "2026",
-        "weeks": 44.7,
-        "pieces": 264,
-        "outside_issues": 184,
-        "per_week_all": 5.9,
-        "per_week_outside_issues": 4.12,
+        "weeks": 45.1,
+        "pieces": 268,
+        "outside_issues": 188,
+        "per_week_all": 5.94,
+        "per_week_outside_issues": 4.16,
         "partial": true
       }
     ],
-    "total_weeks": 268.7,
-    "all_time_per_week": 3.7,
-    "all_time_per_week_outside_issues": 1.79,
+    "total_weeks": 269.1,
+    "all_time_per_week": 3.71,
+    "all_time_per_week_outside_issues": 1.81,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.12,
-    "current_per_week_all": 5.9,
+    "current_per_week_outside_issues": 4.16,
+    "current_per_week_all": 5.94,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 512,
       "published_away_from_drop": 69,
       "share_of_issue_pieces": 13.5,
-      "current_year_strict": 4.12,
-      "current_year_loose": 4.41,
-      "all_time_strict": 1.79,
-      "all_time_loose": 2.05,
-      "all_time_all": 3.7
+      "current_year_strict": 4.16,
+      "current_year_loose": 4.45,
+      "all_time_strict": 1.81,
+      "all_time_loose": 2.06,
+      "all_time_all": 3.71
     }
   },
   "rhythm": {
-    "n_dated": 994,
+    "n_dated": 998,
     "by_weekday": [
       {
         "day": "Mon",
@@ -746,17 +771,17 @@
       {
         "day": "Tue",
         "pieces": 169,
-        "share": 17.0
+        "share": 16.9
       },
       {
         "day": "Wed",
         "pieces": 471,
-        "share": 47.4
+        "share": 47.2
       },
       {
         "day": "Thu",
-        "pieces": 192,
-        "share": 19.3
+        "pieces": 196,
+        "share": 19.6
       },
       {
         "day": "Fri",
@@ -775,8 +800,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.4,
-    "midweek_share": 83.7,
+    "top_day_share": 47.2,
+    "midweek_share": 83.8,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -852,9 +877,9 @@
       {
         "month": "November",
         "abbr": "Nov",
-        "pieces": 56,
+        "pieces": 60,
         "occurrences": 6,
-        "per_occurrence": 9.3
+        "per_occurrence": 10.0
       },
       {
         "month": "December",
