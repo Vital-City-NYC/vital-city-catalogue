@@ -1,6 +1,6 @@
 name: kpi-weekly
 
-# Weekly key indicators for the Claude dashboard (claude.ai/artifact/JmbSAJs5jv27ttVhyNczWW).
+# Weekly key indicators for the Vital City analytics Claude dashboard (claude.ai/artifact/2YceF8cyNHLBYWuKoSjwjy).
 # Pulls Mailchimp, Donorbox, Ghost and GA4 directly and overwrites the
 # "Vital City key indicators" Google Sheet, which the dashboard reads live.
 # Writes nothing to the repo. GitHub emails on failure.

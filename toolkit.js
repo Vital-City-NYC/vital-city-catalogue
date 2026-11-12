@@ -20,16 +20,17 @@
   var TOOLS = [
     { id: "catalogue",  label: "Catalogue",  path: "catalogue/",         gated: true,  data: "data/meta.json",
       blurb: "Every piece Vital City has published, searchable by author, topic, issue and date, with readership and contributor contacts." },
-    // Two views of one subject: the monthly dashboard here, and the seven
-    // weekly measures in a Claude dashboard (it reads the key-indicators
-    // Google Sheet, which kpi_weekly.py writes every Monday).
+    // Two views of one subject: the monthly dashboard here, and the Vital City
+    // analytics Claude dashboard (daily data from vc_dashboard_build.py, plus
+    // the seven weekly measures from the key-indicators Google Sheet, which
+    // kpi_weekly.py writes every Monday).
     { id: "growth",     label: "Growth",     path: "growth/",            gated: true,  data: "growth/data.enc",
       blurb: "The newsletter list, signups, sends, site traffic and giving, with the ten key indicators and the weekly report.",
       views: [
         { id: "growth", label: "Dashboard", path: "growth/", gated: true, data: "growth/data.enc",
           blurb: "The newsletter list, signups, sends, site traffic and giving, by month, with the ten key indicators and the weekly report." },
-        { id: "weekly", label: "Weekly indicators", href: "https://claude.ai/artifact/JmbSAJs5jv27ttVhyNczWW", gated: false, static: true,
-          blurb: "Seven measures week by week since January 2025, with industry norms and Vital City's own averages. A Claude dashboard: open it signed in to claude.ai with the Google Sheets connector on." }
+        { id: "analytics", label: "Analytics", href: "https://claude.ai/artifact/2YceF8cyNHLBYWuKoSjwjy", gated: false, static: true,
+          blurb: "Headline numbers updated through the day, with signups, newsletters, site traffic, giving, the app and the seven weekly key indicators. A Claude dashboard: open it signed in to claude.ai; the weekly indicators need the Google Sheets connector on." }
       ] },
     { id: "contacts",   label: "Contacts",   path: "network/",           gated: true,  data: "network/data.enc",
       blurb: "Everyone in Vital City's orbit: subscribers, contributors, press, funders and donors, searchable and exportable." },
