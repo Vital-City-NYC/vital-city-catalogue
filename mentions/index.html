@@ -49,6 +49,9 @@
   .chip .mbadge{margin:0}
   .chip.on{border-color:var(--vc-black);box-shadow:inset 0 0 0 1px var(--vc-black)}
   .chip .n{color:var(--vc-charcoal);font-weight:600}
+  .bar select{font:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);max-width:260px}
+  ul.feed li.grp{border-bottom:1px solid var(--vc-black);padding:16px 0 4px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+  ul.feed li.grp .ct{color:var(--vc-charcoal);font-weight:600;letter-spacing:.04em;margin-left:6px}
   #q{font:inherit;font-size:13px;padding:6px 10px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);min-width:220px;flex:1 1 220px;max-width:340px}
   .acts{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
   .acts button{font:inherit;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--vc-black);background:var(--vc-black);color:#fff;padding:6px 12px;cursor:pointer}
@@ -72,7 +75,7 @@
   /* dark mode, the toolkit's shared convention */
   html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1d1e21}
   html.dark body{background:var(--vc-paper);color:var(--vc-black)}
-  html.dark input{background:#1b1c1f!important;color:var(--vc-black)!important;border-color:var(--vc-cloud)!important}
+  html.dark input,html.dark select{background:#1b1c1f!important;color:var(--vc-black)!important;border-color:var(--vc-cloud)!important}
   html.dark .confbar{background:#0b0b0d;color:#cfcfcf}
   html.dark .acts button{background:#e8e8e5;color:#161719;border-color:#e8e8e5}
   html.dark .acts button.ghost{background:var(--vc-white);color:var(--vc-black);border-color:var(--vc-cloud)}
@@ -83,6 +86,7 @@
     .bar{position:static}
     .acts{margin-left:0}
     #q{max-width:none}
+    .bar select{flex:1 1 45%;max-width:none}
     ul.feed li,.feed a{overflow-wrap:anywhere}
   }
 </style>
@@ -117,6 +121,15 @@
 <div class="bar">
   <div class="chips" id="chips"></div>
   <input id="q" type="search" placeholder="Filter by outlet or words" aria-label="Filter by outlet or words">
+  <select id="sort" aria-label="Sort" title="Order the list, or group it under subheads">
+    <option value="newest">Newest first</option>
+    <option value="oldest">Oldest first</option>
+    <option value="subject">By subject</option>
+    <option value="year">By year</option>
+    <option value="outlet">By outlet</option>
+    <option value="kind">By how it uses Vital City</option>
+  </select>
+  <select id="subj" aria-label="Subject" title="Subjects are read from each listing's headline and the passage that names Vital City"></select>
   <div class="acts">
     <button id="copy" title="Copy what is showing, with links, to paste into an email, a doc or Slack">Copy list</button>
     <button id="csv" class="ghost" title="Download what is showing as a spreadsheet">Download CSV</button>
@@ -142,6 +155,7 @@
   </section>
   <div class="foot" id="how">
     <p><b>Where this comes from.</b> The press tracker runs every night (growth_pull.py) and writes one feed. This page, the growth dashboard and the press page all read that feed and apply the same rules, kept in one file (mentions.js), so the three lists always match. Outlets on the whitelist can be changed; the <a href="../growth/about.html#whitelist">growth dashboard's guide</a> explains how.</p>
+    <p><b>Subjects.</b> The feed has no topic field, so each mention's subject is read from its headline and from the passage that names Vital City, using a word list kept in mentions.js. It describes the listing, not the whole article. Stories that name the mayor are filed under a policy subject when they have one, and under government and politics only when they don't. Entries logged by hand as "Liz quoted" and the like name no subject and are grouped as not clear. Outlets logged under several spellings ("NYTimes," "NY Times") are grouped under one name.</p>
     <p><b>What it leaves out.</b> Paywalled stories that hide the phrase from search engines, and podcast or radio appearances nobody has logged. <b>This is not the citation count.</b> The number used in the key indicators and on the home page is the stricter <a href="../prospects/#impact">impact ledger in Prospects</a>, which drops roundups, passing mentions and duplicates.</p>
   </div>
 </main>
@@ -201,30 +215,60 @@ const VM=window.vcMentions;
 const apDate=s=>{ if(!s) return ""; const d=new Date(String(s).slice(0,10)+"T12:00:00"); if(isNaN(d)) return String(s);
   return window.vcApDate?vcApDate(d):d.toDateString(); };
 const kindLabel=k=>(VM.KINDS.find(x=>x.k===k)||{}).l||"";
+const subjLabel=k=>(VM.SUBJECTS.find(x=>x.k===k)||{}).l||"";
 const hay=(...xs)=>xs.filter(Boolean).join(" ").toLowerCase();
 const matches=(text,q)=>!q||q.split(/\s+/).every(w=>text.includes(w));
+const dayOf=p=>VM.day(p);
+const SECTIONS=[
+  {id:"press", head:"In the press", row:p=>VM.pressRow(p)},
+  {id:"gov",   head:"Government and policy", row:p=>VM.govRow(p)},
+  {id:"audio", head:"Podcasts, radio and video", row:m=>VM.ledgerRow(m)}
+];
 
 function shown(){
-  const q=$("#q").value.trim().toLowerCase();
+  const q=$("#q").value.trim().toLowerCase(), S=$("#subj").value;
+  const bySubj=p=>!S||VM.subjectOf(p)===S;
   return {
-    press: P.filter(p=>(KIND==="all"||p._kind===KIND) && matches(hay(p.source,p.domain,p.title,p.snippet,kindLabel(p._kind)),q)),
-    gov:   KIND==="all"||KIND==="gov" ? G.items.filter(p=>matches(hay(p.source,p.domain,p.title,p.snippet),q)) : [],
-    audio: KIND==="all"||KIND==="audio" ? L.items.filter(m=>matches(hay(m.outlet,m.program,m.who,m.note),q)) : []
+    press: P.filter(p=>(KIND==="all"||p._kind===KIND) && bySubj(p) && matches(hay(p.source,p.domain,p.title,p.snippet,kindLabel(p._kind),subjLabel(VM.subjectOf(p))),q)),
+    gov:   KIND==="all"||KIND==="gov" ? G.items.filter(p=>bySubj(p) && matches(hay(p.source,p.domain,p.title,p.snippet,subjLabel(VM.subjectOf(p))),q)) : [],
+    audio: KIND==="all"||KIND==="audio" ? L.items.filter(m=>bySubj(m) && matches(hay(m.outlet,m.program,m.who,m.note,subjLabel(VM.subjectOf(m))),q)) : []
   };
 }
 
+// Order a section's items and split them into labeled groups for the chosen
+// sort. Within a group, newest first (oldest first for "oldest").
+function grouped(items, section){
+  const mode=$("#sort").value;
+  const byDate=(a,b)=>dayOf(b).localeCompare(dayOf(a));
+  const list=items.slice().sort(mode==="oldest"?(a,b)=>byDate(b,a):byDate);
+  let key=null, order=null;
+  if(mode==="subject"){ key=p=>subjLabel(VM.subjectOf(p)); order=(a,b)=>(a.label===subjLabel("other"))-(b.label===subjLabel("other"))||b.items.length-a.items.length||a.label.localeCompare(b.label); }
+  else if(mode==="year"){ key=p=>dayOf(p).slice(0,4)||"Undated"; order=(a,b)=>b.label.localeCompare(a.label); }
+  else if(mode==="outlet"){ key=p=>VM.outletOf(p); order=(a,b)=>b.items.length-a.items.length||a.label.localeCompare(b.label); }
+  else if(mode==="kind" && section==="press"){ const ix=k=>VM.KINDS.findIndex(x=>x.l===k); key=p=>kindLabel(p._kind); order=(a,b)=>ix(a.label)-ix(b.label); }
+  if(!key) return [{label:null, items:list}];
+  const m=new Map(); list.forEach(p=>{ const k=key(p); if(!m.has(k)) m.set(k,[]); m.get(k).push(p); });
+  return [...m].map(([label,items])=>({label,items})).sort(order);
+}
+
 function draw(){
-  const s=shown();
-  const none=t=>`<li class="empty">${t}</li>`;
-  $("#pressFeed").innerHTML=s.press.length?s.press.map(VM.pressRow).join(""):none(KIND==="gov"||KIND==="audio"?"Hidden by the filter above.":"Nothing matches.");
-  $("#govFeed").innerHTML=s.gov.length?s.gov.map(VM.govRow).join(""):none(KIND!=="all"&&KIND!=="gov"?"Hidden by the filter above.":"Nothing matches.");
-  $("#audioFeed").innerHTML=s.audio.length?s.audio.map(VM.ledgerRow).join(""):none(KIND!=="all"&&KIND!=="audio"?"Hidden by the filter above.":"Nothing matches.");
-  const of=(a,b)=>a===b?`${b}`:`${a} of ${b}`;
-  $("#ctPress").textContent=of(s.press.length,P.length);
-  $("#ctGov").textContent=of(s.gov.length,G.items.length);
-  $("#ctAudio").textContent=of(s.audio.length,L.items.length);
+  const s=shown(), none=t=>`<li class="empty">${t}</li>`;
+  const totals={press:P.length, gov:G.items.length, audio:L.items.length};
+  const hidden={press:KIND==="gov"||KIND==="audio", gov:KIND!=="all"&&KIND!=="gov", audio:KIND!=="all"&&KIND!=="audio"};
+  SECTIONS.forEach(sec=>{
+    const items=s[sec.id], el=$("#"+sec.id+"Feed");
+    if(!items.length){ el.innerHTML=none(hidden[sec.id]?"Hidden by the filter above.":"Nothing matches."); }
+    else el.innerHTML=grouped(items,sec.id).map(g=>(g.label?`<li class="grp">${esc(g.label)} <span class="ct">${g.items.length}</span></li>`:"")+g.items.map(sec.row).join("")).join("");
+    const a=items.length, b=totals[sec.id];
+    $("#ct"+sec.id[0].toUpperCase()+sec.id.slice(1)).textContent=a===b?`${b}`:`${a} of ${b}`;
+  });
   $$(".chip").forEach(c=>c.classList.toggle("on",c.dataset.k===KIND));
   $("#msg").textContent="";
+  // keep the view in the address, so a sorted or filtered list can be linked
+  try{ const u=new URL(location.href);
+    $("#sort").value==="newest"?u.searchParams.delete("sort"):u.searchParams.set("sort",$("#sort").value);
+    $("#subj").value?u.searchParams.set("subject",$("#subj").value):u.searchParams.delete("subject");
+    history.replaceState(null,"",u); }catch(e){}
 }
 
 function chips(){
@@ -235,20 +279,33 @@ function chips(){
     + chip("gov","Government and policy",G.items.length,"Official documents and policy institutions")
     + chip("audio","Podcasts, radio, video",L.items.length,"Logged by hand");
   $$(".chip").forEach(b=>b.addEventListener("click",()=>{ KIND=(KIND===b.dataset.k&&b.dataset.k!=="all")?"all":b.dataset.k; draw(); }));
+  const all=[...P,...G.items,...L.items], n={};
+  all.forEach(p=>{ const k=VM.subjectOf(p); n[k]=(n[k]||0)+1; });
+  $("#subj").innerHTML=`<option value="">All subjects</option>`+VM.SUBJECTS.filter(x=>n[x.k]).map(x=>`<option value="${x.k}">${esc(x.l)} (${n[x.k]})</option>`).join("");
 }
 
 /* Copy: plain text and, where the browser allows, the same list with live links
-   for email and docs. One line per item: outlet, date, title, tag, link. */
+   for email and docs. One line per item: outlet, date, title, tag, link. The
+   grouping on screen (subject, year, outlet) is kept as subheads. */
+const rowOf={
+  press:p=>({src:p.source||p.domain||"web",date:apDate(p.published_iso||p.published),title:p.title||"",url:p.url,tag:kindLabel(p._kind).toLowerCase()}),
+  gov:p=>({src:p.source||p.domain||"web",date:apDate(p.published_iso||p.published),title:p.title||"",url:p.url,tag:p.kind==="gov"?"official":"policy organization"}),
+  audio:m=>({src:m.outlet||"",date:apDate(m.date),title:[m.program,m.who].filter(Boolean).join(", "),url:m.url,tag:m.kind||""})
+};
 function copyParts(){
-  const s=shown(), T=[], H=[];
-  const block=(head,rows)=>{ if(!rows.length) return; T.push(head.toUpperCase()); H.push(`<p><b>${esc(head)}</b></p><ul>`);
-    rows.forEach(r=>{ T.push(`${r.src}, ${r.date}: ${r.title}${r.tag?` (${r.tag})`:""}\n${r.url}`);
-      H.push(`<li>${esc(r.src)}, ${esc(r.date)}: <a href="${esc(r.url)}">${esc(r.title)}</a>${r.tag?` (${esc(r.tag)})`:""}</li>`); });
-    T.push(""); H.push("</ul>"); };
-  block("In the press", s.press.map(p=>({src:p.source||p.domain||"web",date:apDate(p.published_iso||p.published),title:p.title||"",url:p.url,tag:kindLabel(p._kind).toLowerCase()})));
-  block("Government and policy", s.gov.map(p=>({src:p.source||p.domain||"web",date:apDate(p.published_iso||p.published),title:p.title||"",url:p.url,tag:p.kind==="gov"?"official":"policy organization"})));
-  block("Podcasts, radio and video", s.audio.map(m=>({src:m.outlet||"",date:apDate(m.date),title:[m.program,m.who].filter(Boolean).join(", "),url:m.url,tag:m.kind||""})));
-  const n=s.press.length+s.gov.length+s.audio.length;
+  const s=shown(), T=[], H=[]; let n=0;
+  SECTIONS.forEach(sec=>{
+    if(!s[sec.id].length) return;
+    T.push(sec.head.toUpperCase()); H.push(`<p><b>${esc(sec.head)}</b></p>`);
+    grouped(s[sec.id],sec.id).forEach(g=>{
+      if(g.label){ T.push(`${g.label} (${g.items.length})`); H.push(`<p><i>${esc(g.label)} (${g.items.length})</i></p>`); }
+      H.push("<ul>");
+      g.items.map(rowOf[sec.id]).forEach(r=>{ n++;
+        T.push(`${r.src}, ${r.date}: ${r.title}${r.tag?` (${r.tag})`:""}\n${r.url}`);
+        H.push(`<li>${esc(r.src)}, ${esc(r.date)}: <a href="${esc(r.url)}">${esc(r.title)}</a>${r.tag?` (${esc(r.tag)})`:""}</li>`); });
+      H.push("</ul>"); T.push("");
+    });
+  });
   return {text:T.join("\n").trim(), html:H.join(""), n};
 }
 $("#copy").addEventListener("click",async()=>{
@@ -262,10 +319,13 @@ $("#copy").addEventListener("click",async()=>{
 });
 $("#csv").addEventListener("click",()=>{
   const s=shown(), q=v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`;
-  const rows=[["section","date","outlet","how it uses Vital City","title","link","excerpt"]];
-  s.press.forEach(p=>rows.push(["press",VM.day(p),p.source||p.domain||"",kindLabel(p._kind),p.title,p.url,p.snippet||""]));
-  s.gov.forEach(p=>rows.push(["government and policy",VM.day(p),p.source||p.domain||"",p.kind==="gov"?"official":"policy organization",p.title,p.url,p.snippet||""]));
-  s.audio.forEach(m=>rows.push(["podcasts, radio and video",m.date||"",m.outlet||"",m.kind||"",[m.program,m.who].filter(Boolean).join(", "),m.url,m.note||""]));
+  const rows=[["section","date","year","outlet","outlet as listed","subject","how it uses Vital City","title","link","excerpt"]];
+  const add=(sec,p,how,title,listed,ex)=>rows.push([sec,dayOf(p),dayOf(p).slice(0,4),VM.outletOf(p),listed,subjLabel(VM.subjectOf(p)),how,title,p.url,ex||""]);
+  SECTIONS.forEach(sec=>grouped(s[sec.id],sec.id).forEach(g=>g.items.forEach(p=>{
+    if(sec.id==="press") add("press",p,kindLabel(p._kind),p.title,p.source||p.domain,p.snippet);
+    else if(sec.id==="gov") add("government and policy",p,p.kind==="gov"?"official":"policy organization",p.title,p.source||p.domain,p.snippet);
+    else add("podcasts, radio and video",p,p.kind||"",[p.program,p.who].filter(Boolean).join(", "),p.outlet,p.note);
+  })));
   if(rows.length===1){ $("#msg").textContent="Nothing showing to download."; return; }
   const blob=new Blob(["﻿"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
@@ -278,8 +338,14 @@ function init(data){
   if(L.last_audit) $("#audioNote").textContent=`Logged by hand, because Google News does not index audio. Last audited ${apDate(L.last_audit)}.`;
   const n=P.length+G.items.length+L.items.length;
   if(window.vcStamp) vcStamp("#asof", data.generated_at, `${n} mentions`); else $("#asof").textContent=`${n} mentions`;
-  chips(); draw();
+  chips();
+  try{ const u=new URLSearchParams(location.search);
+    if(u.get("sort")&&[...$("#sort").options].some(o=>o.value===u.get("sort"))) $("#sort").value=u.get("sort");
+    if(u.get("subject")&&[...$("#subj").options].some(o=>o.value===u.get("subject"))) $("#subj").value=u.get("subject"); }catch(e){}
+  draw();
   $("#q").addEventListener("input",draw);
+  $("#sort").addEventListener("change",draw);
+  $("#subj").addEventListener("change",draw);
   // press/, the growth dashboard and the home page link straight to a section
   if(location.hash) setTimeout(()=>document.getElementById(location.hash.slice(1))?.scrollIntoView(),60);
 }
