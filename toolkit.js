@@ -36,8 +36,16 @@
       blurb: "Everyone in Vital City's orbit: subscribers, contributors, press, funders and donors, searchable and exportable." },
     { id: "prospects",  label: "Prospects",  path: "prospects/",         gated: true,  data: "prospects/data.enc",
       blurb: "Foundations and individual donors worth approaching, ranked by the evidence in our own data." },
+    // Two views: the reporter map, and the full list of everyone who has cited
+    // Vital City (mentions/, drawn by mentions.js from the growth feed).
     { id: "press",      label: "Press",      path: "press/",             gated: true,  data: "press/data.enc",
-      blurb: "Who covers New York City government: reporters, the beats their own bylines prove, and how to reach them." },
+      blurb: "Who covers New York City government, and who has cited Vital City.",
+      views: [
+        { id: "press", label: "Reporters", path: "press/", gated: true, data: "press/data.enc",
+          blurb: "Who covers New York City government: reporters, the beats their own bylines prove, and how to reach them." },
+        { id: "mentions", label: "Media mentions", path: "mentions/", gated: true, data: "growth/data.enc",
+          blurb: "Every publication, government document and program that has cited Vital City, tagged by how it uses our work, on one page ready to copy." }
+      ] },
     // Rebuilt weekly, not nightly, so the home page allows it eight days before calling it stale.
     { id: "influence",  label: "Influence",  path: "influence/",         gated: true,  data: "influence/data.enc", staleHours: 192,
       blurb: "Vital City's footprint in New York City policy (press, the official record, scholarship, Wikipedia, the web), measured against eleven peers the same way every year since 2022." },

@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- installable app (VC Toolkit): phone home-screen only, no effect on the desktop page -->
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../app/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VC Toolkit">
+<meta name="robots" content="noindex,nofollow">
+<title>Vital City — Media mentions</title>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
+<link rel="stylesheet" href="../toolkit.css">
+<style>
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-cerulean:#217ebe; --vc-paper2:#eeeeec;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--vc-cerulean)}
+  /* gate */
+  #gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px;max-width:440px;width:92%;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gatebox .wm{font-weight:900;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+  .gatebox h1{font-size:24px;font-weight:900;margin:10px 0 6px}
+  .gatebox p{font-size:13px;color:var(--vc-charcoal);margin:0 0 16px}
+  .gatebox input{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--vc-black);margin-bottom:10px}
+  .gatebox button{width:100%;background:var(--vc-black);color:#fff;border:0;padding:11px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
+  .gateerr{color:#c8102e;font-size:12.5px;min-height:18px;margin-top:8px}
+  .gatebox .conf{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);margin-top:14px}
+  #app{display:none}
+  /* chrome */
+  .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  header.mast{border-bottom:1px solid var(--vc-black);padding:22px 30px 16px;background:var(--vc-white);position:relative}
+  header.mast h1{font-weight:900;font-size:26px;margin:6px 0 2px;letter-spacing:-.01em}
+  header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:780px}
+  .mastlinks{position:absolute;right:30px;top:20px;display:flex;align-items:center;gap:14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .mastlinks a{color:var(--vc-cerulean);text-decoration:none;white-space:nowrap;cursor:pointer}
+  .mastlinks a:hover{text-decoration:underline}
+  /* tools */
+  .bar{position:sticky;top:0;z-index:40;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:10px 30px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .chip{font:inherit;font-size:11px;font-weight:700;border:1px solid var(--vc-cloud);background:var(--vc-white);color:var(--vc-black);padding:3px 9px;border-radius:12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+  .chip .mbadge{margin:0}
+  .chip.on{border-color:var(--vc-black);box-shadow:inset 0 0 0 1px var(--vc-black)}
+  .chip .n{color:var(--vc-charcoal);font-weight:600}
+  #q{font:inherit;font-size:13px;padding:6px 10px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);min-width:220px;flex:1 1 220px;max-width:340px}
+  .acts{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+  .acts button{font:inherit;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--vc-black);background:var(--vc-black);color:#fff;padding:6px 12px;cursor:pointer}
+  .acts button.ghost{background:var(--vc-white);color:var(--vc-black)}
+  #msg{font-size:12px;color:var(--vc-charcoal);width:100%}
+  main{max-width:980px;margin:0 auto;padding:18px 30px 60px}
+  section{scroll-margin-top:110px;margin-bottom:30px}
+  section h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin:0 0 4px;display:flex;gap:10px;align-items:baseline}
+  section h2 .ct{color:var(--vc-charcoal);font-weight:600;letter-spacing:.04em}
+  .note{font-size:12.5px;color:var(--vc-charcoal);margin:0 0 10px;max-width:760px}
+  /* rows: the same markup the growth dashboard and press page draw (mentions.js) */
+  ul.feed{list-style:none;margin:0;padding:0;border-top:1px solid var(--vc-cloud)}
+  ul.feed li{border-bottom:1px solid var(--vc-cloud);padding:10px 0;font-size:14px}
+  ul.feed .src{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal);margin-right:6px}
+  ul.feed a{color:var(--vc-black);text-decoration:none;font-weight:700}
+  ul.feed a:hover{color:var(--vc-cerulean);text-decoration:underline}
+  ul.feed .date{font-size:11.5px;color:var(--vc-charcoal);margin-left:8px;white-space:nowrap}
+  ul.feed .snip{font-size:12.5px;color:var(--vc-charcoal);margin-top:3px;line-height:1.45}
+  ul.feed .empty{color:var(--vc-charcoal);font-size:13px}
+  .foot{font-size:12px;color:var(--vc-charcoal);border-top:1px solid var(--vc-cloud);padding-top:12px;max-width:760px}
+  /* dark mode, the toolkit's shared convention */
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1d1e21}
+  html.dark body{background:var(--vc-paper);color:var(--vc-black)}
+  html.dark input{background:#1b1c1f!important;color:var(--vc-black)!important;border-color:var(--vc-cloud)!important}
+  html.dark .confbar{background:#0b0b0d;color:#cfcfcf}
+  html.dark .acts button{background:#e8e8e5;color:#161719;border-color:#e8e8e5}
+  html.dark .acts button.ghost{background:var(--vc-white);color:var(--vc-black);border-color:var(--vc-cloud)}
+  @media(max-width:700px){
+    .confbar,header.mast,.bar{padding-left:16px;padding-right:16px}
+    main{padding:16px 16px 50px}
+    .mastlinks{position:static;flex-wrap:wrap;gap:10px 14px;margin:0 0 10px}
+    .bar{position:static}
+    .acts{margin-left:0}
+    #q{max-width:none}
+    ul.feed li,.feed a{overflow-wrap:anywhere}
+  }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>Media mentions</h1>
+    <p>Every publication, government document and program that has cited Vital City. Enter the shared passphrase.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="off" autofocus>
+    <button id="unlock">Unlock</button>
+    <div class="gateerr" id="err"></div>
+    <div class="conf">Confidential · internal use only</div>
+  </div>
+</div>
+
+<div id="app">
+<div class="confbar"><span>Confidential · internal use only</span><span id="asof"></span></div>
+<div data-toolkit-nav></div>
+<header class="mast">
+  <div class="mastlinks">
+    <a href="#how" title="Where these come from and what they leave out.">How it works</a>
+    <a href="#" id="themeToggle" title="Switch between light and dark color themes. Your choice is remembered on this device and shared with the other tools.">🌙 Dark mode</a>
+    <a href="#" id="lock" title="You stay logged in on this device for 90 days, and the same login covers the other Vital City tools. Lock forgets the saved passphrase now.">Lock</a>
+  </div>
+  <h1>Media mentions</h1>
+  <div class="sub">Every publication, government document and program that has cited Vital City, newest first. Each press mention is tagged by how it uses our work. This is the same list the growth dashboard and the press page show.</div>
+</header>
+
+<div class="bar">
+  <div class="chips" id="chips"></div>
+  <input id="q" type="search" placeholder="Filter by outlet or words" aria-label="Filter by outlet or words">
+  <div class="acts">
+    <button id="copy" title="Copy what is showing, with links, to paste into an email, a doc or Slack">Copy list</button>
+    <button id="csv" class="ghost" title="Download what is showing as a spreadsheet">Download CSV</button>
+  </div>
+  <div id="msg"></div>
+</div>
+
+<main>
+  <section id="press">
+    <h2>In the press <span class="ct" id="ctPress"></span></h2>
+    <div class="note">Third-party outlets citing Vital City, found by Google News searches for the exact phrase, the @vitalcitynyc handle and any vitalcitynyc.org link, inside a whitelist of outlets. Pages the check found only naming us in a sidebar or related-stories box are left out.</div>
+    <ul class="feed" id="pressFeed"></ul>
+  </section>
+  <section id="gov">
+    <h2>Government and policy <span class="ct" id="ctGov"></span></h2>
+    <div class="note">Official statements, testimony and reports that cite Vital City, plus republications by policy institutions. Each page was fetched and checked, because "vital city" is ordinary English on government sites.</div>
+    <ul class="feed" id="govFeed"></ul>
+  </section>
+  <section id="audio">
+    <h2>Podcasts, radio and video <span class="ct" id="ctAudio"></span></h2>
+    <div class="note" id="audioNote">Logged by hand, because Google News does not index audio.</div>
+    <ul class="feed" id="audioFeed"></ul>
+  </section>
+  <div class="foot" id="how">
+    <p><b>Where this comes from.</b> The press tracker runs every night (growth_pull.py) and writes one feed. This page, the growth dashboard and the press page all read that feed and apply the same rules, kept in one file (mentions.js), so the three lists always match. Outlets on the whitelist can be changed; the <a href="../growth/about.html#whitelist">growth dashboard's guide</a> explains how.</p>
+    <p><b>What it leaves out.</b> Paywalled stories that hide the phrase from search engines, and podcast or radio appearances nobody has logged. <b>This is not the citation count.</b> The number used in the key indicators and on the home page is the stricter <a href="../prospects/#impact">impact ledger in Prospects</a>, which drops roundups, passing mentions and duplicates.</p>
+  </div>
+</main>
+</div>
+
+<script src="../toolkit.js" data-tool="mentions" defer></script>
+<script src="../mentions.js"></script>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let P=[], G={items:[]}, L={items:[]}, KIND="all";
+
+/* ---------- theme ---------- */
+function applyTheme(t){
+  document.documentElement.classList.toggle("dark", t==="dark");
+  const b=$("#themeToggle"); if(b) b.textContent = t==="dark" ? "☀️ Light mode" : "🌙 Dark mode";
+}
+(function(){ let t=null; try{ t=localStorage.getItem("vc_theme"); }catch(e){}
+  applyTheme(t || ((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light")); })();
+$("#themeToggle").addEventListener("click",e=>{ e.preventDefault(); const t=document.documentElement.classList.contains("dark")?"light":"dark"; try{ localStorage.setItem("vc_theme",t); }catch(_){} applyTheme(t); });
+
+/* ---------- gate: same format and passphrase as the other tools. The data is
+   the growth dashboard's file, because that is where the mentions feed lives. ---------- */
+function b64d(s){const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+const PASSKEY="vc_net_pass", PASS_TTL_DAYS=90;
+function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+PASS_TTL_DAYS*864e5}));}catch(e){}}
+function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
+  const o=JSON.parse(r);if(o&&o.pass&&o.exp&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null;}catch(e){return null;}}
+function clearPass(){try{localStorage.removeItem(PASSKEY);sessionStorage.removeItem(PASSKEY);}catch(e){}}
+async function unlock(fromStore){
+  $("#err").textContent="";
+  const pass=$("#pw").value.trim();
+  if(!pass){$("#err").textContent="Enter the passphrase.";return;}
+  $("#unlock").textContent="Decrypting…";
+  let blob, data;
+  try{ blob=await fetch("../growth/data.enc",{cache:"no-cache"}).then(r=>r.json()); }
+  catch(e){ $("#err").textContent="Couldn't load the data file — check your connection and try again."; $("#unlock").textContent="Unlock"; return; }
+  try{ data=await decryptBlob(pass,blob); }
+  catch(e){ if(fromStore) clearPass(); $("#err").textContent="Wrong passphrase, or data unavailable."; $("#unlock").textContent="Unlock"; return; }
+  savePass(pass);
+  $("#gate").style.display="none"; $("#app").style.display="block";
+  init(data);
+}
+$("#unlock").addEventListener("click",()=>unlock(false));
+$("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false);});
+(function(){const s=loadPass(); if(s){$("#pw").value=s; unlock(true);}})();
+$("#lock").addEventListener("click",e=>{e.preventDefault();clearPass();location.reload();});
+
+/* ---------- the list ---------- */
+const VM=window.vcMentions;
+const apDate=s=>{ if(!s) return ""; const d=new Date(String(s).slice(0,10)+"T12:00:00"); if(isNaN(d)) return String(s);
+  return window.vcApDate?vcApDate(d):d.toDateString(); };
+const kindLabel=k=>(VM.KINDS.find(x=>x.k===k)||{}).l||"";
+const hay=(...xs)=>xs.filter(Boolean).join(" ").toLowerCase();
+const matches=(text,q)=>!q||q.split(/\s+/).every(w=>text.includes(w));
+
+function shown(){
+  const q=$("#q").value.trim().toLowerCase();
+  return {
+    press: P.filter(p=>(KIND==="all"||p._kind===KIND) && matches(hay(p.source,p.domain,p.title,p.snippet,kindLabel(p._kind)),q)),
+    gov:   KIND==="all"||KIND==="gov" ? G.items.filter(p=>matches(hay(p.source,p.domain,p.title,p.snippet),q)) : [],
+    audio: KIND==="all"||KIND==="audio" ? L.items.filter(m=>matches(hay(m.outlet,m.program,m.who,m.note),q)) : []
+  };
+}
+
+function draw(){
+  const s=shown();
+  const none=t=>`<li class="empty">${t}</li>`;
+  $("#pressFeed").innerHTML=s.press.length?s.press.map(VM.pressRow).join(""):none(KIND==="gov"||KIND==="audio"?"Hidden by the filter above.":"Nothing matches.");
+  $("#govFeed").innerHTML=s.gov.length?s.gov.map(VM.govRow).join(""):none(KIND!=="all"&&KIND!=="gov"?"Hidden by the filter above.":"Nothing matches.");
+  $("#audioFeed").innerHTML=s.audio.length?s.audio.map(VM.ledgerRow).join(""):none(KIND!=="all"&&KIND!=="audio"?"Hidden by the filter above.":"Nothing matches.");
+  const of=(a,b)=>a===b?`${b}`:`${a} of ${b}`;
+  $("#ctPress").textContent=of(s.press.length,P.length);
+  $("#ctGov").textContent=of(s.gov.length,G.items.length);
+  $("#ctAudio").textContent=of(s.audio.length,L.items.length);
+  $$(".chip").forEach(c=>c.classList.toggle("on",c.dataset.k===KIND));
+  $("#msg").textContent="";
+}
+
+function chips(){
+  const c=VM.counts(P);
+  const chip=(k,inner,n,tip)=>`<button class="chip" data-k="${k}" title="${esc(tip||"")}">${inner}<span class="n">${n}</span></button>`;
+  $("#chips").innerHTML=chip("all","All",P.length+G.items.length+L.items.length,"Everything")
+    + VM.KINDS.filter(k=>c[k.k]).map(k=>chip(k.k,`<span class="mbadge mb-${k.k}">${esc(k.l)}</span>`,c[k.k],k.t)).join("")
+    + chip("gov","Government and policy",G.items.length,"Official documents and policy institutions")
+    + chip("audio","Podcasts, radio, video",L.items.length,"Logged by hand");
+  $$(".chip").forEach(b=>b.addEventListener("click",()=>{ KIND=(KIND===b.dataset.k&&b.dataset.k!=="all")?"all":b.dataset.k; draw(); }));
+}
+
+/* Copy: plain text and, where the browser allows, the same list with live links
+   for email and docs. One line per item: outlet, date, title, tag, link. */
+function copyParts(){
+  const s=shown(), T=[], H=[];
+  const block=(head,rows)=>{ if(!rows.length) return; T.push(head.toUpperCase()); H.push(`<p><b>${esc(head)}</b></p><ul>`);
+    rows.forEach(r=>{ T.push(`${r.src}, ${r.date}: ${r.title}${r.tag?` (${r.tag})`:""}\n${r.url}`);
+      H.push(`<li>${esc(r.src)}, ${esc(r.date)}: <a href="${esc(r.url)}">${esc(r.title)}</a>${r.tag?` (${esc(r.tag)})`:""}</li>`); });
+    T.push(""); H.push("</ul>"); };
+  block("In the press", s.press.map(p=>({src:p.source||p.domain||"web",date:apDate(p.published_iso||p.published),title:p.title||"",url:p.url,tag:kindLabel(p._kind).toLowerCase()})));
+  block("Government and policy", s.gov.map(p=>({src:p.source||p.domain||"web",date:apDate(p.published_iso||p.published),title:p.title||"",url:p.url,tag:p.kind==="gov"?"official":"policy organization"})));
+  block("Podcasts, radio and video", s.audio.map(m=>({src:m.outlet||"",date:apDate(m.date),title:[m.program,m.who].filter(Boolean).join(", "),url:m.url,tag:m.kind||""})));
+  const n=s.press.length+s.gov.length+s.audio.length;
+  return {text:T.join("\n").trim(), html:H.join(""), n};
+}
+$("#copy").addEventListener("click",async()=>{
+  const c=copyParts(); if(!c.n){ $("#msg").textContent="Nothing showing to copy."; return; }
+  try{
+    if(window.ClipboardItem&&navigator.clipboard.write){
+      await navigator.clipboard.write([new ClipboardItem({"text/plain":new Blob([c.text],{type:"text/plain"}),"text/html":new Blob([c.html],{type:"text/html"})})]);
+    } else { await navigator.clipboard.writeText(c.text); }
+    $("#msg").textContent=`Copied ${c.n} item${c.n===1?"":"s"}, with links.`;
+  }catch(e){ $("#msg").textContent="The browser blocked copying. Select the list and copy it by hand."; }
+});
+$("#csv").addEventListener("click",()=>{
+  const s=shown(), q=v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`;
+  const rows=[["section","date","outlet","how it uses Vital City","title","link","excerpt"]];
+  s.press.forEach(p=>rows.push(["press",VM.day(p),p.source||p.domain||"",kindLabel(p._kind),p.title,p.url,p.snippet||""]));
+  s.gov.forEach(p=>rows.push(["government and policy",VM.day(p),p.source||p.domain||"",p.kind==="gov"?"official":"policy organization",p.title,p.url,p.snippet||""]));
+  s.audio.forEach(m=>rows.push(["podcasts, radio and video",m.date||"",m.outlet||"",m.kind||"",[m.program,m.who].filter(Boolean).join(", "),m.url,m.note||""]));
+  if(rows.length===1){ $("#msg").textContent="Nothing showing to download."; return; }
+  const blob=new Blob(["﻿"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=`vital-city-media-mentions-${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click(); a.remove();
+  $("#msg").textContent=`Downloaded ${rows.length-1} rows.`;
+});
+
+function init(data){
+  P=VM.press(data); G=VM.gov(data); L=VM.ledger(data);
+  if(L.last_audit) $("#audioNote").textContent=`Logged by hand, because Google News does not index audio. Last audited ${apDate(L.last_audit)}.`;
+  const n=P.length+G.items.length+L.items.length;
+  if(window.vcStamp) vcStamp("#asof", data.generated_at, `${n} mentions`); else $("#asof").textContent=`${n} mentions`;
+  chips(); draw();
+  $("#q").addEventListener("input",draw);
+  // press/, the growth dashboard and the home page link straight to a section
+  if(location.hash) setTimeout(()=>document.getElementById(location.hash.slice(1))?.scrollIntoView(),60);
+}
+</script>
+</body>
+</html>

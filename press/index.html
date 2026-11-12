@@ -48,6 +48,8 @@
   .jump{position:sticky;top:0;z-index:40;background:var(--vc-paper);border-bottom:1px solid var(--vc-black);padding:8px 30px;display:flex;gap:15px;flex-wrap:wrap;font-size:11px}
   .jump a{color:var(--vc-charcoal);text-decoration:none;text-transform:uppercase;letter-spacing:.06em;font-weight:700;cursor:pointer}
   .jump a:hover{color:var(--vc-cerulean)}
+  /* Sections are linkable (press/#mentions etc.); keep the heading clear of the sticky bars. */
+  #ask,.sect,#mentions{scroll-margin-top:96px}
   .wrap{max-width:1180px;margin:0 auto;padding:22px 30px 70px;display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:30px;align-items:start}
   @media(max-width:1000px){.wrap{grid-template-columns:minmax(0,1fr)}}
   h2{font-size:15px;font-weight:900;margin:0 0 4px;letter-spacing:-.01em}
@@ -104,6 +106,11 @@
   ul.feed .src{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--vc-charcoal)}
   ul.feed .date{font-size:10.5px;color:var(--vc-charcoal)}
   ul.feed .empty{padding:9px 0}
+  ul.feed .snip{font-size:11px;color:var(--vc-charcoal);margin-top:2px;line-height:1.4}
+  ul.feed .sum{font-size:11px;color:var(--vc-charcoal);line-height:1.9}
+  ul.feed .sum .mbadge{vertical-align:0}
+  .allm{display:inline-block;margin:6px 0 14px;font-size:11.5px;font-weight:700;color:var(--vc-cerulean);text-decoration:none}
+  .allm:hover{text-decoration:underline}
   /* tables */
   table{border-collapse:collapse;width:100%;font-size:12.5px;background:var(--vc-white)}
   th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--vc-cloud);vertical-align:top}
@@ -225,8 +232,8 @@
   </div>
 </header>
 <nav class="jump">
-  <a data-go="ask">Find a reporter</a><a data-go="amplify">Who should hear</a><a data-go="directory">Search everyone</a><a data-go="beats">By beat</a><a data-go="outlets">By outlet</a>
-  <a data-go="known">Contacts we know</a><a data-go="mentions">Who cites us</a><a data-go="method">Method</a>
+  <a href="#ask" data-go="ask">Find a reporter</a><a href="#amplify" data-go="amplify">Who should hear</a><a href="#directory" data-go="directory">Search everyone</a><a href="#beats" data-go="beats">By beat</a><a href="#outlets" data-go="outlets">By outlet</a>
+  <a href="#known" data-go="known">Contacts we know</a><a href="#mentions" data-go="mentions">Who cites us</a><a href="#method" data-go="method">Method</a>
 </nav>
 
 <div class="wrap">
@@ -307,14 +314,17 @@
 
  <aside id="mentions">
    <h2>Who cites Vital City</h2>
-   <div class="note">Third-party publications citing Vital City, from the growth dashboard's media-mentions feed. The same list runs there; it sits here because the question "who should hear about this" and the question "who already reads us" are the same question asked twice.</div>
-   <ul class="feed" id="newsFeed"></ul>
+   <div class="note">The newest third-party publications citing Vital City, each tagged by how it uses our work. It is the same list as the growth dashboard's, from the same nightly feed. <a href="../mentions/">The full list</a> sits on a page of its own, ready to copy.</div>
+   <ul class="feed" id="newsFeed"><li class="empty">Loading&hellip;</li></ul>
+   <a class="allm" id="newsAll" href="../mentions/#press">All press mentions &rsaquo;</a>
    <h2>Cited in government &amp; policy</h2>
    <div class="note">Official statements, testimony and reports that cite Vital City, plus republications by policy institutions.</div>
    <ul class="feed" id="govFeed"></ul>
+   <a class="allm" href="../mentions/#gov">All government and policy citations &rsaquo;</a>
    <h2>Podcasts, radio &amp; video</h2>
-   <div class="note">Hand-logged, because Google News does not index audio.</div>
+   <div class="note">Logged by hand, because Google News does not index audio.</div>
    <ul class="feed" id="ledgerFeed"></ul>
+   <a class="allm" href="../mentions/#audio">All podcasts, radio and video &rsaquo;</a>
  </aside>
 </div>
 </div>
@@ -328,6 +338,7 @@
   <span id="selnote"></span>
 </div>
 <script src="../toolkit.js" data-tool="press" defer></script>
+<script src="../mentions.js"></script>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -996,21 +1007,19 @@ function renderOutlets(){
      <td>${(o.phones||[]).length?(o.phones||[]).map(p=>`<a href="tel:${esc(p.number.replace(/\D/g,""))}" title="${esc(p.context||"")} — read from ${esc(p.source_url||"")}">${esc(p.number)}</a>`).join("<br>"):'<span style="color:var(--vc-charcoal)">—</span>'}</td>
    </tr>`).join("")+`</tbody></table>`;
 }
+// The rail reads the growth dashboard's feed (growth/data.enc) and draws it
+// with ../mentions.js, so the three tools that show mentions show one list.
 function renderMentions(){
-  const m=DATA.mentions||{};
-  const feed=(items,fmt)=>items&&items.length?items.map(fmt).join(""):`<li class="empty">Nothing in the current window.</li>`;
-  $("#newsFeed").innerHTML=feed((m.media||[]).slice(0,80),p=>`<li>
-    <span class="src">${esc(p.source||p.domain||"web")}${p.roundup?" &middot; <i>roundup</i>":""}</span>
-    <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
-    <span class="date">${esc((p.published_iso||p.published||"").slice(0,10))}</span></li>`);
-  $("#govFeed").innerHTML=feed((m.gov||[]).slice(0,40),p=>`<li>
-    <span class="src">${esc(p.source||p.domain||"gov")}</span>
-    <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
-    <span class="date">${esc((p.published_iso||p.published||"").slice(0,10))}</span></li>`);
-  $("#ledgerFeed").innerHTML=feed(m.ledger||[],p=>`<li>
-    <span class="src">${esc(p.outlet)}</span>
-    <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.program||p.outlet)}</a>
-    <span class="date">${esc(p.date||"")} &middot; ${esc(p.who||"")}</span></li>`);
+  const VM=window.vcMentions, empty=t=>`<li class="empty">${t}</li>`;
+  const open=window.vcOpen?window.vcOpen("growth/data.enc"):Promise.resolve(null);
+  open.then(g=>{
+    if(!g||!VM){ $("#newsFeed").innerHTML=empty("Couldn't load the mentions feed. Try reloading."); return; }
+    const P=VM.press(g), G=VM.gov(g), L=VM.ledger(g);
+    $("#newsFeed").innerHTML=P.length?`<li class="empty sum">${VM.summary(P)}</li>`+P.slice(0,12).map(VM.pressRow).join(""):empty("Nothing in the current window.");
+    $("#newsAll").textContent=`All ${P.length} press mentions ›`;
+    $("#govFeed").innerHTML=G.items.length?G.items.slice(0,6).map(VM.govRow).join(""):empty("Nothing verified in the current window.");
+    $("#ledgerFeed").innerHTML=L.items.length?L.items.slice(0,6).map(VM.ledgerRow).join(""):empty("Nothing logged yet.");
+  });
 }
 function renderMethod(){
   const c=DATA.counts||{}, r=DATA.report||{};
@@ -1268,7 +1277,9 @@ function init(){
   const pc=(DATA.counts?.people||0).toLocaleString()+" people · "+(DATA.counts?.outlets||0)+" outlets";
   if(window.vcStamp) vcStamp("#asof", DATA.as_of, pc); else $("#asof").textContent="Updated "+(DATA.as_of||"").slice(0,10)+" · "+pc;
   renderBeats(); initDirectory(); renderKnown(); renderOutlets(); renderMentions(); renderMethod();
-  Promise.resolve(renderAmplify()).finally(updateSelbar);
+  // The amplify list draws late and can push the sections below it down, so a
+  // linked section (press/#mentions) is lined up again once it is in.
+  Promise.resolve(renderAmplify()).finally(()=>{ updateSelbar(); if(location.hash && !new URLSearchParams(location.search).get("q")) goTo(location.hash.slice(1),false); });
   updateSelbar();
   $("#go").addEventListener("click",runQuery);
   $("#clear").addEventListener("click",()=>{$("#q").value="";runQuery();});
@@ -1278,7 +1289,13 @@ function init(){
   // piece page asks "who should hear about this piece").
   try{ const q0=new URLSearchParams(location.search).get("q");
     if(q0){ $("#q").value=q0; runQuery(); setTimeout(()=>document.getElementById("ask")?.scrollIntoView({behavior:"smooth"}),60); } }catch(e){}
-  $$(".jump a").forEach(a=>a.addEventListener("click",()=>document.getElementById(a.dataset.go)?.scrollIntoView({behavior:"smooth"})));
+  // Each section has its own address (press/#mentions is the media-mentions list),
+  // so a jump updates the URL, and a link that arrives with a hash lands on it
+  // once the data is unlocked and drawn.
+  const goTo=(id,smooth)=>{ const el=id&&document.getElementById(id); if(el) el.scrollIntoView({behavior:smooth?"smooth":"auto"}); return !!el; };
+  $$(".jump a").forEach(a=>a.addEventListener("click",e=>{ e.preventDefault(); const h="#"+a.dataset.go; if(location.hash===h) goTo(a.dataset.go,true); else location.hash=h; }));
+  window.addEventListener("hashchange",()=>goTo(location.hash.slice(1),true));
+  if(location.hash && !new URLSearchParams(location.search).get("q")) setTimeout(()=>goTo(location.hash.slice(1),false),80);
   document.addEventListener("click",e=>{
     const id=e.target?.dataset?.all; if(!id) return;
     const p=DATA.people.find(x=>x.id===id); if(!p) return;

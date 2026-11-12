@@ -314,3 +314,9 @@ html.dark .vcx-scrim { background: rgba(0, 0, 0, .55); }
   html body input[type="text"], html body input[type="search"], html body input[type="password"],
   html body input[type="email"], html body input:not([type]), html body select, html body textarea { font-size: 16px; }
 }
+
+/* Media-mention tags (mentions.js): how a mention uses Vital City. Shared by
+   the growth dashboard, the press page and the mentions page. */
+.mbadge{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:9px;margin:0 4px 2px 0;vertical-align:1px;white-space:nowrap;color:#fff}
+.mb-work{background:#3d7a35}.mb-people{background:#217ebe}.mb-repub{background:#7a5aa6}.mb-event{background:#c8612f}.mb-writer{background:#2f8a8a}
+.mb-roundup{background:#9a9a9a}.mb-named{background:#c9c9c6;color:#050507}.mb-unchecked{background:transparent;color:#707175;border:1px solid #b9b9b6}
