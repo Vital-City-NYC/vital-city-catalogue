@@ -1,7 +1,129 @@
 {
- "generated": "2026-11-11T20:06:31+00:00",
+ "generated": "2026-11-12T20:44:36+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "the-best-street-safety-fix-new-york-isnt-using",
+   "title": "The Best Street Safety Fix New York Isn’t Using",
+   "url": "https://www.vitalcitynyc.org/the-best-street-safety-fix-new-york-isnt-using/",
+   "date": "2026-11-12",
+   "author": "Sara Lind",
+   "handle": null,
+   "dek": "London slashed casualties on residential streets without banning cars or removing parking.",
+   "tags": [
+    "Streets",
+    "Traffic",
+    "Bicycles",
+    "Neighborhood Life"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "London cut casualties on residential streets without banning cars or removing parking, writes Sara Lind. She says New York City is not using the fix."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Sara Lind on drivers cutting through residential blocks in all five boroughs, and on the street safety fix from London that New York City has not tried."
+    },
+    {
+     "kind": "hook",
+     "text": "\"That chaos isn't just unpleasant; it costs lives.\" Sara Lind writes on the traffic moving onto New York City's local streets, and what London did about its own."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "tough-truths-integration-education",
+   "title": "Tough Truths About Integration and Education",
+   "url": "https://www.vitalcitynyc.org/tough-truths-integration-education/",
+   "date": "2026-11-12",
+   "author": "Daniel Weisberg",
+   "handle": null,
+   "dek": "Should equalizing New York City schools' ethnic and racial compositions really be a top priority?",
+   "tags": [
+    "Education",
+    "Integration",
+    "Race"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Daniel Weisberg argues that before New York City redraws school boundaries again, it should settle what outcomes integration is meant to achieve. Diversity, racial balance and school quality are different things."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Daniel Weisberg on integration and education, written in response to Nikole Hannah-Jones' essay on her daughter's Brooklyn schooling and her questions to Chancellor Kamar Samuels."
+    },
+    {
+     "kind": "hook",
+     "text": "Should equalizing New York City schools' ethnic and racial compositions be a top priority? Daniel Weisberg takes up the question and asks what outcomes the City actually wants."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "a-new-rec-center-shirley-chisolm",
+   "title": "A New Rec Center Comes to Play",
+   "url": "https://www.vitalcitynyc.org/a-new-rec-center-shirley-chisolm/",
+   "date": "2026-11-12",
+   "author": "Alyssa Katz",
+   "handle": null,
+   "dek": "An ambitious new facility in Brooklyn pushes back on lightweight expectations about what's possible.",
+   "tags": [
+    "Parks",
+    "Public Works",
+    "Architecture"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Alyssa Katz describes a new public recreation center in Brooklyn that pushes back on lightweight expectations: a competition-size pool, a packed class schedule, and a $150 annual membership, free for anyone 24 or under."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Alyssa Katz on the Shirley Chisholm Recreation Center in Flatbush, from the keytag neighbors rave about to the swimsuit-drying machines that tell patrons they matter."
+    },
+    {
+     "kind": "hook",
+     "text": "\"Digital keypads secure the lockers, attendants spritz tile to a shine and swimsuit-drying machines say to patrons: you matter.\" Alyssa Katz on Brooklyn's new Shirley Chisholm Recreation Center."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "zohran-mamdanis-good-fortune",
+   "title": "How Strong Are the Winds at Mamdani’s Back?",
+   "url": "https://www.vitalcitynyc.org/zohran-mamdanis-good-fortune/",
+   "date": "2026-11-12",
+   "author": "Ross Barkan",
+   "handle": null,
+   "dek": "The mayor has been amazingly fortunate so far. The good luck may not last.",
+   "tags": [
+    "Mamdani",
+    "Mayoralty",
+    "Politics",
+    "Elections"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Ross Barkan argues Zohran Mamdani has had far better tailwinds than Bill de Blasio did: a friendlier Albany, a weaker police union and no Eric Garner. The risks, he says, are a Wall Street downturn and ICE."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Ross Barkan on how Mamdani's first year compares with de Blasio's, and what could end the good run. Barkan discloses that Mamdani managed his 2018 campaign for office."
+    },
+    {
+     "kind": "hook",
+     "text": "What happens if the local economy slows and Mamdani has to make cuts his base reviles? Ross Barkan on the luck that has carried the mayor so far, and where it could run out."
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "lets-be-demanding-of-government-but-not-cheaply-cynical-about-it",
    "title": "Let’s Be Demanding of Government, but Not Cheaply Cynical About It",
