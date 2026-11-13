@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- installable app (VC Toolkit): phone home-screen only, no effect on the desktop page -->
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../app/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VC Toolkit">
+<meta name="robots" content="noindex,nofollow">
+<title>Vital City — Signups by day</title>
+<link rel="stylesheet" href="https://use.typekit.net/qqk2vto.css">
+<link rel="stylesheet" href="../toolkit.css">
+<style>
+  :root{
+    --vc-paper:#f7f7f4; --vc-white:#fff; --vc-black:#050507; --vc-charcoal:#707175;
+    --vc-cloud:#dddddd; --vc-cerulean:#217ebe; --vc-paper2:#eeeeec;
+    --sig:#217ebe; --uns:#d0612f;
+    --vc-sans:"halyard-text","Inter Tight","Inter",system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--vc-paper);color:var(--vc-black);font-family:var(--vc-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--vc-cerulean)}
+  #gate{position:fixed;inset:0;background:var(--vc-paper);display:flex;align-items:center;justify-content:center;z-index:500}
+  .gatebox{background:var(--vc-white);border:1px solid var(--vc-black);padding:34px;max-width:440px;width:92%;box-shadow:7px 7px 0 rgba(5,5,7,.14)}
+  .gatebox .wm{font-weight:900;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+  .gatebox h1{font-size:24px;font-weight:900;margin:10px 0 6px}
+  .gatebox p{font-size:13px;color:var(--vc-charcoal);margin:0 0 16px}
+  .gatebox input{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--vc-black);margin-bottom:10px}
+  .gatebox button{width:100%;background:var(--vc-black);color:#fff;border:0;padding:11px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
+  .gateerr{color:#c8102e;font-size:12.5px;min-height:18px;margin-top:8px}
+  .gatebox .conf{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--vc-charcoal);margin-top:14px}
+  #app{display:none}
+  .confbar{background:var(--vc-black);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.11em;padding:5px 30px;font-weight:700;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  header.mast{border-bottom:1px solid var(--vc-black);padding:22px 30px 16px;background:var(--vc-white);position:relative}
+  header.mast h1{font-weight:900;font-size:26px;margin:6px 0 2px;letter-spacing:-.01em}
+  header.mast .sub{font-size:13px;color:var(--vc-charcoal);max-width:780px}
+  .mastlinks{position:absolute;right:30px;top:20px;display:flex;align-items:center;gap:14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .mastlinks a{color:var(--vc-cerulean);text-decoration:none;white-space:nowrap;cursor:pointer}
+  .mastlinks a:hover{text-decoration:underline}
+  main{max-width:980px;margin:0 auto;padding:20px 30px 60px}
+  .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .nav button{font:inherit;font-size:18px;line-height:1;width:38px;height:38px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);cursor:pointer}
+  .nav button:disabled{opacity:.3;cursor:default}
+  .nav h2{font-size:22px;font-weight:900;margin:0;min-width:190px}
+  .nav select{font:inherit;font-size:13px;padding:7px 8px;border:1px solid var(--vc-black);background:var(--vc-white);color:var(--vc-black);margin-left:auto}
+  .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+  .card{background:var(--vc-white);border:1px solid var(--vc-cloud);padding:10px 12px}
+  .card .l{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--vc-charcoal)}
+  .card .v{font-size:24px;font-weight:900;font-variant-numeric:tabular-nums}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--vc-charcoal);margin-bottom:4px}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .legend i{display:inline-block;width:11px;height:11px}
+  #chart{width:100%;background:var(--vc-white);border:1px solid var(--vc-cloud)}
+  #chart svg{display:block;width:100%}
+  #chart text{font-family:var(--vc-sans)}
+  .note{font-size:12.5px;color:var(--vc-charcoal);margin:10px 0 0;max-width:760px}
+  .note.warn{color:#8a4b00;background:#fff4e0;border:1px solid #f0d199;padding:8px 10px}
+  .foot{font-size:12px;color:var(--vc-charcoal);border-top:1px solid var(--vc-cloud);padding-top:12px;margin-top:26px;max-width:760px}
+  html.dark{--vc-paper:#161719;--vc-white:#212329;--vc-black:#e8e8e5;--vc-cloud:#3a3c43;--vc-charcoal:#9a9ca2;--vc-paper2:#1d1e21;--sig:#4a9be0;--uns:#e07a4a}
+  html.dark body{background:var(--vc-paper);color:var(--vc-black)}
+  html.dark input,html.dark select{background:#1b1c1f!important;color:var(--vc-black)!important;border-color:var(--vc-cloud)!important}
+  html.dark .confbar{background:#0b0b0d;color:#cfcfcf}
+  html.dark .note.warn{color:#f0c27a;background:#2b2418;border-color:#5a4a2a}
+  @media(max-width:700px){
+    .confbar,header.mast{padding-left:16px;padding-right:16px}
+    main{padding:16px 16px 50px}
+    .mastlinks{position:static;flex-wrap:wrap;gap:10px 14px;margin:0 0 10px}
+    .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .nav h2{min-width:0;font-size:19px}
+    .nav select{margin-left:0;width:100%}
+  }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gatebox">
+    <div class="wm">Vital City</div>
+    <h1>Signups by day</h1>
+    <p>Newsletter signups and unsubscribes, day by day. Enter the shared passphrase.</p>
+    <input id="pw" type="password" placeholder="Passphrase" autocomplete="off" autofocus>
+    <button id="unlock">Unlock</button>
+    <div class="gateerr" id="err"></div>
+    <div class="conf">Confidential · internal use only</div>
+  </div>
+</div>
+
+<div id="app">
+<div class="confbar"><span>Confidential · internal use only</span><span id="asof"></span></div>
+<div data-toolkit-nav></div>
+<header class="mast">
+  <div class="mastlinks">
+    <a href="#how" title="Where the numbers come from.">How it works</a>
+    <a href="#" id="themeToggle" title="Switch between light and dark color themes. Your choice is remembered on this device and shared with the other tools.">🌙 Dark mode</a>
+    <a href="#" id="lock" title="You stay logged in on this device for 90 days, and the same login covers the other Vital City tools. Lock forgets the saved passphrase now.">Lock</a>
+  </div>
+  <h1>Signups by day</h1>
+  <div class="sub">Newsletter signups above the line, unsubscribes below it, and the day's net above each bar. One month at a time; step back with the arrows or your keyboard's arrow keys.</div>
+</header>
+
+<main>
+  <div class="nav">
+    <button id="prev" aria-label="Previous month" title="Previous month (left arrow key)">‹</button>
+    <h2 id="mname"></h2>
+    <button id="next" aria-label="Next month" title="Next month (right arrow key)">›</button>
+    <select id="pick" aria-label="Jump to a month"></select>
+  </div>
+  <div class="cards">
+    <div class="card"><div class="l">Signups</div><div class="v" id="kS"></div></div>
+    <div class="card"><div class="l">Unsubscribes</div><div class="v" id="kU"></div></div>
+    <div class="card"><div class="l">Net</div><div class="v" id="kN"></div></div>
+    <div class="card"><div class="l">Signups a day</div><div class="v" id="kA"></div></div>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--sig)"></i>Signups (Ghost)</span>
+    <span><i style="background:var(--uns)"></i>Unsubscribes (Mailchimp)</span>
+    <span><b style="font-size:11px;color:var(--vc-black)">+12</b>&nbsp;Net for the day</span>
+    <span>Dates under the bars are Thursdays, when the newsletter goes out.</span>
+  </div>
+  <div id="chart" role="img" aria-label="Daily signups and unsubscribes for the selected month"></div>
+  <div id="notes"></div>
+
+  <div class="foot" id="how">
+    <p><b>Where the numbers come from.</b> The growth dashboard's nightly file (growth_pull.py), the same daily series its signup charts use. Signups are dated by the day someone joined through the Ghost form. Unsubscribes are dated by the day they happened in Mailchimp, where people unsubscribe from the email footer; Ghost only learns of them in the Thursday sync, so its own dates run late. Signups count everyone who joined, including people who later left.</p>
+    <p><b>Scale.</b> Every month since April 2026, when the site moved to Ghost, is drawn on one scale, so bar heights compare directly. The scale is set by ordinary days; the rare day that runs past it (the July 2, 2026 event-list import added 134) is drawn cut off, with its number given under the chart. Earlier months are each drawn on their own scale, because the 2025 bot signups would flatten everything else; the page says so on those months.</p>
+    <p>The file is rebuilt overnight, so today is missing and the last day can be short. The growth dashboard has the monthly view and the key indicators.</p>
+  </div>
+</main>
+</div>
+
+<script src="../toolkit.js" data-tool="signups" defer></script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- theme ---------- */
+function applyTheme(t){
+  document.documentElement.classList.toggle("dark", t==="dark");
+  const b=$("#themeToggle"); if(b) b.textContent = t==="dark" ? "☀️ Light mode" : "🌙 Dark mode";
+  if(window._redraw) _redraw();
+}
+(function(){ let t=null; try{ t=localStorage.getItem("vc_theme"); }catch(e){}
+  applyTheme(t || ((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light")); })();
+$("#themeToggle").addEventListener("click",e=>{ e.preventDefault(); const t=document.documentElement.classList.contains("dark")?"light":"dark"; try{ localStorage.setItem("vc_theme",t); }catch(_){} applyTheme(t); });
+
+/* ---------- gate: same format and passphrase as the other tools; the data is
+   the growth dashboard's file ---------- */
+function b64d(s){const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+async function decryptBlob(pass,blob){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pass),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64d(blob.salt),iterations:blob.iters,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64d(blob.iv)},key,b64d(blob.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+const PASSKEY="vc_net_pass", PASS_TTL_DAYS=90;
+function savePass(p){try{localStorage.setItem(PASSKEY,JSON.stringify({pass:p,exp:Date.now()+PASS_TTL_DAYS*864e5}));}catch(e){}}
+function loadPass(){try{const r=localStorage.getItem(PASSKEY);if(!r)return null;if(r[0]!=="{")return r;
+  const o=JSON.parse(r);if(o&&o.pass&&o.exp&&o.exp>Date.now())return o.pass;localStorage.removeItem(PASSKEY);return null;}catch(e){return null;}}
+function clearPass(){try{localStorage.removeItem(PASSKEY);sessionStorage.removeItem(PASSKEY);}catch(e){}}
+async function unlock(fromStore){
+  $("#err").textContent="";
+  const pass=$("#pw").value.trim();
+  if(!pass){$("#err").textContent="Enter the passphrase.";return;}
+  $("#unlock").textContent="Decrypting…";
+  let blob, data;
+  try{ blob=await fetch("../growth/data.enc",{cache:"no-cache"}).then(r=>r.json()); }
+  catch(e){ $("#err").textContent="Couldn't load the data file — check your connection and try again."; $("#unlock").textContent="Unlock"; return; }
+  try{ data=await decryptBlob(pass,blob); }
+  catch(e){ if(fromStore) clearPass(); $("#err").textContent="Wrong passphrase, or data unavailable."; $("#unlock").textContent="Unlock"; return; }
+  savePass(pass);
+  $("#gate").style.display="none"; $("#app").style.display="block";
+  init(data);
+}
+$("#unlock").addEventListener("click",()=>unlock(false));
+$("#pw").addEventListener("keydown",e=>{if(e.key==="Enter")unlock(false);});
+(function(){const s=loadPass(); if(s){$("#pw").value=s; unlock(true);}})();
+$("#lock").addEventListener("click",e=>{e.preventDefault();clearPass();location.reload();});
+
+/* ---------- the chart ---------- */
+const AP=["Jan.","Feb.","March","April","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec."];
+const FULL=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOW=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const GHOST_MOVE="2026-04", BOT_FROM="2025-05", BOT_TO="2025-09";
+const sgn=v=>(v>0?"+":"")+v;
+let MONTHS=[], cur=0, SHARED={top:10,bot:5}, LAST="";
+
+function niceUp(v){ if(v<=5) return 5; const p=Math.pow(10,Math.floor(Math.log10(v))); for(const m of [1,2,2.5,5,10]) if(m*p>=v) return m*p; return 10*p; }
+
+function build(act){
+  const by={};
+  act.forEach(r=>{ if(!r.d) return; const k=r.d.slice(0,7); (by[k]=by[k]||{}); by[k][r.d]={s:+r.subs||0,u:+r.unsubs||0}; });
+  LAST=act.map(r=>r.d).filter(Boolean).sort().pop()||"";
+  MONTHS=Object.keys(by).sort().map(k=>{
+    const y=+k.slice(0,4), m=+k.slice(5,7)-1, n=new Date(y,m+1,0).getDate();
+    const days=[]; for(let i=1;i<=n;i++){ const d=`${k}-${String(i).padStart(2,"0")}`; if(d>LAST) break; const v=by[k][d]||{s:0,u:0}; days.push({d,i,s:v.s,u:v.u,dow:new Date(y,m,i).getDay()}); }
+    return {k,y,m,n,days};
+  });
+  // drop a leading partial month (the series starts mid-month two years back)
+  if(MONTHS.length>1 && MONTHS[0].days.length && act.map(r=>r.d).sort()[0].slice(8)!=="01") MONTHS.shift();
+  const since=MONTHS.filter(x=>x.k>=GHOST_MOVE);
+  // The scale follows ordinary days, not the rare outlier (the July 2, 2026
+  // event-list import added 134 in a day): the 98th-percentile day sets it,
+  // and the few taller days are drawn cut off at the top with their number.
+  const pct=(xs,q)=>{ const a=xs.slice().sort((p,q)=>p-q); return a.length?a[Math.min(a.length-1,Math.floor(q*a.length))]:0; };
+  SHARED.top=niceUp(Math.max(10,pct(since.flatMap(x=>x.days.map(d=>d.s)),0.98)*1.15));
+  SHARED.bot=niceUp(Math.max(5,pct(since.flatMap(x=>x.days.map(d=>d.u)),0.98)*1.15));
+}
+
+function draw(){
+  const mo=MONTHS[cur]; if(!mo) return;
+  const own=mo.k<GHOST_MOVE;
+  const top=own?niceUp(Math.max(5,...mo.days.map(d=>d.s))):SHARED.top;
+  const bot=own?niceUp(Math.max(5,...mo.days.map(d=>d.u))):SHARED.bot;
+  const box=$("#chart"), W=Math.max(320,box.clientWidth||900), H=Math.round(Math.min(380,Math.max(260,W*0.42)));
+  const L=34, R=10, T=22, B=26, pw=W-L-R, ph=H-T-B;
+  const y=v=>T+ph*(top-v)/(top+bot), slot=pw/31, bw=Math.max(2,slot*0.72);
+  const css=getComputedStyle(document.documentElement);
+  const ink=css.getPropertyValue("--vc-black").trim(), muted=css.getPropertyValue("--vc-charcoal").trim(), grid=css.getPropertyValue("--vc-cloud").trim();
+  const sig=css.getPropertyValue("--sig").trim(), uns=css.getPropertyValue("--uns").trim();
+  const fs=slot<15?9.5:11, showNet=slot>=11;
+  let g="";
+  const step=[5,10,20,25,50,100,200,250,500,1000].find(st=>(top+bot)/st<=7)||1000;
+  const ticks=[0]; for(let v=step; v<=top; v+=step) ticks.push(v); for(let v=-step; v>=-bot; v-=step) ticks.push(v);
+  ticks.forEach(v=>{
+    g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="${v===0?muted:grid}" stroke-width="${v===0?1.2:1}"/>`;
+    g+=`<text x="${L-6}" y="${y(v)+3.5}" text-anchor="end" font-size="10.5" fill="${muted}">${Math.abs(v)}</text>`;
+  });
+  mo.days.forEach((d,i)=>{
+    const x=L+slot*i+(slot-bw)/2, cx=x+bw/2, net=d.s-d.u;
+    const tip=`${DOW[d.dow]}, ${AP[mo.m]} ${d.i}: ${d.s} signup${d.s===1?"":"s"}, ${d.u} unsubscribe${d.u===1?"":"s"}, net ${sgn(net)}${d.d===LAST?" (may be a short day)":""}`;
+    g+=`<g><title>${esc(tip)}</title>`;
+    g+=`<rect x="${x}" y="${T}" width="${bw}" height="${ph}" fill="transparent"/>`;
+    if(d.s) g+=`<rect x="${x}" y="${y(Math.min(d.s,top))}" width="${bw}" height="${y(0)-y(Math.min(d.s,top))}" fill="${sig}"/>`;
+    if(d.u) g+=`<rect x="${x}" y="${y(0)}" width="${bw}" height="${y(-Math.min(d.u,bot))-y(0)}" fill="${uns}"/>`;
+    // a cut across a bar that runs past the scale
+    if(d.s>top) g+=`<line x1="${x-1}" x2="${x+bw+1}" y1="${y(top)+7}" y2="${y(top)+3}" stroke="${css.getPropertyValue("--vc-white").trim()}" stroke-width="2.5"/>`;
+    if(d.u>bot) g+=`<line x1="${x-1}" x2="${x+bw+1}" y1="${y(-bot)-3}" y2="${y(-bot)-7}" stroke="${css.getPropertyValue("--vc-white").trim()}" stroke-width="2.5"/>`;
+    if(showNet) g+=`<text x="${cx}" y="${Math.min(y(Math.min(d.s,top)),y(0))-4}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="${net<0?uns:ink}">${sgn(net)}</text>`;
+    if(d.dow===4) g+=`<text x="${cx}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="${muted}">${AP[mo.m]} ${d.i}</text>`;
+    g+=`</g>`;
+  });
+  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
+  box.setAttribute("aria-label",`${FULL[mo.m]} ${mo.y}: daily signups and unsubscribes with the net above each day`);
+
+  const s=mo.days.reduce((a,d)=>a+d.s,0), u=mo.days.reduce((a,d)=>a+d.u,0);
+  $("#mname").textContent=`${FULL[mo.m]} ${mo.y}`;
+  $("#kS").textContent=s.toLocaleString(); $("#kU").textContent=u.toLocaleString(); $("#kN").textContent=sgn(s-u);
+  $("#kA").textContent=mo.days.length?(s/mo.days.length).toFixed(1):"0";
+  $("#prev").disabled=cur===0; $("#next").disabled=cur===MONTHS.length-1; $("#pick").value=mo.k;
+  const notes=[];
+  if(mo.k>=BOT_FROM && mo.k<=BOT_TO) notes.push(`<div class="note warn">Bot signups: about half of all signups from May through September 2025 were bots, so this month's signup count is inflated. Don't compare it with other months.</div>`);
+  if(own) notes.push(`<div class="note">Before the site moved to Ghost in April 2026. Signups came through the old site's form and are dated from the merged Ghost and Mailchimp record. This month is drawn on its own scale (up to ${top} signups and ${bot} unsubscribes a day), so its bar heights don't compare with the months after the move.</div>`);
+  if(!showNet) notes.push(`<div class="note">The screen is too narrow for each day's net. Tap or hover a bar for the day's numbers.</div>`);
+  if(mo.days.length && mo.days[mo.days.length-1].d===LAST && mo.days.length<mo.n) notes.push(`<div class="note">Through ${AP[mo.m]} ${mo.days[mo.days.length-1].i}. The file is rebuilt overnight, so the last day may be short.</div>`);
+  const tall=mo.days.filter(d=>d.s>top||d.u>bot);
+  if(tall.length) notes.push(`<div class="note">${tall.map(d=>`${AP[mo.m]} ${d.i} (${d.s} signups, ${d.u} unsubscribes)`).join("; ")} ${tall.length===1?"runs":"run"} past the scale and ${tall.length===1?"is":"are"} drawn cut off.${mo.k==="2026-07"?" July 2 is the day the June 26 webinar's registration list was added.":""}</div>`);
+  $("#notes").innerHTML=notes.join("");
+  try{ const q=new URL(location.href); q.searchParams.set("m",mo.k); history.replaceState(null,"",q); }catch(e){}
+}
+window._redraw=()=>{ if(MONTHS.length) draw(); };
+
+function go(i){ cur=Math.max(0,Math.min(MONTHS.length-1,i)); draw(); }
+
+function init(data){
+  const mc=data.mailchimp||{}, act=mc.daily_activity||[];
+  if(window.vcStamp) vcStamp("#asof", data.generated_at);
+  if(!act.length){ $("#chart").innerHTML=`<p style="padding:20px">The daily series is missing from tonight's file.</p>`; return; }
+  build(act);
+  $("#pick").innerHTML=MONTHS.slice().reverse().map(x=>{ const s=x.days.reduce((a,d)=>a+d.s,0),u=x.days.reduce((a,d)=>a+d.u,0);
+    return `<option value="${x.k}">${FULL[x.m]} ${x.y} · net ${sgn(s-u)}</option>`; }).join("");
+  let want=null; try{ want=new URLSearchParams(location.search).get("m"); }catch(e){}
+  const wi=MONTHS.findIndex(x=>x.k===want); cur=wi>=0?wi:MONTHS.length-1;
+  $("#prev").addEventListener("click",()=>go(cur-1));
+  $("#next").addEventListener("click",()=>go(cur+1));
+  $("#pick").addEventListener("change",e=>go(MONTHS.findIndex(x=>x.k===e.target.value)));
+  document.addEventListener("keydown",e=>{ if(e.target.matches("input,select,textarea")) return;
+    if(e.key==="ArrowLeft") go(cur-1); if(e.key==="ArrowRight") go(cur+1); });
+  let t; window.addEventListener("resize",()=>{ clearTimeout(t); t=setTimeout(draw,120); });
+  draw();
+}
+</script>
+</body>
+</html>

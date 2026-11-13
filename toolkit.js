@@ -20,7 +20,8 @@
   var TOOLS = [
     { id: "catalogue",  label: "Catalogue",  path: "catalogue/",         gated: true,  data: "data/meta.json",
       blurb: "Every piece Vital City has published, searchable by author, topic, issue and date, with readership and contributor contacts." },
-    // Two views of one subject: the monthly dashboard here, and the Vital City
+    // Three views of one subject: the monthly dashboard here, signups by day
+    // (signups/, drawn from the same file's daily series), and the Vital City
     // analytics Claude dashboard (daily data from vc_dashboard_build.py, plus
     // the seven weekly measures from the key-indicators Google Sheet, which
     // kpi_weekly.py writes every Monday).
@@ -29,6 +30,8 @@
       views: [
         { id: "growth", label: "Dashboard", path: "growth/", gated: true, data: "growth/data.enc",
           blurb: "The newsletter list, signups, sends, site traffic and giving, by month, with the ten key indicators and the weekly report." },
+        { id: "signups", label: "Signups by day", path: "signups/", gated: true, data: "growth/data.enc",
+          blurb: "Newsletter signups and unsubscribes day by day, with the net for each day, one month at a time." },
         { id: "analytics", label: "Analytics", href: "https://claude.ai/artifact/2YceF8cyNHLBYWuKoSjwjy", gated: false, static: true,
           blurb: "Headline numbers updated through the day, with signups, newsletters, site traffic, giving, the app and the seven weekly key indicators. A Claude dashboard: open it signed in to claude.ai; the weekly indicators need the Google Sheets connector on." }
       ] },
