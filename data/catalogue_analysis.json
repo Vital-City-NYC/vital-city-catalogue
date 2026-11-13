@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-11-12T18:46:17.931846+00:00",
+    "generated_at": "2026-11-13T03:09:02.773921+00:00",
     "site": "https://www.vitalcitynyc.org",
     "total_posts": 998,
     "total_authors": 542,
@@ -11,33 +11,8 @@
       "2026-11-12"
     ],
     "first_run": false,
-    "new_article_count": 4,
-    "new_articles": [
-      {
-        "title": "The Best Street Safety Fix New York Isn\u2019t Using",
-        "url": "https://www.vitalcitynyc.org/the-best-street-safety-fix-new-york-isnt-using/",
-        "published_date": "2026-11-12",
-        "primary_author": "Sara Lind"
-      },
-      {
-        "title": "Tough Truths About Integration and Education",
-        "url": "https://www.vitalcitynyc.org/tough-truths-integration-education/",
-        "published_date": "2026-11-12",
-        "primary_author": "Daniel Weisberg"
-      },
-      {
-        "title": "A New Rec Center Comes to Play",
-        "url": "https://www.vitalcitynyc.org/a-new-rec-center-shirley-chisolm/",
-        "published_date": "2026-11-12",
-        "primary_author": "Alyssa Katz"
-      },
-      {
-        "title": "How Strong Are the Winds at Mamdani\u2019s Back?",
-        "url": "https://www.vitalcitynyc.org/zohran-mamdanis-good-fortune/",
-        "published_date": "2026-11-12",
-        "primary_author": "Ross Barkan"
-      }
-    ]
+    "new_article_count": 0,
+    "new_articles": []
   },
   "total_pieces": 998,
   "by_year": {
@@ -411,17 +386,17 @@
     }
   },
   "wc_stats": {
-    "n": 974,
+    "n": 970,
     "median": 1642,
-    "mean": 2185,
-    "p90": 3276,
+    "mean": 2186,
+    "p90": 3331,
     "max": 15166,
-    "p10": 942,
-    "p25": 1294,
-    "p75": 2234,
-    "p95": 5882,
-    "no_count": 24,
-    "core_1000_2499": 699,
+    "p10": 935,
+    "p25": 1292,
+    "p75": 2232,
+    "p95": 5884,
+    "no_count": 28,
+    "core_1000_2499": 696,
     "under_500": 43,
     "over_5000": 57
   },
@@ -436,11 +411,11 @@
     ],
     [
       "1,000-1,999",
-      557
+      555
     ],
     [
       "2,000-2,999",
-      198
+      196
     ],
     [
       "3,000-4,999",
@@ -483,12 +458,12 @@
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 151
+        "n": 150
       },
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 178
+        "n": 177
       },
       {
         "floor": 1750,
@@ -503,12 +478,12 @@
       {
         "floor": 2250,
         "label": "2,250",
-        "n": 70
+        "n": 69
       },
       {
         "floor": 2500,
         "label": "2,500",
-        "n": 36
+        "n": 35
       },
       {
         "floor": 2750,
@@ -567,8 +542,8 @@
     },
     {
       "year": "2026",
-      "n": 246,
-      "p25": 1351,
+      "n": 242,
+      "p25": 1315,
       "median": 1766,
       "p75": 2439,
       "max": 13675
