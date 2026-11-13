@@ -13,6 +13,9 @@ name: dashboard-data
 # key that works on that one repository only). This job's log is public too:
 # it prints file names and the data's as-of time, never a figure.
 #
+# It also copies five tabs of the "Vital City key indicators" Google Sheet to
+# out/kp_*.csv (kp_sheet_export.py).
+#
 # A Claude scheduled task ("Vital City analytics dashboard refresh") then copies
 # new files from the private repository into the dashboard, six times a day.
 # Before this (Oct. 21 to Nov. 10, 2026) the script ran on Josh's Mac, and a
@@ -72,6 +75,19 @@ jobs:
           VC_NETWORK_PASS: ${{ secrets.VC_NETWORK_PASS }}
           VC_DASH_DIR: ${{ github.workspace }}/dashdata
         run: python3 vc_dashboard_build.py --alerts
+
+      # The five tabs of the "Vital City key indicators" sheet (written Mondays by
+      # kpi_weekly.py, events tab kept by hand) as out/kp_*.csv, so the dashboard
+      # reads files instead of a live Google Sheets query. Uses the same service
+      # account as kpi_weekly.py, read-only. A tab that can't be read keeps its
+      # previous file and never fails the job.
+      - name: Copy the key indicators sheet
+        continue-on-error: true
+        working-directory: catalogue
+        env:
+          GA4_CREDS_JSON: ${{ secrets.GA4_CREDS_JSON }}
+          VC_DASH_DIR: ${{ github.workspace }}/dashdata
+        run: python3 kp_sheet_export.py
 
       # No fallback: a failure here must stop the job before anything is saved.
       # Compares the new files with the last saved ones. Prints file names only.
