@@ -1,7 +1,373 @@
 {
- "generated": "2026-11-12T20:44:36+00:00",
+ "generated": "2026-11-18T21:18:42+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "editors-note-ai-and-the-city",
+   "title": "Editor’s Note",
+   "url": "https://www.vitalcitynyc.org/editors-note-ai-and-the-city/",
+   "date": "2026-11-18",
+   "author": "Josh Greenman",
+   "handle": null,
+   "dek": "Cities are for people (and bots)",
+   "tags": [
+    "Artifical Intelligence",
+    "Technology",
+    "The Big Reboot"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Josh Greenman says the issue asks what AI can do for cities, and what risks it poses. The essays disagree on who should regulate it: Washington, or cities because Washington won't."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Josh Greenman on a New York City issue about AI that weighs government efficiency against the pitfalls, from the shuttered MyCity chatbot to 86 algorithmic tools the City now lists."
+    },
+    {
+     "kind": "hook",
+     "text": "\"What can these new technologies do for cities? What capabilities will they unlock? And, just as important, what risks will they pose?\" Josh Greenman writes on the questions behind the issue."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "nyc-government-ai-tools-local-law-35",
+   "title": "AI and the City: A Data Story",
+   "url": "https://www.vitalcitynyc.org/nyc-government-ai-tools-local-law-35/",
+   "date": "2026-11-18",
+   "author": "Vital City",
+   "handle": null,
+   "dek": "How city governments, including New York, are using artificial intelligence, and where things are going next",
+   "tags": [
+    "Artifical Intelligence",
+    "The Big Reboot",
+    "Data Stories"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "New York City agencies now report 86 algorithmic tools at 19 agencies, up from 31 tools at 11 in 2022, a Vital City data story finds. Local Law 35 requires the yearly accounting."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Vital City's data story on how city governments, New York City included, are using artificial intelligence, and where things are going next."
+    },
+    {
+     "kind": "hook",
+     "text": "Which American cities tell the public exactly which algorithms their agencies use? New York City is one of a few, under Local Law 35, passed in 2022. Vital City's data story has the latest count."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-city-government-services-hype-vs-reality",
+   "title": "Between Hype and Reality: What AI Can and Can’t Fix in City Hall",
+   "url": "https://www.vitalcitynyc.org/ai-city-government-services-hype-vs-reality/",
+   "date": "2026-11-18",
+   "author": "Tiffany Chu, Alicia Rouault",
+   "handle": null,
+   "dek": "Local governments are already putting AI to work, but that progress is only as strong as the foundation of workers and operations that it stands on.",
+   "tags": [
+    "Artifical Intelligence",
+    "City Government",
+    "The Big Reboot"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Tiffany Chu and Alicia Rouault argue that city governments moved paper processes onto computers but treated each upgrade as a one-time capital project. What was new is now technical debt."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Tiffany Chu and Alicia Rouault on what AI can and can't fix in City Hall, and why the foundation of workers and operations decides how far it gets."
+    },
+    {
+     "kind": "hook",
+     "text": "\"What was new is already becoming technical debt, and more people than ever are churning out of critical services because of missed administrative steps.\" Tiffany Chu and Alicia Rouault on AI in City Hall."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-criminal-justice-reform-nyc-rikers-nypd",
+   "title": "AI to Advance Criminal Justice Reform",
+   "url": "https://www.vitalcitynyc.org/ai-criminal-justice-reform-nyc-rikers-nypd/",
+   "date": "2026-11-18",
+   "author": "Alex Chohlas-Wood",
+   "handle": null,
+   "dek": "How technology can make for fairer and more effective policing, prosecutions and jails",
+   "tags": [
+    "Police Reform",
+    "Artifical Intelligence",
+    "Justice",
+    "Better Prompts, Better Services"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Justice reforms ask swamped public servants to scrutinize more and weigh more alternatives, on top of their daily work. Alex Chohlas-Wood argues technology can carry some of that load."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Alex Chohlas-Wood on how AI could make policing, prosecutions and jails fairer and more effective, as New York City reforms stall and budgets tighten."
+    },
+    {
+     "kind": "hook",
+     "text": "\"Reforms also ask swamped public servants to do more.\" Alex Chohlas-Wood on why New York City's justice reforms stall, and what AI might do about it."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "federal-ai-regulation",
+   "title": "City Limits",
+   "url": "https://www.vitalcitynyc.org/federal-ai-regulation/",
+   "date": "2026-11-18",
+   "author": "Kevin Frazier",
+   "handle": null,
+   "dek": "Why Washington, not New York City (or state), should be the frontline regulator of AI",
+   "tags": [
+    "Artifical Intelligence",
+    "Federal Government",
+    "Technology",
+    "Retraining Our Systems"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Kevin Frazier argues that mayors and city councils should leave frontier AI to Washington and spend their limited resources on what only cities can do: workforce plans, AI literacy and transparent city deployments."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Kevin Frazier on why city officials should stay out of regulating AI labs, and what they can do instead: publish which AI tools the city uses, for what task and against which outcome measures."
+    },
+    {
+     "kind": "hook",
+     "text": "\"A resident cannot audit the Commerce Department, but she can walk into city hall, attend a council meeting and judge for herself whether the permit office got faster or the pothole got filled.\" Kevin Frazier on AI and local government."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "the-need-to-build-cities-of-trust",
+   "title": "The Need to Build Cities of Trust",
+   "url": "https://www.vitalcitynyc.org/the-need-to-build-cities-of-trust/",
+   "date": "2026-11-18",
+   "author": "Brendan O'Flaherty, Rajiv Sethi",
+   "handle": null,
+   "dek": "Authentication and authenticity are up for grabs in the AI age — and cities can leverage that fact to their advantage.",
+   "tags": [
+    "Artifical Intelligence",
+    "City Government",
+    "The Big Reboot"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "As AI makes fraud cheap, Brendan O'Flaherty and Rajiv Sethi argue, face-to-face trust gains value. Cities, where people can look each other in the eye, will build whole economies around being trustworthy."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Brendan O'Flaherty and Rajiv Sethi on the cities of trust AI may create: finance, law, research, news and higher education clustering where handshakes and reputations still count."
+    },
+    {
+     "kind": "hook",
+     "text": "\"Like the Puritan dream of Boston as a shining city on a hill, the great cities of the age of AI should be shining islands of integrity in a sea of sleaze, deception and fraud.\" Brendan O'Flaherty and Rajiv Sethi."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "urban-innovation-big-data-ai",
+   "title": "Solving Big Problems With Big Data",
+   "url": "https://www.vitalcitynyc.org/urban-innovation-big-data-ai/",
+   "date": "2026-11-18",
+   "author": "Prem Ramaswami",
+   "handle": null,
+   "dek": "Our brains weren't built for city scale. AI can help.",
+   "tags": [
+    "Artifical Intelligence",
+    "Technology",
+    "City Government",
+    "The Big Reboot"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Prem Ramaswami argues that human minds can't trace how a two-foot road narrowing ripples through bus times, storm runoff and retail foot traffic, but minds working with AI can."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Prem Ramaswami on AI for city planning. He is head of Data Commons by Google and a former president of urban products at Sidewalk Labs. He lays out privacy rules cities should require."
+    },
+    {
+     "kind": "hook",
+     "text": "\"Data collected in the public realm must be treated as a public asset.\" Prem Ramaswami writes on what cities should require of sensors and AI before using either."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "deliverance-from-bureaucratic-purgatory",
+   "title": "Deliverance from Bureaucratic Purgatory?",
+   "url": "https://www.vitalcitynyc.org/deliverance-from-bureaucratic-purgatory/",
+   "date": "2026-11-18",
+   "author": "Julie Samuels",
+   "handle": null,
+   "dek": "Attack the time tax that makes government such a burden for so many New Yorkers.",
+   "tags": [
+    "Artifical Intelligence",
+    "City Government",
+    "Technology",
+    "Retraining Our Systems"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Julie Samuels argues that waiting on government is a time tax, and that someone working two shifts or managing a disability pays far more of it than someone with a flexible job and a laptop."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Julie Samuels on the time tax New Yorkers pay in hold music, repeated forms and applications with no way to check their status, and what city government can do about it."
+    },
+    {
+     "kind": "hook",
+     "text": "\"We fill out forms with information the government already has, again and again.\" Julie Samuels on the hours New Yorkers lose to city bureaucracy."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-regulation-lessons-1916-zoning-resolution",
+   "title": "What AI Can Learn from Cities",
+   "url": "https://www.vitalcitynyc.org/ai-regulation-lessons-1916-zoning-resolution/",
+   "date": "2026-11-18",
+   "author": "Alexandros Washburn",
+   "handle": null,
+   "dek": "The frontier models need to embrace a new understanding of their technology.",
+   "tags": [
+    "Artifical Intelligence",
+    "Technology",
+    "City Government",
+    "The Big Reboot"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Alexandros Washburn argues that AI regulation should borrow from zoning, not the building code. A code checks one model. Zoning shapes what a swarm of agents does to the shared environment."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Alexandros Washburn on what the 1916 Zoning Resolution can teach AI regulators. In 1913 New York City's real estate titans asked for rules after one skyscraper cast its neighbors into shadow."
+    },
+    {
+     "kind": "hook",
+     "text": "\"A frontier is the place where you don't have neighbors yet.\" Alexandros Washburn on why the word is wrong for an AI industry that now has them."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "nyc-public-school-classroom-ai-policy",
+   "title": "AI to Help Students Learn and Teachers Teach",
+   "url": "https://www.vitalcitynyc.org/nyc-public-school-classroom-ai-policy/",
+   "date": "2026-11-18",
+   "author": "Justin Reich",
+   "handle": null,
+   "dek": "New York City's new rules provide too little room for rigorous experimentation by teachers and students.",
+   "tags": [
+    "Education",
+    "Technology",
+    "Artifical Intelligence",
+    "Better Prompts, Better Services"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Justin Reich argues New York City's September AI rules for schools were set by politics. Nothing in the research changed between March and September, he writes. The vibe did."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Justin Reich, who has spent 25 years researching technology and learning at Harvard and MIT, on how New York City should test AI in schools: publish the outcomes it will measure and the data it will collect."
+    },
+    {
+     "kind": "hook",
+     "text": "\"Nothing in the science of AI and education changed between March and September.\" Justin Reich on why New York City's school AI policy reversed anyway."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-nyc-quality-of-life-open-data",
+   "title": "AI to Improve Quality of Life",
+   "url": "https://www.vitalcitynyc.org/ai-nyc-quality-of-life-open-data/",
+   "date": "2026-11-18",
+   "author": "Josh Appel",
+   "handle": null,
+   "dek": "Use data to pay closer attention to delivering the services New Yorkers care most about.",
+   "tags": [
+    "Artifical Intelligence",
+    "Quality of Life",
+    "Better Prompts, Better Services"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Josh Appel argues New York City already has the data to improve quality of life. What it lacks is a practical way to search it, and he says AI can supply one, starting with where to send housing inspectors."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Josh Appel on how artificial intelligence could point the City's inspectors, garbage trucks and night patrols to where they are needed before the complaints come in."
+    },
+    {
+     "kind": "hook",
+     "text": "\"City government does not need to collect an entirely new universe of information.\" Josh Appel on what New York City could do with the data it already has."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-city-union-labor-bargain",
+   "title": "Union Members and Bots, Holding Hands",
+   "url": "https://www.vitalcitynyc.org/ai-city-union-labor-bargain/",
+   "date": "2026-11-18",
+   "author": "Stephen Goldsmith",
+   "handle": null,
+   "dek": "The AI bargain cities should strike with labor",
+   "tags": [
+    "Artifical Intelligence",
+    "Labor",
+    "Retraining Our Systems"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Stephen Goldsmith argues that with AI and better data, New York City can close its budget gaps by changing how government works, rather than choosing between higher taxes and cut services."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Stephen Goldsmith on the AI bargain the city should strike with labor, and how Mayor Mamdani's new civil service advisory committee could be the first step."
+    },
+    {
+     "kind": "hook",
+     "text": "Can New York City close a projected $23 billion budget gap without raising taxes or cutting services? Stephen Goldsmith says AI and civil service reform offer a third option."
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "the-best-street-safety-fix-new-york-isnt-using",
    "title": "The Best Street Safety Fix New York Isn’t Using",
@@ -619,126 +985,6 @@
     {
      "kind": "hook",
      "text": "What can an attorney general do when a district attorney charges too low? Saritha Komatireddy tells the New York Editorial Board she would use Executive Law 63 to take the case over and prosecute it herself."
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "new-yorks-devilish-assault-problem",
-   "title": "New York’s Devilish Assault Problem",
-   "url": "https://www.vitalcitynyc.org/new-yorks-devilish-assault-problem/",
-   "date": "2026-10-15",
-   "author": "Vital City, Paul Reeping",
-   "handle": "@paulreeping",
-   "dek": "What's driving it and what's next?",
-   "tags": [
-    "Crime",
-    "Justice",
-    "Data Stories"
-   ],
-   "mode": "claude",
-   "posts": [
-    {
-     "kind": "finding",
-     "text": "Paul Reeping tested the usual explanations for New York City's rise in assaults, from hotspots to repeat offenders to subway crime. Most contribute. None drives it. The rise is citywide and mostly among people who know each other."
-    },
-    {
-     "kind": "argument",
-     "text": "Read @paulreeping on why assaults keep rising in New York City while murders and shootings fall. His answer starts with the city doing deeper analysis of the detailed data it already holds."
-    },
-    {
-     "kind": "hook",
-     "text": "Why are assaults up 20% since 2019 in New York City when they are falling nationally? Paul Reeping checks six common explanations against the data. Stranger attacks, hotspots and the subway are part of it, none the main cause."
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "from-san-juan-hill-to-lincoln-center-and-back",
-   "title": "From San Juan Hill to Lincoln Center and Back",
-   "url": "https://www.vitalcitynyc.org/from-san-juan-hill-to-lincoln-center-and-back/",
-   "date": "2026-10-14",
-   "author": "Julia Foulkes",
-   "handle": null,
-   "dek": "How cultural institutions should respect what they displace",
-   "tags": [
-    "Culture",
-    "History",
-    "Gentrification"
-   ],
-   "mode": "claude",
-   "posts": [
-    {
-     "kind": "finding",
-     "text": "Julia Foulkes argues that Lincoln Center's San Juan Hill festival is a long-overdue attempt to make a cultural treasure welcome to a wider range of New Yorkers, and that its new design should open outward too."
-    },
-    {
-     "kind": "argument",
-     "text": "Read Julia Foulkes on what Lincoln Center replaced. San Juan Hill gave New York City stride piano, \"Shuffle Along\" and the Charleston before it was cleared for the performing arts complex."
-    },
-    {
-     "kind": "hook",
-     "text": "\"It can be an elite cultural treasure — but it need not and should not be only for elites.\" Julia Foulkes on Lincoln Center, San Juan Hill and what an institution owes the neighborhood it displaced."
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "how-ice-puts-the-nypd-in-an-impossible-position",
-   "title": "How ICE Puts the NYPD in an Impossible Position",
-   "url": "https://www.vitalcitynyc.org/how-ice-puts-the-nypd-in-an-impossible-position/",
-   "date": "2026-10-14",
-   "author": "John Hall",
-   "handle": null,
-   "dek": "Those pointing fingers at the police department in the wake of the Marble Hill shooting fail to understand its legal constraints and responsibilities.",
-   "tags": [
-    "Immigration",
-    "Federal Government",
-    "Justice"
-   ],
-   "mode": "claude",
-   "posts": [
-    {
-     "kind": "finding",
-     "text": "John Hall argues the New York City Police Department has little choice in how it responds to ICE: city law bars it from assisting civil immigration enforcement, and federal law bars it from obstructing federal agents."
-    },
-    {
-     "kind": "argument",
-     "text": "Read John Hall on the Marble Hill shooting and the police department's legal position. Hall says City Hall should issue clear public guidelines on what officers may and may not do when ICE is on the street."
-    },
-    {
-     "kind": "hook",
-     "text": "\"The feds cause a mess, and local police take much of the blame.\" John Hall on what Newark's Delaney Hall protests show about where New York City is heading."
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "make-the-governor-responsible-for-new-yorks-schools-2",
-   "title": "Make the Governor Responsible for New York’s Schools",
-   "url": "https://www.vitalcitynyc.org/make-the-governor-responsible-for-new-yorks-schools-2/",
-   "date": "2026-10-14",
-   "author": "Daniel Weisberg",
-   "handle": null,
-   "dek": "Learn from mayoral control, and from other states",
-   "tags": [
-    "Education",
-    "Governor",
-    "Accountability"
-   ],
-   "mode": "claude",
-   "posts": [
-    {
-     "kind": "finding",
-     "text": "Daniel Weisberg argues New York's governor should pick the Board of Regents, which would then pick the education commissioner. A change in state law would do it, he says. No constitutional amendment needed."
-    },
-    {
-     "kind": "argument",
-     "text": "Read Daniel Weisberg on what New York could learn from mayoral control and from Mississippi, Tennessee and Louisiana about who should be answerable for the state's schools."
-    },
-    {
-     "kind": "hook",
-     "text": "Who is in charge of New York's schools? Daniel Weisberg says the governor has no say over the Regents or the commissioner, and that the \"maybes\" mean no one is in charge."
     }
    ],
    "attempts": 1
