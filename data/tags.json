@@ -1,15 +1,15 @@
 [
   {
+    "name": "City Government",
+    "post_count": 155
+  },
+  {
     "name": "Crime",
     "post_count": 154
   },
   {
     "name": "History",
     "post_count": 149
-  },
-  {
-    "name": "City Government",
-    "post_count": 146
   },
   {
     "name": "Government Operations",
@@ -20,11 +20,11 @@
     "post_count": 112
   },
   {
-    "name": "Housing",
-    "post_count": 83
+    "name": "Justice",
+    "post_count": 84
   },
   {
-    "name": "Justice",
+    "name": "Housing",
     "post_count": 83
   },
   {
@@ -36,16 +36,16 @@
     "post_count": 78
   },
   {
-    "name": "Politics",
+    "name": "Police Reform",
     "post_count": 58
   },
   {
     "name": "Economics",
-    "post_count": 57
+    "post_count": 58
   },
   {
-    "name": "Police Reform",
-    "post_count": 57
+    "name": "Politics",
+    "post_count": 58
   },
   {
     "name": "Interview",
@@ -56,6 +56,10 @@
     "post_count": 50
   },
   {
+    "name": "Technology",
+    "post_count": 48
+  },
+  {
     "name": "Education",
     "post_count": 44
   },
@@ -64,8 +68,8 @@
     "post_count": 42
   },
   {
-    "name": "Technology",
-    "post_count": 37
+    "name": "Artifical Intelligence",
+    "post_count": 34
   },
   {
     "name": "Transit",
@@ -92,32 +96,32 @@
     "post_count": 29
   },
   {
-    "name": "Events",
+    "name": "Quality of Life",
     "post_count": 27
   },
   {
-    "name": "Quality of Life",
-    "post_count": 26
+    "name": "Events",
+    "post_count": 27
   },
   {
     "name": "Setting the Stage",
     "post_count": 26
   },
   {
+    "name": "Incarceration",
+    "post_count": 25
+  },
+  {
     "name": "Infrastructure",
     "post_count": 24
   },
   {
-    "name": "Incarceration",
-    "post_count": 24
+    "name": "Data Stories",
+    "post_count": 22
   },
   {
     "name": "Corruption",
     "post_count": 22
-  },
-  {
-    "name": "Data Stories",
-    "post_count": 21
   },
   {
     "name": "policy",
@@ -129,7 +133,7 @@
   },
   {
     "name": "Neighborhood Life",
-    "post_count": 19
+    "post_count": 20
   },
   {
     "name": "Subway Crime",
@@ -160,20 +164,20 @@
     "post_count": 16
   },
   {
+    "name": "Labor",
+    "post_count": 15
+  },
+  {
     "name": "Transportation",
     "post_count": 15
   },
   {
-    "name": "The Way Forward",
+    "name": "Federal Government",
     "post_count": 14
   },
   {
-    "name": "Labor",
-    "post_count": 13
-  },
-  {
-    "name": "Federal Government",
-    "post_count": 13
+    "name": "The Way Forward",
+    "post_count": 14
   },
   {
     "name": "Inequality",
@@ -188,16 +192,16 @@
     "post_count": 13
   },
   {
+    "name": "Streets",
+    "post_count": 12
+  },
+  {
     "name": "Immigration",
     "post_count": 12
   },
   {
     "name": "What to Do Now",
     "post_count": 12
-  },
-  {
-    "name": "Streets",
-    "post_count": 11
   },
   {
     "name": "Youth",
@@ -216,6 +220,10 @@
     "post_count": 11
   },
   {
+    "name": "Better Prompts, Better Services",
+    "post_count": 10
+  },
+  {
     "name": "Book Review",
     "post_count": 10
   },
@@ -225,10 +233,6 @@
   },
   {
     "name": "Elections",
-    "post_count": 9
-  },
-  {
-    "name": "Artifical Intelligence",
     "post_count": 9
   },
   {
@@ -250,6 +254,14 @@
   {
     "name": "Looking Back",
     "post_count": 9
+  },
+  {
+    "name": "The Big Reboot",
+    "post_count": 8
+  },
+  {
+    "name": "Retraining Our Systems",
+    "post_count": 8
   },
   {
     "name": "More Money in More Pockets",

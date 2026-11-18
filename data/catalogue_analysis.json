@@ -1,27 +1,178 @@
 {
   "meta": {
-    "generated_at": "2026-11-18T04:03:05.793100+00:00",
+    "generated_at": "2026-11-18T19:19:40.058320+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 998,
-    "total_authors": 542,
-    "total_issues": 33,
-    "total_topics": 236,
+    "total_posts": 1023,
+    "total_authors": 557,
+    "total_issues": 34,
+    "total_topics": 239,
     "date_range": [
       "2021-09-15",
-      "2026-11-12"
+      "2026-11-18"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 25,
+    "new_articles": [
+      {
+        "title": "Editor\u2019s Note",
+        "url": "https://www.vitalcitynyc.org/editors-note-ai-and-the-city/",
+        "published_date": "2026-11-18",
+        "primary_author": "Josh Greenman"
+      },
+      {
+        "title": "AI and the City: A Data Story",
+        "url": "https://www.vitalcitynyc.org/nyc-government-ai-tools-local-law-35/",
+        "published_date": "2026-11-18",
+        "primary_author": "Vital City"
+      },
+      {
+        "title": "Between Hype and Reality: What AI Can and Can\u2019t Fix in City Hall",
+        "url": "https://www.vitalcitynyc.org/ai-city-government-services-hype-vs-reality/",
+        "published_date": "2026-11-18",
+        "primary_author": "Tiffany Chu"
+      },
+      {
+        "title": "AI to Advance Criminal Justice Reform",
+        "url": "https://www.vitalcitynyc.org/ai-criminal-justice-reform-nyc-rikers-nypd/",
+        "published_date": "2026-11-18",
+        "primary_author": "Alex Chohlas-Wood"
+      },
+      {
+        "title": "City Limits",
+        "url": "https://www.vitalcitynyc.org/federal-ai-regulation/",
+        "published_date": "2026-11-18",
+        "primary_author": "Kevin Frazier"
+      },
+      {
+        "title": "The Need to Build Cities of Trust",
+        "url": "https://www.vitalcitynyc.org/the-need-to-build-cities-of-trust/",
+        "published_date": "2026-11-18",
+        "primary_author": "Brendan O'Flaherty"
+      },
+      {
+        "title": "Solving Big Problems With Big Data",
+        "url": "https://www.vitalcitynyc.org/urban-innovation-big-data-ai/",
+        "published_date": "2026-11-18",
+        "primary_author": "Prem Ramaswami"
+      },
+      {
+        "title": "Deliverance from Bureaucratic Purgatory?",
+        "url": "https://www.vitalcitynyc.org/deliverance-from-bureaucratic-purgatory/",
+        "published_date": "2026-11-18",
+        "primary_author": "Julie Samuels"
+      },
+      {
+        "title": "What AI Can Learn from Cities",
+        "url": "https://www.vitalcitynyc.org/ai-regulation-lessons-1916-zoning-resolution/",
+        "published_date": "2026-11-18",
+        "primary_author": "Alexandros Washburn"
+      },
+      {
+        "title": "AI to Improve Quality of Life",
+        "url": "https://www.vitalcitynyc.org/ai-nyc-quality-of-life-open-data/",
+        "published_date": "2026-11-18",
+        "primary_author": "Josh Appel"
+      },
+      {
+        "title": "Union Members and Bots, Holding Hands",
+        "url": "https://www.vitalcitynyc.org/ai-city-union-labor-bargain/",
+        "published_date": "2026-11-18",
+        "primary_author": "Stephen Goldsmith"
+      },
+      {
+        "title": "AI to Advance Vision Zero",
+        "url": "https://www.vitalcitynyc.org/ai-vision-zero-nyc-street-sensors/",
+        "published_date": "2026-11-18",
+        "primary_author": "Andrew Miller"
+      },
+      {
+        "title": "How New York Constrains Public Sector AI",
+        "url": "https://www.vitalcitynyc.org/new-york-loading-act-ai-public-sector-nyc/",
+        "published_date": "2026-11-18",
+        "primary_author": "Rebecca Heywood"
+      },
+      {
+        "title": "The Man at the Window",
+        "url": "https://www.vitalcitynyc.org/urban-surveillance-computer-vision/",
+        "published_date": "2026-11-18",
+        "primary_author": "Carlo Ratti"
+      },
+      {
+        "title": "How\u2019m I Really Doing?",
+        "url": "https://www.vitalcitynyc.org/ai-city-government-measurement-improvement/",
+        "published_date": "2026-11-18",
+        "primary_author": "Anna Harvey"
+      },
+      {
+        "title": "The AI Time Dividend",
+        "url": "https://www.vitalcitynyc.org/ai-productivity-shorter-work-week-time-dividend/",
+        "published_date": "2026-11-18",
+        "primary_author": "Arpit Gupta"
+      },
+      {
+        "title": "If Data Are Biased, AI Will Only Amplify Problems",
+        "url": "https://www.vitalcitynyc.org/ai-data-bias-problems/",
+        "published_date": "2026-11-18",
+        "primary_author": "Constantine Kontokosta"
+      },
+      {
+        "title": "AI to Enhance Transparency and Accountability",
+        "url": "https://www.vitalcitynyc.org/ai-ny-court-of-appeals-judges-transparency/",
+        "published_date": "2026-11-18",
+        "primary_author": "Oded Oren"
+      },
+      {
+        "title": "What Jobs Will AI Really Replace?",
+        "url": "https://www.vitalcitynyc.org/ai-job-replacement-fears-reality/",
+        "published_date": "2026-11-18",
+        "primary_author": "Anthony Townsend"
+      },
+      {
+        "title": "AI to Listen Better",
+        "url": "https://www.vitalcitynyc.org/ai-interviews-nyc-residents-public-listening/",
+        "published_date": "2026-11-18",
+        "primary_author": "John Della Volpe"
+      },
+      {
+        "title": "AI to Amplify Civic Participation",
+        "url": "https://www.vitalcitynyc.org/ai-311-civic-participation-nyc/",
+        "published_date": "2026-11-18",
+        "primary_author": "Audrey Tang"
+      },
+      {
+        "title": "Generate Economic Gains for Every New Yorker",
+        "url": "https://www.vitalcitynyc.org/amazon-hq-lessons-nyc-economy/",
+        "published_date": "2026-11-18",
+        "primary_author": "Jared Giles"
+      },
+      {
+        "title": "AI to Connect Neighbors",
+        "url": "https://www.vitalcitynyc.org/ai-neighbor-connection-nyc-community/",
+        "published_date": "2026-11-18",
+        "primary_author": "Dominic Ramos-Ruiz"
+      },
+      {
+        "title": "AI to Shred Government Paperwork",
+        "url": "https://www.vitalcitynyc.org/ai-nyc-government-paperwork-approvals/",
+        "published_date": "2026-11-18",
+        "primary_author": "Rohit Aggarwala"
+      },
+      {
+        "title": "AI to Help Lift People Up",
+        "url": "https://www.vitalcitynyc.org/ai-reentry-job-coaching-criminal-justice/",
+        "published_date": "2026-11-18",
+        "primary_author": "Sam Schaeffer"
+      }
+    ]
   },
-  "total_pieces": 998,
+  "total_pieces": 1023,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 268
+    "2026": 293
   },
   "by_month": {
     "2021-09": 1,
@@ -78,14 +229,14 @@
     "2026-06": 46,
     "2026-07": 23,
     "2026-08": 16,
-    "2026-09": 33,
+    "2026-09": 32,
     "2026-10": 26,
-    "2026-11": 11
+    "2026-11": 37
   },
   "by_type": [
     [
       "opinion/commentary",
-      782
+      805
     ],
     [
       "q&a",
@@ -93,19 +244,19 @@
     ],
     [
       "data analysis",
-      52
+      53
     ],
     [
       "podcast",
       29
     ],
     [
-      "policy",
+      "something else",
       15
     ],
     [
-      "something else",
-      14
+      "policy",
+      15
     ],
     [
       "book review",
@@ -118,16 +269,16 @@
   ],
   "by_topic_top25": [
     [
+      "City Government",
+      155
+    ],
+    [
       "Crime",
       154
     ],
     [
       "History",
       149
-    ],
-    [
-      "City Government",
-      146
     ],
     [
       "Government Operations",
@@ -138,11 +289,11 @@
       112
     ],
     [
-      "Housing",
-      83
+      "Justice",
+      84
     ],
     [
-      "Justice",
+      "Housing",
       83
     ],
     [
@@ -154,16 +305,16 @@
       78
     ],
     [
-      "Politics",
+      "Police Reform",
       58
     ],
     [
       "Economics",
-      57
+      58
     ],
     [
-      "Police Reform",
-      57
+      "Politics",
+      58
     ],
     [
       "Interview",
@@ -174,6 +325,10 @@
       50
     ],
     [
+      "Technology",
+      48
+    ],
+    [
       "Education",
       44
     ],
@@ -182,8 +337,8 @@
       42
     ],
     [
-      "Technology",
-      37
+      "Artifical Intelligence",
+      34
     ],
     [
       "Transit",
@@ -210,47 +365,43 @@
       29
     ],
     [
-      "Events",
-      27
-    ],
-    [
       "Quality of Life",
-      26
+      27
     ]
   ],
-  "n_topics_total": 236,
+  "n_topics_total": 239,
   "by_credential_pieces": [
     [
       "Academic",
-      237
+      244
     ],
     [
       "Journalist / media",
-      135
-    ],
-    [
-      "Nonprofit / advocacy",
-      118
+      136
     ],
     [
       "Other / unclassified",
-      111
+      120
+    ],
+    [
+      "Nonprofit / advocacy",
+      120
     ],
     [
       "Vital City (institutional)",
-      103
+      104
     ],
     [
       "Government / public official",
-      88
+      91
     ],
     [
       "Think tank / research institute",
-      59
+      60
     ],
     [
       "Business / private sector",
-      58
+      59
     ],
     [
       "Architecture / design / planning",
@@ -272,27 +423,27 @@
   "by_credential_authors": [
     [
       "Academic",
-      171
+      172
     ],
     [
       "Other / unclassified",
-      120
+      126
     ],
     [
       "Nonprofit / advocacy",
-      83
+      86
     ],
     [
       "Journalist / media",
-      37
-    ],
-    [
-      "Think tank / research institute",
-      33
+      38
     ],
     [
       "Government / public official",
-      31
+      34
+    ],
+    [
+      "Think tank / research institute",
+      34
     ],
     [
       "Business / private sector",
@@ -320,16 +471,22 @@
     ]
   ],
   "top_topics_for_stack": [
+    "City Government",
     "Crime",
     "History",
-    "City Government",
     "Government Operations",
     "City Planning",
-    "Housing",
     "Justice",
+    "Housing",
     "Gun Violence"
   ],
   "topic_by_year": {
+    "City Government": {
+      "2023": 4,
+      "2024": 20,
+      "2025": 54,
+      "2026": 77
+    },
     "Crime": {
       "2022": 18,
       "2023": 37,
@@ -343,12 +500,6 @@
       "2024": 38,
       "2025": 52,
       "2026": 19
-    },
-    "City Government": {
-      "2023": 4,
-      "2024": 20,
-      "2025": 54,
-      "2026": 68
     },
     "Government Operations": {
       "2022": 1,
@@ -364,18 +515,18 @@
       "2025": 39,
       "2026": 18
     },
-    "Housing": {
-      "2023": 5,
-      "2024": 11,
-      "2025": 37,
-      "2026": 30
-    },
     "Justice": {
       "2022": 4,
       "2023": 26,
       "2024": 27,
       "2025": 13,
-      "2026": 13
+      "2026": 14
+    },
+    "Housing": {
+      "2023": 5,
+      "2024": 11,
+      "2025": 37,
+      "2026": 30
     },
     "Gun Violence": {
       "2022": 14,
@@ -386,17 +537,17 @@
     }
   },
   "wc_stats": {
-    "n": 970,
+    "n": 995,
     "median": 1642,
-    "mean": 2186,
-    "p90": 3331,
+    "mean": 2172,
+    "p90": 3241,
     "max": 15166,
-    "p10": 935,
-    "p25": 1292,
-    "p75": 2232,
-    "p95": 5884,
+    "p10": 953,
+    "p25": 1295,
+    "p75": 2213,
+    "p95": 5844,
     "no_count": 28,
-    "core_1000_2499": 696,
+    "core_1000_2499": 720,
     "under_500": 43,
     "over_5000": 57
   },
@@ -411,11 +562,11 @@
     ],
     [
       "1,000-1,999",
-      555
+      575
     ],
     [
       "2,000-2,999",
-      196
+      201
     ],
     [
       "3,000-4,999",
@@ -453,27 +604,27 @@
       {
         "floor": 1000,
         "label": "1,000",
-        "n": 112
+        "n": 116
       },
       {
         "floor": 1250,
         "label": "1,250",
-        "n": 150
+        "n": 157
       },
       {
         "floor": 1500,
         "label": "1,500",
-        "n": 177
+        "n": 183
       },
       {
         "floor": 1750,
         "label": "1,750",
-        "n": 116
+        "n": 119
       },
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 72
+        "n": 76
       },
       {
         "floor": 2250,
@@ -483,7 +634,7 @@
       {
         "floor": 2500,
         "label": "2,500",
-        "n": 35
+        "n": 36
       },
       {
         "floor": 2750,
@@ -542,16 +693,16 @@
     },
     {
       "year": "2026",
-      "n": 242,
-      "p25": 1315,
-      "median": 1766,
-      "p75": 2439,
+      "n": 267,
+      "p25": 1342,
+      "median": 1709,
+      "p75": 2389,
       "max": 13675
     }
   ],
   "by_nauthors": {
-    "1": 845,
-    "2": 124,
+    "1": 867,
+    "2": 127,
     "3": 26,
     "4": 1,
     "8": 1,
@@ -560,7 +711,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 103,
+      "posts": 104,
       "credential": "Vital City (institutional)"
     },
     {
@@ -585,7 +736,7 @@
     },
     {
       "name": "Josh Greenman",
-      "posts": 19,
+      "posts": 20,
       "credential": "Journalist / media"
     },
     {
@@ -659,7 +810,7 @@
       "credential": "Academic"
     }
   ],
-  "n_issues": 33,
+  "n_issues": 34,
   "cadence": {
     "by_year": [
       {
@@ -709,64 +860,64 @@
       },
       {
         "year": "2026",
-        "weeks": 45.1,
-        "pieces": 268,
-        "outside_issues": 188,
-        "per_week_all": 5.94,
-        "per_week_outside_issues": 4.16,
+        "weeks": 46.0,
+        "pieces": 293,
+        "outside_issues": 187,
+        "per_week_all": 6.37,
+        "per_week_outside_issues": 4.07,
         "partial": true
       }
     ],
-    "total_weeks": 269.1,
-    "all_time_per_week": 3.71,
-    "all_time_per_week_outside_issues": 1.81,
+    "total_weeks": 270.0,
+    "all_time_per_week": 3.79,
+    "all_time_per_week_outside_issues": 1.8,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.16,
-    "current_per_week_all": 5.94,
+    "current_per_week_outside_issues": 4.07,
+    "current_per_week_all": 6.37,
     "robustness": {
       "drop_window_days": 3,
-      "issue_tagged_pieces": 512,
-      "published_away_from_drop": 69,
-      "share_of_issue_pieces": 13.5,
-      "current_year_strict": 4.16,
-      "current_year_loose": 4.45,
-      "all_time_strict": 1.81,
-      "all_time_loose": 2.06,
-      "all_time_all": 3.71
+      "issue_tagged_pieces": 538,
+      "published_away_from_drop": 70,
+      "share_of_issue_pieces": 13.0,
+      "current_year_strict": 4.07,
+      "current_year_loose": 4.35,
+      "all_time_strict": 1.8,
+      "all_time_loose": 2.05,
+      "all_time_all": 3.79
     }
   },
   "rhythm": {
-    "n_dated": 998,
+    "n_dated": 1023,
     "by_weekday": [
       {
         "day": "Mon",
         "pieces": 69,
-        "share": 6.9
+        "share": 6.7
       },
       {
         "day": "Tue",
         "pieces": 169,
-        "share": 16.9
+        "share": 16.5
       },
       {
         "day": "Wed",
-        "pieces": 471,
-        "share": 47.2
+        "pieces": 497,
+        "share": 48.6
       },
       {
         "day": "Thu",
-        "pieces": 196,
-        "share": 19.6
+        "pieces": 195,
+        "share": 19.1
       },
       {
         "day": "Fri",
         "pieces": 65,
-        "share": 6.5
+        "share": 6.4
       },
       {
         "day": "Sat",
         "pieces": 24,
-        "share": 2.4
+        "share": 2.3
       },
       {
         "day": "Sun",
@@ -775,8 +926,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 47.2,
-    "midweek_share": 83.8,
+    "top_day_share": 48.6,
+    "midweek_share": 84.2,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -838,9 +989,9 @@
       {
         "month": "September",
         "abbr": "Sep",
-        "pieces": 129,
+        "pieces": 128,
         "occurrences": 6,
-        "per_occurrence": 21.5
+        "per_occurrence": 21.3
       },
       {
         "month": "October",
@@ -852,9 +1003,9 @@
       {
         "month": "November",
         "abbr": "Nov",
-        "pieces": 60,
+        "pieces": 86,
         "occurrences": 6,
-        "per_occurrence": 10.0
+        "per_occurrence": 14.3
       },
       {
         "month": "December",

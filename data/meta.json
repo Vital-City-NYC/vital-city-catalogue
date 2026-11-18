@@ -1,15 +1,166 @@
 {
-  "generated_at": "2026-11-18T04:03:05.793100+00:00",
+  "generated_at": "2026-11-18T19:19:40.058320+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 998,
-  "total_authors": 542,
-  "total_issues": 33,
-  "total_topics": 236,
+  "total_posts": 1023,
+  "total_authors": 557,
+  "total_issues": 34,
+  "total_topics": 239,
   "date_range": [
     "2021-09-15",
-    "2026-11-12"
+    "2026-11-18"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 25,
+  "new_articles": [
+    {
+      "title": "Editor’s Note",
+      "url": "https://www.vitalcitynyc.org/editors-note-ai-and-the-city/",
+      "published_date": "2026-11-18",
+      "primary_author": "Josh Greenman"
+    },
+    {
+      "title": "AI and the City: A Data Story",
+      "url": "https://www.vitalcitynyc.org/nyc-government-ai-tools-local-law-35/",
+      "published_date": "2026-11-18",
+      "primary_author": "Vital City"
+    },
+    {
+      "title": "Between Hype and Reality: What AI Can and Can’t Fix in City Hall",
+      "url": "https://www.vitalcitynyc.org/ai-city-government-services-hype-vs-reality/",
+      "published_date": "2026-11-18",
+      "primary_author": "Tiffany Chu"
+    },
+    {
+      "title": "AI to Advance Criminal Justice Reform",
+      "url": "https://www.vitalcitynyc.org/ai-criminal-justice-reform-nyc-rikers-nypd/",
+      "published_date": "2026-11-18",
+      "primary_author": "Alex Chohlas-Wood"
+    },
+    {
+      "title": "City Limits",
+      "url": "https://www.vitalcitynyc.org/federal-ai-regulation/",
+      "published_date": "2026-11-18",
+      "primary_author": "Kevin Frazier"
+    },
+    {
+      "title": "The Need to Build Cities of Trust",
+      "url": "https://www.vitalcitynyc.org/the-need-to-build-cities-of-trust/",
+      "published_date": "2026-11-18",
+      "primary_author": "Brendan O'Flaherty"
+    },
+    {
+      "title": "Solving Big Problems With Big Data",
+      "url": "https://www.vitalcitynyc.org/urban-innovation-big-data-ai/",
+      "published_date": "2026-11-18",
+      "primary_author": "Prem Ramaswami"
+    },
+    {
+      "title": "Deliverance from Bureaucratic Purgatory?",
+      "url": "https://www.vitalcitynyc.org/deliverance-from-bureaucratic-purgatory/",
+      "published_date": "2026-11-18",
+      "primary_author": "Julie Samuels"
+    },
+    {
+      "title": "What AI Can Learn from Cities",
+      "url": "https://www.vitalcitynyc.org/ai-regulation-lessons-1916-zoning-resolution/",
+      "published_date": "2026-11-18",
+      "primary_author": "Alexandros Washburn"
+    },
+    {
+      "title": "AI to Improve Quality of Life",
+      "url": "https://www.vitalcitynyc.org/ai-nyc-quality-of-life-open-data/",
+      "published_date": "2026-11-18",
+      "primary_author": "Josh Appel"
+    },
+    {
+      "title": "Union Members and Bots, Holding Hands",
+      "url": "https://www.vitalcitynyc.org/ai-city-union-labor-bargain/",
+      "published_date": "2026-11-18",
+      "primary_author": "Stephen Goldsmith"
+    },
+    {
+      "title": "AI to Advance Vision Zero",
+      "url": "https://www.vitalcitynyc.org/ai-vision-zero-nyc-street-sensors/",
+      "published_date": "2026-11-18",
+      "primary_author": "Andrew Miller"
+    },
+    {
+      "title": "How New York Constrains Public Sector AI",
+      "url": "https://www.vitalcitynyc.org/new-york-loading-act-ai-public-sector-nyc/",
+      "published_date": "2026-11-18",
+      "primary_author": "Rebecca Heywood"
+    },
+    {
+      "title": "The Man at the Window",
+      "url": "https://www.vitalcitynyc.org/urban-surveillance-computer-vision/",
+      "published_date": "2026-11-18",
+      "primary_author": "Carlo Ratti"
+    },
+    {
+      "title": "How’m I Really Doing?",
+      "url": "https://www.vitalcitynyc.org/ai-city-government-measurement-improvement/",
+      "published_date": "2026-11-18",
+      "primary_author": "Anna Harvey"
+    },
+    {
+      "title": "The AI Time Dividend",
+      "url": "https://www.vitalcitynyc.org/ai-productivity-shorter-work-week-time-dividend/",
+      "published_date": "2026-11-18",
+      "primary_author": "Arpit Gupta"
+    },
+    {
+      "title": "If Data Are Biased, AI Will Only Amplify Problems",
+      "url": "https://www.vitalcitynyc.org/ai-data-bias-problems/",
+      "published_date": "2026-11-18",
+      "primary_author": "Constantine Kontokosta"
+    },
+    {
+      "title": "AI to Enhance Transparency and Accountability",
+      "url": "https://www.vitalcitynyc.org/ai-ny-court-of-appeals-judges-transparency/",
+      "published_date": "2026-11-18",
+      "primary_author": "Oded Oren"
+    },
+    {
+      "title": "What Jobs Will AI Really Replace?",
+      "url": "https://www.vitalcitynyc.org/ai-job-replacement-fears-reality/",
+      "published_date": "2026-11-18",
+      "primary_author": "Anthony Townsend"
+    },
+    {
+      "title": "AI to Listen Better",
+      "url": "https://www.vitalcitynyc.org/ai-interviews-nyc-residents-public-listening/",
+      "published_date": "2026-11-18",
+      "primary_author": "John Della Volpe"
+    },
+    {
+      "title": "AI to Amplify Civic Participation",
+      "url": "https://www.vitalcitynyc.org/ai-311-civic-participation-nyc/",
+      "published_date": "2026-11-18",
+      "primary_author": "Audrey Tang"
+    },
+    {
+      "title": "Generate Economic Gains for Every New Yorker",
+      "url": "https://www.vitalcitynyc.org/amazon-hq-lessons-nyc-economy/",
+      "published_date": "2026-11-18",
+      "primary_author": "Jared Giles"
+    },
+    {
+      "title": "AI to Connect Neighbors",
+      "url": "https://www.vitalcitynyc.org/ai-neighbor-connection-nyc-community/",
+      "published_date": "2026-11-18",
+      "primary_author": "Dominic Ramos-Ruiz"
+    },
+    {
+      "title": "AI to Shred Government Paperwork",
+      "url": "https://www.vitalcitynyc.org/ai-nyc-government-paperwork-approvals/",
+      "published_date": "2026-11-18",
+      "primary_author": "Rohit Aggarwala"
+    },
+    {
+      "title": "AI to Help Lift People Up",
+      "url": "https://www.vitalcitynyc.org/ai-reentry-job-coaching-criminal-justice/",
+      "published_date": "2026-11-18",
+      "primary_author": "Sam Schaeffer"
+    }
+  ]
 }

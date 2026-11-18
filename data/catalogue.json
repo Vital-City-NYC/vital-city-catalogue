@@ -1,5 +1,1150 @@
 [
   {
+    "title": "Editor’s Note",
+    "slug": "editors-note-ai-and-the-city",
+    "url": "https://www.vitalcitynyc.org/editors-note-ai-and-the-city/",
+    "type": "something else",
+    "type_basis": "title:framing-page",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T17:01:00.000+00:00",
+    "updated_at": "2026-11-18T17:01:47.000+00:00",
+    "primary_author": "Josh Greenman",
+    "authors": [
+      "Josh Greenman"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Technology",
+      "The Big Reboot"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Cities are for people (and bots)",
+    "excerpt": "Cities are for people (and bots)",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T165709.673.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Mike Szpot",
+    "embeds": {
+      "flourish": [],
+      "iframes": [
+        {
+          "url": "https://vital-city-nyc.github.io/ai-and-the-city-map/?embed=1",
+          "host": "vital-city-nyc.github.io",
+          "kind": "vital city project"
+        }
+      ],
+      "counts": {
+        "vital city project": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1092,
+    "reading_minutes": 5,
+    "id": "6afc6c1bac4f8c0001a3ff25"
+  },
+  {
+    "title": "AI and the City: A Data Story",
+    "slug": "nyc-government-ai-tools-local-law-35",
+    "url": "https://www.vitalcitynyc.org/nyc-government-ai-tools-local-law-35/",
+    "type": "data analysis",
+    "type_basis": "tag:data-stories",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T17:00:00.000+00:00",
+    "updated_at": "2026-11-18T16:59:59.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "The Big Reboot",
+      "Data Stories"
+    ],
+    "issues": [
+      "ai-and-the-city",
+      "data-stories"
+    ],
+    "issue_numbers": [],
+    "summary": "How city governments, including New York, are using artificial intelligence, and where things are going next",
+    "excerpt": "How city governments, including New York, are using artificial intelligence, and where things are going next",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101058.200.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Harry Gruyaert / Magnum Photos",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "30803431",
+          "src": "visualisation/30803431?1257272",
+          "url": "https://public.flourish.studio/visualisation/30803431/"
+        },
+        {
+          "id": "30803674",
+          "src": "visualisation/30803674?1257272",
+          "url": "https://public.flourish.studio/visualisation/30803674/"
+        },
+        {
+          "id": "30803816",
+          "src": "visualisation/30803816?1257272",
+          "url": "https://public.flourish.studio/visualisation/30803816/"
+        },
+        {
+          "id": "30804126",
+          "src": "visualisation/30804126?1257272",
+          "url": "https://public.flourish.studio/visualisation/30804126/"
+        },
+        {
+          "id": "30803222",
+          "src": "visualisation/30803222?1257272",
+          "url": "https://public.flourish.studio/visualisation/30803222/"
+        },
+        {
+          "id": "30804250",
+          "src": "visualisation/30804250?1257272",
+          "url": "https://public.flourish.studio/visualisation/30804250/"
+        },
+        {
+          "id": "30804402",
+          "src": "visualisation/30804402?1257272",
+          "url": "https://public.flourish.studio/visualisation/30804402/"
+        },
+        {
+          "id": "30804608",
+          "src": "visualisation/30804608?1257272",
+          "url": "https://public.flourish.studio/visualisation/30804608/"
+        },
+        {
+          "id": "30804669",
+          "src": "visualisation/30804669?1257272",
+          "url": "https://public.flourish.studio/visualisation/30804669/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 9
+      },
+      "total": 9
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1655,
+    "reading_minutes": 7,
+    "id": "6afcbf58f02801000138dc64"
+  },
+  {
+    "title": "Between Hype and Reality: What AI Can and Can’t Fix in City Hall",
+    "slug": "ai-city-government-services-hype-vs-reality",
+    "url": "https://www.vitalcitynyc.org/ai-city-government-services-hype-vs-reality/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T17:00:00.000+00:00",
+    "updated_at": "2026-11-18T17:47:50.000+00:00",
+    "primary_author": "Tiffany Chu",
+    "authors": [
+      "Tiffany Chu",
+      "Alicia Rouault"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "City Government",
+      "The Big Reboot"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Local governments are already putting AI to work, but that progress is only as strong as the foundation of workers and operations that it stands on.",
+    "excerpt": "Local governments are already putting AI to work, but that progress is only as strong as the foundation of workers and operations that it stands on.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T173350.471.png",
+    "feature_image_alt": null,
+    "feature_image_credit": null,
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2094,
+    "reading_minutes": 9,
+    "id": "6afcbc37f02801000138dc2e"
+  },
+  {
+    "title": "AI to Advance Criminal Justice Reform",
+    "slug": "ai-criminal-justice-reform-nyc-rikers-nypd",
+    "url": "https://www.vitalcitynyc.org/ai-criminal-justice-reform-nyc-rikers-nypd/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T17:00:00.000+00:00",
+    "updated_at": "2026-11-18T17:00:02.000+00:00",
+    "primary_author": "Alex Chohlas-Wood",
+    "authors": [
+      "Alex Chohlas-Wood"
+    ],
+    "topics": [
+      "Police Reform",
+      "Artifical Intelligence",
+      "Justice",
+      "Better Prompts, Better Services"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "How technology can make for fairer and more effective policing, prosecutions and jails",
+    "excerpt": "How technology can make for fairer and more effective policing, prosecutions and jails",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101223.149.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Josh Ethan Johnson",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2552,
+    "reading_minutes": 11,
+    "id": "6afc85f4f02801000138da9a"
+  },
+  {
+    "title": "City Limits",
+    "slug": "federal-ai-regulation",
+    "url": "https://www.vitalcitynyc.org/federal-ai-regulation/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T17:00:00.000+00:00",
+    "updated_at": "2026-11-18T17:00:00.000+00:00",
+    "primary_author": "Kevin Frazier",
+    "authors": [
+      "Kevin Frazier"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Federal Government",
+      "Technology",
+      "Retraining Our Systems"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Why Washington, not New York City (or state), should be the frontline regulator of AI",
+    "excerpt": "Why Washington, not New York City (or state), should be the frontline regulator of AI",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101921.590.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Sonia Goydenko",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "30830505",
+          "src": "visualisation/30830505?1257272",
+          "url": "https://public.flourish.studio/visualisation/30830505/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1640,
+    "reading_minutes": 7,
+    "id": "6afc7c50f02801000138da2c"
+  },
+  {
+    "title": "The Need to Build Cities of Trust",
+    "slug": "the-need-to-build-cities-of-trust",
+    "url": "https://www.vitalcitynyc.org/the-need-to-build-cities-of-trust/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T17:00:00.000+00:00",
+    "updated_at": "2026-11-18T17:00:02.000+00:00",
+    "primary_author": "Brendan O'Flaherty",
+    "authors": [
+      "Brendan O'Flaherty",
+      "Rajiv Sethi"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "City Government",
+      "The Big Reboot"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Authentication and authenticity are up for grabs in the AI age — and cities can leverage that fact to their advantage.",
+    "excerpt": "Authentication and authenticity are up for grabs in the AI age — and cities can leverage that fact to their advantage.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T100506.750.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Sean Fryxell",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1477,
+    "reading_minutes": 6,
+    "id": "6afc73b1ac4f8c0001a3ff8d"
+  },
+  {
+    "title": "Solving Big Problems With Big Data",
+    "slug": "urban-innovation-big-data-ai",
+    "url": "https://www.vitalcitynyc.org/urban-innovation-big-data-ai/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:59:00.000+00:00",
+    "updated_at": "2026-11-18T17:05:14.000+00:00",
+    "primary_author": "Prem Ramaswami",
+    "authors": [
+      "Prem Ramaswami"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Technology",
+      "City Government",
+      "The Big Reboot"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Our brains weren’t built for city scale. AI can help.",
+    "excerpt": "Our brains weren’t built for city scale. AI can help.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T100645.081.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Angela Weiss / AFP / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1365,
+    "reading_minutes": 6,
+    "id": "6afc70b2ac4f8c0001a3ff48"
+  },
+  {
+    "title": "Deliverance from Bureaucratic Purgatory?",
+    "slug": "deliverance-from-bureaucratic-purgatory",
+    "url": "https://www.vitalcitynyc.org/deliverance-from-bureaucratic-purgatory/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:58:00.000+00:00",
+    "updated_at": "2026-11-18T17:09:40.000+00:00",
+    "primary_author": "Julie Samuels",
+    "authors": [
+      "Julie Samuels"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "City Government",
+      "Technology",
+      "Retraining Our Systems"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Attack the time tax that makes government such a burden for so many New Yorkers.",
+    "excerpt": "Attack the time tax that makes government such a burden for so many New Yorkers.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T100851.271.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Martynas Katauskas",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1694,
+    "reading_minutes": 7,
+    "id": "6afc7db6f02801000138da42"
+  },
+  {
+    "title": "What AI Can Learn from Cities",
+    "slug": "ai-regulation-lessons-1916-zoning-resolution",
+    "url": "https://www.vitalcitynyc.org/ai-regulation-lessons-1916-zoning-resolution/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:58:00.000+00:00",
+    "updated_at": "2026-11-18T17:04:24.000+00:00",
+    "primary_author": "Alexandros Washburn",
+    "authors": [
+      "Alexandros Washburn"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Technology",
+      "City Government",
+      "The Big Reboot"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "The frontier models need to embrace a new understanding of their technology.",
+    "excerpt": "The frontier models need to embrace a new understanding of their technology.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T100929.690.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Burt Glinn / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1532,
+    "reading_minutes": 7,
+    "id": "6afc727dac4f8c0001a3ff78"
+  },
+  {
+    "title": "AI to Help Students Learn and Teachers Teach",
+    "slug": "nyc-public-school-classroom-ai-policy",
+    "url": "https://www.vitalcitynyc.org/nyc-public-school-classroom-ai-policy/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:58:00.000+00:00",
+    "updated_at": "2026-11-18T17:16:28.000+00:00",
+    "primary_author": "Justin Reich",
+    "authors": [
+      "Justin Reich"
+    ],
+    "topics": [
+      "Education",
+      "Technology",
+      "Artifical Intelligence",
+      "Better Prompts, Better Services"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "New York City’s new rules provide too little room for rigorous experimentation by teachers and students.",
+    "excerpt": "New York City’s new rules provide too little room for rigorous experimentation by teachers and students.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-10T100646.906.png",
+    "feature_image_alt": "Girl holds a pencil over a worksheet while looking at a tablet",
+    "feature_image_credit": "Craig F. Walker / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1856,
+    "reading_minutes": 8,
+    "id": "6a7cb9f4c673b70001958f45"
+  },
+  {
+    "title": "AI to Improve Quality of Life",
+    "slug": "ai-nyc-quality-of-life-open-data",
+    "url": "https://www.vitalcitynyc.org/ai-nyc-quality-of-life-open-data/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:56:00.000+00:00",
+    "updated_at": "2026-11-18T17:15:31.000+00:00",
+    "primary_author": "Josh Appel",
+    "authors": [
+      "Josh Appel"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Quality of Life",
+      "Better Prompts, Better Services"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Use data to pay closer attention to delivering the services New Yorkers care most about.",
+    "excerpt": "Use data to pay closer attention to delivering the services New Yorkers care most about.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101820.650.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "David Tan",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "30830130",
+          "src": "visualisation/30830130?1257272",
+          "url": "https://public.flourish.studio/visualisation/30830130/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1267,
+    "reading_minutes": 6,
+    "id": "6afc8706f02801000138dab4"
+  },
+  {
+    "title": "Union Members and Bots, Holding Hands",
+    "slug": "ai-city-union-labor-bargain",
+    "url": "https://www.vitalcitynyc.org/ai-city-union-labor-bargain/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:56:00.000+00:00",
+    "updated_at": "2026-11-18T17:09:06.000+00:00",
+    "primary_author": "Stephen Goldsmith",
+    "authors": [
+      "Stephen Goldsmith"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Labor",
+      "Retraining Our Systems"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "The AI bargain cities should strike with labor",
+    "excerpt": "The AI bargain cities should strike with labor",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T100714.426.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Selcuk Acar / Anadolu / Getty Images",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1133,
+    "reading_minutes": 5,
+    "id": "6afc7b84f02801000138da18"
+  },
+  {
+    "title": "AI to Advance Vision Zero",
+    "slug": "ai-vision-zero-nyc-street-sensors",
+    "url": "https://www.vitalcitynyc.org/ai-vision-zero-nyc-street-sensors/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:55:00.000+00:00",
+    "updated_at": "2026-11-18T17:15:00.000+00:00",
+    "primary_author": "Andrew Miller",
+    "authors": [
+      "Andrew Miller"
+    ],
+    "topics": [
+      "Streets",
+      "Artifical Intelligence",
+      "Better Prompts, Better Services"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Measure streets, not just crashes",
+    "excerpt": "Measure streets, not just crashes",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T100544.153.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Dane Manary",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "30830302",
+          "src": "visualisation/30830302?1257272",
+          "url": "https://public.flourish.studio/visualisation/30830302/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1796,
+    "reading_minutes": 8,
+    "id": "6afc8929f02801000138dacf"
+  },
+  {
+    "title": "How New York Constrains Public Sector AI",
+    "slug": "new-york-loading-act-ai-public-sector-nyc",
+    "url": "https://www.vitalcitynyc.org/new-york-loading-act-ai-public-sector-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:55:00.000+00:00",
+    "updated_at": "2026-11-18T17:08:18.000+00:00",
+    "primary_author": "Rebecca Heywood",
+    "authors": [
+      "Rebecca Heywood"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Retraining Our Systems",
+      "City Government",
+      "Technology"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "That could make cities fall behind",
+    "excerpt": "That could make cities fall behind",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101702.060.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "David Tan",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "30829874",
+          "src": "visualisation/30829874?1257272",
+          "url": "https://public.flourish.studio/visualisation/30829874/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2135,
+    "reading_minutes": 9,
+    "id": "6afc7f93f02801000138da53"
+  },
+  {
+    "title": "The Man at the Window",
+    "slug": "urban-surveillance-computer-vision",
+    "url": "https://www.vitalcitynyc.org/urban-surveillance-computer-vision/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:55:00.000+00:00",
+    "updated_at": "2026-11-18T17:04:02.000+00:00",
+    "primary_author": "Carlo Ratti",
+    "authors": [
+      "Carlo Ratti"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Technology",
+      "The Big Reboot"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "What algorithms can see better than people",
+    "excerpt": "What algorithms can see better than people",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T100952.850.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Thomas Hoepker / Magnum Photos",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "30830395",
+          "src": "visualisation/30830395?1257272",
+          "url": "https://public.flourish.studio/visualisation/30830395/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1477,
+    "reading_minutes": 6,
+    "id": "6afc76e1ac4f8c0001a3ffac"
+  },
+  {
+    "title": "How’m I Really Doing?",
+    "slug": "ai-city-government-measurement-improvement",
+    "url": "https://www.vitalcitynyc.org/ai-city-government-measurement-improvement/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:54:00.000+00:00",
+    "updated_at": "2026-11-18T17:07:53.000+00:00",
+    "primary_author": "Anna Harvey",
+    "authors": [
+      "Anna Harvey"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "City Government",
+      "Retraining Our Systems",
+      "Technology"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Using AI to measure — and improve — city government performance",
+    "excerpt": "Using AI to measure — and improve — city government performance",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101130.797.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Harry Gruyaert / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1482,
+    "reading_minutes": 6,
+    "id": "6afc847af02801000138da80"
+  },
+  {
+    "title": "The AI Time Dividend",
+    "slug": "ai-productivity-shorter-work-week-time-dividend",
+    "url": "https://www.vitalcitynyc.org/ai-productivity-shorter-work-week-time-dividend/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:54:00.000+00:00",
+    "updated_at": "2026-11-18T17:04:47.000+00:00",
+    "primary_author": "Arpit Gupta",
+    "authors": [
+      "Arpit Gupta"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "The Big Reboot",
+      "Technology"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Let tech give us back hours and days to do things that matter more.",
+    "excerpt": "Let tech give us back hours and days to do things that matter more.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T100619.848.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Jorge Garcia",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "30830461",
+          "src": "visualisation/30830461?1257272",
+          "url": "https://public.flourish.studio/visualisation/30830461/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2034,
+    "reading_minutes": 9,
+    "id": "6afc797bf02801000138d9f7"
+  },
+  {
+    "title": "If Data Are Biased, AI Will Only Amplify Problems",
+    "slug": "ai-data-bias-problems",
+    "url": "https://www.vitalcitynyc.org/ai-data-bias-problems/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:53:00.000+00:00",
+    "updated_at": "2026-11-18T17:07:18.000+00:00",
+    "primary_author": "Constantine Kontokosta",
+    "authors": [
+      "Constantine Kontokosta"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Retraining Our Systems"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Can artificial intelligence deliver more efficient, and fair, city public services? It depends.",
+    "excerpt": "Can artificial intelligence deliver more efficient, and fair, city public services? It depends.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-18T105812.164.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Martin Parr / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1481,
+    "reading_minutes": 6,
+    "id": "6afcca10f02801000138dce6"
+  },
+  {
+    "title": "AI to Enhance Transparency and Accountability",
+    "slug": "ai-ny-court-of-appeals-judges-transparency",
+    "url": "https://www.vitalcitynyc.org/ai-ny-court-of-appeals-judges-transparency/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:53:00.000+00:00",
+    "updated_at": "2026-11-18T17:14:21.000+00:00",
+    "primary_author": "Oded Oren",
+    "authors": [
+      "Oded Oren"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "City Government",
+      "Better Prompts, Better Services"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Open data notwithstanding, public records are not yet public knowledge.",
+    "excerpt": "Open data notwithstanding, public records are not yet public knowledge.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101847.094.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "David Tan",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1678,
+    "reading_minutes": 7,
+    "id": "6afc8aacf02801000138dae2"
+  },
+  {
+    "title": "What Jobs Will AI Really Replace?",
+    "slug": "ai-job-replacement-fears-reality",
+    "url": "https://www.vitalcitynyc.org/ai-job-replacement-fears-reality/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:52:00.000+00:00",
+    "updated_at": "2026-11-18T17:06:36.000+00:00",
+    "primary_author": "Anthony Townsend",
+    "authors": [
+      "Anthony Townsend",
+      "Hugh O'Neill"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Labor",
+      "Retraining Our Systems"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "We built a desktop simulation to help keep the debate honest",
+    "excerpt": "We built a desktop simulation to help keep the debate honest",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101300.574.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Mathias Wasik",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "3861518",
+          "src": "story/3861518?1257272",
+          "url": "https://public.flourish.studio/story/3861518/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1865,
+    "reading_minutes": 8,
+    "id": "6afcca5af02801000138dcf5"
+  },
+  {
+    "title": "AI to Listen Better",
+    "slug": "ai-interviews-nyc-residents-public-listening",
+    "url": "https://www.vitalcitynyc.org/ai-interviews-nyc-residents-public-listening/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:52:00.000+00:00",
+    "updated_at": "2026-11-18T17:13:36.000+00:00",
+    "primary_author": "John Della Volpe",
+    "authors": [
+      "John Della Volpe"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Better Prompts, Better Services"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "What hundreds of hours of conversations with New Yorkers reveal about everyday life — and how cities can earn trust.",
+    "excerpt": "What hundreds of hours of conversations with New Yorkers reveal about everyday life — and how cities can earn trust.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101035.781.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Alex Webb / Magnum Photo",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "30947699",
+          "src": "visualisation/30947699?1257272",
+          "url": "https://public.flourish.studio/visualisation/30947699/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 1
+      },
+      "total": 1
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2062,
+    "reading_minutes": 9,
+    "id": "6afcb20ff02801000138dbd6"
+  },
+  {
+    "title": "AI to Amplify Civic Participation",
+    "slug": "ai-311-civic-participation-nyc",
+    "url": "https://www.vitalcitynyc.org/ai-311-civic-participation-nyc/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:51:00.000+00:00",
+    "updated_at": "2026-11-18T17:13:06.000+00:00",
+    "primary_author": "Audrey Tang",
+    "authors": [
+      "Audrey Tang"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Better Prompts, Better Services"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Connect residents with the city workers who can solve their problems. Don’t replace those workers.",
+    "excerpt": "Connect residents with the city workers who can solve their problems. Don’t replace those workers.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101757.862.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "David Tan",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1004,
+    "reading_minutes": 4,
+    "id": "6afc8c0ff02801000138daf5"
+  },
+  {
+    "title": "Generate Economic Gains for Every New Yorker",
+    "slug": "amazon-hq-lessons-nyc-economy",
+    "url": "https://www.vitalcitynyc.org/amazon-hq-lessons-nyc-economy/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:50:00.000+00:00",
+    "updated_at": "2026-11-18T17:05:59.000+00:00",
+    "primary_author": "Jared Giles",
+    "authors": [
+      "Jared Giles"
+    ],
+    "topics": [
+      "Technology",
+      "Artifical Intelligence",
+      "Economics",
+      "Retraining Our Systems"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Lessons from Amazon HQ2 for New York’s AI economy",
+    "excerpt": "Lessons from Amazon HQ2 for New York’s AI economy",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T170326.940.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Stephen Voss / Redux",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1342,
+    "reading_minutes": 6,
+    "id": "6afcc759f02801000138dccf"
+  },
+  {
+    "title": "AI to Connect Neighbors",
+    "slug": "ai-neighbor-connection-nyc-community",
+    "url": "https://www.vitalcitynyc.org/ai-neighbor-connection-nyc-community/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:49:00.000+00:00",
+    "updated_at": "2026-11-18T17:12:06.000+00:00",
+    "primary_author": "Dominic Ramos-Ruiz",
+    "authors": [
+      "Dominic Ramos-Ruiz"
+    ],
+    "topics": [
+      "Neighborhood Life",
+      "Artifical Intelligence",
+      "Better Prompts, Better Services"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Most civic technology focuses on making cities more efficient, overlooking the relationships that hold them together.",
+    "excerpt": "Most civic technology focuses on making cities more efficient, overlooking the relationships that hold them together. ",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T100811.540.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Alex Webb / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1838,
+    "reading_minutes": 8,
+    "id": "6afc8db6f02801000138db0e"
+  },
+  {
+    "title": "AI to Shred Government Paperwork",
+    "slug": "ai-nyc-government-paperwork-approvals",
+    "url": "https://www.vitalcitynyc.org/ai-nyc-government-paperwork-approvals/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:48:00.000+00:00",
+    "updated_at": "2026-11-18T17:11:28.000+00:00",
+    "primary_author": "Rohit Aggarwala",
+    "authors": [
+      "Rohit Aggarwala"
+    ],
+    "topics": [
+      "City Government",
+      "Artifical Intelligence",
+      "Better Prompts, Better Services"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "Employees need not get bogged down by red tape.",
+    "excerpt": "Employees need not get bogged down by red tape.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T100752.083.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Stuart Franklin / Magnum Photos",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1190,
+    "reading_minutes": 5,
+    "id": "6afc9401f02801000138db33"
+  },
+  {
+    "title": "AI to Help Lift People Up",
+    "slug": "ai-reentry-job-coaching-criminal-justice",
+    "url": "https://www.vitalcitynyc.org/ai-reentry-job-coaching-criminal-justice/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-18",
+    "published_at": "2026-11-18T16:45:00.000+00:00",
+    "updated_at": "2026-11-18T17:10:44.000+00:00",
+    "primary_author": "Sam Schaeffer",
+    "authors": [
+      "Sam Schaeffer"
+    ],
+    "topics": [
+      "Artifical Intelligence",
+      "Incarceration",
+      "Technology",
+      "Better Prompts, Better Services"
+    ],
+    "issues": [
+      "ai-and-the-city"
+    ],
+    "issue_numbers": [],
+    "summary": "How technology helps with reentry — and can assist with other complicated social services work",
+    "excerpt": "How technology helps with reentry — and can assist with other complicated social services work",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T101731.637.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "David Tan",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1742,
+    "reading_minutes": 8,
+    "id": "6afca51ff02801000138db9d"
+  },
+  {
     "title": "The Best Street Safety Fix New York Isn’t Using",
     "slug": "the-best-street-safety-fix-new-york-isnt-using",
     "url": "https://www.vitalcitynyc.org/the-best-street-safety-fix-new-york-isnt-using/",
@@ -2185,43 +3330,6 @@
     "word_count": 1925,
     "reading_minutes": 8,
     "id": "6aa83036c32a03000118cdf6"
-  },
-  {
-    "title": "AI to Help Students Learn and Teachers Teach",
-    "slug": "nyc-public-school-classroom-ai-policy",
-    "url": "https://www.vitalcitynyc.org/nyc-public-school-classroom-ai-policy/",
-    "type": "opinion/commentary",
-    "type_basis": "default",
-    "published_date": "2026-09-10",
-    "published_at": "2026-09-10T14:55:09.000+00:00",
-    "updated_at": "2026-11-17T19:30:58.000+00:00",
-    "primary_author": "Justin Reich",
-    "authors": [
-      "Justin Reich"
-    ],
-    "topics": [
-      "Education",
-      "Technology",
-      "Artifical Intelligence"
-    ],
-    "issues": [],
-    "issue_numbers": [],
-    "summary": "New York City’s new rules provide too little room for rigorous experimentation by teachers and students.",
-    "excerpt": "New York City’s new rules provide too little room for rigorous experimentation by teachers and students.",
-    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/09/Cropping-Tool---2026-09-10T100646.906.png",
-    "feature_image_alt": "Girl holds a pencil over a worksheet while looking at a tablet",
-    "feature_image_credit": "Craig F. Walker / Getty Images",
-    "embeds": {
-      "flourish": [],
-      "iframes": [],
-      "counts": {},
-      "total": 0
-    },
-    "featured": false,
-    "visibility": "public",
-    "word_count": 1856,
-    "reading_minutes": 8,
-    "id": "6a7cb9f4c673b70001958f45"
   },
   {
     "title": "A Simple Change That Could Improve the Lives of Millions of New Yorkers",
@@ -40041,14 +41149,14 @@
     "id": "69a04c0ad4006a00010a417a"
   },
   {
-    "title": "The State of Crime in 2022",
+    "title": "The State of Crime in 2023",
     "slug": "vital-signs-march-2023",
     "url": "https://www.vitalcitynyc.org/vital-signs-march-2023/",
     "type": "data analysis",
     "type_basis": "tag:data-stories",
     "published_date": "2023-03-03",
     "published_at": "2023-03-03T19:00:01.000+00:00",
-    "updated_at": "2026-11-11T19:17:56.000+00:00",
+    "updated_at": "2026-11-18T09:37:45.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"

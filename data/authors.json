@@ -1,7 +1,7 @@
 [
  {
   "name": "Vital City",
-  "post_count": 103,
+  "post_count": 104,
   "slugs": [
    "2025-a-look-back-most-read",
    "a-conversation-with-former-federal-prosecutor-carrie-cohen-on-smartphone-seizures-in-the-investigation-of-mayor-eric-adams",
@@ -53,6 +53,7 @@
    "nyc-coge-charter-reform-government-operations-fixes",
    "nyc-crime-midyear-2026-felony-assaults-rape-murder",
    "nyc-economy-data-story",
+   "nyc-government-ai-tools-local-law-35",
    "nyc-housing-permits-fast-track-construction-mamdani",
    "nyc-mamdani-coge-government-efficiency-ballot-reform-recommendations",
    "nypd-crime-strategy-questions-michael-lipetri",
@@ -307,13 +308,14 @@
  },
  {
   "name": "Josh Greenman",
-  "post_count": 19,
+  "post_count": 20,
   "slugs": [
    "age-diversity-in-cities-and-neighborhoods",
    "black-market-brooklyn",
    "brick-by-brick-rule-by-rule",
    "congestion-pricing-an-explainer",
    "darializa-avila-chevalier-claire-valdez-brad-lander-mamdani",
+   "editors-note-ai-and-the-city",
    "editors-note-issue-16",
    "imagine-a-real-new-york-mayoral-election",
    "michael-oppenheimer-mark-chambers-interview",
@@ -674,6 +676,24 @@
   "senior": true
  },
  {
+  "name": "Arpit Gupta",
+  "post_count": 6,
+  "slugs": [
+   "ai-economic-opportunities-nyc",
+   "ai-productivity-shorter-work-week-time-dividend",
+   "cause-to-worry-reason-to-act",
+   "congestion-pricing-across-america",
+   "mamdani-rent-freeze-agenda-nyc",
+   "office-conversions-easier-said-than-done"
+  ],
+  "slug": "gupta-arpit",
+  "bio": "is an associate professor at NYU Stern and a senior fellow at the Manhattan Institute.",
+  "url": "https://www.vitalcitynyc.org/author/gupta-arpit/",
+  "twitter": null,
+  "website": null,
+  "senior": true
+ },
+ {
   "name": "Howard Yaruss",
   "post_count": 6,
   "slugs": [
@@ -774,23 +794,6 @@
   "website": null
  },
  {
-  "name": "Arpit Gupta",
-  "post_count": 5,
-  "slugs": [
-   "ai-economic-opportunities-nyc",
-   "cause-to-worry-reason-to-act",
-   "congestion-pricing-across-america",
-   "mamdani-rent-freeze-agenda-nyc",
-   "office-conversions-easier-said-than-done"
-  ],
-  "slug": "gupta-arpit",
-  "bio": "is an associate professor at NYU Stern and a senior fellow at the Manhattan Institute.",
-  "url": "https://www.vitalcitynyc.org/author/gupta-arpit/",
-  "twitter": null,
-  "website": null,
-  "senior": true
- },
- {
   "name": "Megan Kang",
   "post_count": 5,
   "slugs": [
@@ -836,6 +839,21 @@
   "slug": "norman-sara",
   "bio": "is the principal in the Law Offices of Sara Norman, located in San Francisco, California. Previously, she served as deputy director of the Prison Law Office, where she managed a nonprofit devoted to class-action system reform litigation.",
   "url": "https://www.vitalcitynyc.org/author/norman-sara/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Alex Chohlas-Wood",
+  "post_count": 4,
+  "slugs": [
+   "ai-criminal-justice-reform-nyc-rikers-nypd",
+   "how-rare-is-crime-on-the-subway",
+   "how-to-deploy-ai-policing-nyc-nypd",
+   "underground-safer-than-the-surface"
+  ],
+  "slug": "chohlas-wood-alex",
+  "bio": "is an assistant professor of computational social science at NYU Steinhardt, where he directs the Algorithms, Data, and Public Policy Technology (ADAPPT) Lab. He is the former director of analytics at the New York City Police Department.",
+  "url": "https://www.vitalcitynyc.org/author/chohlas-wood-alex/",
   "twitter": null,
   "website": null
  },
@@ -1087,6 +1105,35 @@
   "website": null
  },
  {
+  "name": "Stephen Goldsmith",
+  "post_count": 3,
+  "slugs": [
+   "ai-city-union-labor-bargain",
+   "government-should-harness-the-power-of-ai-to-combat-corruption-while-preserving-managerial-discretion",
+   "nyc-government-ai-accountability-discretion"
+  ],
+  "slug": "goldsmith-stephen",
+  "bio": "is the Derek Bok Professor of Urban Policy at Harvard\u2019s Kennedy School of Government, and was formerly a prosecutor and mayor in Indianapolis, and deputy mayor of New York City.",
+  "url": "https://www.vitalcitynyc.org/author/goldsmith-stephen/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Anna Harvey",
+  "post_count": 3,
+  "slugs": [
+   "ai-city-government-measurement-improvement",
+   "stemming-violence-investing-in-civic-goods",
+   "what-is-gold-standard-evidence-anyway"
+  ],
+  "slug": "harvey-anna",
+  "bio": "is president and CEO of the Social Science Research Council and a professor of politics at New York University. She directs the Public Safety Lab and is co-director of the Criminal Justice Expert Panel.",
+  "url": "https://www.vitalcitynyc.org/author/harvey-anna/",
+  "twitter": null,
+  "website": null,
+  "senior": true
+ },
+ {
   "name": "Jennifer Doleac",
   "post_count": 3,
   "slugs": [
@@ -1287,20 +1334,6 @@
   "website": null
  },
  {
-  "name": "Alex Chohlas-Wood",
-  "post_count": 3,
-  "slugs": [
-   "how-rare-is-crime-on-the-subway",
-   "how-to-deploy-ai-policing-nyc-nypd",
-   "underground-safer-than-the-surface"
-  ],
-  "slug": "chohlas-wood-alex",
-  "bio": "is an assistant professor of computational social science at NYU Steinhardt. He also co-directs the Computational Policy Lab at Harvard Kennedy School and is the former director of analytics at the New York Police Department.",
-  "url": "https://www.vitalcitynyc.org/author/chohlas-wood-alex/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Marcos F. Soler",
   "post_count": 3,
   "slugs": [
@@ -1495,6 +1528,98 @@
   "slug": "vergara-camilo-jose",
   "bio": "is a photographer who has spent more than 50 years documenting poor communities in New York City. He has more than 16,000 images in the Library of Congress.",
   "url": "https://www.vitalcitynyc.org/author/vergara-camilo-jose/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Brendan O'Flaherty",
+  "post_count": 2,
+  "slugs": [
+   "the-need-to-build-cities-of-trust",
+   "when-products-can-kill"
+  ],
+  "slug": "oflaherty-brendan",
+  "bio": "is a professor of economics at Columbia University.",
+  "url": "https://www.vitalcitynyc.org/author/oflaherty-brendan/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Rajiv Sethi",
+  "post_count": 2,
+  "slugs": [
+   "the-need-to-build-cities-of-trust",
+   "when-products-can-kill"
+  ],
+  "slug": "sethi-rajiv",
+  "bio": "is a professor of economics at Barnard College and an external professor at the Santa Fe Institute. He is a co-author of \u201cShadows of Doubt: Stereotypes, Crime and the Pursuit of Justice.\u201d",
+  "url": "https://www.vitalcitynyc.org/author/sethi-rajiv/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Andrew Miller",
+  "post_count": 2,
+  "slugs": [
+   "ai-vision-zero-nyc-street-sensors",
+   "waymo-driverless-ridehail-strategy-nyc"
+  ],
+  "slug": "miller-andrew",
+  "bio": "is a consultant, advisor and speaker on innovative mobility and smart cities. He is a fellow at the Roots of Progress Institute and writes deep-dive articles on mobility, innovation and transit for his Substack, \u201cChanging Lanes.\u201d",
+  "url": "https://www.vitalcitynyc.org/author/miller-andrew/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Carlo Ratti",
+  "post_count": 2,
+  "slugs": [
+   "training-ai-to-make-cities-more-humane",
+   "urban-surveillance-computer-vision"
+  ],
+  "slug": "ratti-carlo",
+  "bio": "is a professor at MIT and at the Politecnico di Milano. He is a co-founder of the international design and innovation office CRA-Carlo Ratti Associati and of the MIT Senseable City Lab. In 2025, he directed Venice's Biennale Architettura.\n\n",
+  "url": "https://www.vitalcitynyc.org/author/ratti-carlo/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Anthony Townsend",
+  "post_count": 2,
+  "slugs": [
+   "ai-job-replacement-fears-reality",
+   "putting-tech-to-work-for-all-new-yorkers"
+  ],
+  "slug": "townsend-anthony",
+  "bio": "is a senior research associate at Cornell Tech\u2019s Jacobs Urban Tech Hub, and the author of \u201cSmart Cities: Big Data, Civic Hackers, and the Quest for a New Utopia\u201d and \u201cGhost Road: Beyond the Driverless Car.\u201d",
+  "url": "https://www.vitalcitynyc.org/author/townsend-anthony/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "John Della Volpe",
+  "post_count": 2,
+  "slugs": [
+   "ai-interviews-nyc-residents-public-listening",
+   "new-yorks-five-political-types"
+  ],
+  "slug": "della-volpe-john",
+  "bio": "is a public opinion researcher. His company SocialSphere conducts research for Vital City, and he is one of the founders of CrowdVox.ai, the platform used to conduct the interviews described here. ",
+  "url": "https://www.vitalcitynyc.org/author/della-volpe-john/",
+  "twitter": null,
+  "website": null,
+  "senior": true
+ },
+ {
+  "name": "Jared Giles",
+  "post_count": 2,
+  "slugs": [
+   "amazon-hq-lessons-nyc-economy",
+   "economic-justice-youth-workforce-development-nyc"
+  ],
+  "slug": "giles-jared",
+  "bio": "is the vice president of STEAM Engine and founder of SquareOne, a consulting firm focused on education, workforce and economic development.",
+  "url": "https://www.vitalcitynyc.org/author/giles-jared/",
   "twitter": null,
   "website": null
  },
@@ -1834,19 +1959,6 @@
   "slug": "tompkins-tim",
   "bio": "is an NYU Marron Institute fellow, where he leads the Sustaining Places Initiative.",
   "url": "https://www.vitalcitynyc.org/author/tompkins-tim/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Stephen Goldsmith",
-  "post_count": 2,
-  "slugs": [
-   "government-should-harness-the-power-of-ai-to-combat-corruption-while-preserving-managerial-discretion",
-   "nyc-government-ai-accountability-discretion"
-  ],
-  "slug": "goldsmith-stephen",
-  "bio": "is the Derek Bok Professor of Urban Policy at Harvard\u2019s Kennedy School of Government, and was formerly a prosecutor and mayor in Indianapolis, and deputy mayor of New York City.",
-  "url": "https://www.vitalcitynyc.org/author/goldsmith-stephen/",
   "twitter": null,
   "website": null
  },
@@ -2494,20 +2606,6 @@
   "senior": true
  },
  {
-  "name": "Anna Harvey",
-  "post_count": 2,
-  "slugs": [
-   "stemming-violence-investing-in-civic-goods",
-   "what-is-gold-standard-evidence-anyway"
-  ],
-  "slug": "harvey-anna",
-  "bio": "is president and CEO of the Social Science Research Council and a professor of politics at New York University. She directs the Public Safety Lab and is co-director of the Criminal Justice Expert Panel.",
-  "url": "https://www.vitalcitynyc.org/author/harvey-anna/",
-  "twitter": null,
-  "website": null,
-  "senior": true
- },
- {
   "name": "Michael Rempel",
   "post_count": 2,
   "slugs": [
@@ -2650,6 +2748,198 @@
   "twitter": null,
   "website": null,
   "senior": true
+ },
+ {
+  "name": "Tiffany Chu",
+  "post_count": 1,
+  "slugs": [
+   "ai-city-government-services-hype-vs-reality"
+  ],
+  "slug": "chu-tiffany",
+  "bio": "is the former chief of staff to Boston Mayor Michelle Wu and former CEO of Remix. She is a contributing writer for Tech Viaduct, a project of Searchlight Institute.",
+  "url": "https://www.vitalcitynyc.org/author/chu-tiffany/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Alicia Rouault",
+  "post_count": 1,
+  "slugs": [
+   "ai-city-government-services-hype-vs-reality"
+  ],
+  "slug": "rouault-alicia",
+  "bio": "is director of Applied AI for Government at Propel and former CTO of the U.S. Department of Health and Human Services. She is a contributing writer for Tech Viaduct, a project of Searchlight Institute.\n",
+  "url": "https://www.vitalcitynyc.org/author/rouault-alicia/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Kevin Frazier",
+  "post_count": 1,
+  "slugs": [
+   "federal-ai-regulation"
+  ],
+  "slug": "frazier-kevin",
+  "bio": "is AI Innovation and Law Fellow at Texas Law.",
+  "url": "https://www.vitalcitynyc.org/author/frazier-kevin/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Prem Ramaswami",
+  "post_count": 1,
+  "slugs": [
+   "urban-innovation-big-data-ai"
+  ],
+  "slug": "ramaswami-prem",
+  "bio": "is the head of Data Commons at Google, an open-source initiative that organizes the world\u2019s public data to ground AI and help people make data-driven decisions. Previously, he served as president of urban products at Sidewalk Labs. \n",
+  "url": "https://www.vitalcitynyc.org/author/ramaswami-prem/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Julie Samuels",
+  "post_count": 1,
+  "slugs": [
+   "deliverance-from-bureaucratic-purgatory"
+  ],
+  "slug": "samuels-julie",
+  "bio": "is the president and CEO of Tech:NYC.\n",
+  "url": "https://www.vitalcitynyc.org/author/samuels-julie/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Alexandros Washburn",
+  "post_count": 1,
+  "slugs": [
+   "ai-regulation-lessons-1916-zoning-resolution"
+  ],
+  "slug": "washburn-alexandros",
+  "bio": "is the founder of civicvirtue.ai and former chief urban designer of New York City. He is the author of \u201cThe Nature of Urban Design\u201d and \u201cChatting with Barbarians: Can Cities Civilize AI?\u201d\n",
+  "url": "https://www.vitalcitynyc.org/author/washburn-alexandros/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Justin Reich",
+  "post_count": 1,
+  "slugs": [
+   "nyc-public-school-classroom-ai-policy"
+  ],
+  "slug": "reich-justin",
+  "bio": "is an associate professor of digital media at MIT and the host of \u201cThe Homework Machine\u201d podcast.",
+  "url": "https://www.vitalcitynyc.org/author/reich-justin/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Josh Appel",
+  "post_count": 1,
+  "slugs": [
+   "ai-nyc-quality-of-life-open-data"
+  ],
+  "slug": "appel-josh",
+  "bio": "is a policy analyst at the Manhattan Institute.\n",
+  "url": "https://www.vitalcitynyc.org/author/appel-josh/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Rebecca Heywood",
+  "post_count": 1,
+  "slugs": [
+   "new-york-loading-act-ai-public-sector-nyc"
+  ],
+  "slug": "heywood-rebecca",
+  "bio": "is the founder of Civic Works Studio, where she advises organizations in and around government on technology and workforce strategy. A former New York City civil servant, she later worked on digital transformation with state and local governments.",
+  "url": "https://www.vitalcitynyc.org/author/heywood-rebecca/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Constantine Kontokosta",
+  "post_count": 1,
+  "slugs": [
+   "ai-data-bias-problems"
+  ],
+  "slug": "kontokosta-constantine",
+  "bio": "Is a professor of urban science and planning at NYU, and directs the Civic Analytics program at the NYU Marron Institute and the Urban Intelligence Lab at NYU CUSP.\n",
+  "url": "https://www.vitalcitynyc.org/author/kontokosta-constantine/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Oded Oren",
+  "post_count": 1,
+  "slugs": [
+   "ai-ny-court-of-appeals-judges-transparency"
+  ],
+  "slug": "oren-oded",
+  "bio": "is the founder and executive director of Scrutinize, a nonpartisan nonprofit that uses data and artificial intelligence to increase the transparency and accountability of state courts. He spent seven years working as a public defender in the Bronx.\n",
+  "url": "https://www.vitalcitynyc.org/author/oren-oded/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Hugh O'Neill",
+  "post_count": 1,
+  "slugs": [
+   "ai-job-replacement-fears-reality"
+  ],
+  "slug": "oneill-hugh",
+  "bio": "is the founder and president of Appleseed, a New York City-based consulting firm founded in 1993 that provides economic research, analysis and economic development planning to government, nonprofit, institutional and corporate clients.\n",
+  "url": "https://www.vitalcitynyc.org/author/oneill-hugh/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Audrey Tang",
+  "post_count": 1,
+  "slugs": [
+   "ai-311-civic-participation-nyc"
+  ],
+  "slug": "tang-audrey",
+  "bio": "is Taiwan\u2019s cyber ambassador, first digital minister and a Right Livelihood Award laureate in 2025 for \u201cadvancing the social use of digital technology to empower citizens, renew democracy and heal divides.\u201d",
+  "url": "https://www.vitalcitynyc.org/author/tang-audrey/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Dominic Ramos-Ruiz",
+  "post_count": 1,
+  "slugs": [
+   "ai-neighbor-connection-nyc-community"
+  ],
+  "slug": "ramosruiz-dominic",
+  "bio": "is the founder of Citizenry, a nonprofit tech platform using AI to personalize civic involvement. He previously worked in community development and impact investing at the Federal Reserve Bank of New York.\n",
+  "url": "https://www.vitalcitynyc.org/author/ramosruiz-dominic/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Rohit Aggarwala",
+  "post_count": 1,
+  "slugs": [
+   "ai-nyc-government-paperwork-approvals"
+  ],
+  "slug": "aggarwala-rohit",
+  "bio": "served as New York City\u2019s chief climate officer and commissioner of the Department of Environmental Protection under Mayor Eric Adams, and as director of long-term planning and sustainability under Mayor Michael R. Bloomberg.",
+  "url": "https://www.vitalcitynyc.org/author/aggarwala-rohit/",
+  "twitter": null,
+  "website": null
+ },
+ {
+  "name": "Sam Schaeffer",
+  "post_count": 1,
+  "slugs": [
+   "ai-reentry-job-coaching-criminal-justice"
+  ],
+  "slug": "schaeffer-sam",
+  "bio": "is chief executive officer of the Center for Employment Opportunities. \n\n",
+  "url": "https://www.vitalcitynyc.org/author/schaeffer-sam/",
+  "twitter": null,
+  "website": null
  },
  {
   "name": "Sara Lind",
@@ -3036,18 +3326,6 @@
   "website": null
  },
  {
-  "name": "Justin Reich",
-  "post_count": 1,
-  "slugs": [
-   "nyc-public-school-classroom-ai-policy"
-  ],
-  "slug": "reich-justin",
-  "bio": "is an associate professor of digital media at MIT and the host of \u201cThe Homework Machine\u201d podcast.",
-  "url": "https://www.vitalcitynyc.org/author/reich-justin/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Terra Ziporyn",
   "post_count": 1,
   "slugs": [
@@ -3260,18 +3538,6 @@
   "slug": "gafford-megan",
   "bio": "is an artist and writer based in New York City. In May 2026, she was awarded a New Aesthetics grant from Patrick Collison and Tyler Cowen to try to invent a new style of ornamental architecture.",
   "url": "https://www.vitalcitynyc.org/author/gafford-megan/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Andrew Miller",
-  "post_count": 1,
-  "slugs": [
-   "waymo-driverless-ridehail-strategy-nyc"
-  ],
-  "slug": "miller-andrew",
-  "bio": "is a consultant, advisor and speaker on innovative mobility and smart cities. He is a fellow at the Roots of Progress Institute and writes deep-dive articles on mobility, innovation and transit for his Substack, \u201cChanging Lanes.\u201d",
-  "url": "https://www.vitalcitynyc.org/author/miller-andrew/",
   "twitter": null,
   "website": null
  },
@@ -3608,18 +3874,6 @@
   "slug": "sigal-abby-jo",
   "bio": "is a strategic advisor at the New York Hall of Science and executive-in-residence at NYU\u2019s School of Professional Studies and formerly led New York City\u2019s Office of Talent and Workforce Development and Enterprise Community Partners\u2019 New York office.",
   "url": "https://www.vitalcitynyc.org/author/sigal-abby-jo/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Jared Giles",
-  "post_count": 1,
-  "slugs": [
-   "economic-justice-youth-workforce-development-nyc"
-  ],
-  "slug": "giles-jared",
-  "bio": "is the vice president of STEAM Engine and founder of SquareOne, a consulting firm focused on education, workforce and economic development.",
-  "url": "https://www.vitalcitynyc.org/author/giles-jared/",
   "twitter": null,
   "website": null
  },
@@ -4200,18 +4454,6 @@
   "website": null
  },
  {
-  "name": "Anthony Townsend",
-  "post_count": 1,
-  "slugs": [
-   "putting-tech-to-work-for-all-new-yorkers"
-  ],
-  "slug": "townsend-anthony",
-  "bio": "is a senior research associate at Cornell Tech\u2019s Jacobs Urban Tech Hub, and the author of \u201cSmart Cities: Big Data, Civic Hackers, and the Quest for a New Utopia\u201d and \u201cGhost Road: Beyond the Driverless Car.\u201d",
-  "url": "https://www.vitalcitynyc.org/author/townsend-anthony/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Alex Armlovich",
   "post_count": 1,
   "slugs": [
@@ -4741,30 +4983,6 @@
   "website": null
  },
  {
-  "name": "Brendan O'Flaherty",
-  "post_count": 1,
-  "slugs": [
-   "when-products-can-kill"
-  ],
-  "slug": "oflaherty-brendan",
-  "bio": "is a professor of economics at Columbia University.",
-  "url": "https://www.vitalcitynyc.org/author/oflaherty-brendan/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Rajiv Sethi",
-  "post_count": 1,
-  "slugs": [
-   "when-products-can-kill"
-  ],
-  "slug": "sethi-rajiv",
-  "bio": "is a professor of economics at Barnard College and an external professor at the Santa Fe Institute. He is a co-author of \u201cShadows of Doubt: Stereotypes, Crime and the Pursuit of Justice.\u201d",
-  "url": "https://www.vitalcitynyc.org/author/sethi-rajiv/",
-  "twitter": null,
-  "website": null
- },
- {
   "name": "Jack Rakove",
   "post_count": 1,
   "slugs": [
@@ -4955,19 +5173,6 @@
   "url": "https://www.vitalcitynyc.org/author/mushlin-michael-b/",
   "twitter": null,
   "website": null
- },
- {
-  "name": "John Della Volpe",
-  "post_count": 1,
-  "slugs": [
-   "new-yorks-five-political-types"
-  ],
-  "slug": "della-volpe-john",
-  "bio": "is director of polling at Harvard Kennedy School\u2019s Institute of Politics and founder and CEO of Social Sphere, a public opinion research firm. He advised on the Biden 2020 campaign.",
-  "url": "https://www.vitalcitynyc.org/author/della-volpe-john/",
-  "twitter": null,
-  "website": null,
-  "senior": true
  },
  {
   "name": "Matthew Dallek",
@@ -5434,18 +5639,6 @@
   "slug": "hampton-mark",
   "bio": "is the author of \u201cVisions of the Press in Britain, 1850-1950\u201d and \u201cHong Kong and British Culture, 1945-97.\u201d He teaches at Lingnan University, Hong Kong.",
   "url": "https://www.vitalcitynyc.org/author/hampton-mark/",
-  "twitter": null,
-  "website": null
- },
- {
-  "name": "Carlo Ratti",
-  "post_count": 1,
-  "slugs": [
-   "training-ai-to-make-cities-more-humane"
-  ],
-  "slug": "ratti-carlo",
-  "bio": "is a professor at MIT and at the Politecnico di Milano. He is a co-founder of the international design and innovation office CRA-Carlo Ratti Associati and of the MIT Senseable City Lab. In 2025, he directed Venice's Biennale Architettura.\n\n",
-  "url": "https://www.vitalcitynyc.org/author/ratti-carlo/",
   "twitter": null,
   "website": null
  },
