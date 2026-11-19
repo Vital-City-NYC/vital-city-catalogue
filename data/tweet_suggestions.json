@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-19T03:07:05+00:00",
+ "generated": "2026-11-19T21:19:17+00:00",
  "window_days": 30,
  "pieces": [
   {
@@ -724,6 +724,67 @@
     {
      "kind": "hook",
      "text": "\"AI cannot manufacture human connection, but it can give us more reasons to recognize each other.\" From Dominic Ramos-Ruiz on technology and neighborhood life."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-nyc-government-paperwork-approvals",
+   "title": "AI to Shred Government Paperwork",
+   "url": "https://www.vitalcitynyc.org/ai-nyc-government-paperwork-approvals/",
+   "date": "2026-11-18",
+   "author": "Rohit Aggarwala",
+   "handle": null,
+   "dek": "Employees need not get bogged down by red tape.",
+   "tags": [
+    "City Government",
+    "Artifical Intelligence",
+    "Better Prompts, Better Services"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Rohit Aggarwala argues the Mamdani administration should train AI on three years of approved and rejected city forms, then use it to check paperwork before it is submitted."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Rohit Aggarwala on using AI to catch mistakes in internal government forms, before a rejected hire memo or contract sends the work back to the start."
+    },
+    {
+     "kind": "hook",
+     "text": "\"The goal is not to replace human government with government by AI, but to use AI to check forms before they are submitted.\" Rohit Aggarwala on speeding up New York City government."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-reentry-job-coaching-criminal-justice",
+   "title": "AI to Help Lift People Up",
+   "url": "https://www.vitalcitynyc.org/ai-reentry-job-coaching-criminal-justice/",
+   "date": "2026-11-18",
+   "author": "Sam Schaeffer",
+   "handle": null,
+   "dek": "How technology helps with reentry — and can assist with other complicated social services work",
+   "tags": [
+    "Artifical Intelligence",
+    "Incarceration",
+    "Technology",
+    "Better Prompts, Better Services"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Sam Schaeffer argues AI should supplement human job coaches, not replace them. His group built a voice coach people reach by phone because asking them to download an app cut engagement."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Sam Schaeffer, who leads the Center for Employment Opportunities, on how an AI phone coach helped a man prepare for his first job interview after prison, and what it couldn't do when he was laid off."
+    },
+    {
+     "kind": "hook",
+     "text": "Could a tool built to help people prepare for parole hearings make parole boards more skeptical of them? Sam Schaeffer writes about why his organization is asking that before it launches one."
     }
    ],
    "attempts": 1
