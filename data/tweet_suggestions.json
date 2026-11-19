@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-18T21:18:42+00:00",
+ "generated": "2026-11-19T03:07:05+00:00",
  "window_days": 30,
  "pieces": [
   {
@@ -364,6 +364,366 @@
     {
      "kind": "hook",
      "text": "Can New York City close a projected $23 billion budget gap without raising taxes or cutting services? Stephen Goldsmith says AI and civil service reform offer a third option."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-vision-zero-nyc-street-sensors",
+   "title": "AI to Advance Vision Zero",
+   "url": "https://www.vitalcitynyc.org/ai-vision-zero-nyc-street-sensors/",
+   "date": "2026-11-18",
+   "author": "Andrew Miller",
+   "handle": null,
+   "dek": "Measure streets, not just crashes",
+   "tags": [
+    "Streets",
+    "Artifical Intelligence",
+    "Better Prompts, Better Services"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Andrew Miller argues that New York City already has roadside sensors that count cars, bikes and mopeds and log near-misses. Vision Zero Reimagined never mentions them. He says AI could put them to work."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Andrew Miller on how the city could measure Vision Zero. His case: connect the cameras and sensors it already runs, add AI to read them and give a new curb office oversight."
+    },
+    {
+     "kind": "hook",
+     "text": "Mayor Mamdani says he measures success by changed behavior, not tickets. How would the city know? Andrew Miller says the sensors are already on the streets and AI can make sense of what they see."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "new-york-loading-act-ai-public-sector-nyc",
+   "title": "How New York Constrains Public Sector AI",
+   "url": "https://www.vitalcitynyc.org/new-york-loading-act-ai-public-sector-nyc/",
+   "date": "2026-11-18",
+   "author": "Rebecca Heywood",
+   "handle": null,
+   "dek": "That could make cities fall behind",
+   "tags": [
+    "Artifical Intelligence",
+    "Retraining Our Systems",
+    "City Government",
+    "Technology"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Rebecca Heywood argues New York state's LOADinG Act protects the duties employees perform today, not the employees. She says that leaves agencies unable to use AI, and New York City behind other places."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Rebecca Heywood on how the LOADinG Act could keep New York City agencies from using AI on translation, benefits applications and permitting, while Pennsylvania, California and Ohio take a different route."
+    },
+    {
+     "kind": "hook",
+     "text": "\"Only New York, it seems, is explicitly protecting the duties an employee is asked to perform, not the employee themselves.\" Rebecca Heywood on the state's limits on public sector AI."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "urban-surveillance-computer-vision",
+   "title": "The Man at the Window",
+   "url": "https://www.vitalcitynyc.org/urban-surveillance-computer-vision/",
+   "date": "2026-11-18",
+   "author": "Carlo Ratti",
+   "handle": null,
+   "dek": "What algorithms can see better than people",
+   "tags": [
+    "Artifical Intelligence",
+    "Technology",
+    "The Big Reboot"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Carlo Ratti argues New York City should write into law the line between data about places and data about people. Collect the first freely. Collect the second only under strict conditions."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Carlo Ratti on what William H. Whyte's 1970s plaza cameras can teach New York City about surveillance. Ratti directs an MIT lab that has used computer vision on city streets for 20 years."
+    },
+    {
+     "kind": "hook",
+     "text": "\"The possibility of anonymity is one of the most important qualities that differentiate a city from a village.\" Carlo Ratti cites Deyan Sudjic in making the case for keeping the window and giving up the stalking."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-city-government-measurement-improvement",
+   "title": "How’m I Really Doing?",
+   "url": "https://www.vitalcitynyc.org/ai-city-government-measurement-improvement/",
+   "date": "2026-11-18",
+   "author": "Anna Harvey",
+   "handle": null,
+   "dek": "Using AI to measure — and improve — city government performance",
+   "tags": [
+    "Artifical Intelligence",
+    "City Government",
+    "Retraining Our Systems",
+    "Technology"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Anna Harvey argues that AI can now do program evaluations that used to take years of data-sharing talks, so Mayor Zohran Mamdani could learn which city programs work before the next election."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Anna Harvey on why the Mayor's Management Report can't say whether city government is performing well. Most of its indicators track process. The rest track trends, not what a program caused."
+    },
+    {
+     "kind": "hook",
+     "text": "\"By the time a mayor has the results of an evaluation in hand, his next election has in all likelihood come and gone.\" Anna Harvey on how AI could shorten that wait."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-productivity-shorter-work-week-time-dividend",
+   "title": "The AI Time Dividend",
+   "url": "https://www.vitalcitynyc.org/ai-productivity-shorter-work-week-time-dividend/",
+   "date": "2026-11-18",
+   "author": "Arpit Gupta",
+   "handle": null,
+   "dek": "Let tech give us back hours and days to do things that matter more.",
+   "tags": [
+    "Artifical Intelligence",
+    "The Big Reboot",
+    "Technology"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Arpit Gupta argues that AI's public image problem comes largely from the AI companies themselves, which have stressed existential risk and job losses in their own messaging."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Arpit Gupta on the AI time dividend: how technology could give back hours and days for things that matter more, and why public unease about AI may stand in the way."
+    },
+    {
+     "kind": "hook",
+     "text": "\"AI suffers from a catastrophically poor public image.\" Arpit Gupta writes that the companies building it have spent considerable energy stressing its existential risks and near-term job losses."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-data-bias-problems",
+   "title": "If Data Are Biased, AI Will Only Amplify Problems",
+   "url": "https://www.vitalcitynyc.org/ai-data-bias-problems/",
+   "date": "2026-11-18",
+   "author": "Constantine Kontokosta",
+   "handle": null,
+   "dek": "Can artificial intelligence deliver more efficient, and fair, city public services? It depends.",
+   "tags": [
+    "Artifical Intelligence",
+    "Retraining Our Systems"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Constantine Kontokosta argues that people do not complain to city hall at the same rate, so an algorithm trained on 311 data will send help to the neighborhoods that call the most, not the ones that need it most."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Constantine Kontokosta on AI and city services. His lab found that pothole predictions built on 311 data in Kansas City overestimated repair needs in wealthier neighborhoods with better streets."
+    },
+    {
+     "kind": "hook",
+     "text": "\"Households without heat or hot water in the middle of winter are probably not going to complain about a pothole in the street.\" Constantine Kontokosta on why 311 data can mislead an algorithm."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-ny-court-of-appeals-judges-transparency",
+   "title": "AI to Enhance Transparency and Accountability",
+   "url": "https://www.vitalcitynyc.org/ai-ny-court-of-appeals-judges-transparency/",
+   "date": "2026-11-18",
+   "author": "Oded Oren",
+   "handle": null,
+   "dek": "Open data notwithstanding, public records are not yet public knowledge.",
+   "tags": [
+    "Artifical Intelligence",
+    "City Government",
+    "Better Prompts, Better Services"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Oded Oren argues that large language models can turn public records into public knowledge. His group ran more than 1,700 Court of Appeals decisions through them so New Yorkers can see how each judge has ruled."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Oded Oren, founder of Scrutinize, on using artificial intelligence to make New York's highest court legible before the governor and state Senate fill the coming vacancies."
+    },
+    {
+     "kind": "hook",
+     "text": "Why do New Yorkers know Amy Coney Barrett but not Jenny Rivera? Oded Oren says the records are public. Reading them takes expertise few people have, and he describes how artificial intelligence can supply it."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-job-replacement-fears-reality",
+   "title": "What Jobs Will AI Really Replace?",
+   "url": "https://www.vitalcitynyc.org/ai-job-replacement-fears-reality/",
+   "date": "2026-11-18",
+   "author": "Anthony Townsend, Hugh O'Neill",
+   "handle": null,
+   "dek": "We built a desktop simulation to help keep the debate honest",
+   "tags": [
+    "Artifical Intelligence",
+    "Labor",
+    "Retraining Our Systems"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Anthony Townsend and Hugh O'Neill say the evidence on artificial intelligence and jobs doesn't yet tell a coherent story. Some experts see white-collar hollowing-out. Others see job growth at the biggest spenders."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Anthony Townsend and Hugh O'Neill on which jobs artificial intelligence will really replace. They built a desktop simulation to help keep the debate honest."
+    },
+    {
+     "kind": "hook",
+     "text": "Is artificial intelligence failing to deliver automation, or starting to make workers obsolete? Anthony Townsend and Hugh O'Neill built a simulation to test the debate."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-interviews-nyc-residents-public-listening",
+   "title": "AI to Listen Better",
+   "url": "https://www.vitalcitynyc.org/ai-interviews-nyc-residents-public-listening/",
+   "date": "2026-11-18",
+   "author": "John Della Volpe",
+   "handle": null,
+   "dek": "What hundreds of hours of conversations with New Yorkers reveal about everyday life — and how cities can earn trust.",
+   "tags": [
+    "Artifical Intelligence",
+    "Better Prompts, Better Services"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "John Della Volpe says daily AI-led phone interviews with New Yorkers caught shifts that official data misses. Mentions of ICE tripled from spring to October. Mentions of the rent freeze spiked after the vote, then faded."
+    },
+    {
+     "kind": "argument",
+     "text": "Read pollster John Della Volpe on building an AI interviewer in his own voice, and what 3,282 conversations with New Yorkers taught him about listening."
+    },
+    {
+     "kind": "hook",
+     "text": "\"I never had a person that actually cared enough to understand my circumstances.\" A New Yorker on being interviewed by AI, from John Della Volpe's account of what hundreds of hours of listening show."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-311-civic-participation-nyc",
+   "title": "AI to Amplify Civic Participation",
+   "url": "https://www.vitalcitynyc.org/ai-311-civic-participation-nyc/",
+   "date": "2026-11-18",
+   "author": "Audrey Tang",
+   "handle": null,
+   "dek": "Connect residents with the city workers who can solve their problems. Don't replace those workers.",
+   "tags": [
+    "Artifical Intelligence",
+    "Better Prompts, Better Services"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Audrey Tang argues New York City should use AI to route residents to the city worker who owns their problem, and keep the thread open for follow-up. Her case: it puts people in front of workers, not in their place."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Audrey Tang on how New York City could use AI to close the gap 311 leaves open. She drew on Taiwan's Polis, Engaged California and Germany's SPRIND, and on her own call about an IDNYC."
+    },
+    {
+     "kind": "hook",
+     "text": "\"The answer to my question existed all along; there was simply no way for me to reach the person who had it.\" Audrey Tang on calling 311 about her IDNYC, and what AI could change."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "amazon-hq-lessons-nyc-economy",
+   "title": "Generate Economic Gains for Every New Yorker",
+   "url": "https://www.vitalcitynyc.org/amazon-hq-lessons-nyc-economy/",
+   "date": "2026-11-18",
+   "author": "Jared Giles",
+   "handle": null,
+   "dek": "Lessons from Amazon HQ2 for New York's AI economy",
+   "tags": [
+    "Technology",
+    "Artifical Intelligence",
+    "Economics",
+    "Retraining Our Systems"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Jared Giles argues New York City should negotiate with AI companies the way Arlington did with Amazon: performance-based incentives, strict enforcement and an AI Fund that shares the gains with residents."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Jared Giles on what Amazon HQ2 teaches New York City about the AI economy. Giles says city government has focused on safety and has not yet negotiated for economic gains."
+    },
+    {
+     "kind": "hook",
+     "text": "Could an AI Fund pay for CityFHEPS, bigger kindergarten savings accounts and support for workers displaced by automation? Jared Giles lays out how it could work, modeled on the JFK Airport community program."
+    }
+   ],
+   "attempts": 1
+  },
+  {
+   "slug": "ai-neighbor-connection-nyc-community",
+   "title": "AI to Connect Neighbors",
+   "url": "https://www.vitalcitynyc.org/ai-neighbor-connection-nyc-community/",
+   "date": "2026-11-18",
+   "author": "Dominic Ramos-Ruiz",
+   "handle": null,
+   "dek": "Most civic technology focuses on making cities more efficient, overlooking the relationships that hold them together.",
+   "tags": [
+    "Neighborhood Life",
+    "Artifical Intelligence",
+    "Better Prompts, Better Services"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Dominic Ramos-Ruiz argues that city engagement efforts hear residents one at a time and miss the neighbors beside them. AI, he says, could connect people whose concerns overlap, if both opt in."
+    },
+    {
+     "kind": "argument",
+     "text": "Read Dominic Ramos-Ruiz on how AI could help New Yorkers meet the neighbors they share a building, a block or a grievance with, and what it takes for people to trust the tools."
+    },
+    {
+     "kind": "hook",
+     "text": "\"AI cannot manufacture human connection, but it can give us more reasons to recognize each other.\" From Dominic Ramos-Ruiz on technology and neighborhood life."
     }
    ],
    "attempts": 1
@@ -956,35 +1316,6 @@
     {
      "kind": "hook",
      "text": "\"I'm not fighting Donald Trump. What I'm doing is protecting the rights of New Yorkers.\" Letitia James, in an interview with the New York Editorial Board, on her case for a third term as attorney general."
-    }
-   ],
-   "attempts": 1
-  },
-  {
-   "slug": "saritha-komatireddy-on-public-safety",
-   "title": "Saritha Komatireddy on Public Safety, Law Enforcement and Her Campaign for New York Attorney General",
-   "url": "https://www.vitalcitynyc.org/saritha-komatireddy-on-public-safety/",
-   "date": "2026-10-19",
-   "author": "New York Editorial Board",
-   "handle": null,
-   "dek": "The New York Editorial Board's interview with Saritha Komatireddy, the Republican nominee for New York attorney general in the 2026 election.",
-   "tags": [
-    "Interview",
-    "New York Editorial Board"
-   ],
-   "mode": "claude",
-   "posts": [
-    {
-     "kind": "finding",
-     "text": "Saritha Komatireddy, the Republican nominee for attorney general, says she would move 350 of the office's 700 assistant attorneys general onto criminal prosecution. She told the New York Editorial Board how."
-    },
-    {
-     "kind": "argument",
-     "text": "The New York Editorial Board sat down with Saritha Komatireddy, a former federal prosecutor running for attorney general, and pressed her on crime data, Alvin Bragg and the Justice Department under Trump."
-    },
-    {
-     "kind": "hook",
-     "text": "What can an attorney general do when a district attorney charges too low? Saritha Komatireddy tells the New York Editorial Board she would use Executive Law 63 to take the case over and prosecute it herself."
     }
    ],
    "attempts": 1
