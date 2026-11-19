@@ -54,7 +54,7 @@
     "type_basis": "tag:data-stories",
     "published_date": "2026-11-18",
     "published_at": "2026-11-18T17:00:00.000+00:00",
-    "updated_at": "2026-11-18T16:59:59.000+00:00",
+    "updated_at": "2026-11-18T20:30:59.000+00:00",
     "primary_author": "Vital City",
     "authors": [
       "Vital City"
@@ -75,62 +75,14 @@
     "feature_image_alt": null,
     "feature_image_credit": "Harry Gruyaert / Magnum Photos",
     "embeds": {
-      "flourish": [
-        {
-          "id": "30803431",
-          "src": "visualisation/30803431?1257272",
-          "url": "https://public.flourish.studio/visualisation/30803431/"
-        },
-        {
-          "id": "30803674",
-          "src": "visualisation/30803674?1257272",
-          "url": "https://public.flourish.studio/visualisation/30803674/"
-        },
-        {
-          "id": "30803816",
-          "src": "visualisation/30803816?1257272",
-          "url": "https://public.flourish.studio/visualisation/30803816/"
-        },
-        {
-          "id": "30804126",
-          "src": "visualisation/30804126?1257272",
-          "url": "https://public.flourish.studio/visualisation/30804126/"
-        },
-        {
-          "id": "30803222",
-          "src": "visualisation/30803222?1257272",
-          "url": "https://public.flourish.studio/visualisation/30803222/"
-        },
-        {
-          "id": "30804250",
-          "src": "visualisation/30804250?1257272",
-          "url": "https://public.flourish.studio/visualisation/30804250/"
-        },
-        {
-          "id": "30804402",
-          "src": "visualisation/30804402?1257272",
-          "url": "https://public.flourish.studio/visualisation/30804402/"
-        },
-        {
-          "id": "30804608",
-          "src": "visualisation/30804608?1257272",
-          "url": "https://public.flourish.studio/visualisation/30804608/"
-        },
-        {
-          "id": "30804669",
-          "src": "visualisation/30804669?1257272",
-          "url": "https://public.flourish.studio/visualisation/30804669/"
-        }
-      ],
+      "flourish": [],
       "iframes": [],
-      "counts": {
-        "flourish": 9
-      },
-      "total": 9
+      "counts": {},
+      "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 1655,
+    "visibility": "members",
+    "word_count": null,
     "reading_minutes": 7,
     "id": "6afcbf58f02801000138dc64"
   },
@@ -142,7 +94,7 @@
     "type_basis": "default",
     "published_date": "2026-11-18",
     "published_at": "2026-11-18T17:00:00.000+00:00",
-    "updated_at": "2026-11-18T17:47:50.000+00:00",
+    "updated_at": "2026-11-18T19:58:42.000+00:00",
     "primary_author": "Tiffany Chu",
     "authors": [
       "Tiffany Chu",
@@ -169,9 +121,9 @@
       "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 2094,
-    "reading_minutes": 9,
+    "visibility": "members",
+    "word_count": null,
+    "reading_minutes": 8,
     "id": "6afcbc37f02801000138dc2e"
   },
   {
@@ -182,7 +134,7 @@
     "type_basis": "default",
     "published_date": "2026-11-18",
     "published_at": "2026-11-18T17:00:00.000+00:00",
-    "updated_at": "2026-11-18T17:00:02.000+00:00",
+    "updated_at": "2026-11-18T20:32:15.000+00:00",
     "primary_author": "Alex Chohlas-Wood",
     "authors": [
       "Alex Chohlas-Wood"
@@ -209,9 +161,9 @@
       "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 2552,
-    "reading_minutes": 11,
+    "visibility": "members",
+    "word_count": null,
+    "reading_minutes": 10,
     "id": "6afc85f4f02801000138da9a"
   },
   {
@@ -350,7 +302,7 @@
     "type_basis": "default",
     "published_date": "2026-11-18",
     "published_at": "2026-11-18T16:58:00.000+00:00",
-    "updated_at": "2026-11-18T17:09:40.000+00:00",
+    "updated_at": "2026-11-18T20:15:37.000+00:00",
     "primary_author": "Julie Samuels",
     "authors": [
       "Julie Samuels"
@@ -377,9 +329,9 @@
       "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 1694,
-    "reading_minutes": 7,
+    "visibility": "members",
+    "word_count": null,
+    "reading_minutes": 6,
     "id": "6afc7db6f02801000138da42"
   },
   {
@@ -517,7 +469,7 @@
     "type_basis": "default",
     "published_date": "2026-11-18",
     "published_at": "2026-11-18T16:56:00.000+00:00",
-    "updated_at": "2026-11-18T17:09:06.000+00:00",
+    "updated_at": "2026-11-18T20:25:34.000+00:00",
     "primary_author": "Stephen Goldsmith",
     "authors": [
       "Stephen Goldsmith"
@@ -543,9 +495,9 @@
       "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 1133,
-    "reading_minutes": 5,
+    "visibility": "members",
+    "word_count": null,
+    "reading_minutes": 4,
     "id": "6afc7b84f02801000138da18"
   },
   {
@@ -738,7 +690,7 @@
     "type_basis": "default",
     "published_date": "2026-11-18",
     "published_at": "2026-11-18T16:54:00.000+00:00",
-    "updated_at": "2026-11-18T17:04:47.000+00:00",
+    "updated_at": "2026-11-18T19:58:03.000+00:00",
     "primary_author": "Arpit Gupta",
     "authors": [
       "Arpit Gupta"
@@ -758,23 +710,15 @@
     "feature_image_alt": null,
     "feature_image_credit": "Jorge Garcia",
     "embeds": {
-      "flourish": [
-        {
-          "id": "30830461",
-          "src": "visualisation/30830461?1257272",
-          "url": "https://public.flourish.studio/visualisation/30830461/"
-        }
-      ],
+      "flourish": [],
       "iframes": [],
-      "counts": {
-        "flourish": 1
-      },
-      "total": 1
+      "counts": {},
+      "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 2034,
-    "reading_minutes": 9,
+    "visibility": "members",
+    "word_count": null,
+    "reading_minutes": 8,
     "id": "6afc797bf02801000138d9f7"
   },
   {
@@ -862,7 +806,7 @@
     "type_basis": "default",
     "published_date": "2026-11-18",
     "published_at": "2026-11-18T16:52:00.000+00:00",
-    "updated_at": "2026-11-18T17:06:36.000+00:00",
+    "updated_at": "2026-11-18T20:25:56.000+00:00",
     "primary_author": "Anthony Townsend",
     "authors": [
       "Anthony Townsend",
@@ -883,23 +827,15 @@
     "feature_image_alt": null,
     "feature_image_credit": "Mathias Wasik",
     "embeds": {
-      "flourish": [
-        {
-          "id": "3861518",
-          "src": "story/3861518?1257272",
-          "url": "https://public.flourish.studio/story/3861518/"
-        }
-      ],
+      "flourish": [],
       "iframes": [],
-      "counts": {
-        "flourish": 1
-      },
-      "total": 1
+      "counts": {},
+      "total": 0
     },
     "featured": false,
-    "visibility": "public",
-    "word_count": 1865,
-    "reading_minutes": 8,
+    "visibility": "members",
+    "word_count": null,
+    "reading_minutes": 7,
     "id": "6afcca5af02801000138dcf5"
   },
   {
