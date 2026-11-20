@@ -1,0 +1,49 @@
+# Twice a day: what would the iPhone app show right now?
+#
+# On Nov. 18, 2026 the app's Today screen went blank for every reader while
+# Ghost, the site and the monthly health check were all fine (13 #hidehome
+# pieces published at once; see app_screen_check.py). This asks the app's own
+# questions and messages Josh only when a screen would come up empty, wrong
+# or stale. Silence means every screen has something to show.
+#
+# It reads only public things and changes nothing. The run also fails when
+# there are findings, so the Actions tab shows a red mark on the same day.
+name: App screen check
+
+on:
+  schedule:
+    # Off the busy :00 and :30 slots, which GitHub starts late or drops.
+    - cron: "23 13 * * *"   # 8:23 a.m. New York in winter, 9:23 in summer
+    - cron: "17 22 * * *"   # 5:17 p.m. in winter, 6:17 in summer: after the day's publishing
+  workflow_dispatch:
+    inputs:
+      say_ok:
+        description: "Also message Josh when everything is fine (setup test only)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-screen-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: The check's own logic still holds
+        run: python3 app_screen_check.py --selftest
+      # Findings go to Josh as a direct message, never to a channel.
+      - name: Ask the app's questions
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_DM_TO: ${{ secrets.SLACK_DM_TO }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python3 app_screen_check.py --slack ${{ inputs.say_ok && '--say-ok' || '' }}
