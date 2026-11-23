@@ -6539,7 +6539,7 @@ function scorecardModel(data){
     vals:S(m=>ms[m]?ms[m].cum_subs:null), fmt:n0,
     extra: mc.total_subscribers ? `${fmtN(mc.total_subscribers)} on the list now` : "",
     note:"About 2,400 bot accounts from the 2025 signup surge are still on the list. The comparison leaves out the bot months (May to September 2025), the March 2026 catch-up import and the May 2026 cleanup of about 500 inactive addresses.",
-    std:()=>{ const c=avgOf(churnM,CUR); return c==null?"":`Departures: ${c.toFixed(1)}% of the list unsubscribes in a typical month (${curLbl}). Healthy digital news publications keep that under about 5% a month (INMA, 2025).`; }},
+    std:()=>{ const c=avgOf(churnM,CUR); return c==null?"":`Departures: ${c.toFixed(1)}% of the list unsubscribes in a typical month (${curLbl}). Nonprofits lost 12% of their lists to unsubscribes over 2025, roughly 1% a month (M+R Benchmarks 2026).`; }},
    {k:"visits", name:"Website visits", unit:"visits in", kind:"flow", good:1,
     def:"Visits to vitalcitynyc.org, from Google Analytics.",
     vals:S(m=>vis[m]||null, visStart), fmt:n0,
@@ -7433,7 +7433,7 @@ function pulseBenchmarks(m, data){
   if(lastD&&subs){ const from=new Date(Date.parse(lastD+"T00:00:00Z")-29*86400000).toISOString().slice(0,10);
     const u30=dact.reduce((acc,r)=> (r.d>=from&&r.d<=lastD) ? acc+(+r.unsubs||0) : acc, 0); const churn=u30/subs*100;
     rows.push({k:"Share of the list that unsubscribes in a month", vc:`${churn.toFixed(1)}% (${u30.toLocaleString("en-US")} unsubscribes in the 30 days to ${pxDay(lastD)})`,
-      norm:"Healthy digital news publications keep this under about 5% a month (INMA, 2025).", read: churn<5?"well under that":"over that"}); }
+      norm:"Nonprofits lost 12% of their lists to unsubscribes over 2025, roughly 1% a month (M+R Benchmarks 2026).", read: churn<1?"under that":"over that"}); }
   const act=(m.stocks||[]).find(k=>/Active subscribers/i.test(k.lbl));
   if(act&&subs){ const n=parseInt(String(act.num).replace(/[^0-9]/g,""),10); if(n) rows.push({k:"Share of the list reading", vc:`${Math.round(n/subs*100)}% opened at least one email in the last 30 days`,
       norm:"Readers who regularly open a newsletter are about twice as likely to still be subscribed a year later (INMA, 2025). No fixed benchmark; the direction is what matters.", read:""}); }
