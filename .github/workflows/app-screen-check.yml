@@ -12,9 +12,12 @@ name: App screen check
 
 on:
   schedule:
-    # Off the busy :00 and :30 slots, which GitHub starts late or drops.
-    - cron: "23 13 * * *"   # 8:23 a.m. New York in winter, 9:23 in summer
-    - cron: "17 22 * * *"   # 5:17 p.m. in winter, 6:17 in summer: after the day's publishing
+    # GitHub starts this repository's scheduled runs hours late: in the first
+    # three days the 13:23 UTC run began between 20:10 and 20:24, and the 22:17
+    # one between 02:19 and 03:16. So each is set early, to land near 8 a.m.
+    # and 5 p.m. New York. A late run is still a run; the times are a target.
+    - cron: "23 6 * * *"    # lands about 13:00 UTC, 8 a.m. New York in winter
+    - cron: "17 17 * * *"   # lands about 22:00 UTC, 5 p.m.: after the day's publishing
   workflow_dispatch:
     inputs:
       say_ok:
