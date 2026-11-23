@@ -1,27 +1,34 @@
 {
   "meta": {
-    "generated_at": "2026-11-23T03:29:28.168034+00:00",
+    "generated_at": "2026-11-23T22:32:18.588472+00:00",
     "site": "https://www.vitalcitynyc.org",
-    "total_posts": 1023,
+    "total_posts": 1024,
     "total_authors": 557,
     "total_issues": 34,
-    "total_topics": 239,
+    "total_topics": 240,
     "date_range": [
       "2021-09-15",
-      "2026-11-18"
+      "2026-11-23"
     ],
     "first_run": false,
-    "new_article_count": 0,
-    "new_articles": []
+    "new_article_count": 1,
+    "new_articles": [
+      {
+        "title": "The Urban Optimist\u2019s Holiday Gift Guide",
+        "url": "https://www.vitalcitynyc.org/nyc-optimist-gift-guide/",
+        "published_date": "2026-11-23",
+        "primary_author": "Vital City"
+      }
+    ]
   },
-  "total_pieces": 1023,
+  "total_pieces": 1024,
   "by_year": {
     "2021": 1,
     "2022": 46,
     "2023": 153,
     "2024": 226,
     "2025": 304,
-    "2026": 293
+    "2026": 294
   },
   "by_month": {
     "2021-09": 1,
@@ -80,12 +87,12 @@
     "2026-08": 16,
     "2026-09": 32,
     "2026-10": 26,
-    "2026-11": 37
+    "2026-11": 38
   },
   "by_type": [
     [
       "opinion/commentary",
-      805
+      806
     ],
     [
       "q&a",
@@ -151,7 +158,7 @@
     ],
     [
       "Culture",
-      78
+      79
     ],
     [
       "Police Reform",
@@ -218,7 +225,7 @@
       27
     ]
   ],
-  "n_topics_total": 239,
+  "n_topics_total": 240,
   "by_credential_pieces": [
     [
       "Academic",
@@ -238,7 +245,7 @@
     ],
     [
       "Vital City (institutional)",
-      104
+      105
     ],
     [
       "Government / public official",
@@ -386,17 +393,17 @@
     }
   },
   "wc_stats": {
-    "n": 988,
+    "n": 989,
     "median": 1640,
     "mean": 2174,
     "p90": 3259,
     "max": 15166,
     "p10": 951,
-    "p25": 1292,
-    "p75": 2219,
-    "p95": 5860,
+    "p25": 1293,
+    "p75": 2217,
+    "p95": 5858,
     "no_count": 35,
-    "core_1000_2499": 714,
+    "core_1000_2499": 715,
     "under_500": 43,
     "over_5000": 57
   },
@@ -415,7 +422,7 @@
     ],
     [
       "2,000-2,999",
-      198
+      199
     ],
     [
       "3,000-4,999",
@@ -473,7 +480,7 @@
       {
         "floor": 2000,
         "label": "2,000",
-        "n": 74
+        "n": 75
       },
       {
         "floor": 2250,
@@ -542,15 +549,15 @@
     },
     {
       "year": "2026",
-      "n": 260,
-      "p25": 1325,
-      "median": 1704,
-      "p75": 2395,
+      "n": 261,
+      "p25": 1331,
+      "median": 1709,
+      "p75": 2393,
       "max": 13675
     }
   ],
   "by_nauthors": {
-    "1": 867,
+    "1": 868,
     "2": 127,
     "3": 26,
     "4": 1,
@@ -560,7 +567,7 @@
   "prolific": [
     {
       "name": "Vital City",
-      "posts": 104,
+      "posts": 105,
       "credential": "Vital City (institutional)"
     },
     {
@@ -709,39 +716,39 @@
       },
       {
         "year": "2026",
-        "weeks": 46.0,
-        "pieces": 293,
-        "outside_issues": 187,
-        "per_week_all": 6.37,
-        "per_week_outside_issues": 4.07,
+        "weeks": 46.7,
+        "pieces": 294,
+        "outside_issues": 188,
+        "per_week_all": 6.29,
+        "per_week_outside_issues": 4.02,
         "partial": true
       }
     ],
-    "total_weeks": 270.0,
-    "all_time_per_week": 3.79,
+    "total_weeks": 270.7,
+    "all_time_per_week": 3.78,
     "all_time_per_week_outside_issues": 1.8,
     "current_year": "2026",
-    "current_per_week_outside_issues": 4.07,
-    "current_per_week_all": 6.37,
+    "current_per_week_outside_issues": 4.02,
+    "current_per_week_all": 6.29,
     "robustness": {
       "drop_window_days": 3,
       "issue_tagged_pieces": 538,
       "published_away_from_drop": 70,
       "share_of_issue_pieces": 13.0,
-      "current_year_strict": 4.07,
-      "current_year_loose": 4.35,
+      "current_year_strict": 4.02,
+      "current_year_loose": 4.3,
       "all_time_strict": 1.8,
       "all_time_loose": 2.05,
-      "all_time_all": 3.79
+      "all_time_all": 3.78
     }
   },
   "rhythm": {
-    "n_dated": 1023,
+    "n_dated": 1024,
     "by_weekday": [
       {
         "day": "Mon",
-        "pieces": 69,
-        "share": 6.7
+        "pieces": 70,
+        "share": 6.8
       },
       {
         "day": "Tue",
@@ -751,17 +758,17 @@
       {
         "day": "Wed",
         "pieces": 497,
-        "share": 48.6
+        "share": 48.5
       },
       {
         "day": "Thu",
         "pieces": 195,
-        "share": 19.1
+        "share": 19.0
       },
       {
         "day": "Fri",
         "pieces": 65,
-        "share": 6.4
+        "share": 6.3
       },
       {
         "day": "Sat",
@@ -775,8 +782,8 @@
       }
     ],
     "top_day": "Wed",
-    "top_day_share": 48.6,
-    "midweek_share": 84.2,
+    "top_day_share": 48.5,
+    "midweek_share": 84.1,
     "weekend_pieces": 28,
     "by_month": [
       {
@@ -852,9 +859,9 @@
       {
         "month": "November",
         "abbr": "Nov",
-        "pieces": 86,
+        "pieces": 87,
         "occurrences": 6,
-        "per_occurrence": 14.3
+        "per_occurrence": 14.5
       },
       {
         "month": "December",

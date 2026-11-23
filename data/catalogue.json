@@ -1,5 +1,41 @@
 [
   {
+    "title": "The Urban Optimist’s Holiday Gift Guide",
+    "slug": "nyc-optimist-gift-guide",
+    "url": "https://www.vitalcitynyc.org/nyc-optimist-gift-guide/",
+    "type": "opinion/commentary",
+    "type_basis": "default",
+    "published_date": "2026-11-23",
+    "published_at": "2026-11-23T20:14:36.000+00:00",
+    "updated_at": "2026-11-23T21:57:17.000+00:00",
+    "primary_author": "Vital City",
+    "authors": [
+      "Vital City"
+    ],
+    "topics": [
+      "Gift Guide",
+      "Culture"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "For the New Yorker (or other metropolitan resident) who loves cities, believes in their future and wants gifts with civic soul. Our second annual edition.",
+    "excerpt": "For the New Yorker (or other metropolitan resident) who loves cities, believes in their future and wants gifts with civic soul. Our second annual edition.",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-23T150636.044.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Melissa O'Shaughnessy",
+    "embeds": {
+      "flourish": [],
+      "iframes": [],
+      "counts": {},
+      "total": 0
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 2139,
+    "reading_minutes": 9,
+    "id": "6b00bb6244946000011f3710"
+  },
+  {
     "title": "Editor’s Note",
     "slug": "editors-note-ai-and-the-city",
     "url": "https://www.vitalcitynyc.org/editors-note-ai-and-the-city/",
@@ -113,7 +149,7 @@
     "excerpt": "Local governments are already putting AI to work, but that progress is only as strong as the foundation of workers and operations that it stands on.",
     "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-17T173350.471.png",
     "feature_image_alt": null,
-    "feature_image_credit": null,
+    "feature_image_credit": "Diana Cuautle",
     "embeds": {
       "flourish": [],
       "iframes": [],
@@ -4316,7 +4352,8 @@
     "topics": [
       "Economics",
       "City Government",
-      "Food and Drink"
+      "Food and Drink",
+      "Supermarkets"
     ],
     "issues": [],
     "issue_numbers": [],

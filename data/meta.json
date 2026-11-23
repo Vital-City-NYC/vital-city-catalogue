@@ -1,15 +1,22 @@
 {
-  "generated_at": "2026-11-23T03:29:28.168034+00:00",
+  "generated_at": "2026-11-23T22:32:18.588472+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 1023,
+  "total_posts": 1024,
   "total_authors": 557,
   "total_issues": 34,
-  "total_topics": 239,
+  "total_topics": 240,
   "date_range": [
     "2021-09-15",
-    "2026-11-18"
+    "2026-11-23"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "The Urban Optimist’s Holiday Gift Guide",
+      "url": "https://www.vitalcitynyc.org/nyc-optimist-gift-guide/",
+      "published_date": "2026-11-23",
+      "primary_author": "Vital City"
+    }
+  ]
 }
