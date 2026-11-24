@@ -1,5 +1,74 @@
 [
   {
+    "title": "How Safe Are the Subways?",
+    "slug": "nyc-subway-safety-data-2026",
+    "url": "https://www.vitalcitynyc.org/nyc-subway-safety-data-2026/",
+    "type": "data analysis",
+    "type_basis": "html:6-chart-embeds",
+    "published_date": "2026-11-24",
+    "published_at": "2026-11-24T20:15:27.000+00:00",
+    "updated_at": "2026-11-24T20:15:27.000+00:00",
+    "primary_author": "Paul Reeping",
+    "authors": [
+      "Paul Reeping"
+    ],
+    "topics": [
+      "Transit",
+      "Crime"
+    ],
+    "issues": [],
+    "issue_numbers": [],
+    "summary": "Putting the numbers in context",
+    "excerpt": "Putting the numbers in context",
+    "feature_image": "https://storage.ghost.io/c/20/8c/208caa48-0e58-40ee-862f-e5f1276ae3d0/content/images/2026/11/Cropping-Tool---2026-11-24T141502.849.png",
+    "feature_image_alt": null,
+    "feature_image_credit": "Bruce Davidson / Magnum Photos",
+    "embeds": {
+      "flourish": [
+        {
+          "id": "30962508",
+          "src": "visualisation/30962508?1257272",
+          "url": "https://public.flourish.studio/visualisation/30962508/"
+        },
+        {
+          "id": "30697589",
+          "src": "visualisation/30697589?1257272",
+          "url": "https://public.flourish.studio/visualisation/30697589/"
+        },
+        {
+          "id": "30698040",
+          "src": "visualisation/30698040?1257272",
+          "url": "https://public.flourish.studio/visualisation/30698040/"
+        },
+        {
+          "id": "30962283",
+          "src": "visualisation/30962283?1257272",
+          "url": "https://public.flourish.studio/visualisation/30962283/"
+        },
+        {
+          "id": "30962015",
+          "src": "visualisation/30962015?1257272",
+          "url": "https://public.flourish.studio/visualisation/30962015/"
+        },
+        {
+          "id": "30962406",
+          "src": "visualisation/30962406?1257272",
+          "url": "https://public.flourish.studio/visualisation/30962406/"
+        }
+      ],
+      "iframes": [],
+      "counts": {
+        "flourish": 6
+      },
+      "total": 6
+    },
+    "featured": false,
+    "visibility": "public",
+    "word_count": 1004,
+    "reading_minutes": 4,
+    "id": "6b04afb0475a270001727350"
+  },
+  {
     "title": "The Urban Optimist’s Holiday Gift Guide",
     "slug": "nyc-optimist-gift-guide",
     "url": "https://www.vitalcitynyc.org/nyc-optimist-gift-guide/",

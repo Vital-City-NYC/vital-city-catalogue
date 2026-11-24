@@ -1,15 +1,22 @@
 {
-  "generated_at": "2026-11-24T14:55:29.633108+00:00",
+  "generated_at": "2026-11-24T21:04:06.564765+00:00",
   "site": "https://www.vitalcitynyc.org",
-  "total_posts": 1024,
+  "total_posts": 1025,
   "total_authors": 557,
   "total_issues": 34,
   "total_topics": 240,
   "date_range": [
     "2021-09-15",
-    "2026-11-23"
+    "2026-11-24"
   ],
   "first_run": false,
-  "new_article_count": 0,
-  "new_articles": []
+  "new_article_count": 1,
+  "new_articles": [
+    {
+      "title": "How Safe Are the Subways?",
+      "url": "https://www.vitalcitynyc.org/nyc-subway-safety-data-2026/",
+      "published_date": "2026-11-24",
+      "primary_author": "Paul Reeping"
+    }
+  ]
 }
