@@ -1,7 +1,36 @@
 {
- "generated": "2026-11-24T00:42:12+00:00",
+ "generated": "2026-11-24T22:58:05+00:00",
  "window_days": 30,
  "pieces": [
+  {
+   "slug": "nyc-subway-safety-data-2026",
+   "title": "How Safe Are the Subways?",
+   "url": "https://www.vitalcitynyc.org/nyc-subway-safety-data-2026/",
+   "date": "2026-11-24",
+   "author": "Paul Reeping",
+   "handle": "@paulreeping",
+   "dek": "Putting the numbers in context",
+   "tags": [
+    "Transit",
+    "Crime"
+   ],
+   "mode": "claude",
+   "posts": [
+    {
+     "kind": "finding",
+     "text": "Paul Reeping argues that subway crime stays rare on any single ride, but with ridership 25% below 2019, the same crime counts now mean more risk per trip. Assaults are the category that has risen."
+    },
+    {
+     "kind": "argument",
+     "text": "Read @paulreeping on how safe the subways are. He built a tool that turns reported crime rates into odds based on how often you ride, and compares New York with other transit systems."
+    },
+    {
+     "kind": "hook",
+     "text": "How does New York's subway compare with other big systems? Paul Reeping finds it has the lowest reported aggravated assault rate per million rides among seven large U.S. systems he examined."
+    }
+   ],
+   "attempts": 1
+  },
   {
    "slug": "nyc-optimist-gift-guide",
    "title": "The Urban Optimist’s Holiday Gift Guide",
