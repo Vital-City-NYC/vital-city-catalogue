@@ -591,6 +591,97 @@ if "--alerts" in sys.argv:
     json.dump(_old + [{"as_of": asof, "text": b} for a, b in alerts], open(OUT / "alerts_new.json", "w"), ensure_ascii=False, indent=1)
     _sent_p.write_text(json.dumps(sorted(_sent | set(a for a, b in alerts))))
 
+# ---- members-only pieces and signups (gating_*.csv)
+# Pieces published members-only since Oct. 8, 2026 show the opening and ask
+# for an email. These five files compare signups before and after, using every
+# Ghost signup since Aug. 10 (growth payload "gating": day, landing type, path,
+# homepage flag; no emails) and GA4 weekly visits spread evenly over each
+# week's days. The retention table (gating_retention) needs per-person
+# Mailchimp lookups, stays a one-time check and is not written here.
+def _gating():
+    import datetime as _dt
+    g = d.get("gating") or {}
+    evs, posts = g.get("events") or [], g.get("posts")
+    if not evs or not posts:
+        print("gating: no events or posts in the payload; gating files left as they were"); return
+    GATE = "2026-10-08"; START = _dt.date(2026, 8, 10); BEFORE0 = "2026-08-11"
+    # last complete New York day before the pull
+    gen = _dt.datetime.fromisoformat(asof.replace("Z", "+00:00"))
+    from zoneinfo import ZoneInfo
+    end = gen.astimezone(ZoneInfo("America/New_York")).date() - _dt.timedelta(days=1)
+    END = end.isoformat()
+    gated = {p["path"]: p for p in posts if p.get("visibility") != "public" and p.get("published", "") >= GATE}
+    public = {p["path"]: p for p in posts if p.get("visibility") == "public"}
+    def cls(e):
+        day, typ, path, home = e
+        if path in gated and day >= gated[path]["published"]: return "gated"
+        if typ == "post": return "public"
+        if (path == "" and typ == "url") or home: return "home"
+        return "other"
+    ev = [e for e in evs if START.isoformat() <= e[0] <= END]
+    # daily
+    by = collections.defaultdict(lambda: [0, 0])
+    for e in ev: by[e[0]][0 if cls(e) == "gated" else 1] += 1
+    rows, x = [], START
+    while x <= end:
+        k = x.isoformat(); rows.append({"day": k, "members_only": by[k][0], "elsewhere": by[k][1]}); x += _dt.timedelta(days=1)
+    write("gating_daily.csv", ["day", "members_only", "elsewhere"], rows)
+    # weekly, with GA4 visits for full weeks
+    tw = {w["wk"]: w.get("visits") for w in (ga.get("traffic_weekly") or [])}
+    wk = collections.defaultdict(lambda: [0, 0])
+    for e in ev:
+        dd = _dt.date.fromisoformat(e[0]); wk[(dd - _dt.timedelta(days=dd.weekday())).isoformat()][0 if cls(e) == "gated" else 1] += 1
+    write("gating_weekly.csv", ["week", "members_only", "elsewhere", "site_visits"],
+          [{"week": k, "members_only": v[0], "elsewhere": v[1], "site_visits": tw.get(k)} for k, v in sorted(wk.items())])
+    # daily visits: each GA4 week spread over the days it covers (the current week runs to END)
+    vis = {}
+    for k, v in tw.items():
+        if v is None: continue
+        w0 = _dt.date.fromisoformat(k); n = min(7, (end - w0).days + 1)
+        if n <= 0: continue
+        for i in range(n): vis[(w0 + _dt.timedelta(days=i)).isoformat()] = v / n
+    MON = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
+    def ap(dd): return f"{MON[dd.month - 1]} {dd.day}"
+    def span(a, b): return ap(a) + " to " + (str(b.day) if a.month == b.month else ap(b))
+    def weeks(n):
+        h = round(n / 7 * 2) / 2
+        return (str(int(h)) if h == int(h) else (str(int(h)) if int(h) else "") + "½") + (" week" if h == 1 else " weeks")
+    def per(a, b):
+        a1, b1 = _dt.date.fromisoformat(a), _dt.date.fromisoformat(b)
+        n = (b1 - a1).days + 1
+        E = [e for e in ev if a <= e[0] <= b]
+        v = sum(vis.get((a1 + _dt.timedelta(days=i)).isoformat(), 0) for i in range(n))
+        o = [e for e in E if cls(e) != "gated"]
+        return n, len(E), round(len(E) / n * 7), (round(1000 * len(E) / v, 1) if v else None), (round(1000 * len(o) / v, 1) if v else None), round(v)
+    after2 = "2026-10-30"
+    prs = [("before", BEFORE0, "2026-10-07", "8 weeks before"), ("after1", GATE, "2026-10-29", "first 3 weeks after")]
+    if END >= after2: prs.append(("after2", after2, END, "next {w}"))
+    prs.append(("all", GATE, END, "all {w} after"))
+    out = []
+    for key, a, b, lbl in prs:
+        if b > END: b = END
+        n, s_, pw, r, ro, v = per(a, b)
+        out.append({"period": key, "label": f"{span(_dt.date.fromisoformat(a), _dt.date.fromisoformat(b))} ({lbl.format(w=weeks(n))})",
+                    "signups": s_, "per_week": pw, "per_1000_visits": r, "elsewhere_per_1000_visits": ro, "site_visits": v})
+    write("gating_periods.csv", ["period", "label", "signups", "per_week", "per_1000_visits", "elsewhere_per_1000_visits", "site_visits"], out)
+    cc = collections.Counter(cls(e) for e in ev if e[0] >= GATE)
+    write("gating_where.csv", ["where", "signups"], [{"where": "Members-only pieces", "signups": cc["gated"]}, {"where": "Public articles", "signups": cc["public"]},
+          {"where": "Homepage", "signups": cc["home"]}, {"where": "Other pages (About, issue and topic pages)", "signups": cc["other"]}])
+    # pieces: every members-only piece, and public pieces since Aug. 1 that GA4 knows
+    def _np(u): return ("/" + u.split("vitalcitynyc.org/", 1)[-1]).rstrip("/").lower() if u else ""
+    pi = {_np(p.get("url")): p for p in ((ga.get("piece_index") or {}).get("pieces") or []) if p.get("url")}
+    sig = collections.Counter(e[2] for e in evs if e[0] <= END)
+    pr = [{"title": p["title"], "access": "Members-only", "published": p["published"], "views": (pi.get(u) or {}).get("views"), "signups": sig[u]} for u, p in gated.items()]
+    pr += [{"title": p["title"], "access": "Public", "published": p["published"], "views": pi[u].get("views"), "signups": sig[u]}
+           for u, p in public.items() if "2026-08-01" <= p["published"] <= END and u in pi]
+    pr.sort(key=lambda r: r["published"], reverse=True)
+    write("gating_pieces.csv", ["title", "access", "published", "views", "signups"], pr)
+    print("gating:", len(ev), "signups through", END, dict(cc))
+try:
+    _gating()
+except Exception as _e:
+    print("gating: skipped after an error:", repr(_e))
+
 json.dump({"as_of": asof}, open(OUT / "as_of.json", "w"))
 # File names and the as-of time only: this prints into a public Actions log.
 print("ok", asof, "from", _src, sorted(p.name for p in OUT.iterdir()))

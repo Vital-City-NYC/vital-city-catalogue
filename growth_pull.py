@@ -3092,6 +3092,13 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
     by_email  = {}         # email -> {source, medium, landing_url, ts} (for channel-LTV join)
     recent = []            # last-21d signups w/ name+email+date for the click-through list
     recent_cut = (datetime.now(timezone.utc) - timedelta(days=21)).isoformat()
+    # Members-only study (analytics dashboard): every signup since Aug. 10,
+    # 2026, as [New York day, landing type, landing path, homepage?]. No
+    # emails or names, so it can ride in the payload as is.
+    from zoneinfo import ZoneInfo as _ZI
+    _ny = _ZI("America/New_York")
+    gate_since = "2026-08-10T04:00:00"
+    gate_events = []
     fetched = 0
     stop = False
     cursor_id = None       # last event id from previous page (cursor pagination)
@@ -3119,6 +3126,14 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
         for e in events:
             d = e.get("data") or {}
             ts = (d.get("created_at") or "")
+            if ts and ts[:19] >= gate_since:
+                _ga = d.get("attribution") or {}
+                _gu = d.get("attribution_url") or _ga.get("url") or ""
+                _gp = (urllib.parse.urlparse(_gu).path if _gu.startswith("http") else _gu.split("?")[0]).rstrip("/").lower()
+                gate_events.append([
+                    datetime.fromisoformat(ts.replace("Z", "+00:00")).astimezone(_ny).date().isoformat(),
+                    d.get("attribution_type") or _ga.get("type") or "", _gp,
+                    1 if (_ga.get("title") or "") == "homepage" else 0])
             if ts and ts < since_iso:
                 if ts < url_since_iso:
                     stop = True
@@ -3241,7 +3256,32 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
         "_by_email":      by_email,   # internal — used for channel-LTV join, stripped before JSON write
         "_url_days":      url_days,   # internal — per-piece signup days since url_since, for the piece index
         "url_since":      url_since,
+        "gating":         {"since": gate_since[:10], "events": gate_events, "posts": _ghost_gating_posts(tok)},
     }
+
+
+def _ghost_gating_posts(tok, since="2026-07-01"):
+    """Posts published since `since` with their visibility, so the members-only
+    study can tell gated pieces from public ones. Paths only, no counts."""
+    posts, page = [], 1
+    flt = urllib.parse.quote(f"published_at:>='{since}'")
+    while page < 20:
+        try:
+            data = json.loads(http_get(f"{GHOST_ADMIN_API}/posts/?limit=100&page={page}&filter={flt}"
+                                       "&fields=title,url,visibility,published_at",
+                                       headers={"Authorization": f"Ghost {tok}", "Accept-Version": "v5.0"}, timeout=60))
+        except Exception as e:
+            log(f"  ghost gating posts page {page} failed: {e}")
+            return None
+        for p in data.get("posts") or []:
+            u = p.get("url") or ""
+            posts.append({"path": (urllib.parse.urlparse(u).path if u.startswith("http") else u).rstrip("/").lower(),
+                          "title": p.get("title") or "", "visibility": p.get("visibility") or "",
+                          "published": (p.get("published_at") or "")[:10]})
+        if not ((data.get("meta") or {}).get("pagination") or {}).get("next"):
+            break
+        page += 1
+    return posts
 
 
 def pull_ghost_logins(weeks=20):
@@ -5779,6 +5819,9 @@ def main():
             "by_topic":       signup_attr.get("by_topic") or {},
             "recent_signups": signup_attr.get("recent_signups") or [],
         },
+        # Members-only study inputs: compact signup events (no emails) and
+        # post visibility, read by vc_dashboard_build.py.
+        "gating": signup_attr.get("gating") or {},
         # Recent unsubscribers (email + date, names where Mailchimp has them)
         # for the 7d-box "Unsubscribes" click-through.
         "recent_unsubs": pull_recent_unsubs(21),
