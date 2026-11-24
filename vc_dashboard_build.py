@@ -74,6 +74,19 @@ def write(name, cols, rows):
 mc, db, ga, gt, ap = d["mailchimp"], d["donorbox"], d["ga4"], d["ghost_traffic"], d["app_store"]
 sw = mc.get("signup_windows", {}); mw = mc.get("windows", {}); dw = db.get("windows", {})
 
+# One dead source must not freeze the whole dashboard. When the Donorbox pull
+# comes back empty (a rejected key returns no donations at all), keep the last
+# good giving figures already in out/ and refresh everything else.
+DB_OK = bool(db.get("available") and db.get("monthly_series"))
+_old_db = {}
+if not DB_OK:
+    print(f"::warning title=Donorbox unavailable::{db.get('reason') or 'no donations returned'}; keeping the last good giving figures")
+    try:
+        with open(OUT / "kpis.csv", newline="") as _f:
+            _old_db = {r["metric"]: r for r in csv.DictReader(_f) if r.get("source") == "Donorbox"}
+    except FileNotFoundError:
+        pass
+
 # ---- app store daily
 rep = ap.get("reports", {})
 days = set()
@@ -130,8 +143,9 @@ k = [
  ("app_impressions_30","App Store","App Store impressions, last 30 days of data", app_imp30, None),
 ]
 write("kpis.csv", ["metric","source","label","value","prior","as_of"],
-      [{"metric":a,"source":b,"label":c,"value":"" if v is None else round(v,2) if isinstance(v,float) else v,
-        "prior":"" if p is None else round(p,2) if isinstance(p,float) else p,"as_of":asof} for a,b,c,v,p in k])
+      [(_old_db[a] if (not DB_OK and b == "Donorbox" and a in _old_db) else
+        {"metric":a,"source":b,"label":c,"value":"" if v is None else round(v,2) if isinstance(v,float) else v,
+        "prior":"" if p is None else round(p,2) if isinstance(p,float) else p,"as_of":asof}) for a,b,c,v,p in k])
 
 # ---- web weekly (GA4 + Ghost); drop the week still in progress
 from datetime import date, timedelta
@@ -189,8 +203,8 @@ for x in sorted(mc.get("campaigns", []), key=lambda c: c.get("sent", ""), revers
 write("newsletter_sends.csv", ["campaign_id","sent","kind","subject","ab_test","tested_against","test_pct","recipients","delivered",
       "open_pct","click_pct","ctor_pct","unsubs","unsub_pct"], send_rows)
 
-# ---- donations monthly
-write("donations_monthly.csv", ["month","raised","gifts","donors","recurring"],
+# ---- donations monthly (left as it was when Donorbox returned nothing)
+if DB_OK: write("donations_monthly.csv", ["month","raised","gifts","donors","recurring"],
       [{"month": r["m"], "raised": round(r["amt"], 2), "gifts": r["gifts"], "donors": r["donors"],
         "recurring": round(r.get("recurring_amt", 0), 2)} for r in db.get("monthly_series", [])])
 
@@ -583,6 +597,10 @@ for r in _allS[-2:]:
             det = [q for q in dd if q["date"] == r["date"] and q["kind"] == "signup_page"]
             top = max(det, key=lambda q: float(q["n"])) if det else None
             alerts.append((f"signups:{r['date']}", f"{_n(n)} newsletter signups on {_d(r['date'])}{' so far' if r.get('note') else ''}, against {avg:.1f} a day the week before." + (f" Most came from “{top['label']}” ({_n(top['n'])})." if top else "")))
+if not DB_OK:
+    _k = f"donorbox:down:{_date.fromisoformat(_gen).toordinal() // 3}"   # at most one reminder every three days
+    if _k not in _sent:
+        alerts.append((_k, "Donorbox is rejecting the dashboard's API key, so giving figures on the analytics dashboard are frozen at their last good values. Generate a new key in Donorbox and update the DONORBOX_KEY secret."))
 if "--alerts" in sys.argv:
     try: _old = json.loads((OUT / "alerts_new.json").read_text())
     except Exception: _old = []
