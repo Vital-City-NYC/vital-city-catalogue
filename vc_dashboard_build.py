@@ -218,6 +218,68 @@ if DB_OK and isinstance(db.get("by_page"), list):
             "raised_30": r.get("amount_30", 0), "first": r.get("first", ""), "last": r.get("last", ""),
             "tags_since": db.get("page_tags_since", "")} for r in db["by_page"]])
 
+# ---- who shares the pieces on social media, by account. Bluesky comes from
+# its open search (one lookup per piece); X, LinkedIn, Reddit and the rest only
+# from posts the mention searches found or someone logged in the mentions
+# record, since those platforms have no free search. Public posts; our own
+# accounts are left out.
+def _social_rows():
+    import re as _re
+    from urllib.parse import urlsplit
+    acc = {}
+    def add(platform, account, name, posted, eng, post_url, slug):
+        if not account: return
+        k = (platform, account.lower())
+        a = acc.setdefault(k, {"platform": platform, "account": account, "name": name or "", "posts": 0,
+                               "engagement": 0, "last": "", "last_url": "", "pieces": set(), "seen": set()})
+        if post_url and post_url in a["seen"]:
+            if slug: a["pieces"].add(slug)
+            return
+        if post_url: a["seen"].add(post_url)
+        a["posts"] += 1; a["engagement"] += int(eng or 0)
+        if slug: a["pieces"].add(slug)
+        if (posted or "") >= a["last"]: a["last"], a["last_url"] = posted or "", post_url or a["last_url"]
+    bs = d.get("bluesky_piece_shares") or {}
+    for r in bs.get("shares") or []:
+        if r.get("own"): continue
+        add("Bluesky", "@" + r["handle"], r.get("name"), r.get("posted"),
+            (r.get("likes") or 0) + (r.get("reposts") or 0) + (r.get("quotes") or 0), r.get("url"), r.get("slug"))
+    def slug_of(u):
+        m = _re.search(r"vitalcitynyc\.org/([^/?#]+)", u or "")
+        return m.group(1).lower() if m else ""
+    for m in d.get("news_mentions") or []:
+        if m.get("kind") != "social" or m.get("own_post") or m.get("own_account"): continue
+        u = m.get("url") or ""
+        try: host = urlsplit(u).netloc.lower().removeprefix("www.").removeprefix("m.")
+        except Exception: host = ""
+        path = [p for p in urlsplit(u).path.split("/") if p] if u else []
+        slug = next((slug_of(x) for x in (m.get("vc_links") or []) if slug_of(x)), "")
+        src = (m.get("source") or "").strip()
+        if host == "bsky.app":
+            if bs.get("available"):
+                if path[:1] == ["profile"] and len(path) > 1: add("Bluesky", "@" + path[1], "", (m.get("published") or "")[:10],
+                                                                  (m.get("likes") or 0) + (m.get("reposts") or 0), u, slug)
+                continue
+            add("Bluesky", src, "", (m.get("published") or "")[:10], (m.get("likes") or 0) + (m.get("reposts") or 0), u, slug)
+        elif host in ("x.com", "twitter.com") and path and path[0] not in ("i", "search", "hashtag"):
+            add("X", "@" + path[0], "", (m.get("published") or "")[:10], 0, u, slug)
+        elif host == "linkedin.com" and len(path) > 1 and path[0] in ("posts", "in", "company", "feed"):
+            who = path[1].split("_")[0] if path[0] == "posts" else path[1]
+            add("LinkedIn", who, src if src and src.lower() not in ("linkedin", "") else "", (m.get("published") or "")[:10], 0, u, slug)
+        elif host.endswith("reddit.com"):
+            sub = next((path[i + 1] for i, p in enumerate(path[:-1]) if p == "r"), "")
+            add("Reddit", ("r/" + sub) if sub else src, "", (m.get("published") or "")[:10], 0, u, slug)
+        elif host in ("facebook.com", "threads.net", "instagram.com") and path:
+            add({"facebook.com": "Facebook", "threads.net": "Threads", "instagram.com": "Instagram"}[host], path[0], "",
+                (m.get("published") or "")[:10], 0, u, slug)
+    return sorted(({**{k: v for k, v in a.items() if k != "seen"}, "pieces": ";".join(sorted(a["pieces"]))}
+                   for a in acc.values()), key=lambda r: (-r["posts"], -r["engagement"], r["account"].lower()))
+try:
+    _soc = _social_rows()
+    write("social_shares.csv", ["platform","account","name","posts","engagement","last","last_url","pieces"], _soc)
+except Exception as _e:
+    print(f"::warning title=Social shares skipped::{_e}")
+
 # ---- top pages and signup sources
 write("top_pages_30d.csv", ["title","path","visits","prev"], gt.get("top_pages_30d", []))
 bs = d.get("ghost_signup_attribution", {}).get("by_source", [])
@@ -260,6 +322,18 @@ if rs:
         cnt[(title, kind)] += 1
     write("signup_pages_recent.csv", ["page","kind","signups","from","to"],
           [{"page": a, "kind": k, "signups": n, "from": lo, "to": hi} for (a, k), n in cnt.most_common()])
+# per page per day, last 90 days, for the range toggle on the same card
+_pd = sa.get("page_days") or []
+if _pd:
+    _rows = []
+    for r in _pd:
+        t, title = r.get("type") or "", r.get("title") or ""
+        if t == "url" and title == "homepage": title = "Homepage"
+        if not title: title = "(not recorded)" if t in ("", "unknown") else (r.get("url") or "(not recorded)")
+        kind = {"post": "Piece", "page": "Page", "url": "Page", "tag": "Topic page", "author": "Author page"}.get(t, "Unknown")
+        _rows.append({"date": r["d"], "page": title, "kind": kind,
+                      "slug": (r.get("url") or "").rstrip("/").rsplit("/", 1)[-1].lower() if t == "post" else "", "signups": r["n"]})
+    write("signup_pages_daily.csv", ["date","page","kind","slug","signups"], _rows)
 pidx = ga.get("piece_index", {})
 since = pidx.get("signups_since", "")
 pieces = sorted([x for x in pidx.get("pieces", []) if (x.get("signups") or 0) > 0], key=lambda x: -x["signups"])

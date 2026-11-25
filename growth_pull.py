@@ -3143,6 +3143,11 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
     by_email  = {}         # email -> {source, medium, landing_url, ts} (for channel-LTV join)
     recent = []            # last-21d signups w/ name+email+date for the click-through list
     recent_cut = (datetime.now(timezone.utc) - timedelta(days=21)).isoformat()
+    # Signups per landing page per day for the last 95 days, counts only, so
+    # the dashboard can show any window up to 90 days (the 21-day list above
+    # carries names and stays short).
+    page_days = {}
+    page_cut = (datetime.now(timezone.utc) - timedelta(days=95)).isoformat()
     # Members-only study (analytics dashboard): every signup since Aug. 10,
     # 2026, as [New York day, landing type, landing path, homepage?]. No
     # emails or names, so it can ride in the payload as is.
@@ -3200,6 +3205,10 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
             if ts:
                 day = ts[:10]
                 by_day[day] = by_day.get(day, 0) + 1
+            if ts and ts >= page_cut:
+                _ap = d.get("attribution") or {}
+                _k = (ts[:10], _ap.get("title") or "", _ap.get("type") or "", (_ap.get("url") or "").rstrip("/"))
+                page_days[_k] = page_days.get(_k, 0) + 1
             # Recent-signups list (names behind the 7d-box "New signups" tile)
             if ts and ts >= recent_cut:
                 m = d.get("member") or {}
@@ -3304,6 +3313,8 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
         "by_topic":       by_topic(signup_slugs, catalogue_topic_map(), "signups"),
         "window_days":    days_back,
         "recent_signups": sorted(recent, key=lambda r: r["date"], reverse=True),
+        "page_days":      [{"d": k[0], "title": k[1], "type": k[2], "url": k[3], "n": n}
+                           for k, n in sorted(page_days.items())],
         "_by_email":      by_email,   # internal — used for channel-LTV join, stripped before JSON write
         "_url_days":      url_days,   # internal — per-piece signup days since url_since, for the piece index
         "url_since":      url_since,
@@ -3750,6 +3761,17 @@ def pull_bluesky_mentions():
             created = re.sub(r"\.\d+", "", created)   # trim fractional seconds for strptime
             likes, reposts = p.get("likeCount") or 0, p.get("repostCount") or 0
             eng = f" · {likes} likes, {reposts} reposts" if (likes or reposts) else ""
+            # Which Vital City pages the post links to: the link card, links
+            # in the text, and addresses typed out in full.
+            rec = p.get("record") or {}
+            cand = [((rec.get("embed") or {}).get("external") or {}).get("uri") or "",
+                    ((p.get("embed") or {}).get("external") or {}).get("uri") or ""]
+            for f in rec.get("facets") or []:
+                for ft in f.get("features") or []:
+                    if ft.get("uri"): cand.append(ft["uri"])
+            cand += re.findall(r"vitalcitynyc\.org/[^\s)\]>\"']*", text)
+            vc_links = sorted({re.sub(r"^(https?://)?(www\.)?", "https://www.", c).split("?")[0].split("#")[0]
+                               for c in cand if "vitalcitynyc.org" in c})
             items.append({
                 "title": re.sub(r"\s+", " ", text)[:140] or "(no text)",
                 "url": f"https://bsky.app/profile/{handle}/post/{rkey}",
@@ -3757,7 +3779,7 @@ def pull_bluesky_mentions():
                 "snippet": (text[:200] + eng).strip(),
                 "domain": "bsky.app", "match_shape": q, "kind": "social",
                 "is_url_share": is_share,
-                "likes": likes, "reposts": reposts,
+                "likes": likes, "reposts": reposts, "vc_links": vc_links,
                 # Authorship is definitive here (it's the platform API, not a
                 # Google index guess) — lets flag_own_url_shares skip matching.
                 "own_account": handle.lower() == VC_BLUESKY_HANDLE,
@@ -3765,6 +3787,52 @@ def pull_bluesky_mentions():
             })
     log(f"  bluesky mentions: {len(items)}")
     return items
+
+
+def pull_bluesky_piece_shares(days=365):
+    """Who shared each piece on Bluesky. Bluesky's search takes a url filter
+    that matches link cards as well as links in the text, which the plain
+    text search above misses; one query per piece published in the last
+    year. Public posts only, read through the open API (no key)."""
+    posts, page = [], 1
+    since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
+    flt = urllib.parse.quote("published_at:>'" + since + "'")
+    while page <= 10:
+        try:
+            url = (f"{GHOST_API}/posts/?key={GHOST_CONTENT_KEY}&limit=100&page={page}"
+                   f"&fields=slug,url,published_at&filter={flt}&order=published_at%20desc")
+            data = json.loads(http_get(url, timeout=30))
+        except Exception as e:
+            log(f"  bluesky piece shares: Ghost post list failed ({e})"); break
+        posts += data.get("posts") or []
+        if not (data.get("meta") or {}).get("pagination", {}).get("next"): break
+        page += 1
+    shares, failed = [], 0
+    for p in posts:
+        purl = p.get("url") or ""
+        if not purl: continue
+        q = urllib.parse.urlencode({"q": "*", "url": purl, "limit": 100})
+        try:
+            data = json.loads(http_get(f"https://api.bsky.app/xrpc/app.bsky.feed.searchPosts?{q}", timeout=20))
+        except Exception:
+            failed += 1; time.sleep(1); continue
+        for sp in data.get("posts") or []:
+            au = sp.get("author") or {}
+            handle = (au.get("handle") or "").strip()
+            if not handle: continue
+            shares.append({"slug": p.get("slug"), "handle": handle,
+                           "name": (au.get("displayName") or "").strip()[:80],
+                           "posted": ((sp.get("record") or {}).get("createdAt") or sp.get("indexedAt") or "")[:10],
+                           "likes": sp.get("likeCount") or 0, "reposts": sp.get("repostCount") or 0,
+                           "quotes": sp.get("quoteCount") or 0, "replies": sp.get("replyCount") or 0,
+                           "url": f"https://bsky.app/profile/{handle}/post/{(sp.get('uri') or '').rsplit('/', 1)[-1]}",
+                           "own": handle.lower() == VC_BLUESKY_HANDLE})
+        time.sleep(0.2)
+    log(f"  bluesky piece shares: {len(shares)} posts across {len(posts)} pieces"
+        + (f" ({failed} lookups failed)" if failed else ""))
+    if posts and failed == len(posts):
+        return {"available": False, "reason": "every Bluesky lookup failed", "shares": []}
+    return {"available": True, "pieces_checked": len(posts), "shares": shares}
 
 
 def pull_reddit_mentions():
@@ -5742,6 +5810,11 @@ def main():
     mentions_ledger = load_mentions_ledger()
     mentions_record = load_mentions_record()
     all_titles = pull_all_ghost_titles()
+    try:
+        bluesky_piece_shares = pull_bluesky_piece_shares()
+    except Exception as e:
+        log(f"  bluesky piece shares failed: {e}")
+        bluesky_piece_shares = {"available": False, "reason": str(e)[:200], "shares": []}
     # Pull VC's own X tweets to recognize URL shares that are reposts from
     # @VitalCityNYC's own account (where VC's tweet copy doesn't match an
     # article title verbatim — promotional text, contextual one-liners, etc.).
@@ -5906,6 +5979,7 @@ def main():
             # dropped silently on the first run for exactly that reason.
             "by_topic":       signup_attr.get("by_topic") or {},
             "recent_signups": signup_attr.get("recent_signups") or [],
+            "page_days": signup_attr.get("page_days") or [],
         },
         # Members-only study inputs: compact signup events (no emails) and
         # post visibility, read by vc_dashboard_build.py.
@@ -5915,6 +5989,7 @@ def main():
         "recent_unsubs": pull_recent_unsubs(21),
         "press":     pull_press(),
         "news_mentions": news_mentions,
+        "bluesky_piece_shares": bluesky_piece_shares,
         # Two channels the audit showed a brand-mention tracker structurally
         # cannot reach: law reviews (not in Google News at all) and podcasts
         # (audio leaves no indexable trace).
