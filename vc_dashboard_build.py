@@ -285,6 +285,10 @@ write("top_pages_30d.csv", ["title","path","visits","prev"], gt.get("top_pages_3
 bs = d.get("ghost_signup_attribution", {}).get("by_source", [])
 if isinstance(bs, dict): bs = [{"src": k2, "n": v} for k2, v in bs.items()]
 write("signup_sources.csv", ["source","signups"], [{"source": r["src"], "signups": r["n"]} for r in bs[:12]])
+# per source per day, for the date-range toggle shared with "Where people signed up"
+_sd = d.get("ghost_signup_attribution", {}).get("source_days") or []
+if _sd:
+    write("signup_sources_daily.csv", ["date","source","signups"], [{"date": r["d"], "source": r["src"], "signups": r["n"]} for r in _sd])
 
 
 # ---- traffic sources and long-run trends

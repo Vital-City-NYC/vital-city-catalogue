@@ -3148,6 +3148,9 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
     # carries names and stays short).
     page_days = {}
     page_cut = (datetime.now(timezone.utc) - timedelta(days=95)).isoformat()
+    # Signups per source per day for the same 95 days, counts only, so the
+    # dashboard's sources card can share the pages card's date-range toggle.
+    source_days = {}
     # Members-only study (analytics dashboard): every signup since Aug. 10,
     # 2026, as [New York day, landing type, landing path, homepage?]. No
     # emails or names, so it can ride in the payload as is.
@@ -3236,6 +3239,8 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
             # per-URL counts.
             src = (att.get("referrer_source") or "(unknown)").strip() or "(unknown)"
             by_source[src] = by_source.get(src, 0) + 1
+            if ts and ts >= page_cut:
+                source_days[(ts[:10], src)] = source_days.get((ts[:10], src), 0) + 1
             # The iPhone app opens the signup page with ?ref=Vital City app
             # (app 1.0.1 and later), so its signups carry that source.
             if src == APP_SIGNUP_SOURCE and ts:
@@ -3315,6 +3320,7 @@ def pull_ghost_signup_attribution(days_back=180, url_since="2026-03-01"):
         "recent_signups": sorted(recent, key=lambda r: r["date"], reverse=True),
         "page_days":      [{"d": k[0], "title": k[1], "type": k[2], "url": k[3], "n": n}
                            for k, n in sorted(page_days.items())],
+        "source_days":    [{"d": k[0], "src": k[1], "n": n} for k, n in sorted(source_days.items())],
         "_by_email":      by_email,   # internal — used for channel-LTV join, stripped before JSON write
         "_url_days":      url_days,   # internal — per-piece signup days since url_since, for the piece index
         "url_since":      url_since,
@@ -5980,6 +5986,7 @@ def main():
             "by_topic":       signup_attr.get("by_topic") or {},
             "recent_signups": signup_attr.get("recent_signups") or [],
             "page_days": signup_attr.get("page_days") or [],
+            "source_days": signup_attr.get("source_days") or [],
         },
         # Members-only study inputs: compact signup events (no emails) and
         # post visibility, read by vc_dashboard_build.py.
