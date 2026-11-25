@@ -1017,7 +1017,7 @@
             <span><span class="sw" style="background:var(--vc-charcoal);opacity:.4;width:14px;height:1px;margin-top:4px"></span>Bot signups, May–Sept. 2025 (about half of new signups; they diluted open and click rates)</span>
           </div>
         </div>
-        <div class="flagnote" style="margin-top:12px"><b>Benchmark:</b> nonprofit email averages ~28-29% open and ~3.3% click (<a href="https://mrbenchmarks.com/" target="_blank" style="color:var(--vc-cerulean)">M+R Benchmarks 2025</a>). The tiles above set Vital City's own rates against these. Open rate is Apple-Mail-inflated across the whole industry, so click rate is the cleaner comparison.</div>
+        <div class="flagnote" style="margin-top:12px"><b>Benchmark:</b> nonprofit senders average 28.6% (<a href="https://neonone.com/resources/blog/nonprofit-email-benchmarks/" target="_blank" style="color:var(--vc-cerulean)">Neon One</a>, 2022 data) to 40% (<a href="https://mailchimp.com/resources/email-marketing-benchmarks/" target="_blank" style="color:var(--vc-cerulean)">Mailchimp</a>, data through Dec. 2023) opens and about 3.3% clicks. The tiles above set Vital City's own rates against these. Open rate is Apple-Mail-inflated across the whole industry, so click rate is the cleaner comparison.</div>
         <div id="perfByYear"></div>
       
         <h3 class="subh">Send-by-send performance <span class="hint">last 20 sends charted, every send in the table · one point = one send (A/B tests counted once)</span></h3>
@@ -2514,14 +2514,14 @@ function renderPerf(mc){
     (oc ? {lbl:`Open rate · ${q0Lbl}`, n:oc.now.toFixed(1)+"%",
       d:`${fmtPctDelta(oc.d)} against the average from ${normLbl} (about ${oc.base.toFixed(1)}%)${trendTxt(oc)}`,
       cls:deltaPctClass(oc.d,true),
-      tip:`Newsletter open rate over the last three full months (${q0Lbl}), weighted by emails delivered, against the ${oc.months} months before them, leaving out the May–September 2025 bot surge. Year to date is ${ytd.open_pct||0}%; the same window last year was ${prior.open_pct||0}%.\n\nWhy the norm and not last year: this metric trends hard. It ran 62% in early 2025, fell to 29% by October as bot signups diluted the list, and has climbed back since. A year-to-date average sits in the middle of that curve and describes no month that ever happened — comparing two such averages reports a decline while the rate is rising.\n\nRead the level with care in both directions: Apple Mail's privacy auto-opens inflate it, while roughly 2,400 never-opening bot accounts still on the list depress it (bot-adjusted it is about 42.6%). Click rate is the steadier cut: automatic opens don't click. Benchmark: nonprofit email averages ~28-29% (M+R Benchmarks 2025).`}
+      tip:`Newsletter open rate over the last three full months (${q0Lbl}), weighted by emails delivered, against the ${oc.months} months before them, leaving out the May–September 2025 bot surge. Year to date is ${ytd.open_pct||0}%; the same window last year was ${prior.open_pct||0}%.\n\nWhy the norm and not last year: this metric trends hard. It ran 62% in early 2025, fell to 29% by October as bot signups diluted the list, and has climbed back since. A year-to-date average sits in the middle of that curve and describes no month that ever happened — comparing two such averages reports a decline while the rate is rising.\n\nRead the level with care in both directions: Apple Mail's privacy auto-opens inflate it, while roughly 2,400 never-opening bot accounts still on the list depress it (bot-adjusted it is about 42.6%). Click rate is the steadier cut: automatic opens don't click. Benchmark: nonprofit senders average 28.6% (Neon One, 2022 data) to 40% (Mailchimp, data through Dec. 2023).`}
         : {lbl:"Open rate · YTD", n:(ytd.open_pct||0)+"%",
       d:fmtPctDelta(dOpenYtd)+" against the same dates in 2025", cls:deltaPctClass(dOpenYtd,true),
       tip:"Year-to-date open rate, recipient-weighted. (Not enough monthly history yet for the trailing-norm comparison.)"}),
     (cc ? {lbl:`Click rate · ${q0Lbl}`, n:cc.now.toFixed(1)+"%",
       d:`${fmtPctDelta(cc.d)} against the average from ${normLbl} (about ${cc.base.toFixed(1)}%)${trendTxt(cc)}`,
       cls:deltaPctClass(cc.d,true),
-      tip:`Newsletter click rate over the last three full months (${q0Lbl}), weighted by emails delivered, against the ${cc.months} months before them, leaving out the May–September 2025 bot surge. Year to date is ${ytd.click_pct||0}%; the same window last year was ${prior.click_pct||0}%.\n\nWhy it matters: the more reliable engagement signal — clicks aren't inflated by Apple Mail's auto-opens. Same caveat as the open rate on the composition side: the never-opening accounts don't click either, so the raw level runs low. Benchmark: nonprofit email averages ~3.3% (M+R Benchmarks 2025).`}
+      tip:`Newsletter click rate over the last three full months (${q0Lbl}), weighted by emails delivered, against the ${cc.months} months before them, leaving out the May–September 2025 bot surge. Year to date is ${ytd.click_pct||0}%; the same window last year was ${prior.click_pct||0}%.\n\nWhy it matters: the more reliable engagement signal — clicks aren't inflated by Apple Mail's auto-opens. Same caveat as the open rate on the composition side: the never-opening accounts don't click either, so the raw level runs low. Benchmark: nonprofit senders average about 3.3% (Neon One 3.29%, 2022 data; Mailchimp 3.27%, data through Dec. 2023).`}
         : {lbl:"Click rate · YTD", n:(ytd.click_pct||0)+"%",
       d:fmtPctDelta(dClickYtd)+" against the same dates in 2025", cls:deltaPctClass(dClickYtd,true),
       tip:"Year-to-date click rate, recipient-weighted across every send.\n\nWhy it matters: The more reliable engagement signal — clicks aren't inflated by Apple Mail's auto-opens, so this is the truest read on whether content is landing. If one performance number deserves your attention, it's this one."+interpretInsight("click_rate", dClickYtd)}),
@@ -6544,12 +6544,12 @@ function scorecardModel(data){
     def:"Visits to vitalcitynyc.org, from Google Analytics.",
     vals:S(m=>vis[m]||null, visStart), fmt:n0,
     std:()=>{ const p3=avgOf(m=>pieces[m]||0,CUR), pb=avgOf(m=>pieces[m]||0,BASE);
-      return `Context: news-site traffic fell about 26% in the year after Google's AI Overviews launched, and AI assistants send readers to websites at roughly a tenth of search's old rate (Similarweb, via Axios, Sept. 19, 2026); publisher search traffic fell by about a third in 2025 (Chartbeat via Press Gazette).`+(p3!=null&&pb!=null?` Publishing: ${Math.round(p3)} pieces a month, against ${Math.round(pb)} before.`:""); }},
+      return `Context: Google search traffic to publishers fell by about a third globally in the year to November 2025, and smaller sites were hit harder (Chartbeat data via Press Gazette, Jan. and March 2026).`+(p3!=null&&pb!=null?` Publishing: ${Math.round(p3)} pieces a month, against ${Math.round(pb)} before.`:""); }},
    {k:"click", name:"Email click rate", unit:"of recipients clicked,", kind:"rate", good:1,
     def:"Share of people who received an email from Vital City (every send) and clicked a link in it. Apple Mail opens some emails automatically, which inflates open rates, so clicks are the more reliable sign that people read.",
     vals:S(m=>mcp[m]&&mcp[m].click_pct!=null?+mcp[m].click_pct:null), fmt:v=>(+v).toFixed(1)+"%",
     std:(x)=>{ const op=avgOf(m=>mcp[m]&&mcp[m].open_pct!=null?+mcp[m].open_pct:null,CUR);
-      return `Industry: nonprofits average about 3.3% clicks and 28–29% opens (M+R Benchmarks 2025); media newsletters run about 3–6% clicks. ${pos(x.cur,[{v:3.3},{v:6}])}`+(op!=null?` Opens: ${op.toFixed(1)}%.`:""); }},
+      return `Industry: nonprofit senders average about 3.3% clicks (Neon One, Mailchimp); ClickMinded's rough estimate for media newsletters is 3–6%. ${pos(x.cur,[{v:3.3},{v:6}])}`+(op!=null?` Opens: ${op.toFixed(1)}%.`:""); }},
    {k:"active", name:"Active newsletter readers", unit:"opened an email in the 30 days to the end of", kind:"level", good:1,
     def:"People who opened at least one Vital City email sent in the 30 days up to the last day of the month. Some email apps open messages automatically, which inflates it; it also moves with how many emails went out.",
     vals:S(m=>{ const [yy,mm]=m.split("-").map(Number); const e=new Date(Date.UTC(yy,mm,0)).toISOString().slice(0,10); const v=(mc.mau_series||{})[e]; return v==null?null:v; }), fmt:n0,
@@ -6587,7 +6587,7 @@ function scorecardModel(data){
     std:()=>{ if(!chRows.length) return ""; const tot={}; let all=0; CUR.forEach(i=>{const e=chM[months[i]]; if(!e) return; all+=e.s; Object.entries(e.ch).forEach(([c,n])=>tot[c]=(tot[c]||0)+n);});
       const nm={"Organic Search":"search","Direct":"direct","Email":"email","Organic Social":"social","Referral":"other sites","Unassigned":"unassigned"};
       const top=Object.entries(tot).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([c,n])=>`${nm[c]||c.toLowerCase()} ${Math.round(n/all*100)}%`);
-      return all?`${curLbl}, where visits came from: ${top.join(", ")}. Industry: 69% of Google searches ended without a click by May 2025, up from 56% a year earlier, and the share of searches that led to a website fell about a fifth again by May 2026 (Similarweb). ${aiLine()}`.trim():""; }},
+      return all?`${curLbl}, where visits came from: ${top.join(", ")}. Industry: Google search traffic to publishers fell by about a third in the year to November 2025 (Chartbeat data via Press Gazette). ${aiLine()}`.trim():""; }},
    {k:"cites", name:"Times Vital City was cited", unit:"in", kind:"flow", good:1,
     def:"News stories, government documents and other publishers citing or republishing Vital City's work, found by the press tracker and checked by reading the page. The count is the Prospects impact ledger's, the one record of citations every toolkit page uses: roundups, passing mentions and duplicates are left out.",
     vals:S(m=>cites[m]||0,"2025-03"), fmt:n0, note:"The tracker's record starts in March 2025.",
@@ -7396,7 +7396,7 @@ function pulseInsights(w, data){
   return out;
 }
 // Static industry context with sources, compared against the live figures.
-// Reviewed June 2026 (see about.html); refresh when the annual reports land.
+// Sources re-checked Nov. 25, 2026 (see about.html); every figure carries its source link in src.
 function pulseBenchmarks(m, data){
   const mc=(data||{}).mailchimp||{};
   // Last three full months of sends (the current month is partial, and the
@@ -7418,14 +7418,14 @@ function pulseBenchmarks(m, data){
   const band=(v,lo,hi)=> v==null?"": (v>hi?"above":v<lo?"below":"within");
   const rows=[];
   rows.push({k:"Open rate", vc: mo.open_pct!=null?`${mo.open_pct}% (${mo.month})`:"—",
-    norm:"About 28–29% is average for nonprofits and about 21% for businesses (M+R Benchmarks 2025); 30–40% counts as solid for media. Apple Mail opens some emails automatically, which inflates every open rate, so treat this as an upper bound.",
-    read: mo.open_pct!=null ? (mo.open_pct>=29?"above the nonprofit average":"below the nonprofit average") : ""});
+    norm:"Nonprofit senders average 28.6% (Neon One) to 40% (Mailchimp). Apple Mail opens some emails automatically, which inflates every open rate, so treat this as an upper bound.", src:[{n:"Neon One, 2022 data",u:"https://neonone.com/resources/blog/nonprofit-email-benchmarks/"},{n:"Mailchimp, data through Dec. 2023",u:"https://mailchimp.com/resources/email-marketing-benchmarks/"}],
+    read: mo.open_pct!=null ? (mo.open_pct>=40?"above both nonprofit averages":mo.open_pct>=28.6?"between the two nonprofit averages":"below both nonprofit averages") : ""});
   rows.push({k:"Click rate", vc: mo.click_pct!=null?`${mo.click_pct}% (${mo.month})`:"—",
-    norm:"About 3.3% is average for nonprofits (M+R 2025) and 2.27% across all industries; media newsletters typically run 3–6% (Letterhead, ClickMinded and Brevo 2026 compilations).",
+    norm:"Nonprofit senders average about 3.3% (Neon One 3.29%, Mailchimp 3.27%). ClickMinded's rough estimate for media newsletters is 3–6%.", src:[{n:"Neon One, 2022 data",u:"https://neonone.com/resources/blog/nonprofit-email-benchmarks/"},{n:"Mailchimp, data through Dec. 2023",u:"https://mailchimp.com/resources/email-marketing-benchmarks/"},{n:"ClickMinded",u:"https://www.clickminded.com/newsletter-statistics/"}],
     read: mo.click_pct!=null ? `${band(mo.click_pct,3,6)} the typical range for media newsletters` : ""});
   rows.push({k:"Of those who opened, share who clicked a link", vc: mo.ctor_pct!=null?`${(+mo.ctor_pct).toFixed(1)}% (${mo.month})`:"—",
-    norm:"Typically 5.3–8.6% across industries. Apple Mail opens some emails automatically, adding opens nobody read, so this figure runs low; read it as a minimum.",
-    read: mo.ctor_pct!=null ? `${band(mo.ctor_pct,5.3,8.6)} the typical range` : ""});
+    norm:"No source found publishes this for nonprofits directly. Dividing the averages above gives about 8% (Mailchimp) to 11.5% (Neon One). Apple Mail opens some emails automatically, adding opens nobody read, so this figure runs low; read it as a minimum.", src:[{n:"Neon One, 2022 data",u:"https://neonone.com/resources/blog/nonprofit-email-benchmarks/"},{n:"Mailchimp, data through Dec. 2023",u:"https://mailchimp.com/resources/email-marketing-benchmarks/"}],
+    read: mo.ctor_pct!=null ? `${band(mo.ctor_pct,8.2,11.5)} the range those averages imply` : ""});
   // Churn from the actual last 30 days of the daily series, whatever window
   // the report covers (scaling a single week up to a month is too noisy).
   const dact=mc.daily_activity||[]; const subs=mc.total_subscribers;
@@ -7433,23 +7433,23 @@ function pulseBenchmarks(m, data){
   if(lastD&&subs){ const from=new Date(Date.parse(lastD+"T00:00:00Z")-29*86400000).toISOString().slice(0,10);
     const u30=dact.reduce((acc,r)=> (r.d>=from&&r.d<=lastD) ? acc+(+r.unsubs||0) : acc, 0); const churn=u30/subs*100;
     rows.push({k:"Share of the list that unsubscribes in a month", vc:`${churn.toFixed(1)}% (${u30.toLocaleString("en-US")} unsubscribes in the 30 days to ${pxDay(lastD)})`,
-      norm:"Nonprofits lost 12% of their lists to unsubscribes over 2025, roughly 1% a month (M+R Benchmarks 2026).", read: churn<1?"under that":"over that"}); }
+      norm:"Nonprofits lost 12% of their lists to unsubscribes over 2025, roughly 1% a month (M+R Benchmarks 2026).", src:[{n:"M+R Benchmarks 2026",u:"https://mrbenchmarks.com/email-messaging/"}], read: churn<1?"under that":"over that"}); }
   const act=(m.stocks||[]).find(k=>/Active subscribers/i.test(k.lbl));
   if(act&&subs){ const n=parseInt(String(act.num).replace(/[^0-9]/g,""),10); if(n) rows.push({k:"Share of the list reading", vc:`${Math.round(n/subs*100)}% opened at least one email in the last 30 days`,
-      norm:"Readers who regularly open a newsletter are about twice as likely to still be subscribed a year later (INMA, 2025). No fixed benchmark; the direction is what matters.", read:""}); }
+      norm:"No published benchmark found for this measure; the direction over time is what matters.", src:[], read:""}); }
   rows.push({k:"Site traffic", vc:(m.windows||[]).map(w=>{const V=w.tiles.find(t=>t.k==="visitors"); return V?`${w.label}: ${V.value}`:null;}).filter(Boolean).slice(0,2).join(" · ")||"—",
-    norm:"Publisher search traffic fell by about a third globally in 2025, and small publishers lost more (Chartbeat data via Press Gazette). Across news media, loyal audiences and subscriptions grow while overall traffic shrinks (Reuters Institute Digital News Report 2025).", read:""});
+    norm:"Google search traffic to publishers fell by about a third globally in the year to November 2025, and smaller sites were hit harder (Chartbeat data via Press Gazette).", src:[{n:"Press Gazette, Jan. 2026",u:"https://pressgazette.co.uk/media-audience-and-business-data/google-traffic-down-2025-trends-report-2026/"},{n:"Press Gazette, March 2026",u:"https://pressgazette.co.uk/?p=250292"}], read:""});
   // Zero-click search: impressions keep rising while clicks do not follow.
   const sc=(data||{}).search_console||{}; const win=(sc.windows||{});
   const w28=(win["28"]||{}).totals, w365=(win["365"]||{}).totals;
   if(w28&&w28.impressions){
     rows.push({k:"Google searches that led to a visit", vc:`${w28.ctr}% of the ${Number(w28.impressions).toLocaleString("en-US")} times a Vital City page appeared in Google results led to a click (last 28 days of Google's data; our pages appeared about ${Math.round(w28.position)} places down the results, on average)`+
         (w365&&w365.ctr?`; ${w365.ctr}% over the last year`:""),
-      norm:"69% of Google searches ended without a click by May 2025, up from 56% a year earlier, and the share reaching websites fell about a fifth again by May 2026 (Similarweb). AI assistants send readers to websites at roughly a tenth of search's old rate, so showing up in more searches without more clicks is expected, not a sign of lower rankings.",
+      norm:"Google search traffic to publishers fell by about a third in the year to November 2025 (Chartbeat data via Press Gazette), so appearing in more searches without more clicks is common across publishers.", src:[{n:"Press Gazette, Jan. 2026",u:"https://pressgazette.co.uk/media-audience-and-business-data/google-traffic-down-2025-trends-report-2026/"}],
       read: w365&&w28.ctr>w365.ctr ? "a higher share than over the past year" : ""});
   }
   rows.push({k:"Paying for news", vc:"Vital City is free; donations play that role",
-    norm:"Only ~18% of people in wealthy countries (~20% in the US) pay for any online news, and growth is flat (Reuters Institute, 2025).", read:""});
+    norm:"About 20% of Americans pay for any online news (Reuters Institute Digital News Report 2025).", src:[{n:"Reuters Institute Digital News Report 2025",u:"https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025/dnr-executive-summary"}], read:""});
   return rows;
 }
 function pxRate(v){ return v>=10 ? String(Math.round(v)) : (Math.round(v*10)/10).toFixed(1); }
@@ -7547,7 +7547,7 @@ function pulseReportMD(m){
   if(m.data){ const w=whoMD(m.data,"week")+whoMD(m.data,"month"); if(w) o+=`
 ## Who is joining and leaving
 `+w; }
-  if((m.benchmarks||[]).length){ o+=`\n## Industry context\n`; m.benchmarks.forEach(b=>{ o+=`- ${b.k}: Vital City ${b.vc}${b.read?` — ${b.read}`:""}. Norm: ${b.norm}\n`; }); o+=`\n_Benchmarks are static orientation (last reviewed June 2026), not live data; sectors and methods differ._\n`; }
+  if((m.benchmarks||[]).length){ o+=`\n## Industry context\n`; m.benchmarks.forEach(b=>{ o+=`- ${b.k}: Vital City ${b.vc}${b.read?` — ${b.read}`:""}. Norm: ${b.norm}${(b.src||[]).length?` Sources: ${b.src.map(x=>`[${x.n}](${x.u})`).join("; ")}.`:""}\n`; }); o+=`\n_Benchmarks are static orientation (sources checked Nov. 25, 2026), not live data; sectors and methods differ._\n`; }
   o+=`\n## Context\n`+m.context.map(c=>`- ${c}`).join("\n")+`\n`;
   if(m.windows[0]) o+=`\n_${m.windows[0].note}_\n`;
   return o;
@@ -7663,7 +7663,7 @@ function pulseReportHTML(m){
   // on a page of their own, saying which months they cover.
   if(m.scorecard) b+=`<h2 class="kibig">The bigger picture: key indicators <span class="sub">monthly, through ${esc(m.scorecard.fullLbl)}, the latest full month · the same in every report</span></h2>`+kiBodyHTML(m.scorecard,210,{layout:"rows",noNotes:true,noLede:true,noAlso:true});
   if(m.data){ const w=whoHTML(m.data,"week")+whoHTML(m.data,"month")+kiStayHTML(m.data); if(w) b+=`<h2>Who is joining and leaving</h2>`+w; }
-  if((m.benchmarks||[]).length) b+=`<h2>Industry context</h2><table class="bm">`+m.benchmarks.map(x=>`<tr><td class="l">${esc(x.k)}</td><td class="v">${esc(x.vc)}${x.read?`<div class="r">${esc(x.read)}</div>`:""}</td><td class="n">${esc(x.norm)}</td></tr>`).join("")+`</table><div class="cav" style="margin-top:6px;border:0;padding:0">Benchmarks are static orientation (last reviewed June 2026), not live data; sectors and methods differ. Sources: M+R Benchmarks 2025; Letterhead, ClickMinded and Brevo 2026 email compilations; INMA 2025; Chartbeat via Press Gazette; Reuters Institute Digital News Report 2025.</div>`;
+  if((m.benchmarks||[]).length) b+=`<h2>Industry context</h2><table class="bm">`+m.benchmarks.map(x=>`<tr><td class="l">${esc(x.k)}</td><td class="v">${esc(x.vc)}${x.read?`<div class="r">${esc(x.read)}</div>`:""}</td><td class="n">${esc(x.norm)}${(x.src||[]).length?`<div class="r">Source: ${x.src.map(z=>`<a href="${esc(z.u)}" target="_blank" rel="noopener">${esc(z.n)}</a>`).join("; ")}</div>`:""}</td></tr>`).join("")+`</table><div class="cav" style="margin-top:6px;border:0;padding:0">Benchmarks are static orientation (sources checked Nov. 25, 2026), not live data; sectors and methods differ.</div>`;
   if(m.scorecard) b+=`<h2>Notes on the key indicators</h2><div class="ki-notes">`+kiNotesHTML(m.scorecard)+`</div>`;
   b+=`<h2>Context</h2><ul class="ctx">`+m.context.map(c=>`<li>${esc(c)}</li>`).join("")+`</ul>`;
   if(m.windows[0]) b+=`<div class="cav">${esc(m.windows[0].note)}</div>`;
@@ -7875,8 +7875,8 @@ function rptModel(r){
   const emRows = r.em.sends ? [
     {l:"Newsletter sends", v:fmtN(r.em.sends)},
     {l:"Total recipients", v:fmtN(r.em.recipients), note:"summed across sends — one person on several sends counts each time"},
-    {l:"Avg open rate", v:(r.em.open!=null?r.em.open+"%":"—"), note:"recipient-weighted · nonprofit avg ~28-29% (M+R 2025)"},
-    {l:"Avg click rate", v:(r.em.click!=null?r.em.click+"%":"—"), note:"recipient-weighted · nonprofit avg ~3.3% (M+R 2025)"},
+    {l:"Avg open rate", v:(r.em.open!=null?r.em.open+"%":"—"), note:"recipient-weighted · nonprofit avg 28.6% (Neon One, 2022 data) to 40% (Mailchimp, through Dec. 2023)"},
+    {l:"Avg click rate", v:(r.em.click!=null?r.em.click+"%":"—"), note:"recipient-weighted · nonprofit avg ~3.3% (Neon One, Mailchimp)"},
     {l:"Click-to-open", v:(r.em.ctor!=null?r.em.ctor+"%":"—"), note:"of openers, share who clicked"},
   ] : [{l:"Newsletter sends", v:"0", note:"no sends in this window"}];
   S.push({name:"Email sends", rows:emRows});
