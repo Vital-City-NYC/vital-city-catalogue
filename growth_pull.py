@@ -4974,10 +4974,47 @@ def pull_donorbox():
     rec_rows = [d for d in last90 if _recurring(d) and _email(d)]
     recurring_donors = _donor_agg(rec_rows)
 
+    # ---- Where each gift was made. The site tags every Donorbox form it embeds
+    # with utm_content=<the page's path>, and Donorbox keeps the UTM fields on
+    # the donation. Gifts made on donorbox.org itself (links in appeals, say)
+    # carry whatever UTM tags the link had, or none. Counts and sums only.
+    from urllib.parse import unquote as _unq
+    def _utm(d, k): return str(d.get(k) or "").strip()
+    def _where(d):
+        c = _unq(_utm(d, "utm_content"))
+        if c.startswith("/"):
+            p = c.split("?")[0].split("#")[0].lower()
+            return ("page", p if p.endswith("/") else p + "/")
+        src, med, camp = _utm(d, "utm_source"), _utm(d, "utm_medium"), _utm(d, "utm_campaign")
+        if src or med or camp:
+            return ("link", " / ".join(x for x in (src, med, camp) if x)[:120])
+        return ("none", "")
+    by_where = {}
+    for d in paid:
+        kind, key = _where(d)
+        w = by_where.setdefault((kind, key), {"kind": kind, "where": key, "gifts": 0, "amount": 0.0,
+                                              "donors": set(), "recurring": 0, "gifts_30": 0, "amount_30": 0.0,
+                                              "first": "", "last": ""})
+        w["gifts"] += 1; w["amount"] += _amt(d)
+        w["donors"].add(_email(d) or ("name:" + _name(d).lower()))
+        if _recurring(d): w["recurring"] += 1
+        if _day(d) >= d30.isoformat(): w["gifts_30"] += 1; w["amount_30"] += _amt(d)
+        if not w["first"] or _day(d) < w["first"]: w["first"] = _day(d)
+        if _day(d) > w["last"]: w["last"] = _day(d)
+    by_page = sorted(({**v, "donors": len(v["donors"]), "amount": round(v["amount"], 2),
+                       "amount_30": round(v["amount_30"], 2)} for v in by_where.values()),
+                     key=lambda x: (-x["gifts"], -x["amount"]))
+    tagged = [d for d in paid if _where(d)[0] == "page"]
+    utm_keys = sorted({k for d in paid[:200] for k in d.keys() if k.startswith("utm")})
+    log(f"  donorbox: {len(tagged)} of {len(paid)} gifts carry a page tag; utm fields seen: {', '.join(utm_keys) or 'none'}")
+
     return {
         "available": True,
         "donations_paid": len(paid),
         "history_starts": oldest,
+        "by_page": by_page,
+        "page_tags_since": min((_day(d) for d in tagged if _day(d)), default=""),
+        "utm_fields_seen": utm_keys,
         "yoy_ok": yoy_ok,
         "windows": {
             "ytd":       _agg(_in(paid, ytd_start, today)),

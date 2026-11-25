@@ -208,6 +208,16 @@ if DB_OK: write("donations_monthly.csv", ["month","raised","gifts","donors","rec
       [{"month": r["m"], "raised": round(r["amt"], 2), "gifts": r["gifts"], "donors": r["donors"],
         "recurring": round(r.get("recurring_amt", 0), 2)} for r in db.get("monthly_series", [])])
 
+# ---- where Donorbox gifts were made: the page the donate form sat on (the site
+# tags each embedded form with its path), a tagged link, or nothing recorded.
+# Counts and sums per page only, no donors.
+if DB_OK and isinstance(db.get("by_page"), list):
+    write("donations_by_page.csv", ["kind","where","gifts","donors","raised","recurring","gifts_30","raised_30","first","last","tags_since"],
+          [{"kind": r.get("kind"), "where": r.get("where"), "gifts": r.get("gifts", 0), "donors": r.get("donors", 0),
+            "raised": r.get("amount", 0), "recurring": r.get("recurring", 0), "gifts_30": r.get("gifts_30", 0),
+            "raised_30": r.get("amount_30", 0), "first": r.get("first", ""), "last": r.get("last", ""),
+            "tags_since": db.get("page_tags_since", "")} for r in db["by_page"]])
+
 # ---- top pages and signup sources
 write("top_pages_30d.csv", ["title","path","visits","prev"], gt.get("top_pages_30d", []))
 bs = d.get("ghost_signup_attribution", {}).get("by_source", [])
