@@ -731,6 +731,28 @@ try:
 except Exception as _e:
     print("article sources: skipped after an error:", repr(_e))
 
+# Why people leave: Mailchimp's unsubscribe-form reasons, last 12 months, counts only.
+# growth_pull already keeps a reason verbatim only when it recurs (the form's fixed
+# choices) and folds every free-text answer into "Other (free text)".
+def _unsub_reasons():
+    ur = mc.get("unsub_reasons") or {}
+    if not any(ur.values()):
+        print("unsubscribe reasons: nothing in the payload; file left as it was"); return
+    kinds = ("newsletter", "appeal", "other")
+    tot = collections.defaultdict(collections.Counter)
+    for k in kinds:
+        for reason, n in (ur.get(k) or {}).items():
+            tot[reason][k] += int(n or 0)
+    NONE = {"No reason given", "None given"}
+    rows = [{"reason": "No reason given" if r in NONE else r, **{k: c[k] for k in kinds}, "total": sum(c.values())} for r, c in tot.items()]
+    rows.sort(key=lambda r: (r["reason"] == "No reason given", r["reason"] == "Other (free text)", -r["total"]))
+    write("unsub_reasons.csv", ["reason", "newsletter", "appeal", "other", "total"], rows)
+    print("unsubscribe reasons:", len(rows), "rows")
+try:
+    _unsub_reasons()
+except Exception as _e:
+    print("unsubscribe reasons: skipped after an error:", repr(_e))
+
 json.dump({"as_of": asof}, open(OUT / "as_of.json", "w"))
 # File names and the as-of time only: this prints into a public Actions log.
 print("ok", asof, "from", _src, sorted(p.name for p in OUT.iterdir()))
