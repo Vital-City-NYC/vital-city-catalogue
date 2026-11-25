@@ -1589,6 +1589,51 @@ AI_HOSTS = ("chatgpt.com", "chat.openai.com", "openai.com", "perplexity.ai", "ww
             "duckduckgo.com/aichat", "phind.com", "kagi.com")
 
 
+# How readers reach each article: GA4 page views by page and session source,
+# folded into a dozen plain buckets. "Direct" in GA4 also holds clicks from
+# email apps, Slack and messaging that carry no referrer.
+SOURCE_BUCKETS = ["Google", "Other search", "Direct", "Newsletter and email", "LinkedIn", "X/Twitter",
+                  "Facebook", "Bluesky", "Other social", "AI tools", "Other sites"]
+
+
+def _source_bucket(src, med):
+    s, m = (src or "").lower(), (med or "").lower()
+    if s in ("(direct)", "(not set)", "") and m in ("(none)", "(not set)", ""): return "Direct"
+    if m == "email" or any(k in s for k in ("mailchimp", "newsletter", "mail.google", "outlook", "gmail", "substack", "beehiiv", "sailthru")): return "Newsletter and email"
+    if any(h in s for h in AI_HOSTS) or s in ("chatgpt", "perplexity", "gemini", "copilot"): return "AI tools"
+    if s.startswith("google") and m in ("organic", "(none)", "referral", "(not set)", ""): return "Google"
+    if m == "organic" or s in ("bing", "duckduckgo", "yahoo", "ecosia", "brave", "search.brave.com", "baidu", "yandex", "startpage.com"): return "Other search"
+    if "linkedin" in s or s == "lnkd.in": return "LinkedIn"
+    if s in ("t.co", "twitter", "x", "x.com", "twitter.com", "mobile.twitter.com"): return "X/Twitter"
+    if "facebook" in s or s in ("fb", "m.facebook.com", "l.facebook.com", "lm.facebook.com"): return "Facebook"
+    if "bsky" in s or "bluesky" in s: return "Bluesky"
+    if any(k in s for k in ("reddit", "threads", "instagram", "mastodon", "youtube", "tiktok", "whatsapp", "slack", "teams")): return "Other social"
+    return "Other sites"
+
+
+def _ga4_article_sources(prop, token, start_date="2026-07-01", min_views=50):
+    body = {
+        "dateRanges": [{"startDate": start_date, "endDate": "today"}],
+        "dimensions": [{"name": "pagePath"}, {"name": "sessionSource"}, {"name": "sessionMedium"}],
+        "metrics": [{"name": "screenPageViews"}],
+        "limit": 100000,
+    }
+    req = urllib.request.Request(
+        f"https://analyticsdata.googleapis.com/v1beta/properties/{prop}:runReport",
+        data=json.dumps(body).encode(),
+        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=90) as r:
+        rep = json.loads(r.read())
+    agg = defaultdict(Counter)
+    for row in rep.get("rows") or []:
+        path = (row["dimensionValues"][0]["value"] or "").split("?")[0].rstrip("/").lower()
+        if not path: continue
+        b = _source_bucket(row["dimensionValues"][1]["value"], row["dimensionValues"][2]["value"])
+        agg[path][b] += int(row["metricValues"][0]["value"])
+    rows = [[p, b, n] for p, c in agg.items() if sum(c.values()) >= min_views for b, n in c.items()]
+    return {"since": start_date, "buckets": SOURCE_BUCKETS, "rows": rows}
+
+
 def _ga4_ai_referrals(prop, token, start_date="2024-09-01"):
     """Sessions by calendar month and source, kept only for AI assistants.
 
@@ -2402,6 +2447,11 @@ def pull_ga4():
         # (they'd otherwise bloat the published payload with a duplicate copy).
         piece_benchmarks.pop("_pieces", None)
         try:
+            article_sources = _ga4_article_sources(prop, token)
+        except Exception as e:
+            log(f"  ga4 article sources failed: {e}")
+            article_sources = None
+        try:
             ga4_events = _ga4_events(prop, token)
         except Exception as e:
             log(f"  ga4 events failed: {e}")
@@ -2425,6 +2475,7 @@ def pull_ga4():
             "piece_benchmarks": piece_benchmarks,
             "piece_index": piece_index,
             "events": ga4_events,
+            "article_sources": article_sources,
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         }
     except Exception as e:

@@ -700,6 +700,37 @@ try:
 except Exception as _e:
     print("gating: skipped after an error:", repr(_e))
 
+
+# How readers reach each piece: GA4 views by source bucket, for pieces published
+# since July 1, with Ghost signups (counted from Aug. 10) beside them.
+SRC_COLS = {"Google": "google", "Other search": "other_search", "Direct": "direct", "Newsletter and email": "newsletter",
+            "LinkedIn": "linkedin", "X/Twitter": "twitter", "Facebook": "facebook", "Bluesky": "bluesky",
+            "Other social": "other_social", "AI tools": "ai", "Other sites": "other_sites"}
+def _article_sources():
+    a = ga.get("article_sources") or {}
+    rows, posts = a.get("rows") or [], (d.get("gating") or {}).get("posts") or []
+    if not rows or not posts:
+        print("article sources: nothing in the payload; file left as it was"); return
+    by = collections.defaultdict(collections.Counter)
+    for pth, b, n in rows: by[pth.rstrip("/").lower()][b] += n
+    sig = collections.Counter(e[2].rstrip("/").lower() for e in ((d.get("gating") or {}).get("events") or []))
+    out = []
+    for p in posts:
+        k = p["path"].rstrip("/").lower(); c = by.get(k)
+        if not c or sum(c.values()) < 100: continue
+        r = {"path": p["path"], "title": p["title"], "published": p["published"],
+             "access": "Members-only" if p.get("visibility") != "public" else "Public",
+             "views": sum(c.values()), "signups": sig[k]}
+        for lbl, col in SRC_COLS.items(): r[col] = c.get(lbl, 0)
+        out.append(r)
+    out.sort(key=lambda r: -r["views"])
+    write("article_sources.csv", ["path", "title", "published", "access", "views", "signups"] + list(SRC_COLS.values()), out)
+    print("article sources:", len(out), "pieces since", a.get("since"))
+try:
+    _article_sources()
+except Exception as _e:
+    print("article sources: skipped after an error:", repr(_e))
+
 json.dump({"as_of": asof}, open(OUT / "as_of.json", "w"))
 # File names and the as-of time only: this prints into a public Actions log.
 print("ok", asof, "from", _src, sorted(p.name for p in OUT.iterdir()))
